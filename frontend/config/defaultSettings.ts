@@ -11,7 +11,7 @@ const Settings: LayoutSettings & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'Hệ Thống Đào Tạo Trực Tuyến Từ Xa',
+  title: 'PTIT DU',
   pwa: false,
   logo: '/favicon.ico',
   iconfontUrl: '',

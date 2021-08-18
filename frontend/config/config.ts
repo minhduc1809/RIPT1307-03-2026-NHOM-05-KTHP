@@ -63,6 +63,8 @@ export default defineConfig({
       ],
     },
     {
+      hideInMenu: true,
+
       name: 'account',
       icon: 'user',
       path: '/account',
