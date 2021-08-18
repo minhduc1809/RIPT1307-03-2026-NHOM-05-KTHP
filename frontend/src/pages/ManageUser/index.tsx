@@ -138,6 +138,7 @@ export default () => {
       <ProTable<User.Result>
         columns={columns}
         actionRef={actionRef}
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         request={async (params = {}, sort, filter) => {
           // console.log(sort, filter, params);
 

@@ -11,6 +11,7 @@ import type { IrecordSuKien } from './typing';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const CodePreview: React.FC = ({ children }) => (
   <pre className={styles.pre}>
     <code>
@@ -43,9 +44,7 @@ export default () => {
       title,
       info: { ma_mon_hoc, ten_mon_hoc, loai_hinh, tiet_bat_dau, tiet_ket_thuc },
       loaiSuKien,
-      diaDiem,
     } = record;
-    console.log('record :>> ', record);
     Modal.info({
       title: 'Chi tiết sự kiện',
       // width: '40%',
@@ -72,9 +71,8 @@ export default () => {
   const eventCustom = ({ event }: any) => {
     const {
       title,
-      info: { ma_mon_hoc, ten_mon_hoc, loai_hinh, tiet_bat_dau, tiet_ket_thuc },
+      // info: { ma_mon_hoc, ten_mon_hoc, loai_hinh, tiet_bat_dau, tiet_ket_thuc },
       loaiSuKien,
-      diaDiem,
     } = event;
     return (
       <div style={{ width: '100%', fontSize: 13 }}>
@@ -87,12 +85,13 @@ export default () => {
     );
   };
   const localizer = momentLocalizer(moment);
-  const { loading, danhSachSuKien, getSuKienSinhVienByNamModel } = useModel('sukien');
+  const { danhSachSuKien, getSuKienSinhVienByNamModel } = useModel('sukien');
 
   useEffect(() => {
     getSuKienSinhVienByNamModel(new Date().getFullYear());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const dataCalendar = [];
+  const dataCalendar: { title: string }[] | undefined = [];
   danhSachSuKien?.forEach((x: IrecordSuKien.RootObject) =>
     dataCalendar.push({
       ...x,
@@ -101,7 +100,7 @@ export default () => {
       end: moment(x?.thoiGianKetThuc).subtract(new Date().getTimezoneOffset(), 'minutes').toDate(),
     }),
   );
-  console.log('dataCalendar :>> ', dataCalendar);
+  // console.log('dataCalendar :>> ', dataCalendar);
   return (
     <div style={{ height: 600 }}>
       <Card bordered>

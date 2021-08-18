@@ -118,5 +118,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     //  403
     // unAccessible: <div>unAccessible</div>,
     ...initialState?.settings,
+    title: 'PTIT DU',
   };
 };

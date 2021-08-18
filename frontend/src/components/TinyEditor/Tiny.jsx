@@ -13,12 +13,12 @@ class App extends React.Component {
   }
 
   triggerChange = (changedValue) => {
-    console.log('Content was updated:', changedValue);
+    // console.log('Content was updated:', changedValue);
 
     this.setState({ text: changedValue }, () => {
       const { onChange } = this.props;
       if (onChange) {
-        onChange(Object.assign({}, { text: this.state.text }, changedValue));
+        onChange({ text: this.state.text, ...changedValue });
       }
     });
   };
@@ -27,12 +27,14 @@ class App extends React.Component {
   //   console.log('Content was updated:', content);
   // };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   imageHandler = (callback, value, meta) => {
     const input = document.createElement('input');
     // Tạo input file và click luôn
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
     input.click();
+    // eslint-disable-next-line func-names
     input.onchange = async function () {
       const file = input.files[0];
 
@@ -47,7 +49,7 @@ class App extends React.Component {
         // response?.data?.data,
         key: uuidv1(),
       });
-    }.bind(this);
+    };
   };
 
   render() {

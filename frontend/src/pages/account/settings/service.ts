@@ -2,7 +2,6 @@ import { ip3 } from '@/utils/constants';
 import request from 'umi-request';
 
 export async function queryCurrent() {
-
   return request(`${ip3}/odoo-user/sinh-vien/me`);
 }
 

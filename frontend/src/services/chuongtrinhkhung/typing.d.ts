@@ -11,7 +11,7 @@ declare module ChuongTrinhKhung {
     tongSoTinChi: number;
     id: string;
     ten_ky_hoc: string;
-    danh_sach_hoc_phan: {'hoc_phan': IHocPhanRecord}[]
+    danh_sach_hoc_phan: { hoc_phan: IHocPhanRecord }[];
   }
 
   export interface IChuongTrinhKhungRecord {
@@ -19,7 +19,7 @@ declare module ChuongTrinhKhung {
     ten_chuong_trinh_khung: string;
     nganh: Nganh.INganhRecord;
     chuyenNganh: any;
-    danh_sach_ky_hoc: IKyHocRecord[]
+    danh_sach_ky_hoc: IKyHocRecord[];
   }
 
   export interface RootObject {

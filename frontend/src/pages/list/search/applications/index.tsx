@@ -68,6 +68,7 @@ const CardInfo: React.FC<{
 
 export const Applications: FC<Record<string, any>> = () => {
   const { data, loading, run } = useRequest((values: any) => {
+    // eslint-disable-next-line no-console
     console.log('form data', values);
     return queryFakeList({
       count: 8,

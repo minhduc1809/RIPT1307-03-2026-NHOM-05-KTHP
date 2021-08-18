@@ -1,5 +1,6 @@
 import { List, Switch } from 'antd';
 import React, { Component, Fragment } from 'react';
+
 type Unpacked<T> = T extends (infer U)[] ? U : T;
 
 class NotificationView extends Component {

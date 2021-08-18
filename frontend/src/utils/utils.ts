@@ -1,9 +1,10 @@
 /* eslint-disable no-return-assign */
-import { map } from "lodash";
-import moment from "moment";
+import { map } from 'lodash';
+import moment from 'moment';
 
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
-const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
+const reg =
+  /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
 export const isUrl = (path: string): boolean => reg.test(path);
 
@@ -48,7 +49,6 @@ export function toHexa(str: string) {
   return colors[sum % colors.length];
 }
 
-
 export function tinhTuanHienTai(ngayHoc: moment.MomentInput) {
   const batDauKy1 = '2019-09-05';
   // Tìm thứ của ngày bắt đầu kỳ 1
@@ -61,19 +61,22 @@ export function tinhTuanHienTai(ngayHoc: moment.MomentInput) {
   return dateNgayHoc.diff(dateBatDauTuan1, 'weeks') + 1;
 }
 
-export function tinhNgayTheoTuan(tuan: moment.DurationInputArg1, thu: number, ngayBatDau: moment.MomentInput) {
+export function tinhNgayTheoTuan(
+  tuan: moment.DurationInputArg1,
+  thu: number,
+  ngayBatDau: moment.MomentInput,
+) {
   return moment(ngayBatDau)
     .add(tuan, 'weeks')
     .add(thu - 1, 'days');
 }
 
-
 function render(value: any) {
   // phục vụ hàm toRegex bên dưới
   let result = '';
   [...value].forEach(
-    char =>
-      (result += map[char] || ("$&+,:;=?@#|'<>.^*()%!-".includes(char) && `\\${char}`) || char)
+    (char) =>
+      (result += map[char] || ("$&+,:;=?@#|'<>.^*()%!-".includes(char) && `\\${char}`) || char),
   );
   return result;
 }
@@ -84,7 +87,7 @@ function render(value: any) {
 //   hoTen: toRegex('h')
 // }
 
-export function Format(str: { toString: () => string; }) {
+export function Format(str: { toString: () => string }) {
   // xóa hết dấu + đưa về chữ thường
   if (!str) return '';
   return str
@@ -101,10 +104,9 @@ export function toRegex(value: any) {
   return { $regex: `.*${render(Format(value))}.*`, $options: 'i' };
 }
 
-
 export function Object2Regex(obj: Record<string, any>) {
   // convert từ string sang dạng regex.
-  return Object.keys(obj).map(key => ({
+  return Object.keys(obj).map((key) => ({
     [key]: { $regex: `.*${render(Format(obj[key]))}.*`, $options: 'i' },
   }));
 }
@@ -112,13 +114,14 @@ export function Object2Regex(obj: Record<string, any>) {
 export function isValue(val: string | number | any[]) {
   // check xem nếu bị undefined, null, xâu rỗng -> false
   if (!val && val !== 0) return false; // undefined, null
-  if (val && (val?.length) === 0) return false; // ""
+  if (val && val?.length === 0) return false; // ""
   return true;
 }
 
-
-
-export function trim(string: { toISOString: () => any; replace: (arg0: RegExp, arg1: string) => string; }) {
+export function trim(string: {
+  toISOString: () => any;
+  replace: (arg0: RegExp, arg1: string) => string;
+}) {
   // nếu là moment thì cho sang string
   if (moment.isMoment(string)) return string?.toISOString() ?? '';
   // xóa tất cả dấu cách thừa
@@ -143,10 +146,3 @@ export function fixedZero(val: number) {
 export function digitUppercase(n: any) {
   return nzh.toMoney(n);
 }
-
-
-
-
-
-
-

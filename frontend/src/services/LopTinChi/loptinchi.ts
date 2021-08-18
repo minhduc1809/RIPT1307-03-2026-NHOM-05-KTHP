@@ -29,6 +29,7 @@ export async function getThongBaoLopTinChiById(payload: {
 export async function getURLImg(payload: any) {
   // console.log(`payload`, payload);
   const form = new FormData();
+  // eslint-disable-next-line array-callback-return
   Object.keys(payload).map((key) => {
     form.set(key, payload[key]);
   });

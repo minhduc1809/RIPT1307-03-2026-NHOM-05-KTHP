@@ -13,6 +13,7 @@ const ThongTinChung = (props: { id: string; isGiangVien: boolean }) => {
       getLopTinChiByIdLop(Number(props.id));
     }
     getThongTinChungLopTinChi(record.id || Number(props.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [record.id]);
   const { giangVien, sinhVienList } = thongTinChung;
   return (

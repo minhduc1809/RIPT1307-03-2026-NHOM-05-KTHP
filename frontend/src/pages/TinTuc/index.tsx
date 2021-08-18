@@ -3,22 +3,28 @@ import { EyeOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
 import { Button, Col, Empty, Row, Tooltip, Typography } from 'antd';
 import moment from 'moment';
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import type { ITinTuc } from './index.d';
+import type { IRecordTinTuc } from './typings';
 
 export default () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [visibleDrawer, setVisibleDrawer] = useState(false);
-  const [record, setRecord] = useState<ITinTuc | {}>({});
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [record, setRecord] = useState<IRecordTinTuc.Result>();
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const renderParagraph = (text: string, rows: number, style?: object) => (
     <Typography.Paragraph ellipsis={{ rows, expandable: false }} style={style}>
       {text}
     </Typography.Paragraph>
   );
 
-  const handleView = (record: any): void => {};
+  const handleView = (): void => {};
 
-  const renderItem = (item: any, handleView: Function, index: number): ReactNode => {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  const renderItem = (item: any, handleView: (item: any) => void, index: number): ReactNode => {
     switch (index) {
       case 0: {
         return (
@@ -131,18 +137,19 @@ export default () => {
     }
   };
 
-  const viewMore = (rc: ITinTuc) => {
+  const viewMore = (rc: IRecordTinTuc.Result) => {
     setVisibleDrawer(true);
     setRecord(rc);
   };
 
-  const renderLast = (rc: ITinTuc) => (
+  const renderLast = (rc: IRecordTinTuc.Result) => (
     <>
       <Button onClick={() => viewMore(rc)} icon={<EyeOutlined />} />
     </>
   );
 
-  const columns: ProColumns<ITinTuc>[] = [
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const columns: ProColumns<IRecordTinTuc.Result>[] = [
     {
       dataIndex: 'index',
       width: 80,
@@ -197,7 +204,7 @@ export default () => {
   useEffect(() => {
     const getData = async () => {
       const res = await getDataTinTuc({});
-      console.log('res :>> ', res);
+      // console.log('res :>> ', res);
       setdataTinTuc(res);
     };
     getData();

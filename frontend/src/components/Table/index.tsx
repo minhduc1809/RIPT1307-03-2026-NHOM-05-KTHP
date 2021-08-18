@@ -10,6 +10,7 @@ type Props = {
   formType?: 'Modal' | 'Drawer';
   columns: ColumnProps<any>[];
   title?: React.ReactNode;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   getData: Function;
   dependencies?: any[];
   loading: boolean;
@@ -21,21 +22,29 @@ type Props = {
 const TableBase = (props: Props) => {
   const {
     modelName,
-    Form,
+    // Form,
     columns,
     title,
     getData,
     dependencies = [],
-    formType,
+    // formType,
     loading,
     children,
     params,
     border,
   } = props;
-  const { danhSach, showDrawer, setShowDrawer, total, page, limit, setPage, setLimit } =
-    useModel(modelName);
+  const {
+    danhSach,
+    // showDrawer, setShowDrawer,
+    total,
+    page,
+    limit,
+    setPage,
+    setLimit,
+  } = useModel(modelName);
   useEffect(() => {
     getData(params);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...dependencies]);
 
   const handleTableChange = (pagination: PaginationProps) => {

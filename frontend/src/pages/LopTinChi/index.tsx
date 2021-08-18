@@ -54,6 +54,7 @@ const LopTinChi = () => {
 
   useEffect(() => {
     getAllKyHocModel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onChangeKyHoc = (value: number) => {

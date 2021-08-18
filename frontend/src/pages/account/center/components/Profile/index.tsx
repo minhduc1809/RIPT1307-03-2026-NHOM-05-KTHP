@@ -1,9 +1,9 @@
 import rules from '@/utils/rules';
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message, Select, Upload } from 'antd';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect, formatMessage, FormattedMessage } from 'umi';
-import type { CurrentUser } from '../data.d';
+import type { CurrentUser } from '../../data';
 import styles from './BaseView.less';
 
 const { Option } = Select;
@@ -30,39 +30,39 @@ const AvatarView = ({ avatar }: { avatar: string }) => (
     </Upload>
   </>
 );
-interface SelectItem {
-  label: string;
-  key: string;
-}
+// interface SelectItem {
+//   label: string;
+//   key: string;
+// }
 
-const validatorGeographic = (
-  _: any,
-  value: {
-    province: SelectItem;
-    city: SelectItem;
-  },
-  callback: (message?: string) => void,
-) => {
-  const { province, city } = value;
-  if (!province.key) {
-    callback('Please input your province!');
-  }
-  if (!city.key) {
-    callback('Please input your city!');
-  }
-  callback();
-};
+// const validatorGeographic = (
+//   _: any,
+//   value: {
+//     province: SelectItem;
+//     city: SelectItem;
+//   },
+//   callback: (message?: string) => void,
+// ) => {
+//   const { province, city } = value;
+//   if (!province.key) {
+//     callback('Please input your province!');
+//   }
+//   if (!city.key) {
+//     callback('Please input your city!');
+//   }
+//   callback();
+// };
 
-const validatorPhone = (rule: any, value: string, callback: (message?: string) => void) => {
-  const values = value.split('-');
-  if (!values[0]) {
-    callback('Please input your area code!');
-  }
-  if (!values[1]) {
-    callback('Please input your phone number!');
-  }
-  callback();
-};
+// const validatorPhone = (rule: any, value: string, callback: (message?: string) => void) => {
+//   const values = value.split('-');
+//   if (!values[0]) {
+//     callback('Please input your area code!');
+//   }
+//   if (!values[1]) {
+//     callback('Please input your phone number!');
+//   }
+//   callback();
+// };
 
 interface BaseViewProps {
   currentUser?: CurrentUser;
@@ -87,14 +87,15 @@ class BaseView extends Component<BaseViewProps> {
     this.view = ref;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleFinish = (val: any) => {
-    console.log('val :>> ', val);
+    // console.log('val :>> ', val);
     message.success(formatMessage({ id: 'accountandsettings.basic.update.success' }));
   };
 
   render() {
     const { currentUser } = this.props;
-    console.log('currentUser :>> ', currentUser);
+    // console.log('currentUser :>> ', currentUser);
     return (
       <div className={styles.baseView} ref={this.getViewDom}>
         <div className={styles.left}>

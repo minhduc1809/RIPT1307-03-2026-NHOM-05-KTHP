@@ -17,6 +17,7 @@ const getKey = (id: string, index: number) => `${id}-${index}`;
 
 const Projects: FC = () => {
   const { data, loading, run } = useRequest((values: any) => {
+    // eslint-disable-next-line no-console
     console.log('form data', values);
     return queryFakeList({
       count: 8,

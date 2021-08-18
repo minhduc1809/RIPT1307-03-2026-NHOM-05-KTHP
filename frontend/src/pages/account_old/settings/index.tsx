@@ -54,6 +54,7 @@ const Settings: React.FC = () => {
     return () => {
       window.removeEventListener('resize', resize);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dom.current]);
 
   const getMenu = () => {
