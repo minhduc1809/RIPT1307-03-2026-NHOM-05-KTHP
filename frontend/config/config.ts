@@ -296,14 +296,14 @@ export default defineConfig({
       access: 'sinh_vien',
     },
     {
-      name: 'Lớp tín chỉ',
+      name: 'LopTinChi',
       icon: 'team',
       path: '/loptinchi',
       component: './LopTinChi',
       access: 'sinh_vien',
     },
     {
-      name: 'Lớp hành chính',
+      name: 'LopHanhChinh',
       icon: 'team',
       path: '/lophanhchinh',
       component: './LopHanhChinh',

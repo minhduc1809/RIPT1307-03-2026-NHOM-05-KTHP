@@ -49,4 +49,10 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
+  'menu.register-result': 'Kết quả đăng ký',
+  'menu.Calendar': 'Lịch',
+  'menu.News': 'Tin tức',
+  'menu.Structure': 'Tổ chức',
+  'menu.LopTinChi': 'Lớp tín chỉ',
+  'menu.LopHanhChinh': 'Lớp hành chính',
 };
