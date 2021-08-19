@@ -9,7 +9,7 @@ const ChuongTrinhKhung = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const [nganh_dsMonHocDieuKien, setnganh_dsMonHocDieuKien] = useState<
-    IRecordCTK.MonHocDieuKienId2[] | undefined
+    IRecordCTK.MonHocDieuKienId[] | undefined
   >([]);
 
   useEffect(() => {

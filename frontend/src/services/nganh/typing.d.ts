@@ -1,5 +1,6 @@
 declare module IRecordCTK {
   export interface MonHocDieuKienId {
+    soTinChi?: number;
     id: number;
     ma_hoc_phan: string;
     hoc_phan_id: any[];
@@ -23,23 +24,13 @@ declare module IRecordCTK {
     __last_update: string;
   }
 
-  export interface MonHocDieuKienId2 {
-    soTinChi: number;
-    id: number;
-    ma_hoc_phan: string;
-    hoc_phan_id: any[];
-    hoc_ky: string;
-    tinh_chat: any;
-    display_name: string;
-  }
-
   export interface ChuyenNganh {
     id?: number;
     ten_chuong_trinh_khung?: string;
     khoa_sinh_vien_id?: number[];
     nganh_id?: any[];
     chuyen_nganh_id?: any[];
-    mon_hoc_dieu_kien_ids?: MonHocDieuKienId2[];
+    mon_hoc_dieu_kien_ids?: MonHocDieuKienId[];
     display_name?: string;
     create_uid?: any[];
     create_date?: string;
