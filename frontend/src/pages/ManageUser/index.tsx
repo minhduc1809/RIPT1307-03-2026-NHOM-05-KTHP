@@ -142,12 +142,12 @@ export default () => {
         request={async (params = {}, sort, filter) => {
           // console.log(sort, filter, params);
 
-          const response: User.RootObject = await request<{
+          const response = await request<{
             data: User.Result[];
           }>('/v2.2/user/pageable', {
             params: { ...params, page: params.current, limit: params.pageSize },
           });
-          // console.log(`responsessss`, response.data.result);
+          console.log(`responsessss`, response);
           return {
             data: response.data.result,
             success: response.statusCode <= 200 && response.statusCode <= 399,

@@ -158,7 +158,7 @@ class Center extends Component<CenterProps, CenterState> {
             marginRight: 8,
           }}
         />
-        {currentUser?.email_dang_nhap}
+        {currentUser?.email}
       </p>
       <p>
         <HomeOutlined
@@ -193,9 +193,9 @@ class Center extends Component<CenterProps, CenterState> {
               {!dataLoading && (
                 <div>
                   <div className={styles.avatarHolder}>
-                    <img alt="" src={currentUser?.anh_dai_dien || avatar} />
-                    <div className={styles.name}>{currentUser?.TenDayDu || 'Chưa cập nhật'}</div>
-                    <div>{currentUser?.lop_hanh_chinh_id?.[1] || 'Chưa cập nhật'}</div>
+                    <img alt="" src={currentUser?.avatar || avatar} />
+                    <div className={styles.name}>{currentUser?.name || 'Chưa cập nhật'}</div>
+                    <div>{currentUser?.email?.[1] || 'Chưa cập nhật'}</div>
                   </div>
                   {this.renderUserInfo(currentUser)}
                   <Divider dashed />

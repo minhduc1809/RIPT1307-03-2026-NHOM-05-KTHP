@@ -49,14 +49,14 @@ export default class Map extends React.Component {
             key="1"
             source={{
               data: grid,
-              transforms: [
-                {
-                  type: 'hexagon',
-                  size: 800000,
-                  field: 'capacity',
-                  method: 'sum',
-                },
-              ],
+              // transforms: [
+              //   {
+              //     type: 'hexagon',
+              //     size: 800000,
+              //     field: 'capacity',
+              //     method: 'sum',
+              //   },
+              // ],
             }}
             color={{
               values: '#ddd',

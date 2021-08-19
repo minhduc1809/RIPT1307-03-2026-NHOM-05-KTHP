@@ -114,19 +114,16 @@ export function Object2Regex(obj: Record<string, any>) {
 export function isValue(val: string | number | any[]) {
   // check xem nếu bị undefined, null, xâu rỗng -> false
   if (!val && val !== 0) return false; // undefined, null
-  if (val && val?.length === 0) return false; // ""
+  if (val && Array.isArray(val) && val?.length === 0) return false; // ""
   return true;
 }
 
-export function trim(string: {
-  toISOString: () => any;
-  replace: (arg0: RegExp, arg1: string) => string;
-}) {
+export function trim(str: string) {
   // nếu là moment thì cho sang string
-  if (moment.isMoment(string)) return string?.toISOString() ?? '';
+  if (moment.isMoment(str)) return str?.toISOString() ?? '';
   // xóa tất cả dấu cách thừa
-  if (typeof string !== 'string') return string;
-  return string.replace(/[ ]{2,}/g, ' ').trim();
+  if (typeof str !== 'string') return str;
+  return str.replace(/[ ]{2,}/g, ' ').trim();
 }
 
 export function currencyFormat(num: number) {
@@ -143,6 +140,6 @@ export function fixedZero(val: number) {
   return val * 1 < 10 ? `0${val}` : val;
 }
 
-export function digitUppercase(n: any) {
-  return nzh.toMoney(n);
-}
+// export function digitUppercase(n: any) {
+//   return nzh.toMoney(n);
+// }

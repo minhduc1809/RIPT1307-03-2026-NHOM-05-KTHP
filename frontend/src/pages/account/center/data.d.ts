@@ -25,6 +25,11 @@ export interface NoticeType {
   memberLink: string;
 }
 
+export type GeographicItemType = {
+  name: string;
+  id: string;
+};
+
 export interface CurrentUser {
   name: string;
   avatar: string;

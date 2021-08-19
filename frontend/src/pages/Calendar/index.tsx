@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useModel } from 'umi';
-import type { IrecordSuKien } from './typing';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 

@@ -3,6 +3,7 @@ import TableBase from '@/components/Table';
 import type { ColumnProps } from 'antd/lib/table';
 import { Select } from 'antd';
 import { useEffect } from 'react';
+import type { LopTinChi as ILopTinChi } from '@/services/LopTinChi/typings';
 
 const LopTinChi = () => {
   const {
@@ -14,14 +15,14 @@ const LopTinChi = () => {
   } = useModel('kyhoc');
   const { setRecord: setRecordLopTinChi } = useModel('loptinchi');
   const { loading: loadingLopTinChi, getLopTinChiByHocKyModel } = useModel('loptinchi');
-  const onCell = (loptinchi: LopTinChi.Record) => ({
+  const onCell = (loptinchi: ILopTinChi.Record) => ({
     onClick: () => {
       setRecordLopTinChi(loptinchi);
       history.push(`/loptinchi/${loptinchi.id}`);
     },
     style: { cursor: 'pointer' },
   });
-  const columns: ColumnProps<LopTinChi.Record>[] = [
+  const columns: ColumnProps<ILopTinChi.Record>[] = [
     {
       title: 'STT',
       dataIndex: 'index',
