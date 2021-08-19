@@ -735,7 +735,7 @@ declare module IRecordThongTinNguoiDung {
   }
 }
 
-declare module IrecordLogin {
+declare module IRecordLogin {
   export interface User {
     ho_ten: string;
     ho_dem: string;

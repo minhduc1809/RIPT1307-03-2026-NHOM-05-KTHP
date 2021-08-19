@@ -1,6 +1,5 @@
-import styles from '@/pages/Welcome.less';
 import { toHexa } from '@/utils/utils';
-import { Card, Modal, Typography } from 'antd';
+import { Card, Modal } from 'antd';
 import moment from 'moment';
 import mm from 'moment-timezone';
 import { useEffect } from 'react';
@@ -12,13 +11,13 @@ import type { IrecordSuKien } from './typing';
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const CodePreview: React.FC = ({ children }) => (
-  <pre className={styles.pre}>
-    <code>
-      <Typography.Text copyable>{children}</Typography.Text>
-    </code>
-  </pre>
-);
+// const CodePreview: React.FC = ({ children }) => (
+//   <pre className={styles.pre}>
+//     <code>
+//       <Typography.Text copyable>{children}</Typography.Text>
+//     </code>
+//   </pre>
+// );
 const messages = {
   allDay: 'Cả ngày',
   previous: 'Trước',
@@ -91,8 +90,8 @@ export default () => {
     getSuKienSinhVienByNamModel(new Date().getFullYear());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const dataCalendar: { title: string }[] | undefined = [];
-  danhSachSuKien?.forEach((x: IrecordSuKien.RootObject) =>
+  const dataCalendar: { title: string; [x: string]: unknown }[] | undefined = [];
+  danhSachSuKien?.forEach((x: SuKien.Record) =>
     dataCalendar.push({
       ...x,
       title: x?.info?.ten_buoi_hoc,

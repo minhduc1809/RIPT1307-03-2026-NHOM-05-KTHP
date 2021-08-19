@@ -1,9 +1,7 @@
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
-export default function access(initialState: {
-  currentUser?: IrecordLogin.RootObject | undefined;
-}) {
+export default function access(initialState: { currentUser?: IRecordLogin.User | undefined }) {
   const { currentUser } = initialState || {};
 
   return {

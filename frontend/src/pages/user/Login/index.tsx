@@ -34,7 +34,7 @@ const goto = () => {
 
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
-  // const [userLoginState, setUserLoginState] = useState<IrecordLogin.RootObject>({});
+  // const [userLoginState, setUserLoginState] = useState<IRecordLogin.RootObject>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
 

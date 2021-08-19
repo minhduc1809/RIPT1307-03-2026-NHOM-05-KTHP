@@ -79,7 +79,7 @@ export async function getCalendar(
 }
 
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<IrecordLogin.RootObject>(`${ip}/odoo-user-service/odoo-auth/login/web`, {
+  return request<IRecordLogin.RootObject>(`${ip}/odoo-user-service/odoo-auth/login/web`, {
     method: 'POST',
     data: body,
     //   headers: { "Content-Type": "multipart/form-data" },

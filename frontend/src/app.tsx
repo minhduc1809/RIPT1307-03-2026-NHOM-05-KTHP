@@ -22,11 +22,11 @@ export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: IInfoSV.Data | IInfoGV.Data;
   partner_id?: number;
-  fetchUserInfo?: () => Promise<API.UserMe.Data | undefined>;
+  fetchUserInfo?: () => Promise<IInfoSV.Data | undefined>;
   authorizedRoles?: API.LoginResponse.AuthorizedRole[];
   isModalSelectRoleVisible?: boolean;
 }> {
-  const fetchUserInfo = async () => {
+  const fetchUserInfo: () => Promise<IInfoSV.Data | undefined> = async () => {
     try {
       // const currentUser = (await queryCurrentUser(Number(localStorage.getItem('id')))).data?.[0];
       // dung cho sv gv
