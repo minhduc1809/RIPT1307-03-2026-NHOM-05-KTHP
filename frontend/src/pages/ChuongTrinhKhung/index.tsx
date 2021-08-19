@@ -91,9 +91,10 @@ const ChuongTrinhKhung = () => {
             <br />
             <b> I. Học phần chung của ngành:</b>
             <div style={{ overflowX: 'auto' }}>
-              {dsnganh?.map((item: number) => {
+              {dsnganh?.map((item: number, index) => {
                 return (
-                  <div style={{ display: 'flex' }}>
+                  // eslint-disable-next-line react/no-array-index-key
+                  <div style={{ display: 'flex' }} key={`${index} + ${item}`}>
                     <Block
                       hocphantruoc={[]}
                       hocphantienquyet={[]}
@@ -127,7 +128,8 @@ const ChuongTrinhKhung = () => {
             <div style={{ overflowX: 'auto' }}>
               {dsMonHocDKTheoChuyenNganhSapXepKyBoSungSoKy?.map((chuyenNganh, index) => {
                 return (
-                  <ul>
+                  // eslint-disable-next-line react/no-array-index-key
+                  <ul key={index + chuyenNganh.tenChuyenNganh}>
                     <li>
                       <br />
                       <b>
