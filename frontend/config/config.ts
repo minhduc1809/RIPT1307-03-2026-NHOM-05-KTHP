@@ -1,6 +1,5 @@
 // https://umijs.org/config/
 import { defineConfig } from 'umi';
-import { join } from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 const { REACT_APP_ENV } = process.env;
@@ -278,14 +277,6 @@ export default defineConfig({
     // },
 
     {
-      name: 'user-list',
-      icon: 'table',
-      path: '/manageuser',
-      component: './ManageUser',
-      access: 'admin',
-    },
-
-    {
       name: 'Calendar',
       icon: 'CalendarOutlined',
       path: '/calendar',
@@ -349,20 +340,7 @@ export default defineConfig({
   },
   // Fast Refresh 热更新
   fastRefresh: {},
-  openAPI: [
-    {
-      requestLibPath: "import { request } from 'umi'",
-      // 或者使用在线的版本
-      // schemaPath: "https://gw.alipayobjects.com/os/antfincdn/M%24jrzTTYJN/oneapi.json"
-      schemaPath: join(__dirname, 'oneapi.json'),
-      mock: false,
-    },
-    {
-      requestLibPath: "import { request } from 'umi'",
-      schemaPath: 'https://gw.alipayobjects.com/os/antfincdn/CA1dOm%2631B/openapi.json',
-      projectName: 'swagger',
-    },
-  ],
+
   nodeModulesTransform: {
     type: 'none',
   },

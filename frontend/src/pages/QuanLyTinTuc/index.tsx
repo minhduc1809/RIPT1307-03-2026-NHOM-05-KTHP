@@ -3,14 +3,14 @@ import { Card, Col, Empty, Modal, Row, Typography } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import type { ITinTuc } from './index.d';
+import type { IRecordTinTuc } from './index.d';
 import './styles.less';
 
 export default () => {
   const [visibleModal, setVisibleModal] = useState(false);
-  const [record, setRecord] = useState<ITinTuc>({});
+  const [record, setRecord] = useState<IRecordTinTuc.Result>();
 
-  const viewMore = (rc: ITinTuc) => {
+  const viewMore = (rc: IRecordTinTuc.Result) => {
     setVisibleModal(true);
     setRecord(rc);
   };
@@ -107,7 +107,7 @@ export default () => {
             src={`https://dhs.aisenote.com/${record?.avatar_path}`}
           />
         </div>
-        <div dangerouslySetInnerHTML={{ __html: record?.noi_dung }} />
+        <div dangerouslySetInnerHTML={{ __html: record?.noi_dung ?? '' }} />
         <div style={{ textAlign: 'center' }}>
           {moment(record?.ngay_dang).format('DD/MM/YYYY HH:mm')}
         </div>

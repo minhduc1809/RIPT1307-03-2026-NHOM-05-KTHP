@@ -1,4 +1,4 @@
-declare module IRecordTinTuc {
+export declare module IRecordTinTuc {
   export interface Result {
     id: number;
     mo_ta: string;

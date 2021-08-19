@@ -1,17 +1,23 @@
 import { getDataTinTuc } from '@/services/ant-design-pro/api';
-import { EyeOutlined } from '@ant-design/icons';
-import type { ProColumns } from '@ant-design/pro-table';
-import { Button, Col, Empty, Row, Tooltip, Typography } from 'antd';
-import moment from 'moment';
+// import { EyeOutlined } from '@ant-design/icons';
+// import type { ProColumns } from '@ant-design/pro-table';
+import {
+  //  Button,
+  Col,
+  Empty,
+  Row,
+  Tooltip,
+  Typography,
+} from 'antd';
+// import moment from 'moment';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import type { IRecordTinTuc } from './typings';
 
 export default () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [visibleDrawer, setVisibleDrawer] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [record, setRecord] = useState<IRecordTinTuc.Result>();
+  // const [visibleDrawer, setVisibleDrawer] = useState(false);
+  // const [record, setRecord] = useState<IRecordTinTuc.Result>();
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const renderParagraph = (text: string, rows: number, style?: object) => (
@@ -137,68 +143,69 @@ export default () => {
     }
   };
 
-  const viewMore = (rc: IRecordTinTuc.Result) => {
-    setVisibleDrawer(true);
-    setRecord(rc);
-  };
+  // const viewMore = (rc: IRecordTinTuc.Result) => {
+  //   setVisibleDrawer(true);
+  //   setRecord(rc);
+  // };
 
-  const renderLast = (rc: IRecordTinTuc.Result) => (
-    <>
-      <Button onClick={() => viewMore(rc)} icon={<EyeOutlined />} />
-    </>
-  );
+  // const renderLast = (rc: IRecordTinTuc.Result) => (
+  //   <>
+  //     <Button onClick={() => viewMore(rc)} icon={<EyeOutlined />} />
+  //   </>
+  // );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const columns: ProColumns<IRecordTinTuc.Result>[] = [
-    {
-      dataIndex: 'index',
-      width: 80,
-      title: 'Số thứ tự',
-      align: 'center',
-    },
-    {
-      dataIndex: 'display_name',
-      width: 250,
-      title: 'Tiêu đề',
-      align: 'center',
-    },
-    {
-      dataIndex: 'mo_ta',
-      width: 250,
-      title: 'Mô tả',
-      align: 'center',
-    },
-    {
-      dataIndex: 'avatar_path',
-      width: 250,
-      title: 'Ảnh đại diện',
-      align: 'center',
-      render: (_) => {
-        return <img src={`https://dhs.aisenote.com/${_}`} width={50} height={50} />;
-      },
-    },
-    {
-      dataIndex: 'nguoi_dang',
-      width: 200,
-      title: 'Người đăng',
-      align: 'center',
-    },
-    {
-      dataIndex: 'ngay_dang',
-      width: 100,
-      title: 'Ngày đăng',
-      align: 'center',
-      render: (_, rc: ITinTuc) => <span>{moment(rc.ngay_dang).format('DD/MM/YYYY')}</span>,
-    },
-    {
-      fixed: 'right',
-      width: 200,
-      title: 'Thao tác',
-      search: false,
-      align: 'center',
-      render: (_, rc: ITinTuc) => renderLast(rc),
-    },
-  ];
+  // const columns: ProColumns<IRecordTinTuc.Result>[] = [
+  //   {
+  //     dataIndex: 'index',
+  //     width: 80,
+  //     title: 'Số thứ tự',
+  //     align: 'center',
+  //   },
+  //   {
+  //     dataIndex: 'display_name',
+  //     width: 250,
+  //     title: 'Tiêu đề',
+  //     align: 'center',
+  //   },
+  //   {
+  //     dataIndex: 'mo_ta',
+  //     width: 250,
+  //     title: 'Mô tả',
+  //     align: 'center',
+  //   },
+  //   {
+  //     dataIndex: 'avatar_path',
+  //     width: 250,
+  //     title: 'Ảnh đại diện',
+  //     align: 'center',
+  //     render: (_) => {
+  //       return <img src={`https://dhs.aisenote.com/${_}`} width={50} height={50} />;
+  //     },
+  //   },
+  //   {
+  //     dataIndex: 'nguoi_dang',
+  //     width: 200,
+  //     title: 'Người đăng',
+  //     align: 'center',
+  //   },
+  //   {
+  //     dataIndex: 'ngay_dang',
+  //     width: 100,
+  //     title: 'Ngày đăng',
+  //     align: 'center',
+  //     render: (_, rc: IRecordTinTuc.Result) => (
+  //       <span>{moment(rc.ngay_dang).format('DD/MM/YYYY')}</span>
+  //     ),
+  //   },
+  //   {
+  //     fixed: 'right',
+  //     width: 200,
+  //     title: 'Thao tác',
+  //     search: false,
+  //     align: 'center',
+  //     render: (_, rc: IRecordTinTuc.Result) => renderLast(rc),
+  //   },
+  // ];
 
   const [dataTinTuc, setdataTinTuc] = useState<IRecordTinTuc.RootObject>({});
   useEffect(() => {
