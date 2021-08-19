@@ -3,3 +3,4 @@
 
 npm run lint
 npx tsc
+fabric verify-commit
