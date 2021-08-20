@@ -55,4 +55,5 @@ export default {
   'menu.Structure': 'Tổ chức',
   'menu.LopTinChi': 'Lớp tín chỉ',
   'menu.LopHanhChinh': 'Lớp hành chính',
+  'menu.dva-sample': 'Page mẫu dùng DVA',
 };

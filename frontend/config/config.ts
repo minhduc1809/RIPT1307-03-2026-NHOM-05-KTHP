@@ -275,7 +275,12 @@ export default defineConfig({
     //     },
     //   ],
     // },
-
+    {
+      name: 'dva-sample',
+      icon: 'CalendarOutlined',
+      path: '/dva-sample',
+      component: './DvaSample',
+    },
     {
       name: 'Calendar',
       icon: 'CalendarOutlined',
