@@ -1,48 +1,49 @@
 import TinyEditor from '@/components/TinyEditor/Tiny';
-import { addThongBao, getThongBaoLopTinChiById } from '@/services/LopTinChi/loptinchi';
+import { addThongBao, getThongBaoLopTinChiById, getURLImg } from '@/services/LopTinChi/loptinchi';
 import type { IResThongBaoLopTinChi } from '@/services/LopTinChi/typings';
 import { PlusCircleFilled, UploadOutlined } from '@ant-design/icons';
 import { DrawerForm, ProFormText } from '@ant-design/pro-form';
 import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { Button, Form, message, Upload } from 'antd';
+import { Button, Form, message, Modal, Upload } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
+import ViewThongBao from './ViewThongBao';
 
 const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
   const [visibleDrawer, setVisibleDrawer] = useState<boolean>(false);
+  const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
   const [recordTB, setRecordTB] = useState<IResThongBaoLopTinChi.Result>({});
   const [state, setstate] = useState<number>(0);
   const [dataThongBao, setdataThongBao] = useState<IResThongBaoLopTinChi.Result[]>([]);
   useEffect(() => {
     const getData = async () => {
-      const res = await getThongBaoLopTinChiById({ page: 1, limit: 10, idLop: props?.id });
-
+      const res = await getThongBaoLopTinChiById({
+        page: 1,
+        limit: 10,
+        idLop: props?.id,
+        role: props.isGiangVien ? 'giang-vien' : 'sinh-vien',
+      });
       setdataThongBao(res?.data?.data?.result);
     };
     getData();
-  }, [props?.id, state]);
+  }, [props?.id, props.isGiangVien, state]);
 
   const dsThongBao = dataThongBao?.map((value, index) => ({
     ...value,
     index: index + 1,
   }));
 
-  const viewMore = (rc: IResThongBaoLopTinChi.Result) => {
-    setVisibleDrawer(true);
-    setEdit(true);
+  const viewThongBao = (rc: IResThongBaoLopTinChi.Result) => {
+    setVisibleModal(true);
     setRecordTB(rc);
   };
 
   const onCell = (rc: IResThongBaoLopTinChi.Result) => ({
-    onClick: () => viewMore(rc),
+    onClick: () => viewThongBao(rc),
     style: { cursor: 'pointer' },
   });
-
-  // const handleEdit = (record: any) => {};
-
-  // const handleDel = (_id: string) => {};
 
   const columns: ProColumns<IResThongBaoLopTinChi.Result>[] = [
     {
@@ -78,15 +79,7 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
         </span>
       ),
     },
-    // {
-    //   title: 'Thao tác',
-    //   align: 'center',
-    //   render: (value, record) => renderLast(value, record),
-    //   fixed: 'right',
-    //   width: 170,
-    // },
   ];
-
   return (
     <>
       <ProTable<IResThongBaoLopTinChi.Result, API.PageParams>
@@ -96,18 +89,22 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
         search={{
           labelWidth: 120,
         }}
-        toolBarRender={() => [
-          <Button
-            onClick={() => {
-              setEdit(false);
-              setVisibleDrawer(true);
-            }}
-            type="primary"
-          >
-            <PlusCircleFilled />
-            Thêm mới
-          </Button>,
-        ]}
+        toolBarRender={() =>
+          props.isGiangVien
+            ? [
+                <Button
+                  onClick={() => {
+                    setEdit(false);
+                    setVisibleDrawer(true);
+                  }}
+                  type="primary"
+                >
+                  <PlusCircleFilled />
+                  Thêm mới
+                </Button>,
+              ]
+            : []
+        }
         bordered
         columns={columns}
       />
@@ -120,18 +117,15 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
           destroyOnClose: true,
         }}
         onFinish={async (values: any) => {
-          const url =
-            // (await getURLImg({
-            //   filename: 'url1',
-            //   public: true,
-            //   file: values?.imageUrl.file.originFileObj,
-            // })) ||
-
-            'abc.ccc';
+          const response = await getURLImg({
+            filename: 'url1',
+            public: true,
+            file: values?.imageUrl.file.originFileObj,
+          });
 
           const newValues = {
             ...values,
-            imageUrl: url,
+            imageUrl: response?.data?.data?.url,
             htmlContent: values?.htmlContent?.text,
           };
           const res = await addThongBao({ idLop: props.id, newValues });
@@ -175,14 +169,8 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
           ...(edit && recordTB),
         }}
       >
-        <ProFormText
-          name="title"
-          width="lg"
-          label="Tiêu đề"
-          tooltip="Tiêu đề"
-          placeholder="Tiêu đề"
-        />
-        <ProFormText name="content" width="lg" label="Mô tả" tooltip="Mô tả" placeholder="Mô tả" />
+        <ProFormText name="title" label="Tiêu đề" tooltip="Tiêu đề" placeholder="Tiêu đề" />
+        <ProFormText name="content" label="Mô tả" tooltip="Mô tả" placeholder="Mô tả" />
         <Form.Item name="imageUrl" label="Ảnh" rules={[{ required: true }]}>
           <Upload listType="picture" maxCount={1}>
             <Button icon={<UploadOutlined />}>Tải lên (Tối đa: 1)</Button>
@@ -199,6 +187,19 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
           />
         )}
       </DrawerForm>
+      <Modal
+        width="80%"
+        bodyStyle={{ padding: 0 }}
+        destroyOnClose
+        footer={
+          <Button onClick={() => setVisibleModal(false)} type="primary">
+            Đóng
+          </Button>
+        }
+        visible={visibleModal}
+      >
+        <ViewThongBao record={recordTB} />
+      </Modal>
     </>
   );
 };

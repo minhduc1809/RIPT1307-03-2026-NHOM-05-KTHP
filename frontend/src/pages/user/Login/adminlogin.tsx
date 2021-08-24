@@ -1,5 +1,5 @@
 import Footer from '@/components/Footer';
-import { login, getInfoSV, getInfoGV } from '@/services/ant-design-pro/api';
+import { adminlogin, getInfo } from '@/services/ant-design-pro/api';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { ConfigProvider, message, Tabs } from 'antd';
@@ -28,7 +28,8 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.LoginParams) => {
     setSubmitting(true);
     try {
-      const msg = await login({ ...values });
+      const msg = await adminlogin({ ...values });
+
       if (msg.statusCode === 201 && msg?.data?.accessToken) {
         const defaultloginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
@@ -42,15 +43,8 @@ const Login: React.FC = () => {
         // });
         localStorage.setItem('token', msg?.data?.accessToken);
 
-        localStorage.setItem('vaiTro', msg?.data.user.vai_tro);
-        let info;
-
-        if (msg?.data.user.vai_tro === 'giang_vien') {
-          info = await getInfoGV();
-        } else if (msg?.data.user.vai_tro === 'sinh_vien') {
-          info = await getInfoSV();
-        }
-
+        localStorage.setItem('vaiTro', msg?.data.user.systemRole);
+        const info = await getInfo();
         setInitialState({
           ...initialState,
           currentUser: info?.data,
@@ -128,7 +122,7 @@ const Login: React.FC = () => {
               {type === 'account' && (
                 <>
                   <ProFormText
-                    name="login"
+                    name="username"
                     fieldProps={{
                       size: 'large',
                       prefix: <UserOutlined className={styles.prefixIcon} />,

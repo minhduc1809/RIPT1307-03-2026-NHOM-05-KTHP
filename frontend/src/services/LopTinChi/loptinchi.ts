@@ -13,21 +13,21 @@ export async function getLopTinChiByHocKy(idHocKy: number) {
 
 export async function getThongBaoLopTinChiById(payload: {
   idLop?: string;
+  role?: string;
   page: number;
   limit: number;
   cond?: any;
 }) {
   const idLop = payload?.idLop;
-
+  const role = payload?.role;
   delete payload.idLop;
-
-  return axios.get(`${ip3}/odoo-lop-tin-chi/${idLop}/giang-vien/notification/pageable`, {
+  delete payload.role;
+  return axios.get(`${ip3}/odoo-lop-tin-chi/${idLop}/${role}/notification/pageable`, {
     params: payload,
   });
 }
 
 export async function getURLImg(payload: any) {
-  // console.log(`payload`, payload);
   const form = new FormData();
   // eslint-disable-next-line array-callback-return
   Object.keys(payload).map((key) => {

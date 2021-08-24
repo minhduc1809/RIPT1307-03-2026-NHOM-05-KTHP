@@ -54,6 +54,9 @@ export default {
   'menu.News': 'Tin tức',
   'menu.Structure': 'Tổ chức',
   'menu.LopTinChi': 'Lớp tín chỉ',
+  'menu.DanhMuc': 'Danh mục',
+  'menu.DanhMuc.TinTuc': 'Tin tức',
+  'menu.DanhMuc.ChuDeChung': 'Chủ đề chung',
   'menu.LopHanhChinh': 'Lớp hành chính',
   'menu.dva-sample': 'Page mẫu dùng DVA',
 };

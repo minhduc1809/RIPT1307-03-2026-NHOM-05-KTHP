@@ -1,6 +1,5 @@
 import React from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-import uuidv1 from 'uuid/v1';
 // import lang from './vi';
 import { uploadFile } from '@/services/uploadFile';
 
@@ -47,7 +46,6 @@ class App extends React.Component {
         name: response?.data?.data.split('/').pop().substring(26),
         status: 'done',
         // response?.data?.data,
-        key: uuidv1(),
       });
     };
   };
