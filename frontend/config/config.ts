@@ -105,12 +105,27 @@ export default defineConfig({
           name: 'ChuDeChung',
           icon: 'smile',
           path: './chudechung',
-          component: './ChuDe',
+          component: './DanhMuc/ChuDe',
         },
         {
           name: 'TinTuc',
           icon: 'smile',
           path: './tintuc',
+          component: './DanhMuc/TinTuc',
+        },
+      ],
+    },
+    {
+      name: 'BieuMau',
+      icon: 'file',
+      path: '/bieumau',
+      access: 'Admin',
+      routes: [
+        {
+          name: 'KhaoSat',
+          icon: 'smile',
+          path: './khaosat',
+          component: './BieuMau/KhaoSat',
         },
       ],
     },

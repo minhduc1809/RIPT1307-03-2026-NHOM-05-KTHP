@@ -1,4 +1,11 @@
-import { addChuDe, delChuDe, getAllLoaiChuDe, getChuDe, putChuDe } from '@/services/ChuDe/chude';
+import {
+  addChuDe,
+  delChuDe,
+  getAllChuDe,
+  getAllLoaiChuDe,
+  getChuDe,
+  putChuDe,
+} from '@/services/ChuDe/chude';
 import { message } from 'antd';
 import { useState } from 'react';
 
@@ -23,6 +30,14 @@ export default () => {
     setLoading(true);
     const response = await getChuDe(loaiChuDe, page, limit);
     setDanhSach(response?.data?.data?.result ?? []);
+    setTotal(response?.data?.data?.total ?? 0);
+    setLoading(false);
+  };
+
+  const getAllChuDeModel = async () => {
+    setLoading(true);
+    const response = await getAllChuDe();
+    setDanhSach(response?.data?.data ?? []);
     setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);
   };
@@ -53,6 +68,7 @@ export default () => {
   };
 
   return {
+    getAllChuDeModel,
     setRecord,
     addChuDeModel,
     putChuDeModel,

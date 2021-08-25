@@ -5,6 +5,10 @@ export async function getAllLoaiChuDe() {
   return axios.get(`${ip3}/common-topic/type/all`);
 }
 
+export async function getAllChuDe() {
+  return axios.get(`${ip3}/common-topic/all`);
+}
+
 export async function getChuDe(type: string, page: number, limit: number) {
   return axios.get(
     `${ip3}/common-topic/pageable?page=${page}&limit=${limit}${

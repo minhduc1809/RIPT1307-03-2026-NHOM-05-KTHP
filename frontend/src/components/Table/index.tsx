@@ -1,5 +1,5 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Card, Modal, Table } from 'antd';
+import { PlusCircleFilled } from '@ant-design/icons';
+import { Button, Card, Drawer, Modal, Table } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import type { ColumnProps } from 'antd/lib/table';
 import { useEffect } from 'react';
@@ -11,6 +11,7 @@ type Props = {
   formType?: 'Modal' | 'Drawer';
   columns: ColumnProps<any>[];
   title?: React.ReactNode;
+  widthDrawer?: string | number;
   // eslint-disable-next-line @typescript-eslint/ban-types
   getData: Function;
   dependencies?: any[];
@@ -18,6 +19,8 @@ type Props = {
   params?: any;
   children?: React.ReactNode;
   border?: boolean;
+  scroll?: { x?: number; y?: number };
+  hascreate?: boolean;
 };
 
 const TableBase = (props: Props) => {
@@ -28,14 +31,27 @@ const TableBase = (props: Props) => {
     title,
     getData,
     dependencies = [],
-    // formType,
+    formType,
     loading,
     children,
     params,
     border,
+    scroll,
+    hascreate,
+    widthDrawer,
   } = props;
-  const { danhSach, visibleForm, setVisibleForm, total, page, limit, setPage, setLimit, setEdit } =
-    useModel(modelName);
+  const {
+    danhSach,
+    visibleForm,
+    setVisibleForm,
+    total,
+    page,
+    limit,
+    setPage,
+    setLimit,
+    setEdit,
+    setRecord,
+  } = useModel(modelName);
   useEffect(() => {
     getData(params);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -49,17 +65,21 @@ const TableBase = (props: Props) => {
   return (
     <Card title={title || false}>
       {children}
-      <Button
-        onClick={() => {
-          setVisibleForm(true);
-          setEdit(false);
-        }}
-        icon={<PlusOutlined />}
-        type="primary"
-      >
-        Thêm mới
-      </Button>
+      {hascreate && (
+        <Button
+          onClick={() => {
+            setVisibleForm(true);
+            setEdit(false);
+            setRecord({});
+          }}
+          icon={<PlusCircleFilled />}
+          type="primary"
+        >
+          Thêm mới
+        </Button>
+      )}
       <Table
+        scroll={scroll}
         loading={loading}
         bordered={border || false}
         pagination={{
@@ -80,17 +100,34 @@ const TableBase = (props: Props) => {
         columns={columns}
       ></Table>
       {Form && (
-        <Modal
-          onCancel={() => {
-            setVisibleForm(false);
-          }}
-          destroyOnClose
-          footer={false}
-          bodyStyle={{ padding: 0 }}
-          visible={visibleForm}
-        >
-          <Form />
-        </Modal>
+        <>
+          {formType === 'Drawer' ? (
+            <Drawer
+              width={widthDrawer}
+              onClose={() => {
+                setVisibleForm(false);
+              }}
+              destroyOnClose
+              footer={false}
+              bodyStyle={{ padding: 0 }}
+              visible={visibleForm}
+            >
+              <Form />
+            </Drawer>
+          ) : (
+            <Modal
+              onCancel={() => {
+                setVisibleForm(false);
+              }}
+              destroyOnClose
+              footer={false}
+              bodyStyle={{ padding: 0 }}
+              visible={visibleForm}
+            >
+              <Form />
+            </Modal>
+          )}
+        </>
       )}
     </Card>
   );

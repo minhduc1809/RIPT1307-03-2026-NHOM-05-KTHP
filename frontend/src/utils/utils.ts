@@ -140,6 +140,23 @@ export function fixedZero(val: number) {
   return val * 1 < 10 ? `0${val}` : val;
 }
 
-// export function digitUppercase(n: any) {
-//   return nzh.toMoney(n);
-// }
+export function getNameFile(url: string) {
+  if (typeof url !== 'string') return 'Đường dẫn không đúng';
+  return url.split('/').slice(-1)[0];
+  // .substring(26);
+}
+
+export function renderFileListUrl(url: string) {
+  if (!url) return { fileList: [] };
+  return {
+    fileList: [
+      {
+        name: getNameFile(url),
+        url,
+        status: 'done',
+        size: 0,
+        type: 'img/png',
+      },
+    ],
+  };
+}

@@ -97,6 +97,7 @@ const LopTinChi = () => {
       columns={columns}
       getData={getChuDeModel}
       loading={loading}
+      hascreate
       dependencies={[loaiChuDe, page, limit]}
       modelName="chude"
       title="Chủ đề chung"
