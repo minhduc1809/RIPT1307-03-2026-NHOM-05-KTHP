@@ -79,7 +79,7 @@ const TableBase = (props: Props) => {
         </Button>
       )}
       <Table
-        scroll={scroll}
+        scroll={scroll || { x: 1000 }}
         loading={loading}
         bordered={border || false}
         pagination={{

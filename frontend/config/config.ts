@@ -137,6 +137,13 @@ export default defineConfig({
       component: './PhanHoi',
     },
     {
+      name: 'KhaiBaoSucKhoe',
+      icon: 'file',
+      path: '/khaibaosuckhoe',
+      access: 'admin',
+      component: './KhaiBaoSucKhoe',
+    },
+    {
       name: 'KhaoSat',
       icon: 'CalendarOutlined',
       path: '/khaosat',
