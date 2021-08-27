@@ -99,7 +99,7 @@ export default defineConfig({
       name: 'DanhMuc',
       icon: 'file',
       path: '/danhmuc',
-      access: 'Admin',
+      access: 'admin',
       routes: [
         {
           name: 'ChuDeChung',
@@ -119,7 +119,7 @@ export default defineConfig({
       name: 'BieuMau',
       icon: 'file',
       path: '/bieumau',
-      access: 'Admin',
+      access: 'admin',
       routes: [
         {
           name: 'KhaoSat',
@@ -128,6 +128,20 @@ export default defineConfig({
           component: './BieuMau/KhaoSat',
         },
       ],
+    },
+    {
+      name: 'PhanHoi',
+      icon: 'file',
+      path: '/phanhoi',
+      access: 'admin',
+      component: './PhanHoi',
+    },
+    {
+      name: 'KhaoSat',
+      icon: 'CalendarOutlined',
+      path: '/khaosat',
+      component: './KhaoSatSVGV',
+      access: 'sinhVienVaGiangVien',
     },
     {
       name: 'Calendar',

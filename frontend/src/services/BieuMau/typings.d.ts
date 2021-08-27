@@ -6,15 +6,19 @@ declare module BieuMau {
     cauTraLoiKhac: boolean;
     luaChon: {
       noiDung: string;
-    };
+      _id: string;
+    }[];
     luaChonCot: {
       noiDung: string;
-    };
+      _id: string;
+    }[];
     luaChonHang: {
       noiDung: string;
-    };
+      _id: string;
+    }[];
     gioiHanDuoiTuyenTinh: number;
     gioiHanTrenTuyenTinh: number;
+    _id: string;
   }
 
   export interface Khoi {
@@ -24,6 +28,8 @@ declare module BieuMau {
   }
 
   export interface Record {
+    coCamKet: boolean;
+    noiDungCamKet: string;
     thoiGian?: string[];
     danhSachVaiTro: string[];
     loai: string;

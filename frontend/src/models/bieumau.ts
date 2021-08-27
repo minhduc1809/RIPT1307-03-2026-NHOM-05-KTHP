@@ -59,11 +59,12 @@ export default () => {
     setVisibleForm(false);
   };
 
-  const kichHoatBieuMauModel = async (payload: { id: string }) => {
+  const kichHoatBieuMauModel = async (payload: { id: string; data: { kichHoat: boolean } }) => {
     setLoading(true);
     await kichHoatBieuMau(payload);
-    message.success('Kích hoạt thành công');
+    message.success('Xử lý thành công');
     setLoading(false);
+    getBieuMauAdminModel();
   };
 
   const delBieuMauModel = async (payload: { id: string }) => {

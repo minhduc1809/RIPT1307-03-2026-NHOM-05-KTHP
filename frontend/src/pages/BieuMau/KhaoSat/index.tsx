@@ -1,6 +1,6 @@
 import TableBase from '@/components/Table';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Divider, Popconfirm } from 'antd';
+import { Button, Divider, Popconfirm, Popover, Switch, Tooltip } from 'antd';
 import type { ColumnProps } from 'antd/lib/table';
 import moment from 'moment';
 import { useEffect } from 'react';
@@ -18,6 +18,7 @@ const KhaoSat = () => {
     setEdit,
     setRecord,
     setVisibleForm,
+    kichHoatBieuMauModel,
   } = useModel('bieumau');
 
   useEffect(() => {
@@ -28,6 +29,11 @@ const KhaoSat = () => {
     setEdit(true);
     setRecord(record);
     setVisibleForm(true);
+  };
+
+  const handleChangeStatus = (record: BieuMau.Record) => {
+    // eslint-disable-next-line no-underscore-dangle
+    kichHoatBieuMauModel({ id: record._id, data: { kichHoat: !record.kichHoat } });
   };
 
   const columns: ColumnProps<BieuMau.Record>[] = [
@@ -64,38 +70,59 @@ const KhaoSat = () => {
       width: 200,
     },
     {
-      title: 'Kích hoạt',
-      dataIndex: 'kichHoat',
-      align: 'center',
-      render: (val) => <div>{val ? 'Có' : 'Không'}</div>,
-      width: 200,
-    },
-    {
       title: 'Đối tượng',
       dataIndex: 'doiTuong',
       align: 'center',
       width: 200,
     },
     {
+      title: 'Trạng thái',
+      dataIndex: 'kichHoat',
+      align: 'center',
+      width: '100px',
+      fixed: 'right',
+      render: (val: boolean, record: BieuMau.Record) => (
+        <Switch
+          checkedChildren="Mở"
+          unCheckedChildren="Mở"
+          checked={val}
+          onChange={() => {
+            handleChangeStatus(record);
+          }}
+        />
+      ),
+    },
+    {
       title: 'Thao tác',
       align: 'center',
-      width: 150,
+      width: 100,
+      fixed: 'right',
       render: (record) => (
-        <>
-          <Button onClick={() => handleEdit(record)} type="default" shape="circle">
-            <EditOutlined />
-          </Button>
-          <Divider type="vertical" />
+        <Popover
+          content={
+            <>
+              <Tooltip title="Chỉnh sửa">
+                <Button onClick={() => handleEdit(record)} type="default" shape="circle">
+                  <EditOutlined />
+                </Button>
+              </Tooltip>
 
-          <Popconfirm
-            // onConfirm={() => delChuDeModel({ id: record._id })}
-            title="Bạn có chắc chắn muốn xóa chủ đề này"
-          >
-            <Button type="primary" shape="circle">
-              <DeleteOutlined />
-            </Button>
-          </Popconfirm>
-        </>
+              <Divider type="vertical" />
+              <Tooltip title="Xóa">
+                <Popconfirm
+                  // onConfirm={() => delChuDeModel({ id: record._id })}
+                  title="Bạn có chắc chắn muốn xóa khảo sát này"
+                >
+                  <Button type="primary" shape="circle">
+                    <DeleteOutlined />
+                  </Button>
+                </Popconfirm>
+              </Tooltip>
+            </>
+          }
+        >
+          <Button type="primary" icon={<EditOutlined />} />
+        </Popover>
       ),
     },
   ];

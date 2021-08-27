@@ -1,6 +1,6 @@
 import rules from '@/utils/rules';
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Select, Checkbox } from 'antd';
+import { Button, Form, Input, Select, Checkbox, Row, Col } from 'antd';
 import { useState } from 'react';
 import MultipleChoice from './QuestionType/MultipleChoice';
 import SingleChoice from './QuestionType/SingleChoice';
@@ -28,27 +28,37 @@ const BlockQuestion = (props: { index: number; block: number }) => {
   );
   return (
     <>
-      <Form.Item
-        name={[props.index, 'noiDungCauHoi']}
-        label="Nội dung câu hỏi"
-        rules={[...rules.required]}
-      >
-        <Input placeholder="Nội dung câu hỏi" />
-      </Form.Item>
-      <Form.Item
-        name={[props.index, 'loai']}
-        label="Loại"
-        rules={[...rules.required]}
-        initialValue={questionType}
-      >
-        <Select onChange={(val: string) => setQuestionType(val)} placeholder="Chọn loại câu hỏi">
-          {loaiCauHoi.map((item) => (
-            <Select.Option key={item.value} value={item.value}>
-              {item.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+      <Row gutter={[20, 0]}>
+        <Col md={12} lg={16}>
+          <Form.Item
+            name={[props.index, 'noiDungCauHoi']}
+            label="Nội dung câu hỏi"
+            rules={[...rules.required]}
+          >
+            <Input placeholder="Nội dung câu hỏi" />
+          </Form.Item>
+        </Col>
+        <Col md={12} lg={8}>
+          <Form.Item
+            name={[props.index, 'loai']}
+            label="Loại"
+            rules={[...rules.required]}
+            initialValue={questionType}
+          >
+            <Select
+              onChange={(val: string) => setQuestionType(val)}
+              placeholder="Chọn loại câu hỏi"
+            >
+              {loaiCauHoi.map((item) => (
+                <Select.Option key={item.value} value={item.value}>
+                  {item.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+      </Row>
+
       {['SingleChoice', 'MultipleChoice'].includes(questionType) && (
         <Form.List
           name={[props.index, 'luaChon']}

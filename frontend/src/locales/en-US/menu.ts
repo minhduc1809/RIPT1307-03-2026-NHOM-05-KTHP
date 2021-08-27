@@ -58,6 +58,8 @@ export default {
   'menu.DanhMuc.ChuDeChung': 'Chủ đề chung',
   'menu.DanhMuc': 'Danh mục',
   'menu.BieuMau': 'Biểu mẫu',
+  'menu.KhaoSat': 'Khảo sát',
+  'menu.PhanHoi': 'Phản hồi',
   'menu.BieuMau.KhaoSat': 'Khảo sát',
   'menu.LopHanhChinh': 'Lớp hành chính',
   'menu.dva-sample': 'Page mẫu dùng DVA',

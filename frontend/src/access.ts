@@ -12,5 +12,7 @@ export default function access(initialState: { currentUser?: IRecordLogin.User |
     chuyenGiaHT: currentUser && currentUser.vai_tro === 'chuyen_gia_ht',
     chuyenGiaCN: currentUser && currentUser.vai_tro === 'chuyen_gia_cn',
     chuyenVien: currentUser && currentUser.vai_tro === 'chuyen_vien',
+    sinhVienVaGiangVien:
+      currentUser && (currentUser.vai_tro === 'giang_vien' || currentUser.vai_tro === 'sinh_vien'),
   };
 }

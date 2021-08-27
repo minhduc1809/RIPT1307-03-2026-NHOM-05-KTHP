@@ -26,8 +26,8 @@ export async function putBieuMau(payload: { data: BieuMau.Record; id: string }) 
   return axios.put(`${ip3}/bieu-mau/${payload.id}`, payload.data);
 }
 
-export async function kichHoatBieuMau(payload: { id: string }) {
-  return axios.post(`${ip3}/bieu-mau/${payload.id}/kich-hoat`);
+export async function kichHoatBieuMau(payload: { id: string; data: { kichHoat: boolean } }) {
+  return axios.post(`${ip3}/bieu-mau/${payload.id}/kich-hoat`, payload.data);
 }
 
 export async function delBieuMau(payload: { id: string }) {

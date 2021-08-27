@@ -14,6 +14,7 @@ const FormBaiHoc = () => {
   const { loading, record, setVisibleForm, edit, putBieuMauModel, addBieuMauModel } =
     useModel('bieumau');
   const [doiTuong, setDoiTuong] = useState<string>(record?.doiTuong ?? 'Tất cả');
+  const [camKet, setCamKet] = useState<boolean>(record?.coCamKet ?? true);
   return (
     <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
       <Form
@@ -45,7 +46,7 @@ const FormBaiHoc = () => {
         <Form.Item
           name="moTa"
           label="Mô tả"
-          rules={[...rules.required]}
+          // rules={[...rules.required]}
           initialValue={record?.moTa}
         >
           <Input.TextArea rows={3} placeholder="Tiêu đề" />
@@ -53,7 +54,7 @@ const FormBaiHoc = () => {
         <Form.Item
           name="thoiGian"
           label="Thời gian bắt đầu - kết thúc"
-          rules={[...rules.required]}
+          // rules={[...rules.required]}
           initialValue={edit ? [moment(record.thoiGianBatDau), moment(record.thoiGianKetThuc)] : []}
         >
           <DatePicker.RangePicker
@@ -63,7 +64,7 @@ const FormBaiHoc = () => {
           />
         </Form.Item>
         <Row gutter={[20, 0]}>
-          <Col xs={24} sm={12}>
+          <Col xs={24} sm={12} md={8}>
             <Form.Item
               rules={[...rules.required]}
               name="doiTuong"
@@ -84,9 +85,21 @@ const FormBaiHoc = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12}>
+          <Col xs={24} sm={12} md={8}>
             <Form.Item name="kichHoat" label="Kích hoạt" initialValue={record?.kichHoat ?? true}>
               <Radio.Group>
+                <Radio value={true}>Có</Radio>
+                <Radio value={false}>Không</Radio>
+              </Radio.Group>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12} md={8}>
+            <Form.Item name="coCamKet" label="Có cam kết" initialValue={record?.coCamKet ?? true}>
+              <Radio.Group
+                onChange={(val) => {
+                  setCamKet(val.target.value);
+                }}
+              >
                 <Radio value={true}>Có</Radio>
                 <Radio value={false}>Không</Radio>
               </Radio.Group>
@@ -110,6 +123,16 @@ const FormBaiHoc = () => {
                 </Select.Option>
               ))}
             </Select>
+          </Form.Item>
+        )}
+        {camKet && (
+          <Form.Item
+            rules={[...rules.required]}
+            name="noiDungCamKet"
+            label="Nội dung cam kết"
+            initialValue={record?.noiDungCamKet}
+          >
+            <Input placeholder="Nội dung cam kết" />
           </Form.Item>
         )}
         <Form.List
