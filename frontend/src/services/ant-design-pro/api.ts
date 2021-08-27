@@ -36,12 +36,27 @@ export async function getInfoSV(options?: { [key: string]: any }) {
   });
 }
 
+export async function getInfo(options?: { [key: string]: any }) {
+  return request<IInfoSV.RootObject>(`${ip3}/user/me`, {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
 export async function getInfoGV(options?: { [key: string]: any }) {
   return request<IInfoSV.RootObject>(`${ip3}/odoo-user/giang-vien/me`, {
     method: 'GET',
     // params:{
     //   limit: 1
     // },
+    headers: { 'Content-Type': 'multipart/form-data' },
+    ...(options || {}),
+  });
+}
+
+export async function getInfoChung(options?: { [key: string]: any }) {
+  return request<IInfoSV.RootObject>(`${ip3}/odoo-user/general`, {
+    method: 'GET',
     headers: { 'Content-Type': 'multipart/form-data' },
     ...(options || {}),
   });
@@ -82,16 +97,16 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
   return request<IRecordLogin.RootObject>(`${ip}/odoo-user-service/odoo-auth/login/web`, {
     method: 'POST',
     data: body,
-    //   headers: { "Content-Type": "multipart/form-data" },
     ...(options || {}),
   });
+}
 
-  // return request<API.LoginResponse.RootObject>('http://203.162.10.108:8099/api/login/', {
-  //   method: 'POST',
-  //   data: formData,
-  //   mode: 'cors',
-  //   ...(options || {}),
-  // });
+export async function adminlogin(body: API.LoginParams, options?: { [key: string]: any }) {
+  return request<IRecordLogin.RootObject>(`${ip3}/auth/login/web`, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
 }
 
 /**  GET /api/notices */

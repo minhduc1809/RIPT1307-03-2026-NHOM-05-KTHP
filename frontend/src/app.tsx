@@ -6,10 +6,10 @@ import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
-import { getInfoGV, getInfoSV } from './services/ant-design-pro/api';
+import { getInfo, getInfoGV, getInfoSV } from './services/ant-design-pro/api';
 
 const loginPath = '/user/login';
-
+const pathAuth = ['/admin/login'];
 /**  loading */
 export const initialStateConfig = {
   loading: <PageLoading />,
@@ -31,12 +31,16 @@ export async function getInitialState(): Promise<{
       // const currentUser = (await queryCurrentUser(Number(localStorage.getItem('id')))).data?.[0];
       // dung cho sv gv
       const auth = localStorage.getItem('vaiTro');
-      const currentUser =
-        auth === 'sinh_vien' ? (await getInfoSV()).data : (await getInfoGV()).data;
-
+      let currentUser;
+      if (auth) {
+        if (auth === 'sinh_vien') currentUser = (await getInfoSV()).data;
+        else if (auth === 'Admin') currentUser = (await getInfo()).data;
+        else currentUser = (await getInfoGV()).data;
+      }
       return currentUser;
     } catch (error) {
-      history.push(loginPath);
+      const { location } = history;
+      if (!pathAuth.includes(location.pathname)) history.push(loginPath);
     }
     return undefined;
   };
@@ -108,15 +112,15 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      //  login
-
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
+      if (
+        !initialState?.currentUser &&
+        location.pathname !== loginPath &&
+        !pathAuth.includes(location.pathname)
+      ) {
         history.push(loginPath);
       }
     },
     menuHeaderRender: undefined,
-    //  403
-    // unAccessible: <div>unAccessible</div>,
     ...initialState?.settings,
     title: 'PTIT DU',
   };

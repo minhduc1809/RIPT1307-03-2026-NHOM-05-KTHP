@@ -307,6 +307,9 @@ declare module IInfoSV {
     subjects: any[];
     slide_channel_count: number;
     slide_channel_company_count: number;
+    username: string;
+    email: string;
+    systemRole: string;
   }
 
   export interface RootObject {
@@ -596,6 +599,9 @@ declare module IInfoGV {
     subjects: any[];
     slide_channel_count: number;
     slide_channel_company_count: number;
+    username: string;
+    email: string;
+    systemRole: string;
   }
 
   export interface RootObject {
@@ -726,6 +732,9 @@ declare module IRecordThongTinNguoiDung {
     slide_channel_count: number;
     slide_channel_company_count: number;
     vai_tro: string;
+    username: string;
+    email: string;
+    systemRole: string;
   }
 
   export interface RootObject {
@@ -737,6 +746,7 @@ declare module IRecordThongTinNguoiDung {
 
 declare module IRecordLogin {
   export interface User {
+    systemRole: string;
     ho_ten: string;
     ho_dem: string;
     ten: string;

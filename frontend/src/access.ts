@@ -3,9 +3,8 @@
  * */
 export default function access(initialState: { currentUser?: IRecordLogin.User | undefined }) {
   const { currentUser } = initialState || {};
-
   return {
-    admin: currentUser && currentUser.vai_tro === '',
+    admin: currentUser && currentUser.systemRole === 'Admin',
     giangVien: currentUser && currentUser.vai_tro === 'giang_vien',
     sinhVien: currentUser && currentUser.vai_tro === 'sinh_vien',
     quanTri: currentUser && currentUser.vai_tro === 'quan_tri',
@@ -13,5 +12,7 @@ export default function access(initialState: { currentUser?: IRecordLogin.User |
     chuyenGiaHT: currentUser && currentUser.vai_tro === 'chuyen_gia_ht',
     chuyenGiaCN: currentUser && currentUser.vai_tro === 'chuyen_gia_cn',
     chuyenVien: currentUser && currentUser.vai_tro === 'chuyen_vien',
+    sinhVienVaGiangVien:
+      currentUser && (currentUser.vai_tro === 'giang_vien' || currentUser.vai_tro === 'sinh_vien'),
   };
 }

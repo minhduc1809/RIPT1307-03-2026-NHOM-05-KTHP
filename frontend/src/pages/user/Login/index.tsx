@@ -8,26 +8,11 @@ import React, { useState } from 'react';
 import { FormattedMessage, history, Link, SelectLang, useIntl, useModel } from 'umi';
 import styles from './index.less';
 
-// const LoginMessage: React.FC<{
-//   content: string;
-// }> = ({ content }) => (
-//   <Alert
-//     style={{
-//       marginBottom: 24,
-//     }}
-//     message={content}
-//     type="error"
-//     showIcon
-//   />
-// );
-
-/** = redirect */
 const goto = () => {
   if (!history) return;
   setTimeout(() => {
     const { query } = history.location;
     const { redirect } = query as { redirect: string };
-    // console.log(`redirect`, redirect);
     history.push(redirect || '/');
   }, 2000);
 };
@@ -44,7 +29,6 @@ const Login: React.FC = () => {
     setSubmitting(true);
     try {
       const msg = await login({ ...values });
-
       if (msg.statusCode === 201 && msg?.data?.accessToken) {
         const defaultloginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
@@ -72,7 +56,6 @@ const Login: React.FC = () => {
           currentUser: info?.data,
         });
 
-        // console.log(`defaultloginSuccessMessage`, defaultloginSuccessMessage);
         message.success(defaultloginSuccessMessage);
         history.push('/');
 
