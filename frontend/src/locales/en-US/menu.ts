@@ -60,6 +60,7 @@ export default {
   'menu.BieuMau': 'Biểu mẫu',
   'menu.KhaoSat': 'Khảo sát',
   'menu.PhanHoi': 'Phản hồi',
+  'menu.VanBanHuongDan': 'Văn bản hướng dẫn',
   'menu.KhaiBaoSucKhoe': 'Khai báo sức khỏe',
   'menu.BieuMau.KhaoSat': 'Khảo sát',
   'menu.LopHanhChinh': 'Lớp hành chính',

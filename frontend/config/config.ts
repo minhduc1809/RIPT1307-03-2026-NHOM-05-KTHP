@@ -137,6 +137,13 @@ export default defineConfig({
       component: './PhanHoi',
     },
     {
+      name: 'VanBanHuongDan',
+      icon: 'file',
+      path: '/vanbanhuongdan',
+      access: 'admin',
+      component: './VanBanHuongDan',
+    },
+    {
       name: 'KhaiBaoSucKhoe',
       icon: 'file',
       path: '/khaibaosuckhoe',

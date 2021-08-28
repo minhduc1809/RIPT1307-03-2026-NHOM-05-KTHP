@@ -38,12 +38,12 @@ class App extends React.Component {
       const file = input.files[0];
 
       // Up ảnh lên và lấy url
-      const response = await uploadFile(file);
+      const response = await uploadFile({file, filename: 'fileName', public:true});
       // Chèn ảnh vào dưới dạng url
-      callback(response?.data?.data ?? '', {
+      callback(response?.data?.data?.url ?? '', {
         alt: 'image',
         uid: response?.data?.data,
-        name: response?.data?.data.split('/').pop().substring(26),
+        name: response?.data?.data?.file?.filename.split('/').pop().substring(26),
         status: 'done',
         // response?.data?.data,
       });
