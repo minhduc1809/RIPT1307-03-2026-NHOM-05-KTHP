@@ -7,6 +7,7 @@ import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
 import { getInfo, getInfoGV, getInfoSV } from './services/ant-design-pro/api';
+import data from './utils/data';
 
 const loginPath = '/user/login';
 const pathAuth = ['/admin/login'];
@@ -118,6 +119,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         !pathAuth.includes(location.pathname)
       ) {
         history.push(loginPath);
+      } else if (initialState?.currentUser && location.pathname === loginPath) {
+        history.push(
+          data.path[
+            `${initialState?.currentUser?.vai_tro || initialState?.currentUser?.systemRole}`
+          ],
+        );
       }
     },
     menuHeaderRender: undefined,

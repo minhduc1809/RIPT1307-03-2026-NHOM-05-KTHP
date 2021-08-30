@@ -5,6 +5,7 @@ export async function getKhaiBaoYTeAdmin(payload: {
   data: {
     page: number;
     limit: number;
+    condition: any;
   };
 
   id: string;

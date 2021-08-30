@@ -1,7 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
+import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
-import { Button, Divider, Modal, Popconfirm, Select } from 'antd';
+import { Button, Divider, Modal, Popconfirm, Popover, Select, Tooltip } from 'antd';
 import type { ColumnProps } from 'antd/lib/table';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -21,6 +22,9 @@ const TinTuc = () => {
     page,
     limit,
     setChuDe,
+    setCondition,
+    condition,
+    filterInfo,
   } = useModel('tintuc');
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [recordTT, setRecordTT] = useState<TinTuc.Record>({} as TinTuc.Record);
@@ -32,7 +36,7 @@ const TinTuc = () => {
     setEdit(true);
   };
 
-  const columns: ColumnProps<TinTuc.Record>[] = [
+  const columns: IColumn<TinTuc.Record>[] = [
     {
       title: 'STT',
       dataIndex: 'index',
@@ -44,6 +48,7 @@ const TinTuc = () => {
       dataIndex: 'tieuDe',
       align: 'center',
       width: 200,
+      search: 'search',
     },
     {
       title: 'Mô tả',
@@ -53,7 +58,7 @@ const TinTuc = () => {
     },
     {
       title: 'Chủ đề',
-      dataIndex: 'idTopic',
+      dataIndex: ['idTopic', 'name'],
       align: 'center',
       width: 200,
     },
@@ -73,35 +78,46 @@ const TinTuc = () => {
     {
       title: 'Thao tác',
       align: 'center',
-      width: 180,
+      width: 90,
       fixed: 'right',
       render: (record) => (
-        <>
-          <Button
-            onClick={() => {
-              setVisibleModal(true);
-              setRecordTT(record);
-            }}
-            type="default"
-            shape="circle"
-          >
-            <EyeOutlined />
-          </Button>
-          <Divider type="vertical" />
-          <Button onClick={() => handleEdit(record)} type="default" shape="circle">
-            <EditOutlined />
-          </Button>
-          <Divider type="vertical" />
-
-          <Popconfirm
-            onConfirm={() => delTinTucModel({ id: record._id })}
-            title="Bạn có chắc chắn muốn xóa chủ đề này"
-          >
-            <Button type="primary" shape="circle">
-              <DeleteOutlined />
-            </Button>
-          </Popconfirm>
-        </>
+        <Popover
+          content={
+            <>
+              <Tooltip title="Xem chi tiết">
+                <Button
+                  onClick={() => {
+                    setVisibleModal(true);
+                    setRecordTT(record);
+                  }}
+                  type="primary"
+                  shape="circle"
+                >
+                  <EyeOutlined />
+                </Button>
+              </Tooltip>{' '}
+              <Divider type="vertical" />
+              <Tooltip title="Chỉnh sửa">
+                <Button onClick={() => handleEdit(record)} type="default" shape="circle">
+                  <EditOutlined />
+                </Button>
+              </Tooltip>{' '}
+              <Divider type="vertical" />
+              <Tooltip title="Xóa">
+                <Popconfirm
+                  onConfirm={() => delTinTucModel({ id: record._id })}
+                  title="Bạn có chắc chắn muốn xóa chủ đề này"
+                >
+                  <Button type="primary" shape="circle">
+                    <DeleteOutlined />
+                  </Button>
+                </Popconfirm>
+              </Tooltip>
+            </>
+          }
+        >
+          <Button type="primary" icon={<EditOutlined />} />
+        </Popover>
       ),
     },
   ];
@@ -112,6 +128,7 @@ const TinTuc = () => {
 
   const onChangeLoaiTinTuc = (value: string) => {
     setChuDe(value);
+    setCondition({ ...condition, idTopic: value === 'Tất cả' ? undefined : value });
   };
 
   return (
@@ -119,8 +136,10 @@ const TinTuc = () => {
       columns={columns}
       getData={getTinTucModel}
       loading={loading}
-      dependencies={[chuDe, page, limit]}
+      dependencies={[chuDe, page, limit, condition, filterInfo]}
       modelName="tintuc"
+      formType="Drawer"
+      widthDrawer="60%"
       title="Quản lý tin tức"
       Form={Form}
       hascreate
@@ -146,6 +165,7 @@ const TinTuc = () => {
             Đóng
           </Button>
         }
+        onCancel={() => setVisibleModal(false)}
         visible={visibleModal}
       >
         <ViewTinTuc record={recordTT} />

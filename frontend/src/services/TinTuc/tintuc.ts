@@ -1,12 +1,8 @@
 import axios from '@/utils/axios';
 import { ip3 } from '@/utils/constants';
 
-export async function getTinTuc(idTopic: string, page: number, limit: number) {
-  return axios.get(
-    `${ip3}/tin-tuc/pageable?page=${page}&limit=${limit}${
-      idTopic !== 'Tất cả' ? `&idTopic=${idTopic}` : ''
-    }`,
-  );
+export async function getTinTuc(payload: { page: number; limit: number; condition?: any }) {
+  return axios.get(`${ip3}/tin-tuc/pageable`, { params: payload });
 }
 
 export async function putTinTuc(payload: { id: string; data: TinTuc.Record }) {

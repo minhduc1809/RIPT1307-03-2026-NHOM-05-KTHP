@@ -97,7 +97,7 @@ export default defineConfig({
     // },
     {
       name: 'DanhMuc',
-      icon: 'file',
+      icon: 'container',
       path: '/danhmuc',
       access: 'admin',
       routes: [
@@ -117,7 +117,7 @@ export default defineConfig({
     },
     {
       name: 'BieuMau',
-      icon: 'file',
+      icon: 'fileDone',
       path: '/bieumau',
       access: 'admin',
       routes: [
@@ -131,21 +131,21 @@ export default defineConfig({
     },
     {
       name: 'PhanHoi',
-      icon: 'file',
+      icon: 'QuestionOutlined',
       path: '/phanhoi',
       access: 'admin',
       component: './PhanHoi',
     },
     {
       name: 'VanBanHuongDan',
-      icon: 'file',
+      icon: 'FileText',
       path: '/vanbanhuongdan',
       access: 'admin',
       component: './VanBanHuongDan',
     },
     {
       name: 'KhaiBaoSucKhoe',
-      icon: 'file',
+      icon: 'Environment',
       path: '/khaibaosuckhoe',
       access: 'admin',
       component: './KhaiBaoSucKhoe',
@@ -165,7 +165,7 @@ export default defineConfig({
     },
     {
       name: 'News',
-      icon: 'FileDoneOutlined',
+      icon: 'NotificationOutlined',
       path: '/quan-ly-tin-tuc',
       component: './QuanLyTinTuc',
     },
@@ -181,6 +181,7 @@ export default defineConfig({
       icon: 'team',
       path: '/loptinchi',
       component: './LopTinChi',
+      access: 'sinhVienVaGiangVien',
     },
     {
       name: 'LopHanhChinh',
@@ -199,7 +200,7 @@ export default defineConfig({
     },
     {
       path: '/',
-      redirect: '/chuongtrinhkhung',
+      redirect: '/user/login',
     },
     {
       component: '404',

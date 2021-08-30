@@ -14,7 +14,7 @@ export default () => {
       links={[
         {
           key: 'github',
-          title: 'Học viện Công nghệ Bưu Chính Viễn thông',
+          title: 'Học viện Công nghệ Bưu chính Viễn thông',
           href: 'https://portal.ptit.edu.vn/',
           blankTarget: true,
         },

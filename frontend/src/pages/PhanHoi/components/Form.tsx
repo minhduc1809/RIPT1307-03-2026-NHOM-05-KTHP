@@ -25,7 +25,7 @@ const FormPhanHoi = () => {
             name="noiDungTraLoi"
             label="Nội dung trả lời"
             initialValue={record?.noiDungTraLoi}
-            rules={[...rules.required, ...rules.text]}
+            rules={[...rules.required, ...rules.text, ...rules.length(2000)]}
           >
             <Input.TextArea rows={4} placeholder="Nhập nội dung" />
           </Form.Item>

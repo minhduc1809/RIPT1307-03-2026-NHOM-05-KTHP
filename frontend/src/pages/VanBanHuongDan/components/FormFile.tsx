@@ -10,13 +10,14 @@ import { useModel } from 'umi';
 const FormFile = () => {
   const [form] = Form.useForm();
 
-  const { loading, record, setVisibleFormFile, editFile, putThuMucModel, recordFile } =
+  const { loading, record, setVisibleFormFile, editFile, putThuMucModel, recordFile, setLoading } =
     useModel('vanbanhuongdan');
   return (
     <Card title={editFile ? 'Chỉnh sửa' : 'Thêm mới'}>
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values: VanBanHuongDan.TepTin) => {
+          setLoading(true);
           if (values?.taiLieu?.fileList?.[0]?.url) {
             values.url = values?.taiLieu?.fileList?.[0]?.url;
           } else {

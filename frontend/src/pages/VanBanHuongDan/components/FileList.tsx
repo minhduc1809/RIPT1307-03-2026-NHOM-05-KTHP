@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { useModel } from 'umi';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PaperClipOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Divider, Modal, Popconfirm, Table, Tooltip } from 'antd';
 import Form from './FormFile';
 
@@ -61,9 +61,10 @@ const FileList = (props: { data: VanBanHuongDan.TepTin[] }) => {
             title: 'Tệp đính kèm',
             align: 'center',
             dataIndex: 'url',
-            render: (val) => (
+            render: (val, recordFile) => (
               <a href={val} target="_blank">
-                {val?.split('-')?.pop()}
+                <PaperClipOutlined />
+                {recordFile.ten}
               </a>
             ),
           },
@@ -106,6 +107,7 @@ const FileList = (props: { data: VanBanHuongDan.TepTin[] }) => {
         })}
       />
       <Modal
+        maskClosable={false}
         destroyOnClose
         footer={false}
         onCancel={() => setVisibleFormFile(false)}

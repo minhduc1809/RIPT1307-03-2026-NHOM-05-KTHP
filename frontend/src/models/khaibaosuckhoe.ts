@@ -8,7 +8,8 @@ import { useState } from 'react';
 
 export default () => {
   const [danhSach, setDanhSach] = useState<KhaiBaoSucKhoe.Record[]>([]);
-
+  const [filterInfo, setFilterInfo] = useState<any>({});
+  const [condition, setCondition] = useState<any>({});
   const [bieuMau, setBieuMau] = useState<BieuMau.Record>({} as BieuMau.Record);
   const [record, setRecord] = useState<KhaiBaoSucKhoe.Record>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -27,7 +28,10 @@ export default () => {
   const getKhaiBaoYTeAdminModel = async () => {
     if (!bieuMau?._id) return;
     setLoading(true);
-    const response = await getKhaiBaoYTeAdmin({ data: { page, limit }, id: bieuMau?._id });
+    const response = await getKhaiBaoYTeAdmin({
+      data: { page, limit, condition },
+      id: bieuMau?._id,
+    });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);
@@ -41,6 +45,10 @@ export default () => {
 
   return {
     getLichSuKhaiBaoModel,
+    filterInfo,
+    condition,
+    setFilterInfo,
+    setCondition,
     getKhaiBaoYTeAdminModel,
     bieuMau,
     setRecord,

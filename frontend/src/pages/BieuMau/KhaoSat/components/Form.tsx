@@ -46,18 +46,19 @@ const FormBaiHoc = () => {
         <Form.Item
           name="moTa"
           label="Mô tả"
-          // rules={[...rules.required]}
+          rules={[...rules.length(255)]}
           initialValue={record?.moTa}
         >
           <Input.TextArea rows={3} placeholder="Tiêu đề" />
         </Form.Item>
         <Form.Item
           name="thoiGian"
-          label="Thời gian bắt đầu - kết thúc"
+          label="Thời gian bắt đầu - Thời gian kết thúc"
           // rules={[...rules.required]}
           initialValue={edit ? [moment(record.thoiGianBatDau), moment(record.thoiGianKetThuc)] : []}
         >
           <DatePicker.RangePicker
+            disabledDate={(cur) => moment(cur).isBefore(moment())}
             style={{ width: '100%' }}
             placeholder={['Thời gian bắt đầu', 'Thời gian kết thúc']}
             showTime
@@ -142,7 +143,7 @@ const FormBaiHoc = () => {
             {
               validator: async (_, names) => {
                 if (!names || names.length < 1) {
-                  return Promise.reject(new Error('Ít nhất 1 khôi'));
+                  return Promise.reject(new Error('Ít nhất 1 khối'));
                 }
                 return '';
               },

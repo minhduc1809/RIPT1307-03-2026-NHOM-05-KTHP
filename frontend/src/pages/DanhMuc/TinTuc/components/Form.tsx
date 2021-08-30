@@ -80,7 +80,7 @@ const FormTinTuc = () => {
           name="urlAnhDaiDien"
           label="Ảnh đại diện"
           initialValue={renderFileListUrl(record?.urlAnhDaiDien)}
-          rules={[{ required: true }]}
+          rules={[...rules.fileRequired]}
         >
           <UploadAvatar
             style={{
@@ -94,7 +94,18 @@ const FormTinTuc = () => {
         <Form.Item
           name="noiDung"
           label="Nội dung"
-          rules={[...rules.required]}
+          rules={[
+            {
+              validator: (ece, value, callback) => {
+                const { text } = value;
+                if (!text || !text.length || !text[0]) {
+                  callback('');
+                }
+                callback();
+              },
+              message: 'Hãy nhập nội dung',
+            },
+          ]}
           initialValue={{ text: record?.noiDung || '' }}
         >
           <TinyEditor height={650} />

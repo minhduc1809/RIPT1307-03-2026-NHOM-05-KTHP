@@ -5,7 +5,7 @@ import { useState } from 'react';
 export default () => {
   const [danhSach, setDanhSach] = useState<PhanHoi.Record[]>([]);
   const [record, setRecord] = useState<PhanHoi.Record>({} as PhanHoi.Record);
-  const [daTraLoi, setDaTraLoi] = useState<boolean>(true);
+  const [daTraLoi, setDaTraLoi] = useState<boolean>(false);
   const [vaiTro, setVaiTro] = useState<string>('sinh_vien');
   const [loading, setLoading] = useState<boolean>(true);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);

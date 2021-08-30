@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer';
 import { login, getInfoSV, getInfoGV } from '@/services/ant-design-pro/api';
+import rules from '@/utils/rules';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { ConfigProvider, message, Tabs } from 'antd';
@@ -29,7 +30,7 @@ const Login: React.FC = () => {
     setSubmitting(true);
     try {
       const msg = await login({ ...values });
-      if (msg.statusCode === 201 && msg?.data?.accessToken) {
+      if (msg.status === 201 && msg?.data?.data?.accessToken) {
         const defaultloginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: 'success',
@@ -40,14 +41,14 @@ const Login: React.FC = () => {
         // setInitialState({
         //   ...initialState,
         // });
-        localStorage.setItem('token', msg?.data?.accessToken);
+        localStorage.setItem('token', msg?.data?.data?.accessToken);
 
-        localStorage.setItem('vaiTro', msg?.data.user.vai_tro);
+        localStorage.setItem('vaiTro', msg?.data?.data?.user.vai_tro);
         let info;
 
-        if (msg?.data.user.vai_tro === 'giang_vien') {
+        if (msg?.data?.data.user.vai_tro === 'giang_vien') {
           info = await getInfoGV();
-        } else if (msg?.data.user.vai_tro === 'sinh_vien') {
+        } else if (msg?.data?.data.user.vai_tro === 'sinh_vien') {
           info = await getInfoSV();
         }
 
@@ -61,14 +62,11 @@ const Login: React.FC = () => {
 
         return;
       }
-      //
-      // setUserLoginState(msg);
     } catch (error) {
       const defaultloginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
         defaultMessage: 'failure',
       });
-
       message.error(defaultloginFailureMessage);
     }
     setSubmitting(false);
@@ -85,9 +83,6 @@ const Login: React.FC = () => {
               <span className={styles.title}>Hệ Thống Đào Tạo Trực Tuyến Từ Xa</span>
             </Link>
           </div>
-          {/* <div className={styles.desc}>
-            {intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
-          </div> */}
         </div>
         <ConfigProvider locale={viVN}>
           <div className={styles.main}>
@@ -135,7 +130,7 @@ const Login: React.FC = () => {
                     }}
                     placeholder={intl.formatMessage({
                       id: 'pages.login.username.placeholder',
-                      defaultMessage: 'placeholder: admin or user',
+                      defaultMessage: 'Nhập tên đăng nhập',
                     })}
                     rules={[
                       {
@@ -147,6 +142,7 @@ const Login: React.FC = () => {
                           />
                         ),
                       },
+                      ...rules.username,
                     ]}
                   />
                   <ProFormText.Password
@@ -169,14 +165,11 @@ const Login: React.FC = () => {
                           />
                         ),
                       },
+                      ...rules.password,
                     ]}
                   />
                 </>
               )}
-
-              {/* {status === 'error' && loginType === 'mobile' && (
-                <LoginMessage content="LoginMessage" />
-              )} */}
             </ProForm>
           </div>
         </ConfigProvider>

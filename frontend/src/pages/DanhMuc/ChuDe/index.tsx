@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
+import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Divider, Popconfirm, Select } from 'antd';
-import type { ColumnProps } from 'antd/lib/table';
+import { Button, Divider, Popconfirm, Select, Tooltip } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import Form from './components/Form';
@@ -20,6 +20,8 @@ const LopTinChi = () => {
     setRecord,
     page,
     limit,
+    condition,
+    filterInfo,
     setLoaiChuDe,
   } = useModel('chude');
 
@@ -29,7 +31,7 @@ const LopTinChi = () => {
     setEdit(true);
   };
 
-  const columns: ColumnProps<ChuDe.Record>[] = [
+  const columns: IColumn<ChuDe.Record>[] = [
     {
       title: 'STT',
       dataIndex: 'index',
@@ -41,12 +43,14 @@ const LopTinChi = () => {
       dataIndex: '_id',
       align: 'center',
       width: 200,
+      search: 'search',
     },
     {
-      title: 'Tên chủ để',
+      title: 'Tên chủ đề',
       dataIndex: 'name',
       align: 'center',
       width: 200,
+      search: 'search',
     },
     {
       title: 'Loại chủ đề',
@@ -66,19 +70,22 @@ const LopTinChi = () => {
       width: 120,
       render: (record) => (
         <>
-          <Button onClick={() => handleEdit(record)} type="default" shape="circle">
-            <EditOutlined />
-          </Button>
-          <Divider type="vertical" />
-
-          <Popconfirm
-            onConfirm={() => delChuDeModel({ id: record._id })}
-            title="Bạn có chắc chắn muốn xóa chủ đề này"
-          >
-            <Button type="primary" shape="circle">
-              <DeleteOutlined />
+          <Tooltip title="Chỉnh sửa">
+            <Button onClick={() => handleEdit(record)} type="default" shape="circle">
+              <EditOutlined />
             </Button>
-          </Popconfirm>
+          </Tooltip>
+          <Divider type="vertical" />
+          <Tooltip title="Xóa">
+            <Popconfirm
+              onConfirm={() => delChuDeModel({ id: record._id })}
+              title="Bạn có chắc chắn muốn xóa chủ đề này"
+            >
+              <Button type="primary" shape="circle">
+                <DeleteOutlined />
+              </Button>
+            </Popconfirm>
+          </Tooltip>
         </>
       ),
     },
@@ -98,7 +105,7 @@ const LopTinChi = () => {
       getData={getChuDeModel}
       loading={loading}
       hascreate
-      dependencies={[loaiChuDe, page, limit]}
+      dependencies={[loaiChuDe, page, limit, condition, filterInfo]}
       modelName="chude"
       title="Chủ đề chung"
       Form={Form}

@@ -13,6 +13,8 @@ import { useState } from 'react';
 export default () => {
   const [danhSach, setDanhSach] = useState<BieuMau.Record[]>([]);
   const [loaiBieuMau, setLoaiBieuMau] = useState<string | undefined>(undefined);
+  const [filterInfo, setFilterInfo] = useState<any>({});
+  const [condition, setCondition] = useState<any>({});
   const [record, setRecord] = useState<BieuMau.Record>({} as BieuMau.Record);
   const [loading, setLoading] = useState<boolean>(true);
   const [edit, setEdit] = useState<boolean>(false);
@@ -22,7 +24,7 @@ export default () => {
   const [limit, setLimit] = useState<number>(10);
   const getBieuMauAdminModel = async () => {
     setLoading(true);
-    const response = await getBieuMauAdmin({ page, limit, loai: loaiBieuMau });
+    const response = await getBieuMauAdmin({ page, limit, condition });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.total);
     setLoading(false);
@@ -77,6 +79,10 @@ export default () => {
 
   return {
     getBieuMauAdminModel,
+    filterInfo,
+    condition,
+    setCondition,
+    setFilterInfo,
     kichHoatBieuMauModel,
     getBieuMauByIdModel,
     getBieuMauUserModel,

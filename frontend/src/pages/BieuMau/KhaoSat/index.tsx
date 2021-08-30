@@ -1,7 +1,8 @@
+/* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
+import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Divider, Popconfirm, Popover, Switch, Tooltip } from 'antd';
-import type { ColumnProps } from 'antd/lib/table';
 import moment from 'moment';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
@@ -10,6 +11,7 @@ import Form from './components/Form';
 const KhaoSat = () => {
   const {
     getBieuMauAdminModel,
+    delBieuMauModel,
     setLoaiBieuMau,
     loaiBieuMau,
     loading,
@@ -19,6 +21,7 @@ const KhaoSat = () => {
     setRecord,
     setVisibleForm,
     kichHoatBieuMauModel,
+    condition,
   } = useModel('bieumau');
 
   useEffect(() => {
@@ -32,11 +35,10 @@ const KhaoSat = () => {
   };
 
   const handleChangeStatus = (record: BieuMau.Record) => {
-    // eslint-disable-next-line no-underscore-dangle
     kichHoatBieuMauModel({ id: record._id, data: { kichHoat: !record.kichHoat } });
   };
 
-  const columns: ColumnProps<BieuMau.Record>[] = [
+  const columns: IColumn<BieuMau.Record>[] = [
     {
       title: 'STT',
       dataIndex: 'index',
@@ -47,6 +49,7 @@ const KhaoSat = () => {
       title: 'Tiêu đề',
       dataIndex: 'tieuDe',
       align: 'center',
+      search: 'search',
       width: 200,
     },
     {
@@ -72,6 +75,8 @@ const KhaoSat = () => {
     {
       title: 'Đối tượng',
       dataIndex: 'doiTuong',
+      search: 'filterString',
+      notRegex: true,
       align: 'center',
       width: 200,
     },
@@ -110,7 +115,7 @@ const KhaoSat = () => {
               <Divider type="vertical" />
               <Tooltip title="Xóa">
                 <Popconfirm
-                  // onConfirm={() => delChuDeModel({ id: record._id })}
+                  onConfirm={() => delBieuMauModel({ id: record._id })}
                   title="Bạn có chắc chắn muốn xóa khảo sát này"
                 >
                   <Button type="primary" shape="circle">
@@ -132,7 +137,7 @@ const KhaoSat = () => {
       columns={columns}
       getData={getBieuMauAdminModel}
       loading={loading}
-      dependencies={[loaiBieuMau, page, limit]}
+      dependencies={[loaiBieuMau, page, limit, condition]}
       modelName="bieumau"
       title="Khảo sát"
       hascreate

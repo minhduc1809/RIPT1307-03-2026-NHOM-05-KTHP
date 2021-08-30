@@ -1,10 +1,10 @@
-import component from './en-US/component';
-import globalHeader from './en-US/globalHeader';
-import menu from './en-US/menu';
-import pages from './en-US/pages';
-import pwa from './en-US/pwa';
-import settingDrawer from './en-US/settingDrawer';
-import settings from './en-US/settings';
+import component from './vi-VN/component';
+import globalHeader from './vi-VN/globalHeader';
+import menu from './vi-VN/menu';
+import pages from './vi-VN/pages';
+import pwa from './vi-VN/pwa';
+import settingDrawer from './vi-VN/settingDrawer';
+import settings from './vi-VN/settings';
 
 export default {
   'navBar.lang': 'Languages',

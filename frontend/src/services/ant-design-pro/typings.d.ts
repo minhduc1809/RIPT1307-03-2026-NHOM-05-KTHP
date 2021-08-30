@@ -310,6 +310,7 @@ declare module IInfoSV {
     username: string;
     email: string;
     systemRole: string;
+    vai_tro: string;
   }
 
   export interface RootObject {
@@ -602,6 +603,7 @@ declare module IInfoGV {
     username: string;
     email: string;
     systemRole: string;
+    vai_tro: string;
   }
 
   export interface RootObject {

@@ -1,11 +1,11 @@
-import { getTinTuc, putTinTuc, addTinTuc, delTinTuc } from '@/services/TinTuc/tintuc';
+import { addTinTuc, delTinTuc, getTinTuc, putTinTuc } from '@/services/TinTuc/tintuc';
 import { message } from 'antd';
 import { useState } from 'react';
-import chude from './chude';
 
 export default () => {
   const [danhSach, setDanhSach] = useState<TinTuc.Record[]>([]);
-
+  const [filterInfo, setFilterInfo] = useState<any>({});
+  const [condition, setCondition] = useState<any>({});
   const [chuDe, setChuDe] = useState<string>('Tất cả');
   const [record, setRecord] = useState<TinTuc.Record>({} as TinTuc.Record);
   const [loading, setLoading] = useState<boolean>(true);
@@ -17,7 +17,11 @@ export default () => {
 
   const getTinTucModel = async () => {
     setLoading(true);
-    const response = await getTinTuc(chuDe, page, limit);
+    const response = await getTinTuc({
+      page,
+      limit,
+      condition,
+    });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);
@@ -49,6 +53,10 @@ export default () => {
   };
 
   return {
+    filterInfo,
+    setFilterInfo,
+    condition,
+    setCondition,
     setRecord,
     addTinTucModel,
     putTinTucModel,

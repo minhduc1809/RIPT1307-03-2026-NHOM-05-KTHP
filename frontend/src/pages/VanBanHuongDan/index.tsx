@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, List, Modal, Popconfirm, Typography } from 'antd';
+import { Avatar, Button, Card, List, Modal, Popconfirm, Tooltip, Typography } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import Form from './components/Form';
@@ -112,21 +112,24 @@ const VanBanHuongDan = () => {
             <List.Item
               onMouseOut={(e) => handleOnMouseOut(e.target)}
               onMouseOver={(e) => handleOnMouseOver(e.target)}
-              onClick={() => showFileList(item)}
               actions={[
-                <Button
-                  shape="circle"
-                  icon={<EditOutlined />}
-                  title="Sửa"
-                  onClick={() => handleEdit(item)}
-                />,
-                <Popconfirm
-                  title="Bạn có chắc muốn xóa?"
-                  // eslint-disable-next-line no-underscore-dangle
-                  onConfirm={() => handleDel(item._id)}
-                >
-                  <Button type="primary" shape="circle" icon={<DeleteOutlined />} title="Xóa" />
-                </Popconfirm>,
+                <Tooltip title="Chỉnh sửa">
+                  <Button
+                    shape="circle"
+                    icon={<EditOutlined />}
+                    title="Sửa"
+                    onClick={() => handleEdit(item)}
+                  />
+                </Tooltip>,
+                <Tooltip title="Xóa">
+                  <Popconfirm
+                    title="Bạn có chắc muốn xóa?"
+                    // eslint-disable-next-line no-underscore-dangle
+                    onConfirm={() => handleDel(item._id)}
+                  >
+                    <Button type="primary" shape="circle" icon={<DeleteOutlined />} title="Xóa" />
+                  </Popconfirm>
+                </Tooltip>,
               ]}
             >
               <List.Item.Meta
@@ -137,11 +140,11 @@ const VanBanHuongDan = () => {
                   />
                 }
                 title={
-                  <div style={{ display: 'flex' }}>
+                  <div onClick={() => showFileList(item)} style={{ display: 'flex' }}>
                     <Typography.Text strong>{`${item.ten || 'CHƯA ĐẶT TÊN'}`}</Typography.Text>
                   </div>
                 }
-                description={<div>{item.moTa || ''}</div>}
+                description={<div onClick={() => showFileList(item)}>{item.moTa || ''}</div>}
               />
             </List.Item>
           )}
@@ -170,7 +173,7 @@ const VanBanHuongDan = () => {
         onCancel={() => setVisibleFileList(false)}
         visible={visibleFileList}
       >
-        <FileList data={record.danhSachTep} />
+        <FileList data={record.danhSachTep?.reverse()} />
       </Modal>
     </>
   );

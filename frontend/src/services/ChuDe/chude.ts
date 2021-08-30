@@ -9,12 +9,13 @@ export async function getAllChuDe() {
   return axios.get(`${ip3}/common-topic/all`);
 }
 
-export async function getChuDe(type: string, page: number, limit: number) {
-  return axios.get(
-    `${ip3}/common-topic/pageable?page=${page}&limit=${limit}${
-      type !== 'Tất cả' ? `&type=${type}` : ''
-    }`,
-  );
+export async function getChuDe(payload: {
+  type: string;
+  page: number;
+  limit: number;
+  condition?: any;
+}) {
+  return axios.get(`${ip3}/common-topic/pageable`, { params: payload });
 }
 
 export async function putChuDe(payload: { id: string; data: ChuDe.Record }) {

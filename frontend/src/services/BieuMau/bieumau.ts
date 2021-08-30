@@ -1,7 +1,7 @@
 import axios from '@/utils/axios';
 import { ip3 } from '@/utils/constants';
 
-export async function getBieuMauAdmin(payload: { page: number; limit: number; loai?: string }) {
+export async function getBieuMauAdmin(payload: { page: number; limit: number; condition: any }) {
   return axios.get(`${ip3}/bieu-mau/pageable`, { params: payload });
 }
 

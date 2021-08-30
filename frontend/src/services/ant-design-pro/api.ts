@@ -1,5 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
+import axios from '@/utils/axios';
 import { ip, ip3 } from '@/utils/constants';
 import { request } from 'umi';
 
@@ -93,20 +94,12 @@ export async function getCalendar(
   });
 }
 
-export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<IRecordLogin.RootObject>(`${ip}/odoo-user-service/odoo-auth/login/web`, {
-    method: 'POST',
-    data: body,
-    ...(options || {}),
-  });
+export async function login(payload: { login?: string; password?: string }) {
+  return axios.post(`${ip3}/odoo-auth/login/web`, payload);
 }
 
-export async function adminlogin(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<IRecordLogin.RootObject>(`${ip3}/auth/login/web`, {
-    method: 'POST',
-    data: body,
-    ...(options || {}),
-  });
+export async function adminlogin(payload: { login?: string; password?: string }) {
+  return axios.post(`${ip3}/auth/login/web`, payload);
 }
 
 /**  GET /api/notices */

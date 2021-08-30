@@ -58,6 +58,7 @@ export default () => {
   };
 
   return {
+    setLoading,
     setRecord,
     recordFile,
     setRecordFile,
