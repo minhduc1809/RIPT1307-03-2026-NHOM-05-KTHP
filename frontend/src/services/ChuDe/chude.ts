@@ -9,12 +9,7 @@ export async function getAllChuDe() {
   return axios.get(`${ip3}/common-topic/all`);
 }
 
-export async function getChuDe(payload: {
-  type: string;
-  page: number;
-  limit: number;
-  condition?: any;
-}) {
+export async function getChuDe(payload: { page: number; limit: number; condition?: any }) {
   return axios.get(`${ip3}/common-topic/pageable`, { params: payload });
 }
 

@@ -1,13 +1,7 @@
 import axios from '@/utils/axios';
 import { ip3 } from '@/utils/constants';
 
-export async function getPhanHoiAdmin(payload: {
-  page: number;
-  limit: number;
-  daTraLoi?: boolean;
-  vaiTro?: string;
-  condition?: any;
-}) {
+export async function getPhanHoiAdmin(payload: { page: number; limit: number; condition?: any }) {
   return axios.get(`${ip3}/phan-hoi/pageable`, { params: payload });
 }
 

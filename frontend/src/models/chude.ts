@@ -31,7 +31,11 @@ export default () => {
   };
   const getChuDeModel = async () => {
     setLoading(true);
-    const response = await getChuDe({ type: loaiChuDe, page, limit, condition });
+    const response = await getChuDe({
+      page,
+      limit,
+      condition: { ...condition, type: loaiChuDe === 'Tất cả' ? undefined : loaiChuDe },
+    });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);

@@ -1,5 +1,5 @@
 import rules from '@/utils/rules';
-import { Col, Form, InputNumber, Row } from 'antd';
+import { Col, Form, InputNumber, Row, Select } from 'antd';
 
 const formItemLayout = {
   labelCol: {
@@ -23,7 +23,13 @@ const NumericRange = (props: { index: number }) => {
           style={{ marginBottom: 0 }}
           label="Từ"
         >
-          <InputNumber style={{ width: '100%' }} />
+          <Select>
+            {[0, 1].map((item) => (
+              <Select.Option key={item} value={item}>
+                {item}
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
       </Col>
       <Col span={12}>
@@ -34,7 +40,13 @@ const NumericRange = (props: { index: number }) => {
           name={[props.index, 'gioiHanTrenTuyenTinh']}
           style={{ marginBottom: 0 }}
         >
-          <InputNumber style={{ width: '100%' }} />
+          <Select>
+            {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
+              <Select.Option key={item} value={item}>
+                {item}
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
       </Col>
     </Row>

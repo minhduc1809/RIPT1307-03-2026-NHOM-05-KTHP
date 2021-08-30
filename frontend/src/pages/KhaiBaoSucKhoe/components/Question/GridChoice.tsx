@@ -6,7 +6,7 @@ import type { ColumnProps } from 'antd/lib/table';
 const GridChoice = (props: {
   hang: { _id: string; noiDung: string }[];
   cot: { _id: string; noiDung: string }[];
-  dapAn: KhaiBaoSucKhoe.LuaChonBangRecord[];
+  dapAn?: KhaiBaoSucKhoe.LuaChonBangRecord[];
 }) => {
   const columns: ColumnProps<any>[] = [
     {

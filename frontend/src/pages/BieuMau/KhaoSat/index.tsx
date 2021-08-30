@@ -1,12 +1,14 @@
 /* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Button, Divider, Popconfirm, Popover, Switch, Tooltip } from 'antd';
 import moment from 'moment';
+import { useState } from 'react';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import Form from './components/Form';
+import FormViewDetail from './components/FormViewDetail';
 
 const KhaoSat = () => {
   const {
@@ -22,13 +24,15 @@ const KhaoSat = () => {
     setVisibleForm,
     kichHoatBieuMauModel,
     condition,
+    edit,
   } = useModel('bieumau');
-
+  const [form, setForm] = useState<string>('edit');
   useEffect(() => {
     setLoaiBieuMau('Khảo sát');
   }, []);
 
   const handleEdit = (record: BieuMau.Record) => {
+    setForm('edit');
     setEdit(true);
     setRecord(record);
     setVisibleForm(true);
@@ -106,6 +110,22 @@ const KhaoSat = () => {
         <Popover
           content={
             <>
+              <Tooltip title="Xem trước">
+                <Button
+                  onClick={() => {
+                    setForm('view');
+                    setVisibleForm(true);
+                    setEdit(true);
+                    setRecord(record);
+                  }}
+                  type="primary"
+                  shape="circle"
+                >
+                  <EyeOutlined />
+                </Button>
+              </Tooltip>
+
+              <Divider type="vertical" />
               <Tooltip title="Chỉnh sửa">
                 <Button onClick={() => handleEdit(record)} type="default" shape="circle">
                   <EditOutlined />
@@ -144,7 +164,7 @@ const KhaoSat = () => {
       formType="Drawer"
       widthDrawer="60%"
       // scroll={{ x: 1200 }}
-      Form={Form}
+      Form={form === 'edit' || !edit ? Form : FormViewDetail}
     ></TableBase>
   );
 };

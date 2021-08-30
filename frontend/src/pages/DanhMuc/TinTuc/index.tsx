@@ -3,7 +3,6 @@ import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Button, Divider, Modal, Popconfirm, Popover, Select, Tooltip } from 'antd';
-import type { ColumnProps } from 'antd/lib/table';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';

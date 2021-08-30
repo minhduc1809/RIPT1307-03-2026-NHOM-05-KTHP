@@ -1,4 +1,4 @@
-import { getSuKienSinhVienByNam } from '@/services/sukien/sukien';
+import { getSuKienUserByNam } from '@/services/sukien/sukien';
 import { useState } from 'react';
 
 export default () => {
@@ -6,8 +6,8 @@ export default () => {
   const [loading, setLoading] = useState<boolean>(true);
   const getSuKienSinhVienByNamModel = async (year: number) => {
     setLoading(true);
-    const response = await getSuKienSinhVienByNam(year);
-    setDanhSachSuKien(response?.data ?? []);
+    const response = await getSuKienUserByNam(year);
+    setDanhSachSuKien(response?.data?.data ?? []);
     setLoading(false);
   };
 

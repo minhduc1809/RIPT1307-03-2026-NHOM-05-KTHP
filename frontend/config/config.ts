@@ -145,7 +145,7 @@ export default defineConfig({
     },
     {
       name: 'KhaiBaoSucKhoe',
-      icon: 'Environment',
+      icon: 'FormOutlined',
       path: '/khaibaosuckhoe',
       access: 'admin',
       component: './KhaiBaoSucKhoe',
@@ -162,12 +162,14 @@ export default defineConfig({
       icon: 'CalendarOutlined',
       path: '/calendar',
       component: './Calendar',
+      access: 'sinhVienVaGiangVien',
     },
     {
       name: 'News',
       icon: 'NotificationOutlined',
       path: '/quan-ly-tin-tuc',
       component: './QuanLyTinTuc',
+      access: 'sinhVienVaGiangVien',
     },
     {
       name: 'Structure',

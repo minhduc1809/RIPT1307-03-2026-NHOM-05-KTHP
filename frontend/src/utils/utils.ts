@@ -1,10 +1,19 @@
 /* eslint-disable no-return-assign */
-import { map } from 'lodash';
 import moment from 'moment';
 
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
 const reg =
   /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
+
+const map = {
+  a: '[aàáâãăăạảấầẩẫậắằẳẵặ]',
+  e: '[eèéẹẻẽêềềểễệế]',
+  i: '[iìíĩỉị]',
+  o: '[oòóọỏõôốồổỗộơớờởỡợ]',
+  u: '[uùúũụủưứừửữự]',
+  y: '[yỳỵỷỹý]',
+  ' ': ' ',
+};
 
 export const isUrl = (path: string): boolean => reg.test(path);
 
@@ -71,13 +80,10 @@ export function tinhNgayTheoTuan(
     .add(thu - 1, 'days');
 }
 
-function render(value: any) {
+function render(value: string) {
   // phục vụ hàm toRegex bên dưới
   let result = '';
-  [...value].forEach(
-    (char) =>
-      (result += map[char] || ("$&+,:;=?@#|'<>.^*()%!-".includes(char) && `\\${char}`) || char),
-  );
+  [...value].forEach((char) => (result += map[char] || char));
   return result;
 }
 
@@ -87,7 +93,7 @@ function render(value: any) {
 //   hoTen: toRegex('h')
 // }
 
-export function Format(str: { toString: () => string }) {
+export function Format(str: string) {
   // xóa hết dấu + đưa về chữ thường
   if (!str) return '';
   return str

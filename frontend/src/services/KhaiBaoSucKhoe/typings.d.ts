@@ -11,6 +11,7 @@ declare module KhaiBaoSucKhoe {
     traLoiText: string;
     _id: string;
     idCauHoi: string;
+    luaChonTuyenTinh: number;
   }
 
   export interface Record {

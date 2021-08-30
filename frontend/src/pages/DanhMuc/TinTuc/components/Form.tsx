@@ -105,6 +105,7 @@ const FormTinTuc = () => {
               },
               message: 'Hãy nhập nội dung',
             },
+            ...rules.required,
           ]}
           initialValue={{ text: record?.noiDung || '' }}
         >

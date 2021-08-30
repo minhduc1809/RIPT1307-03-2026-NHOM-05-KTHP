@@ -16,7 +16,11 @@ export default () => {
   const [limit, setLimit] = useState<number>(10);
   const getPhanHoiAdminModel = async () => {
     setLoading(true);
-    const response = await getPhanHoiAdmin({ page, limit, daTraLoi, vaiTro, condition });
+    const response = await getPhanHoiAdmin({
+      page,
+      limit,
+      condition: { ...condition, daTraLoi, vaiTro },
+    });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.total);
     setLoading(false);
