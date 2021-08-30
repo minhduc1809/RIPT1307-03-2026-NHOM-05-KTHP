@@ -6,6 +6,7 @@ export async function getPhanHoiAdmin(payload: {
   limit: number;
   daTraLoi?: boolean;
   vaiTro?: string;
+  condition?: any;
 }) {
   return axios.get(`${ip3}/phan-hoi/pageable`, { params: payload });
 }

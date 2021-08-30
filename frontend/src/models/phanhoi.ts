@@ -5,6 +5,8 @@ import { useState } from 'react';
 export default () => {
   const [danhSach, setDanhSach] = useState<PhanHoi.Record[]>([]);
   const [record, setRecord] = useState<PhanHoi.Record>({} as PhanHoi.Record);
+  const [filterInfo, setFilterInfo] = useState<any>({});
+  const [condition, setCondition] = useState<any>({});
   const [daTraLoi, setDaTraLoi] = useState<boolean>(false);
   const [vaiTro, setVaiTro] = useState<string>('sinh_vien');
   const [loading, setLoading] = useState<boolean>(true);
@@ -14,7 +16,7 @@ export default () => {
   const [limit, setLimit] = useState<number>(10);
   const getPhanHoiAdminModel = async () => {
     setLoading(true);
-    const response = await getPhanHoiAdmin({ page, limit, daTraLoi, vaiTro });
+    const response = await getPhanHoiAdmin({ page, limit, daTraLoi, vaiTro, condition });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.total);
     setLoading(false);
@@ -30,6 +32,10 @@ export default () => {
   };
 
   return {
+    filterInfo,
+    condition,
+    setFilterInfo,
+    setCondition,
     daTraLoi,
     vaiTro,
     getPhanHoiAdminModel,

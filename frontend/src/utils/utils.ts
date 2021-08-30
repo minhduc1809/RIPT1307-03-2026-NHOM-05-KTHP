@@ -160,3 +160,8 @@ export function renderFileListUrl(url: string) {
     ],
   };
 }
+
+export function includes(str1: string, str2: string) {
+  // str1 có chứa str2 ko
+  return Format(str1).includes(Format(str2));
+}

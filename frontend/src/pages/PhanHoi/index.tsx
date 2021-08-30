@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
+import type { IColumn } from '@/utils/interfaces';
 import { EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Button, Select, Tooltip } from 'antd';
 import type { ColumnProps } from 'antd/lib/table';
@@ -19,6 +20,7 @@ const PhanHoi = () => {
     getPhanHoiAdminModel,
     daTraLoi,
     vaiTro,
+    condition,
   } = useModel('phanhoi');
 
   const handleEdit = (record: PhanHoi.Record) => {
@@ -26,7 +28,7 @@ const PhanHoi = () => {
     setVisibleForm(true);
   };
 
-  const columns: ColumnProps<PhanHoi.Record>[] = [
+  const columns: IColumn<PhanHoi.Record>[] = [
     {
       title: 'STT',
       dataIndex: 'index',
@@ -37,18 +39,21 @@ const PhanHoi = () => {
       title: `Mã ${vaiTro === 'sinh_vien' ? 'sinh viên' : 'giảng viên'}`,
       dataIndex: 'maSv',
       align: 'center',
+      search: 'search',
       width: 150,
     },
     {
       title: 'Người gửi',
       dataIndex: 'hoTenNguoiPhanHoi',
       align: 'center',
+      search: 'search',
       width: 200,
     },
     {
       title: 'Câu hỏi',
       dataIndex: 'noiDungPhanHoi',
       align: 'center',
+      search: 'search',
       // width: 200,
     },
     {
@@ -97,7 +102,7 @@ const PhanHoi = () => {
       columns={columns}
       getData={getPhanHoiAdminModel}
       loading={loading}
-      dependencies={[vaiTro, daTraLoi, page, limit]}
+      dependencies={[vaiTro, daTraLoi, page, limit, condition]}
       modelName="phanhoi"
       title="Phản hồi"
       Form={Form}
