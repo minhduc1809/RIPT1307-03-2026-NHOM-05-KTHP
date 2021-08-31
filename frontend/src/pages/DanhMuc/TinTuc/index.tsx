@@ -46,18 +46,24 @@ const TinTuc = () => {
       title: 'Tiêu đề',
       dataIndex: 'tieuDe',
       align: 'center',
-      width: 200,
+      // width: 200,
       search: 'search',
     },
     {
       title: 'Mô tả',
       dataIndex: 'moTa',
       align: 'center',
+      // width: 200,
+    },
+    {
+      title: 'Mã chủ đề',
+      dataIndex: 'idTopic',
+      align: 'center',
       width: 200,
     },
     {
       title: 'Chủ đề',
-      dataIndex: ['idTopic', 'name'],
+      dataIndex: ['chuDe', 'name'],
       align: 'center',
       width: 200,
     },
@@ -72,7 +78,7 @@ const TinTuc = () => {
       dataIndex: 'ngayDang',
       render: (val) => <div>{moment(val).format('DD/MM/YYYY')}</div>,
       align: 'center',
-      width: 100,
+      width: 120,
     },
     {
       title: 'Thao tác',
@@ -139,6 +145,7 @@ const TinTuc = () => {
       modelName="tintuc"
       formType="Drawer"
       widthDrawer="60%"
+      scroll={{ x: 1500 }}
       title="Quản lý tin tức"
       Form={Form}
       hascreate
