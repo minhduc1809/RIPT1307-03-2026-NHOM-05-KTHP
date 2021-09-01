@@ -17,6 +17,7 @@ export default defineConfig({
   },
   // https://umijs.org/zh-CN/plugins/plugin-locale
   locale: {
+    // enable: true,
     default: 'vi-VN',
     antd: true,
     // default true, when it is true, will use `navigator.language` overwrite default

@@ -1,5 +1,5 @@
 import rules from '@/utils/rules';
-import { Col, Form, InputNumber, Row, Select } from 'antd';
+import { Col, Form, Row, Select } from 'antd';
 
 const formItemLayout = {
   labelCol: {
