@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 import rules from '@/utils/rules';
 import { CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
@@ -23,8 +24,11 @@ const FormBaiHoc = () => {
           const thoiGianBatDau = values?.thoiGian?.[0] ?? values.thoiGianBatDau;
           const thoiGianKetThuc = values?.thoiGian?.[1] ?? values.thoiGianKetThuc;
           delete values.thoiGian;
-          // eslint-disable-next-line no-underscore-dangle
-          if (edit) putBieuMauModel({ id: record._id, data: values });
+          if (edit)
+            putBieuMauModel({
+              id: record._id,
+              data: { ...values, thoiGianBatDau, thoiGianKetThuc },
+            });
           else
             addBieuMauModel({
               ...values,
@@ -55,9 +59,13 @@ const FormBaiHoc = () => {
           name="thoiGian"
           label="Thời gian bắt đầu - Thời gian kết thúc"
           // rules={[...rules.required]}
-          initialValue={edit ? [moment(record.thoiGianBatDau), moment(record.thoiGianKetThuc)] : []}
+          initialValue={[
+            record?.thoiGianBatDau ? moment(record?.thoiGianBatDau) : undefined,
+            record?.thoiGianKetThuc ? moment(record?.thoiGianKetThuc) : undefined,
+          ]}
         >
           <DatePicker.RangePicker
+            format="HH:mm DD-MM-YYYY"
             disabledDate={(cur) => moment(cur).isBefore(moment())}
             style={{ width: '100%' }}
             placeholder={['Thời gian bắt đầu', 'Thời gian kết thúc']}

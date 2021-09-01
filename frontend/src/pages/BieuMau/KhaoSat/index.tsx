@@ -66,14 +66,14 @@ const KhaoSat = () => {
       title: 'Thời gian bắt đầu',
       dataIndex: 'thoiGianBatDau',
       align: 'center',
-      render: (val) => <div>{moment(val).format('HH:mm DD/MM/YYYY')}</div>,
+      render: (val) => <div>{val ? moment(val).format('HH:mm DD/MM/YYYY') : ''}</div>,
       width: 200,
     },
     {
       title: 'Thời gian kết thúc',
       dataIndex: 'thoiGianKetThuc',
       align: 'center',
-      render: (val) => <div>{moment(val).format('HH:mm DD/MM/YYYY')}</div>,
+      render: (val) => <div>{val ? moment(val).format('HH:mm DD/MM/YYYY') : ''}</div>,
       width: 200,
     },
     {
