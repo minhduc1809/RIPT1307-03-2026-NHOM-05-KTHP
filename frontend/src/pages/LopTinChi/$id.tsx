@@ -1,6 +1,7 @@
 import { TeamOutlined } from '@ant-design/icons';
 import { Breadcrumb, Card, Tabs } from 'antd';
 import { history, useModel } from 'umi';
+import HocLieuSo from './components/HocLieuSo';
 import ThongBao from './components/ThongBao';
 import ThongTinChung from './components/ThongTinChung';
 
@@ -38,6 +39,9 @@ const DetailLopTinChi = ({
         <Tabs.TabPane tab="Kết quả học tập" key="3"></Tabs.TabPane>
         <Tabs.TabPane tab="Thông báo" key="4">
           <ThongBao isGiangVien={isGiangVien} id={id} />
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="Học liệu số" key="5">
+          <HocLieuSo />
         </Tabs.TabPane>
       </Tabs>
     </Card>

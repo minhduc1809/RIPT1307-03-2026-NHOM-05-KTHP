@@ -6,5 +6,6 @@ declare module KyHoc {
     ma_ky_nam_hoc: string;
     thoi_gian_bat_dau: string;
     thoi_gian_ket_thuc: string;
+    soThuTu: number;
   }
 }

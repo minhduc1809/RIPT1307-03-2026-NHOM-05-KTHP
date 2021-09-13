@@ -64,5 +64,6 @@ export default {
   'menu.KhaiBaoSucKhoe': 'Khai báo sức khỏe',
   'menu.BieuMau.KhaoSat': 'Khảo sát',
   'menu.LopHanhChinh': 'Lớp hành chính',
+  'menu.DangKyTinChi': 'Đăng ký tín chỉ',
   'menu.dva-sample': 'Page mẫu dùng DVA',
 };
