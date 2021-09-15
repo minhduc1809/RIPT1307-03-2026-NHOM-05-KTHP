@@ -9,14 +9,6 @@ import { useModel } from 'umi';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// const CodePreview: React.FC = ({ children }) => (
-//   <pre className={styles.pre}>
-//     <code>
-//       <Typography.Text copyable>{children}</Typography.Text>
-//     </code>
-//   </pre>
-// );
 const messages = {
   allDay: 'Cả ngày',
   previous: 'Trước',

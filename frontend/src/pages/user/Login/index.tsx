@@ -1,6 +1,5 @@
 import Footer from '@/components/Footer';
-import { login, getInfoSV, getInfoGV } from '@/services/ant-design-pro/api';
-import rules from '@/utils/rules';
+import { getInfoGV, getInfoSV, login } from '@/services/ant-design-pro/api';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { ConfigProvider, message, Tabs } from 'antd';

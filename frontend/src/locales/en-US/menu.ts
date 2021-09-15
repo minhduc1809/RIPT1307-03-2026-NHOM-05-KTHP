@@ -65,5 +65,6 @@ export default {
   'menu.BieuMau.KhaoSat': 'Khảo sát',
   'menu.LopHanhChinh': 'Lớp hành chính',
   'menu.DangKyTinChi': 'Đăng ký tín chỉ',
+  'menu.CoCauToChuc': 'Cơ cấu tổ chức',
   'menu.dva-sample': 'Page mẫu dùng DVA',
 };

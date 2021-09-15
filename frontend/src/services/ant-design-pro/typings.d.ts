@@ -156,7 +156,7 @@ declare module IInfoSV {
     khoa_sinh_vien_id: boolean;
     dia_chi_hien_nay: boolean;
     ten_goi_khac: boolean;
-    ngay_sinh: boolean;
+    ngay_sinh: string;
     gioi_tinh: boolean;
     tinh_tp_ns: boolean;
     quan_huyen_ns: boolean;
@@ -311,6 +311,25 @@ declare module IInfoSV {
     email: string;
     systemRole: string;
     vai_tro: string;
+    ngay_sinh: string;
+    gioi_tinh: string;
+    tinh_tp_hk: string;
+    quan_huyen_hk: string;
+    phuong_xa_hk: string;
+    so_nha_ten_duong_hk: string;
+    tinh_tp_no: string;
+    quan_huyen_no: string;
+    phuong_xa_no: string;
+    so_nha_ten_duong_no: string;
+    tinh_tp_ns: string;
+    quan_huyen_ns: string;
+    phuong_xa_ns: string;
+    so_nha_ten_duong_ns: string;
+    email_dang_nhap: string;
+    avatar_path: string;
+    so_dien_thoai: string;
+    so_dien_thoai_thay_the: string;
+    dia_chi_hien_nay: string;
   }
 
   export interface RootObject {
@@ -449,7 +468,7 @@ declare module IInfoGV {
     khoa_sinh_vien_id: boolean;
     dia_chi_hien_nay: boolean;
     ten_goi_khac: boolean;
-    ngay_sinh: boolean;
+    ngay_sinh: string;
     gioi_tinh: boolean;
     tinh_tp_ns: boolean;
     quan_huyen_ns: boolean;
@@ -604,6 +623,25 @@ declare module IInfoGV {
     email: string;
     systemRole: string;
     vai_tro: string;
+    ngay_sinh: string;
+    gioi_tinh: string;
+    tinh_tp_hk: string;
+    quan_huyen_hk: string;
+    phuong_xa_hk: string;
+    so_nha_ten_duong_hk: string;
+    tinh_tp_no: string;
+    quan_huyen_no: string;
+    phuong_xa_no: string;
+    so_nha_ten_duong_no: string;
+    tinh_tp_ns: string;
+    quan_huyen_ns: string;
+    phuong_xa_ns: string;
+    so_nha_ten_duong_ns: string;
+    email_dang_nhap: string;
+    avatar_path: string;
+    so_dien_thoai: string;
+    so_dien_thoai_thay_the: string;
+    dia_chi_hien_nay: string;
   }
 
   export interface RootObject {
@@ -737,6 +775,25 @@ declare module IRecordThongTinNguoiDung {
     username: string;
     email: string;
     systemRole: string;
+    ngay_sinh: string;
+    gioi_tinh: string;
+    tinh_tp_hk: string;
+    quan_huyen_hk: string;
+    phuong_xa_hk: string;
+    so_nha_ten_duong_hk: string;
+    tinh_tp_no: string;
+    quan_huyen_no: string;
+    phuong_xa_no: string;
+    so_nha_ten_duong_no: string;
+    tinh_tp_ns: string;
+    quan_huyen_ns: string;
+    phuong_xa_ns: string;
+    so_nha_ten_duong_ns: string;
+    email_dang_nhap: string;
+    avatar_path: string;
+    so_dien_thoai: string;
+    so_dien_thoai_thay_the: string;
+    dia_chi_hien_nay: string;
   }
 
   export interface RootObject {

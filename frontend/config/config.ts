@@ -153,7 +153,7 @@ export default defineConfig({
     },
     {
       name: 'KhaoSat',
-      icon: 'CalendarOutlined',
+      icon: 'FormOutlined',
       path: '/khaosat',
       component: './KhaoSatSVGV',
       access: 'sinhVienVaGiangVien',
@@ -181,24 +181,31 @@ export default defineConfig({
     },
     {
       name: 'LopTinChi',
-      icon: 'team',
+      icon: 'SolutionOutlined',
       path: '/loptinchi',
       component: './LopTinChi',
       access: 'sinhVienVaGiangVien',
     },
     {
       name: 'LopHanhChinh',
-      icon: 'team',
+      icon: 'AuditOutlined',
       path: '/lophanhchinh',
       component: './LopHanhChinh',
       access: 'sinhVien',
     },
     {
       name: 'DangKyTinChi',
-      icon: 'team',
+      icon: 'CheckSquareOutlined',
       path: '/dangkytinchi',
       component: './DangKyTinChi',
       access: 'sinhVien',
+    },
+    {
+      name: 'CoCauToChuc',
+      icon: 'team',
+      path: '/cocautochuc',
+      component: './CoCauToChuc',
+      access: 'admin',
     },
     {
       hideInMenu: true,
