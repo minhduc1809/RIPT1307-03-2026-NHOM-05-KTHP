@@ -142,6 +142,7 @@ const Login: React.FC = () => {
                           />
                         ),
                       },
+                      // ...rules.username,
                     ]}
                   />
                   <ProFormText.Password
@@ -164,7 +165,7 @@ const Login: React.FC = () => {
                           />
                         ),
                       },
-                      //  ...rules.password,
+                      // ...rules.password,
                     ]}
                   />
                 </>

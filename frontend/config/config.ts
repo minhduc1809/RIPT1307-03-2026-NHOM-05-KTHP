@@ -194,6 +194,13 @@ export default defineConfig({
       access: 'sinhVien',
     },
     {
+      name: 'DangKyTinChi',
+      icon: 'team',
+      path: '/dangkytinchi',
+      component: './DangKyTinChi',
+      access: 'sinhVien',
+    },
+    {
       hideInMenu: true,
       icon: 'team',
       exact: true,
