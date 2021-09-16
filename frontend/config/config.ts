@@ -194,6 +194,13 @@ export default defineConfig({
       access: 'sinhVien',
     },
     {
+      name: 'LopHanhChinhAdmin',
+      icon: 'AuditOutlined',
+      path: '/lophanhchinhadmin',
+      component: './LopHanhChinh/Admin',
+      access: 'Admin',
+    },
+    {
       name: 'DangKyTinChi',
       icon: 'CheckSquareOutlined',
       path: '/dangkytinchi',
@@ -205,6 +212,13 @@ export default defineConfig({
       icon: 'team',
       path: '/cocautochuc',
       component: './CoCauToChuc',
+      access: 'admin',
+    },
+    {
+      name: 'ThongBao',
+      icon: 'notification',
+      path: '/thongbao',
+      component: './ThongBao',
       access: 'admin',
     },
     {

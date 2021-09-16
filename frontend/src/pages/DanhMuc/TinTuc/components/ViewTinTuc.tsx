@@ -12,7 +12,7 @@ const ViewTinTuc = (props: { record: TinTuc.Record }) => {
       <br />
       <div
         dangerouslySetInnerHTML={{ __html: record.noiDung || '' }}
-        style={{ width: '100%', overflowX: 'scroll' }}
+        style={{ width: '100%', overflowX: 'auto' }}
       />
     </Card>
   );

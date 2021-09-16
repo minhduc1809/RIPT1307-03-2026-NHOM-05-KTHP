@@ -70,7 +70,7 @@ declare module BieuMau {
     noiDungCauHoi: string;
     loai: string;
     soLuongTraLoi: number;
-    ketQua: ThongKeLuaChon | ThongKeLuaChonGrid | ThongKeLuaChonNumeric[];
+    ketQua: ThongKeLuaChon[] | ThongKeLuaChonGrid[] | ThongKeLuaChonNumeric[];
   }
   export interface ThongKeKhoi {
     _id: string;

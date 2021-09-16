@@ -44,12 +44,24 @@ const KhaoSat = () => {
     kichHoatBieuMauModel({ id: record._id, data: { kichHoat: !record.kichHoat } });
   };
 
+  const onCell = (record: BieuMau.Record) => ({
+    onClick: () => {
+      setForm('statistic');
+      setVisibleForm(true);
+      setEdit(true);
+      setRecord(record);
+      getBieuMauThongKeModel(record._id);
+    },
+    style: { cursor: 'pointer' },
+  });
+
   const columns: IColumn<BieuMau.Record>[] = [
     {
       title: 'STT',
       dataIndex: 'index',
       align: 'center',
       width: 80,
+      onCell,
     },
     {
       title: 'Tiêu đề',
@@ -57,12 +69,14 @@ const KhaoSat = () => {
       align: 'center',
       search: 'search',
       width: 200,
+      onCell,
     },
     {
       title: 'Mô tả',
       dataIndex: 'moTa',
       align: 'center',
       width: 200,
+      onCell,
     },
     {
       title: 'Thời gian bắt đầu',
@@ -70,6 +84,7 @@ const KhaoSat = () => {
       align: 'center',
       render: (val) => <div>{val ? moment(val).format('HH:mm DD/MM/YYYY') : ''}</div>,
       width: 200,
+      onCell,
     },
     {
       title: 'Thời gian kết thúc',
@@ -77,6 +92,7 @@ const KhaoSat = () => {
       align: 'center',
       render: (val) => <div>{val ? moment(val).format('HH:mm DD/MM/YYYY') : ''}</div>,
       width: 200,
+      onCell,
     },
     {
       title: 'Đối tượng',
@@ -85,6 +101,7 @@ const KhaoSat = () => {
       notRegex: true,
       align: 'center',
       width: 200,
+      onCell,
     },
     {
       title: 'Trạng thái',

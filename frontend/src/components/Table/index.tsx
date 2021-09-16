@@ -257,9 +257,9 @@ const TableBase = (props: Props) => {
     const tmpCond = _.clone(condition);
     setFilterInfo({ ...filterInfo, ...filters, sort: columnKey, order: orderValue });
     Object.keys(filters).forEach((key) => {
-      if (!filters?.[key]?.length) {
-        return;
-      }
+      // if (!filters?.[key]?.length) {
+      //   return;
+      // }
       const notRegex = columns?.find(
         (item) => item.dataIndex === key || item.key === key,
       )?.notRegex;
