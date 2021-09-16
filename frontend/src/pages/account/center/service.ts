@@ -2,7 +2,10 @@ import { ip3 } from '@/utils/constants';
 import request from 'umi-request';
 
 export async function queryCurrent() {
-  return request(`${ip3}/odoo-user/sinh-vien/me`);
+  const role = localStorage.getItem('vaiTro');
+  let path = 'sinh-vien';
+  if (role === 'giang_vien') path = 'giang-vien';
+  return request(`${ip3}/odoo-user/${path}/me`);
 }
 
 export async function queryFakeList(params: { count: number }) {

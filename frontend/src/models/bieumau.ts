@@ -6,6 +6,7 @@ import {
   getBieuMauAdmin,
   getBieuMauUser,
   putBieuMau,
+  getBieuMauThongKe,
 } from '@/services/BieuMau/bieumau';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -16,6 +17,7 @@ export default () => {
   const [filterInfo, setFilterInfo] = useState<any>({});
   const [condition, setCondition] = useState<any>({});
   const [record, setRecord] = useState<BieuMau.Record>({} as BieuMau.Record);
+  const [thongKe, setThongKe] = useState<BieuMau.ThongKe>();
   const [loading, setLoading] = useState<boolean>(true);
   const [edit, setEdit] = useState<boolean>(false);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
@@ -77,7 +79,17 @@ export default () => {
     setLoading(false);
   };
 
+  const getBieuMauThongKeModel = async (id: string) => {
+    setLoading(true);
+    const response = await getBieuMauThongKe({ id });
+    setThongKe(response?.data?.data ?? {});
+    setLoading(false);
+  };
+
   return {
+    getBieuMauThongKeModel,
+    thongKe,
+    setThongKe,
     getBieuMauAdminModel,
     filterInfo,
     condition,

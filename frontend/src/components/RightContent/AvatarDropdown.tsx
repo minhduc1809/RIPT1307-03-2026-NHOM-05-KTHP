@@ -66,7 +66,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-      {menu && (
+      {menu && localStorage.getItem('vaiTro') !== 'Admin' && (
         <Menu.Item key="center">
           <UserOutlined />
           Trang cá nhân
@@ -78,7 +78,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
           Cài đặt
         </Menu.Item>
       )} */}
-      {menu && <Menu.Divider />}
+      {menu && localStorage.getItem('vaiTro') !== 'Admin' && <Menu.Divider />}
 
       <Menu.Item key="logout">
         <LogoutOutlined />

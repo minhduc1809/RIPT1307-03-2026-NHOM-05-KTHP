@@ -30,6 +30,10 @@ export async function kichHoatBieuMau(payload: { id: string; data: { kichHoat: b
   return axios.post(`${ip3}/bieu-mau/${payload.id}/kich-hoat`, payload.data);
 }
 
+export async function getBieuMauThongKe(payload: { id: string }) {
+  return axios.get(`${ip3}/bieu-mau/${payload.id}/thong-ke`);
+}
+
 export async function delBieuMau(payload: { id: string }) {
   return axios.delete(`${ip3}/bieu-mau/${payload.id}`);
 }

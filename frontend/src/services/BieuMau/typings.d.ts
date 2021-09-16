@@ -42,4 +42,48 @@ declare module BieuMau {
     doiTuong: string;
     _id: string;
   }
+
+  export interface ThongKeLuaChon {
+    noiDungLuaChon: string;
+    idLuaChon: string;
+    soLuong: number;
+  }
+
+  export interface ThongKeCot {
+    idCot: string;
+    noiDungCot: string;
+    soLuong: number;
+  }
+  export interface ThongKeLuaChonGrid {
+    noiDungHang: string;
+    idHang: string;
+    thongKeCot: ThongKeCot[];
+  }
+
+  export interface ThongKeLuaChonNumeric {
+    giaTriTuyenTinh: number;
+    soLuong: number;
+  }
+
+  export interface ThongKeCauHoi {
+    _id: string;
+    noiDungCauHoi: string;
+    loai: string;
+    soLuongTraLoi: number;
+    ketQua: ThongKeLuaChon | ThongKeLuaChonGrid | ThongKeLuaChonNumeric[];
+  }
+  export interface ThongKeKhoi {
+    _id: string;
+    tieuDe: string;
+    moTa: string;
+    thongKeCauHoi: ThongKeCauHoi[];
+  }
+
+  export interface ThongKe {
+    _id: string;
+    tieuDe: string;
+    moTa: string;
+    loai: string;
+    thongKeKhoi: ThongKeKhoi[];
+  }
 }

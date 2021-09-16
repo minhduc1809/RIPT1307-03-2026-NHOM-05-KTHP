@@ -69,26 +69,32 @@ class Center extends Component<CenterProps, CenterState> {
     return null;
   };
 
-  renderUserInfo = (currentUser: Partial<IInfoSV.Data | IInfoGV.Data>) => (
-    <div className={styles.detail}>
-      <p>
-        <ContactsOutlined
-          style={{
-            marginRight: 8,
-          }}
-        />
-        {localStorage.getItem('vaiTro') === 'sinh_vien' ? 'Sinh viên' : 'Chưa xác định'}
-      </p>
-      <p>
-        <ClusterOutlined
-          style={{
-            marginRight: 8,
-          }}
-        />
-        {currentUser?.email_dang_nhap ?? ''}
-      </p>
-    </div>
-  );
+  renderUserInfo = (currentUser: Partial<IInfoSV.Data | IInfoGV.Data>) => {
+    const role = localStorage.getItem('vaiTro');
+    let roleText = 'Chưa xác định';
+    if (role === 'giang_vien') roleText = 'Giảng viên';
+    else if (role === 'can_bo') roleText = 'Cán bộ';
+    return (
+      <div className={styles.detail}>
+        <p>
+          <ContactsOutlined
+            style={{
+              marginRight: 8,
+            }}
+          />
+          {roleText}
+        </p>
+        <p>
+          <ClusterOutlined
+            style={{
+              marginRight: 8,
+            }}
+          />
+          {currentUser?.email_dang_nhap ?? ''}
+        </p>
+      </div>
+    );
+  };
 
   render() {
     const { tabKey } = this.state;
