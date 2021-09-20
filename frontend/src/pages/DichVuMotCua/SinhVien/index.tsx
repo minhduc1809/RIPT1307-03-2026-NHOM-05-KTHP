@@ -40,7 +40,16 @@ const CTCTSV = () => {
       >
         Sử dụng dịch vụ
       </Button>
-      <Modal footer={false} width="80%" bodyStyle={{ padding: 0 }} visible={visibleForm}>
+      <Modal
+        destroyOnClose
+        onCancel={() => {
+          setVisibleForm(false);
+        }}
+        footer={false}
+        width="70%"
+        bodyStyle={{ padding: 0 }}
+        visible={visibleForm}
+      >
         <FormYeuCauCapGiayXacNhanTinhTrangHocTap />
       </Modal>
       <DanhMuc />

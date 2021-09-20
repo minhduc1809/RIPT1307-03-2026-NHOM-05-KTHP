@@ -1,3 +1,5 @@
+import { postDonXacNhanTinhTrangHocTap } from '@/services/DichVuMotCua/dichvumotcua';
+import { message } from 'antd';
 import { useState } from 'react';
 
 export default () => {
@@ -14,8 +16,15 @@ export default () => {
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
+  const postDonXacNhanTinhTrangHocTapModel = async (payload: DichVuMotCua.Record) => {
+    setLoading(true);
+    await postDonXacNhanTinhTrangHocTap(payload);
+    message.success('Gửi đơn thành công');
+    setLoading(false);
+  };
 
   return {
+    postDonXacNhanTinhTrangHocTapModel,
     thuTuc,
     setThuTuc,
     danhSach,
