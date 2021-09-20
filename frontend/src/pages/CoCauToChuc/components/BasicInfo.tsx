@@ -20,8 +20,10 @@ const BasicInfo = () => {
         <Tooltip title="Chỉnh sửa">
           <EditOutlined
             onClick={() => {
-              setEdit(true);
-              setVisibleForm(true);
+              if (record?.id) {
+                setEdit(true);
+                setVisibleForm(true);
+              }
             }}
           />
         </Tooltip>,
@@ -33,7 +35,7 @@ const BasicInfo = () => {
             }}
             title="Bạn có chắc chắn muốn xóa đơn vị này ?"
           >
-            <DeleteOutlined />
+            <DeleteOutlined disabled={!record?.id} />
           </Popconfirm>
         </Tooltip>,
       ]}

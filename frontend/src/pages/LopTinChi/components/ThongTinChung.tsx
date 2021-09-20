@@ -18,7 +18,6 @@ const ThongTinChung = (props: { id: string; isGiangVien: boolean }) => {
     danhSachSinhVien,
     getDanhSachSinhVienByIdNhomLopModel,
     setIdNhomLop,
-    setDanhSachNhomLop,
   } = useModel('loptinchi');
   useEffect(() => {
     if (!record.id) {
@@ -31,10 +30,6 @@ const ThongTinChung = (props: { id: string; isGiangVien: boolean }) => {
 
   useEffect(() => {
     getDanhSachSinhVienByIdNhomLopModel();
-    return () => {
-      setDanhSachNhomLop([]);
-      setIdNhomLop(-1);
-    };
   }, [idNhomLop]);
   const { giangVien, sinhVienList } = thongTinChung;
   return (
@@ -88,10 +83,7 @@ const ThongTinChung = (props: { id: string; isGiangVien: boolean }) => {
           <DanhSachSinhVien loading={loading} data={sinhVienList} />
         </Tabs.TabPane>
         {danhSachNhomLop?.map((item) => (
-          <Tabs.TabPane
-            tab={`Nhóm ${item.so_thu_tu_nhom} (${item.ma_nhom_lop_tin_chi})`}
-            key={item.id}
-          >
+          <Tabs.TabPane tab={`Nhóm ${item.so_thu_tu_nhom}`} key={item.id}>
             <DanhSachSinhVien loading={loading} data={danhSachSinhVien} />
           </Tabs.TabPane>
         ))}
