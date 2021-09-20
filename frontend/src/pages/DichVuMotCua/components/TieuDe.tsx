@@ -9,7 +9,7 @@ const TieuDe = () => {
         <>
           <Row>
             <div style={{ textAlign: 'center' }}>
-              <p style={{ marginBottom: '-7px', fontWeight: 650, fontSize: '20px' }}>
+              <p style={{ fontWeight: 650, fontSize: '20px' }}>
                 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
               </p>
               <p
@@ -53,7 +53,7 @@ const TieuDe = () => {
         <>
           <Row>
             <div style={{ textAlign: 'center' }}>
-              <p style={{ marginBottom: '-7px', fontWeight: 650, fontSize: '20px' }}>
+              <p style={{ fontWeight: 650, fontSize: '20px' }}>
                 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
               </p>
               <p
@@ -94,10 +94,8 @@ const TieuDe = () => {
             <>
               <Col xl={12}>
                 <div style={{ textAlign: 'center' }}>
-                  <p style={{ fontWeight: 450, marginBottom: '-15px' }}>
-                    BỘ THÔNG TIN VÀ TRUYỀN THÔNG
-                  </p>
-                  <p style={{ fontWeight: 'bold', marginBottom: '-15px' }}>HỌC VIỆN CÔNG NGHỆ </p>
+                  <p style={{ fontWeight: 450 }}>BỘ THÔNG TIN VÀ TRUYỀN THÔNG</p>
+                  <p style={{ fontWeight: 'bold' }}>HỌC VIỆN CÔNG NGHỆ </p>
                   <p style={{ fontWeight: 'bold' }}>
                     <u>BƯU CHÍNH VIỄN THÔNG</u>
                   </p>
@@ -105,9 +103,7 @@ const TieuDe = () => {
               </Col>
               <Col xl={12}>
                 <div style={{ textAlign: 'center' }}>
-                  <p style={{ fontWeight: 450, marginBottom: '-15px' }}>
-                    CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-                  </p>
+                  <p style={{ fontWeight: 450 }}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>
                   <p style={{ fontWeight: 'bold' }}>
                     <u>Độc lập - Tự do - Hạnh phúc</u>
                   </p>
@@ -126,10 +122,10 @@ const TieuDe = () => {
                 </p>
                 {loaiGiayTo === 'Yêu cầu cấp giấy xác nhận tình trạng học tập' && (
                   <>
-                    <p style={{ marginBottom: '-15px', fontSize: 16, fontWeight: 650 }}>
+                    <p style={{ fontSize: 16, fontWeight: 650 }}>
                       HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG
                     </p>
-                    <p style={{ marginBottom: '-15px' }}>
+                    <p>
                       <i style={{ fontWeight: 'bold' }}>Địa chỉ: </i>Km10, Đường Nguyễn Trãi, Mộ
                       Lao, Hà Đông, Hà Nội.
                     </p>
@@ -148,12 +144,11 @@ const TieuDe = () => {
             <>
               <Row>
                 <div style={{ textAlign: 'center' }}>
-                  <p style={{ marginBottom: '-15px', fontWeight: 650, fontSize: '20px' }}>
+                  <p style={{ fontWeight: 650, fontSize: '20px' }}>
                     CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
                   </p>
                   <p
                     style={{
-                      // marginBottom: '-15px',
                       fontWeight: 'bold',
                       fontSize: '18px',
                     }}
@@ -165,7 +160,6 @@ const TieuDe = () => {
               <Row>
                 <p
                   style={{
-                    marginBottom: '-15px',
                     fontWeight: 650,
                     fontSize: '20px',
                     textAlign: 'center',
@@ -202,7 +196,7 @@ const TieuDe = () => {
             <>
               <Row>
                 <div style={{ textAlign: 'center' }}>
-                  <p style={{ marginBottom: '-15px', fontWeight: 650, fontSize: '20px' }}>
+                  <p style={{ fontWeight: 650, fontSize: '20px' }}>
                     CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
                   </p>
                   <p
@@ -222,14 +216,12 @@ const TieuDe = () => {
                     <p style={{ fontWeight: 650, fontSize: 20 }}>ĐƠN ĐỀ NGHỊ MIỄN, GIẢM HỌC PHÍ</p>
                   </Row>
                   <Row>
-                    <p style={{ fontWeight: 650, fontSize: 16, marginBottom: '-15px' }}>
-                      Kính gửi:
-                    </p>
+                    <p style={{ fontWeight: 650, fontSize: 16 }}>Kính gửi:</p>
                     <p
                       style={{
                         fontWeight: 650,
                         fontSize: 16,
-                        marginBottom: '-15px',
+
                         marginLeft: '30px',
                       }}
                     >
@@ -288,10 +280,8 @@ const TieuDe = () => {
               <Row>
                 <Col xl={12}>
                   <div style={{ textAlign: 'center' }}>
-                    <p style={{ fontWeight: 450, marginBottom: '-15px' }}>
-                      BỘ THÔNG TIN VÀ TRUYỀN THÔNG
-                    </p>
-                    <p style={{ fontWeight: 'bold', marginBottom: '-15px' }}>HỌC VIỆN CÔNG NGHỆ </p>
+                    <p style={{ fontWeight: 450 }}>BỘ THÔNG TIN VÀ TRUYỀN THÔNG</p>
+                    <p style={{ fontWeight: 'bold' }}>HỌC VIỆN CÔNG NGHỆ </p>
                     <p style={{ fontWeight: 'bold' }}>
                       <u>BƯU CHÍNH VIỄN THÔNG</u>
                     </p>
@@ -299,9 +289,7 @@ const TieuDe = () => {
                 </Col>
                 <Col xl={12}>
                   <div style={{ textAlign: 'center' }}>
-                    <p style={{ fontWeight: 450, marginBottom: '-15px' }}>
-                      CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-                    </p>
+                    <p style={{ fontWeight: 450 }}>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>
                     <p style={{ fontWeight: 'bold' }}>
                       <u>Độc lập - Tự do - Hạnh phúc</u>
                     </p>
@@ -309,13 +297,11 @@ const TieuDe = () => {
                 </Col>
               </Row>
               <Row style={{ textAlign: 'center' }}>
-                <p style={{ marginBottom: '-15px', fontWeight: 650, fontSize: 20 }}>
-                  GIẤY GIỚI THIỆU
-                </p>
-                <p style={{ marginBottom: '-15px', fontSize: 16, fontWeight: 650 }}>
+                <p style={{ fontWeight: 650, fontSize: 20 }}>GIẤY GIỚI THIỆU</p>
+                <p style={{ fontSize: 16, fontWeight: 650 }}>
                   HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG
                 </p>
-                <p style={{ marginBottom: '-15px' }}>
+                <p>
                   <i style={{ fontWeight: 'bold' }}>Địa chỉ: </i>Km10, Đường Nguyễn Trãi, Mộ Lao, Hà
                   Đông, Hà Nội.
                 </p>
