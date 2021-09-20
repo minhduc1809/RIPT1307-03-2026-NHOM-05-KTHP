@@ -1,6 +1,6 @@
 const data: any = {
   path: {
-    sinh_vien: '/chuongtrinhkhung',
+    sinh_vien: '/calendar',
     giang_vien: '/calendar',
     Admin: '/danhmuc/chudechung',
   },

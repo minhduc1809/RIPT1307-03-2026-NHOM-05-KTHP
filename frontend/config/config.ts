@@ -146,20 +146,6 @@ export default defineConfig({
       component: './VanBanHuongDan',
     },
     {
-      name: 'KhaiBaoSucKhoe',
-      icon: 'FormOutlined',
-      path: '/khaibaosuckhoe',
-      access: 'admin',
-      component: './KhaiBaoSucKhoe',
-    },
-    {
-      name: 'KhaoSat',
-      icon: 'FormOutlined',
-      path: '/khaosat',
-      component: './KhaoSatSVGV',
-      access: 'sinhVienVaGiangVien',
-    },
-    {
       name: 'Calendar',
       icon: 'CalendarOutlined',
       path: '/calendar',
@@ -195,6 +181,28 @@ export default defineConfig({
       access: 'sinhVien',
     },
     {
+      name: 'DangKyTinChi',
+      icon: 'CheckSquareOutlined',
+      path: '/dangkytinchi',
+      component: './DangKyTinChi',
+      access: 'sinhVien',
+    },
+    {
+      name: 'KhaoSat',
+      icon: 'FormOutlined',
+      path: '/khaosat',
+      component: './KhaoSatSVGV',
+      access: 'sinhVienVaGiangVien',
+    },
+    {
+      name: 'KhaiBaoSucKhoe',
+      icon: 'FormOutlined',
+      path: '/khaibaosuckhoe',
+      access: 'admin',
+      component: './KhaiBaoSucKhoe',
+    },
+
+    {
       name: 'LopHanhChinhAdmin',
       icon: 'AuditOutlined',
       path: '/lophanhchinhadmin',
@@ -208,13 +216,7 @@ export default defineConfig({
     //   component: './LopTinChi/Admin',
     //   access: 'admin',
     // },
-    {
-      name: 'DangKyTinChi',
-      icon: 'CheckSquareOutlined',
-      path: '/dangkytinchi',
-      component: './DangKyTinChi',
-      access: 'sinhVien',
-    },
+
     {
       name: 'CoCauToChuc',
       icon: 'team',
