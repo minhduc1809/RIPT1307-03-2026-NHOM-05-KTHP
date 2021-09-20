@@ -1,11 +1,11 @@
-import Icon, { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Card, Tooltip, Popconfirm } from 'antd';
+import metadata from '@/assets/metadata.jpg';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Card, Popconfirm, Tooltip } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import { useModel } from 'umi';
-import metadata from '@/assets/metadata.jpg';
 
 const BasicInfo = () => {
-  const { record } = useModel('donvi');
+  const { record, setVisibleForm, setEdit, delDonViModel } = useModel('donvi');
 
   return (
     <Card
@@ -18,19 +18,19 @@ const BasicInfo = () => {
       }
       actions={[
         <Tooltip title="Chỉnh sửa">
-          <EditOutlined />
+          <EditOutlined
+            onClick={() => {
+              setEdit(true);
+              setVisibleForm(true);
+            }}
+          />
         </Tooltip>,
         <Tooltip title="Xóa">
           <Popconfirm
             disabled={!record?.id}
-            // onConfirm={() => {
-            //   this.props.dispatch({
-            //     type: 'khoa/del',
-            //     payload: {
-            //       _id: record?._id,
-            //     },
-            //   });
-            // }}
+            onConfirm={() => {
+              delDonViModel(record?.id);
+            }}
             title="Bạn có chắc chắn muốn xóa đơn vị này ?"
           >
             <DeleteOutlined />

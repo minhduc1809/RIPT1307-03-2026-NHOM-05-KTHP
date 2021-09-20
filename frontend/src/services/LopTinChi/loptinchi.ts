@@ -56,5 +56,13 @@ export async function getThongTinChungLopTinChiById(idLop: number) {
 }
 
 export async function getLopTinChiById(idLop: number) {
-  return axios.get(`${ip3}/odoo-lop-tin-chi/${idLop}/sinh-vien`);
+  return axios.get(`${ip3}/odoo-lop-tin-chi/${idLop}`);
+}
+
+export async function getNhomLopTinChiById(idLop: number) {
+  return axios.get(`${ip3}/odoo-nhom-lop-tin-chi/user/lop-tin-chi/${idLop}`);
+}
+
+export async function getDanhSachSinhVienByIdNhomLop(idNhomLop: number) {
+  return axios.get(`${ip3}/odoo-nhom-lop-tin-chi/${idNhomLop}/user/danh-sach-sv`);
 }

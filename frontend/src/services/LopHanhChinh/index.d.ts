@@ -1,11 +1,11 @@
 export declare module APILopHanhChinh {
   export interface DanhSachSinhVien {
+    ma_sv: string;
     anhDaiDien: any;
     id: number;
     TenDayDu: string;
     Phai: boolean;
     NgaySinhC: boolean;
-    MaSV: string;
   }
 
   export interface Data {

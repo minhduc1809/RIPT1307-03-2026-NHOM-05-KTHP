@@ -68,5 +68,6 @@ export default {
   'menu.CoCauToChuc': 'Cơ cấu tổ chức',
   'menu.ThongBao': 'Thông báo',
   'menu.LopHanhChinhAdmin': 'Lớp hành chính',
+  'menu.LopTinChiAdmin': 'Lớp tín chỉ',
   'menu.dva-sample': 'Page mẫu dùng DVA',
 };

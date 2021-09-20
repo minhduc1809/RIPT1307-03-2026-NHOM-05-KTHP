@@ -15,6 +15,8 @@ const data: any = {
     { value: true, text: 'An toàn' },
   ],
 
+  loaiDonVi: ['Đơn vị cứng', 'Đơn vị mềm'],
+
   CapDonVi: {
     'Bộ môn': { Trưởng: 'Trưởng bộ môn', Phó: 'Phó trưởng bộ môn', 'Cán bộ': 'Cán bộ' },
     Phòng: { Trưởng: 'Trưởng phòng', Phó: 'Phó trưởng phòng', 'Cán bộ': 'Cán bộ' },

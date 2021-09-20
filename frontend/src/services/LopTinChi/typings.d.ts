@@ -17,8 +17,8 @@ export declare module LopTinChi {
   }
 
   export interface SinhVienRecord {
+    ma_sv: string;
     id: number;
-    MaSV: string;
     TenDayDu: string;
     anhDaiDien: string;
     soDienThoai: string;
@@ -27,6 +27,17 @@ export declare module LopTinChi {
   export interface ThongTinChungLopTinChiRecord {
     giangVien: GiangVienRecord;
     sinhVienList: SinhVienRecord[];
+  }
+
+  export interface NhomLopTinChi {
+    id: number;
+    ma_nhom_lop_tin_chi: string;
+    so_thu_tu_nhom: number;
+    ma_lop_tin_chi_id: (string | number)[];
+    loai_nhom_lop: string;
+    danh_sach_sinh_vien_ids: number[];
+    buoi_hoc_ids: number[];
+    display_name: string;
   }
 }
 

@@ -21,7 +21,8 @@ export default defineConfig({
     default: 'vi-VN',
     antd: true,
     // default true, when it is true, will use `navigator.language` overwrite default
-    baseNavigator: true,
+    baseNavigator: false,
+    // baseSeparator: '_',
   },
   dynamicImport: {
     loading: '@ant-design/pro-layout/es/PageLoading',
@@ -198,8 +199,15 @@ export default defineConfig({
       icon: 'AuditOutlined',
       path: '/lophanhchinhadmin',
       component: './LopHanhChinh/Admin',
-      access: 'Admin',
+      access: 'admin',
     },
+    // {
+    //   name: 'LopTinChiAdmin',
+    //   icon: 'TeamOutlined',
+    //   path: '/loptinchiadmin',
+    //   component: './LopTinChi/Admin',
+    //   access: 'admin',
+    // },
     {
       name: 'DangKyTinChi',
       icon: 'CheckSquareOutlined',

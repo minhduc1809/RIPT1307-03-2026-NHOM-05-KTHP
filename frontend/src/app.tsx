@@ -23,7 +23,7 @@ export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: IInfoSV.Data | IInfoGV.Data;
   partner_id?: number;
-  fetchUserInfo: () => Promise<IInfoSV.Data | undefined>;
+  fetchUserInfo?: () => Promise<IInfoSV.Data | undefined>;
   authorizedRoles?: API.LoginResponse.AuthorizedRole[];
   isModalSelectRoleVisible?: boolean;
 }> {

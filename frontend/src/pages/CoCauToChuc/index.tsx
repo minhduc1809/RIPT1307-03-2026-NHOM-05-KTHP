@@ -1,14 +1,16 @@
 import { useModel } from 'umi';
 import { PlusOutlined } from '@ant-design/icons';
-import { Card, Row, Col, Button, Tabs } from 'antd';
+import { Card, Row, Col, Button, Tabs, Modal } from 'antd';
 import { useEffect } from 'react';
 import CayCoCauToChuc from './components/CayCoCauToChuc';
 import BasicInfo from './components/BasicInfo';
 import DanhSachCanBo from './components/DanhSachCanBo';
 import DanhSachCanBoKiemNhiem from './components/DanhSachCanBoKiemNhiem';
+import FormCoCauToChuc from './components/FormCoCauToChuc';
 
 const CoCauToChuc = () => {
-  const { getAllDonViModel, setRecord, record } = useModel('donvi');
+  const { getAllDonViModel, setRecord, record, visibleForm, setEdit, setVisibleForm } =
+    useModel('donvi');
 
   useEffect(() => {
     getAllDonViModel();
@@ -24,7 +26,11 @@ const CoCauToChuc = () => {
           <Col span={24}>
             <Button
               type="primary"
-              // onClick={this.handleThemMoiKhoa}
+              onClick={() => {
+                setEdit(false);
+                setRecord(undefined);
+                setVisibleForm(true);
+              }}
               icon={<PlusOutlined />}
             >
               Thêm mới đơn vị
@@ -58,6 +64,17 @@ const CoCauToChuc = () => {
           </Tabs.TabPane>
         </Tabs>
       )}
+      <Modal
+        onCancel={() => {
+          setVisibleForm(false);
+        }}
+        footer={false}
+        destroyOnClose
+        bodyStyle={{ padding: 0 }}
+        visible={visibleForm}
+      >
+        <FormCoCauToChuc />
+      </Modal>
     </>
   );
 };

@@ -8,5 +8,7 @@ declare module DonVi {
     loai_don_vi: string;
     cap_don_vi: string;
     display_name: string;
+    key: string;
+    children?: Record[];
   }
 }

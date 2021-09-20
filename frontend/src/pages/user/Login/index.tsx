@@ -5,7 +5,7 @@ import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { ConfigProvider, message, Tabs } from 'antd';
 import viVN from 'antd/lib/locale/vi_VN';
 import React, { useState } from 'react';
-import { FormattedMessage, history, Link, SelectLang, useIntl, useModel } from 'umi';
+import { FormattedMessage, history, Link, useIntl, useModel } from 'umi';
 import styles from './index.less';
 
 const goto = () => {
@@ -73,7 +73,7 @@ const Login: React.FC = () => {
   return (
     <div className={styles.container}>
       {/* <SelectRole /> */}
-      <div className={styles.lang}>{SelectLang && <SelectLang />}</div>
+      {/* <div className={styles.lang}>{SelectLang && <SelectLang />}</div> */}
       <div className={styles.content}>
         <div className={styles.top}>
           <div className={styles.header}>

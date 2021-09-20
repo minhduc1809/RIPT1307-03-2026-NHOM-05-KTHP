@@ -5,7 +5,7 @@ const BarLabel = (props: { ketQua: BieuMau.ThongKeLuaChon[] }) => {
   const cols = {};
   return (
     <div>
-      <Chart height={300} width={800} data={props.ketQua} scale={cols}>
+      <Chart height={300} width={700} data={props.ketQua} scale={cols}>
         <Coord transpose />
         <Axis name="noiDungLuaChon" />
         <Axis name="soLuong" visible={false} />
