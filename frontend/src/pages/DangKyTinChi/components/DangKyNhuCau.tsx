@@ -280,6 +280,7 @@ const DangKyNhuCau = () => {
                           ? [
                               ...danhSachHocPhanDaChon,
                               {
+                                index: ' ',
                                 tenMonHoc: 'Tổng',
                                 soTinChi: tongSoTinChi,
                                 soThuTuKyHoc: tongSoTinChi,

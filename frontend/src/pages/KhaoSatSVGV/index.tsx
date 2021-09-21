@@ -1,6 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
 import { EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip } from 'antd';
+import { Button, Popconfirm, Tag, Tooltip } from 'antd';
 import type { ColumnProps } from 'antd/lib/table';
 import moment from 'moment';
 import { useEffect } from 'react';
@@ -18,10 +19,16 @@ const KhaoSat = () => {
     setEdit,
     setRecord,
     setVisibleForm,
+    getIdBieuMauDaTraLoiModel,
+    listIdBieuMauDaTraLoi,
   } = useModel('bieumau');
 
   useEffect(() => {
     setLoaiBieuMau('Khảo sát');
+  }, []);
+
+  useEffect(() => {
+    getIdBieuMauDaTraLoiModel();
   }, []);
 
   const handleEdit = (record: BieuMau.Record) => {
@@ -49,6 +56,17 @@ const KhaoSat = () => {
       align: 'center',
     },
     {
+      title: 'Trạng thái',
+      align: 'center',
+      dataIndex: '_id',
+      width: 150,
+      render: (val) => (
+        <Tag color={listIdBieuMauDaTraLoi.includes(val) ? 'green' : 'red'}>
+          {listIdBieuMauDaTraLoi.includes(val) ? 'Đã thực hiện' : 'Chưa thực hiện'}
+        </Tag>
+      ),
+    },
+    {
       title: 'Thời gian bắt đầu',
       dataIndex: 'thoiGianBatDau',
       align: 'center',
@@ -66,7 +84,6 @@ const KhaoSat = () => {
       },
       width: 200,
     },
-
     {
       title: 'Thao tác',
       align: 'center',
@@ -81,14 +98,26 @@ const KhaoSat = () => {
             <Tooltip
               title={checkHetThoiGianThucHien ? 'Ngoài thời gian cho phép' : 'Thực hiện khảo sát'}
             >
-              <Button
-                disabled={checkHetThoiGianThucHien}
-                onClick={() => handleEdit(record)}
-                type="primary"
-                shape="circle"
-              >
-                <EditOutlined />
-              </Button>
+              {listIdBieuMauDaTraLoi.includes(record._id) ? (
+                <Popconfirm
+                  disabled={checkHetThoiGianThucHien}
+                  title="Bạn đã thực hiện khảo sát này, bạn có muốn thực hiện lại ?"
+                  onConfirm={() => handleEdit(record)}
+                >
+                  <Button disabled={checkHetThoiGianThucHien} type="primary" shape="circle">
+                    <EditOutlined />
+                  </Button>
+                </Popconfirm>
+              ) : (
+                <Button
+                  disabled={checkHetThoiGianThucHien}
+                  onClick={() => handleEdit(record)}
+                  type="primary"
+                  shape="circle"
+                >
+                  <EditOutlined />
+                </Button>
+              )}
             </Tooltip>
           </>
         );
@@ -106,7 +135,7 @@ const KhaoSat = () => {
       title="Khảo sát"
       formType="Drawer"
       widthDrawer="60%"
-      // scroll={{ x: 1200 }}
+      scroll={{ x: 1300 }}
       Form={Form}
     ></TableBase>
   );

@@ -54,6 +54,7 @@ export default () => {
     setLoading(true);
     await khaiBaoYTe(payload);
     message.success('Khai báo thành công');
+    setVisibleForm(false);
     setLoading(false);
   };
 

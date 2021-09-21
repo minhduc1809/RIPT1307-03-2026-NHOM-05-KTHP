@@ -34,6 +34,10 @@ export async function getBieuMauThongKe(payload: { id: string }) {
   return axios.get(`${ip3}/bieu-mau/${payload.id}/thong-ke`);
 }
 
+export async function getIdBieuMauDaTraLoi(loaiBieuMau?: string) {
+  return axios.get(`${ip3}/cau-tra-loi-bieu-mau/id-bieu-mau/da-tra-loi?loai=${loaiBieuMau}`);
+}
+
 export async function delBieuMau(payload: { id: string }) {
   return axios.delete(`${ip3}/bieu-mau/${payload.id}`);
 }

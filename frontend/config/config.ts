@@ -139,11 +139,11 @@ export default defineConfig({
       component: './PhanHoi',
     },
     {
-      name: 'VanBanHuongDan',
-      icon: 'FileText',
-      path: '/vanbanhuongdan',
-      access: 'admin',
-      component: './VanBanHuongDan',
+      name: 'Calendar',
+      icon: 'CalendarOutlined',
+      path: '/calendar',
+      component: './Calendar',
+      access: 'sinhVienVaGiangVien',
     },
     {
       name: 'VanBanHuongDanUser',
@@ -153,18 +153,18 @@ export default defineConfig({
       component: './VanBanHuongDan',
     },
     {
-      name: 'Calendar',
-      icon: 'CalendarOutlined',
-      path: '/calendar',
-      component: './Calendar',
-      access: 'sinhVienVaGiangVien',
-    },
-    {
       name: 'News',
       icon: 'NotificationOutlined',
       path: '/quan-ly-tin-tuc',
       component: './QuanLyTinTuc',
       access: 'sinhVienVaGiangVien',
+    },
+    {
+      name: 'VanBanHuongDan',
+      icon: 'FileText',
+      path: '/vanbanhuongdan',
+      access: 'admin',
+      component: './VanBanHuongDan',
     },
     {
       name: 'Structure',

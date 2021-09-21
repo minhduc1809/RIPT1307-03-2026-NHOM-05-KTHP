@@ -13,7 +13,7 @@ const GridChoice = (props: {
     {
       title: '',
       dataIndex: 'tieuChi',
-      width: 300,
+      width: 250,
       fixed: 'left',
     },
   ];

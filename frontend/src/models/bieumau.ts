@@ -8,6 +8,7 @@ import {
   putBieuMau,
   getBieuMauThongKe,
   traLoiBieuMau,
+  getIdBieuMauDaTraLoi,
 } from '@/services/BieuMau/bieumau';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -15,6 +16,7 @@ import { useState } from 'react';
 export default () => {
   const [danhSach, setDanhSach] = useState<BieuMau.Record[]>([]);
   const [loaiBieuMau, setLoaiBieuMau] = useState<string | undefined>(undefined);
+  const [listIdBieuMauDaTraLoi, setListIdBieuMauDaTraLoi] = useState<string[]>([]);
   const [filterInfo, setFilterInfo] = useState<any>({});
   const [condition, setCondition] = useState<any>({});
   const [record, setRecord] = useState<BieuMau.Record>({} as BieuMau.Record);
@@ -87,6 +89,13 @@ export default () => {
     setLoading(false);
   };
 
+  const getIdBieuMauDaTraLoiModel = async () => {
+    setLoading(true);
+    const response = await getIdBieuMauDaTraLoi(loaiBieuMau);
+    setListIdBieuMauDaTraLoi(response?.data?.data ?? []);
+    setLoading(false);
+  };
+
   const traLoiBieuMauModel = async (payload: {
     idBieuMau: string;
     danhSachTraLoi: KhaiBaoSucKhoe.TraLoiRecord[];
@@ -94,11 +103,15 @@ export default () => {
     setLoading(true);
     await traLoiBieuMau(payload);
     message.success('Gửi câu trả lời thành công');
+    getIdBieuMauDaTraLoiModel();
     setLoading(false);
     setVisibleForm(false);
   };
 
   return {
+    getIdBieuMauDaTraLoiModel,
+    listIdBieuMauDaTraLoi,
+    setListIdBieuMauDaTraLoi,
     traLoiBieuMauModel,
     getBieuMauThongKeModel,
     thongKe,

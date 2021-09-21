@@ -74,12 +74,13 @@ const KhaiBaoSucKhoeUser = () => {
         ]}
       />
       <Drawer
+        destroyOnClose
         onClose={() => {
           setVisibleForm(false);
         }}
         bodyStyle={{ padding: 0 }}
         visible={visibleForm}
-        width="60%"
+        width="70%"
       >
         <Form />
       </Drawer>

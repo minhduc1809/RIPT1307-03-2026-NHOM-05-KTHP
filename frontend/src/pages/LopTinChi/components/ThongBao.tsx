@@ -86,9 +86,7 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
         headerTitle="Danh sách thông báo"
         rowKey="key"
         dataSource={dsThongBao ?? []}
-        search={{
-          labelWidth: 120,
-        }}
+        search={false}
         toolBarRender={() =>
           props.isGiangVien
             ? [

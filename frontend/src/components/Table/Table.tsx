@@ -220,14 +220,12 @@ const TableBase = (props: Props) => {
         showSizeChanger: true,
         pageSizeOptions: ['10', '25', '50', '100'],
         showTotal: (tongSo: number) => {
-          return <div>Tổng số: {tongSo}</div>;
+          return <div>Tổng số: {tongSo - 1}</div>;
         },
       }}
       // onChange={handleTableChange}
       onChange={onChange}
-      dataSource={data?.map((item: any, index: number) => {
-        return { ...item, index: index + 1 };
-      })}
+      dataSource={data}
       columns={columns}
     />
   );

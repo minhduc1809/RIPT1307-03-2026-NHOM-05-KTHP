@@ -32,6 +32,10 @@ const KhaiBaoSucKhoe = () => {
     setRecord(record);
   };
 
+  let titleColumn = 'Mã sinh viên/giảng viên';
+  if (vaiTro === 'sinh_vien') titleColumn = 'Mã sinh viên';
+  else if (vaiTro === 'giang_vien') titleColumn = 'Mã giảng viên';
+
   const columns: IColumn<BieuMau.Record>[] = [
     {
       title: 'STT',
@@ -44,11 +48,11 @@ const KhaiBaoSucKhoe = () => {
       dataIndex: 'hoTen',
       search: vaiTro === 'Admin' ? 'search' : undefined,
       align: 'center',
-      width: 300,
+      width: 200,
     },
     {
-      title: 'Mã sinh viên/giảng viên',
-      dataIndex: 'userId',
+      title: titleColumn,
+      dataIndex: 'userCode',
       align: 'center',
       width: 200,
       search: vaiTro === 'Admin' ? 'search' : undefined,
