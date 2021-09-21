@@ -1,6 +1,8 @@
 import TieuDe from '@/pages/DichVuMotCua/components/TieuDe';
+import { useEffect } from 'react';
 import rules from '@/utils/rules';
-import { Button, Card, Col, Form, Input, InputNumber, Row, Select } from 'antd';
+
+import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useModel } from 'umi';
 
 const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
@@ -11,9 +13,16 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
     setVisibleForm,
     edit,
     loading,
+    infoSv,
+    getInfo,
     postDonXacNhanTinhTrangHocTapModel,
   } = useModel('dichvumotcua');
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    getInfo();
+  }, []);
+
   return (
     <Card bodyStyle={{ padding: 60 }} title={loaiGiayTo}>
       <Form
@@ -24,6 +33,99 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
         form={form}
       >
         <TieuDe />
+        <Row gutter={[16, 0]}>
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item
+              name="hoTen"
+              label="Họ tên"
+              initialValue={infoSv?.hoTen}
+              rules={[...rules.required]}
+            >
+              <Input readOnly placeholder="Họ và tên" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item
+              name="hoTen"
+              label="Mã sinh viên"
+              initialValue={record?.hoTen}
+              rules={[...rules.required]}
+            >
+              <Input placeholder="Niên khóa" />
+            </Form.Item>
+          </Col>
+
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item
+              name="hoTen"
+              label="Giới tính"
+              initialValue={record?.lop}
+              rules={[...rules.required]}
+            >
+              <Input placeholder="Niên khóa" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item
+              name="hoTen"
+              label="Số CMND (CCCD)"
+              initialValue={record?.lop}
+              rules={[...rules.required]}
+            >
+              <Input placeholder="Niên khóa" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item
+              name="hoTen"
+              label="Ngày cấp"
+              initialValue={record?.lop}
+              rules={[...rules.required]}
+            >
+              <DatePicker style={{ width: '100%' }} placeholder="Ngày cấp" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item
+              name="hoTen"
+              label="Nơi cấp"
+              initialValue={record?.lop}
+              rules={[...rules.required]}
+            >
+              <Input placeholder="Niên khóa" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item
+              name="hoTen"
+              label="Lớp"
+              initialValue={record?.lop}
+              rules={[...rules.required]}
+            >
+              <Input placeholder="Niên khóa" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item
+              name="hoTen"
+              label="Số điện thoại"
+              initialValue={record?.lop}
+              rules={[...rules.required]}
+            >
+              <Input placeholder="Niên khóa" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item
+              name="hoTen"
+              label="Quê quán"
+              initialValue={record?.lop}
+              rules={[...rules.required]}
+            >
+              <Input placeholder="Quê quán" />
+            </Form.Item>
+          </Col>
+        </Row>
         <Row gutter={[20, 0]}>
           <Col xs={24} md={12} xl={8}>
             <Form.Item
@@ -41,13 +143,33 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
           </Col>
           <Col xs={24} md={12} xl={8}>
             <Form.Item
+              name="hoTen"
+              label="Khoa"
+              initialValue={record?.lop}
+              rules={[...rules.required]}
+            >
+              <Input placeholder="Khoa" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item
+              name="hoTen"
+              label="Ngành"
+              initialValue={record?.lop}
+              rules={[...rules.required]}
+            >
+              <Input placeholder="Ngành" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item
               name="heDaoTao"
               label="Hệ đào tạo"
-              initialValue={record?.heDaoTao}
+              initialValue="Đại học chính quy"
               rules={[...rules.required]}
             >
               <Select placeholder="Hệ đào tạo">
-                {['Đại học', 'Cao đẳng', 'Dạy nghề'].map((item) => (
+                {['Đại học chính quy'].map((item) => (
                   <Select.Option value={item}>{item}</Select.Option>
                 ))}
               </Select>
@@ -86,11 +208,20 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
           <Col span={24}>
             <Form.Item
               name="lyDo"
-              label="Lý do"
+              label="Lý do xác nhận"
               initialValue={record?.lyDo}
               rules={[...rules.required]}
             >
-              <Input.TextArea rows={3} placeholder="Lý do" />
+              <Select placeholder="Chọn lý do">
+                {[
+                  'Xác nhận là sinh viên',
+                  'Làm thủ tục hoãn nghĩa vụ quân sự',
+                  'Làm thủ tục giảm trừ thuế thu thập cho người thân',
+                  'Khác',
+                ].map((item) => (
+                  <Select.Option value={item}>{item}</Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </Col>
         </Row>
