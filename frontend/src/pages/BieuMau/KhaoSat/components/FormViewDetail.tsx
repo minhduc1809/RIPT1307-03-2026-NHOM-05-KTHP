@@ -38,7 +38,7 @@ const FormBaiHoc = () => {
     );
   };
   return (
-    <Card loading={loading} title="Chi tiết khai báo">
+    <Card loading={loading} title="Chi tiết khảo sát">
       <Form labelCol={{ span: 24 }} form={form}>
         <h3>{record.tieuDe}</h3>
 

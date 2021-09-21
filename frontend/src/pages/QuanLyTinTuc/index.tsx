@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { getDataTinTuc } from '@/services/ant-design-pro/api';
 import { Card, Col, Empty, Modal, Row, Typography } from 'antd';
 import _ from 'lodash';
@@ -8,9 +9,9 @@ import './styles.less';
 
 export default () => {
   const [visibleModal, setVisibleModal] = useState(false);
-  const [record, setRecord] = useState<IRecordTinTuc.Result>();
+  const [record, setRecord] = useState<TinTuc.Record>();
 
-  const viewMore = (rc: IRecordTinTuc.Result) => {
+  const viewMore = (rc: TinTuc.Record) => {
     setVisibleModal(true);
     setRecord(rc);
   };
@@ -18,7 +19,7 @@ export default () => {
   const [dataTinTuc, setdataTinTuc] = useState<IRecordTinTuc.RootObject>({});
   useEffect(() => {
     const getData = async () => {
-      const res = await getDataTinTuc({});
+      const res: any = await getDataTinTuc({});
       // console.log('res :>> ', res);
       setdataTinTuc(res);
     };
@@ -30,22 +31,23 @@ export default () => {
     index: index + 1,
   }));
 
-  const renderTinTuc = (tinTuc: IRecordTinTuc.Result | undefined) => {
+  const renderTinTuc = (tinTuc: TinTuc.Record) => {
     if (!tinTuc) {
       return null;
     }
 
     return (
-      <Card key={tinTuc.id} className="tin-tuc-card" hoverable onClick={() => viewMore(tinTuc)}>
+      // eslint-disable-next-line no-underscore-dangle
+      <Card key={tinTuc._id} className="tin-tuc-card" hoverable onClick={() => viewMore(tinTuc)}>
         <div className="tin-tuc-image-wrapper">
-          <img src={`https://dhs.aisenote.com/${tinTuc.avatar_path}`} />
+          <img style={{ objectFit: 'cover' }} src={tinTuc?.urlAnhDaiDien ?? ''} />
         </div>
         <div className="tin-tuc-content">
           <Typography.Title level={4} ellipsis={{ rows: 2 }} className="tin-tuc-tieu-de">
-            {tinTuc.mo_ta}
+            {tinTuc?.tieuDe ?? ''}
           </Typography.Title>
           <Typography.Paragraph ellipsis={{ rows: 2 }} type="secondary" className="tin-tuc-mo-ta">
-            {tinTuc.mo_ta}
+            {tinTuc?.moTa ?? ''}
           </Typography.Paragraph>
         </div>
       </Card>
@@ -61,14 +63,14 @@ export default () => {
         <Col md={12} xs={24}>
           <Row>
             {_.slice(dsTinTuc, 1, 4).map((tinTuc) => (
-              <Col span={24} key={tinTuc?.id}>
+              <Col span={24} key={tinTuc?._id}>
                 {renderTinTuc(tinTuc)}
               </Col>
             ))}
           </Row>
         </Col>
         {_.slice(dsTinTuc, 4).map((tinTuc) => (
-          <Col md={8} xs={24} key={tinTuc?.id}>
+          <Col md={8} xs={24} key={tinTuc?._id}>
             {renderTinTuc(tinTuc)}
           </Col>
         ))}
@@ -93,23 +95,21 @@ export default () => {
       {renderDanhSachTinTuc()}
       <Modal
         width="1000px"
-        title={record?.mo_ta}
+        title={record?.moTa}
         visible={visibleModal}
         okText="Đóng"
         onOk={() => setVisibleModal(false)}
         cancelButtonProps={{ hidden: true }}
         onCancel={() => setVisibleModal(false)}
       >
-        <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-          <img
-            style={{ maxWidth: '100%' }}
-            alt=""
-            src={`https://dhs.aisenote.com/${record?.avatar_path}`}
-          />
-        </div>
-        <div dangerouslySetInnerHTML={{ __html: record?.noi_dung ?? '' }} />
-        <div style={{ textAlign: 'center' }}>
-          {moment(record?.ngay_dang).format('DD/MM/YYYY HH:mm')}
+        <div style={{ overflowX: 'auto' }}>
+          <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+            <img style={{ maxWidth: '100%' }} alt="" src={record?.urlAnhDaiDien ?? ''} />
+          </div>
+          <div dangerouslySetInnerHTML={{ __html: record?.noiDung ?? '' }} />
+          <div style={{ textAlign: 'center' }}>
+            {moment(record?.ngayDang).format('DD/MM/YYYY HH:mm')}
+          </div>{' '}
         </div>
       </Modal>
     </>

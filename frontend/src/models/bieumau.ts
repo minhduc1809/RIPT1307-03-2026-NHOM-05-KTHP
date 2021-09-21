@@ -7,6 +7,7 @@ import {
   getBieuMauUser,
   putBieuMau,
   getBieuMauThongKe,
+  traLoiBieuMau,
 } from '@/services/BieuMau/bieumau';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -86,7 +87,19 @@ export default () => {
     setLoading(false);
   };
 
+  const traLoiBieuMauModel = async (payload: {
+    idBieuMau: string;
+    danhSachTraLoi: KhaiBaoSucKhoe.TraLoiRecord[];
+  }) => {
+    setLoading(true);
+    await traLoiBieuMau(payload);
+    message.success('Gửi câu trả lời thành công');
+    setLoading(false);
+    setVisibleForm(false);
+  };
+
   return {
+    traLoiBieuMauModel,
     getBieuMauThongKeModel,
     thongKe,
     setThongKe,

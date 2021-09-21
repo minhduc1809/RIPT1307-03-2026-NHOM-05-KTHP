@@ -37,3 +37,10 @@ export async function getBieuMauThongKe(payload: { id: string }) {
 export async function delBieuMau(payload: { id: string }) {
   return axios.delete(`${ip3}/bieu-mau/${payload.id}`);
 }
+
+export async function traLoiBieuMau(payload: {
+  idBieuMau: string;
+  danhSachTraLoi: KhaiBaoSucKhoe.TraLoiRecord[];
+}) {
+  return axios.post(`${ip3}/cau-tra-loi-bieu-mau/me`, payload);
+}

@@ -3,7 +3,10 @@ import {
   getBieuMauKhaiBaoYTe,
   getKhaiBaoYTeAdmin,
   getLichSuKhaiBaoByUserId,
+  getLichSuKhaiBaoUser,
+  khaiBaoYTe,
 } from '@/services/KhaiBaoSucKhoe/khaibaosuckhoe';
+import { message } from 'antd';
 import { useState } from 'react';
 
 export default () => {
@@ -15,6 +18,7 @@ export default () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [edit, setEdit] = useState<boolean>(false);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
+  const [visibleLichSuKhaiBao, setVisibleLichSuKhaiBao] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
@@ -39,11 +43,37 @@ export default () => {
 
   const getLichSuKhaiBaoModel = async (userId: string) => {
     setLoading(true);
-    const response = await getLichSuKhaiBaoByUserId({ idBieuMau: bieuMau._id, userId });
+    await getLichSuKhaiBaoByUserId({ idBieuMau: bieuMau._id, userId });
+    setLoading(false);
+  };
+
+  const khaiBaoYTeModel = async (payload: {
+    idBieuMau: string;
+    danhSachTraLoi: KhaiBaoSucKhoe.TraLoiRecord[];
+  }) => {
+    setLoading(true);
+    await khaiBaoYTe(payload);
+    message.success('Khai báo thành công');
+    setLoading(false);
+  };
+
+  const getLichSuKhaiBaoUserModel = async () => {
+    if (!bieuMau?._id) return;
+    setLoading(true);
+    const response = await getLichSuKhaiBaoUser({
+      data: { page, limit, condition },
+      idBieuMau: bieuMau?._id,
+    });
+    setDanhSach(response?.data?.data?.result ?? []);
+    setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);
   };
 
   return {
+    visibleLichSuKhaiBao,
+    setVisibleLichSuKhaiBao,
+    getLichSuKhaiBaoUserModel,
+    khaiBaoYTeModel,
     getLichSuKhaiBaoModel,
     filterInfo,
     condition,

@@ -23,7 +23,7 @@ export async function currentUser(id: number, options?: { [key: string]: any }) 
 }
 
 export async function getDataTinTuc(options?: { [key: string]: any }) {
-  return request<IRecordTinTuc.RootObject>(`${ip}/odoo-user-service/odoo-tin-tuc/pageable`, {
+  return request<IRecordTinTuc.RootObject>(`${ip}/odoo-user-service/tin-tuc/me/pageable`, {
     method: 'GET',
     params: { page: 1, limit: 20 },
     ...(options || {}),

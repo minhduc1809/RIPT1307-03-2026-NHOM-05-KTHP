@@ -7,6 +7,10 @@ export async function getThuMucAdmin(payload: { page: number; limit: number }) {
   return axios.get(`${ip3}/${url}/pageable`, { params: payload });
 }
 
+export async function getThuMucUser() {
+  return axios.get(`${ip3}/${url}/me/all`);
+}
+
 export async function addThuMuc(payload: VanBanHuongDan.ThuMuc) {
   return axios.post(`${ip3}/${url}`, payload);
 }

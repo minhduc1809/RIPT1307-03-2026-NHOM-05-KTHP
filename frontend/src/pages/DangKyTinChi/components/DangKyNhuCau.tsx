@@ -80,7 +80,7 @@ const DangKyNhuCau = () => {
       dataIndex: 'tenMonHoc',
       width: 200,
       align: 'center',
-      search: 'search',
+      // search: 'search',
     },
     {
       title: 'Mã học phần',

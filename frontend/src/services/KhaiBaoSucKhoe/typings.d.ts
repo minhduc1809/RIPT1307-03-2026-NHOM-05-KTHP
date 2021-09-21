@@ -1,17 +1,17 @@
 declare module KhaiBaoSucKhoe {
   export interface LuaChonBangRecord {
-    _id: string;
+    _id?: string;
     idCot: string;
     idHang: string;
   }
 
   export interface TraLoiRecord {
-    listLuaChon: string[];
-    listLuaChonBang: LuaChonBangRecord[];
-    traLoiText: string;
-    _id: string;
+    listLuaChon?: string[];
+    listLuaChonBang?: LuaChonBangRecord[];
+    traLoiText?: string;
+    _id?: string;
     idCauHoi: string;
-    luaChonTuyenTinh: number;
+    luaChonTuyenTinh?: number;
   }
 
   export interface Record {

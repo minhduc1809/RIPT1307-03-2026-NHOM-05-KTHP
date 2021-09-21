@@ -21,7 +21,6 @@ const DangKyTinChi = () => {
     getThongTinKyHocModel,
     current,
     setCurrent,
-    loading,
   } = useModel('dangkytinchi');
 
   useEffect(() => {
@@ -46,7 +45,7 @@ const DangKyTinChi = () => {
   };
   return (
     <Card
-      loading={loading || loadingKyHoc}
+      loading={loadingKyHoc}
       title={
         <>
           Đăng ký tín chỉ
@@ -66,7 +65,7 @@ const DangKyTinChi = () => {
       </Steps>
       <br />
       {current === 0 && <DangKyNhuCau />}
-      {current === 1 && <div>bbb</div>}
+      {current === 1 && <div>Chức năng đang phát triển</div>}
     </Card>
   );
 };

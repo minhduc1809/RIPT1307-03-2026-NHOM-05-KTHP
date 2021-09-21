@@ -9,6 +9,7 @@ import { useModel } from 'umi';
 import Form from './components/Form';
 
 const KhaiBaoSucKhoe = () => {
+  const vaiTro = localStorage.getItem('vaiTro');
   const {
     bieuMau,
     getBieuMauKhaiBaoYTeModel,
@@ -19,10 +20,11 @@ const KhaiBaoSucKhoe = () => {
     condition,
     setRecord,
     setVisibleForm,
+    getLichSuKhaiBaoUserModel,
   } = useModel('khaibaosuckhoe');
 
   useEffect(() => {
-    getBieuMauKhaiBaoYTeModel();
+    if (vaiTro === 'Admin') getBieuMauKhaiBaoYTeModel();
   }, []);
 
   const handleView = (record: KhaiBaoSucKhoe.Record) => {
@@ -40,7 +42,7 @@ const KhaiBaoSucKhoe = () => {
     {
       title: 'Người khai báo',
       dataIndex: 'hoTen',
-      search: 'search',
+      search: vaiTro === 'Admin' ? 'search' : undefined,
       align: 'center',
       width: 300,
     },
@@ -49,13 +51,13 @@ const KhaiBaoSucKhoe = () => {
       dataIndex: 'userId',
       align: 'center',
       width: 200,
-      search: 'search',
+      search: vaiTro === 'Admin' ? 'search' : undefined,
     },
     {
       title: 'Vai trò',
       dataIndex: 'vaiTro',
       align: 'center',
-      search: 'filterString',
+      search: vaiTro === 'Admin' ? 'filterString' : undefined,
       render: (val) => <div>{val === 'sinh_vien' ? 'Sinh viên' : 'Giảng viên'}</div>,
     },
     {
@@ -97,7 +99,7 @@ const KhaiBaoSucKhoe = () => {
   return (
     <TableBase
       columns={columns}
-      getData={getKhaiBaoYTeAdminModel}
+      getData={vaiTro === 'Admin' ? getKhaiBaoYTeAdminModel : getLichSuKhaiBaoUserModel}
       loading={loading}
       dependencies={[bieuMau._id, page, limit, condition]}
       modelName="khaibaosuckhoe"

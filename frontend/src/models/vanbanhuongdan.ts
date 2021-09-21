@@ -2,6 +2,7 @@ import {
   addThuMuc,
   delThuMuc,
   getThuMucAdmin,
+  getThuMucUser,
   putThuMuc,
 } from '@/services/VanBanHuongDan/vanbanhuongdan';
 import { message } from 'antd';
@@ -27,6 +28,14 @@ export default () => {
     const response = await getThuMucAdmin({ page, limit });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);
+    setLoading(false);
+  };
+
+  const getThuMucUserModel = async () => {
+    setLoading(true);
+    const response = await getThuMucUser();
+    setDanhSach(response?.data?.data ?? []);
+    setTotal(response?.data?.data?.length ?? 0);
     setLoading(false);
   };
 
@@ -58,6 +67,7 @@ export default () => {
   };
 
   return {
+    getThuMucUserModel,
     setLoading,
     setRecord,
     recordFile,

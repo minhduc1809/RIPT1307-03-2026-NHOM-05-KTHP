@@ -5,8 +5,10 @@ import { Button, Divider, Input, Modal, Popconfirm, Table, Tooltip } from 'antd'
 import Form from './FormFile';
 import { useState } from 'react';
 import { includes } from '@/utils/utils';
+import type { IColumn } from '@/utils/interfaces';
 
 const FileList = (props: { data: VanBanHuongDan.TepTin[] }) => {
+  const vaiTro = localStorage.getItem('vaiTro');
   const {
     visibleFormFile,
     setVisibleFormFile,
@@ -51,15 +53,78 @@ const FileList = (props: { data: VanBanHuongDan.TepTin[] }) => {
     );
   };
 
+  const columns: IColumn<VanBanHuongDan.TepTin>[] = [
+    {
+      title: 'STT',
+      dataIndex: 'index',
+      width: 80,
+      align: 'center',
+    },
+    {
+      title: 'Tên văn bản',
+      dataIndex: 'ten',
+      align: 'center',
+      width: 250,
+    },
+    {
+      title: 'Tệp đính kèm',
+      align: 'center',
+      dataIndex: 'url',
+      render: (val, recordFile) => (
+        <a href={val} target="_blank">
+          <PaperClipOutlined />
+          {recordFile.ten}
+        </a>
+      ),
+    },
+    {
+      title: 'Mô tả',
+      dataIndex: 'moTa',
+      align: 'center',
+      width: 300,
+    },
+  ];
+
+  if (vaiTro === 'Admin')
+    columns.push({
+      title: 'Thao tác',
+      align: 'center',
+      width: 130,
+      fixed: 'right',
+      render: (recordFile: VanBanHuongDan.TepTin) => (
+        <>
+          <Tooltip title="Chỉnh sửa">
+            <Button onClick={() => handleEdit(recordFile)} type="default" shape="circle">
+              <EditOutlined />
+            </Button>
+          </Tooltip>
+
+          <Divider type="vertical" />
+          <Tooltip title="Xóa">
+            <Popconfirm
+              onConfirm={() => delFile(recordFile._id)}
+              title="Bạn có chắc chắn muốn xóa văn bản này"
+            >
+              <Button type="primary" shape="circle">
+                <DeleteOutlined />
+              </Button>
+            </Popconfirm>
+          </Tooltip>
+        </>
+      ),
+    });
+
   return (
     <>
       <div style={{ display: 'flex' }}>
-        <Button type="primary" style={{ marginBottom: 8, marginRight: 8 }} onClick={handleAdd}>
-          <PlusOutlined />
-          Thêm mới
-        </Button>
+        {vaiTro === 'Admin' && (
+          <Button type="primary" style={{ marginBottom: 8, marginRight: 8 }} onClick={handleAdd}>
+            <PlusOutlined />
+            Thêm mới
+          </Button>
+        )}
         <Input.Search
-          style={{ width: 300 }}
+          style={{ width: 300, marginBottom: 8 }}
           placeholder="Tìm kiếm theo tên văn bản"
           onSearch={onSearch}
           enterButton
@@ -77,64 +142,7 @@ const FileList = (props: { data: VanBanHuongDan.TepTin[] }) => {
           },
         }}
         scroll={{ x: 1000 }}
-        columns={[
-          {
-            title: 'STT',
-            dataIndex: 'index',
-            width: 80,
-            align: 'center',
-          },
-          {
-            title: 'Tên văn bản',
-            dataIndex: 'ten',
-            align: 'center',
-            width: 250,
-          },
-          {
-            title: 'Tệp đính kèm',
-            align: 'center',
-            dataIndex: 'url',
-            render: (val, recordFile) => (
-              <a href={val} target="_blank">
-                <PaperClipOutlined />
-                {recordFile.ten}
-              </a>
-            ),
-          },
-          {
-            title: 'Mô tả',
-            dataIndex: 'moTa',
-            align: 'center',
-            width: 300,
-          },
-          {
-            title: 'Thao tác',
-            align: 'center',
-            width: 130,
-            fixed: 'right',
-            render: (recordFile: VanBanHuongDan.TepTin) => (
-              <>
-                <Tooltip title="Chỉnh sửa">
-                  <Button onClick={() => handleEdit(recordFile)} type="default" shape="circle">
-                    <EditOutlined />
-                  </Button>
-                </Tooltip>
-
-                <Divider type="vertical" />
-                <Tooltip title="Xóa">
-                  <Popconfirm
-                    onConfirm={() => delFile(recordFile._id)}
-                    title="Bạn có chắc chắn muốn xóa văn bản này"
-                  >
-                    <Button type="primary" shape="circle">
-                      <DeleteOutlined />
-                    </Button>
-                  </Popconfirm>
-                </Tooltip>
-              </>
-            ),
-          },
-        ]}
+        columns={columns}
         dataSource={data}
       />
       <Modal

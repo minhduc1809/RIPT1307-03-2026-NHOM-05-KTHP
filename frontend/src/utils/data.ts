@@ -8,7 +8,7 @@ const data: any = {
   vaiTro: [
     { value: 'sinh_vien', text: 'Sinh viên' },
     { value: 'giang_vien', text: 'Giảng viên' },
-    { value: 'can_bo', name: 'Cán bộ' },
+    { value: 'can_bo', text: 'Cán bộ' },
   ],
   'info.anToan': [
     { value: false, text: 'Không an toàn' },

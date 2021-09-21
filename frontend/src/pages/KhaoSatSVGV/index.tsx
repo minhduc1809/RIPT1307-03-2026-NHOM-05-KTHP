@@ -72,15 +72,27 @@ const KhaoSat = () => {
       align: 'center',
       width: 100,
       fixed: 'right',
-      render: (record) => (
-        <>
-          <Tooltip title="Thực hiện khảo sát">
-            <Button onClick={() => handleEdit(record)} type="primary" shape="circle">
-              <EditOutlined />
-            </Button>
-          </Tooltip>
-        </>
-      ),
+      render: (record: BieuMau.Record) => {
+        const checkHetThoiGianThucHien =
+          moment(record.thoiGianBatDau).isAfter(new Date()) ||
+          moment(record.thoiGianKetThuc).isBefore(new Date());
+        return (
+          <>
+            <Tooltip
+              title={checkHetThoiGianThucHien ? 'Ngoài thời gian cho phép' : 'Thực hiện khảo sát'}
+            >
+              <Button
+                disabled={checkHetThoiGianThucHien}
+                onClick={() => handleEdit(record)}
+                type="primary"
+                shape="circle"
+              >
+                <EditOutlined />
+              </Button>
+            </Tooltip>
+          </>
+        );
+      },
     },
   ];
 

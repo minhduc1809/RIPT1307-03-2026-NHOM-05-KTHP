@@ -146,6 +146,13 @@ export default defineConfig({
       component: './VanBanHuongDan',
     },
     {
+      name: 'VanBanHuongDanUser',
+      icon: 'FileText',
+      path: '/vanbanhuongdanuser',
+      access: 'sinhVienVaGiangVien',
+      component: './VanBanHuongDan',
+    },
+    {
       name: 'Calendar',
       icon: 'CalendarOutlined',
       path: '/calendar',
@@ -196,7 +203,14 @@ export default defineConfig({
     },
     {
       name: 'KhaiBaoSucKhoe',
-      icon: 'FormOutlined',
+      icon: 'HeartOutlined',
+      path: '/khaibaosuckhoeuser',
+      component: './KhaiBaoSucKhoe/User',
+      access: 'sinhVienVaGiangVien',
+    },
+    {
+      name: 'KhaiBaoSucKhoe',
+      icon: 'HeartOutlined',
       path: '/khaibaosuckhoe',
       access: 'admin',
       component: './KhaiBaoSucKhoe',

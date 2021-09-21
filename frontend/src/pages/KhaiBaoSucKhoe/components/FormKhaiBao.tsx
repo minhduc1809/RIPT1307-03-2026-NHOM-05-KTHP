@@ -11,7 +11,7 @@ import { useState } from 'react';
 
 const FormTraLoiKhaoSat = () => {
   const [form] = Form.useForm();
-  const { loading, record, setVisibleForm, traLoiBieuMauModel } = useModel('bieumau');
+  const { loading, bieuMau, setVisibleForm, khaiBaoYTeModel } = useModel('khaibaosuckhoe');
   const [listLuaChonBang, setListLuaChonBang] = useState<{ idHang: string; idCot: string }[]>([]);
   const renderQuestion = (question: BieuMau.CauHoi, indexKhoi: number, indexCauHoi: number) => {
     let questionEleMent = <div></div>;
@@ -53,11 +53,11 @@ const FormTraLoiKhaoSat = () => {
     );
   };
   return (
-    <Card loading={loading} title="Chi tiết khảo sát">
+    <Card loading={loading} title="Chi tiết khai báo y tế">
       <Form
         onFinish={(values) => {
           const danhSachTraLoi: KhaiBaoSucKhoe.TraLoiRecord[] = [];
-          record?.danhSachKhoi?.forEach((item, indexKhoi) => {
+          bieuMau?.danhSachKhoi?.forEach((item, indexKhoi) => {
             item?.danhSachCauHoi?.forEach((cauHoi, indexCauHoi) => {
               let traLoi: KhaiBaoSucKhoe.TraLoiRecord = {
                 idCauHoi: cauHoi._id,
@@ -83,15 +83,15 @@ const FormTraLoiKhaoSat = () => {
               danhSachTraLoi.push(traLoi);
             });
           });
-          traLoiBieuMauModel({ idBieuMau: record._id, danhSachTraLoi });
+          khaiBaoYTeModel({ idBieuMau: bieuMau._id, danhSachTraLoi });
         }}
         labelCol={{ span: 24 }}
         form={form}
       >
-        <h3>{record.tieuDe}</h3>
-        <p>{record.moTa}</p>
+        <h3>{bieuMau.tieuDe}</h3>
+        <p>{bieuMau.moTa}</p>
         <div>
-          {record.danhSachKhoi?.map((item: BieuMau.Khoi, indexKhoi) => (
+          {bieuMau.danhSachKhoi?.map((item: BieuMau.Khoi, indexKhoi) => (
             <Card hoverable key={indexKhoi}>
               <div>{item.tieuDe}</div>
               <div>{item.moTa}</div>

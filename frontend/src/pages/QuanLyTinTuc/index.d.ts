@@ -13,7 +13,7 @@ export declare module IRecordTinTuc {
     offset: number;
     limit: number;
     total: number;
-    result: Result[];
+    result: TinTuc.Record[];
   }
 
   export interface RootObject {

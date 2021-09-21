@@ -24,6 +24,7 @@ const VanBanHuongDan = () => {
     delThuMucModel,
     visibleFileList,
     setVisibleFileList,
+    getThuMucUserModel,
   } = useModel('vanbanhuongdan');
 
   const handleEdit = (thuMuc: VanBanHuongDan.ThuMuc) => {
@@ -78,17 +79,20 @@ const VanBanHuongDan = () => {
     setVisibleFileList(true);
     setRecord(thuMuc);
   };
-
+  const vaiTro = localStorage.getItem('vaiTro');
   useEffect(() => {
-    getThuMucModel();
+    if (vaiTro === 'Admin') getThuMucModel();
+    else getThuMucUserModel();
   }, [page, limit]);
 
   return (
     <>
       <Card title="Văn bản hướng dẫn">
-        <Button onClick={handleAdd} style={{ marginBottom: 8 }} type="primary">
-          <PlusOutlined /> Thêm mới
-        </Button>
+        {vaiTro === 'Admin' && (
+          <Button onClick={handleAdd} style={{ marginBottom: 8 }} type="primary">
+            <PlusOutlined /> Thêm mới
+          </Button>
+        )}
         <List
           loading={loading}
           split
@@ -114,25 +118,34 @@ const VanBanHuongDan = () => {
               key={item._id}
               onMouseOut={(e) => handleOnMouseOut(e.target)}
               onMouseOver={(e) => handleOnMouseOver(e.target)}
-              actions={[
-                <Tooltip title="Chỉnh sửa">
-                  <Button
-                    shape="circle"
-                    icon={<EditOutlined />}
-                    title="Sửa"
-                    onClick={() => handleEdit(item)}
-                  />
-                </Tooltip>,
-                <Tooltip title="Xóa">
-                  <Popconfirm
-                    title="Bạn có chắc muốn xóa?"
-                    // eslint-disable-next-line no-underscore-dangle
-                    onConfirm={() => handleDel(item._id)}
-                  >
-                    <Button type="primary" shape="circle" icon={<DeleteOutlined />} title="Xóa" />
-                  </Popconfirm>
-                </Tooltip>,
-              ]}
+              actions={
+                vaiTro === 'Admin'
+                  ? [
+                      <Tooltip title="Chỉnh sửa">
+                        <Button
+                          shape="circle"
+                          icon={<EditOutlined />}
+                          title="Sửa"
+                          onClick={() => handleEdit(item)}
+                        />
+                      </Tooltip>,
+                      <Tooltip title="Xóa">
+                        <Popconfirm
+                          title="Bạn có chắc muốn xóa?"
+                          // eslint-disable-next-line no-underscore-dangle
+                          onConfirm={() => handleDel(item._id)}
+                        >
+                          <Button
+                            type="primary"
+                            shape="circle"
+                            icon={<DeleteOutlined />}
+                            title="Xóa"
+                          />
+                        </Popconfirm>
+                      </Tooltip>,
+                    ]
+                  : []
+              }
             >
               <List.Item.Meta
                 avatar={
