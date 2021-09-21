@@ -92,7 +92,7 @@ const LopHanhChinh = () => {
               description={
                 <div>
                   <b>Mã sinh viên: </b>
-                  {item?.MaSV ?? ''}
+                  {item?.ma_sv ?? ''}
                 </div>
               }
             />

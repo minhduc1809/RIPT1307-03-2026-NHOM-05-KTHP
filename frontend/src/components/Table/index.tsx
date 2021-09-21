@@ -26,6 +26,7 @@ type Props = {
   border?: boolean;
   scroll?: { x?: number; y?: number };
   hascreate?: boolean;
+  dataState?: string;
 };
 
 const TableBase = (props: Props) => {
@@ -43,10 +44,10 @@ const TableBase = (props: Props) => {
     scroll,
     hascreate,
     widthDrawer,
+    dataState,
   } = props;
   let { columns } = props;
   const {
-    danhSach,
     visibleForm,
     setVisibleForm,
     total,
@@ -61,6 +62,8 @@ const TableBase = (props: Props) => {
     setFilterInfo,
     setCondition,
   } = useModel(modelName);
+  const model = useModel(modelName);
+
   useEffect(() => {
     getData(params);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -303,7 +306,7 @@ const TableBase = (props: Props) => {
         }}
         // onChange={handleTableChange}
         onChange={onChange}
-        dataSource={danhSach?.map((item: any, index: number) => {
+        dataSource={model?.[dataState || 'danhSach']?.map((item: any, index: number) => {
           return { ...item, index: index + 1 + (page - 1) * limit, key: index };
         })}
         columns={columns}

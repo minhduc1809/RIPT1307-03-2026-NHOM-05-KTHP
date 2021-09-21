@@ -5,15 +5,16 @@ import UploadAvatar from '@/components/Upload/UploadAvatar';
 import { getURLImg } from '@/services/LopTinChi/loptinchi';
 import rules from '@/utils/rules';
 import { renderFileListUrl } from '@/utils/utils';
-import { Button, Card, DatePicker, Form, Input, Select } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import moment from 'moment';
+import { useState } from 'react';
 import { useModel } from 'umi';
 
 const FormTinTuc = () => {
   const [form] = Form.useForm();
-
   const { loading, record, setVisibleForm, edit, putTinTucModel, addTinTucModel } =
     useModel('tintuc');
+  const [doiTuong, setDoiTuong] = useState<string>(record?.doiTuong ?? 'Tất cả');
   const { danhSach } = useModel('chude');
   return (
     <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
@@ -64,18 +65,7 @@ const FormTinTuc = () => {
         >
           <Input placeholder="Mô tả" />
         </Form.Item>
-        <Form.Item
-          name="ngayDang"
-          label="Ngày đăng"
-          rules={[...rules.required]}
-          initialValue={moment(record?.ngayDang)}
-        >
-          <DatePicker
-            format="DD/MM/YYYY"
-            disabledDate={(cur) => moment(cur).isAfter(moment())}
-            placeholder="Ngày đăng"
-          />
-        </Form.Item>
+
         <Form.Item
           name="urlAnhDaiDien"
           label="Ảnh đại diện"
@@ -91,6 +81,63 @@ const FormTinTuc = () => {
             }}
           />
         </Form.Item>
+        <Row gutter={[20, 0]}>
+          <Col xs={24} md={12}>
+            <Form.Item
+              name="doiTuong"
+              label="Đối tượng"
+              rules={[...rules.required]}
+              initialValue={record?.doiTuong ?? 'Tất cả'}
+            >
+              <Select
+                onChange={(val: string) => {
+                  setDoiTuong(val);
+                }}
+                placeholder="Chọn đối tượng"
+              >
+                {['Tất cả', 'Vai trò'].map((item) => (
+                  <Select.Option value={item}>{item}</Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12}>
+            <Form.Item
+              name="ngayDang"
+              label="Ngày đăng"
+              rules={[...rules.required]}
+              initialValue={moment(record?.ngayDang)}
+            >
+              <DatePicker
+                style={{ width: '100%' }}
+                format="DD/MM/YYYY"
+                disabledDate={(cur) => moment(cur).isAfter(moment())}
+                placeholder="Ngày đăng"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        {doiTuong === 'Vai trò' && (
+          <Form.Item
+            rules={[...rules.required]}
+            name="danhSachVaiTro"
+            label="Vai trò"
+            initialValue={record?.danhSachVaiTro}
+          >
+            <Select mode="multiple" placeholder="Chọn vai trò">
+              {[
+                { value: 'giang_vien', name: 'Giảng viên' },
+                { value: 'sinh_vien', name: 'Sinh viên' },
+                { value: 'can_bo', name: 'Cán bộ' },
+              ].map((item) => (
+                <Select.Option key={item.value} value={item.value}>
+                  {item.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+
         <Form.Item
           name="noiDung"
           label="Nội dung"

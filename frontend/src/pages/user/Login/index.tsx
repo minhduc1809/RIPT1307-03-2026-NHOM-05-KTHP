@@ -1,12 +1,11 @@
 import Footer from '@/components/Footer';
-import { login, getInfoSV, getInfoGV } from '@/services/ant-design-pro/api';
-import rules from '@/utils/rules';
+import { getInfoGV, getInfoSV, login } from '@/services/ant-design-pro/api';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { ConfigProvider, message, Tabs } from 'antd';
 import viVN from 'antd/lib/locale/vi_VN';
 import React, { useState } from 'react';
-import { FormattedMessage, history, Link, SelectLang, useIntl, useModel } from 'umi';
+import { FormattedMessage, history, Link, useIntl, useModel } from 'umi';
 import styles from './index.less';
 
 const goto = () => {
@@ -74,7 +73,7 @@ const Login: React.FC = () => {
   return (
     <div className={styles.container}>
       {/* <SelectRole /> */}
-      <div className={styles.lang}>{SelectLang && <SelectLang />}</div>
+      {/* <div className={styles.lang}>{SelectLang && <SelectLang />}</div> */}
       <div className={styles.content}>
         <div className={styles.top}>
           <div className={styles.header}>

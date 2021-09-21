@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined, PieChartOutlined } from '@ant-design/icons';
 import { Button, Divider, Popconfirm, Popover, Switch, Tooltip } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { useModel } from 'umi';
 import Form from './components/Form';
 import FormViewDetail from './components/FormViewDetail';
+import ThongKe from './components/ThongKe';
 
 const KhaoSat = () => {
   const {
@@ -25,6 +26,7 @@ const KhaoSat = () => {
     kichHoatBieuMauModel,
     condition,
     edit,
+    getBieuMauThongKeModel,
   } = useModel('bieumau');
   const [form, setForm] = useState<string>('edit');
   useEffect(() => {
@@ -42,12 +44,24 @@ const KhaoSat = () => {
     kichHoatBieuMauModel({ id: record._id, data: { kichHoat: !record.kichHoat } });
   };
 
+  const onCell = (record: BieuMau.Record) => ({
+    onClick: () => {
+      setForm('statistic');
+      setVisibleForm(true);
+      setEdit(true);
+      setRecord(record);
+      getBieuMauThongKeModel(record._id);
+    },
+    style: { cursor: 'pointer' },
+  });
+
   const columns: IColumn<BieuMau.Record>[] = [
     {
       title: 'STT',
       dataIndex: 'index',
       align: 'center',
       width: 80,
+      onCell,
     },
     {
       title: 'Tiêu đề',
@@ -55,12 +69,14 @@ const KhaoSat = () => {
       align: 'center',
       search: 'search',
       width: 200,
+      onCell,
     },
     {
       title: 'Mô tả',
       dataIndex: 'moTa',
       align: 'center',
       width: 200,
+      onCell,
     },
     {
       title: 'Thời gian bắt đầu',
@@ -68,6 +84,7 @@ const KhaoSat = () => {
       align: 'center',
       render: (val) => <div>{val ? moment(val).format('HH:mm DD/MM/YYYY') : ''}</div>,
       width: 200,
+      onCell,
     },
     {
       title: 'Thời gian kết thúc',
@@ -75,6 +92,7 @@ const KhaoSat = () => {
       align: 'center',
       render: (val) => <div>{val ? moment(val).format('HH:mm DD/MM/YYYY') : ''}</div>,
       width: 200,
+      onCell,
     },
     {
       title: 'Đối tượng',
@@ -83,6 +101,7 @@ const KhaoSat = () => {
       notRegex: true,
       align: 'center',
       width: 200,
+      onCell,
     },
     {
       title: 'Trạng thái',
@@ -106,10 +125,25 @@ const KhaoSat = () => {
       align: 'center',
       width: 100,
       fixed: 'right',
-      render: (record) => (
+      render: (record: BieuMau.Record) => (
         <Popover
           content={
             <>
+              <Tooltip title="Thống kê">
+                <Button
+                  onClick={() => {
+                    setForm('statistic');
+                    setVisibleForm(true);
+                    setEdit(true);
+                    setRecord(record);
+                    getBieuMauThongKeModel(record._id);
+                  }}
+                  shape="circle"
+                >
+                  <PieChartOutlined />
+                </Button>
+              </Tooltip>
+              <Divider type="vertical" />
               <Tooltip title="Xem trước">
                 <Button
                   onClick={() => {
@@ -151,7 +185,9 @@ const KhaoSat = () => {
       ),
     },
   ];
-
+  let formTable = Form;
+  if (form === 'view' && edit) formTable = FormViewDetail;
+  else if (form === 'statistic' && edit) formTable = ThongKe;
   return (
     <TableBase
       columns={columns}
@@ -164,7 +200,7 @@ const KhaoSat = () => {
       formType="Drawer"
       widthDrawer="60%"
       // scroll={{ x: 1200 }}
-      Form={form === 'edit' || !edit ? Form : FormViewDetail}
+      Form={formTable}
     ></TableBase>
   );
 };

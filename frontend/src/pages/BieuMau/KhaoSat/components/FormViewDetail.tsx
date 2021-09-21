@@ -40,19 +40,18 @@ const FormBaiHoc = () => {
   return (
     <Card loading={loading} title="Chi tiết khai báo">
       <Form labelCol={{ span: 24 }} form={form}>
-        <p>
-          <h3>{record.tieuDe}</h3>
-        </p>
+        <h3>{record.tieuDe}</h3>
+
         <p>{record.moTa}</p>
         <div>
-          {record.danhSachKhoi?.map((item: BieuMau.Khoi) => (
-            <>
+          {record.danhSachKhoi?.map((item: BieuMau.Khoi, index) => (
+            <div key={index}>
               <div>{item.tieuDe}</div>
               <div>{item.moTa}</div>
               <div>
                 {item.danhSachCauHoi?.map((cauHoi: BieuMau.CauHoi) => renderQuestion(cauHoi))}
               </div>
-            </>
+            </div>
           ))}
         </div>
         <br />

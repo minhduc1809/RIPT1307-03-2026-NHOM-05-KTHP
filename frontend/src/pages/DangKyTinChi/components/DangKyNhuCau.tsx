@@ -1,7 +1,8 @@
 import type { IColumn } from '@/utils/interfaces';
 import { currencyFormat } from '@/utils/utils';
 import { ArrowRightOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, List, Popconfirm, Row, Table, Statistic, Tag, Result } from 'antd';
+import { Button, Checkbox, Col, List, Popconfirm, Row, Statistic, Tag, Result, Table } from 'antd';
+import TableTemp from '@/components/Table/Table';
 import type { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -79,6 +80,7 @@ const DangKyNhuCau = () => {
       dataIndex: 'tenMonHoc',
       width: 200,
       align: 'center',
+      search: 'search',
     },
     {
       title: 'Mã học phần',
@@ -89,7 +91,7 @@ const DangKyNhuCau = () => {
     {
       title: 'Số tín chỉ',
       dataIndex: 'soTinChi',
-      width: 200,
+      width: 100,
       align: 'center',
     },
     {
@@ -238,8 +240,8 @@ const DangKyNhuCau = () => {
                 </Col>
                 <Col xs={24} xl={12} xxl={12}>
                   <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}>
-                    <Table
-                      title={() => (
+                    <TableTemp
+                      title={
                         <b>
                           <span>Danh sách học phần đã chọn</span>
                           <span style={{ float: 'right' }}>
@@ -263,7 +265,7 @@ const DangKyNhuCau = () => {
                             </Popconfirm>
                           </span>
                         </b>
-                      )}
+                      }
                       columns={[
                         {
                           title: 'STT',
@@ -273,7 +275,7 @@ const DangKyNhuCau = () => {
                         },
                         ...columns.slice(1),
                       ]}
-                      dataSource={
+                      data={
                         danhSachHocPhanDaChon.length > 0
                           ? [
                               ...danhSachHocPhanDaChon,

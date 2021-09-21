@@ -126,6 +126,7 @@ const FormBaiHoc = () => {
               {[
                 { value: 'giang_vien', name: 'Giảng viên' },
                 { value: 'sinh_vien', name: 'Sinh viên' },
+                { value: 'can_bo', name: 'Cán bộ' },
               ].map((item) => (
                 <Select.Option key={item.value} value={item.value}>
                   {item.name}

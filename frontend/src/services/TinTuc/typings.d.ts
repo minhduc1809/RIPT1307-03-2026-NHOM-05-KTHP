@@ -1,5 +1,7 @@
 declare module TinTuc {
   export interface Record {
+    danhSachVaiTro: string[];
+    doiTuong: 'Tất cả' | 'Vai trò';
     _id: string;
     tieuDe: string;
     idTopic: string;

@@ -44,15 +44,6 @@ const DangKyTinChi = () => {
     );
     setRecord(kyHoc);
   };
-  // let trangThaiDot = 'Đang diễn ra';
-  // let colorDot = 'orange';
-  // if (moment(new Date()).isBefore(recordDot?.ngay_bat_dau_nhu_cau)) {
-  //   trangThaiDot = 'Chưa diễn ra';
-  //   colorDot = 'green';
-  // } else if (recordDot?.ket_thuc === true) {
-  //   trangThaiDot = 'Đã diễn ra';
-  //   colorDot = 'blue';
-  // }
   return (
     <Card
       loading={loading || loadingKyHoc}
@@ -63,11 +54,6 @@ const DangKyTinChi = () => {
             {danhSach?.map((item) => (
               <Select.Option key={item.id} value={item.id}>
                 Kỳ {item.ten_ky_nam_hoc} năm học {item.nam_hoc_id[1]}{' '}
-                {/* {recordDot?.id && (
-                <Tag style={{ marginLeft: 20 }} color={colorDot}>
-                  {trangThaiDot}
-                </Tag>
-              )} */}
               </Select.Option>
             ))}
           </Select>

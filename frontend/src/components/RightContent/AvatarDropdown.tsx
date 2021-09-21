@@ -1,5 +1,5 @@
 import logo from '@/assets/logo.png';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
@@ -66,19 +66,19 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-      {menu && (
+      {menu && localStorage.getItem('vaiTro') !== 'Admin' && (
         <Menu.Item key="center">
           <UserOutlined />
           Trang cá nhân
         </Menu.Item>
       )}
-      {menu && (
+      {/* {menu && (
         <Menu.Item key="settings">
           <SettingOutlined />
           Cài đặt
         </Menu.Item>
-      )}
-      {menu && <Menu.Divider />}
+      )} */}
+      {menu && localStorage.getItem('vaiTro') !== 'Admin' && <Menu.Divider />}
 
       <Menu.Item key="logout">
         <LogoutOutlined />

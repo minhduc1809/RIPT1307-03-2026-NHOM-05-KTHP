@@ -21,7 +21,8 @@ export default defineConfig({
     default: 'vi-VN',
     antd: true,
     // default true, when it is true, will use `navigator.language` overwrite default
-    baseNavigator: true,
+    baseNavigator: false,
+    // baseSeparator: '_',
   },
   dynamicImport: {
     loading: '@ant-design/pro-layout/es/PageLoading',
@@ -153,7 +154,7 @@ export default defineConfig({
     },
     {
       name: 'KhaoSat',
-      icon: 'CalendarOutlined',
+      icon: 'FormOutlined',
       path: '/khaosat',
       component: './KhaoSatSVGV',
       access: 'sinhVienVaGiangVien',
@@ -181,24 +182,66 @@ export default defineConfig({
     },
     {
       name: 'LopTinChi',
-      icon: 'team',
+      icon: 'SolutionOutlined',
       path: '/loptinchi',
       component: './LopTinChi',
       access: 'sinhVienVaGiangVien',
     },
     {
       name: 'LopHanhChinh',
-      icon: 'team',
+      icon: 'AuditOutlined',
       path: '/lophanhchinh',
       component: './LopHanhChinh',
       access: 'sinhVien',
     },
     {
+      name: 'LopHanhChinhAdmin',
+      icon: 'AuditOutlined',
+      path: '/lophanhchinhadmin',
+      component: './LopHanhChinh/Admin',
+      access: 'admin',
+    },
+    // {
+    //   name: 'LopTinChiAdmin',
+    //   icon: 'TeamOutlined',
+    //   path: '/loptinchiadmin',
+    //   component: './LopTinChi/Admin',
+    //   access: 'admin',
+    // },
+    {
       name: 'DangKyTinChi',
-      icon: 'team',
+      icon: 'CheckSquareOutlined',
       path: '/dangkytinchi',
       component: './DangKyTinChi',
       access: 'sinhVien',
+    },
+    {
+      name: 'CoCauToChuc',
+      icon: 'team',
+      path: '/cocautochuc',
+      component: './CoCauToChuc',
+      access: 'admin',
+    },
+    {
+      name: 'DichVuMotCuaSinhVien',
+      icon: 'BankOutlined',
+      path: '/dichvumotcuasv',
+      routes: [
+        {
+          name: 'CTCTSV',
+          path: './ctctsv',
+          component: './DichVuMotCua/SinhVien',
+          access: 'sinhVien',
+        },
+      ],
+      access: 'sinhVien',
+    },
+    {
+      name: 'ThongBao',
+      icon: 'notification',
+      path: '/thongbao',
+      component: './ThongBao',
+      access: 'admin',
     },
     {
       hideInMenu: true,

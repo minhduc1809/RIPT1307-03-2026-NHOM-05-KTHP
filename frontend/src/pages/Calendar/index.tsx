@@ -9,14 +9,6 @@ import { useModel } from 'umi';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// const CodePreview: React.FC = ({ children }) => (
-//   <pre className={styles.pre}>
-//     <code>
-//       <Typography.Text copyable>{children}</Typography.Text>
-//     </code>
-//   </pre>
-// );
 const messages = {
   allDay: 'Cả ngày',
   previous: 'Trước',
@@ -29,7 +21,7 @@ const messages = {
   date: 'Ngày',
   time: 'Thời gian',
   event: 'Sự kiện',
-  showMore: (total: any) => `+ Xem thêm (${total})`,
+  showMore: (total: number) => `+ Xem thêm (${total})`,
 };
 
 export default () => {
@@ -37,12 +29,8 @@ export default () => {
     style: { backgroundColor: toHexa(event.title) },
   });
 
-  const onSelectEvent = (record: any) => {
-    const {
-      title,
-      info: { ma_mon_hoc, ten_mon_hoc, loai_hinh, tiet_bat_dau, tiet_ket_thuc },
-      loaiSuKien,
-    } = record;
+  const onSelectEvent = (record: SuKien.Record) => {
+    const { loaiSuKien } = record;
     Modal.info({
       title: 'Chi tiết sự kiện',
       // width: '40%',
@@ -50,28 +38,20 @@ export default () => {
       okText: 'Đóng',
       content: (
         <div>
-          <p>
-            {' '}
-            <b>Tên sự kiện:</b> {`${title || 'Chưa cập nhật'}\n\n`}
-            <b>Loại sự kiện:</b> {`${loaiSuKien || 'Chưa cập nhật'}\n\n`}
-          </p>
           <b>
-            <p>Loại hình: {loai_hinh}</p>
-            <p>Tên môn học: {ten_mon_hoc}</p>
-            <p>Mã môn học: {ma_mon_hoc}</p>
-            <p>Tiết bắt đầu: {tiet_bat_dau}</p>
-            <p>Tiết kết thúc: {tiet_ket_thuc}</p>
+            <p>Tên sự kiện: {record?.info?.mon_hoc_id?.[1] ?? ''}</p>
+            <p>Loại sự kiện: {`${loaiSuKien || 'Chưa cập nhật'}`}</p>
+            <p>Tên môn học: {record?.info?.mon_hoc_id?.[1] ?? ''}</p>
+            <p>Mã môn học: {record?.info?.mon_hoc_id?.[0]}</p>
+            <p>Tiết bắt đầu: {record?.info?.tiet_bd ?? ''}</p>
+            <p>Tiết kết thúc: {record?.info?.tiet_bd + record?.info?.so_tiet}</p>
           </b>
         </div>
       ),
     });
   };
   const eventCustom = ({ event }: any) => {
-    const {
-      title,
-      // info: { ma_mon_hoc, ten_mon_hoc, loai_hinh, tiet_bat_dau, tiet_ket_thuc },
-      loaiSuKien,
-    } = event;
+    const { title, loaiSuKien } = event;
     return (
       <div style={{ width: '100%', fontSize: 13 }}>
         <p>
@@ -93,12 +73,11 @@ export default () => {
   danhSachSuKien?.forEach((x: SuKien.Record) =>
     dataCalendar.push({
       ...x,
-      title: x?.info?.ten_buoi_hoc,
-      start: moment(x?.thoiGianBatDau).subtract(new Date().getTimezoneOffset(), 'minutes').toDate(),
-      end: moment(x?.thoiGianKetThuc).subtract(new Date().getTimezoneOffset(), 'minutes').toDate(),
+      title: x?.info?.mon_hoc_id?.[1],
+      start: moment(x?.thoiGianBatDau).toDate(),
+      end: moment(x?.thoiGianKetThuc).toDate(),
     }),
   );
-  // console.log('dataCalendar :>> ', dataCalendar);
   return (
     <div style={{ height: 600 }}>
       <Card bordered>

@@ -1,20 +1,41 @@
-import studentIcon from '@/assets/student.png';
 import teacherIcon from '@/assets/teacher.png';
-import { Avatar, Card, Descriptions, List } from 'antd';
+import { Avatar, Card, Descriptions, List, Tabs } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
+import DanhSachSinhVien from './DanhSachSinhVien';
 
 const ThongTinChung = (props: { id: string; isGiangVien: boolean }) => {
   const { isGiangVien } = props;
-  const { record, getThongTinChungLopTinChi, thongTinChung, getLopTinChiByIdLop } =
-    useModel('loptinchi');
+  const {
+    loading,
+    record,
+    getThongTinChungLopTinChi,
+    thongTinChung,
+    getLopTinChiByIdLop,
+    danhSachNhomLop,
+    getNhomLopTinChiByIdModel,
+    idNhomLop,
+    danhSachSinhVien,
+    getDanhSachSinhVienByIdNhomLopModel,
+    setIdNhomLop,
+    setDanhSachNhomLop,
+  } = useModel('loptinchi');
   useEffect(() => {
     if (!record.id) {
       getLopTinChiByIdLop(Number(props.id));
     }
     getThongTinChungLopTinChi(record.id || Number(props.id));
+    getNhomLopTinChiByIdModel();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [record.id]);
+
+  useEffect(() => {
+    getDanhSachSinhVienByIdNhomLopModel();
+    return () => {
+      setDanhSachNhomLop([]);
+      setIdNhomLop(-1);
+    };
+  }, [idNhomLop]);
   const { giangVien, sinhVienList } = thongTinChung;
   return (
     <Card>
@@ -57,37 +78,24 @@ const ThongTinChung = (props: { id: string; isGiangVien: boolean }) => {
         </>
       )}
       <Descriptions title="Danh sách sinh viên:" />
-      <List
-        grid={{
-          xs: 1,
-          xl: 3,
-          md: 2,
-          sm: 2,
-          lg: 3,
-          xxl: 4,
+
+      <Tabs
+        onChange={(val: string) => {
+          setIdNhomLop(Number(val));
         }}
-        itemLayout="horizontal"
-        dataSource={sinhVienList}
-        renderItem={(item) => (
-          <List.Item>
-            <List.Item.Meta
-              avatar={<Avatar src={item?.anhDaiDien ?? studentIcon} />}
-              title={
-                <div>
-                  <b>Họ và tên: </b>
-                  {item?.TenDayDu ?? ''}
-                </div>
-              }
-              description={
-                <div>
-                  <b>Mã sinh viên: </b>
-                  {item?.MaSV ?? ''}
-                </div>
-              }
-            />
-          </List.Item>
-        )}
-      />
+      >
+        <Tabs.TabPane tab="Tất cả" key={-1}>
+          <DanhSachSinhVien loading={loading} data={sinhVienList} />
+        </Tabs.TabPane>
+        {danhSachNhomLop?.map((item) => (
+          <Tabs.TabPane
+            tab={`Nhóm ${item.so_thu_tu_nhom} (${item.ma_nhom_lop_tin_chi})`}
+            key={item.id}
+          >
+            <DanhSachSinhVien loading={loading} data={danhSachSinhVien} />
+          </Tabs.TabPane>
+        ))}
+      </Tabs>
     </Card>
   );
 };

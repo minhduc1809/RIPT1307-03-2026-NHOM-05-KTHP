@@ -37,6 +37,10 @@ export async function getInfoSV(options?: { [key: string]: any }) {
   });
 }
 
+export async function putInfoSV(payload: IInfoSV.Data) {
+  return axios.put(`${ip3}/odoo-user/sinh-vien/me`, payload);
+}
+
 export async function getInfo(options?: { [key: string]: any }) {
   return request<IInfoSV.RootObject>(`${ip3}/user/me`, {
     method: 'GET',
@@ -53,6 +57,10 @@ export async function getInfoGV(options?: { [key: string]: any }) {
     headers: { 'Content-Type': 'multipart/form-data' },
     ...(options || {}),
   });
+}
+
+export async function putInfoGV(payload: IInfoGV.Data) {
+  return axios.put(`${ip3}/odoo-user/giang-vien/me`, payload);
 }
 
 export async function getInfoChung(options?: { [key: string]: any }) {

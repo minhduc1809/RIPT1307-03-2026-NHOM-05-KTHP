@@ -1,71 +1,22 @@
+import UploadAvatar from '@/components/Upload/UploadAvatar';
+import { getInfoGV, getInfoSV, putInfoGV, putInfoSV } from '@/services/ant-design-pro/api';
+import { getURLImg } from '@/services/LopTinChi/loptinchi';
 import rules from '@/utils/rules';
-import { UploadOutlined } from '@ant-design/icons';
-import { Button, Form, Input, message, Select, Upload } from 'antd';
+import { renderFileListUrl } from '@/utils/utils';
+import { Button, Col, DatePicker, Form, Input, message, Row, Select } from 'antd';
+import moment from 'moment';
+import mm from 'moment-timezone';
 import { Component } from 'react';
-import { connect, formatMessage, FormattedMessage } from 'umi';
+import type { Dispatch } from 'umi';
+import { connect } from 'umi';
 import type { CurrentUser } from '../../data';
-import styles from './BaseView.less';
 
-const { Option } = Select;
-
-// 头像组件 方便以后独立，增加裁剪之类的功能
-const AvatarView = ({ avatar }: { avatar: string }) => (
-  <>
-    <div className={styles.avatar_title}>
-      <FormattedMessage id="accountandsettings.basic.avatar" defaultMessage="Avatar" />
-    </div>
-    <div className={styles.avatar}>
-      <img src={avatar} alt="avatar" />
-    </div>
-    <Upload showUploadList={false}>
-      <div className={styles.button_view}>
-        <Button>
-          <UploadOutlined />
-          <FormattedMessage
-            id="accountandsettings.basic.change-avatar"
-            defaultMessage="Change avatar"
-          />
-        </Button>
-      </div>
-    </Upload>
-  </>
-);
-// interface SelectItem {
-//   label: string;
-//   key: string;
-// }
-
-// const validatorGeographic = (
-//   _: any,
-//   value: {
-//     province: SelectItem;
-//     city: SelectItem;
-//   },
-//   callback: (message?: string) => void,
-// ) => {
-//   const { province, city } = value;
-//   if (!province.key) {
-//     callback('Please input your province!');
-//   }
-//   if (!city.key) {
-//     callback('Please input your city!');
-//   }
-//   callback();
-// };
-
-// const validatorPhone = (rule: any, value: string, callback: (message?: string) => void) => {
-//   const values = value.split('-');
-//   if (!values[0]) {
-//     callback('Please input your area code!');
-//   }
-//   if (!values[1]) {
-//     callback('Please input your phone number!');
-//   }
-//   callback();
-// };
+mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 interface BaseViewProps {
-  currentUser?: CurrentUser;
+  dispatch: Dispatch;
+  currentUser?: IInfoSV.Data | IInfoSV.Data;
+  loading: boolean;
 }
 
 class BaseView extends Component<BaseViewProps> {
@@ -74,8 +25,8 @@ class BaseView extends Component<BaseViewProps> {
   getAvatarURL() {
     const { currentUser } = this.props;
     if (currentUser) {
-      if (currentUser.avatar) {
-        return currentUser.avatar;
+      if (currentUser.avatar_path) {
+        return currentUser.avatar_path;
       }
       const url = 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png';
       return url;
@@ -88,92 +39,153 @@ class BaseView extends Component<BaseViewProps> {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  handleFinish = (val: any) => {
-    // console.log('val :>> ', val);
-    message.success(formatMessage({ id: 'accountandsettings.basic.update.success' }));
+  handleFinish = async (val: any) => {
+    const { currentUser, dispatch } = this.props;
+    let response;
+    let avatar_path = '';
+    if (val.avatar_path.fileList?.[0]?.originFileObj) {
+      const responseUpload = await getURLImg({
+        filename: 'url1',
+        public: true,
+        file: val?.avatar_path.fileList?.[0].originFileObj,
+      });
+      avatar_path = responseUpload?.data?.data?.url;
+    } else avatar_path = val.avatar_path.fileList?.[0]?.url;
+    if (currentUser?.vai_tro === 'sinh_vien') {
+      response = await putInfoSV({
+        ...val,
+        avatar_path,
+        ngay_sinh: val?.ngay_sinh?.format('YYYY-MM-DD'),
+      });
+      getInfoSV();
+    } else if (currentUser?.vai_tro === 'giang_vien') {
+      response = await putInfoGV({
+        ...val,
+        avatar_path,
+        ngay_sinh: val?.ngay_sinh?.format('YYYY-MM-DD'),
+      });
+      getInfoGV();
+    }
+    dispatch({
+      type: 'accountAndcenter/fetchCurrent',
+    });
+    dispatch({
+      type: 'accountAndcenter/fetch',
+    });
+
+    if (response?.data?.data?.success) message.success('Cập nhật thành công');
   };
 
   render() {
     const { currentUser } = this.props;
-    // console.log('currentUser :>> ', currentUser);
     return (
-      <div className={styles.baseView} ref={this.getViewDom}>
-        <div className={styles.left}>
-          <Form
-            layout="vertical"
-            onFinish={this.handleFinish}
-            initialValues={currentUser}
-            hideRequiredMark
-          >
-            <Form.Item name="name" label="Họ và tên" rules={[...rules.required]}>
-              <Input />
-            </Form.Item>
-            <Form.Item name="email_dang_nhap" label="Email" rules={[...rules.email]}>
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="profile"
-              label="Mô tả"
-              rules={[
-                {
-                  required: true,
-                  message: formatMessage({ id: 'accountandsettings.basic.profile-message' }, {}),
-                },
-              ]}
-            >
-              <Input.TextArea
-                placeholder={formatMessage({ id: 'accountandsettings.basic.profile-placeholder' })}
-                rows={4}
-              />
-            </Form.Item>
-            <Form.Item
-              name="country"
-              label="Quê quán"
-              rules={[
-                {
-                  required: true,
-                  message: formatMessage({ id: 'accountandsettings.basic.country-message' }, {}),
-                },
-              ]}
-            >
-              <Select style={{ maxWidth: 220 }}>
-                <Option value="China">Hà Nội</Option>
-              </Select>
-            </Form.Item>
+      <div ref={this.getViewDom}>
+        <Form layout="vertical" onFinish={this.handleFinish}>
+          <Row gutter={[50, 0]}>
+            <Col xl={12}>
+              <Form.Item
+                initialValue={currentUser?.TenDayDu}
+                name="TenDayDu"
+                label="Họ và tên"
+                rules={[...rules.required, ...rules.ten]}
+              >
+                <Input placeholder="Họ và tên" />
+              </Form.Item>
 
-            <Form.Item
-              name="address"
-              label="Trường học"
-              rules={[
-                {
-                  required: true,
-                  message: formatMessage({ id: 'accountandsettings.basic.address-message' }, {}),
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item>
-              <Button htmlType="submit" type="primary">
-                {/* <FormattedMessage
-                  id="accountandsettings.basic.update"
-                  defaultMessage="Update Information"
-                /> */}
-                Cập nhật
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
-        <div className={styles.right}>
-          <AvatarView avatar={this.getAvatarURL()} />
-        </div>
+              <Row gutter={[20, 0]}>
+                <Col xs={24} lg={12}>
+                  <Form.Item
+                    name="ngay_sinh"
+                    label="Ngày sinh"
+                    rules={[...rules.required]}
+                    initialValue={moment(currentUser?.ngay_sinh)}
+                  >
+                    <DatePicker
+                      style={{ width: '100%' }}
+                      format="DD/MM/YYYY"
+                      disabledDate={(cur) => moment(cur).isAfter(moment())}
+                      placeholder="Ngày sinh"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} lg={12}>
+                  <Form.Item
+                    initialValue={currentUser?.gioi_tinh ?? '0'}
+                    name="gioi_tinh"
+                    label="Giới tính"
+                    rules={[...rules.required]}
+                  >
+                    <Select>
+                      <Select.Option value="0">Nam</Select.Option>
+                      <Select.Option value="1">Nữ</Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Form.Item
+                initialValue={currentUser?.email_dang_nhap}
+                name="email_dang_nhap"
+                label="Email"
+                rules={[...rules.email]}
+              >
+                <Input placeholder="Email" />
+              </Form.Item>
+              <Form.Item
+                initialValue={currentUser?.so_dien_thoai}
+                name="so_dien_thoai"
+                label="Số điện thoại"
+                rules={[...rules.soDienThoai, ...rules.required]}
+              >
+                <Input placeholder="Số điện thoại" />
+              </Form.Item>
+              <Form.Item
+                initialValue={currentUser?.dia_chi_hien_nay}
+                name="dia_chi_hien_nay"
+                label="Địa chỉ hiện nay"
+                rules={[...rules.required]}
+              >
+                <Input.TextArea rows={3} placeholder="Địa chỉ hiện nay" />
+              </Form.Item>
+              <Form.Item>
+                <Button htmlType="submit" type="primary">
+                  Cập nhật
+                </Button>
+              </Form.Item>
+            </Col>
+            <Col xl={12}>
+              <Form.Item
+                name="avatar_path"
+                label="Ảnh đại diện"
+                initialValue={renderFileListUrl(currentUser?.avatar_path ?? '')}
+                rules={[...rules.fileRequired]}
+              >
+                <UploadAvatar
+                  style={{
+                    width: 102,
+                    maxWidth: 102,
+                    height: 102,
+                    maxHeight: 102,
+                  }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
       </div>
     );
   }
 }
 
 export default connect(
-  ({ accountAndcenter }: { accountAndcenter: { currentUser: CurrentUser } }) => ({
+  ({
+    accountAndcenter,
+    loading,
+  }: {
+    accountAndcenter: { currentUser: CurrentUser };
+    loading: { effects: Record<string, boolean> };
+  }) => ({
     currentUser: accountAndcenter.currentUser,
+    currentUserLoading: loading.effects['accountAndcenter/fetchCurrent'],
   }),
 )(BaseView);

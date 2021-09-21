@@ -1,7 +1,6 @@
 import React from 'react';
 import { Upload, Icon, Modal, message } from 'antd';
 import _ from 'lodash';
-import styles from './UploadAvatar.less';
 /**
  * @param
  */
@@ -24,7 +23,7 @@ class PicturesWall extends React.Component {
     };
   }
 
-  triggerChange = changedValue => {
+  triggerChange = (changedValue) => {
     // Should provide an event to pass value to Form.
     const { onChange } = this.props;
     if (onChange) {
@@ -37,20 +36,20 @@ class PicturesWall extends React.Component {
   /**
    * Tính năng xem trước ảnh
    */
-  handlePreview = file => {
+  handlePreview = (file) => {
     this.setState({
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
     });
   };
 
-  handleChange = info => {
+  handleChange = (info) => {
     if (info.file.status === 'uploading') {
       this.setState({ loading: true, imageUrl: undefined });
       return;
     }
     if (info.file.status === 'done') {
-      getBase64(info.file.originFileObj, imageUrl =>
+      getBase64(info.file.originFileObj, (imageUrl) =>
         this.setState({
           imageUrl,
           loading: false,
@@ -60,7 +59,7 @@ class PicturesWall extends React.Component {
     }
   };
 
-  beforeUpload = file => {
+  beforeUpload = (file) => {
     const isImg = file.type.split('/')[0] === 'image';
     if (!isImg) {
       message.error('Bạn chỉ có thể  chọn ảnh!');
@@ -80,14 +79,12 @@ class PicturesWall extends React.Component {
         <div className="ant-upload-text">Tải ảnh</div>
       </div>
     );
-    try {
-      // this.props.get(imageUrl);
-    } catch (err) {}
+
     return (
       <div className="clearfix">
         <Upload
           disabled={this.props?.disabled ?? false}
-          customRequest={({ file, onSuccess }) => {
+          customRequest={({ onSuccess }) => {
             setTimeout(() => {
               onSuccess('ok');
             }, 0);

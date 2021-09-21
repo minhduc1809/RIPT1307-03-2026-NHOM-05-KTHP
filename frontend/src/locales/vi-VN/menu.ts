@@ -64,6 +64,12 @@ export default {
   'menu.KhaiBaoSucKhoe': 'Khai báo sức khỏe',
   'menu.BieuMau.KhaoSat': 'Khảo sát',
   'menu.LopHanhChinh': 'Lớp hành chính',
+  'menu.CoCauToChuc': 'Cơ cấu tổ chức',
+  'menu.ThongBao': 'Thông báo',
+  'menu.LopHanhChinhAdmin': 'Lớp hành chính',
+  'menu.LopTinChiAdmin': 'Lớp tín chỉ',
+  'menu.DichVuMotCuaSinhVien': 'Dịch vụ một cửa',
+  'menu.DichVuMotCuaSinhVien.CTCTSV': 'Phòng CTCTSV',
   'menu.dva-sample': 'Page mẫu dùng DVA',
   'menu.DangKyTinChi': 'Đăng ký tín chỉ',
 };
