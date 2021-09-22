@@ -12,6 +12,28 @@ declare module DichVuMotCua {
   }
 
   export interface Record {
+    hoDem: string;
+    ten: string;
+    trangThai: string;
+    maKhoa: string;
+    maNganh: string;
+    doiTuong: string;
+    heDaoTao: string;
+    hocPhiHangThang: number;
+    loaiDon: string;
+    loaiHinhDaoTao: string;
+    loaiMienGiam: string;
+    lop: string;
+    maSv: string;
+    maTruong: string;
+    ngayNhapHoc: string;
+    ngaySinh: string;
+    nienKhoa: string;
+    noiCap: string;
+    soDienThoai: string;
+    thoiGianHocTaiTruong: number;
+    thoiGianRaTruong: string;
+    diaChiNhanDon: string;
     loaiPhongBan: string;
     donVi: DonVi;
     loaiDon: string;
@@ -43,7 +65,7 @@ declare module DichVuMotCua {
     userCode: string;
     hoTen: string;
     ngaySinh: string;
-    gioiTinh: string;
+    gioiTinh: number;
     lop: string;
   }
 

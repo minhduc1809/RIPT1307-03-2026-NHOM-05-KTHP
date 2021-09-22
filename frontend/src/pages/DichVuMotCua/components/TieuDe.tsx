@@ -176,7 +176,7 @@ const TieuDe = () => {
           )}
 
           {loaiGiayTo === 'Yêu cầu cấp giấy đăng ký vé tháng xe buýt' && (
-            <Row>
+            <Row style={{ textAlign: 'center' }}>
               <p
                 style={{
                   fontWeight: 650,

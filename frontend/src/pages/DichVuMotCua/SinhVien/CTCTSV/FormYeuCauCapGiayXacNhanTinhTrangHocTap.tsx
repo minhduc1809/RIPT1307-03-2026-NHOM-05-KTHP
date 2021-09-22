@@ -1,38 +1,23 @@
 import TieuDe from '@/pages/DichVuMotCua/components/TieuDe';
 import rules from '@/utils/rules';
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select } from 'antd';
-import { useEffect } from 'react';
 import { useModel } from 'umi';
 
 const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
-  const {
-    loaiPhongBan,
-    loaiGiayTo,
-    record,
-    setVisibleForm,
-    edit,
-    loading,
-    postDonXacNhanTinhTrangHocTapModel,
-  } = useModel('dichvumotcua');
+  const { loaiPhongBan, loaiGiayTo, record, setVisibleForm, edit, loading, postDonSinhVienModel } =
+    useModel('dichvumotcua');
   const { initialState } = useModel('@@initialState');
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    // getInfo();
-    // form.setFieldsValue({
-    //   hoTen: infoSv?.TenDayDu,
-    //   maSv: infoSv?.ma_sv,
-    //   gioiTinh: infoSv?.gioi_tinh === '0' ? 'Nam' : 'Nữ',
-    //   cmtCccd: infoSv?.so_cmnd,
-    //   ngayCapCmtCccd: infoSv?.ngay_cap,
-    // });
-  }, []);
   return (
     <Card bodyStyle={{ padding: 60 }} title={loaiGiayTo}>
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          postDonXacNhanTinhTrangHocTapModel({ ...values, loaiPhongBan, loaiDon: loaiGiayTo });
+          postDonSinhVienModel(
+            { ...values, loaiPhongBan, loaiDon: loaiGiayTo },
+            'xac-nhan-tinh-trang-hoc-tap',
+          );
         }}
         form={form}
       >

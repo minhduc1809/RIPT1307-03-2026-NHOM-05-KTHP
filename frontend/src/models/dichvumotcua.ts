@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import { getInfoSV } from '@/services/ant-design-pro/api';
-import { postDonXacNhanTinhTrangHocTap } from '@/services/DichVuMotCua/dichvumotcua';
+import { postDonSinhVien } from '@/services/DichVuMotCua/dichvumotcua';
 import { message } from 'antd';
+import { useState } from 'react';
 
 export default () => {
   const [danhSach, setDanhSach] = useState<DichVuMotCua.Record[]>([]);
@@ -9,7 +8,6 @@ export default () => {
   const [filterInfo, setFilterInfo] = useState<any>({});
   const [condition, setCondition] = useState<any>({});
   const [loaiGiayTo, setLoaiGiayTo] = useState<string>('');
-  const [infoSv, setInfoSv] = useState<IInfoSV.DataSV>();
 
   const [loaiPhongBan, setLoaiPhongBan] = useState<string>('');
   const [record, setRecord] = useState<DichVuMotCua.Record>();
@@ -19,26 +17,20 @@ export default () => {
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
-  const getInfo = async () => {
+
+  const postDonSinhVienModel = async (payload: DichVuMotCua.Record, pathDon: string) => {
     setLoading(true);
-    const currentUser = (await getInfoSV())?.data;
-    setInfoSv(currentUser);
-    setLoading(false);
-  };
-  const postDonXacNhanTinhTrangHocTapModel = async (payload: DichVuMotCua.Record) => {
-    setLoading(true);
-    await postDonXacNhanTinhTrangHocTap(payload);
+    await postDonSinhVien(payload, pathDon);
     message.success('Gửi đơn thành công');
     setLoading(false);
+    setVisibleForm(false);
   };
 
   return {
-    postDonXacNhanTinhTrangHocTapModel,
+    postDonSinhVienModel,
     thuTuc,
     setThuTuc,
     danhSach,
-    getInfo,
-    infoSv,
     setDanhSach,
     filterInfo,
     setFilterInfo,
