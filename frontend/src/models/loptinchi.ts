@@ -13,6 +13,8 @@ export default () => {
   const [danhSach, setDanhSach] = useState<LopTinChi.Record[]>([]);
   const [danhSachNhomLop, setDanhSachNhomLop] = useState<LopTinChi.NhomLopTinChi[]>();
   const [idNhomLop, setIdNhomLop] = useState<number>(-1);
+  const [filterInfo, setFilterInfo] = useState<any>({});
+  const [condition, setCondition] = useState<any>({});
   const [danhSachSinhVien, setDanhSachSinhVien] = useState<LopTinChi.SinhVienRecord[]>([]);
   const [record, setRecord] = useState<LopTinChi.Record>({} as any);
   const [loading, setLoading] = useState<boolean>(true);
@@ -71,6 +73,10 @@ export default () => {
   };
 
   return {
+    condition,
+    setCondition,
+    filterInfo,
+    setFilterInfo,
     getDanhSachSinhVienByIdNhomLopModel,
     danhSachSinhVien,
     idNhomLop,

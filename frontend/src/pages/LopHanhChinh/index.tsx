@@ -54,7 +54,7 @@ const LopHanhChinh = () => {
               title={
                 <div>
                   <b>Họ và tên: </b>
-                  {item}
+                  {item || 'Chưa cập nhật'}
                 </div>
               }
               description={

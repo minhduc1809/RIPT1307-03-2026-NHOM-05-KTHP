@@ -31,7 +31,7 @@ export default () => {
       limit,
       condition: {
         ...condition,
-        hinh_thuc_dao_tao_moi: hinhThucDaoTao === -1 ? undefined : hinhThucDaoTao,
+        hinh_thuc_dao_tao_id: hinhThucDaoTao === -1 ? undefined : hinhThucDaoTao,
       },
     });
     setTotal(response?.data?.data?.total ?? 0);

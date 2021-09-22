@@ -16,19 +16,21 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [recordTB, setRecordTB] = useState<IResThongBaoLopTinChi.Result>({});
   const [state, setstate] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
   const [dataThongBao, setdataThongBao] = useState<IResThongBaoLopTinChi.Result[]>([]);
+  const getData = async () => {
+    const res = await getThongBaoLopTinChiById({
+      page,
+      limit,
+      idLop: props?.id,
+      role: props.isGiangVien ? 'giang-vien' : 'sinh-vien',
+    });
+    setdataThongBao(res?.data?.data?.result);
+  };
   useEffect(() => {
-    const getData = async () => {
-      const res = await getThongBaoLopTinChiById({
-        page: 1,
-        limit: 10,
-        idLop: props?.id,
-        role: props.isGiangVien ? 'giang-vien' : 'sinh-vien',
-      });
-      setdataThongBao(res?.data?.data?.result);
-    };
     getData();
-  }, [props?.id, props.isGiangVien, state]);
+  }, [props?.id, props.isGiangVien, state, page, limit]);
 
   const dsThongBao = dataThongBao?.map((value, index) => ({
     ...value,
@@ -83,6 +85,14 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
   return (
     <>
       <ProTable<IResThongBaoLopTinChi.Result, API.PageParams>
+        pagination={{
+          showTotal: () => <div></div>,
+          pageSize: limit,
+          onChange: (pageNumber: number, limitNumber?: number) => {
+            setPage(pageNumber);
+            setLimit(limitNumber || 10);
+          },
+        }}
         headerTitle="Danh sách thông báo"
         rowKey="key"
         dataSource={dsThongBao ?? []}

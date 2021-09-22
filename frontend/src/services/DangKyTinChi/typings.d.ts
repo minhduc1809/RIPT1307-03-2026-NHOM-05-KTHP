@@ -22,14 +22,16 @@ declare module DangKyTinChi {
     idHocPhan: number;
     maMonHoc: boolean | string;
     tenMonHoc: string;
+    hocPhi: number;
+    soTinChi: number;
   }
 
   export interface PhieuDangKy {
     phieuDangKy: {
       id: number;
-      dot_dang_ky_id: (string | number)[];;
-      ky_hoc_id: (string | number)[];;
-      sinh_vien_id: (string | number)[];;
+      dot_dang_ky_id: (string | number)[];
+      ky_hoc_id: (string | number)[];
+      sinh_vien_id: (string | number)[];
       nv_hoc_phan_id: number[];
       tong_so_tin_chi: number;
       tong_hoc_phi: number;
@@ -39,9 +41,9 @@ declare module DangKyTinChi {
       so_dien_thoai: string | boolean;
       giang_vien_id: string | boolean;
       display_name: string;
-      create_uid: (string | number)[];;
+      create_uid: (string | number)[];
       create_date: string;
-      write_uid: (string | number)[];;
+      write_uid: (string | number)[];
       write_date: string;
     };
     danhSachNguyenVong: NguyenVong[];

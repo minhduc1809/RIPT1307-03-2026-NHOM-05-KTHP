@@ -29,6 +29,7 @@ const LopHanhChinhAdmin = () => {
       dataIndex: 'ten_lop_hanh_chinh',
       width: 200,
       align: 'center',
+      // search: 'search',
     },
     {
       title: 'Giảng viên',

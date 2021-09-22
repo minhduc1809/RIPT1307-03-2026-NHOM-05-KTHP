@@ -80,7 +80,7 @@ const KhaiBaoSucKhoeUser = () => {
         }}
         bodyStyle={{ padding: 0 }}
         visible={visibleForm}
-        width="70%"
+        width="60%"
       >
         <Form />
       </Drawer>

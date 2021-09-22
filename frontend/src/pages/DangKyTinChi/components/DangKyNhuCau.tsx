@@ -151,6 +151,7 @@ const DangKyNhuCau = () => {
   useEffect(() => {
     const danhSachHocPhanDaChonTemp: DangKyTinChi.MonHoc[] = [];
     const danhSachIdHocPhanDaChonTemp: number[] = [];
+    let tongSoTinChiTemp = 0;
     recordPhieuDangKy?.danhSachNguyenVong?.forEach((item, index) => {
       const hocPhanRecord = danhSachTatCaHocPhan?.find(
         (hocPhan) => hocPhan.idHocPhan === item.idHocPhan,
@@ -158,17 +159,19 @@ const DangKyNhuCau = () => {
       if (hocPhanRecord?.idHocPhan) {
         danhSachHocPhanDaChonTemp.push({ ...hocPhanRecord, index: index + 1 });
         danhSachIdHocPhanDaChonTemp.push(hocPhanRecord?.idHocPhan);
+        tongSoTinChiTemp += hocPhanRecord.soTinChi;
       }
     });
     if (danhSachHocPhanDaChonTemp.length === 0) {
       danhSachHocPhanKyNay?.forEach((item, index) => {
         danhSachHocPhanDaChonTemp.push({ ...item, index: index + 1 });
         danhSachIdHocPhanDaChonTemp.push(item.idHocPhan);
+        tongSoTinChiTemp += item.soTinChi;
       });
     }
     setDanhSachHocPhanDaChon(danhSachHocPhanDaChonTemp);
     setDanhSachIdHocPhanDaChon(danhSachIdHocPhanDaChonTemp);
-    setTongSoTinChi(recordPhieuDangKy?.phieuDangKy?.tong_so_tin_chi ?? 0);
+    setTongSoTinChi(tongSoTinChiTemp);
   }, [recordHocPhan, recordPhieuDangKy]);
   return (
     <div>

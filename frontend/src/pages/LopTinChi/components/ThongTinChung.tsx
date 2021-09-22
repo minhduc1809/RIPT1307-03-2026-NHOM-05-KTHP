@@ -57,7 +57,7 @@ const ThongTinChung = (props: { id: string; isGiangVien: boolean }) => {
                   title={
                     <div>
                       <b>Họ và tên: </b>
-                      {item?.TenDayDu ?? ''}
+                      {item?.TenDayDu ?? 'Chưa cập nhật'}
                     </div>
                   }
                   description={
