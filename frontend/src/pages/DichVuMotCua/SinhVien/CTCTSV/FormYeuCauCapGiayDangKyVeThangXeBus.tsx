@@ -1,3 +1,4 @@
+import DiaChi from '@/components/DiaChi';
 import TieuDe from '@/pages/DichVuMotCua/components/TieuDe';
 import data from '@/utils/data';
 import rules from '@/utils/rules';
@@ -200,6 +201,10 @@ const FormYeuCauCapGiayDangKyVeThangXeBus = () => {
             </Form.Item>
           </Col>
         </Row>
+        <Form.Item label="Địa chỉ" required>
+          <DiaChi />
+        </Form.Item>
+
         <div>
           - Trong thời gian học tại trường, anh (chị): Phan Quang Thành không bị xử phạt hành chính
           trở lên về các hành vi: cờ bạc, nghiện hút, trộm cắp, buôn lậu.

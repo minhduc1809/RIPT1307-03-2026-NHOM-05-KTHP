@@ -26,7 +26,7 @@ declare module IRecordCalendar {
   }
 }
 
-declare module IInfoSV {
+export declare module IInfoSV {
   export interface DataSV {
     id: number;
     HoLotSV: string;
@@ -371,7 +371,7 @@ declare module IInfoSV {
   }
 
   export interface RootObject {
-    data: Data;
+    data: Data | DataSV;
     statusCode: number;
   }
 }
