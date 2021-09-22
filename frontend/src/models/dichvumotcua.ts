@@ -1,10 +1,9 @@
-import type { IInfoSV } from './../services/ant-design-pro/typings.d';
 import type { IRecordTinh } from '@/services/DonViHanhChinh/typing';
 
 import { getQuanHuyenS, getTinhS, getXaPhuongS } from '@/services/DonViHanhChinh/donvihanhchinh';
 import { useState } from 'react';
-import { getInfoSV } from '@/services/ant-design-pro/api';
-import { postDonXacNhanTinhTrangHocTap } from '@/services/DichVuMotCua/dichvumotcua';
+
+import { postDonSinhVien } from '@/services/DichVuMotCua/dichvumotcua';
 import { message } from 'antd';
 
 export default () => {
@@ -13,7 +12,6 @@ export default () => {
   const [filterInfo, setFilterInfo] = useState<any>({});
   const [condition, setCondition] = useState<any>({});
   const [loaiGiayTo, setLoaiGiayTo] = useState<string>('');
-  const [infoSv, setInfoSv] = useState<IInfoSV.DataSV>();
 
   const [loaiPhongBan, setLoaiPhongBan] = useState<string>('');
   const [record, setRecord] = useState<DichVuMotCua.Record>();
@@ -30,13 +28,13 @@ export default () => {
   const [danhSachQuanHuyen, setDanhSachQuanHuyen] = useState<IRecordTinh.Datum[]>([]);
   const [danhSachXaPhuong, setDanhSachXaPhuong] = useState<IRecordTinh.Datum[]>([]);
 
-  const getInfo = async () => {
-    setLoading(true);
-    const currentUser = await getInfoSV();
-    console.log(`currentUser`, currentUser);
-    setInfoSv(currentUser?.data);
-    setLoading(false);
-  };
+  // const getInfo = async () => {
+  //   setLoading(true);
+  //   const currentUser = await getInfoSV();
+  //   console.log(`currentUser`, currentUser);
+  //   setInfoSv(currentUser?.data);
+  //   setLoading(false);
+  // };
 
   const getTinh = async () => {
     setLoading(true);
@@ -62,11 +60,12 @@ export default () => {
     setLoading(false);
   };
 
-  const postDonXacNhanTinhTrangHocTapModel = async (payload: DichVuMotCua.Record) => {
+  const postDonSinhVienModel = async (payload: DichVuMotCua.Record, pathDon: string) => {
     setLoading(true);
-    await postDonXacNhanTinhTrangHocTap(payload);
+    await postDonSinhVien(payload, pathDon);
     message.success('Gửi đơn thành công');
     setLoading(false);
+    setVisibleForm(false);
   };
 
   return {
@@ -74,14 +73,12 @@ export default () => {
     danhSachXaPhuong,
     getQuanHuyen,
     getXaPhuong,
-    postDonXacNhanTinhTrangHocTapModel,
+    postDonSinhVienModel,
     thuTuc,
     getTinh,
     danhSachTinh,
     setThuTuc,
     danhSach,
-    getInfo,
-    infoSv,
     setDanhSach,
     filterInfo,
     setFilterInfo,

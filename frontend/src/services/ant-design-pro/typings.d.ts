@@ -507,7 +507,7 @@ declare module IInfoGV {
     dia_chi_hien_nay: boolean;
     ten_goi_khac: boolean;
     ngay_sinh: string;
-    gioi_tinh: boolean;
+    gioi_tinh: string;
     tinh_tp_ns: boolean;
     quan_huyen_ns: boolean;
     phuong_xa_ns: boolean;

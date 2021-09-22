@@ -5,6 +5,8 @@ import { useModel } from 'umi';
 import DanhMuc from '../components/DanhMuc';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import FormYeuCauCapGiayXacNhanTinhTrangHocTap from './CTCTSV/FormYeuCauCapGiayXacNhanTinhTrangHocTap';
+import FormYeuCauCapGiayXacNhanVayVonSinhVien from './CTCTSV/FormYeuCauCapGiayXacNhanVayVonSV';
+import FormYeuCauCapGiayDangKyVeThangXeBus from './CTCTSV/FormYeuCauCapGiayDangKyVeThangXeBus';
 
 const CTCTSV = () => {
   const pathname = window.location.pathname?.split('/')?.pop() ?? '';
@@ -22,6 +24,9 @@ const CTCTSV = () => {
     <Card title={PhongBan?.[pathname]}>
       <b>Loại giấy tờ:</b>
       <Select
+        onChange={(val: string) => {
+          setLoaiGiayTo(val);
+        }}
         showSearch
         value={loaiGiayTo}
         style={{ width: '400px', marginBottom: 20, marginLeft: 8 }}
@@ -50,7 +55,15 @@ const CTCTSV = () => {
         bodyStyle={{ padding: 0 }}
         visible={visibleForm}
       >
-        <FormYeuCauCapGiayXacNhanTinhTrangHocTap />
+        {loaiGiayTo === 'Yêu cầu cấp giấy xác nhận tình trạng học tập' && (
+          <FormYeuCauCapGiayXacNhanTinhTrangHocTap />
+        )}
+        {loaiGiayTo === 'Yêu cầu cấp giấy xác nhận vay vốn sinh viên' && (
+          <FormYeuCauCapGiayXacNhanVayVonSinhVien />
+        )}
+        {loaiGiayTo === 'Yêu cầu cấp giấy đăng ký vé tháng xe buýt' && (
+          <FormYeuCauCapGiayDangKyVeThangXeBus />
+        )}
       </Modal>
       <DanhMuc />
     </Card>

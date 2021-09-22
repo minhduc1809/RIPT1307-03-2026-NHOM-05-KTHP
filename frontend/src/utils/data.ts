@@ -10,10 +10,13 @@ const data: any = {
     { value: 'giang_vien', text: 'Giảng viên' },
     { value: 'can_bo', name: 'Cán bộ' },
   ],
+  gioiTinh: ['Nam', 'Nữ'],
   'info.anToan': [
     { value: false, text: 'Không an toàn' },
     { value: true, text: 'An toàn' },
   ],
+
+  loaiHinhDaoTao: ['Đại học Chính quy', 'Đại học Phi chính quy', 'Sau Đại học', 'Liên kết quốc tế'],
 
   loaiDonVi: ['Đơn vị cứng', 'Đơn vị mềm'],
 

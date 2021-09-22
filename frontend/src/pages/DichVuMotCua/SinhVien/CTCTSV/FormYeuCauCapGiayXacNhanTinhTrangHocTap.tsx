@@ -1,7 +1,7 @@
 import TieuDe from '@/pages/DichVuMotCua/components/TieuDe';
 import rules from '@/utils/rules';
-import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useEffect } from 'react';
+import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useModel } from 'umi';
 
 const dataSinhVienNam = [
@@ -21,7 +21,7 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
     getTinh,
     danhSachTinh,
     loading,
-    postDonXacNhanTinhTrangHocTapModel,
+    postDonSinhVienModel,
   } = useModel('dichvumotcua');
   const { initialState } = useModel('@@initialState');
   const [form] = Form.useForm();
@@ -36,7 +36,7 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
     //   ngayCapCmtCccd: infoSv?.ngay_cap,
     // });
   }, []);
-  console.log(`initialState`, initialState);
+
   return (
     <Card bodyStyle={{ padding: 60 }} title={loaiGiayTo}>
       <Form
@@ -46,14 +46,17 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
             maTinh: values?.queQuan,
             tenTinh: danhSachTinh?.filter((item) => item?.ma === values?.queQuan)?.[0]?.tenDonVi,
           };
-          postDonXacNhanTinhTrangHocTapModel({
-            ...values,
-            queQuan,
-            loaiPhongBan,
-            namHocBatDau: values?.namHocBatDau.toString(),
-            namHocKetThuc: values?.namHocKetThuc?.toString(),
-            loaiDon: loaiGiayTo,
-          });
+          postDonSinhVienModel(
+            {
+              ...values,
+              queQuan,
+              loaiPhongBan,
+              namHocBatDau: values?.namHocBatDau.toString(),
+              namHocKetThuc: values?.namHocKetThuc?.toString(),
+              loaiDon: loaiGiayTo,
+            },
+            'xac-nhan-tinh-trang-hoc-tap',
+          );
         }}
         form={form}
       >
