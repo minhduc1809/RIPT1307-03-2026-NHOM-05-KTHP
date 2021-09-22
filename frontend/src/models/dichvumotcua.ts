@@ -1,6 +1,10 @@
+import type { IRecordTinh } from '@/services/DonViHanhChinh/typing';
+
+import { getQuanHuyenS, getTinhS, getXaPhuongS } from '@/services/DonViHanhChinh/donvihanhchinh';
+import { useState } from 'react';
+
 import { postDonSinhVien } from '@/services/DichVuMotCua/dichvumotcua';
 import { message } from 'antd';
-import { useState } from 'react';
 
 export default () => {
   const [danhSach, setDanhSach] = useState<DichVuMotCua.Record[]>([]);
@@ -18,6 +22,44 @@ export default () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
+  // đơn vị hành chính
+
+  const [danhSachTinh, setDanhSachTinh] = useState<IRecordTinh.Datum[]>([]);
+  const [danhSachQuanHuyen, setDanhSachQuanHuyen] = useState<IRecordTinh.Datum[]>([]);
+  const [danhSachXaPhuong, setDanhSachXaPhuong] = useState<IRecordTinh.Datum[]>([]);
+
+  // const getInfo = async () => {
+  //   setLoading(true);
+  //   const currentUser = await getInfoSV();
+  //   console.log(`currentUser`, currentUser);
+  //   setInfoSv(currentUser?.data);
+  //   setLoading(false);
+  // };
+
+  const getTinh = async () => {
+    setLoading(true);
+    const data = await getTinhS();
+    console.log(`dsTinh`, data);
+    setDanhSachTinh(data?.data?.data ?? []);
+    setLoading(false);
+  };
+
+  const getQuanHuyen = async (payload: { maTinh: string }) => {
+    setLoading(true);
+    const data = await getQuanHuyenS(payload);
+    console.log(`dsQuanHuyen`, data);
+    setDanhSachQuanHuyen(data?.data?.data ?? []);
+    setLoading(false);
+  };
+
+  const getXaPhuong = async (payload: { maQH: string }) => {
+    setLoading(true);
+    const data = await getXaPhuongS(payload);
+    console.log(`dsXaPhuong`, data);
+    setDanhSachXaPhuong(data?.data?.data ?? []);
+    setLoading(false);
+  };
+
   const postDonSinhVienModel = async (payload: DichVuMotCua.Record, pathDon: string) => {
     setLoading(true);
     await postDonSinhVien(payload, pathDon);
@@ -27,6 +69,12 @@ export default () => {
   };
 
   return {
+    danhSachQuanHuyen,
+    danhSachTinh,
+    getTinh,
+    danhSachXaPhuong,
+    getQuanHuyen,
+    getXaPhuong,
     postDonSinhVienModel,
     thuTuc,
     setThuTuc,

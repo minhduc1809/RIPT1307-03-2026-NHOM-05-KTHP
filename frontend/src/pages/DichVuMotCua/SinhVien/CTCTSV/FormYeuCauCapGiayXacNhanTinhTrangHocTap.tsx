@@ -1,21 +1,60 @@
 import TieuDe from '@/pages/DichVuMotCua/components/TieuDe';
 import rules from '@/utils/rules';
+import { useEffect } from 'react';
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useModel } from 'umi';
 
+const dataSinhVienNam = [
+  { label: 'Năm nhất', value: 1 },
+  { label: 'Năm hai', value: 2 },
+  { label: 'Năm ba', value: 3 },
+  { label: 'Năm tư', value: 4 },
+];
+
 const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
-  const { loaiPhongBan, loaiGiayTo, record, setVisibleForm, edit, loading, postDonSinhVienModel } =
-    useModel('dichvumotcua');
+  const {
+    loaiPhongBan,
+    loaiGiayTo,
+    record,
+    setVisibleForm,
+    edit,
+    getTinh,
+    danhSachTinh,
+    loading,
+    postDonSinhVienModel,
+  } = useModel('dichvumotcua');
   const { initialState } = useModel('@@initialState');
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    getTinh();
+    // form.setFieldsValue({
+    //   hoTen: infoSv?.TenDayDu,
+    //   maSv: infoSv?.ma_sv,
+    //   gioiTinh: infoSv?.gioi_tinh === '0' ? 'Nam' : 'Nữ',
+    //   cmtCccd: infoSv?.so_cmnd,
+    //   ngayCapCmtCccd: infoSv?.ngay_cap,
+    // });
+  }, []);
 
   return (
     <Card bodyStyle={{ padding: 60 }} title={loaiGiayTo}>
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
+          const queQuan = {
+            maTinh: values?.queQuan,
+            tenTinh: danhSachTinh?.filter((item) => item?.ma === values?.queQuan)?.[0]?.tenDonVi,
+          };
           postDonSinhVienModel(
-            { ...values, loaiPhongBan, loaiDon: loaiGiayTo },
+            {
+              ...values,
+              queQuan,
+              loaiPhongBan,
+              namHocBatDau: values?.namHocBatDau.toString(),
+              namHocKetThuc: values?.namHocKetThuc?.toString(),
+              loaiDon: loaiGiayTo,
+            },
             'xac-nhan-tinh-trang-hoc-tap',
           );
         }}
@@ -46,7 +85,7 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
 
           <Col xs={24} md={12} xl={8}>
             <Form.Item
-              initialValue={initialState?.currentUser?.gioi_tinh}
+              initialValue={initialState?.currentUser?.gioi_tinh === '0' ? 'Nam' : 'Nữ'}
               name="gioiTinh"
               label="Giới tính"
               rules={[...rules.required]}
@@ -94,8 +133,8 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
               rules={[...rules.required]}
             >
               <Select placeholder="Là sinh viên năm thứ ?">
-                {['Năm nhất', 'Năm hai', 'Năm ba', 'Năm tư'].map((item) => (
-                  <Select.Option value={item}>{item}</Select.Option>
+                {dataSinhVienNam.map((item) => (
+                  <Select.Option value={item.value}>{item.label}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
