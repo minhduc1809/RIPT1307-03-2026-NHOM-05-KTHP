@@ -1,3 +1,7 @@
+import type { IInfoSV } from './../services/ant-design-pro/typings.d';
+import type { IRecordTinh } from '@/services/DonViHanhChinh/typing';
+
+import { getTinhS } from '@/services/DonViHanhChinh/donvihanhchinh';
 import { useState } from 'react';
 import { getInfoSV } from '@/services/ant-design-pro/api';
 import { postDonXacNhanTinhTrangHocTap } from '@/services/DichVuMotCua/dichvumotcua';
@@ -19,12 +23,26 @@ export default () => {
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
+
+  // đơn vị hành chính
+
+  const [danhSachTinh, setDanhSachTinh] = useState<IRecordTinh.Datum[]>([]);
   const getInfo = async () => {
     setLoading(true);
-    const currentUser = (await getInfoSV())?.data;
-    setInfoSv(currentUser);
+    const currentUser = await getInfoSV();
+    console.log(`currentUser`, currentUser);
+    setInfoSv(currentUser?.data);
     setLoading(false);
   };
+
+  const getTinh = async () => {
+    setLoading(true);
+    const data = await getTinhS();
+    console.log(`dsTinh`, data);
+    setDanhSachTinh(data?.data?.data ?? []);
+    setLoading(false);
+  };
+
   const postDonXacNhanTinhTrangHocTapModel = async (payload: DichVuMotCua.Record) => {
     setLoading(true);
     await postDonXacNhanTinhTrangHocTap(payload);
@@ -35,6 +53,8 @@ export default () => {
   return {
     postDonXacNhanTinhTrangHocTapModel,
     thuTuc,
+    getTinh,
+    danhSachTinh,
     setThuTuc,
     danhSach,
     getInfo,

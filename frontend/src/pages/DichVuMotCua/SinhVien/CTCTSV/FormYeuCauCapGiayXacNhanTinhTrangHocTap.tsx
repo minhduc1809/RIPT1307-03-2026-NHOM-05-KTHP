@@ -11,6 +11,8 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
     record,
     setVisibleForm,
     edit,
+    getTinh,
+    danhSachTinh,
     loading,
     postDonXacNhanTinhTrangHocTapModel,
   } = useModel('dichvumotcua');
@@ -18,7 +20,7 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    // getInfo();
+    getTinh();
     // form.setFieldsValue({
     //   hoTen: infoSv?.TenDayDu,
     //   maSv: infoSv?.ma_sv,
@@ -96,7 +98,13 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
           </Col>
           <Col xs={24} md={12} xl={8}>
             <Form.Item name="hoTen" label="Quê quán" rules={[...rules.required]}>
-              <Input placeholder="Quê quán" />
+              <Select>
+                {danhSachTinh?.map((item) => (
+                  <Select.Option key={item?._id} value={item?.ma}>
+                    {item?.tenDonVi}
+                  </Select.Option>
+                ))}{' '}
+              </Select>
             </Form.Item>
           </Col>
         </Row>
