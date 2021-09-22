@@ -4,11 +4,11 @@ declare module DichVuMotCua {
   export interface QueQuan {
     maTinh: string;
     tenTinh: string;
-    maQuanHuyen: string;
-    tenQuanHuyen: string;
-    maPhuongXa: string;
-    tenPhuongXa: string;
-    soNhaTenDuong: string;
+    maQuanHuyen?: string;
+    tenQuanHuyen?: string;
+    maPhuongXa?: string;
+    tenPhuongXa?: string;
+    soNhaTenDuong?: string;
   }
 
   export interface Record {
@@ -25,7 +25,7 @@ declare module DichVuMotCua {
     thoiGianTiepNhan: Date;
     diaChiNhanDon: string;
     soDienThoai: string;
-    queQuan: QueQuan;
+    queQuan: QueQuan | string;
     cmtCccd: string;
     ngayCapCmtCccd: Date;
     noiCap: string;

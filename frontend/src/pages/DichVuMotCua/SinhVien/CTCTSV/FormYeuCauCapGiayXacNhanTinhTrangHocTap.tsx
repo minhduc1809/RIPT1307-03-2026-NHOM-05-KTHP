@@ -4,6 +4,13 @@ import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select } 
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 
+const dataSinhVienNam = [
+  { label: 'Năm nhất', value: 1 },
+  { label: 'Năm hai', value: 2 },
+  { label: 'Năm ba', value: 3 },
+  { label: 'Năm tư', value: 4 },
+];
+
 const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
   const {
     loaiPhongBan,
@@ -34,8 +41,19 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
     <Card bodyStyle={{ padding: 60 }} title={loaiGiayTo}>
       <Form
         labelCol={{ span: 24 }}
-        onFinish={async (values) => {
-          postDonXacNhanTinhTrangHocTapModel({ ...values, loaiPhongBan, loaiDon: loaiGiayTo });
+        onFinish={async (values: DichVuMotCua.Record) => {
+          const queQuan = {
+            maTinh: values?.queQuan,
+            tenTinh: danhSachTinh?.filter((item) => item?.ma === values?.queQuan)?.[0]?.tenDonVi,
+          };
+          postDonXacNhanTinhTrangHocTapModel({
+            ...values,
+            queQuan,
+            loaiPhongBan,
+            namHocBatDau: values?.namHocBatDau.toString(),
+            namHocKetThuc: values?.namHocKetThuc?.toString(),
+            loaiDon: loaiGiayTo,
+          });
         }}
         form={form}
       >
@@ -64,7 +82,7 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
 
           <Col xs={24} md={12} xl={8}>
             <Form.Item
-              initialValue={initialState?.currentUser?.gioi_tinh}
+              initialValue={initialState?.currentUser?.gioi_tinh === '0' ? 'Nam' : 'Nữ'}
               name="gioiTinh"
               label="Giới tính"
               rules={[...rules.required]}
@@ -118,8 +136,8 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
               rules={[...rules.required]}
             >
               <Select placeholder="Là sinh viên năm thứ ?">
-                {['Năm nhất', 'Năm hai', 'Năm ba', 'Năm tư'].map((item) => (
-                  <Select.Option value={item}>{item}</Select.Option>
+                {dataSinhVienNam.map((item) => (
+                  <Select.Option value={item.value}>{item.label}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
