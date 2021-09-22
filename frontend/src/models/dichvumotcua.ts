@@ -23,7 +23,6 @@ export default () => {
     setLoading(true);
     const currentUser = (await getInfoSV())?.data;
     setInfoSv(currentUser);
-
     setLoading(false);
   };
   const postDonXacNhanTinhTrangHocTapModel = async (payload: DichVuMotCua.Record) => {
@@ -38,7 +37,6 @@ export default () => {
     thuTuc,
     setThuTuc,
     danhSach,
-
     getInfo,
     infoSv,
     setDanhSach,

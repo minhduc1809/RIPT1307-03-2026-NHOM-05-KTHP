@@ -68,7 +68,7 @@ declare module IInfoSV {
   export interface Data {
     id: number;
     ghi_chu: boolean;
-    MaSV: string;
+    ma_sv: string;
     TenDayDu: string;
     HoLotSV: string;
     TenSV: string;
@@ -380,7 +380,7 @@ declare module IInfoGV {
   export interface Data {
     id: number;
     ghi_chu: boolean;
-    MaSV: string;
+    ma_sv: string;
     TenDayDu: string;
     HoLotSV: string;
     TenSV: string;
