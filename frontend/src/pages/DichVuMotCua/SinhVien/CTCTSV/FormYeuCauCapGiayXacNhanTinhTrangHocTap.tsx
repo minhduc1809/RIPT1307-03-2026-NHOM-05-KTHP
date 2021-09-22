@@ -1,9 +1,10 @@
 import TieuDe from '@/pages/DichVuMotCua/components/TieuDe';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import rules from '@/utils/rules';
 
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useModel } from 'umi';
+import moment from 'moment';
 
 const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
   const {
@@ -21,8 +22,15 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
 
   useEffect(() => {
     getInfo();
+    form.setFieldsValue({
+      hoTen: infoSv?.TenDayDu,
+      maSv: infoSv?.ma_sv,
+      gioiTinh: infoSv?.gioi_tinh === '0' ? 'Nam' : 'Nữ',
+      cmtCccd: infoSv?.so_cmnd,
+      ngayCapCmtCccd: infoSv?.ngay_cap,
+    });
   }, []);
-
+  console.log(`info`, infoSv);
   return (
     <Card bodyStyle={{ padding: 60 }} title={loaiGiayTo}>
       <Form
@@ -35,93 +43,48 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
         <TieuDe />
         <Row gutter={[16, 0]}>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="hoTen"
-              label="Họ tên"
-              initialValue={infoSv?.hoTen}
-              rules={[...rules.required]}
-            >
+            <Form.Item name="hoTen" label="Họ tên" rules={[...rules.required]}>
               <Input readOnly placeholder="Họ và tên" />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="hoTen"
-              label="Mã sinh viên"
-              initialValue={record?.hoTen}
-              rules={[...rules.required]}
-            >
-              <Input placeholder="Niên khóa" />
+            <Form.Item name="maSv" label="Mã sinh viên" rules={[...rules.required]}>
+              <Input readOnly placeholder="Mã sinh viên" />
             </Form.Item>
           </Col>
 
           <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="hoTen"
-              label="Giới tính"
-              initialValue={record?.lop}
-              rules={[...rules.required]}
-            >
+            <Form.Item name="gioiTinh" label="Giới tính" rules={[...rules.required]}>
+              <Input readOnly placeholder="Giới tính" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item name="hoTen" label="Số CMND (CCCD)" rules={[...rules.required]}>
               <Input placeholder="Niên khóa" />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="hoTen"
-              label="Số CMND (CCCD)"
-              initialValue={record?.lop}
-              rules={[...rules.required]}
-            >
+            <Form.Item name="ngayCap" label="Ngày cấp" rules={[...rules.required]}>
+              <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} placeholder="Ngày cấp" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item name="hoTen" label="Nơi cấp" rules={[...rules.required]}>
+              <Input placeholder="Nơi cấp" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <Form.Item name="hoTen" label="Lớp" rules={[...rules.required]}>
               <Input placeholder="Niên khóa" />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="hoTen"
-              label="Ngày cấp"
-              initialValue={record?.lop}
-              rules={[...rules.required]}
-            >
-              <DatePicker style={{ width: '100%' }} placeholder="Ngày cấp" />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="hoTen"
-              label="Nơi cấp"
-              initialValue={record?.lop}
-              rules={[...rules.required]}
-            >
+            <Form.Item name="hoTen" label="Số điện thoại" rules={[...rules.required]}>
               <Input placeholder="Niên khóa" />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="hoTen"
-              label="Lớp"
-              initialValue={record?.lop}
-              rules={[...rules.required]}
-            >
-              <Input placeholder="Niên khóa" />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="hoTen"
-              label="Số điện thoại"
-              initialValue={record?.lop}
-              rules={[...rules.required]}
-            >
-              <Input placeholder="Niên khóa" />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="hoTen"
-              label="Quê quán"
-              initialValue={record?.lop}
-              rules={[...rules.required]}
-            >
+            <Form.Item name="hoTen" label="Quê quán" rules={[...rules.required]}>
               <Input placeholder="Quê quán" />
             </Form.Item>
           </Col>
@@ -142,22 +105,12 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
             </Form.Item>
           </Col>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="hoTen"
-              label="Khoa"
-              initialValue={record?.lop}
-              rules={[...rules.required]}
-            >
+            <Form.Item name="hoTen" label="Khoa" rules={[...rules.required]}>
               <Input placeholder="Khoa" />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="hoTen"
-              label="Ngành"
-              initialValue={record?.lop}
-              rules={[...rules.required]}
-            >
+            <Form.Item name="hoTen" label="Ngành" rules={[...rules.required]}>
               <Input placeholder="Ngành" />
             </Form.Item>
           </Col>

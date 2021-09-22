@@ -9,7 +9,7 @@ export default () => {
   const [filterInfo, setFilterInfo] = useState<any>({});
   const [condition, setCondition] = useState<any>({});
   const [loaiGiayTo, setLoaiGiayTo] = useState<string>('');
-  const [infoSv, setInfoSv] = useState<IInfoSV.Data>();
+  const [infoSv, setInfoSv] = useState<IInfoSV.DataSV>();
 
   const [loaiPhongBan, setLoaiPhongBan] = useState<string>('');
   const [record, setRecord] = useState<DichVuMotCua.Record>();
