@@ -29,6 +29,7 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
     //   ngayCapCmtCccd: infoSv?.ngay_cap,
     // });
   }, []);
+  console.log(`initialState`, initialState);
   return (
     <Card bodyStyle={{ padding: 60 }} title={loaiGiayTo}>
       <Form
@@ -77,33 +78,33 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
             </Form.Item>
           </Col>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item name="ngayCap" label="Ngày cấp" rules={[...rules.required]}>
+            <Form.Item name="ngayCapCmtCccd" label="Ngày cấp" rules={[...rules.required]}>
               <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} placeholder="Ngày cấp" />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item name="hoTen" label="Nơi cấp" rules={[...rules.required]}>
+            <Form.Item name="noiCap" label="Nơi cấp" rules={[...rules.required]}>
               <Input placeholder="Nơi cấp" />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item name="hoTen" label="Lớp" rules={[...rules.required]}>
-              <Input placeholder="Niên khóa" />
+            <Form.Item name="Lop" label="Lớp" rules={[]}>
+              <Input placeholder="Lớp" />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item name="hoTen" label="Số điện thoại" rules={[...rules.required]}>
-              <Input placeholder="Niên khóa" />
+            <Form.Item name="soDienThoai" label="Số điện thoại" rules={[...rules.required]}>
+              <Input placeholder="Số điện thoại" />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item name="hoTen" label="Quê quán" rules={[...rules.required]}>
-              <Select>
+            <Form.Item name="queQuan" label="Quê quán" rules={[...rules.required]}>
+              <Select placeholder="Chọn tỉnh">
                 {danhSachTinh?.map((item) => (
                   <Select.Option key={item?._id} value={item?.ma}>
                     {item?.tenDonVi}
                   </Select.Option>
-                ))}{' '}
+                ))}
               </Select>
             </Form.Item>
           </Col>
@@ -124,12 +125,12 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
             </Form.Item>
           </Col>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item name="hoTen" label="Khoa" rules={[...rules.required]}>
+            <Form.Item name="khoa" initialValue="Chưa cập nhật" label="Khoa" rules={[]}>
               <Input placeholder="Khoa" />
             </Form.Item>
           </Col>
           <Col xs={24} md={12} xl={8}>
-            <Form.Item name="hoTen" label="Ngành" rules={[...rules.required]}>
+            <Form.Item name="nganh" label="Ngành" rules={[]}>
               <Input placeholder="Ngành" />
             </Form.Item>
           </Col>
@@ -149,12 +150,12 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
           </Col>
           <Col xs={24} md={12} xl={8}>
             <Form.Item
-              name="nienKhoa"
+              name="khoaHoc"
               label="Khóa học"
-              initialValue={record?.nienKhoa}
+              initialValue={''}
               rules={[...rules.required]}
             >
-              <Input placeholder="Niên khóa" />
+              <Input placeholder="Khóa học" />
             </Form.Item>
           </Col>
           <Col xs={24} md={12}>

@@ -1,7 +1,7 @@
 import type { IInfoSV } from './../services/ant-design-pro/typings.d';
 import type { IRecordTinh } from '@/services/DonViHanhChinh/typing';
 
-import { getTinhS } from '@/services/DonViHanhChinh/donvihanhchinh';
+import { getQuanHuyenS, getTinhS, getXaPhuongS } from '@/services/DonViHanhChinh/donvihanhchinh';
 import { useState } from 'react';
 import { getInfoSV } from '@/services/ant-design-pro/api';
 import { postDonXacNhanTinhTrangHocTap } from '@/services/DichVuMotCua/dichvumotcua';
@@ -27,6 +27,9 @@ export default () => {
   // đơn vị hành chính
 
   const [danhSachTinh, setDanhSachTinh] = useState<IRecordTinh.Datum[]>([]);
+  const [danhSachQuanHuyen, setDanhSachQuanHuyen] = useState<IRecordTinh.Datum[]>([]);
+  const [danhSachXaPhuong, setDanhSachXaPhuong] = useState<IRecordTinh.Datum[]>([]);
+
   const getInfo = async () => {
     setLoading(true);
     const currentUser = await getInfoSV();
@@ -43,6 +46,22 @@ export default () => {
     setLoading(false);
   };
 
+  const getQuanHuyen = async (payload: { maTinh: string }) => {
+    setLoading(true);
+    const data = await getQuanHuyenS(payload);
+    console.log(`dsQuanHuyen`, data);
+    setDanhSachQuanHuyen(data?.data?.data ?? []);
+    setLoading(false);
+  };
+
+  const getXaPhuong = async (payload: { maQH: string }) => {
+    setLoading(true);
+    const data = await getXaPhuongS(payload);
+    console.log(`dsXaPhuong`, data);
+    setDanhSachXaPhuong(data?.data?.data ?? []);
+    setLoading(false);
+  };
+
   const postDonXacNhanTinhTrangHocTapModel = async (payload: DichVuMotCua.Record) => {
     setLoading(true);
     await postDonXacNhanTinhTrangHocTap(payload);
@@ -51,6 +70,10 @@ export default () => {
   };
 
   return {
+    danhSachQuanHuyen,
+    danhSachXaPhuong,
+    getQuanHuyen,
+    getXaPhuong,
     postDonXacNhanTinhTrangHocTapModel,
     thuTuc,
     getTinh,
