@@ -4,7 +4,7 @@ import { Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import { useModel } from 'umi';
 import moment from 'moment';
 
-const ThongTinCaNhan = () => {
+const ThongTinCaNhan = (props: { child?: any }) => {
   const { initialState } = useModel('@@initialState');
 
   return (
@@ -60,7 +60,7 @@ const ThongTinCaNhan = () => {
           </Form.Item>
         </Col>
         <Col xs={24} md={12} xl={8}>
-          <Form.Item name="ngayCap" label="Ngày cấp" rules={[...rules.required]}>
+          <Form.Item name="ngayCapCmtCccd" label="Ngày cấp" rules={[...rules.required]}>
             <DatePicker
               disabledDate={(cur) => moment(cur).isAfter(moment())}
               format="DD/MM/YYYY"
@@ -84,6 +84,7 @@ const ThongTinCaNhan = () => {
             <Input placeholder="Lớp" />
           </Form.Item>
         </Col>
+        {props.child}
       </Row>
     </>
   );

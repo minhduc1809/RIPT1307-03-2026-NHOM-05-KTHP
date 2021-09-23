@@ -88,7 +88,7 @@ const TieuDe = () => {
       )}
 
       {(loaiPhongBan === 'Công tác chính trị sinh viên' || loaiPhongBan === 'ctctsv') && (
-        <Row>
+        <Row justify="center">
           {(loaiGiayTo === 'Yêu cầu cấp giấy xác nhận tình trạng học tập' ||
             loaiGiayTo === 'Yêu cầu cấp giấy xác nhận vay vốn sinh viên') && (
             <>
@@ -176,7 +176,7 @@ const TieuDe = () => {
           )}
 
           {loaiGiayTo === 'Yêu cầu cấp giấy đăng ký vé tháng xe buýt' && (
-            <Row style={{ textAlign: 'center' }}>
+            <Row style={{ justifyContent: 'center' }}>
               <p
                 style={{
                   fontWeight: 650,
@@ -195,44 +195,47 @@ const TieuDe = () => {
             loaiGiayTo === 'Đơn đề nghị thi ghép') && (
             <>
               <Row>
-                <div style={{ textAlign: 'center' }}>
-                  <p style={{ fontWeight: 650, fontSize: '20px' }}>
-                    CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-                  </p>
-                  <p
-                    style={{
-                      // marginBottom: '-15px',
-                      fontWeight: 'bold',
-                      fontSize: '18px',
-                    }}
-                  >
-                    <u>Độc lập - Tự do - Hạnh phúc</u>
-                  </p>
-                </div>
-              </Row>
-              {loaiGiayTo === 'Đơn đề nghị miễn, giảm học phí' && (
-                <>
-                  <Row style={{ textAlign: 'center' }}>
-                    <p style={{ fontWeight: 650, fontSize: 20 }}>ĐƠN ĐỀ NGHỊ MIỄN, GIẢM HỌC PHÍ</p>
-                  </Row>
-                  <Row>
-                    <p style={{ fontWeight: 650, fontSize: 16 }}>Kính gửi:</p>
+                <Col span={24}>
+                  <div style={{ textAlign: 'center' }}>
+                    <p style={{ fontWeight: 650, fontSize: '20px' }}>
+                      CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+                    </p>
                     <p
                       style={{
-                        fontWeight: 650,
-                        fontSize: 16,
-
-                        marginLeft: '30px',
+                        // marginBottom: '-15px',
+                        fontWeight: 'bold',
+                        fontSize: '18px',
                       }}
                     >
-                      - Giám đốc Học viện Công nghệ Bưu chính Viễn thông
+                      <u>Độc lập - Tự do - Hạnh phúc</u>
                     </p>
-                    <p style={{ fontWeight: 650, fontSize: 16, marginLeft: '30px' }}>
-                      - Trưởng phòng Chính trị & CTSV
-                    </p>
-                  </Row>
-                </>
-              )}
+                  </div>
+                </Col>
+                {loaiGiayTo === 'Đơn đề nghị miễn, giảm học phí' && (
+                  <Col span={24}>
+                    <Row style={{ justifyContent: 'center' }}>
+                      <p style={{ fontWeight: 650, fontSize: 20 }}>
+                        ĐƠN ĐỀ NGHỊ MIỄN, GIẢM HỌC PHÍ
+                      </p>
+                    </Row>
+                    <div>
+                      <p style={{ fontWeight: 650, fontSize: 16 }}>Kính gửi:</p>
+                      <p
+                        style={{
+                          fontWeight: 650,
+                          fontSize: 16,
+                          marginLeft: '30px',
+                        }}
+                      >
+                        - Giám đốc Học viện Công nghệ Bưu chính Viễn thông
+                      </p>
+                      <p style={{ fontWeight: 650, fontSize: 16, marginLeft: '30px' }}>
+                        - Trưởng phòng Chính trị & CTSV
+                      </p>
+                    </div>
+                  </Col>
+                )}
+              </Row>
               {loaiGiayTo === 'Đơn đăng ký dự thi chuẩn đầu ra Tiếng Anh' && (
                 <>
                   <Row style={{ textAlign: 'center' }}>

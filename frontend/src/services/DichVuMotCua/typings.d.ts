@@ -1,6 +1,4 @@
 declare module DichVuMotCua {
-  export interface DonVi {}
-
   export interface QueQuan {
     maTinh: string;
     tenTinh: string;
@@ -11,7 +9,29 @@ declare module DichVuMotCua {
     soNhaTenDuong?: string;
   }
 
+  export interface ThongTinBoMe {
+    hoTen: string;
+    ngheNghiep: string;
+    diaChi: QueQuan;
+  }
+
   export interface Record {
+    tonGiao: string;
+    soTaiKhoan: string;
+    tenTaiKhoan: string;
+    thongTinBo: ThongTinBoMe;
+    thongTinMe: ThongTinBoMe;
+    soDienThoaiGD: string;
+    noiSinh: QueQuan;
+    danToc: string;
+    diaChiHoKhau: QueQuan;
+    doiTuong: string;
+    nganHang: string;
+    ngayCapCmtCccd: string;
+    anhChanDung: string;
+    diaChi: QueQuan;
+    tenTuyen: string;
+    tuyenBuytDangKy: string;
     hoDem: string;
     ten: string;
     trangThai: string;
@@ -49,8 +69,6 @@ declare module DichVuMotCua {
     soDienThoai: string;
     queQuan: QueQuan | string;
     cmtCccd: string;
-    ngayCapCmtCccd: Date;
-    noiCap: string;
     sinhVienNam: number;
     heDaoTao: string;
     nienKhoa: string;
@@ -64,7 +82,6 @@ declare module DichVuMotCua {
     userId: string;
     userCode: string;
     hoTen: string;
-    ngaySinh: string;
     gioiTinh: number;
     lop: string;
   }

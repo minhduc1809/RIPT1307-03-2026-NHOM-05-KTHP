@@ -28,18 +28,9 @@ export default () => {
   const [danhSachQuanHuyen, setDanhSachQuanHuyen] = useState<IRecordTinh.Datum[]>([]);
   const [danhSachXaPhuong, setDanhSachXaPhuong] = useState<IRecordTinh.Datum[]>([]);
 
-  // const getInfo = async () => {
-  //   setLoading(true);
-  //   const currentUser = await getInfoSV();
-  //   console.log(`currentUser`, currentUser);
-  //   setInfoSv(currentUser?.data);
-  //   setLoading(false);
-  // };
-
   const getTinh = async () => {
     setLoading(true);
     const data = await getTinhS();
-    console.log(`dsTinh`, data);
     setDanhSachTinh(data?.data?.data ?? []);
     setLoading(false);
   };
@@ -47,7 +38,6 @@ export default () => {
   const getQuanHuyen = async (payload: { maTinh: string }) => {
     setLoading(true);
     const data = await getQuanHuyenS(payload);
-    console.log(`dsQuanHuyen`, data);
     setDanhSachQuanHuyen(data?.data?.data ?? []);
     setLoading(false);
   };
@@ -55,7 +45,6 @@ export default () => {
   const getXaPhuong = async (payload: { maQH: string }) => {
     setLoading(true);
     const data = await getXaPhuongS(payload);
-    console.log(`dsXaPhuong`, data);
     setDanhSachXaPhuong(data?.data?.data ?? []);
     setLoading(false);
   };

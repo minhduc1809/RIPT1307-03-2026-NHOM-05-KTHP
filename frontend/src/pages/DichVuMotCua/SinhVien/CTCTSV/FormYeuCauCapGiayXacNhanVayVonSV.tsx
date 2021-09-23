@@ -201,8 +201,9 @@ const FormYeuCauCapGiayXacNhanVayVonSinhVien = () => {
           </Col>
         </Row>
         <div>
-          - Trong thời gian học tại trường, anh (chị): Phan Quang Thành không bị xử phạt hành chính
-          trở lên về các hành vi: cờ bạc, nghiện hút, trộm cắp, buôn lậu.
+          - Trong thời gian học tại trường, anh (chị): {initialState?.currentUser?.TenDayDu ?? ''}{' '}
+          không bị xử phạt hành chính trở lên về các hành vi: cờ bạc, nghiện hút, trộm cắp, buôn
+          lậu.
         </div>
         <div>
           - Số tài khoản của nhà trường: 1500201092540, tại ngân hàng Nông nghiệp và Phát triển nông

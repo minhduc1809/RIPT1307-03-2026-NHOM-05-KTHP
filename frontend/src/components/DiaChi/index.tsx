@@ -5,7 +5,20 @@ import { includes } from '@/utils/utils';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-const DiaChi = () => {
+type Props = {
+  hideTinh?: boolean;
+  hideQuanHuyen?: boolean;
+  hideXaPhuong?: boolean;
+  hideDiaChiCuThe?: boolean;
+  fields: {
+    tinh: string[];
+    quanHuyen: string[];
+    xaPhuong: string[];
+    diaChiCuThe: string[];
+  };
+};
+
+const DiaChi = (props: Props) => {
   const {
     danhSachQuanHuyen,
     danhSachTinh,
@@ -36,65 +49,85 @@ const DiaChi = () => {
 
   return (
     <Row gutter={[20, 0]}>
-      <Col xs={24} md={12} lg={8}>
-        <Form.Item name="tinh" rules={[...rules.required]}>
-          <Select
-            onChange={(val: string) => {
-              setMaTinh(val);
-            }}
-            showSearch
-            placeholder="Thành phố/Tỉnh"
-            optionFilterProp="children"
-            filterOption={(value, option) => includes(option?.props.children, value)}
+      {!props.hideTinh && (
+        <Col
+          xs={24}
+          md={props.hideQuanHuyen && props.hideXaPhuong ? 12 : 24}
+          lg={props.hideQuanHuyen && props.hideXaPhuong ? 24 : 8}
+        >
+          <Form.Item name={props?.fields?.tinh ?? []} rules={[...rules.required]}>
+            <Select
+              onChange={(val: string) => {
+                setMaTinh(val);
+              }}
+              showSearch
+              placeholder="Thành phố/Tỉnh"
+              optionFilterProp="children"
+              filterOption={(value, option) => includes(option?.props.children, value)}
+            >
+              {danhSachTinh?.map((item) => (
+                <Select.Option value={item.ma} key={item.ma}>
+                  {item.tenDonVi}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+      )}
+      {!props.hideQuanHuyen && (
+        <Col xs={24} md={12} lg={8}>
+          <Form.Item name={props?.fields?.quanHuyen ?? []} rules={[...rules.required]}>
+            <Select
+              onChange={(val: string) => {
+                setMaQuanHuyen(val);
+              }}
+              showSearch
+              placeholder="Quận/Huyện"
+              optionFilterProp="children"
+              filterOption={(value, option) => includes(option?.props.children, value)}
+            >
+              {danhSachQuanHuyen?.map((item) => (
+                <Select.Option value={item.ma} key={item.ma}>
+                  {item.tenDonVi}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+      )}
+      {!props.hideXaPhuong && (
+        <Col xs={24} md={12} lg={8}>
+          <Form.Item name={props?.fields?.xaPhuong ?? []} rules={[...rules.required]}>
+            <Select
+              showSearch
+              placeholder="Xã/Phường"
+              optionFilterProp="children"
+              filterOption={(value, option) => includes(option?.props.children, value)}
+            >
+              {danhSachXaPhuong?.map((item) => (
+                <Select.Option value={item.ma} key={item.ma}>
+                  {item.tenDonVi}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Col>
+      )}
+      {!props.hideDiaChiCuThe && (
+        <Col span={24}>
+          <Form.Item
+            rules={[...rules.required]}
+            name={props?.fields?.diaChiCuThe ?? []}
+            style={{ marginBottom: 0 }}
           >
-            {danhSachTinh?.map((item) => (
-              <Select.Option value={item.ma} key={item.ma}>
-                {item.tenDonVi}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-      </Col>
-      <Col xs={24} md={12} lg={8}>
-        <Form.Item name="quanHuyen" rules={[...rules.required]}>
-          <Select
-            onChange={(val: string) => {
-              setMaQuanHuyen(val);
-            }}
-            showSearch
-            placeholder="Quận/Huyện"
-            optionFilterProp="children"
-            filterOption={(value, option) => includes(option?.props.children, value)}
-          >
-            {danhSachQuanHuyen?.map((item) => (
-              <Select.Option value={item.ma} key={item.ma}>
-                {item.tenDonVi}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-      </Col>
-      <Col xs={24} md={12} lg={8}>
-        <Form.Item name="xaPhuong" rules={[...rules.required]}>
-          <Select
-            showSearch
-            placeholder="Xã/Phường"
-            optionFilterProp="children"
-            filterOption={(value, option) => includes(option?.props.children, value)}
-          >
-            {danhSachXaPhuong?.map((item) => (
-              <Select.Option value={item.ma} key={item.ma}>
-                {item.tenDonVi}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-      </Col>
-      <Col span={24}>
-        <Form.Item rules={[...rules.required]} name="diaChiCuThe" style={{ marginBottom: 0 }}>
-          <Input.TextArea maxLength={400} placeholder="Địa chỉ cụ thể" style={{ marginTop: 10 }} />
-        </Form.Item>
-      </Col>
+            <Input.TextArea
+              maxLength={400}
+              placeholder="Địa chỉ cụ thể"
+              style={{ marginTop: 10 }}
+            />
+          </Form.Item>
+        </Col>
+      )}
     </Row>
   );
 };

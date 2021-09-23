@@ -7,6 +7,7 @@ import { PlusCircleOutlined } from '@ant-design/icons';
 import FormYeuCauCapGiayXacNhanTinhTrangHocTap from './CTCTSV/FormYeuCauCapGiayXacNhanTinhTrangHocTap';
 import FormYeuCauCapGiayXacNhanVayVonSinhVien from './CTCTSV/FormYeuCauCapGiayXacNhanVayVonSV';
 import FormYeuCauCapGiayDangKyVeThangXeBus from './CTCTSV/FormYeuCauCapGiayDangKyVeThangXeBus';
+import FormDonDeNghiMienGiamHocPhi from './CTCTSV/FormDonDeNghiMienGiamHocPhi';
 
 const CTCTSV = () => {
   const pathname = window.location.pathname?.split('/')?.pop() ?? '';
@@ -64,6 +65,7 @@ const CTCTSV = () => {
         {loaiGiayTo === 'Yêu cầu cấp giấy đăng ký vé tháng xe buýt' && (
           <FormYeuCauCapGiayDangKyVeThangXeBus />
         )}
+        {loaiGiayTo === 'Đơn đề nghị miễn, giảm học phí' && <FormDonDeNghiMienGiamHocPhi />}
       </Modal>
       <DanhMuc />
     </Card>

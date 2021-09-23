@@ -1,22 +1,11 @@
+/* eslint-disable no-param-reassign */
 import DiaChi from '@/components/DiaChi';
+import UploadAvatar from '@/components/Upload/UploadAvatar';
 import TieuDe from '@/pages/DichVuMotCua/components/TieuDe';
-import data from '@/utils/data';
+import { getURLImg } from '@/services/LopTinChi/loptinchi';
 import rules from '@/utils/rules';
-import {
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  DatePicker,
-  Divider,
-  Form,
-  Input,
-  InputNumber,
-  Radio,
-  Row,
-  Select,
-} from 'antd';
-import moment from 'moment';
+import { renderFileListUrl } from '@/utils/utils';
+import { Button, Card, Checkbox, Col, Divider, Form, Input, Row, Select } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import PhuongThucNhanDon from '../../components/PhuongThucNhanDon';
@@ -34,6 +23,14 @@ const FormYeuCauCapGiayDangKyVeThangXeBus = () => {
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
+          if (values.anhChanDung.fileList?.[0]?.originFileObj) {
+            const response = await getURLImg({
+              filename: 'url1',
+              public: true,
+              file: values?.anhChanDung.fileList?.[0].originFileObj,
+            });
+            values.anhChanDung = response?.data?.data?.url;
+          } else values.anhChanDung = values.anhChanDung.fileList?.[0]?.url;
           postDonSinhVienModel(
             {
               ...values,
@@ -44,7 +41,7 @@ const FormYeuCauCapGiayDangKyVeThangXeBus = () => {
                   ? 'Nhận tại trường'
                   : values.diaChiNhanDon,
             },
-            'vay-von-sinh-vien',
+            'the-xe-bus',
           );
         }}
         form={form}
@@ -54,6 +51,23 @@ const FormYeuCauCapGiayDangKyVeThangXeBus = () => {
         <Divider />
         <h3 style={{ fontWeight: 'bold' }}>Thông tin đơn</h3>
         <Row gutter={[20, 0]}>
+          <Col span={24}>
+            <Form.Item
+              name="anhChanDung"
+              label="Ảnh chân dung"
+              initialValue={renderFileListUrl(record?.anhChanDung ?? '')}
+              rules={[...rules.fileRequired]}
+            >
+              <UploadAvatar
+                style={{
+                  width: 102,
+                  maxWidth: 102,
+                  height: 102,
+                  maxHeight: 102,
+                }}
+              />
+            </Form.Item>
+          </Col>
           <Col xs={24} md={12} xl={8}>
             <Form.Item
               initialValue={initialState?.currentUser?.so_dien_thoai}
@@ -66,39 +80,13 @@ const FormYeuCauCapGiayDangKyVeThangXeBus = () => {
           </Col>
           <Col xs={24} md={12} xl={8}>
             <Form.Item
-              name="maTruong"
-              label="Mã trường theo học"
-              initialValue={record?.maTruong ?? 'BVH'}
+              initialValue={record?.tuyenBuytDangKy}
+              name="tuyenBuytDangKy"
+              label="Tuyến buýt đăng ký"
               rules={[...rules.required]}
             >
-              <Input placeholder="Mã trường theo học" />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              initialValue={record?.loaiHinhDaoTao}
-              name="loaiHinhDaoTao"
-              label="Loại hình đào tạo"
-              rules={[...rules.required]}
-            >
-              <Select placeholder="Loại hình đào tạo">
-                {data.loaiHinhDaoTao?.map((item: string) => (
-                  <Select.Option value={item} key={item}>
-                    {item}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="heDaoTao"
-              label="Hình thức đào tạo"
-              initialValue="Đại học chính quy"
-              rules={[...rules.required]}
-            >
-              <Select placeholder="Hình thức đào tạo">
-                {['Đại học chính quy'].map((item) => (
+              <Select placeholder="Tuyến buýt đăng ký">
+                {['Một tuyến', 'Liên tuyến', 'Liên tuyến và Tuyến'].map((item) => (
                   <Select.Option value={item}>{item}</Select.Option>
                 ))}
               </Select>
@@ -106,113 +94,26 @@ const FormYeuCauCapGiayDangKyVeThangXeBus = () => {
           </Col>
           <Col xs={24} md={12} xl={8}>
             <Form.Item
-              name="nienKhoa"
-              label="Khóa học"
-              initialValue={record?.nienKhoa}
-              rules={[...rules.required]}
+              initialValue={record?.tenTuyen}
+              name="tenTuyen"
+              label="Số hiệu tuyến"
+              rules={[...rules.required, ...rules.text]}
             >
-              <Input placeholder="YYYY-YYYY" />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} xl={8}>
-            <Form.Item name="ngayNhapHoc" label="Ngày nhập học" rules={[...rules.required]}>
-              <DatePicker
-                disabledDate={(cur) => moment(cur).isAfter(moment())}
-                format="DD/MM/YYYY"
-                style={{ width: '100%' }}
-                placeholder="Ngày nhập học"
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="thoiGianRaTruong"
-              label="Thời gian ra trường"
-              rules={[...rules.required]}
-            >
-              <DatePicker
-                disabledDate={(cur) => moment(cur).isBefore(moment())}
-                format="DD/MM/YYYY"
-                style={{ width: '100%' }}
-                placeholder="Thời gian ra trường"
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="thoiGianHocTaiTruong"
-              label="Thời gian học (tháng)"
-              initialValue={record?.thoiGianHocTaiTruong}
-              rules={[...rules.required]}
-            >
-              <InputNumber
-                style={{ width: '100%' }}
-                placeholder="Đơn vị (tháng)"
-                min={0}
-                max={120}
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} xl={8}>
-            <Form.Item
-              name="hocPhiHangThang"
-              label="Học phí hàng tháng"
-              initialValue={record?.hocPhiHangThang}
-              rules={[...rules.required]}
-            >
-              <InputNumber
-                style={{ width: '100%' }}
-                placeholder="Đơn vị (VNĐ)"
-                min={0}
-                max={100000000}
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} xxl={8}>
-            <Form.Item
-              name="loaiMienGiam"
-              label="Thuộc diện"
-              initialValue={record?.loaiMienGiam ?? 'Không miễn giảm'}
-              rules={[...rules.required]}
-            >
-              <Radio.Group>
-                {['Không miễn giảm', 'Giảm học phí', 'Miễn học phí'].map((item) => (
-                  <Radio value={item} key={item}>
-                    {item}
-                  </Radio>
-                ))}
-              </Radio.Group>
-            </Form.Item>
-          </Col>
-          <Col xs={24} md={12} xxl={8}>
-            <Form.Item
-              name="doiTuong"
-              label="Thuộc đối tượng"
-              initialValue={record?.doiTuong ?? 'Không mồ côi'}
-              rules={[...rules.required]}
-            >
-              <Radio.Group>
-                {['Không mồ côi', 'Mồ côi'].map((item) => (
-                  <Radio value={item} key={item}>
-                    {item}
-                  </Radio>
-                ))}
-              </Radio.Group>
+              <Input placeholder="Số hiệu tuyến" />
             </Form.Item>
           </Col>
         </Row>
         <Form.Item label="Địa chỉ" required>
-          <DiaChi />
+          <DiaChi
+            fields={{
+              tinh: ['diaChi', 'maTinh'],
+              quanHuyen: ['diaChi', 'maQuanHuyen'],
+              xaPhuong: ['diaChi', 'maPhuongXa'],
+              diaChiCuThe: ['diaChi', 'soNhaTenDuong'],
+            }}
+          />
         </Form.Item>
 
-        <div>
-          - Trong thời gian học tại trường, anh (chị): Phan Quang Thành không bị xử phạt hành chính
-          trở lên về các hành vi: cờ bạc, nghiện hút, trộm cắp, buôn lậu.
-        </div>
-        <div>
-          - Số tài khoản của nhà trường: 1500201092540, tại ngân hàng Nông nghiệp và Phát triển nông
-          thôn, chi nhánh thành phố Hà Nội.
-        </div>
         {<PhuongThucNhanDon />}
         <Checkbox
           onChange={(e) => {
