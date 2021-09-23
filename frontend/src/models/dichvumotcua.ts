@@ -1,8 +1,7 @@
 import type { IRecordTinh } from '@/services/DonViHanhChinh/typing';
-
 import { getQuanHuyenS, getTinhS, getXaPhuongS } from '@/services/DonViHanhChinh/donvihanhchinh';
 import { useState } from 'react';
-
+import Data from '@/utils/data';
 import { postDonSinhVien } from '@/services/DichVuMotCua/dichvumotcua';
 import { message } from 'antd';
 
@@ -50,11 +49,17 @@ export default () => {
   };
 
   const postDonSinhVienModel = async (payload: DichVuMotCua.Record, pathDon: string) => {
-    setLoading(true);
-    await postDonSinhVien(payload, pathDon);
-    message.success('Gửi đơn thành công');
-    setLoading(false);
-    setVisibleForm(false);
+    try {
+      setLoading(true);
+      await postDonSinhVien(payload, pathDon);
+      message.success('Gửi đơn thành công');
+      setVisibleForm(false);
+    } catch (error) {
+      const { response } = error;
+      message.error(Data.error[response?.data?.errorCode]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {
