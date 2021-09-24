@@ -26,11 +26,49 @@ declare module IRecordCalendar {
   }
 }
 
-declare module IInfoSV {
+export declare module IInfoSV {
+  export interface DataSV {
+    id: number;
+    HoLotSV: string;
+    TenSV: string;
+    ma_sv: string;
+    DC_DT1LLSV: boolean;
+    DC_DCLLSV: boolean;
+    lop_hanh_chinh_id: any[];
+    khoa_nganh_id: any[];
+    khoa_sinh_vien_id: any[];
+    khoi_lop_id: any[];
+    sv_ltc_ds_ids: number[];
+    MaNg: boolean;
+    MaChngNg: boolean;
+    user_id: any[];
+    TenDayDu: string;
+    ngay_sinh: boolean;
+    gioi_tinh: string;
+    so_cmnd: boolean;
+    ngay_cap: boolean;
+    tinh_tp_hk: boolean;
+    quan_huyen_hk: boolean;
+    so_nha_ten_duong_hk: boolean;
+    tinh_tp_no: boolean;
+    quan_huyen_no: boolean;
+    phuong_xa_no: boolean;
+    so_nha_ten_duong_no: boolean;
+    tinh_tp_ns: boolean;
+    quan_huyen_ns: boolean;
+    phuong_xa_ns: boolean;
+    so_nha_ten_duong_ns: boolean;
+    avatar_path: boolean;
+    email_dang_nhap: string;
+    dia_chi_hien_nay: string;
+    so_dien_thoai: string;
+    so_dien_thoai_thay_the: string;
+    vai_tro: string;
+  }
   export interface Data {
     id: number;
     ghi_chu: boolean;
-    MaSV: string;
+    ma_sv: string;
     TenDayDu: string;
     HoLotSV: string;
     TenSV: string;
@@ -157,7 +195,7 @@ declare module IInfoSV {
     dia_chi_hien_nay: boolean;
     ten_goi_khac: boolean;
     ngay_sinh: string;
-    gioi_tinh: boolean;
+    gioi_tinh: string;
     tinh_tp_ns: boolean;
     quan_huyen_ns: boolean;
     phuong_xa_ns: boolean;
@@ -333,7 +371,7 @@ declare module IInfoSV {
   }
 
   export interface RootObject {
-    data: Data;
+    data: Data | DataSV;
     statusCode: number;
   }
 }
@@ -342,7 +380,7 @@ declare module IInfoGV {
   export interface Data {
     id: number;
     ghi_chu: boolean;
-    MaSV: string;
+    ma_sv: string;
     TenDayDu: string;
     HoLotSV: string;
     TenSV: string;
@@ -469,7 +507,7 @@ declare module IInfoGV {
     dia_chi_hien_nay: boolean;
     ten_goi_khac: boolean;
     ngay_sinh: string;
-    gioi_tinh: boolean;
+    gioi_tinh: string;
     tinh_tp_ns: boolean;
     quan_huyen_ns: boolean;
     phuong_xa_ns: boolean;

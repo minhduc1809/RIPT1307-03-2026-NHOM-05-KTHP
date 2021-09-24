@@ -10,10 +10,13 @@ const data: any = {
     { value: 'giang_vien', text: 'Giảng viên' },
     { value: 'can_bo', text: 'Cán bộ' },
   ],
+  gioiTinh: ['Nam', 'Nữ'],
   'info.anToan': [
     { value: false, text: 'Không an toàn' },
     { value: true, text: 'An toàn' },
   ],
+
+  loaiHinhDaoTao: ['Đại học Chính quy', 'Đại học Phi chính quy', 'Sau Đại học', 'Liên kết quốc tế'],
 
   loaiDonVi: ['Đơn vị cứng', 'Đơn vị mềm'],
 
@@ -47,6 +50,8 @@ const data: any = {
     UNAUTHORIZED_WRONG_PASSWORD: 'Tên tài khoản hoặc mật khẩu chưa chính xác',
     UNAUTHORIZED_USERNAME_NOT_FOUND: 'Tên tài khoản hoặc mật khẩu chưa chính xác',
     BAD_REQUEST_ID_EXISTED: 'Mã chủ đề đã tồn tại',
+    BAD_REQUEST_STILL_PROCESSING:
+      'Đơn của bạn đang được xử lý. Vui lòng không tạo thêm yêu cầu mới.',
   },
 };
 

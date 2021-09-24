@@ -69,6 +69,8 @@ export default {
   'menu.LopHanhChinhAdmin': 'Lớp hành chính',
   'menu.LopTinChiAdmin': 'Lớp tín chỉ',
   'menu.VanBanHuongDanUser': 'Văn bản hướng dẫn',
+  'menu.DichVuMotCuaSinhVien': 'Dịch vụ một cửa',
+  'menu.DichVuMotCuaSinhVien.CTCTSV': 'Phòng CTCTSV',
   'menu.dva-sample': 'Page mẫu dùng DVA',
   'menu.DangKyTinChi': 'Đăng ký tín chỉ',
 };

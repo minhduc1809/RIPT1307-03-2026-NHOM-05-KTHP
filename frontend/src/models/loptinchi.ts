@@ -1,5 +1,6 @@
 import {
   getDanhSachSinhVienByIdNhomLop,
+  getInfoMonHoc,
   getLopTinChiByHocKy,
   getLopTinChiById,
   getNhomLopTinChiById,
@@ -15,6 +16,7 @@ export default () => {
   const [idNhomLop, setIdNhomLop] = useState<number>(-1);
   const [filterInfo, setFilterInfo] = useState<any>({});
   const [condition, setCondition] = useState<any>({});
+  const [infoMonHoc, setInfoMonHoc] = useState<LopTinChi.InfoMonHoc>();
   const [danhSachSinhVien, setDanhSachSinhVien] = useState<LopTinChi.SinhVienRecord[]>([]);
   const [record, setRecord] = useState<LopTinChi.Record>({} as any);
   const [loading, setLoading] = useState<boolean>(true);
@@ -72,11 +74,21 @@ export default () => {
     setLoading(false);
   };
 
+  const getInfoMonHocModel = async () => {
+    if (!record.mon_hoc_ids?.[0]) return;
+    setLoading(true);
+    const response = await getInfoMonHoc(record?.mon_hoc_ids?.[0]);
+    setInfoMonHoc(response?.data?.data);
+    setLoading(false);
+  };
+
   return {
     condition,
     setCondition,
     filterInfo,
     setFilterInfo,
+    infoMonHoc,
+    getInfoMonHocModel,
     getDanhSachSinhVienByIdNhomLopModel,
     danhSachSinhVien,
     idNhomLop,

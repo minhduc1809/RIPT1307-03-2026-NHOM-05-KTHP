@@ -49,6 +49,7 @@ const Login: React.FC = () => {
           info = await getInfoGV();
         } else if (msg?.data?.data.user.vai_tro === 'sinh_vien') {
           info = await getInfoSV();
+          console.log(`info`, info);
         }
 
         setInitialState({

@@ -238,6 +238,20 @@ export default defineConfig({
       component: './CoCauToChuc',
       access: 'admin',
     },
+    // {
+    //   name: 'DichVuMotCuaSinhVien',
+    //   icon: 'BankOutlined',
+    //   path: '/dichvumotcuasv',
+    //   routes: [
+    //     {
+    //       name: 'CTCTSV',
+    //       path: './ctctsv',
+    //       component: './DichVuMotCua/SinhVien',
+    //       access: 'sinhVien',
+    //     },
+    //   ],
+    //   access: 'sinhVien',
+    // },
     {
       name: 'ThongBao',
       icon: 'notification',
