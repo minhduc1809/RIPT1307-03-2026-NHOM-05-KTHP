@@ -29,6 +29,23 @@ export declare module LopTinChi {
     sinhVienList: SinhVienRecord[];
   }
 
+  export interface InfoMonHoc {
+    id: number;
+    loai_hoc_phan: string;
+    ma_hoc_phan_moi: string;
+    so_tin_chi: number;
+    ten_hoc_phan: string;
+    url_danh_sach_hoc_lieu: string;
+    gio_tin_chi_yeu_cau: string;
+    khoa_bo_mon_phu_trach: string;
+    noi_dung_chi_tiet: string;
+    objective_kien_thuc: string;
+    objective_ky_nang: string;
+    objective_thai_do: string;
+    tom_tat_noi_dung: string;
+    yeu_cau_ve_csvc: string;
+  }
+
   export interface NhomLopTinChi {
     id: number;
     ma_nhom_lop_tin_chi: string;

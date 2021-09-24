@@ -66,3 +66,7 @@ export async function getNhomLopTinChiById(idLop: number) {
 export async function getDanhSachSinhVienByIdNhomLop(idNhomLop: number) {
   return axios.get(`${ip3}/odoo-nhom-lop-tin-chi/${idNhomLop}/user/danh-sach-sv`);
 }
+
+export async function getInfoMonHoc(idMonHoc: number) {
+  return axios.get(`${ip3}/odoo-slide-channel/${idMonHoc}`);
+}
