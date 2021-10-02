@@ -14,12 +14,37 @@ declare module ChuongTrinhKhung {
     danh_sach_hoc_phan: { hoc_phan: IHocPhanRecord }[];
   }
 
+  export interface KetQuaHocTap {
+    id: number;
+    diem_chu: string;
+    diem_hoc_phan: number;
+    diem_thang_4: number;
+    hoc_phan_id: (string | number)[];
+  }
+
+  export interface MonHocDieuKien {
+    id: number;
+    hoc_phan_id: (string | number)[];
+    ma_hoc_phan_moi: string;
+    hoc_ky: number;
+    loai_hoc_phan: string;
+    tinh_chat: string;
+    ketQuaHocTap: KetQuaHocTap;
+    so_tin_chi: number;
+  }
+
   export interface IChuongTrinhKhungRecord {
     id: string;
     ten_chuong_trinh_khung: string;
     nganh: Nganh.INganhRecord;
     chuyenNganh: any;
     danh_sach_ky_hoc: IKyHocRecord[];
+    khoa_nganh_ids: number[];
+    nganh_id: string;
+    chuyen_nganh_id: string;
+    mon_hoc_dieu_kien_ids: MonHocDieuKien[];
+    is_nganh: boolean;
+    hinh_thuc_dao_tao_id: number[];
   }
 
   export interface RootObject {

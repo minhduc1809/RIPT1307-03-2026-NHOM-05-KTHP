@@ -6,6 +6,8 @@ import {
   getNhomLopTinChiById,
   getThongBaoLopTinChiById,
   getThongTinChungLopTinChiById,
+  giangVienGetKetQuaHocTapByIdLopTinChi,
+  sinhVienGetKetQuaHocTapByIdLopTinChi,
 } from '@/services/LopTinChi/loptinchi';
 import type { IResThongBaoLopTinChi, LopTinChi } from '@/services/LopTinChi/typings';
 import { useState } from 'react';
@@ -18,6 +20,8 @@ export default () => {
   const [condition, setCondition] = useState<any>({});
   const [infoMonHoc, setInfoMonHoc] = useState<LopTinChi.InfoMonHoc>();
   const [danhSachSinhVien, setDanhSachSinhVien] = useState<LopTinChi.SinhVienRecord[]>([]);
+  const [ketQuaHocTap, setKetQuaHocTap] = useState<LopTinChi.KetQuaHocTap>();
+  const [danhSachKetQuaHocTap, setDanhSachKetQuaHocTap] = useState<LopTinChi.KetQuaHocTap[]>([]);
   const [record, setRecord] = useState<LopTinChi.Record>({} as any);
   const [loading, setLoading] = useState<boolean>(true);
   const [total, setTotal] = useState<number>(0);
@@ -82,7 +86,27 @@ export default () => {
     setLoading(false);
   };
 
+  const sinhVienGetKetQuaHocTapByIdLopTinChiModel = async (idLop: number) => {
+    setLoading(true);
+    const response = await sinhVienGetKetQuaHocTapByIdLopTinChi(idLop);
+    setKetQuaHocTap(response?.data?.data);
+    setLoading(false);
+  };
+
+  const giangVienGetKetQuaHocTapByIdLopTinChiModel = async (idLop: number) => {
+    setLoading(true);
+    const response = await giangVienGetKetQuaHocTapByIdLopTinChi(idLop);
+    setDanhSachKetQuaHocTap(response?.data?.data ?? []);
+    setLoading(false);
+  };
+
   return {
+    setDanhSachKetQuaHocTap,
+    giangVienGetKetQuaHocTapByIdLopTinChiModel,
+    danhSachKetQuaHocTap,
+    sinhVienGetKetQuaHocTapByIdLopTinChiModel,
+    ketQuaHocTap,
+    setKetQuaHocTap,
     condition,
     setCondition,
     filterInfo,

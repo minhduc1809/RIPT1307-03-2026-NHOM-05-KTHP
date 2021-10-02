@@ -2,53 +2,29 @@ import { Popover } from 'antd';
 import styles from './block.css';
 
 type Props = {
-  title: string;
-  number: number;
+  title?: string | number;
+  number?: number;
   type: 'hocky' | 'hocphan';
-  hocphantruoc?: ChuongTrinhKhung.IHocPhanRecord[];
-  hocphantienquyet?: ChuongTrinhKhung.IHocPhanRecord[];
   maHocPhan?: string;
+  diem?: ChuongTrinhKhung.KetQuaHocTap;
 };
 
 const Block = (props: Props) => {
-  const { title, number, type, hocphantienquyet, hocphantruoc } = props;
-  return type === 'hocphan' &&
-    ((hocphantruoc?.length ?? 0) > 0 || (hocphantienquyet?.length ?? 0) > 0) ? (
+  const { title, number, type, diem } = props;
+  return type === 'hocphan' ? (
     <Popover
       content={
         <>
-          {(hocphantruoc?.length ?? 0) > 0 && (
-            <div style={{ display: 'flex' }}>
-              <div style={{ marginRight: 8 }}>
-                <b>Học phần trước: </b>
-              </div>
-              <div>
-                {hocphantruoc?.map((item) => (
-                  <div>
-                    {item.name} ({item.so_tin_chi} TC)
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {(hocphantienquyet?.length ?? 0) > 0 && (
-            <div style={{ display: 'flex' }}>
-              <div style={{ marginRight: 8 }}>
-                <b>Học tiên quyết: </b>
-              </div>
-              <div>
-                {hocphantienquyet?.map((item) => (
-                  <div>
-                    {item.name} ({item.so_tin_chi} TC)
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          <div>Điểm thang 4: {diem?.diem_thang_4 ?? 'Chưa cập nhật'}</div>
+          <div>Điểm thang 10: {diem?.diem_hoc_phan ?? 'Chưa cập nhật'}</div>
+          <div>Điểm chữ: {diem?.diem_chu ?? 'Chưa cập nhật'}</div>
         </>
       }
     >
-      <div className={styles[type]} style={{ backgroundColor: 'pink' }}>
+      <div
+        className={styles[type]}
+        style={{ backgroundColor: !diem ? 'rgb(177, 224, 252)' : 'pink' }}
+      >
         <div style={{ textAlign: 'center' }}>{title}</div>
         <div>({number} TC)</div>
       </div>

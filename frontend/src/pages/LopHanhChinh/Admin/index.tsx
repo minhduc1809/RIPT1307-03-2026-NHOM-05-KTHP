@@ -81,7 +81,9 @@ const LopHanhChinhAdmin = () => {
           Tất cả hình thức đào tạo
         </Select.Option>
         {danhSachHinhThucDaoTao?.map((item) => (
-          <Select.Option value={item.id}>{item.ten_hinh_thuc_dao_tao}</Select.Option>
+          <Select.Option key={item.id} value={item.id}>
+            {item.ten_hinh_thuc_dao_tao}
+          </Select.Option>
         ))}
       </Select>
     </TableBase>

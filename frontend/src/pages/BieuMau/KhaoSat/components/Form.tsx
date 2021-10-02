@@ -163,7 +163,7 @@ const FormBaiHoc = () => {
             return (
               <>
                 {fields.map((field, index) => (
-                  <>
+                  <div key={field.key}>
                     <Card
                       className={styles.block}
                       title={
@@ -179,7 +179,7 @@ const FormBaiHoc = () => {
                       <Block field={{ ...field }} />
                     </Card>
                     <br />
-                  </>
+                  </div>
                 ))}
                 <Form.Item>
                   <Button

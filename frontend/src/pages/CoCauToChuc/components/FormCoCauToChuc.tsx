@@ -53,7 +53,9 @@ const FormCoCauToChuc = () => {
               filterOption={(value, option) => includes(option?.props.children, value)}
             >
               {danhSach?.map((item) => (
-                <Select.Option value={item.ma_don_vi}>{item.ten_don_vi}</Select.Option>
+                <Select.Option key={item.id} value={item.ma_don_vi}>
+                  {item.ten_don_vi}
+                </Select.Option>
               ))}
             </Select>
           </Form.Item>
@@ -67,7 +69,9 @@ const FormCoCauToChuc = () => {
         >
           <Select placeholder="Loại đơn vị">
             {data.loaiDonVi.map((item: string) => (
-              <Select.Option value={item}>{item}</Select.Option>
+              <Select.Option key={item} value={item}>
+                {item}
+              </Select.Option>
             ))}
           </Select>
         </Form.Item>
@@ -80,7 +84,9 @@ const FormCoCauToChuc = () => {
         >
           <Select placeholder="Cấp đơn vị" showSearch>
             {Object.keys(data.CapDonVi)?.map((item: string) => (
-              <Select.Option value={item}>{item}</Select.Option>
+              <Select.Option key={item} value={item}>
+                {item}
+              </Select.Option>
             ))}
           </Select>
         </Form.Item>

@@ -25,6 +25,7 @@ const GridChoice = (props: { name: number }) => {
                 {fields.map((field, index) => (
                   <>
                     <SingleChoice
+                      key={field.key}
                       type="grid"
                       index={index}
                       remove={remove}
@@ -63,6 +64,7 @@ const GridChoice = (props: { name: number }) => {
                 {fields.map((field, index) => (
                   <>
                     <SingleChoice
+                      key={field.key}
                       type="grid"
                       index={index}
                       remove={remove}

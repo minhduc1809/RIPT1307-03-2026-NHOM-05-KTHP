@@ -33,7 +33,9 @@ const CTCTSV = () => {
         style={{ width: '400px', marginBottom: 20, marginLeft: 8 }}
       >
         {LoaiDon[PhongBan?.[pathname]]?.map((item: string) => (
-          <Select.Option value={item}>{item}</Select.Option>
+          <Select.Option key={item} value={item}>
+            {item}
+          </Select.Option>
         ))}
       </Select>
       <Button

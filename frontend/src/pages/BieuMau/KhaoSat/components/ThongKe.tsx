@@ -23,7 +23,7 @@ const ThongKe = () => {
     else if (question.loai === 'NumericRange')
       questionEleMent = <NumericChoice ketQua={question.ketQua} />;
     return (
-      <div>
+      <div key={question?._id}>
         <div>
           <b>Câu hỏi: {question.noiDungCauHoi}</b>
         </div>

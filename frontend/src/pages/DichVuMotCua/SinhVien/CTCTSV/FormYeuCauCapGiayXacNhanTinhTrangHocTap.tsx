@@ -134,7 +134,9 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
             >
               <Select placeholder="Là sinh viên năm thứ ?">
                 {dataSinhVienNam.map((item) => (
-                  <Select.Option value={item.value}>{item.label}</Select.Option>
+                  <Select.Option key={item.value} value={item.value}>
+                    {item.label}
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -158,7 +160,9 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
             >
               <Select placeholder="Hệ đào tạo">
                 {['Đại học chính quy'].map((item) => (
-                  <Select.Option value={item}>{item}</Select.Option>
+                  <Select.Option key={item} value={item}>
+                    {item}
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -207,7 +211,9 @@ const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {
                   'Làm thủ tục giảm trừ thuế thu thập cho người thân',
                   'Khác',
                 ].map((item) => (
-                  <Select.Option value={item}>{item}</Select.Option>
+                  <Select.Option key={item} value={item}>
+                    {item}
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>

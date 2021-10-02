@@ -98,7 +98,9 @@ const FormYeuCauCapGiayXacNhanVayVonSinhVien = () => {
             >
               <Select placeholder="Hình thức đào tạo">
                 {['Đại học chính quy'].map((item) => (
-                  <Select.Option value={item}>{item}</Select.Option>
+                  <Select.Option key={item} value={item}>
+                    {item}
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>

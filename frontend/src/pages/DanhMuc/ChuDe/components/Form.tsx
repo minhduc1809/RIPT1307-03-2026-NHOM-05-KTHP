@@ -47,7 +47,9 @@ const FormBaiHoc = () => {
         >
           <Select placeholder="Chọn loại chủ đề">
             {danhSachLoaiChuDe.map((item: string) => (
-              <Select.Option value={item}>{item}</Select.Option>
+              <Select.Option key={item} value={item}>
+                {item}
+              </Select.Option>
             ))}
           </Select>
         </Form.Item>

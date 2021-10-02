@@ -77,14 +77,14 @@ const BlockQuestion = (props: { index: number; block: number }) => {
             return (
               <>
                 {fields.map((field, index) => (
-                  <>
+                  <div key={field.key}>
                     {questionType === 'SingleChoice' && (
                       <SingleChoice index={index} remove={remove} fieldName={field.name} />
                     )}
                     {questionType === 'MultipleChoice' && (
                       <MultipleChoice index={index} remove={remove} fieldName={field.name} />
                     )}
-                  </>
+                  </div>
                 ))}
                 <Form.Item>
                   <Form.ErrorList errors={errors} />

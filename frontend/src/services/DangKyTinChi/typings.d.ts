@@ -1,11 +1,47 @@
 declare module DangKyTinChi {
-  export interface DotDangKy {
+  export interface DotDangKyNhuCau {
     id: number;
     ten_dot_dang_ky_nhu_cau: string;
-    ky_hoc_id: (string | number)[];;
+    ky_hoc_id: (string | number)[];
     ngay_bat_dau_nhu_cau: string;
     ngay_ket_thuc_nhu_cau: string;
     trang_thai: string;
+  }
+
+  export interface DotDangKyTinChi {
+    id: number;
+    ten_dot_dang_ky: string;
+    khoi_lop_ids: number[];
+    ky_hoc_id: (string | number)[];
+    ngay_bat_dau_tin_chi: string;
+    ngay_ket_thuc_tin_chi: string;
+  }
+
+  export interface LopDaDangKy {
+    hocPhan: string;
+    idLopTinChi: number;
+    soThuTuLop: number;
+    idNhomLopTinChi: number;
+    soThuTuNhom: number;
+  }
+
+  export interface LopTinChi {
+    tenGiangVien: string;
+    soThuTuLop: number;
+    idLop: number;
+    tongSoSinhVienLop: number;
+    siSoLop: number;
+    soLuongNhom: number;
+    maHoaLichHoc: string;
+  }
+
+  export interface NhomLopTinChi {
+    idNhomLop: number;
+    soThuTuNhomLop: number;
+    tongSoSinhVienNhomLop: number;
+    siSoNhomLop: number;
+    loaiNhom: string;
+    maHoaLichHoc: string;
   }
 
   export interface MonHoc {
@@ -15,6 +51,14 @@ declare module DangKyTinChi {
     soTinChi: number;
     tenMonHoc: string;
     index?: number;
+    hocPhi: number;
+  }
+
+  export interface LichHoc {
+    danhSachTuan: number[];
+    soTiet: string;
+    thu: string;
+    tietBatDau: string;
   }
 
   export interface NguyenVong {

@@ -1,5 +1,6 @@
 import { request } from 'umi';
 import { ip3 } from '@/utils/constants';
+import axios from '@/utils/axios';
 
 export async function get(options: Record<string, any>) {
   return request<ChuongTrinhKhung.RootObject>(
@@ -9,4 +10,8 @@ export async function get(options: Record<string, any>) {
       ...(options || {}),
     },
   );
+}
+
+export async function getTienTrinhHocTap() {
+  return axios.get(`${ip3}/odoo-chuong-trinh-khung/sinh-vien/me/tien-trinh-hoc-tap`);
 }

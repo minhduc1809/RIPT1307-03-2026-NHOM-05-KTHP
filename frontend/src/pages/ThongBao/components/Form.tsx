@@ -76,7 +76,9 @@ const FormTinTuc = () => {
         >
           <Select showSearch onChange={(val: string) => setNguoiNhan(val)} placeholder="Người nhận">
             {['Tất cả tài khoản', 'Gửi theo vai trò', 'Gửi theo đơn vị'].map((item) => (
-              <Select.Option value={item}>{item}</Select.Option>
+              <Select.Option key={item} value={item}>
+                {item}
+              </Select.Option>
             ))}
           </Select>
         </Form.Item>

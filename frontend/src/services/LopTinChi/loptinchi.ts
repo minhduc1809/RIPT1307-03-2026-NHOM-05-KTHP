@@ -70,3 +70,11 @@ export async function getDanhSachSinhVienByIdNhomLop(idNhomLop: number) {
 export async function getInfoMonHoc(idMonHoc: number) {
   return axios.get(`${ip3}/odoo-slide-channel/${idMonHoc}`);
 }
+
+export async function sinhVienGetKetQuaHocTapByIdLopTinChi(idLop: number) {
+  return axios.get(`${ip3}/odoo-lop-tin-chi/${idLop}/sinh-vien/ket-qua-hoc-tap`);
+}
+
+export async function giangVienGetKetQuaHocTapByIdLopTinChi(idLop: number) {
+  return axios.get(`${ip3}/odoo-lop-tin-chi/${idLop}/giang-vien/ket-qua-hoc-tap`);
+}

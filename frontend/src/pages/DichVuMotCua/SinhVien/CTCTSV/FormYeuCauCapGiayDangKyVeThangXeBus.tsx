@@ -87,7 +87,9 @@ const FormYeuCauCapGiayDangKyVeThangXeBus = () => {
             >
               <Select placeholder="Tuyến buýt đăng ký">
                 {['Một tuyến', 'Liên tuyến', 'Liên tuyến và Tuyến'].map((item) => (
-                  <Select.Option value={item}>{item}</Select.Option>
+                  <Select.Option key={item} value={item}>
+                    {item}
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>

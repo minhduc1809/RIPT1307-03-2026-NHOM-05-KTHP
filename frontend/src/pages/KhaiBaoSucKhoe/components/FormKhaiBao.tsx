@@ -43,7 +43,7 @@ const FormTraLoiKhaoSat = () => {
         <NumericChoice question={question} indexKhoi={indexKhoi} indexCauHoi={indexCauHoi} />
       );
     return (
-      <div>
+      <div key={question._id}>
         <div>
           <b>{question.noiDungCauHoi}</b>
         </div>

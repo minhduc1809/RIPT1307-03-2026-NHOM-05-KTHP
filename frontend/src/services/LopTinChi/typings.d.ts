@@ -16,6 +16,19 @@ export declare module LopTinChi {
     soDienThoai: string;
   }
 
+  export interface KetQuaHocTap {
+    id: number;
+    sinh_vien_id: (number | string)[];
+    ma_sv: string;
+    TenDayDu: string;
+    diem_attendance: number;
+    diem_bai_tap: number;
+    diem_trung_binh_kiem_tra_tren_lop: number;
+    diem_thi_nghiem: number;
+    diem_cuoi_ky: number;
+    diem_tong_ket: number;
+  }
+
   export interface SinhVienRecord {
     ma_sv: string;
     id: number;

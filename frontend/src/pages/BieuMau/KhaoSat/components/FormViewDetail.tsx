@@ -28,7 +28,7 @@ const FormBaiHoc = () => {
         />
       );
     return (
-      <div>
+      <div key={question._id}>
         <div>
           <b>{question.noiDungCauHoi}</b>
         </div>

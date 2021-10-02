@@ -1,45 +1,40 @@
 import type { IColumn } from '@/utils/interfaces';
 import { currencyFormat } from '@/utils/utils';
-import { ArrowRightOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, List, Popconfirm, Row, Statistic, Tag, Result, Table } from 'antd';
-import TableTemp from '@/components/Table/Table';
+import { ArrowRightOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Col, Result, Row } from 'antd';
 import type { CheckboxChangeEvent } from 'antd/lib/checkbox';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';
 import { useModel } from 'umi';
+import InfoDot from './InfoDot';
+import TableDanhSachHocPhan from './TableDanhSachHocPhan';
+import TableDanhSachHocPhanDaChon from './TableDanhSachHocPhanDaChon';
 
-const { Countdown } = Statistic;
-
-const DangKyNhuCau = () => {
+const DangKyNhuCau = (props: {
+  danhSachHocPhanKyNay: DangKyTinChi.MonHoc[];
+  danhSachHocPhanHocVuot: DangKyTinChi.MonHoc[];
+  danhSachHocPhanHocCaiThien: DangKyTinChi.MonHoc[];
+  danhSachHocPhanHocLai: DangKyTinChi.MonHoc[];
+  danhSachTatCaHocPhan: DangKyTinChi.MonHoc[];
+}) => {
   const {
-    recordDot,
+    recordDotNhuCau,
     recordPhieuDangKy,
     recordHocPhan,
-    postDanhSachHocPhanDangKyModel,
-    recordThongTinKyHoc,
     current,
     setCurrent,
+    getDotDangKyNhuCauByKyHocModel,
+    getPhieuDangKyByDotModel,
+    getThongTinKyHocModel,
   } = useModel('dangkytinchi');
+
   const { record } = useModel('kyhoc');
-  const danhSachHocPhanKyNay: DangKyTinChi.MonHoc[] = [];
-  const danhSachHocPhanHocVuot: DangKyTinChi.MonHoc[] = [];
-  const danhSachHocPhanHocCaiThien: DangKyTinChi.MonHoc[] = recordHocPhan?.dat ?? [];
-  const danhSachHocPhanHocLai: DangKyTinChi.MonHoc[] = recordHocPhan?.khongDat ?? [];
+
   const [danhSachHocPhanDaChon, setDanhSachHocPhanDaChon] = useState<DangKyTinChi.MonHoc[]>([]);
   const [danhSachIdHocPhanDaChon, setDanhSachIdHocPhanDaChon] = useState<number[]>([]);
   const [tongSoTinChi, setTongSoTinChi] = useState<number>(0);
-  recordHocPhan?.chuaHoc?.forEach((item) => {
-    if (item?.soThuTuKyHoc === record?.soThuTu) {
-      danhSachHocPhanKyNay?.push(item);
-    } else danhSachHocPhanHocVuot?.push(item);
-  });
-  const danhSachTatCaHocPhan = [
-    ...danhSachHocPhanHocCaiThien,
-    ...danhSachHocPhanHocLai,
-    ...danhSachHocPhanKyNay,
-    ...danhSachHocPhanHocVuot,
-  ];
+  const [tongHocPhi, setTongHocPhi] = useState<number>(0);
+
   const onSelectMonHoc = (value: CheckboxChangeEvent, recordMonHoc: DangKyTinChi.MonHoc) => {
     const danhSachTemp = [...danhSachHocPhanDaChon];
     const danhSachIdTemp = [...danhSachIdHocPhanDaChon];
@@ -49,8 +44,10 @@ const DangKyNhuCau = () => {
       setDanhSachHocPhanDaChon(danhSachTemp);
       setDanhSachIdHocPhanDaChon(danhSachIdTemp);
       setTongSoTinChi(tongSoTinChi + recordMonHoc.soTinChi);
+      setTongHocPhi(tongHocPhi + recordMonHoc.hocPhi);
     } else {
       setTongSoTinChi(tongSoTinChi - recordMonHoc.soTinChi);
+      setTongHocPhi(tongHocPhi - recordMonHoc.hocPhi);
       setDanhSachHocPhanDaChon(
         danhSachTemp
           ?.filter((item) => item.idHocPhan !== recordMonHoc.idHocPhan)
@@ -104,78 +101,62 @@ const DangKyNhuCau = () => {
   ];
 
   const data = [
-    { title: 'Danh sách học phần kỳ này', dataSource: danhSachHocPhanKyNay },
+    { title: 'Danh sách học phần kỳ này', dataSource: props.danhSachHocPhanKyNay },
     {
       title: 'Danh sách học phần học vượt',
-      dataSource: danhSachHocPhanHocVuot,
+      dataSource: props.danhSachHocPhanHocVuot,
     },
     {
       title: 'Danh sách học phần học lại',
-      dataSource: danhSachHocPhanHocLai,
+      dataSource: props.danhSachHocPhanHocLai,
     },
     {
       title: 'Danh sách học phần học cải thiện',
-      dataSource: danhSachHocPhanHocCaiThien,
+      dataSource: props.danhSachHocPhanHocCaiThien,
     },
   ];
 
-  const now = Date.now();
-  const diffTime = moment(new Date(recordDot?.ngay_ket_thuc_nhu_cau ?? now)).diff(now);
-  const deadline = now + diffTime ?? 0;
+  useEffect(() => {
+    getDotDangKyNhuCauByKyHocModel(record?.id);
+    getThongTinKyHocModel(record?.id);
+  }, [record?.id]);
 
-  let colorDot = 'orange';
-  let textTrangThai = 'Đang diễn ra';
-  if (moment(new Date()).isBefore(moment(recordDot?.ngay_bat_dau_nhu_cau))) {
-    textTrangThai = 'Chưa diễn ra';
-    colorDot = 'green';
-  } else if (moment(new Date()).isAfter(moment(recordDot?.ngay_ket_thuc_nhu_cau))) {
-    textTrangThai = 'Đã diễn ra';
-    colorDot = 'blue';
-  }
-  const checkTrongThoiGianDangKy = textTrangThai === 'Đang diễn ra';
-  let textConfirmSave = 'Bạn có chắc chắn muốn lưu không ?';
-  if (tongSoTinChi < recordThongTinKyHoc.tinChiDangKyToiThieu) {
-    textConfirmSave = `Bạn đã đăng ký số tín chỉ ít hơn ${recordThongTinKyHoc.tinChiDangKyToiThieu} tín chỉ theo quy định. Bạn có chắc chắn muốn tiếp tục đăng ký không?`;
-  } else if (tongSoTinChi > recordThongTinKyHoc.tinChiDangKyToiDa) {
-    textConfirmSave = `Bạn đã đăng ký số tín chỉ lớn hơn ${recordThongTinKyHoc.tinChiDangKyToiDa} tín chỉ theo quy định. Bạn vui lòng đăng ký lại`;
-  }
-
-  const onSave = () => {
-    if (tongSoTinChi > recordThongTinKyHoc.tinChiDangKyToiDa) return;
-    const danhSachHocPhan = danhSachHocPhanDaChon?.map((item) => {
-      return { idHocPhan: item.idHocPhan };
-    });
-    postDanhSachHocPhanDangKyModel(danhSachHocPhan);
-  };
+  useEffect(() => {
+    getPhieuDangKyByDotModel();
+  }, [recordDotNhuCau?.id]);
 
   useEffect(() => {
     const danhSachHocPhanDaChonTemp: DangKyTinChi.MonHoc[] = [];
     const danhSachIdHocPhanDaChonTemp: number[] = [];
     let tongSoTinChiTemp = 0;
+    let tongHocPhiTemp = 0;
     recordPhieuDangKy?.danhSachNguyenVong?.forEach((item, index) => {
-      const hocPhanRecord = danhSachTatCaHocPhan?.find(
+      const hocPhanRecord = props.danhSachTatCaHocPhan?.find(
         (hocPhan) => hocPhan.idHocPhan === item.idHocPhan,
       );
       if (hocPhanRecord?.idHocPhan) {
         danhSachHocPhanDaChonTemp.push({ ...hocPhanRecord, index: index + 1 });
         danhSachIdHocPhanDaChonTemp.push(hocPhanRecord?.idHocPhan);
         tongSoTinChiTemp += hocPhanRecord.soTinChi;
+        tongHocPhiTemp += hocPhanRecord.hocPhi;
       }
     });
     if (danhSachHocPhanDaChonTemp.length === 0) {
-      danhSachHocPhanKyNay?.forEach((item, index) => {
+      props.danhSachHocPhanKyNay?.forEach((item, index) => {
         danhSachHocPhanDaChonTemp.push({ ...item, index: index + 1 });
         danhSachIdHocPhanDaChonTemp.push(item.idHocPhan);
         tongSoTinChiTemp += item.soTinChi;
+        tongHocPhiTemp += item.hocPhi;
       });
     }
     setDanhSachHocPhanDaChon(danhSachHocPhanDaChonTemp);
     setDanhSachIdHocPhanDaChon(danhSachIdHocPhanDaChonTemp);
     setTongSoTinChi(tongSoTinChiTemp);
+    setTongHocPhi(tongHocPhiTemp);
   }, [recordHocPhan, recordPhieuDangKy]);
   return (
     <div>
-      {recordDot === null && (
+      {recordDotNhuCau === null && (
         <div>
           <Result
             title="Chưa có đợt đăng ký cho kỳ này"
@@ -183,127 +164,34 @@ const DangKyNhuCau = () => {
           />
         </div>
       )}
-      {recordDot?.id && (
+      {recordDotNhuCau?.id && (
         <div>
           {recordPhieuDangKy && recordPhieuDangKy !== null && (
             <>
-              <Row gutter={[8, 0]}>
-                <Col xs={24} xl={12}>
-                  Thời gian bắt đầu:{' '}
-                  {moment(recordDot.ngay_bat_dau_nhu_cau).format('HH:mm DD/MM/YYYY')}
-                </Col>
-                <Col xs={24} xl={12}>
-                  Thời gian kết thúc:{' '}
-                  {moment(recordDot.ngay_ket_thuc_nhu_cau).format('HH:mm DD/MM/YYYY')}
-                </Col>
-                <Col xs={24} xl={12}>
-                  <div style={{ display: 'flex' }}>
-                    Thời gian còn lại:
-                    <Countdown
-                      value={deadline}
-                      valueStyle={{ fontSize: 14, marginLeft: 4 }}
-                      format="D ngày H giờ m phút s giây"
-                    />
-                  </div>
-                </Col>
-                <Col xs={24} xl={6}>
-                  Trạng thái: <Tag color={colorDot}>{textTrangThai}</Tag>
-                </Col>
-              </Row>
+              <InfoDot
+                ngayBatDau={recordDotNhuCau?.ngay_bat_dau_nhu_cau}
+                ngayKetThuc={recordDotNhuCau?.ngay_ket_thuc_nhu_cau}
+              />
               <Row gutter={[8, 0]}>
                 <Col xs={24} xl={12} xxl={12}>
                   <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}>
-                    <List
-                      style={{ paddingRight: 10 }}
-                      itemLayout="horizontal"
-                      dataSource={data}
-                      renderItem={(item) => (
-                        <List.Item style={{ padding: 0 }} key={item.title}>
-                          <Table
-                            style={{ width: '100%' }}
-                            pagination={
-                              item.title === 'Danh sách học phần kỳ này'
-                                ? false
-                                : {
-                                    showSizeChanger: true,
-                                    pageSizeOptions: ['10', '25', '50', '100'],
-                                    showTotal: (tongSo: number) => {
-                                      return <div>Tổng số: {tongSo}</div>;
-                                    },
-                                  }
-                            }
-                            title={() => <b>{item.title}</b>}
-                            columns={columns}
-                            dataSource={item.dataSource}
-                          />
-                        </List.Item>
-                      )}
-                    />
+                    <TableDanhSachHocPhan data={data} columns={columns} />
                   </Scrollbars>
                 </Col>
                 <Col xs={24} xl={12} xxl={12}>
                   <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}>
-                    <TableTemp
-                      title={
-                        <b>
-                          <span>Danh sách học phần đã chọn</span>
-                          <span style={{ float: 'right' }}>
-                            <Popconfirm
-                              disabled={
-                                danhSachHocPhanDaChon.length === 0 || !checkTrongThoiGianDangKy
-                              }
-                              onConfirm={onSave}
-                              title={<div style={{ maxWidth: 300 }}>{textConfirmSave}</div>}
-                            >
-                              <Button
-                                icon={<SaveOutlined />}
-                                style={{ marginRight: '-16px' }}
-                                disabled={
-                                  danhSachHocPhanDaChon.length === 0 || !checkTrongThoiGianDangKy
-                                }
-                                type="primary"
-                              >
-                                Lưu
-                              </Button>
-                            </Popconfirm>
-                          </span>
-                        </b>
-                      }
-                      columns={[
-                        {
-                          title: 'STT',
-                          width: 80,
-                          align: 'center',
-                          dataIndex: 'index',
-                        },
-                        ...columns.slice(1),
-                      ]}
-                      data={
-                        danhSachHocPhanDaChon.length > 0
-                          ? [
-                              ...danhSachHocPhanDaChon,
-                              {
-                                index: ' ',
-                                tenMonHoc: 'Tổng',
-                                soTinChi: tongSoTinChi,
-                                soThuTuKyHoc: tongSoTinChi,
-                                idHocPhan: -1,
-                                maMonHoc: '',
-                              },
-                            ]
-                          : danhSachHocPhanDaChon
-                      }
-                    />
+                    <TableDanhSachHocPhanDaChon
+                      danhSachHocPhanDaChon={danhSachHocPhanDaChon}
+                      tongSoTinChi={tongSoTinChi}
+                      tongHocPhi={tongHocPhi}
+                      columns={columns}
+                    />{' '}
                   </Scrollbars>
                 </Col>
               </Row>
               <br />
               <div style={{ textAlign: 'center' }}>
-                <Button
-                  onClick={() => setCurrent(current + 1)}
-                  type="primary"
-                  icon={<ArrowRightOutlined />}
-                >
+                <Button onClick={() => setCurrent(1)} type="primary" icon={<ArrowRightOutlined />}>
                   Tiếp theo
                 </Button>
               </div>

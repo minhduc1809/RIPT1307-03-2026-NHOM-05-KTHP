@@ -53,7 +53,9 @@ const FormTinTuc = () => {
         >
           <Select placeholder="Chọn chủ đề">
             {danhSach.map((item) => (
-              <Select.Option value={item._id}>{item.name}</Select.Option>
+              <Select.Option key={item._id} value={item._id}>
+                {item.name}
+              </Select.Option>
             ))}
           </Select>
         </Form.Item>
@@ -96,7 +98,9 @@ const FormTinTuc = () => {
                 placeholder="Chọn đối tượng"
               >
                 {['Tất cả', 'Vai trò'].map((item) => (
-                  <Select.Option value={item}>{item}</Select.Option>
+                  <Select.Option key={item} value={item}>
+                    {item}
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>

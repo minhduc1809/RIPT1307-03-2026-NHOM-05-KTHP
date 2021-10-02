@@ -2,6 +2,8 @@ import { TeamOutlined } from '@ant-design/icons';
 import { Breadcrumb, Card, Tabs } from 'antd';
 import { history, useModel } from 'umi';
 import HocLieuSo from './components/HocLieuSo';
+import KetQuaHocTapGV from './components/KetQuaHocTap/KetQuaHocTapGV';
+import KetQuaHocTapSV from './components/KetQuaHocTap/KetQuaHocTapSV';
 import ThongBao from './components/ThongBao';
 import ThongTinChung from './components/ThongTinChung';
 
@@ -36,7 +38,9 @@ const DetailLopTinChi = ({
           <ThongTinChung id={id} isGiangVien={isGiangVien} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Điểm danh" key="2"></Tabs.TabPane>
-        <Tabs.TabPane tab="Kết quả học tập" key="3"></Tabs.TabPane>
+        <Tabs.TabPane tab="Kết quả học tập" key="3">
+          {isGiangVien ? <KetQuaHocTapGV id={id} /> : <KetQuaHocTapSV id={id} />}
+        </Tabs.TabPane>
         <Tabs.TabPane tab="Thông báo" key="4">
           <ThongBao isGiangVien={isGiangVien} id={id} />
         </Tabs.TabPane>
