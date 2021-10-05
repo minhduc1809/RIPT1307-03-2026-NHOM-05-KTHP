@@ -39,16 +39,16 @@ const LopTinChi = () => {
     },
     {
       title: 'Mã học phần',
-      dataIndex: 'ma_hoc_phan',
+      dataIndex: 'mon_hoc_ids',
+      render: (val) => <div>{val?.[1] ?? ''}</div>,
       align: 'center',
       width: 200,
       onCell,
     },
     {
-      title: 'Môn',
-      dataIndex: 'mon_hoc_ids',
+      title: 'Tên học phần',
+      dataIndex: 'ten_hoc_phan',
       align: 'center',
-      render: (val) => <div>{val?.[1] ?? ''}</div>,
       onCell,
     },
   ];

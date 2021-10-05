@@ -54,11 +54,7 @@ export default () => {
     const { title, loaiSuKien } = event;
     return (
       <div style={{ width: '100%', fontSize: 13 }}>
-        <p>
-          {' '}
-          <p>Tên sự kiện: {`${title || 'Chưa cập nhật'}\n\n`} </p>
-          <p>Loại sự kiện: {`${loaiSuKien || 'Chưa cập nhật'}\n\n`}</p>
-        </p>
+        {`${loaiSuKien || ''}`} - {`${title || 'Chưa cập nhật'}`}{' '}
       </div>
     );
   };
@@ -79,25 +75,23 @@ export default () => {
     }),
   );
   return (
-    <div style={{ height: 600 }}>
-      <Card bordered>
-        <Calendar
-          localizer={localizer}
-          events={dataCalendar}
-          defaultView={Views.WEEK}
-          scrollToTime={new Date(1970, 1, 1)}
-          defaultDate={new Date()}
-          messages={messages}
-          views={['month', 'week', 'day']}
-          style={{ height: 600 }}
-          min={moment('0000', 'HHmm').toDate()}
-          max={moment('2300', 'HHmm').toDate()}
-          eventPropGetter={eventPropGetter}
-          onSelectEvent={(record: any) => onSelectEvent(record)}
-          components={{ event: (event: any) => eventCustom(event) }}
-          popup
-        />
-      </Card>
-    </div>
+    <Card bordered>
+      <Calendar
+        localizer={localizer}
+        events={dataCalendar}
+        defaultView={Views.WEEK}
+        scrollToTime={new Date(1970, 1, 1)}
+        defaultDate={new Date()}
+        messages={messages}
+        views={['month', 'week', 'day']}
+        // style={{ height: 700 }}
+        min={moment('0600', 'HHmm').toDate()}
+        max={moment('2100', 'HHmm').toDate()}
+        eventPropGetter={eventPropGetter}
+        onSelectEvent={(record: any) => onSelectEvent(record)}
+        components={{ event: (event: any) => eventCustom(event) }}
+        popup
+      />
+    </Card>
   );
 };

@@ -77,25 +77,34 @@ const DangKyNhuCau = (props: {
       width: 200,
       align: 'center',
       search: 'search',
+      render: (val) => <div style={{ fontWeight: val === 'Tổng' ? 'bold' : 'normal' }}>{val}</div>,
     },
     {
       title: 'Mã học phần',
       dataIndex: 'maMonHoc',
       width: 200,
       align: 'center',
+      search: 'search',
     },
     {
       title: 'Số tín chỉ',
       dataIndex: 'soTinChi',
       width: 100,
       align: 'center',
+      render: (val, recordHP) => (
+        <div style={{ fontWeight: recordHP?.tenMonHoc === 'Tổng' ? 'bold' : 'normal' }}>{val}</div>
+      ),
     },
     {
       title: 'Học phí',
       dataIndex: 'hocPhi',
       width: 200,
       align: 'center',
-      render: (val) => <div>{currencyFormat(val)}</div>,
+      render: (val, recordHP) => (
+        <div style={{ fontWeight: recordHP?.tenMonHoc === 'Tổng' ? 'bold' : 'normal' }}>
+          {currencyFormat(val)}
+        </div>
+      ),
     },
   ];
 
@@ -172,20 +181,20 @@ const DangKyNhuCau = (props: {
                 ngayKetThuc={recordDotNhuCau?.ngay_ket_thuc_nhu_cau}
               />
               <Row gutter={[8, 0]}>
-                <Col xs={24} xl={12} xxl={12}>
+                <Col xs={24}>
                   <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}>
                     <TableDanhSachHocPhan data={data} columns={columns} />
                   </Scrollbars>
                 </Col>
-                <Col xs={24} xl={12} xxl={12}>
-                  <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}>
-                    <TableDanhSachHocPhanDaChon
-                      danhSachHocPhanDaChon={danhSachHocPhanDaChon}
-                      tongSoTinChi={tongSoTinChi}
-                      tongHocPhi={tongHocPhi}
-                      columns={columns}
-                    />{' '}
-                  </Scrollbars>
+                <Col xs={24}>
+                  {/* <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}> */}
+                  <TableDanhSachHocPhanDaChon
+                    danhSachHocPhanDaChon={danhSachHocPhanDaChon}
+                    tongSoTinChi={tongSoTinChi}
+                    tongHocPhi={tongHocPhi}
+                    columns={columns}
+                  />{' '}
+                  {/* </Scrollbars> */}
                 </Col>
               </Row>
               <br />

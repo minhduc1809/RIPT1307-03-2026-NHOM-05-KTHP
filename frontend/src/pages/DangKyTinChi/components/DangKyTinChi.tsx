@@ -62,11 +62,11 @@ const TinChi = (props: {
     recordLopTinChi: DangKyTinChi.LopTinChi,
   ) => {
     if (value.target.checked) {
-      const dsLop = await getDSNhomLopTinChiByIdLopModel(recordLopTinChi.idLop);
+      const dsNhomLop = await getDSNhomLopTinChiByIdLopModel(recordLopTinChi.idLop);
       const lopDaChonCuaHocPhanHienTai = danhSachLopDaChon?.find(
         (item) => item.idHocPhan === recordHocPhanCurrent.idHocPhan,
       );
-      if (dsLop?.length === 0) {
+      if (dsNhomLop?.length === 0) {
         setDanhSachLopDaChon([
           ...danhSachLopDaChon?.filter((item) => item.idLop !== lopDaChonCuaHocPhanHienTai?.idLop),
           { ...recordLopTinChi, ...recordHocPhanCurrent },
@@ -103,11 +103,21 @@ const TinChi = (props: {
   };
 
   const onCell = (recordHP: DangKyTinChi.MonHoc) => ({
-    onClick: () => {
+    onClick: async () => {
       setDanhSachNhomLopTinChi([]);
       setDanhSachLopTinChi([]);
       setRecordHocPhanCurrent(recordHP);
       getDSLopTinChiByIdDotAndIdMonHocModel(recordHP.idHocPhan);
+      const recordLopDaChon = danhSachLopDaChon?.find(
+        (lop) => lop.idHocPhan === recordHP.idHocPhan,
+      );
+      if (recordLopDaChon?.idLop) {
+        getDSNhomLopTinChiByIdLopModel(recordLopDaChon.idLop);
+      }
+      setRecordLopCurrent(
+        danhSachLopDaChon?.find((lop) => lop.idHocPhan === recordHP.idHocPhan) ??
+          ({} as DangKyTinChi.LopTinChi),
+      );
     },
     style: { cursor: 'pointer' },
   });
@@ -130,7 +140,7 @@ const TinChi = (props: {
       align: 'center',
       onCell,
       render: renderCell,
-      // search: 'search',
+      search: 'search',
     },
     {
       title: 'Mã học phần',
@@ -139,6 +149,7 @@ const TinChi = (props: {
       align: 'center',
       render: renderCell,
       onCell,
+      search: 'search',
     },
     {
       title: 'Số tín chỉ',
@@ -151,7 +162,7 @@ const TinChi = (props: {
     {
       title: 'Học phí',
       dataIndex: 'hocPhi',
-      width: 200,
+      width: 100,
       align: 'center',
       render: (val, recordMonHoc) => (
         <div
@@ -171,15 +182,17 @@ const TinChi = (props: {
     {
       title: 'Học phần',
       dataIndex: 'tenMonHoc',
-      width: 200,
+      // width: 200,
       align: 'center',
-      // search: 'search',
+      search: 'search',
+      render: (val) => <div style={{ fontWeight: val === 'Tổng' ? 'bold' : 'normal' }}>{val}</div>,
     },
     {
       title: 'Mã học phần',
       dataIndex: 'maMonHoc',
-      width: 100,
+      width: 200,
       align: 'center',
+      search: 'search',
     },
     {
       title: 'STT Lớp',
@@ -198,13 +211,20 @@ const TinChi = (props: {
       dataIndex: 'soTinChi',
       width: 100,
       align: 'center',
+      render: (val, recordLop) => (
+        <div style={{ fontWeight: recordLop?.tenMonHoc === 'Tổng' ? 'bold' : 'normal' }}>{val}</div>
+      ),
     },
     {
       title: 'Học phí',
       dataIndex: 'hocPhi',
       width: 200,
       align: 'center',
-      render: (val) => <div>{currencyFormat(val)}</div>,
+      render: (val, recordLop) => (
+        <div style={{ fontWeight: recordLop?.tenMonHoc === 'Tổng' ? 'bold' : 'normal' }}>
+          {currencyFormat(val)}
+        </div>
+      ),
     },
   ];
 
@@ -358,6 +378,7 @@ const TinChi = (props: {
     getThongTinKyHocModel(record?.id);
     return () => {
       setDanhSachNhomLopTinChi([]);
+      setDanhSachLopTinChi([]);
     };
   }, [record?.id]);
 
@@ -372,7 +393,7 @@ const TinChi = (props: {
         if (lop.hocPhanId === hocPhan?.idHocPhan) {
           danhSach.push({
             idNhomLop: lop.idNhomLopTinChi,
-            soThuTuNhomLop: lop.soThuTuNhom,
+            soThuTuNhomLop: lop.soThuTuNhom === 0 ? undefined : lop.soThuTuNhom,
             tongSoSinhVienNhomLop: 0,
             siSoNhomLop: 0,
             loaiNhom: '',

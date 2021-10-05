@@ -1,6 +1,7 @@
 import type { IColumn } from '@/utils/interfaces';
 import { useState } from 'react';
-import { List, Select, Table } from 'antd';
+import { List, Select } from 'antd';
+import Table from '@/components/Table/Table';
 
 const TableDanhSachHocPhan = (props: {
   data: { title: string; dataSource: DangKyTinChi.MonHoc[] }[];
@@ -50,24 +51,23 @@ const TableDanhSachHocPhan = (props: {
         renderItem={(item) => (
           <List.Item style={{ padding: 0 }} key={item.title}>
             <Table
-              style={{ width: '100%' }}
-              pagination={
-                item.title === 'Danh sách học phần kỳ này'
-                  ? false
-                  : {
-                      showSizeChanger: true,
-                      defaultPageSize: 5,
-                      pageSizeOptions: ['5', '10', '25', '50', '100'],
-                      showTotal: (tongSo: number) => {
-                        return <div>Tổng số: {tongSo}</div>;
+              otherProps={{
+                style: { width: '100%' },
+                pagination:
+                  item.title === 'Danh sách học phần kỳ này'
+                    ? false
+                    : {
+                        showSizeChanger: true,
+                        defaultPageSize: 5,
+                        pageSizeOptions: ['5', '10', '25', '50', '100'],
+                        showTotal: (tongSo: number) => {
+                          return <div>Tổng số: {tongSo}</div>;
+                        },
                       },
-                    }
-              }
-              title={() =>
-                type === 'Tất cả các học phần' ? <b>{item.title}</b> : renderSelectTableType()
-              }
+              }}
+              title={type === 'Tất cả các học phần' ? <b>{item.title}</b> : renderSelectTableType()}
               columns={props.columns}
-              dataSource={item.dataSource}
+              data={item.dataSource}
             />
           </List.Item>
         )}
