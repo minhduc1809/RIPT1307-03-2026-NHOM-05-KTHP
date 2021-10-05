@@ -1,14 +1,14 @@
 /* eslint-disable no-param-reassign */
 import axios from '@/utils/axios';
 import { ip3 } from '@/utils/constants';
+import type { LopTinChi } from './typings';
 
-const auth = localStorage.getItem('vaiTro');
-export async function getLopTinChiByHocKy(idHocKy: number) {
-  return axios.get(
-    `${ip3}/odoo-lop-tin-chi/${
-      auth === 'giang_vien' ? 'giang-vien' : 'sinh-vien'
-    }/hoc-ky/${idHocKy}`,
-  );
+export async function sinhVienGetLopTinChiByHocKy(idHocKy: number) {
+  return axios.get(`${ip3}/odoo-lop-tin-chi/sinh-vien/hoc-ky/${idHocKy}`);
+}
+
+export async function giangVienGetLopTinChiByHocKy(idHocKy: number) {
+  return axios.get(`${ip3}/odoo-lop-tin-chi/giang-vien/hoc-ky/${idHocKy}`);
 }
 
 export async function getThongBaoLopTinChiById(payload: {
@@ -49,7 +49,7 @@ export async function addThongBao(payload: { idLop: any; newValues: any }) {
  * @returns dùng cho get ds sv cho sv + giảng viên
  */
 export async function getThongTinChungLopTinChiById(idLop: number) {
-  if (auth === 'giang_vien') {
+  if (localStorage.getItem('vaiTro') === 'giang_vien') {
     return axios.get(`${ip3}/odoo-lop-tin-chi/${idLop}/giang-vien/sv`);
   }
   return axios.get(`${ip3}/odoo-lop-tin-chi/${idLop}/sinh-vien/gv-sv`);
@@ -77,4 +77,11 @@ export async function sinhVienGetKetQuaHocTapByIdLopTinChi(idLop: number) {
 
 export async function giangVienGetKetQuaHocTapByIdLopTinChi(idLop: number) {
   return axios.get(`${ip3}/odoo-lop-tin-chi/${idLop}/giang-vien/ket-qua-hoc-tap`);
+}
+
+export async function giangVienPutKetQuaHocTapByIdLopTinChi(
+  idLop: number,
+  payload: LopTinChi.KetQuaHocTap[],
+) {
+  return axios.put(`${ip3}/odoo-lop-tin-chi/${idLop}/giang-vien/ket-qua-hoc-tap`, payload);
 }

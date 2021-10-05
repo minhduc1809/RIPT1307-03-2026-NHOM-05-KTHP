@@ -21,7 +21,6 @@ const DangKyNhuCau = (props: {
     recordDotNhuCau,
     recordPhieuDangKy,
     recordHocPhan,
-    current,
     setCurrent,
     getDotDangKyNhuCauByKyHocModel,
     getPhieuDangKyByDotModel,
@@ -77,7 +76,7 @@ const DangKyNhuCau = (props: {
       dataIndex: 'tenMonHoc',
       width: 200,
       align: 'center',
-      // search: 'search',
+      search: 'search',
     },
     {
       title: 'Mã học phần',

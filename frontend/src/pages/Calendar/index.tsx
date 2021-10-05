@@ -42,7 +42,7 @@ export default () => {
             <p>Tên sự kiện: {record?.info?.mon_hoc_id?.[1] ?? ''}</p>
             <p>Loại sự kiện: {`${loaiSuKien || 'Chưa cập nhật'}`}</p>
             <p>Tên môn học: {record?.info?.mon_hoc_id?.[1] ?? ''}</p>
-            <p>Mã môn học: {record?.info?.mon_hoc_id?.[0]}</p>
+            {/* <p>Mã môn học: {record?.info?.mon_hoc_id?.[0]}</p> */}
             <p>Tiết bắt đầu: {record?.info?.tiet_bd ?? ''}</p>
             <p>Tiết kết thúc: {record?.info?.tiet_bd + record?.info?.so_tiet}</p>
           </b>

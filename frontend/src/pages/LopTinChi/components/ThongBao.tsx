@@ -1,11 +1,11 @@
 import TinyEditor from '@/components/TinyEditor/Tiny';
 import { addThongBao, getThongBaoLopTinChiById, getURLImg } from '@/services/LopTinChi/loptinchi';
 import type { IResThongBaoLopTinChi } from '@/services/LopTinChi/typings';
+import rules from '@/utils/rules';
 import { PlusCircleFilled, UploadOutlined } from '@ant-design/icons';
-import { DrawerForm, ProFormText } from '@ant-design/pro-form';
 import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { Button, Form, message, Modal, Upload } from 'antd';
+import { Button, Drawer, Form, Input, message, Modal, Upload } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import ViewThongBao from './ViewThongBao';
@@ -18,7 +18,9 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
   const [state, setstate] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
+  const [loading, setLoading] = useState<boolean>(false);
   const [dataThongBao, setdataThongBao] = useState<IResThongBaoLopTinChi.Result[]>([]);
+  const [form] = Form.useForm();
   const getData = async () => {
     const res = await getThongBaoLopTinChiById({
       page,
@@ -116,85 +118,72 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
         bordered
         columns={columns}
       />
-      <DrawerForm<IResThongBaoLopTinChi.Result>
+      <Drawer
+        onClose={() => setVisibleDrawer(false)}
+        width="60%"
         visible={visibleDrawer}
-        onVisibleChange={setVisibleDrawer}
-        title={edit ? 'Chỉnh sửa' : 'Thêm mới'}
-        drawerProps={{
-          forceRender: true,
-          destroyOnClose: true,
-        }}
-        onFinish={async (values: any) => {
-          const response = await getURLImg({
-            filename: 'url1',
-            public: true,
-            file: values?.imageUrl.file.originFileObj,
-          });
-
-          const newValues = {
-            ...values,
-            imageUrl: response?.data?.data?.url,
-            htmlContent: values?.htmlContent?.text,
-          };
-          const res = await addThongBao({ idLop: props.id, newValues });
-
-          if (res?.data?.statusCode === 201) {
-            message.success('Thêm mới thành công');
-            setstate(state + 1);
-            return true;
-          }
-          message.error('Đã xảy ra lỗi');
-          return false;
-          //
-        }}
-        submitter={{
-          render: (newProps) => {
-            // DefaultDom có thể dùng hoặc không
-
-            return [
-              // ...defaultDoms,
-              <Button
-                key="submit"
-                onClick={() => {
-                  newProps.submit();
-                }}
-                type="primary"
-              >
-                Lưu
-              </Button>,
-              <Button
-                key="cancel"
-                onClick={() => {
-                  setVisibleDrawer(false);
-                }}
-              >
-                Quay lại
-              </Button>,
-            ];
-          },
-        }}
-        initialValues={{
-          ...(edit && recordTB),
-        }}
+        destroyOnClose
       >
-        <ProFormText name="title" label="Tiêu đề" tooltip="Tiêu đề" placeholder="Tiêu đề" />
-        <ProFormText name="content" label="Mô tả" tooltip="Mô tả" placeholder="Mô tả" />
-        <Form.Item name="imageUrl" label="Ảnh" rules={[{ required: true }]}>
-          <Upload listType="picture" maxCount={1}>
-            <Button icon={<UploadOutlined />}>Tải lên (Tối đa: 1)</Button>
-          </Upload>
-        </Form.Item>
-        <Form.Item name="htmlContent" label="Nội dung" rules={[{ required: true }]}>
-          <TinyEditor />
-        </Form.Item>
+        <Form
+          initialValues={{}}
+          labelCol={{ span: 24 }}
+          form={form}
+          title={edit ? 'Chỉnh sửa' : 'Thêm mới'}
+          onFinish={async (values: any) => {
+            setLoading(true);
+            let response = {
+              data: { data: { url: '' } },
+            };
+            if (values?.imageUrl)
+              response = await getURLImg({
+                filename: 'url1',
+                public: true,
+                file: values?.imageUrl.file.originFileObj,
+              });
 
-        {edit && (
-          <div
-            dangerouslySetInnerHTML={{ __html: recordTB.htmlContent || '' }}
-            style={{ width: '100%', overflow: 'scroll' }}
-          />
-        )}
-      </DrawerForm>
+            const newValues = {
+              ...values,
+              imageUrl: response?.data?.data?.url,
+              htmlContent: values?.htmlContent?.text,
+            };
+            const res = await addThongBao({ idLop: props.id, newValues });
+            setLoading(false);
+            if (res?.data?.statusCode === 201) {
+              message.success('Thêm mới thành công');
+              setstate(state + 1);
+              setVisibleDrawer(false);
+              return true;
+            }
+            message.error('Đã xảy ra lỗi');
+
+            return false;
+          }}
+        >
+          <Form.Item name="title" label="Tiêu đề" rules={[...rules.required]}>
+            <Input placeholder="Tiêu đề" />
+          </Form.Item>
+
+          <Form.Item name="content" label="Mô tả" rules={[...rules.required]}>
+            <Input placeholder="Mô tả" />
+          </Form.Item>
+
+          <Form.Item name="imageUrl" label="Ảnh">
+            <Upload listType="picture" maxCount={1}>
+              <Button icon={<UploadOutlined />}>Tải lên (Tối đa: 1)</Button>
+            </Upload>
+          </Form.Item>
+          <Form.Item name="htmlContent" label="Nội dung" rules={[...rules.required]}>
+            <TinyEditor />
+          </Form.Item>
+
+          <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
+            <Button loading={loading} style={{ marginRight: 8 }} htmlType="submit" type="primary">
+              Gửi
+            </Button>
+            <Button onClick={() => setVisibleDrawer(false)}>Đóng</Button>
+          </Form.Item>
+        </Form>
+      </Drawer>
       <Modal
         width="80%"
         bodyStyle={{ padding: 0 }}

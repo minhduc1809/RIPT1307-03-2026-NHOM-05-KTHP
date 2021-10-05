@@ -21,18 +21,17 @@ const Block = (props: Props) => {
         </>
       }
     >
-      <div
-        className={styles[type]}
-        style={{ backgroundColor: !diem ? 'rgb(177, 224, 252)' : 'pink' }}
-      >
+      <div className={styles[type]} style={{ backgroundColor: !diem ? '#f0f0f0' : 'pink' }}>
         <div style={{ textAlign: 'center' }}>{title}</div>
         <div>({number} TC)</div>
+        <div>GPA: {diem?.diem_thang_4 || '-'}</div>
       </div>
     </Popover>
   ) : (
     <div className={styles[type]}>
       <div style={{ textAlign: 'center' }}>{title}</div>
       <div>({number} TC)</div>
+      <div>GPA: {diem?.diem_thang_4 || '-'}</div>
     </div>
   );
 };

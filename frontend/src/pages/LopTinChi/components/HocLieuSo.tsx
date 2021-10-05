@@ -4,10 +4,10 @@ import { useEffect } from 'react';
 import { useModel } from 'umi';
 
 const HocLieuSo = () => {
-  const { infoMonHoc, getInfoMonHocModel } = useModel('loptinchi');
+  const { infoMonHoc, getInfoMonHocModel, record } = useModel('loptinchi');
 
   useEffect(() => {
-    getInfoMonHocModel();
+    getInfoMonHocModel(record?.mon_hoc_ids?.[0]);
   }, []);
 
   return (

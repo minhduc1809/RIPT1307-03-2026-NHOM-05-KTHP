@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import type { IColumn } from '@/utils/interfaces';
 import { SearchOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 import { Button, Input, Table } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import type { FilterValue } from 'antd/lib/table/interface';
@@ -17,6 +18,7 @@ type Props = {
 
 const TableBase = (props: Props) => {
   const { title, data, border } = props;
+  const [dataFinal, setDataFinal] = useState<any[]>(data);
   let { columns } = props;
 
   let searchInput: Input | null = null;
@@ -26,7 +28,7 @@ const TableBase = (props: Props) => {
   // kiểm tra xem dataIndex có vừa được search hay ko
   // const haveCond = (dataIndex: string) => getCondValue(dataIndex).length > 0;
 
-  const getSearch = (dataIndex: any) => {
+  const getSearch = () => {
     return {
       filterDropdown: ({
         setSelectedKeys,
@@ -172,7 +174,7 @@ const TableBase = (props: Props) => {
       };
     }
     if (item.search === 'search') {
-      return { ...item, ...getSearch(item.dataIndex) };
+      return { ...item, ...getSearch() };
     }
     if (item.search === 'sort') {
       return { ...item, ...getSort(item.dataIndex) };
@@ -190,6 +192,7 @@ const TableBase = (props: Props) => {
     filters: Record<string, FilterValue | null>,
     sorter: any,
   ) => {
+    Object.keys(filters)?.map((item) => {});
     // const { current, pageSize } = pagination;
     // const { columnKey, order } = sorter;
     // let orderValue;

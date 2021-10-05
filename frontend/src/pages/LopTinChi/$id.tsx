@@ -37,7 +37,9 @@ const DetailLopTinChi = ({
         <Tabs.TabPane tab={isGiangVien ? 'Danh sách sinh viên' : 'Thông tin chung'} key="1">
           <ThongTinChung id={id} isGiangVien={isGiangVien} />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Điểm danh" key="2"></Tabs.TabPane>
+        <Tabs.TabPane tab="Điểm danh" key="2">
+          Tính năng đang phát triển
+        </Tabs.TabPane>
         <Tabs.TabPane tab="Kết quả học tập" key="3">
           {isGiangVien ? <KetQuaHocTapGV id={id} /> : <KetQuaHocTapSV id={id} />}
         </Tabs.TabPane>

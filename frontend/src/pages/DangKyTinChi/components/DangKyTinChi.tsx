@@ -51,8 +51,6 @@ const TinChi = (props: {
     {} as DangKyTinChi.LopTinChi,
   );
   const [danhSachLopDaChon, setDanhSachLopDaChon] = useState<LopDaChon[]>([]);
-  // const [tongSoTinChi, setTongSoTinChi] = useState<number>(0);
-  // const [tongHocPhi, setTongHocPhi] = useState<number>(0);
   let tongSoTinChi = 0;
   let tongHocPhi = 0;
   danhSachLopDaChon?.forEach((item) => {
@@ -366,9 +364,38 @@ const TinChi = (props: {
   useEffect(() => {
     getDSLopDaDangKyByIdDotModel();
   }, [recordDotTinChi?.id]);
-  // useEffect(()=>{
-
-  // },[])
+  useEffect(() => {
+    const danhSach: LopDaChon[] = [];
+    danhSachLopDaDangKy.forEach((lop) => {
+      for (let i = 0; i < props?.danhSachTatCaHocPhan?.length; i += 1) {
+        const hocPhan = props?.danhSachTatCaHocPhan?.[i];
+        if (lop.hocPhanId === hocPhan?.idHocPhan) {
+          danhSach.push({
+            idNhomLop: lop.idNhomLopTinChi,
+            soThuTuNhomLop: lop.soThuTuNhom,
+            tongSoSinhVienNhomLop: 0,
+            siSoNhomLop: 0,
+            loaiNhom: '',
+            idHocPhan: lop.hocPhanId,
+            maMonHoc: hocPhan?.maMonHoc ?? '',
+            soThuTuKyHoc: 0,
+            soTinChi: hocPhan?.soTinChi ?? 0,
+            tenMonHoc: lop.hocPhan,
+            hocPhi: hocPhan?.hocPhi ?? 0,
+            tenGiangVien: '',
+            soThuTuLop: lop.soThuTuLop,
+            idLop: lop.idLopTinChi,
+            tongSoSinhVienLop: 0,
+            siSoLop: 0,
+            soLuongNhom: 0,
+            maHoaLichHoc: '',
+          });
+          break;
+        }
+      }
+    });
+    setDanhSachLopDaChon(danhSach);
+  }, [danhSachLopDaDangKy.length]);
   return (
     <div>
       {recordDotTinChi === null && (

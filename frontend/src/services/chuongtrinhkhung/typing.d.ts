@@ -24,7 +24,7 @@ declare module ChuongTrinhKhung {
 
   export interface MonHocDieuKien {
     id: number;
-    hoc_phan_id: (string | number)[];
+    hoc_phan_id: number[];
     ma_hoc_phan_moi: string;
     hoc_ky: number;
     loai_hoc_phan: string;

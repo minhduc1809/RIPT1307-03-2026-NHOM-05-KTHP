@@ -1,5 +1,6 @@
 import UploadAvatar from '@/components/Upload/UploadAvatar';
 import { getInfoGV, getInfoSV, putInfoGV, putInfoSV } from '@/services/ant-design-pro/api';
+import type { IInfoSV } from '@/services/ant-design-pro/typings';
 import { getURLImg } from '@/services/LopTinChi/loptinchi';
 import rules from '@/utils/rules';
 import { renderFileListUrl } from '@/utils/utils';
@@ -98,7 +99,9 @@ class BaseView extends Component<BaseViewProps> {
                     name="ngay_sinh"
                     label="Ngày sinh"
                     rules={[...rules.required]}
-                    initialValue={moment(currentUser?.ngay_sinh)}
+                    initialValue={
+                      currentUser?.ngay_sinh ? moment(currentUser?.ngay_sinh) : undefined
+                    }
                   >
                     <DatePicker
                       style={{ width: '100%' }}
@@ -110,7 +113,7 @@ class BaseView extends Component<BaseViewProps> {
                 </Col>
                 <Col xs={24} lg={12}>
                   <Form.Item
-                    initialValue={currentUser?.gioi_tinh ?? '0'}
+                    initialValue={currentUser?.gioi_tinh || '0'}
                     name="gioi_tinh"
                     label="Giới tính"
                     rules={[...rules.required]}
@@ -132,7 +135,7 @@ class BaseView extends Component<BaseViewProps> {
                 <Input placeholder="Email" />
               </Form.Item>
               <Form.Item
-                initialValue={currentUser?.so_dien_thoai}
+                initialValue={currentUser?.so_dien_thoai || ''}
                 name="so_dien_thoai"
                 label="Số điện thoại"
                 rules={[...rules.soDienThoai, ...rules.required]}

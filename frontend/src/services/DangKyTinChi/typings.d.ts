@@ -19,6 +19,7 @@ declare module DangKyTinChi {
 
   export interface LopDaDangKy {
     hocPhan: string;
+    hocPhanId: number;
     idLopTinChi: number;
     soThuTuLop: number;
     idNhomLopTinChi: number;

@@ -91,10 +91,10 @@ export default () => {
   }
 
   return (
-    <>
-      {renderDanhSachTinTuc()}
+    <div style={{ backgroundColor: '#fff' }}>
+      <div style={{ maxWidth: 1000, margin: '0 auto' }}>{renderDanhSachTinTuc()}</div>
       <Modal
-        width="1000px"
+        width="1100px"
         title={record?.moTa}
         visible={visibleModal}
         okText="Đóng"
@@ -112,6 +112,6 @@ export default () => {
           </div>{' '}
         </div>
       </Modal>
-    </>
+    </div>
   );
 };

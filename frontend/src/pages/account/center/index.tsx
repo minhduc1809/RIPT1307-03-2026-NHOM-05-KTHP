@@ -1,4 +1,5 @@
-import avatar from '@/assets/admin.png';
+import avatar from '@/assets/logo.png';
+import type { IInfoGV, IInfoSV } from '@/services/ant-design-pro/typings';
 import { ClusterOutlined, ContactsOutlined } from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
 import type { Input } from 'antd';

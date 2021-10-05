@@ -6,14 +6,14 @@ const ViewThongBao = (props: { record: IResThongBaoLopTinChi.Result }) => {
   return (
     <Card>
       <Card.Meta
-        avatar={<Avatar src={record.imageUrl} />}
+        avatar={record?.imageUrl ? <Avatar src={record.imageUrl} /> : false}
         title={record.title}
         description={record.content}
       />
       <br />
       <div
         dangerouslySetInnerHTML={{ __html: record.htmlContent || '' }}
-        // style={{ width: '100%', overflow: 'scroll' }}
+        style={{ width: '100%', overflowX: 'auto' }}
       />
     </Card>
   );

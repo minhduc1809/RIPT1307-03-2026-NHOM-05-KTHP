@@ -1,15 +1,18 @@
 import {
   getDanhSachSinhVienByIdNhomLop,
   getInfoMonHoc,
-  getLopTinChiByHocKy,
+  sinhVienGetLopTinChiByHocKy,
   getLopTinChiById,
   getNhomLopTinChiById,
   getThongBaoLopTinChiById,
   getThongTinChungLopTinChiById,
   giangVienGetKetQuaHocTapByIdLopTinChi,
   sinhVienGetKetQuaHocTapByIdLopTinChi,
+  giangVienGetLopTinChiByHocKy,
+  giangVienPutKetQuaHocTapByIdLopTinChi,
 } from '@/services/LopTinChi/loptinchi';
 import type { IResThongBaoLopTinChi, LopTinChi } from '@/services/LopTinChi/typings';
+import { message } from 'antd';
 import { useState } from 'react';
 
 export default () => {
@@ -33,9 +36,13 @@ export default () => {
   const [thongBao, setThongBao] = useState<IResThongBaoLopTinChi.Result[]>({} as any);
   // user
   const getLopTinChiByHocKyModel = async (payload: { idHocKy: number }) => {
+    const role = localStorage.getItem('vaiTro');
     if (!payload.idHocKy) return;
     setLoading(true);
-    const response = await getLopTinChiByHocKy(payload.idHocKy);
+    const response =
+      role === 'sinh_vien'
+        ? await sinhVienGetLopTinChiByHocKy(payload.idHocKy)
+        : await giangVienGetLopTinChiByHocKy(payload.idHocKy);
     setDanhSach(response?.data?.data ?? []);
     setTotal(response?.data?.data?.length);
     setLoading(false);
@@ -78,10 +85,10 @@ export default () => {
     setLoading(false);
   };
 
-  const getInfoMonHocModel = async () => {
-    if (!record.mon_hoc_ids?.[0]) return;
+  const getInfoMonHocModel = async (idMonHoc: number) => {
+    if (!idMonHoc) return;
     setLoading(true);
-    const response = await getInfoMonHoc(record?.mon_hoc_ids?.[0]);
+    const response = await getInfoMonHoc(idMonHoc);
     setInfoMonHoc(response?.data?.data);
     setLoading(false);
   };
@@ -100,7 +107,19 @@ export default () => {
     setLoading(false);
   };
 
+  const giangVienPutKetQuaHocTapByIdLopTinChiModel = async (
+    idLop: number,
+    danhSachKetQua: LopTinChi.KetQuaHocTap[],
+  ) => {
+    setLoading(true);
+    await giangVienPutKetQuaHocTapByIdLopTinChi(idLop, danhSachKetQua);
+    message.success('Lưu thành công');
+    giangVienGetKetQuaHocTapByIdLopTinChi(idLop);
+    setLoading(false);
+  };
+
   return {
+    giangVienPutKetQuaHocTapByIdLopTinChiModel,
     setDanhSachKetQuaHocTap,
     giangVienGetKetQuaHocTapByIdLopTinChiModel,
     danhSachKetQuaHocTap,
