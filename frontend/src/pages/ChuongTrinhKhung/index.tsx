@@ -69,6 +69,7 @@ const ChuongTrinhKhung = () => {
         <br />
       </Spin>
       <Modal
+        width="900px"
         title="Thông tin học phần"
         footer={
           <Button

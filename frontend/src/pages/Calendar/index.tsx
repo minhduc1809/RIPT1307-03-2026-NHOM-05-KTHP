@@ -39,9 +39,9 @@ export default () => {
       content: (
         <div>
           <b>
-            <p>Tên sự kiện: {record?.info?.mon_hoc_id?.[1] ?? ''}</p>
+            <p>Tên sự kiện: {record?.info?.ten_hoc_phan ?? ''}</p>
             <p>Loại sự kiện: {`${loaiSuKien || 'Chưa cập nhật'}`}</p>
-            <p>Tên môn học: {record?.info?.mon_hoc_id?.[1] ?? ''}</p>
+            <p>Tên môn học: {record?.info?.ten_hoc_phan ?? ''}</p>
             {/* <p>Mã môn học: {record?.info?.mon_hoc_id?.[0]}</p> */}
             <p>Tiết bắt đầu: {record?.info?.tiet_bd ?? ''}</p>
             <p>Tiết kết thúc: {record?.info?.tiet_bd + record?.info?.so_tiet}</p>
@@ -69,7 +69,7 @@ export default () => {
   danhSachSuKien?.forEach((x: SuKien.Record) =>
     dataCalendar.push({
       ...x,
-      title: x?.info?.mon_hoc_id?.[1],
+      title: x?.info?.ten_hoc_phan ?? '',
       start: moment(x?.thoiGianBatDau).toDate(),
       end: moment(x?.thoiGianKetThuc).toDate(),
     }),
@@ -84,7 +84,7 @@ export default () => {
         defaultDate={new Date()}
         messages={messages}
         views={['month', 'week', 'day']}
-        // style={{ height: 700 }}
+        style={{ height: 700 }}
         min={moment('0600', 'HHmm').toDate()}
         max={moment('2100', 'HHmm').toDate()}
         eventPropGetter={eventPropGetter}

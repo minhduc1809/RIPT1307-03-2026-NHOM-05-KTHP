@@ -7,6 +7,7 @@ declare module SuKien {
     diaDiem: string;
     thu: number;
     info: {
+      ten_hoc_phan: string;
       dien_thoai: string;
       giang_vien_id: [number, string];
       id: number;
