@@ -81,7 +81,7 @@ export async function giangVienGetKetQuaHocTapByIdLopTinChi(idLop: number) {
 
 export async function giangVienPutKetQuaHocTapByIdLopTinChi(
   idLop: number,
-  payload: LopTinChi.KetQuaHocTap[],
+  data: { danhSachKetQua: LopTinChi.KetQuaHocTap[] },
 ) {
-  return axios.put(`${ip3}/odoo-lop-tin-chi/${idLop}/giang-vien/ket-qua-hoc-tap`, payload);
+  return axios.put(`${ip3}/odoo-lop-tin-chi/${idLop}/giang-vien/ket-qua-hoc-tap`, data);
 }

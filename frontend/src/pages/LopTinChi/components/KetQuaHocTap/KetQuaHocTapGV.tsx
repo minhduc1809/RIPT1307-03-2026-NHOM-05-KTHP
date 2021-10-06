@@ -1,8 +1,9 @@
 import type { LopTinChi } from '@/services/LopTinChi/typings';
 import type { IColumn } from '@/utils/interfaces';
 import { CloseOutlined, FileOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Form, InputNumber, Popconfirm, Table } from 'antd';
+import { Button, Form, InputNumber } from 'antd';
 import { useEffect, useState } from 'react';
+import Table from '@/components/Table/Table';
 import { useModel } from 'umi';
 
 const KetQuaHocTapGV = (props: { id: string }) => {
@@ -26,7 +27,7 @@ const KetQuaHocTapGV = (props: { id: string }) => {
   const [form] = Form.useForm();
 
   const renderInput = (name: string[], initialValue: number) => (
-    <Form.Item style={{ marginBottom: 0 }} initialValue={initialValue} name={name}>
+    <Form.Item style={{ marginBottom: 0 }} initialValue={initialValue || 0} name={name}>
       <InputNumber max={10} min={0} />
     </Form.Item>
   );
@@ -42,6 +43,7 @@ const KetQuaHocTapGV = (props: { id: string }) => {
       title: 'Họ tên',
       dataIndex: 'TenDayDu',
       align: 'center',
+      search: 'search',
       // width: 200,
     },
     {
@@ -49,6 +51,7 @@ const KetQuaHocTapGV = (props: { id: string }) => {
       dataIndex: 'ma_sv',
       align: 'center',
       width: 150,
+      search: 'search',
     },
     {
       title: 'Điểm chuyên cần',
@@ -131,8 +134,7 @@ const KetQuaHocTapGV = (props: { id: string }) => {
             ...values?.[item.ma_sv],
           };
         });
-        await giangVienPutKetQuaHocTapByIdLopTinChiModel(Number(props.id), danhSachKetQua);
-        setEdit(false);
+        giangVienPutKetQuaHocTapByIdLopTinChiModel(Number(props.id), { danhSachKetQua });
       }}
     >
       {!edit ? (
@@ -163,12 +165,14 @@ const KetQuaHocTapGV = (props: { id: string }) => {
         </>
       )}
       <Table
-        dataSource={danhSachKetQuaHocTap?.map((item, index) => {
+        data={danhSachKetQuaHocTap?.map((item, index) => {
           return { ...item, index: index + 1 };
         })}
-        pagination={{ showTotal: (total) => `Tổng số : ${total} sinh viên` }}
+        otherProps={{
+          pagination: { showTotal: (total: number) => `Tổng số : ${total} sinh viên` },
+          loading,
+        }}
         columns={columns}
-        loading={loading}
       />
     </Form>
   );

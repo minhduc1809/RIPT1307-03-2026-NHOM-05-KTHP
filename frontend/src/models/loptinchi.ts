@@ -109,12 +109,12 @@ export default () => {
 
   const giangVienPutKetQuaHocTapByIdLopTinChiModel = async (
     idLop: number,
-    danhSachKetQua: LopTinChi.KetQuaHocTap[],
+    data: { danhSachKetQua: LopTinChi.KetQuaHocTap[] },
   ) => {
     setLoading(true);
-    await giangVienPutKetQuaHocTapByIdLopTinChi(idLop, danhSachKetQua);
+    await giangVienPutKetQuaHocTapByIdLopTinChi(idLop, data);
     message.success('Lưu thành công');
-    giangVienGetKetQuaHocTapByIdLopTinChi(idLop);
+    giangVienGetKetQuaHocTapByIdLopTinChiModel(idLop);
     setLoading(false);
   };
 
