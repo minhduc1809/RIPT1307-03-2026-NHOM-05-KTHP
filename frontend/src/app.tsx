@@ -7,6 +7,7 @@ import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
 import { getInfo, getInfoGV, getInfoSV } from './services/ant-design-pro/api';
+import type { IInfoGV, IInfoSV } from './services/ant-design-pro/typings';
 import data from './utils/data';
 
 const loginPath = '/user/login';
@@ -24,7 +25,7 @@ export async function getInitialState(): Promise<{
   currentUser?: IInfoSV.Data | IInfoGV.Data;
   partner_id?: number;
   fetchUserInfo?: () => Promise<IInfoSV.Data | undefined>;
-  authorizedRoles?: API.LoginResponse.AuthorizedRole[];
+  authorizedRoles?: any[];
   isModalSelectRoleVisible?: boolean;
 }> {
   const fetchUserInfo: () => Promise<IInfoSV.Data | undefined> = async () => {
@@ -113,13 +114,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      if (
-        !initialState?.currentUser &&
-        location.pathname !== loginPath &&
-        !pathAuth.includes(location.pathname)
-      ) {
+      const token = localStorage.getItem('token');
+      if (!token && location.pathname !== loginPath && !pathAuth.includes(location.pathname)) {
         history.push(loginPath);
-      } else if (initialState?.currentUser && location.pathname === loginPath) {
+      } else if (initialState?.currentUser && token && location.pathname === loginPath) {
         history.push(
           data.path[
             `${initialState?.currentUser?.vai_tro || initialState?.currentUser?.systemRole}`
@@ -129,6 +127,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
     menuHeaderRender: undefined,
     ...initialState?.settings,
-    title: 'PTIT DU',
+    title: 'PTIT S-Link',
   };
 };

@@ -1,5 +1,6 @@
 declare module SuKien {
   export interface Record {
+    tenSuKien: string;
     loaiSuKien: string;
     thoiGianDienRa: string;
     thoiGianBatDau: string;

@@ -39,12 +39,26 @@ export default () => {
       content: (
         <div>
           <b>
-            <p>Tên sự kiện: {record?.info?.ten_hoc_phan ?? ''}</p>
+            <p>Tên sự kiện: {record?.tenSuKien ?? ''}</p>
             <p>Loại sự kiện: {`${loaiSuKien || 'Chưa cập nhật'}`}</p>
-            <p>Tên môn học: {record?.info?.ten_hoc_phan ?? ''}</p>
-            {/* <p>Mã môn học: {record?.info?.mon_hoc_id?.[0]}</p> */}
-            <p>Tiết bắt đầu: {record?.info?.tiet_bd ?? ''}</p>
-            <p>Tiết kết thúc: {record?.info?.tiet_bd + record?.info?.so_tiet}</p>
+            {record?.loaiSuKien === 'Lịch học' && (
+              <>
+                <p>Tên môn học: {record?.info?.ten_hoc_phan ?? ''}</p>
+                <p>ID phòng học Zoom: {record?.info?.id_zoom ?? ''}</p>
+              </>
+            )}
+            <p>
+              Thời gian bắt đầu:{' '}
+              {record?.thoiGianBatDau
+                ? moment(record?.thoiGianBatDau).format('HH:mm DD/MM/YYYY')
+                : 'Chưa cập nhật'}
+            </p>
+            <p>
+              Thời gian kết thúc:{' '}
+              {record?.thoiGianKetThuc
+                ? moment(record?.thoiGianKetThuc).format('HH:mm DD/MM/YYYY')
+                : 'Chưa cập nhật'}
+            </p>
           </b>
         </div>
       ),
@@ -69,7 +83,7 @@ export default () => {
   danhSachSuKien?.forEach((x: SuKien.Record) =>
     dataCalendar.push({
       ...x,
-      title: x?.info?.ten_hoc_phan ?? '',
+      title: x?.tenSuKien ?? '',
       start: moment(x?.thoiGianBatDau).toDate(),
       end: moment(x?.thoiGianKetThuc).toDate(),
     }),

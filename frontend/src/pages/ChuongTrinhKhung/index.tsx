@@ -46,7 +46,7 @@ const ChuongTrinhKhung = () => {
                             <Block
                               key={mon.id}
                               type="hocphan"
-                              title={mon?.hoc_phan_id?.[1] ?? ''}
+                              title={mon?.ten_hoc_phan ?? ''}
                               maHocPhan={mon?.ma_hoc_phan_moi ?? ''}
                               diem={mon?.ketQuaHocTap}
                               number={mon?.so_tin_chi ?? 0}

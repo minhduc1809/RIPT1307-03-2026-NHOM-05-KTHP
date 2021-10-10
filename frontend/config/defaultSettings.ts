@@ -11,7 +11,7 @@ const Settings: LayoutSettings & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'PTIT DU',
+  title: 'PTIT S-Link',
   pwa: false,
   logo: '/favicon.ico',
   iconfontUrl: '',

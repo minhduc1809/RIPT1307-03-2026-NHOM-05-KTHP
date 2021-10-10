@@ -29,6 +29,7 @@ declare module ChuongTrinhKhung {
     hoc_ky: number;
     loai_hoc_phan: string;
     tinh_chat: string;
+    ten_hoc_phan: string;
     ketQuaHocTap: KetQuaHocTap;
     so_tin_chi: number;
   }

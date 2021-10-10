@@ -29,7 +29,7 @@ beforeEach(async () => {
   });
 });
 
-describe('PTIT DU E2E test', () => {
+describe('PTIT S-Link E2E test', () => {
   const testPage = (path) => async () => {
     await page.goto(`${BASE_URL}${path}`);
     await page.waitForSelector('footer', {

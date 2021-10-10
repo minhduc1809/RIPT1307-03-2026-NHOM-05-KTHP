@@ -70,7 +70,7 @@ export default () => {
       placeholder="站内搜索"
       defaultValue="umi ui"
       options={[
-        { label: 'PTIT DU', value: 'PTIT DU' },
+        { label: 'PTIT S-Link', value: 'PTIT S-Link' },
         {
           label: 'Ant Design',
           value: 'Ant Design',

@@ -1,3 +1,5 @@
+import type { IInfoGV } from '../ant-design-pro/typings';
+
 export declare module APILopHanhChinh {
   export interface DanhSachSinhVien {
     ma_sv: string;
@@ -14,7 +16,7 @@ export declare module APILopHanhChinh {
     khoi_lop_id?: any[];
     nganh?: any[];
     chuyen_nganh?: boolean;
-    mentor_id?: any[];
+    giangVien: IInfoGV;
     si_so?: number;
     danhSachSinhVien?: DanhSachSinhVien[];
   }

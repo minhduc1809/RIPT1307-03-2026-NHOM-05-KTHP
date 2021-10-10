@@ -18,7 +18,7 @@ const LopHanhChinh = () => {
     getData();
   }, []);
 
-  const { danhSachSinhVien, mentor_id, si_so, ten_lop_hanh_chinh } = dataLopHanhChinh;
+  const { danhSachSinhVien, giangVien, si_so, ten_lop_hanh_chinh } = dataLopHanhChinh;
   return (
     <Card
       title={
@@ -46,21 +46,21 @@ const LopHanhChinh = () => {
           xxl: 4,
         }}
         itemLayout="horizontal"
-        dataSource={[mentor_id?.[1] || '']}
+        dataSource={[{ ...giangVien }]}
         renderItem={(item) => (
           <List.Item>
             <List.Item.Meta
-              avatar={<Avatar src={item?.anhDaiDien ?? teacherIcon} />}
+              avatar={<Avatar src={item?.image_path || teacherIcon} />}
               title={
                 <div>
                   <b>Họ và tên: </b>
-                  {item || 'Chưa cập nhật'}
+                  {item?.TenDayDu ?? 'Chưa cập nhật'}
                 </div>
               }
               description={
                 <div>
                   <b>Số điện thoại: </b>
-                  {item?.soDienThoai ?? 'Chưa cập nhật'}
+                  {item?.so_dien_thoai ?? 'Chưa cập nhật'}
                 </div>
               }
             />
