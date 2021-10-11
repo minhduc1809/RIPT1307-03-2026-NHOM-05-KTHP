@@ -126,7 +126,7 @@ class BaseView extends Component<BaseViewProps> {
                 </Col>
               </Row> */}
               <Form.Item
-                initialValue={currentUser?.email_dang_nhap}
+                initialValue={currentUser?.email_dang_nhap || ''}
                 name="email_dang_nhap"
                 label="Email"
                 rules={[...rules.email]}
@@ -142,7 +142,7 @@ class BaseView extends Component<BaseViewProps> {
                 <Input placeholder="Số điện thoại" />
               </Form.Item>
               <Form.Item
-                initialValue={currentUser?.dia_chi_hien_nay}
+                initialValue={currentUser?.dia_chi_hien_nay || ''}
                 name="dia_chi_hien_nay"
                 label="Địa chỉ hiện nay"
               >

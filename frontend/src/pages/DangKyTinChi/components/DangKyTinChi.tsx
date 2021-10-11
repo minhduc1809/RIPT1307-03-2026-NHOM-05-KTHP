@@ -54,7 +54,7 @@ const TinChi = (props: {
   let tongSoTinChi = 0;
   let tongHocPhi = 0;
   const checkTimeDangKy =
-    moment(recordDotTinChi?.ngay_bat_dau_tin_chi).isAfter(moment(new Date())) &&
+    moment(recordDotTinChi?.ngay_bat_dau_tin_chi).isBefore(moment(new Date())) &&
     moment(new Date()).isBefore(moment(recordDotTinChi?.ngay_ket_thuc_tin_chi));
   danhSachLopDaChon?.forEach((item) => {
     tongSoTinChi += item.soTinChi;

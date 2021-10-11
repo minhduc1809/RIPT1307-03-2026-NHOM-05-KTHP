@@ -35,7 +35,7 @@ const DangKyNhuCau = (props: {
   const [tongSoTinChi, setTongSoTinChi] = useState<number>(0);
   const [tongHocPhi, setTongHocPhi] = useState<number>(0);
   const checkTimeDangKy =
-    moment(recordDotNhuCau?.ngay_bat_dau_nhu_cau).isAfter(moment(new Date())) &&
+    moment(recordDotNhuCau?.ngay_bat_dau_nhu_cau).isBefore(moment(new Date())) &&
     moment(new Date()).isBefore(moment(recordDotNhuCau?.ngay_ket_thuc_nhu_cau));
   const onSelectMonHoc = (value: CheckboxChangeEvent, recordMonHoc: DangKyTinChi.MonHoc) => {
     const danhSachTemp = [...danhSachHocPhanDaChon];
