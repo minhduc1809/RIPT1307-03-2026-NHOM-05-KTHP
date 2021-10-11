@@ -1,3 +1,4 @@
+import type { IInfoGV, IInfoSV } from '@/services/ant-design-pro/typings';
 import type { Effect, Reducer } from 'umi';
 import type { ListItemDataType } from './data.d';
 import { queryCurrent, queryFakeList } from './service';

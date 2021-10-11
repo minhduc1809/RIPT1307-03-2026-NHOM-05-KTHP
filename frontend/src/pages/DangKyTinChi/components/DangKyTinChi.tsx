@@ -3,6 +3,7 @@ import { currencyFormat } from '@/utils/utils';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Col, Divider, Result, Row, Table } from 'antd';
 import type { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';
 import { useModel } from 'umi';
@@ -27,7 +28,6 @@ const TinChi = (props: {
 }) => {
   const {
     recordDotTinChi,
-    recordPhieuDangKy,
     setCurrent,
     getDotDangKyTinChiByKyHocModel,
     getDSLopDaDangKyByIdDotModel,
@@ -53,6 +53,9 @@ const TinChi = (props: {
   const [danhSachLopDaChon, setDanhSachLopDaChon] = useState<LopDaChon[]>([]);
   let tongSoTinChi = 0;
   let tongHocPhi = 0;
+  const checkTimeDangKy =
+    moment(recordDotTinChi?.ngay_bat_dau_tin_chi).isAfter(moment(new Date())) &&
+    moment(new Date()).isBefore(moment(recordDotTinChi?.ngay_ket_thuc_tin_chi));
   danhSachLopDaChon?.forEach((item) => {
     tongSoTinChi += item.soTinChi;
     tongHocPhi += item.hocPhi;
@@ -429,72 +432,69 @@ const TinChi = (props: {
       )}
       {recordDotTinChi?.id && (
         <div>
-          {recordPhieuDangKy && recordPhieuDangKy !== null && (
-            <>
-              <InfoDot
-                ngayBatDau={recordDotTinChi.ngay_bat_dau_tin_chi}
-                ngayKetThuc={recordDotTinChi.ngay_ket_thuc_tin_chi}
-              />
-              <Row gutter={[8, 24]}>
-                <Col xs={24}>
-                  <Scrollbars style={{ height: '300px' }}>
-                    <TableDanhSachHocPhan data={data} columns={columns} />
-                  </Scrollbars>
-                </Col>
-
-                {recordHocPhanCurrent?.idHocPhan && (
-                  <Col span={24}>
-                    <Table
-                      loading={loading}
-                      pagination={false}
-                      title={() => <b>Danh sách lớp tín chỉ</b>}
-                      dataSource={danhSachLopTinChi}
-                      columns={columnsLopTinChi}
-                    />
-                  </Col>
-                )}
-                {danhSachNhomLopTinChi?.length > 0 && (
-                  <Col span={24}>
-                    <Table
-                      loading={loading}
-                      pagination={false}
-                      title={() => <b>Danh sách nhóm</b>}
-                      dataSource={danhSachNhomLopTinChi}
-                      columns={columnsNhomLop}
-                    />
-                  </Col>
-                )}
-                <Col xs={24}>
-                  <TableDanhSachHocPhanDaChon
-                    danhSachHocPhanDaChon={danhSachLopDaChon?.map((item, index) => {
-                      return { ...item, index: index + 1 };
-                    })}
-                    tongSoTinChi={tongSoTinChi}
-                    tongHocPhi={tongHocPhi}
-                    columns={columnsLopDaChon}
-                  />
-                </Col>
-              </Row>
-              <br />
-              <div style={{ textAlign: 'center' }}>
-                <Button
-                  onClick={() => {
-                    setCurrent(0);
-                  }}
-                  type="primary"
-                  icon={<ArrowLeftOutlined />}
-                >
-                  Quay lại
-                </Button>
-              </div>
-            </>
-          )}
-          {recordPhieuDangKy === null && (
-            <Result
-              title="Bạn chưa đăng ký nhu cầu học phần trong đợt này"
-              extra={<Button type="primary">Bắt đầu đăng ký</Button>}
+          <>
+            <InfoDot
+              ngayBatDau={recordDotTinChi.ngay_bat_dau_tin_chi}
+              ngayKetThuc={recordDotTinChi.ngay_ket_thuc_tin_chi}
             />
-          )}
+            <Row gutter={[8, 24]}>
+              {checkTimeDangKy && (
+                <>
+                  <Col xs={24}>
+                    <Scrollbars style={{ height: '300px' }}>
+                      <TableDanhSachHocPhan data={data} columns={columns} />
+                    </Scrollbars>
+                  </Col>
+
+                  {recordHocPhanCurrent?.idHocPhan && (
+                    <Col span={24}>
+                      <Table
+                        loading={loading}
+                        pagination={false}
+                        title={() => <b>Danh sách lớp tín chỉ</b>}
+                        dataSource={danhSachLopTinChi}
+                        columns={columnsLopTinChi}
+                      />
+                    </Col>
+                  )}
+                  {danhSachNhomLopTinChi?.length > 0 && (
+                    <Col span={24}>
+                      <Table
+                        loading={loading}
+                        pagination={false}
+                        title={() => <b>Danh sách nhóm</b>}
+                        dataSource={danhSachNhomLopTinChi}
+                        columns={columnsNhomLop}
+                      />
+                    </Col>
+                  )}
+                </>
+              )}
+              <Col xs={24}>
+                <TableDanhSachHocPhanDaChon
+                  checkTime={checkTimeDangKy}
+                  danhSachHocPhanDaChon={danhSachLopDaChon?.map((item, index) => {
+                    return { ...item, index: index + 1 };
+                  })}
+                  tongSoTinChi={tongSoTinChi}
+                  tongHocPhi={tongHocPhi}
+                  columns={columnsLopDaChon}
+                />
+              </Col>
+            </Row>
+            <br />
+            <div style={{ textAlign: 'center' }}>
+              <Button
+                onClick={() => {
+                  setCurrent(0);
+                }}
+                type="primary"
+                icon={<ArrowLeftOutlined />}
+              >
+                Quay lại
+              </Button>
+            </div>
+          </>
         </div>
       )}
     </div>

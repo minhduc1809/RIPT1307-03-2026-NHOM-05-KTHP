@@ -3,6 +3,7 @@ import { currencyFormat } from '@/utils/utils';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Col, Result, Row } from 'antd';
 import type { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars-2';
 import { useModel } from 'umi';
@@ -33,7 +34,9 @@ const DangKyNhuCau = (props: {
   const [danhSachIdHocPhanDaChon, setDanhSachIdHocPhanDaChon] = useState<number[]>([]);
   const [tongSoTinChi, setTongSoTinChi] = useState<number>(0);
   const [tongHocPhi, setTongHocPhi] = useState<number>(0);
-
+  const checkTimeDangKy =
+    moment(recordDotNhuCau?.ngay_bat_dau_nhu_cau).isAfter(moment(new Date())) &&
+    moment(new Date()).isBefore(moment(recordDotNhuCau?.ngay_ket_thuc_nhu_cau));
   const onSelectMonHoc = (value: CheckboxChangeEvent, recordMonHoc: DangKyTinChi.MonHoc) => {
     const danhSachTemp = [...danhSachHocPhanDaChon];
     const danhSachIdTemp = [...danhSachIdHocPhanDaChon];
@@ -189,6 +192,7 @@ const DangKyNhuCau = (props: {
                 <Col xs={24}>
                   {/* <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}> */}
                   <TableDanhSachHocPhanDaChon
+                    checkTime={checkTimeDangKy}
                     danhSachHocPhanDaChon={danhSachHocPhanDaChon}
                     tongSoTinChi={tongSoTinChi}
                     tongHocPhi={tongHocPhi}

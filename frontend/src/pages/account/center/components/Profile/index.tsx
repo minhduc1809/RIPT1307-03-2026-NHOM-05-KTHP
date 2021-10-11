@@ -78,11 +78,53 @@ class BaseView extends Component<BaseViewProps> {
 
   render() {
     const { currentUser } = this.props;
-    return (
+
+    return currentUser?.id ? (
       <div ref={this.getViewDom}>
         <Form layout="vertical" onFinish={this.handleFinish}>
           <Row gutter={[50, 0]}>
             <Col xl={12}>
+              {/* <Form.Item
+                initialValue={currentUser?.TenDayDu}
+                name="TenDayDu"
+                label="Họ và tên"
+                rules={[...rules.required, ...rules.ten]}
+              >
+                <Input placeholder="Họ và tên" />
+              </Form.Item> */}
+
+              {/* <Row gutter={[20, 0]}>
+                <Col xs={24} lg={12}>
+                  <Form.Item
+                    name="ngay_sinh"
+                    label="Ngày sinh"
+                    rules={[...rules.required]}
+                    initialValue={
+                      currentUser?.ngay_sinh ? moment(currentUser?.ngay_sinh) : undefined
+                    }
+                  >
+                    <DatePicker
+                      style={{ width: '100%' }}
+                      format="DD/MM/YYYY"
+                      disabledDate={(cur) => moment(cur).isAfter(moment())}
+                      placeholder="Ngày sinh"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} lg={12}>
+                  <Form.Item
+                    initialValue={currentUser?.gioi_tinh || '0'}
+                    name="gioi_tinh"
+                    label="Giới tính"
+                    rules={[...rules.required]}
+                  >
+                    <Select>
+                      <Select.Option value="0">Nam</Select.Option>
+                      <Select.Option value="1">Nữ</Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row> */}
               <Form.Item
                 initialValue={currentUser?.email_dang_nhap}
                 name="email_dang_nhap"
@@ -132,6 +174,8 @@ class BaseView extends Component<BaseViewProps> {
           </Row>
         </Form>
       </div>
+    ) : (
+      <div></div>
     );
   }
 }

@@ -52,9 +52,6 @@ class Center extends Component<CenterProps, CenterState> {
     dispatch({
       type: 'accountAndcenter/fetchCurrent',
     });
-    dispatch({
-      type: 'accountAndcenter/fetch',
-    });
   }
 
   onTabChange = (key: string) => {

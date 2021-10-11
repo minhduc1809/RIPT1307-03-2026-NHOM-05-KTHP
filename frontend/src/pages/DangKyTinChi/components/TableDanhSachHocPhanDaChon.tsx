@@ -10,6 +10,7 @@ const TableDanhSachHocPhanDaChon = (props: {
   columns: IColumn<any>[];
   tongSoTinChi: number;
   tongHocPhi: number;
+  checkTime: boolean;
 }) => {
   const {
     recordDotNhuCau,
@@ -46,22 +47,24 @@ const TableDanhSachHocPhanDaChon = (props: {
       title={
         <b>
           <span>Danh sách học phần đã chọn</span>
-          <span style={{ float: 'right' }}>
-            <Popconfirm
-              disabled={props.danhSachHocPhanDaChon.length === 0 || !checkTrongThoiGianDangKy}
-              onConfirm={onSave}
-              title={<div style={{ maxWidth: 300 }}>{textConfirmSave}</div>}
-            >
-              <Button
-                icon={<SaveOutlined />}
-                style={{ marginRight: '-16px' }}
+          {props.checkTime && (
+            <span style={{ float: 'right' }}>
+              <Popconfirm
                 disabled={props.danhSachHocPhanDaChon.length === 0 || !checkTrongThoiGianDangKy}
-                type="primary"
+                onConfirm={onSave}
+                title={<div style={{ maxWidth: 300 }}>{textConfirmSave}</div>}
               >
-                Lưu
-              </Button>
-            </Popconfirm>
-          </span>
+                <Button
+                  icon={<SaveOutlined />}
+                  style={{ marginRight: '-16px' }}
+                  disabled={props.danhSachHocPhanDaChon.length === 0 || !checkTrongThoiGianDangKy}
+                  type="primary"
+                >
+                  Lưu
+                </Button>
+              </Popconfirm>
+            </span>
+          )}
         </b>
       }
       columns={[
