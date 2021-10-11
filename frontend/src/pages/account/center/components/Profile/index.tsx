@@ -4,8 +4,7 @@ import type { IInfoSV } from '@/services/ant-design-pro/typings';
 import { getURLImg } from '@/services/LopTinChi/loptinchi';
 import rules from '@/utils/rules';
 import { renderFileListUrl } from '@/utils/utils';
-import { Button, Col, DatePicker, Form, Input, message, Row, Select } from 'antd';
-import moment from 'moment';
+import { Button, Col, Form, Input, message, Row } from 'antd';
 import mm from 'moment-timezone';
 import { Component } from 'react';
 import type { Dispatch } from 'umi';
@@ -85,48 +84,6 @@ class BaseView extends Component<BaseViewProps> {
           <Row gutter={[50, 0]}>
             <Col xl={12}>
               <Form.Item
-                initialValue={currentUser?.TenDayDu}
-                name="TenDayDu"
-                label="Họ và tên"
-                rules={[...rules.required, ...rules.ten]}
-              >
-                <Input placeholder="Họ và tên" />
-              </Form.Item>
-
-              <Row gutter={[20, 0]}>
-                <Col xs={24} lg={12}>
-                  <Form.Item
-                    name="ngay_sinh"
-                    label="Ngày sinh"
-                    rules={[...rules.required]}
-                    initialValue={
-                      currentUser?.ngay_sinh ? moment(currentUser?.ngay_sinh) : undefined
-                    }
-                  >
-                    <DatePicker
-                      style={{ width: '100%' }}
-                      format="DD/MM/YYYY"
-                      disabledDate={(cur) => moment(cur).isAfter(moment())}
-                      placeholder="Ngày sinh"
-                    />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} lg={12}>
-                  <Form.Item
-                    initialValue={currentUser?.gioi_tinh || '0'}
-                    name="gioi_tinh"
-                    label="Giới tính"
-                    rules={[...rules.required]}
-                  >
-                    <Select>
-                      <Select.Option value="0">Nam</Select.Option>
-                      <Select.Option value="1">Nữ</Select.Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-              </Row>
-
-              <Form.Item
                 initialValue={currentUser?.email_dang_nhap}
                 name="email_dang_nhap"
                 label="Email"
@@ -138,7 +95,7 @@ class BaseView extends Component<BaseViewProps> {
                 initialValue={currentUser?.so_dien_thoai || ''}
                 name="so_dien_thoai"
                 label="Số điện thoại"
-                rules={[...rules.soDienThoai, ...rules.required]}
+                rules={[...rules.soDienThoai]}
               >
                 <Input placeholder="Số điện thoại" />
               </Form.Item>
@@ -146,7 +103,6 @@ class BaseView extends Component<BaseViewProps> {
                 initialValue={currentUser?.dia_chi_hien_nay}
                 name="dia_chi_hien_nay"
                 label="Địa chỉ hiện nay"
-                rules={[...rules.required]}
               >
                 <Input.TextArea rows={3} placeholder="Địa chỉ hiện nay" />
               </Form.Item>

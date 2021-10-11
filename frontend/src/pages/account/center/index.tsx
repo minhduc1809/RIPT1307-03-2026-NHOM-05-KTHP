@@ -1,16 +1,23 @@
 import avatar from '@/assets/logo.png';
 import type { IInfoGV, IInfoSV } from '@/services/ant-design-pro/typings';
-import { ClusterOutlined, ContactsOutlined } from '@ant-design/icons';
+import {
+  CalendarOutlined,
+  ClusterOutlined,
+  ContactsOutlined,
+  ManOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
 import type { Input } from 'antd';
 import { Card, Col, Row } from 'antd';
+import moment from 'moment';
 import { Component } from 'react';
 import type { RouteChildrenProps } from 'react-router';
 import type { Dispatch } from 'umi';
 import { connect } from 'umi';
 import styles from './Center.less';
 import Profile from './components/Profile';
-import Projects from './components/Projects';
+import ChangePassword from './components/Profile/ChangePassword';
 import type { ModalState } from './model';
 
 const operationTabList = [
@@ -64,7 +71,7 @@ class Center extends Component<CenterProps, CenterState> {
       return <Profile />;
     }
     if (tabKey === 'changePassword') {
-      return <Projects />;
+      return <ChangePassword />;
     }
 
     return null;
@@ -73,8 +80,12 @@ class Center extends Component<CenterProps, CenterState> {
   renderUserInfo = (currentUser: Partial<IInfoSV.Data | IInfoGV.Data>) => {
     const role = localStorage.getItem('vaiTro');
     let roleText = 'Chưa xác định';
+    let gioiTinhText = 'Chưa xác định';
+    if (currentUser?.gioi_tinh === '0') gioiTinhText = 'Nam';
+    else if (currentUser.gioi_tinh === '1') gioiTinhText = 'Nữ';
     if (role === 'giang_vien') roleText = 'Giảng viên';
     else if (role === 'can_bo') roleText = 'Cán bộ';
+    else if (role === 'sinh_vien') roleText = 'Sinh viên';
     return (
       <div className={styles.detail}>
         <p>
@@ -84,6 +95,30 @@ class Center extends Component<CenterProps, CenterState> {
             }}
           />
           {roleText}
+        </p>
+        <p>
+          <UserOutlined
+            style={{
+              marginRight: 8,
+            }}
+          />
+          {currentUser?.TenDayDu ?? ''}
+        </p>
+        <p>
+          <CalendarOutlined
+            style={{
+              marginRight: 8,
+            }}
+          />
+          {currentUser?.ngay_sinh ? moment(currentUser?.ngay_sinh).format('DD/MM/YYYY') : ''}
+        </p>
+        <p>
+          <ManOutlined
+            style={{
+              marginRight: 8,
+            }}
+          />
+          {gioiTinhText}
         </p>
         <p>
           <ClusterOutlined

@@ -110,6 +110,10 @@ export async function adminlogin(payload: { login?: string; password?: string })
   return axios.post(`${ip3}/auth/login/web`, payload);
 }
 
+export async function changePassword(payload: { oldPassword: string; newPassword: string }) {
+  return axios.post(`${ip3}/odoo-user/me/change/password`, payload);
+}
+
 /**  GET /api/notices */
 export async function getNotices(options?: { [key: string]: any }) {
   return request<API.NoticeIconList>('/api/notices', {
