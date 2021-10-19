@@ -6,7 +6,6 @@ import {
   getChuDe,
   putChuDe,
 } from '@/services/ChuDe/chude';
-import data from '@/utils/data';
 import { message } from 'antd';
 import { useState } from 'react';
 
@@ -57,8 +56,7 @@ export default () => {
       getChuDeModel();
       setVisibleForm(false);
     } catch (error) {
-      const { response } = error;
-      message.error(data.error[response?.data?.errorCode]);
+      setLoading(false);
     }
     setLoading(false);
   };

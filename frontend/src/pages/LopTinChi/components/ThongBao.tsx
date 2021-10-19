@@ -1,16 +1,21 @@
 import TinyEditor from '@/components/TinyEditor/Tiny';
-import { addThongBao, getThongBaoLopTinChiById, getURLImg } from '@/services/LopTinChi/loptinchi';
+import { getThongBaoLopHanhChinhById } from '@/services/LopHanhChinh/lophanhchinh';
+import {
+  addThongBao,
+  addThongBaoLopHanhChinh,
+  getThongBaoLopTinChiById,
+} from '@/services/LopTinChi/loptinchi';
 import type { IResThongBaoLopTinChi } from '@/services/LopTinChi/typings';
 import rules from '@/utils/rules';
-import { PlusCircleFilled, UploadOutlined } from '@ant-design/icons';
+import { PlusCircleFilled } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { Button, Drawer, Form, Input, message, Modal, Upload } from 'antd';
+import { Button, Drawer, Form, Input, message, Modal, Typography } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import ViewThongBao from './ViewThongBao';
 
-const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
+const ThongBao = (props: { id: number; isGiangVien: boolean; typeLop: string }) => {
   const [visibleDrawer, setVisibleDrawer] = useState<boolean>(false);
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
@@ -22,12 +27,19 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
   const [dataThongBao, setdataThongBao] = useState<IResThongBaoLopTinChi.Result[]>([]);
   const [form] = Form.useForm();
   const getData = async () => {
-    const res = await getThongBaoLopTinChiById({
-      page,
-      limit,
-      idLop: props?.id,
-      role: props.isGiangVien ? 'giang-vien' : 'sinh-vien',
-    });
+    const res =
+      props.typeLop === 'LopTinChi'
+        ? await getThongBaoLopTinChiById({
+            page,
+            limit,
+            idLop: props?.id,
+            role: props.isGiangVien ? 'giang-vien' : 'sinh-vien',
+          })
+        : await getThongBaoLopHanhChinhById({
+            idLop: props.id,
+            role: props.isGiangVien ? 'giang-vien' : 'sinh-vien',
+            data: { page, limit },
+          });
     setdataThongBao(res?.data?.data?.result);
   };
   useEffect(() => {
@@ -66,9 +78,19 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
     },
     {
       title: 'Nội dung',
-      dataIndex: 'content',
+      dataIndex: 'htmlContent',
       align: 'center',
       ellipsis: true,
+      render: (val: any, record) => {
+        return (
+          <Typography.Paragraph
+            ellipsis={{ rows: 3, expandable: false }}
+            style={{ marginBottom: 0 }}
+          >
+            <div dangerouslySetInnerHTML={{ __html: record?.htmlContent ?? '' }} />
+          </Typography.Paragraph>
+        );
+      },
       width: 200,
       onCell,
     },
@@ -123,38 +145,45 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
         width="60%"
         visible={visibleDrawer}
         destroyOnClose
+        title="Gửi thông báo"
       >
         <Form
-          initialValues={{}}
+          // initialValues={{}}
           labelCol={{ span: 24 }}
           form={form}
           title={edit ? 'Chỉnh sửa' : 'Thêm mới'}
           onFinish={async (values: any) => {
             setLoading(true);
-            let response = {
-              data: { data: { url: '' } },
-            };
-            if (values?.imageUrl)
-              response = await getURLImg({
-                filename: 'url1',
-                public: true,
-                file: values?.imageUrl.file.originFileObj,
-              });
+            // let response = {
+            //   data: { data: { url: '' } },
+            // };
+            // if (values?.imageUrl)
+            //   response = await getURLImg({
+            //     filename: 'url1',
+            //     public: true,
+            //     file: values?.imageUrl.file.originFileObj,
+            //   });
 
             const newValues = {
               ...values,
-              imageUrl: response?.data?.data?.url,
+              // imageUrl: response?.data?.data?.url,
               htmlContent: values?.htmlContent?.text,
             };
-            const res = await addThongBao({ idLop: props.id, newValues });
-            setLoading(false);
-            if (res?.data?.statusCode === 201) {
-              message.success('Thêm mới thành công');
-              setstate(state + 1);
-              setVisibleDrawer(false);
-              return true;
+            try {
+              const res =
+                props.typeLop === 'LopTinChi'
+                  ? await addThongBao({ idLop: props.id, newValues })
+                  : await addThongBaoLopHanhChinh({ idLop: props.id, newValues });
+              if (res?.data?.statusCode === 201) {
+                message.success('Thêm mới thành công');
+                setstate(state + 1);
+                setVisibleDrawer(false);
+                return true;
+              }
+            } catch (error) {
+              setLoading(false);
+              message.error('Đã xảy ra lỗi');
             }
-            message.error('Đã xảy ra lỗi');
 
             return false;
           }}
@@ -163,15 +192,15 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
             <Input placeholder="Tiêu đề" />
           </Form.Item>
 
-          <Form.Item name="content" label="Mô tả" rules={[...rules.required]}>
+          {/* <Form.Item name="content" label="Mô tả" rules={[...rules.required]}>
             <Input placeholder="Mô tả" />
-          </Form.Item>
+          </Form.Item> */}
 
-          <Form.Item name="imageUrl" label="Ảnh">
+          {/* <Form.Item name="imageUrl" label="Ảnh">
             <Upload listType="picture" maxCount={1}>
               <Button icon={<UploadOutlined />}>Tải lên (Tối đa: 1)</Button>
             </Upload>
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item name="htmlContent" label="Nội dung" rules={[...rules.required]}>
             <TinyEditor />
           </Form.Item>
@@ -185,6 +214,9 @@ const ThongBao = (props: { id: string; isGiangVien: boolean }) => {
         </Form>
       </Drawer>
       <Modal
+        onCancel={() => {
+          setVisibleModal(false);
+        }}
         width="80%"
         bodyStyle={{ padding: 0 }}
         destroyOnClose

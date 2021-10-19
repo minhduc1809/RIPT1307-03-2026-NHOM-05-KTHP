@@ -86,7 +86,7 @@ class App extends React.Component {
           }}
           onEditorChange={this.triggerChange}
         />
-        <input id="my-file" type="file" name="my-file" style={{ display: 'none' }} onChange="" />
+        <input id="my-file" type="file" name="my-file" style={{ display: 'none' }} />
       </>
     );
   }

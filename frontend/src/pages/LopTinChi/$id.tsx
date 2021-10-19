@@ -6,13 +6,14 @@ import KetQuaHocTapGV from './components/KetQuaHocTap/KetQuaHocTapGV';
 import KetQuaHocTapSV from './components/KetQuaHocTap/KetQuaHocTapSV';
 import ThongBao from './components/ThongBao';
 import ThongTinChung from './components/ThongTinChung';
+import DiemDanh from './components/DiemDanh';
 
 const DetailLopTinChi = ({
   match: {
     params: { id },
   },
 }: {
-  match: { params: { id: string } };
+  match: { params: { id: number } };
 }) => {
   const { record } = useModel('loptinchi');
   const isGiangVien = localStorage.getItem('vaiTro') === 'giang_vien';
@@ -37,14 +38,16 @@ const DetailLopTinChi = ({
         <Tabs.TabPane tab={isGiangVien ? 'Danh sách sinh viên' : 'Thông tin chung'} key="1">
           <ThongTinChung id={id} isGiangVien={isGiangVien} />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Điểm danh" key="2">
-          Tính năng đang phát triển
-        </Tabs.TabPane>
+        {isGiangVien && (
+          <Tabs.TabPane tab="Điểm danh" key="2">
+            <DiemDanh idLopTinChi={id} />
+          </Tabs.TabPane>
+        )}
         <Tabs.TabPane tab="Kết quả học tập" key="3">
           {isGiangVien ? <KetQuaHocTapGV id={id} /> : <KetQuaHocTapSV id={id} />}
         </Tabs.TabPane>
         <Tabs.TabPane tab="Thông báo" key="4">
-          <ThongBao isGiangVien={isGiangVien} id={id} />
+          <ThongBao isGiangVien={isGiangVien} id={id} typeLop="LopTinChi" />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Học liệu số" key="5">
           <HocLieuSo />

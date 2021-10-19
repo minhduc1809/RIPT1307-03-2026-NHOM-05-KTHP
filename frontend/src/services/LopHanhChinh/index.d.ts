@@ -11,7 +11,7 @@ export declare module APILopHanhChinh {
   }
 
   export interface Data {
-    id?: number;
+    id: number;
     ten_lop_hanh_chinh?: string;
     khoi_lop_id?: any[];
     nganh?: any[];

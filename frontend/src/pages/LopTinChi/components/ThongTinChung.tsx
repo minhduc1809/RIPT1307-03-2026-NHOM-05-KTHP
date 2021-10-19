@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useModel } from 'umi';
 import DanhSachSinhVien from './DanhSachSinhVien';
 
-const ThongTinChung = (props: { id: string; isGiangVien: boolean }) => {
+const ThongTinChung = (props: { id: number; isGiangVien: boolean }) => {
   const { isGiangVien } = props;
   const {
     loading,
@@ -38,7 +38,7 @@ const ThongTinChung = (props: { id: string; isGiangVien: boolean }) => {
 
       {!isGiangVien && (
         <>
-          <Descriptions title="Cố vấn học tập:" />
+          <Descriptions title="Giảng viên:" />
           <List
             grid={{
               xs: 1,
@@ -79,7 +79,7 @@ const ThongTinChung = (props: { id: string; isGiangVien: boolean }) => {
           setIdNhomLop(Number(val));
         }}
       >
-        <Tabs.TabPane tab="Tất cả" key={-1}>
+        <Tabs.TabPane tab="Tất cả sinh viên" key={-1}>
           <DanhSachSinhVien loading={loading} data={sinhVienList} />
         </Tabs.TabPane>
         {danhSachNhomLop?.map((item) => (

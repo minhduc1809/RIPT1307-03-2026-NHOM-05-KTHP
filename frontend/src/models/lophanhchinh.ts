@@ -10,7 +10,7 @@ export default () => {
     APILopHanhChinh.HinhThucDaoTao[]
   >([]);
   const [hinhThucDaoTao, setHinhThucDaoTao] = useState<number>(-1);
-  const [record, setRecord] = useState<APILopHanhChinh.RecordAdmin>();
+  const [record, setRecord] = useState<APILopHanhChinh.Data>();
   const [loading, setLoading] = useState<boolean>(true);
 
   const [total, setTotal] = useState<number>(0);

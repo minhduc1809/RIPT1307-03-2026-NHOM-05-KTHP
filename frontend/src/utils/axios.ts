@@ -2,6 +2,7 @@
 import { notification } from 'antd';
 import axios from 'axios';
 import { history } from 'umi';
+import data from './data';
 
 // Add a request interceptor
 axios.interceptors.request.use(
@@ -28,22 +29,21 @@ axios.interceptors.response.use(
     // Do something with response data
     response,
   (error) => {
-    const {
-      response: {
-        data: {
-          detail: { message: msg, status },
-        },
-      },
-    } = error;
-    switch (status) {
+    switch (error?.response?.data?.detail?.status) {
       case 400:
-        notification.error({ message: 'Bad request', description: msg || error.message });
+        notification.error({
+          message: 'Bad request',
+          description:
+            data.error[error?.response?.data?.detail?.errorCode] ||
+            error?.data?.detail?.message ||
+            error?.message,
+        });
         break;
 
       case 401:
         notification.error({
           message: 'Token quá hạn, vui lòng đăng nhập lại',
-          description: msg || error.message,
+          description: error?.response?.data?.detail?.message || error?.message,
         });
         localStorage.removeItem('vaiTro');
         localStorage.removeItem('token');
@@ -56,30 +56,36 @@ axios.interceptors.response.use(
         notification.error({
           message:
             'Lỗi không tìm thấy dữ liệu, bạn hãy thử f5 refresh lại trình duyệt để cập nhật phiên bản mới nhất.',
-          description: msg || error.message,
+          description: error?.response?.data?.detail?.message || error?.message,
         });
         break;
 
       case 405:
         notification.error({
           message: 'Truy vấn không được phép',
-          description: msg || error.message,
+          description: error?.response?.data?.detail?.message || error?.message,
         });
         break;
 
       case 409:
-        notification.error({ message: 'Dữ liệu chưa đúng', description: msg || error.message });
+        notification.error({
+          message: 'Dữ liệu chưa đúng',
+          description: error?.response?.data?.detail?.message || error?.message,
+        });
         break;
 
       case 500:
-        notification.error({ description: 'Server gặp lỗi', message: msg || error.message });
+        notification.error({
+          description: 'Server gặp lỗi',
+          message: error?.response?.data?.detail?.message || error.message,
+        });
         break;
 
       default:
         break;
     }
     // Do something with response error
-    Promise.reject(error);
+    return Promise.reject(error);
   },
 );
 

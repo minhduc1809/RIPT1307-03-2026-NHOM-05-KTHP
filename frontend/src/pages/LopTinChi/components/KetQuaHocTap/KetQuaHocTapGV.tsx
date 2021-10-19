@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import Table from '@/components/Table/Table';
 import { useModel } from 'umi';
 
-const KetQuaHocTapGV = (props: { id: string }) => {
+const KetQuaHocTapGV = (props: { id: number }) => {
   const {
     giangVienGetKetQuaHocTapByIdLopTinChiModel,
     loading,

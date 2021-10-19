@@ -1,4 +1,5 @@
 import logo from '@/assets/logo.png';
+import { ip } from '@/utils/constants';
 import { Button, Descriptions, List } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
@@ -39,7 +40,7 @@ const HocLieuSo = () => {
         <Descriptions.Item span={3} label="Học liệu số">
           <Button
             onClick={() => {
-              window.open(infoMonHoc?.url_danh_sach_hoc_lieu);
+              window.open(`https://dhs.ptit.edu.vn${infoMonHoc?.url_danh_sach_hoc_lieu}`);
             }}
             type="primary"
           >

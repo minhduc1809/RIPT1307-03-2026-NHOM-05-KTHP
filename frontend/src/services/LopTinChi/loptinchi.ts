@@ -12,7 +12,7 @@ export async function giangVienGetLopTinChiByHocKy(idHocKy: number) {
 }
 
 export async function getThongBaoLopTinChiById(payload: {
-  idLop?: string;
+  idLop?: number;
   role?: string;
   page: number;
   limit: number;
@@ -39,6 +39,19 @@ export async function getURLImg(payload: any) {
 export async function addThongBao(payload: { idLop: any; newValues: any }) {
   const { idLop, newValues } = payload;
   return axios.post(`${ip3}/odoo-lop-tin-chi/${idLop}/giang-vien/notification`, {
+    ...newValues,
+  });
+}
+
+/**
+ * Giảng viên gửi thông báo đến sinh viên lớp hành chính
+ * @param payload idLop: idLop hành chính, newValues: nội dung thông báo
+ * @returns
+ */
+
+export async function addThongBaoLopHanhChinh(payload: { idLop: number; newValues: any }) {
+  const { idLop, newValues } = payload;
+  return axios.post(`${ip3}/odoo-lop-hanh-chinh/${idLop}/giang-vien/notification`, {
     ...newValues,
   });
 }

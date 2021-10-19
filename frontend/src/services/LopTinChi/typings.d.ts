@@ -35,6 +35,8 @@ export declare module LopTinChi {
     TenDayDu: string;
     anhDaiDien: string;
     soDienThoai: string;
+    image_path: string;
+    gioi_tinh: number;
   }
 
   export interface ThongTinChungLopTinChiRecord {
@@ -68,6 +70,53 @@ export declare module LopTinChi {
     danh_sach_sinh_vien_ids: number[];
     buoi_hoc_ids: number[];
     display_name: string;
+  }
+}
+
+export declare module BuoiHoc {
+  export interface Record {
+    id: number;
+    lop_tin_chi_id: (number | string)[];
+    nhom_lop_tin_chi_id: (number | string)[];
+    mon_hoc_id: (number | string)[];
+    ten_hoc_phan: string;
+    tong_so_sinh_vien: number;
+    so_luong_vang: number;
+    thu_kieu_so: number;
+    tuan_hoc: number;
+    ngay_bd: string;
+    tiet_bd: number;
+    so_tiet: number;
+    giang_vien_id: (number | string)[];
+    giang_vien_da_diem_danh: boolean;
+    dien_thoai: string;
+    tai_khoan: string;
+    mat_khau: string;
+    phong_hoc: string;
+    id_zoom: string;
+    mat_khau_1: string;
+    ngay_gio_hoc: string;
+    ngay_gio_ket_thuc: string;
+    diem_danh_buoi_hoc_ids: number[];
+    noi_dung_bai_hoc: string;
+    url_bai_hoc: string;
+  }
+
+  export interface SinhVienDiemDanh {
+    id: number;
+    buoi_hoc_id: (number | string)[];
+    diem_cong: number;
+    sinh_vien_id: (number | string)[];
+    ten_sinh_vien: string;
+    tuan_hoc: number;
+    trang_thai: string;
+  }
+
+  export interface ListSinhVien {
+    giangVienDaDiemDanh: boolean;
+    siSo: number;
+    vang: number;
+    danhSachDiemDanh: SinhVienDiemDanh[];
   }
 }
 

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useModel } from 'umi';
 import DetaiKetQuaHocTap from './Detail';
 
-const KetQuaHocTapSV = (props: { id: string }) => {
+const KetQuaHocTapSV = (props: { id: number }) => {
   const { sinhVienGetKetQuaHocTapByIdLopTinChiModel, ketQuaHocTap } = useModel('loptinchi');
 
   useEffect(() => {
