@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer';
 import { adminlogin, getInfo } from '@/services/ant-design-pro/api';
+import data from '@/utils/data';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { ConfigProvider, message, Tabs } from 'antd';
@@ -35,12 +36,6 @@ const Login: React.FC = () => {
           id: 'pages.login.success',
           defaultMessage: 'success',
         });
-
-        // set các quyền mà user có thể truy cập vào redux và bật modal chọn lên
-        // console.log(`msg.data.authorizedRoles`, msg.data.authorizedRoles);
-        // setInitialState({
-        //   ...initialState,
-        // });
         localStorage.setItem('token', msg?.data?.data?.accessToken);
 
         localStorage.setItem('vaiTro', msg?.data?.data.user.systemRole);
@@ -51,7 +46,7 @@ const Login: React.FC = () => {
         });
 
         message.success(defaultloginSuccessMessage);
-        history.push('/');
+        history.push(data?.path?.[msg?.data?.data?.user?.systemRole] ?? '/');
 
         return;
       }

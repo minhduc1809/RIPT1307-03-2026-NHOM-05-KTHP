@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer';
 import { getInfoGV, getInfoSV, login } from '@/services/ant-design-pro/api';
+import data from '@/utils/data';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { ConfigProvider, message, Tabs } from 'antd';
@@ -49,7 +50,6 @@ const Login: React.FC = () => {
           info = await getInfoGV();
         } else if (msg?.data?.data.user.vai_tro === 'sinh_vien') {
           info = await getInfoSV();
-          console.log(`info`, info);
         }
 
         setInitialState({
@@ -58,7 +58,7 @@ const Login: React.FC = () => {
         });
 
         message.success(defaultloginSuccessMessage);
-        history.push('/');
+        history.push(data?.path?.[msg?.data?.data?.user?.vai_tro] ?? '/');
 
         return;
       }

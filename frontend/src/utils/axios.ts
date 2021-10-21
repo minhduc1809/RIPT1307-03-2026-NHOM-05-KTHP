@@ -42,8 +42,8 @@ axios.interceptors.response.use(
 
       case 401:
         notification.error({
-          message: 'Token quá hạn, vui lòng đăng nhập lại',
-          description: error?.response?.data?.detail?.message || error?.message,
+          message: 'Vui lòng đăng nhập lại',
+          description: '',
         });
         localStorage.removeItem('vaiTro');
         localStorage.removeItem('token');

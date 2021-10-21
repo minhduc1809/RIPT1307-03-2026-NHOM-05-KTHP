@@ -14,13 +14,9 @@ export type GlobalHeaderRightProps = {
 const loginOut = async () => {
   const { query = {} } = history.location;
   const { redirect } = query;
-  // Note: There may be security issues, please note
   if (window.location.pathname !== '/user/login' && !redirect) {
     history.replace({
       pathname: '/user/login',
-      // search: stringify({
-      //   redirect: pathname,
-      // }),
     });
   }
 };
@@ -63,7 +59,6 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   if (!currentUser) {
     return loading;
   }
-
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       {menu && localStorage.getItem('vaiTro') !== 'Admin' && (

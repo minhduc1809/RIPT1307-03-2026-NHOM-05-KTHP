@@ -3,6 +3,7 @@
 import axios from '@/utils/axios';
 import { ip, ip3 } from '@/utils/constants';
 import { request } from 'umi';
+import { IInfoGV, IInfoSV, IRecordCalendar } from './typings';
 
 export async function outLogin(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/v2.2/api/login/outLogin', {
@@ -12,7 +13,7 @@ export async function outLogin(options?: { [key: string]: any }) {
 }
 
 export async function currentUser(id: number, options?: { [key: string]: any }) {
-  return request<API.LoginResponse.RootObject>(`${ip}/api/res.partner?id=${id}`, {
+  return request<any>(`${ip}/api/res.partner?id=${id}`, {
     method: 'GET',
     params: {
       limit: 1,

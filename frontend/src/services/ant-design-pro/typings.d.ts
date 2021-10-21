@@ -371,7 +371,7 @@ export declare module IInfoSV {
   }
 
   export interface RootObject {
-    data: Data | DataSV;
+    data: IInfoGV.Data | IInfoSV.Data;
     statusCode: number;
   }
 }

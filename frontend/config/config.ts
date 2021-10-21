@@ -283,8 +283,16 @@ export default defineConfig({
       component: './LopHanhChinh/GiangVien/$id',
     },
     {
+      hideInMenu: true,
+      icon: 'team',
+      exact: true,
+
+      path: '/blank',
+      component: './Blank',
+    },
+    {
       path: '/',
-      redirect: '/user/login',
+      redirect: '/blank',
     },
     {
       component: '404',

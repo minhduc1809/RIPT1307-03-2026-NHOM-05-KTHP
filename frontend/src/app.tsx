@@ -28,13 +28,12 @@ export async function getInitialState(): Promise<{
   authorizedRoles?: any[];
   isModalSelectRoleVisible?: boolean;
 }> {
-  const fetchUserInfo: () => Promise<IInfoSV.Data | undefined> = async () => {
+  const fetchUserInfo: () => Promise<any> = async () => {
     try {
-      // const currentUser = (await queryCurrentUser(Number(localStorage.getItem('id')))).data?.[0];
-      // dung cho sv gv
       const auth = localStorage.getItem('vaiTro');
+      const token = localStorage.getItem('token');
       let currentUser;
-      if (auth) {
+      if (auth && token) {
         if (auth === 'sinh_vien') currentUser = (await getInfoSV()).data;
         else if (auth === 'Admin') currentUser = (await getInfo()).data;
         else currentUser = (await getInfoGV()).data;
@@ -115,14 +114,16 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     onPageChange: () => {
       const { location } = history;
       const token = localStorage.getItem('token');
+      const vaiTro = localStorage.getItem('vaiTro');
       if (!token && location.pathname !== loginPath && !pathAuth.includes(location.pathname)) {
         history.push(loginPath);
-      } else if (initialState?.currentUser && token && location.pathname === loginPath) {
-        history.push(
-          data.path[
-            `${initialState?.currentUser?.vai_tro || initialState?.currentUser?.systemRole}`
-          ],
-        );
+      } else if (
+        vaiTro &&
+        token &&
+        (location.pathname === loginPath || location.pathname === '/blank')
+      ) {
+        history.push(data.path[`${vaiTro}`]);
+        window.location.reload();
       }
     },
     menuHeaderRender: undefined,

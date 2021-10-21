@@ -1,3 +1,5 @@
+import type { IRecordLogin } from './services/ant-design-pro/typings';
+
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
