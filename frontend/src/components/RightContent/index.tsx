@@ -1,6 +1,7 @@
 import { Space } from 'antd';
 import React from 'react';
 import { useModel } from 'umi';
+import NoticeIcon from '../NoticeIcon';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
 
@@ -22,6 +23,7 @@ const GlobalHeaderRight: React.FC = () => {
 
   return (
     <Space className={className}>
+      <NoticeIcon />
       <Avatar menu />
     </Space>
   );

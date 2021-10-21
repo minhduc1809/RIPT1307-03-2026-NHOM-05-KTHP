@@ -1,11 +1,16 @@
 @import '~antd/es/style/themes/default.less';
 
+
+::-webkit-scrollbar {
+  width: 1px;
+}
+
 .list {
-  max-height: 400px;
-  overflow: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  max-height: 500px;
+  // overflow: auto;
+  // &::-webkit-scrollbar {
+  //   display: none;
+  // }
   .item {
     padding-right: 24px;
     padding-left: 24px;
@@ -26,7 +31,7 @@
     }
 
     &.read {
-      opacity: 0.4;
+      background-color: #ffebe6;
     }
     &:last-child {
       border-bottom: 0;

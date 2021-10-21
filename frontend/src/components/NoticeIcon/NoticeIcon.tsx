@@ -16,7 +16,7 @@ export type NoticeIconProps = {
   className?: string;
   loading?: boolean;
   onClear?: (tabName: string, tabKey: string) => void;
-  onItemClick?: (item: API.NoticeIconItem, tabProps: NoticeIconTabProps) => void;
+  onItemClick?: (item: ThongBao.Record, tabProps: NoticeIconTabProps) => void;
   onViewMore?: (tabProps: NoticeIconTabProps, e: MouseEvent) => void;
   onTabChange?: (tabTile: string) => void;
   style?: React.CSSProperties;
@@ -26,7 +26,7 @@ export type NoticeIconProps = {
   viewMoreText?: string;
   clearClose?: boolean;
   emptyImage?: string;
-  children?: React.ReactElement<NoticeIconTabProps>[];
+  children?: React.ReactElement<NoticeIconTabProps>;
 };
 
 const NoticeIcon: React.FC<NoticeIconProps> & {
@@ -56,7 +56,7 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
       const msgCount = count || count === 0 ? count : len;
       const tabTitle: string = msgCount > 0 ? `${title} (${msgCount})` : title;
       panes.push(
-        <TabPane tab={tabTitle} key={tabKey}>
+        <TabPane closable={false} tab={tabTitle} key={tabKey}>
           <NoticeList
             clearText={clearText}
             viewMoreText={viewMoreText}

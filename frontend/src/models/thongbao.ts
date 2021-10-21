@@ -1,4 +1,5 @@
 import {
+  getThongBao,
   getThongBaoAdmin,
   postThongBaoAll,
   postThongBaoByDonVi,
@@ -18,7 +19,7 @@ export default () => {
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(10);
+  const [limit, setLimit] = useState<number>(5);
 
   const getThongBaoAdminModel = async () => {
     setLoading(true);
@@ -59,7 +60,16 @@ export default () => {
     setVisibleForm(false);
   };
 
+  const getThongBaoModel = async () => {
+    setLoading(true);
+    const response = await getThongBao({ page, limit, condition, sort: { createdAt: -1 } });
+    setDanhSach(response?.data?.data?.result ?? []);
+    setTotal(response?.data?.data?.total ?? 0);
+    setLoading(false);
+  };
+
   return {
+    getThongBaoModel,
     postThongBaoByDonViModel,
     loaiThongBao,
     setLoaiThongBao,

@@ -37,7 +37,10 @@ export default () => {
   // user
   const getLopTinChiByHocKyModel = async (payload: { idHocKy: number }) => {
     const role = localStorage.getItem('vaiTro');
-    if (!payload.idHocKy) return;
+    if (!payload.idHocKy) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     const response =
       role === 'sinh_vien'

@@ -26,6 +26,7 @@ const DangKyNhuCau = (props: {
     getDotDangKyNhuCauByKyHocModel,
     getPhieuDangKyByDotModel,
     getThongTinKyHocModel,
+    khoiTaoPhieuDangKyModel,
   } = useModel('dangkytinchi');
 
   const { record } = useModel('kyhoc');
@@ -212,7 +213,16 @@ const DangKyNhuCau = (props: {
           {recordPhieuDangKy === null && (
             <Result
               title="Bạn chưa đăng ký nhu cầu học phần trong đợt này"
-              extra={<Button type="primary">Bắt đầu đăng ký</Button>}
+              extra={
+                <Button
+                  onClick={() => {
+                    khoiTaoPhieuDangKyModel();
+                  }}
+                  type="primary"
+                >
+                  Bắt đầu đăng ký
+                </Button>
+              }
             />
           )}
         </div>

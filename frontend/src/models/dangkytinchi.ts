@@ -68,10 +68,15 @@ export default () => {
       setLoading(false);
       return;
     }
-    // setLoading(true);
-    const response = await getPhieuDangKyByDot(recordDotNhuCau.id);
-    setRecordPhieuDangKy(response?.data?.data ?? null);
-    setLoading(false);
+    setLoading(true);
+    try {
+      const response = await getPhieuDangKyByDot(recordDotNhuCau.id);
+      setRecordPhieuDangKy(response?.data?.data?.phieuDangKy ? response?.data?.data : null);
+      setLoading(false);
+    } catch (error) {
+      setRecordPhieuDangKy(null);
+      setLoading(false);
+    }
   };
 
   const getDanhSachHocPhanDangKyModel = async () => {
@@ -82,6 +87,7 @@ export default () => {
   };
 
   const postDanhSachHocPhanDangKyModel = async (danhSachHocPhan: { idHocPhan: number }[]) => {
+    if (!recordPhieuDangKy?.phieuDangKy?.id) return;
     setLoading(true);
     const response = await postDanhSachHocPhanDangKy({
       idPhieuDangKy: recordPhieuDangKy?.phieuDangKy.id,
@@ -143,10 +149,15 @@ export default () => {
 
   const khoiTaoPhieuDangKyModel = async () => {
     if (!recordDotNhuCau?.id) return;
-    setLoading(true);
-    await khoiTaoPhieuDangKy(recordDotNhuCau.id);
-    message.success('Khởi tạo thành công');
-    setLoading(false);
+    try {
+      setLoading(true);
+      await khoiTaoPhieuDangKy(recordDotNhuCau.id);
+      message.success('Khởi tạo thành công');
+      setLoading(false);
+      getPhieuDangKyByDotModel();
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   return {

@@ -30,7 +30,6 @@ const TableDanhSachHocPhanDaChon = (props: {
   }
   const onSave = () => {
     if (props.tongSoTinChi > recordThongTinKyHoc.tinChiDangKyToiDa) return;
-
     const danhSachHocPhan: any = props.danhSachHocPhanDaChon?.map((item) => {
       if (current === 0) return { idHocPhan: item.idHocPhan };
       return {

@@ -45,7 +45,7 @@ export async function getThongTinKyHoc(idHocKy?: number) {
 }
 
 export async function khoiTaoPhieuDangKy(idDotDangKy?: number) {
-  return axios.get(`${ip3}/odoo-dang-ky-nhu-cau/phieu-dang-ky-hoc-phan/khoi-tao/${idDotDangKy}`);
+  return axios.post(`${ip3}/odoo-dang-ky-nhu-cau/phieu-dang-ky-hoc-phan/khoi-tao/${idDotDangKy}`);
 }
 
 export async function postDanhSachHocPhanDangKy(payload: {

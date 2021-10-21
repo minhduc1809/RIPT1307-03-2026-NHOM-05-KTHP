@@ -54,11 +54,11 @@ class App extends React.Component {
     return (
       <>
         <Editor
-          apiKey="rai2uglmfyaqnomirbfm4q7w3fvjmq47u39rwpg798cccvdc"
+          apiKey="ihu6rlypska4k9h96g5x752rocpj133f20q41afy85shcrc5"
           value={this.state.text}
           init={{
-            language_url: '/tiny/vi.js',
-            language: 'vi',
+            language_url: '/lang/vi_VN.js',
+            language: 'vi_VN',
             height: 500,
             menubar: 'file edit view insert format tools table help',
             plugins: [

@@ -16,3 +16,20 @@ export async function postThongBaoByVaiTro(payload: ThongBao.PostRecord) {
 export async function postThongBaoAll(payload: ThongBao.PostRecord) {
   return axios.post(`${ip3}/notification/type/all`, payload);
 }
+
+export async function readOneNotification(payload: { notificationId?: string }) {
+  return axios.post(`${ip3}/notification/me/read/one`, payload);
+}
+
+export async function readAllNotification() {
+  return axios.post(`${ip3}/notification/me/read/all`);
+}
+
+export async function getThongBao(payload: {
+  page: number;
+  limit: number;
+  condition: any;
+  sort: { createdAt: 1 | -1 };
+}) {
+  return axios.get(`${ip3}/notification/me`, { params: payload });
+}

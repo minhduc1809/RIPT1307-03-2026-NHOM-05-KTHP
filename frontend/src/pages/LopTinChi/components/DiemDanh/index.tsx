@@ -139,6 +139,7 @@ export default (props: { idLopTinChi: number }) => {
                 });
                 getDanhSachBuoiHocByIdLopTinChiModel(props.idLopTinChi);
                 setVisibleDiemDanh(false);
+                setVisible(false);
                 setRecordDSSV({} as BuoiHoc.ListSinhVien);
               }}
               type="primary"

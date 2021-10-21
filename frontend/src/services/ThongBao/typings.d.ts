@@ -16,6 +16,19 @@ declare module ThongBao {
       idLopHanhChinh?: number;
       idLopTinChi?: number;
     };
+    unread: boolean;
+    createdAt: string;
+    updatedAt: string;
+    id?: string;
+    extra?: string;
+    key?: string;
+    read?: boolean;
+    avatar?: string;
+    title?: string;
+    status?: string;
+    datetime?: string;
+    description?: string;
+    type?: NoticeIconItemType;
   }
 
   export interface PostRecord {
