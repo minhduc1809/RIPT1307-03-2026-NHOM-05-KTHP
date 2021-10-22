@@ -7,7 +7,7 @@ const TableDanhSachHocPhan = (props: {
   data: { title: string; dataSource: DangKyTinChi.MonHoc[] }[];
   columns: IColumn<DangKyTinChi.MonHoc>[];
 }) => {
-  const [type, setType] = useState<string>('Tất cả các học phần');
+  const [type, setType] = useState<string>('Danh sách học phần kỳ này');
 
   const renderSelectTableType = () => (
     <Select
@@ -19,7 +19,7 @@ const TableDanhSachHocPhan = (props: {
       }}
     >
       {[
-        'Tất cả các học phần',
+        // 'Tất cả các học phần',
         'Danh sách học phần kỳ này',
         'Danh sách học phần học vượt',
         'Danh sách học phần học lại',

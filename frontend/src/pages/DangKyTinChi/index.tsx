@@ -26,6 +26,7 @@ const DangKyTinChi = () => {
   const danhSachHocPhanHocVuot: DangKyTinChi.MonHoc[] = [];
   const danhSachHocPhanHocCaiThien: DangKyTinChi.MonHoc[] = recordHocPhan?.dat ?? [];
   const danhSachHocPhanHocLai: DangKyTinChi.MonHoc[] = recordHocPhan?.khongDat ?? [];
+  const danhSachHocPhanMien: DangKyTinChi.MonHoc[] = recordHocPhan?.mien ?? [];
   recordHocPhan?.chuaHoc?.forEach((item) => {
     if (item?.soThuTuKyHoc === record?.soThuTu) {
       danhSachHocPhanKyNay?.push(item);
@@ -36,6 +37,7 @@ const DangKyTinChi = () => {
     ...danhSachHocPhanHocLai,
     ...danhSachHocPhanKyNay,
     ...danhSachHocPhanHocVuot,
+    ...danhSachHocPhanMien,
   ];
   const onChangeKyHoc = async (value: number) => {
     const kyHoc: KyHoc.Record | undefined = danhSach.find(
@@ -71,6 +73,7 @@ const DangKyTinChi = () => {
           danhSachHocPhanHocVuot={danhSachHocPhanHocVuot}
           danhSachHocPhanKyNay={danhSachHocPhanKyNay}
           danhSachTatCaHocPhan={danhSachTatCaHocPhan}
+          danhSachHocPhanMien={danhSachHocPhanMien}
         />
       )}
       {current === 1 && (
@@ -80,6 +83,7 @@ const DangKyTinChi = () => {
           danhSachHocPhanHocVuot={danhSachHocPhanHocVuot}
           danhSachHocPhanKyNay={danhSachHocPhanKyNay}
           danhSachTatCaHocPhan={danhSachTatCaHocPhan}
+          danhSachHocPhanMien={danhSachHocPhanMien}
         />
       )}
     </Card>

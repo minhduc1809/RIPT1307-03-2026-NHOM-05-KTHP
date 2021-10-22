@@ -104,5 +104,6 @@ declare module DangKyTinChi {
     chuaHoc: MonHoc[];
     dat: MonHoc[];
     khongDat: MonHoc[];
+    mien: MonHoc[];
   }
 }

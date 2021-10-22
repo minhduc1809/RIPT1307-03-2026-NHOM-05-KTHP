@@ -5,11 +5,11 @@ import { Button, Checkbox, Col, Divider, Result, Row, Table } from 'antd';
 import type { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import Scrollbars from 'react-custom-scrollbars-2';
 import { useModel } from 'umi';
 import InfoDot from './InfoDot';
 import TableDanhSachHocPhan from './TableDanhSachHocPhan';
 import TableDanhSachHocPhanDaChon from './TableDanhSachHocPhanDaChon';
+import TableTemp from '@/components/Table/Table';
 
 interface LopDaChon extends DangKyTinChi.LopTinChi, DangKyTinChi.MonHoc {
   idNhomLop?: number;
@@ -25,6 +25,7 @@ const TinChi = (props: {
   danhSachHocPhanHocCaiThien: DangKyTinChi.MonHoc[];
   danhSachHocPhanHocLai: DangKyTinChi.MonHoc[];
   danhSachTatCaHocPhan: DangKyTinChi.MonHoc[];
+  danhSachHocPhanMien: DangKyTinChi.MonHoc[];
 }) => {
   const {
     recordDotTinChi,
@@ -311,7 +312,7 @@ const TinChi = (props: {
             <span>Tiết bắt đầu: {item.tietBatDau}</span>
             <Divider type="vertical" />
             <span>Số tiết: {item.soTiet}</span>
-            <div>Danh sách tuần: {item.danhSachTuan}</div>
+            <div>Danh sách tuần: {item.danhSachTuan?.join(', ')}</div>
           </div>
         ));
       },
@@ -441,9 +442,9 @@ const TinChi = (props: {
               {checkTimeDangKy && (
                 <>
                   <Col xs={24}>
-                    <Scrollbars style={{ height: '300px' }}>
-                      <TableDanhSachHocPhan data={data} columns={columns} />
-                    </Scrollbars>
+                    {/* <Scrollbars style={{ height: '300px' }}> */}
+                    <TableDanhSachHocPhan data={data} columns={columns} />
+                    {/* </Scrollbars> */}
                   </Col>
 
                   {recordHocPhanCurrent?.idHocPhan && (
@@ -470,6 +471,18 @@ const TinChi = (props: {
                   )}
                 </>
               )}
+              <Col xs={24}>
+                {/* <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}> */}
+                <TableTemp
+                  otherProps={{
+                    pagination: false,
+                  }}
+                  title={<b>Danh sách học phần được miễn</b>}
+                  data={props.danhSachHocPhanMien}
+                  columns={columns?.filter((item) => item.title !== 'Đăng ký')}
+                />{' '}
+                {/* </Scrollbars> */}
+              </Col>
               <Col xs={24}>
                 <TableDanhSachHocPhanDaChon
                   checkTime={checkTimeDangKy}

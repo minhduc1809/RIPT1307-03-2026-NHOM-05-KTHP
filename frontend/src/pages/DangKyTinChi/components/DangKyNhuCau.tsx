@@ -5,9 +5,9 @@ import { Button, Checkbox, Col, Result, Row } from 'antd';
 import type { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import Scrollbars from 'react-custom-scrollbars-2';
 import { useModel } from 'umi';
 import InfoDot from './InfoDot';
+import Table from '@/components/Table/Table';
 import TableDanhSachHocPhan from './TableDanhSachHocPhan';
 import TableDanhSachHocPhanDaChon from './TableDanhSachHocPhanDaChon';
 
@@ -17,6 +17,7 @@ const DangKyNhuCau = (props: {
   danhSachHocPhanHocCaiThien: DangKyTinChi.MonHoc[];
   danhSachHocPhanHocLai: DangKyTinChi.MonHoc[];
   danhSachTatCaHocPhan: DangKyTinChi.MonHoc[];
+  danhSachHocPhanMien: DangKyTinChi.MonHoc[];
 }) => {
   const {
     recordDotNhuCau,
@@ -126,6 +127,10 @@ const DangKyNhuCau = (props: {
       title: 'Danh sách học phần học cải thiện',
       dataSource: props.danhSachHocPhanHocCaiThien,
     },
+    {
+      title: 'Danh sách học phần được miễn',
+      dataSource: props.danhSachHocPhanMien,
+    },
   ];
 
   useEffect(() => {
@@ -186,11 +191,24 @@ const DangKyNhuCau = (props: {
               />
               <Row gutter={[8, 0]}>
                 <Col xs={24}>
-                  <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}>
-                    <TableDanhSachHocPhan data={data} columns={columns} />
-                  </Scrollbars>
+                  {/* <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}> */}
+                  <TableDanhSachHocPhan data={data} columns={columns} />
+                  {/* </Scrollbars> */}
                 </Col>
-                <Col xs={24}>
+
+                <Col xs={24} lg={12}>
+                  {/* <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}> */}
+                  <Table
+                    otherProps={{
+                      pagination: false,
+                    }}
+                    title={<b>Danh sách học phần được miễn</b>}
+                    data={props.danhSachHocPhanMien}
+                    columns={columns?.filter((item) => item.title !== 'Đăng ký')}
+                  />{' '}
+                  {/* </Scrollbars> */}
+                </Col>
+                <Col xs={24} lg={12}>
                   {/* <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}> */}
                   <TableDanhSachHocPhanDaChon
                     checkTime={checkTimeDangKy}

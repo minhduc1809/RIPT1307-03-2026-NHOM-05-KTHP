@@ -43,6 +43,9 @@ const TableDanhSachHocPhanDaChon = (props: {
 
   return (
     <TableTemp
+      otherProps={{
+        pagination: false,
+      }}
       title={
         <b>
           <span>Danh sách học phần đã chọn</span>
@@ -67,12 +70,12 @@ const TableDanhSachHocPhanDaChon = (props: {
         </b>
       }
       columns={[
-        {
-          title: 'STT',
-          width: 80,
-          align: 'center',
-          dataIndex: 'index',
-        },
+        // {
+        //   title: 'STT',
+        //   width: 80,
+        //   align: 'center',
+        //   dataIndex: 'index',
+        // },
         ...props.columns.slice(1),
       ]}
       data={
