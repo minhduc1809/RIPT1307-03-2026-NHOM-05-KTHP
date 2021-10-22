@@ -20,6 +20,7 @@ declare module ChuongTrinhKhung {
     diem_hoc_phan: number;
     diem_thang_4: number;
     hoc_phan_id: (string | number)[];
+    trang_thai: string;
   }
 
   export interface MonHocDieuKien {
