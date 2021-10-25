@@ -1,4 +1,5 @@
 import { Popover, Typography } from 'antd';
+import { TrangThaiHocPhan } from '../../../services/chuongtrinhkhung/chuongtrinhkhung.constant';
 import styles from './block.css';
 
 type Props = {
@@ -11,6 +12,35 @@ type Props = {
 
 const Block = (props: Props) => {
   const { title, number, type, diem } = props;
+  let backgroundColor: string;
+  let ketQua: string;
+  switch (diem?.trang_thai) {
+    case TrangThaiHocPhan.MIEN: {
+      backgroundColor = "#fff79f";
+      ketQua = "M";
+      break;
+    }
+    case TrangThaiHocPhan.KHONG_DAT: {
+      backgroundColor = "#ffb8bd";
+      
+      ketQua = `GPA: ${diem?.diem_thang_4 || '-'}`;
+      break;
+    }
+    case TrangThaiHocPhan.DAT: {
+      backgroundColor = "#a7ff9f";
+      ketQua = `GPA: ${diem?.diem_thang_4 || '-'}`;
+      break;
+    }
+    case TrangThaiHocPhan.CHUA_CO_DIEM: {
+      backgroundColor = "#b9e2ff";
+      ketQua = `GPA: ${diem?.diem_thang_4 || '-'}`;
+      break;
+    }
+    default: {
+      backgroundColor = "#f0f0f0";
+      ketQua = `GPA: ${diem?.diem_thang_4 || '-'}`;
+    }
+  }
   return type === 'hocphan' ? (
     <Popover
       content={
@@ -24,7 +54,7 @@ const Block = (props: Props) => {
         </>
       }
     >
-      <div className={styles[type]} style={{ backgroundColor: !diem ? '#f0f0f0' : 'pink' }}>
+      <div className={styles[type]} style={{ backgroundColor }}>
         <div style={{ textAlign: 'center' }}>
           <Typography.Paragraph
             style={{ marginBottom: 0 }}
@@ -34,7 +64,7 @@ const Block = (props: Props) => {
           </Typography.Paragraph>
         </div>
         <div>({number} TC)</div>
-        <div>GPA: {diem?.diem_thang_4 || '-'}</div>
+        <div>{ketQua}</div>
       </div>
     </Popover>
   ) : (

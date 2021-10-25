@@ -62,7 +62,7 @@ const ChuongTrinhKhung = () => {
           <li>
             <br />
             <b> II. Học phần riêng của chuyên ngành:</b>
-            <div style={{ overflowX: 'auto' }}></div>
+            <div style={{ overflowX: 'auto' }} />
           </li>
         </ul>
         <br />
