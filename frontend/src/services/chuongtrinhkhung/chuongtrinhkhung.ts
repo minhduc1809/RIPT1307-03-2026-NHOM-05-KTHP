@@ -1,5 +1,5 @@
 import { request } from 'umi';
-import { ip3 } from '@/utils/constants';
+import { ip3 } from '@/utils/ip';
 import axios from '@/utils/axios';
 
 export async function get(options: Record<string, any>) {

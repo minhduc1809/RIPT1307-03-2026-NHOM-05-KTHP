@@ -1,5 +1,5 @@
 import Footer from '@/components/Footer';
-import { adminlogin, getInfo } from '@/services/ant-design-pro/api';
+import { adminlogin, getInfoAdmin } from '@/services/ant-design-pro/api';
 import data from '@/utils/data';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
@@ -26,7 +26,10 @@ const Login: React.FC = () => {
 
   const intl = useIntl();
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: {
+    login?: string | undefined;
+    password?: string | undefined;
+  }) => {
     setSubmitting(true);
     try {
       const msg = await adminlogin({ ...values });
@@ -37,12 +40,11 @@ const Login: React.FC = () => {
           defaultMessage: 'success',
         });
         localStorage.setItem('token', msg?.data?.data?.accessToken);
-
         localStorage.setItem('vaiTro', msg?.data?.data.user.systemRole);
-        const info = await getInfo();
+        const info = await getInfoAdmin();
         setInitialState({
           ...initialState,
-          currentUser: info?.data,
+          currentUser: info?.data?.data,
         });
 
         message.success(defaultloginSuccessMessage);
@@ -57,7 +59,6 @@ const Login: React.FC = () => {
         id: 'pages.login.failure',
         defaultMessage: 'failure',
       });
-
       message.error(defaultloginFailureMessage);
     }
     setSubmitting(false);
@@ -98,7 +99,7 @@ const Login: React.FC = () => {
                 },
               }}
               onFinish={async (values) => {
-                handleSubmit(values as API.LoginParams);
+                handleSubmit(values);
               }}
             >
               <Tabs activeKey={type} onChange={setType}>

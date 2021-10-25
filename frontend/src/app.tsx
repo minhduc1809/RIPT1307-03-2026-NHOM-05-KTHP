@@ -6,8 +6,7 @@ import { notification } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
-import { getInfo, getInfoGV, getInfoSV } from './services/ant-design-pro/api';
-import type { IInfoGV, IInfoSV } from './services/ant-design-pro/typings';
+import { getInfo, getInfoAdmin } from './services/ant-design-pro/api';
 import data from './utils/data';
 
 const loginPath = '/user/login';
@@ -22,9 +21,9 @@ export const initialStateConfig = {
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: IInfoSV.Data | IInfoGV.Data;
+  currentUser?: Login.Profile & Login.ProfileAdmin;
   partner_id?: number;
-  fetchUserInfo?: () => Promise<IInfoSV.Data | undefined>;
+  fetchUserInfo?: () => Promise<{ data: { data: Login.Profile & Login.ProfileAdmin } } | undefined>;
   authorizedRoles?: any[];
   isModalSelectRoleVisible?: boolean;
 }> {
@@ -34,9 +33,8 @@ export async function getInitialState(): Promise<{
       const token = localStorage.getItem('token');
       let currentUser;
       if (auth && token) {
-        if (auth === 'sinh_vien') currentUser = (await getInfoSV()).data;
-        else if (auth === 'Admin') currentUser = (await getInfo()).data;
-        else currentUser = (await getInfoGV()).data;
+        if (auth === 'Admin') currentUser = (await getInfoAdmin())?.data?.data;
+        else currentUser = (await getInfo())?.data?.data;
       }
       return currentUser;
     } catch (error) {

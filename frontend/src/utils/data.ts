@@ -2,6 +2,7 @@ const data: any = {
   path: {
     sinh_vien: '/calendar',
     giang_vien: '/calendar',
+    can_bo: '/calendar',
     Admin: '/danhmuc/chudechung',
   },
   doiTuong: ['Vai trò', 'Tất cả'],

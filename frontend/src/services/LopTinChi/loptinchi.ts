@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import axios from '@/utils/axios';
-import { ip3 } from '@/utils/constants';
+import { ip3 } from '@/utils/ip';
 import type { LopTinChi } from './typings';
 
 export async function sinhVienGetLopTinChiByHocKy(idHocKy: number) {

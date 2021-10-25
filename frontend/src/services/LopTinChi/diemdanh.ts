@@ -1,5 +1,5 @@
 import axios from '@/utils/axios';
-import { ip3 } from '@/utils/constants';
+import { ip3 } from '@/utils/ip';
 
 /**
  * ThanhPQ 19/10/2021

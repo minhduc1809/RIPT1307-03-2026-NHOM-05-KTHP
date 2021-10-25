@@ -1,20 +1,22 @@
-import type { IRecordLogin } from './services/ant-design-pro/typings';
-
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
-export default function access(initialState: { currentUser?: IRecordLogin.User | undefined }) {
-  const { currentUser } = initialState || {};
+export default function access() {
+  const vaiTro = localStorage.getItem('vaiTro');
+  const token = localStorage.getItem('token');
   return {
-    admin: currentUser && currentUser.systemRole === 'Admin',
-    giangVien: currentUser && currentUser.vai_tro === 'giang_vien',
-    sinhVien: currentUser && currentUser.vai_tro === 'sinh_vien',
-    quanTri: currentUser && currentUser.vai_tro === 'quan_tri',
-    mentor: currentUser && currentUser.vai_tro === 'mentor',
-    chuyenGiaHT: currentUser && currentUser.vai_tro === 'chuyen_gia_ht',
-    chuyenGiaCN: currentUser && currentUser.vai_tro === 'chuyen_gia_cn',
-    chuyenVien: currentUser && currentUser.vai_tro === 'chuyen_vien',
-    sinhVienVaGiangVien:
-      currentUser && (currentUser.vai_tro === 'giang_vien' || currentUser.vai_tro === 'sinh_vien'),
+    admin: token && vaiTro && vaiTro === 'Admin',
+    giangVien: token && vaiTro && vaiTro === 'giang_vien',
+    sinhVien: token && vaiTro && vaiTro === 'sinh_vien',
+    quanTri: token && vaiTro && vaiTro === 'quan_tri',
+    mentor: token && vaiTro && vaiTro === 'mentor',
+    chuyenGiaHT: token && vaiTro && vaiTro === 'chuyen_gia_ht',
+    chuyenGiaCN: token && vaiTro && vaiTro === 'chuyen_gia_cn',
+    chuyenVien: token && vaiTro && vaiTro === 'chuyen_vien',
+    sinhVienVaGiangVien: token && vaiTro && (vaiTro === 'giang_vien' || vaiTro === 'sinh_vien'),
+    canBo: token && vaiTro && vaiTro === 'can_bo',
+    giangVienVaCanBo: token && vaiTro && (vaiTro === 'giang_vien' || vaiTro === 'can_bo'),
+    sinhVienVaGiangVienVaCanBo:
+      token && vaiTro && (vaiTro === 'giang_vien' || vaiTro === 'can_bo' || vaiTro === 'sinh_vien'),
   };
 }

@@ -1,13 +1,15 @@
 import Footer from '@/components/Footer';
-import { getInfoGV, getInfoSV, login } from '@/services/ant-design-pro/api';
-import data from '@/utils/data';
+import { getInfo, login } from '@/services/ant-design-pro/api';
+import { Role } from '@/utils/constants';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
-import { ConfigProvider, message, Tabs } from 'antd';
+import { Avatar, Card, ConfigProvider, List, message, Modal, Tabs } from 'antd';
 import viVN from 'antd/lib/locale/vi_VN';
 import React, { useState } from 'react';
 import { FormattedMessage, history, Link, useIntl, useModel } from 'umi';
 import styles from './index.less';
+import logo from '@/assets/logo.png';
+import data from '@/utils/data';
 
 const goto = () => {
   if (!history) return;
@@ -20,47 +22,20 @@ const goto = () => {
 
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
-  // const [userLoginState, setUserLoginState] = useState<IRecordLogin.RootObject>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
+  const [visibleRole, setVisibleRole] = useState<boolean>(false);
+  const [arrRole, setArrRole] = useState<{ vai_tro: string; token: string }[]>([]);
 
   const intl = useIntl();
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: { login: string; password: string }) => {
     setSubmitting(true);
     try {
       const msg = await login({ ...values });
-      if (msg.status === 201 && msg?.data?.data?.accessToken) {
-        const defaultloginSuccessMessage = intl.formatMessage({
-          id: 'pages.login.success',
-          defaultMessage: 'success',
-        });
-
-        // set các quyền mà user có thể truy cập vào redux và bật modal chọn lên
-        // console.log(`msg.data.authorizedRoles`, msg.data.authorizedRoles);
-        // setInitialState({
-        //   ...initialState,
-        // });
-        localStorage.setItem('token', msg?.data?.data?.accessToken);
-
-        localStorage.setItem('vaiTro', msg?.data?.data?.user.vai_tro);
-        let info;
-
-        if (msg?.data?.data.user.vai_tro === 'giang_vien') {
-          info = await getInfoGV();
-        } else if (msg?.data?.data.user.vai_tro === 'sinh_vien') {
-          info = await getInfoSV();
-        }
-
-        setInitialState({
-          ...initialState,
-          currentUser: info?.data,
-        });
-
-        message.success(defaultloginSuccessMessage);
-        history.push(data?.path?.[msg?.data?.data?.user?.vai_tro] ?? '/');
-
-        return;
+      if (msg.status === 201 && msg?.data?.data?.accessTokens?.length > 0) {
+        setVisibleRole(true);
+        setArrRole(msg?.data?.data?.accessTokens ?? []);
       }
     } catch (error) {
       const defaultloginFailureMessage = intl.formatMessage({
@@ -107,7 +82,7 @@ const Login: React.FC = () => {
                 },
               }}
               onFinish={async (values) => {
-                handleSubmit(values as API.LoginParams);
+                handleSubmit(values as { login: string; password: string });
               }}
             >
               <Tabs activeKey={type} onChange={setType}>
@@ -172,6 +147,50 @@ const Login: React.FC = () => {
               )}
             </ProForm>
           </div>
+          <Modal
+            width="400px"
+            onCancel={() => setVisibleRole(false)}
+            visible={visibleRole}
+            title="Chọn vai trò"
+          >
+            <List
+              itemLayout="horizontal"
+              dataSource={arrRole}
+              renderItem={(item) => (
+                <>
+                  <Card
+                    onClick={async () => {
+                      const defaultloginSuccessMessage = intl.formatMessage({
+                        id: 'pages.login.success',
+                        defaultMessage: 'success',
+                      });
+                      localStorage.setItem('token', item?.token);
+                      localStorage.setItem('vaiTro', item?.vai_tro);
+                      const info = await getInfo();
+                      setInitialState({
+                        ...initialState,
+                        currentUser: info?.data?.data ?? {},
+                      });
+                      message.success(defaultloginSuccessMessage);
+                      history.push(data?.path?.[item?.vai_tro] ?? '/');
+                    }}
+                    hoverable
+                  >
+                    <List.Item>
+                      <List.Item.Meta
+                        avatar={
+                          <Avatar style={{ width: 30, height: 40 }} shape="square" src={logo} />
+                        }
+                        title={<a>{Role[item.vai_tro]}</a>}
+                        description={`Đăng nhập với vai trò ${Role[item.vai_tro]}`}
+                      />
+                    </List.Item>{' '}
+                  </Card>
+                  <br />
+                </>
+              )}
+            />
+          </Modal>
         </ConfigProvider>
       </div>
       <Footer />

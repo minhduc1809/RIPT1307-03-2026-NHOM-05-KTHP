@@ -1,5 +1,4 @@
 import avatar from '@/assets/logo.png';
-import type { IInfoGV, IInfoSV } from '@/services/ant-design-pro/typings';
 import {
   CalendarOutlined,
   ClusterOutlined,
@@ -33,7 +32,7 @@ const operationTabList = [
 
 interface CenterProps extends RouteChildrenProps {
   dispatch: Dispatch;
-  currentUser: Partial<IInfoSV.Data | IInfoGV.Data>;
+  currentUser: Partial<Login.Profile>;
   currentUserLoading: boolean;
 }
 interface CenterState {
@@ -55,9 +54,6 @@ class Center extends Component<CenterProps, CenterState> {
   }
 
   onTabChange = (key: string) => {
-    // If you need to sync state to url
-    // const { match } = this.props;
-    // router.push(`${match.url}/${key}`);
     this.setState({
       tabKey: key as CenterState['tabKey'],
     });
@@ -74,7 +70,7 @@ class Center extends Component<CenterProps, CenterState> {
     return null;
   };
 
-  renderUserInfo = (currentUser: Partial<IInfoSV.Data | IInfoGV.Data>) => {
+  renderUserInfo = (currentUser: Partial<Login.Profile>) => {
     const role = localStorage.getItem('vaiTro');
     let roleText = 'Chưa xác định';
     let gioiTinhText = 'Chưa xác định';
@@ -99,7 +95,7 @@ class Center extends Component<CenterProps, CenterState> {
               marginRight: 8,
             }}
           />
-          {currentUser?.TenDayDu ?? ''}
+          {currentUser?.name || ''}
         </p>
         <p>
           <CalendarOutlined
@@ -123,7 +119,7 @@ class Center extends Component<CenterProps, CenterState> {
               marginRight: 8,
             }}
           />
-          {currentUser?.email_dang_nhap ?? ''}
+          {currentUser?.email || ''}
         </p>
       </div>
     );
@@ -142,10 +138,8 @@ class Center extends Component<CenterProps, CenterState> {
                 <div>
                   <div className={styles.avatarHolder}>
                     <img alt="" src={currentUser?.avatar_path || avatar} />
-                    <div className={styles.name}>{currentUser?.TenDayDu || 'Chưa cập nhật'}</div>
-                    <div>
-                      {currentUser?.email || currentUser?.email_dang_nhap || 'Chưa cập nhật'}
-                    </div>
+                    <div className={styles.name}>{currentUser?.name || 'Chưa cập nhật'}</div>
+                    <div>{currentUser?.email || currentUser?.email || 'Chưa cập nhật'}</div>
                   </div>
                   {this.renderUserInfo(currentUser)}
                 </div>

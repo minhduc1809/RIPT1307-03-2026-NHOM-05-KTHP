@@ -1,4 +1,4 @@
-import { ip3 } from '@/utils/constants';
+import { ip3 } from '@/utils/ip';
 import axios from 'axios';
 
 export async function uploadFile(payload: {

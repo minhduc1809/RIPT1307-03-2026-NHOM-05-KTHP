@@ -1,5 +1,5 @@
 import axios from '@/utils/axios';
-import { ip3 } from '@/utils/constants';
+import { ip3 } from '@/utils/ip';
 
 export async function getTinhS() {
   return axios.get(`${ip3}/don-vi-hanh-chinh/tinh`);

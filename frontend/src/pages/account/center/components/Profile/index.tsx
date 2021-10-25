@@ -1,6 +1,5 @@
 import UploadAvatar from '@/components/Upload/UploadAvatar';
-import { getInfoGV, getInfoSV, putInfoGV, putInfoSV } from '@/services/ant-design-pro/api';
-import type { IInfoSV } from '@/services/ant-design-pro/typings';
+import { getInfo, putInfo } from '@/services/ant-design-pro/api';
 import { getURLImg } from '@/services/LopTinChi/loptinchi';
 import rules from '@/utils/rules';
 import { renderFileListUrl } from '@/utils/utils';
@@ -15,7 +14,7 @@ mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 interface BaseViewProps {
   dispatch: Dispatch;
-  currentUser?: IInfoSV.Data | IInfoSV.Data;
+  currentUser?: Login.Profile;
   loading: boolean;
 }
 
@@ -40,8 +39,8 @@ class BaseView extends Component<BaseViewProps> {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleFinish = async (val: any) => {
-    const { currentUser, dispatch } = this.props;
-    let response;
+    const { dispatch } = this.props;
+
     let avatar_path = '';
     if (val.avatar_path.fileList?.[0]?.originFileObj) {
       const responseUpload = await getURLImg({
@@ -51,21 +50,13 @@ class BaseView extends Component<BaseViewProps> {
       });
       avatar_path = responseUpload?.data?.data?.url;
     } else avatar_path = val.avatar_path.fileList?.[0]?.url;
-    if (currentUser?.vai_tro === 'sinh_vien') {
-      response = await putInfoSV({
-        ...val,
-        avatar_path,
-        ngay_sinh: val?.ngay_sinh?.format('YYYY-MM-DD'),
-      });
-      getInfoSV();
-    } else if (currentUser?.vai_tro === 'giang_vien') {
-      response = await putInfoGV({
-        ...val,
-        avatar_path,
-        ngay_sinh: val?.ngay_sinh?.format('YYYY-MM-DD'),
-      });
-      getInfoGV();
-    }
+    const response = await putInfo({
+      ...val,
+      avatar_path,
+      ngay_sinh: val?.ngay_sinh?.format('YYYY-MM-DD'),
+    });
+    getInfo();
+
     dispatch({
       type: 'accountAndcenter/fetchCurrent',
     });
@@ -126,8 +117,8 @@ class BaseView extends Component<BaseViewProps> {
                 </Col>
               </Row> */}
               <Form.Item
-                initialValue={currentUser?.email_dang_nhap || ''}
-                name="email_dang_nhap"
+                initialValue={currentUser?.email || ''}
+                name="email"
                 label="Email"
                 rules={[...rules.email]}
               >
@@ -142,8 +133,8 @@ class BaseView extends Component<BaseViewProps> {
                 <Input placeholder="Số điện thoại" />
               </Form.Item>
               <Form.Item
-                initialValue={currentUser?.dia_chi_hien_nay || ''}
-                name="dia_chi_hien_nay"
+                initialValue={currentUser?.so_nha_ten_duong_no || ''}
+                name="so_nha_ten_duong_no"
                 label="Địa chỉ hiện nay"
               >
                 <Input.TextArea rows={3} placeholder="Địa chỉ hiện nay" />

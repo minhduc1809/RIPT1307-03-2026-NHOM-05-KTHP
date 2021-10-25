@@ -1,5 +1,5 @@
 import axios from '@/utils/axios';
-import { ip3 } from '@/utils/constants';
+import { ip3 } from '@/utils/ip';
 
 const url = 'thu-muc-van-ban';
 

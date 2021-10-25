@@ -1,5 +1,5 @@
 import axios from '@/utils/axios';
-import { ip3 } from '@/utils/constants';
+import { ip3 } from '@/utils/ip';
 
 export async function getDanToc() {
   return axios.get(`${ip3}/dan-toc-ton-giao/dan-toc`);

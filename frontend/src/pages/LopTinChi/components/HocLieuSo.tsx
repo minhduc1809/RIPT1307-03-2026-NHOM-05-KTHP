@@ -1,5 +1,5 @@
 import logo from '@/assets/logo.png';
-import { ip } from '@/utils/constants';
+import { ip } from '@/utils/ip';
 import { Button, Descriptions, List } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';

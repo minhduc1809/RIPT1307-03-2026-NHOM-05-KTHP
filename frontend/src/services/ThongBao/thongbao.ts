@@ -1,5 +1,5 @@
 import axios from '@/utils/axios';
-import { ip3 } from '@/utils/constants';
+import { ip3 } from '@/utils/ip';
 
 export async function getThongBaoAdmin(payload: { page: number; limit: number; condition?: any }) {
   return axios.get(`${ip3}/notification/pageable`, { params: payload });

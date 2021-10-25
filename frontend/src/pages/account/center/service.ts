@@ -1,4 +1,4 @@
-import { ip3 } from '@/utils/constants';
+import { ip3 } from '@/utils/ip';
 import request from 'umi-request';
 
 export async function queryCurrent() {

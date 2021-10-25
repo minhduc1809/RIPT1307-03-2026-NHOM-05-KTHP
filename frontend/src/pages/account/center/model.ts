@@ -1,10 +1,11 @@
-import type { IInfoGV, IInfoSV } from '@/services/ant-design-pro/typings';
+import { getInfo } from '@/services/ant-design-pro/api';
+
 import type { Effect, Reducer } from 'umi';
 import type { ListItemDataType } from './data.d';
-import { queryCurrent, queryFakeList } from './service';
+import { queryFakeList } from './service';
 
 export interface ModalState {
-  currentUser: Partial<IInfoSV.Data | IInfoGV.Data>;
+  currentUser: Partial<Login.Profile>;
   list: ListItemDataType[];
 }
 
@@ -31,10 +32,10 @@ const Model: ModelType = {
 
   effects: {
     *fetchCurrent(_, { call, put }) {
-      const response = yield call(queryCurrent);
+      const response = yield call(getInfo);
       yield put({
         type: 'saveCurrentUser',
-        payload: response?.data ?? {},
+        payload: response?.data?.data ?? {},
       });
     },
     *fetch({ payload }, { call, put }) {
