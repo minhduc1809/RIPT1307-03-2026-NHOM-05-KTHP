@@ -66,7 +66,11 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   if (!currentUser) {
     return loading;
   }
-  const accessTokens = JSON.parse(localStorage?.getItem('accessTokens') ?? '');
+
+  const accessTokens = localStorage?.getItem('accessTokens')
+    ? JSON.parse(localStorage?.getItem('accessTokens') ?? '')
+    : [];
+
   const vaiTro = localStorage.getItem('vaiTro');
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>

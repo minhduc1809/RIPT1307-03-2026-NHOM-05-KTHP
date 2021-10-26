@@ -266,6 +266,21 @@ export default defineConfig({
       component: './ThongBao',
       access: 'admin',
     },
+    // {
+    //   name: 'PhanQuyen',
+    //   icon: 'notification',
+    //   path: '/phanquyen',
+    //   // component: './ThongBao',
+    //   access: 'admin',
+    //   routes: [
+    //     {
+    //       name: 'ChucNangNhomVaiTro',
+    //       icon: 'smile',
+    //       path: './chucnangvanhomvaitro',
+    //       access: 'admin',
+    //     },
+    //   ],
+    // },
     {
       hideInMenu: true,
       icon: 'team',
