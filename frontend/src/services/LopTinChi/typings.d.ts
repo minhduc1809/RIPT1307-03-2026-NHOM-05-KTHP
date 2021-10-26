@@ -7,20 +7,11 @@ export declare module LopTinChi {
     mon_hoc_ids: [number, string];
   }
 
-  export interface GiangVienRecord {
-    id: number;
-    TenDayDu: string;
-    lop_tin_chi_ids: number[];
-    so_cmnd: boolean;
-    anhDaiDien: string;
-    soDienThoai: string;
-  }
-
   export interface KetQuaHocTap {
     id: number;
     sinh_vien_id: (number | string)[];
-    ma_sv: string;
-    TenDayDu: string;
+    ma_dinh_danh: string;
+    name: string;
     diem_attendance: number;
     diem_bai_tap: number;
     diem_trung_binh_kiem_tra_tren_lop: number;
@@ -29,19 +20,9 @@ export declare module LopTinChi {
     diem_tong_ket: number;
   }
 
-  export interface SinhVienRecord {
-    ma_sv: string;
-    id: number;
-    TenDayDu: string;
-    anhDaiDien: string;
-    soDienThoai: string;
-    image_path: string;
-    gioi_tinh: number;
-  }
-
   export interface ThongTinChungLopTinChiRecord {
-    giangVien: GiangVienRecord;
-    sinhVienList: SinhVienRecord[];
+    giangVien: Login.Profile;
+    sinhVienList: Login.Profile[];
   }
 
   export interface InfoMonHoc {

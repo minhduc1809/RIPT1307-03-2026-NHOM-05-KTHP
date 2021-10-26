@@ -47,7 +47,7 @@ const LopHanhChinhAdmin = () => {
     },
     {
       title: 'Hình thức đào tạo',
-      dataIndex: 'hinh_thuc_dao_tao_moi',
+      dataIndex: 'hinh_thuc_dao_tao_id',
       width: 200,
       align: 'center',
       render: (val) => <div>{val?.[1] ?? ''}</div>,

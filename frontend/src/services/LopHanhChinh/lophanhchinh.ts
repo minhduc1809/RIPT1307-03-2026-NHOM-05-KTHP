@@ -35,5 +35,5 @@ export async function getLopHanhChinhAdmin(payload: {
  */
 
 export async function getDSSVLopHanhChinh(idLop: number) {
-  return axios.get(`${ip3}/odoo-lop-hanh-chinh/${idLop}/giang-vien/sv`);
+  return axios.get(`${ip3}/odoo-lop-hanh-chinh/${idLop}/can-bo/sv`);
 }

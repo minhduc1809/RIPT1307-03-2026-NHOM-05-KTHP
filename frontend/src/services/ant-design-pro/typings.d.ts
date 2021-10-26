@@ -9,6 +9,7 @@ declare module Login {
   }
 
   export interface Profile {
+    ma_dinh_danh: string;
     id: number;
     avatar_path: string;
     name: string;

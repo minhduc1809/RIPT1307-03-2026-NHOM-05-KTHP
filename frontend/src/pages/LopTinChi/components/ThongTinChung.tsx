@@ -1,5 +1,6 @@
 import teacherIcon from '@/assets/teacher.png';
 import { Avatar, Card, Descriptions, List, Tabs } from 'antd';
+import type { Key } from 'react';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import DanhSachSinhVien from './DanhSachSinhVien';
@@ -31,10 +32,10 @@ const ThongTinChung = (props: { id: number; isGiangVien: boolean }) => {
   useEffect(() => {
     getDanhSachSinhVienByIdNhomLopModel();
   }, [idNhomLop]);
-  const { giangVien, sinhVienList } = thongTinChung;
+
   return (
     <Card>
-      <Descriptions title={`Sĩ số: ${sinhVienList?.length ?? 0} sinh viên`} />
+      <Descriptions title={`Sĩ số: ${thongTinChung?.sinhVienList?.length ?? 0} sinh viên`} />
 
       {!isGiangVien && (
         <>
@@ -49,21 +50,21 @@ const ThongTinChung = (props: { id: number; isGiangVien: boolean }) => {
               xxl: 4,
             }}
             itemLayout="horizontal"
-            dataSource={[giangVien || {}]}
+            dataSource={[thongTinChung?.giangVien ?? {}]}
             renderItem={(item) => (
               <List.Item>
                 <List.Item.Meta
-                  avatar={<Avatar src={item?.anhDaiDien ?? teacherIcon} />}
+                  avatar={<Avatar src={item?.avatar_path || teacherIcon} />}
                   title={
                     <div>
                       <b>Họ và tên: </b>
-                      {item?.TenDayDu ?? 'Chưa cập nhật'}
+                      {item?.name || 'Chưa cập nhật'}
                     </div>
                   }
                   description={
                     <div>
                       <b>Số điện thoại: </b>
-                      {item?.soDienThoai ?? 'Chưa cập nhật'}
+                      {item?.so_dien_thoai || 'Chưa cập nhật'}
                     </div>
                   }
                 />
@@ -80,9 +81,9 @@ const ThongTinChung = (props: { id: number; isGiangVien: boolean }) => {
         }}
       >
         <Tabs.TabPane tab="Tất cả sinh viên" key={-1}>
-          <DanhSachSinhVien loading={loading} data={sinhVienList} />
+          <DanhSachSinhVien loading={loading} data={thongTinChung?.sinhVienList ?? []} />
         </Tabs.TabPane>
-        {danhSachNhomLop?.map((item) => (
+        {danhSachNhomLop?.map((item: { so_thu_tu_nhom: any; id: Key | null | undefined }) => (
           <Tabs.TabPane tab={`Nhóm ${item.so_thu_tu_nhom}`} key={item.id}>
             <DanhSachSinhVien loading={loading} data={danhSachSinhVien} />
           </Tabs.TabPane>

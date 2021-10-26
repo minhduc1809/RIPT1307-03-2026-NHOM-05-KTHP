@@ -15,7 +15,12 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import ViewThongBao from './ViewThongBao';
 
-const ThongBao = (props: { id: number; isGiangVien: boolean; typeLop: string }) => {
+const ThongBao = (props: {
+  id: number;
+  isCanBo?: boolean;
+  typeLop: string;
+  isGiangVien?: boolean;
+}) => {
   const [visibleDrawer, setVisibleDrawer] = useState<boolean>(false);
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
@@ -37,14 +42,14 @@ const ThongBao = (props: { id: number; isGiangVien: boolean; typeLop: string }) 
           })
         : await getThongBaoLopHanhChinhById({
             idLop: props.id,
-            role: props.isGiangVien ? 'giang-vien' : 'sinh-vien',
+            role: props.isCanBo ? 'can-bo' : 'sinh-vien',
             data: { page, limit },
           });
     setdataThongBao(res?.data?.data?.result);
   };
   useEffect(() => {
     getData();
-  }, [props?.id, props.isGiangVien, state, page, limit]);
+  }, [props?.id, props.isCanBo, state, page, limit]);
 
   const dsThongBao = dataThongBao?.map((value, index) => ({
     ...value,
@@ -108,7 +113,7 @@ const ThongBao = (props: { id: number; isGiangVien: boolean; typeLop: string }) 
   ];
   return (
     <>
-      <ProTable<IResThongBaoLopTinChi.Result, API.PageParams>
+      <ProTable<IResThongBaoLopTinChi.Result, API.ApiResponse>
         pagination={{
           showTotal: () => <div></div>,
           pageSize: limit,
@@ -122,7 +127,7 @@ const ThongBao = (props: { id: number; isGiangVien: boolean; typeLop: string }) 
         dataSource={dsThongBao ?? []}
         search={false}
         toolBarRender={() =>
-          props.isGiangVien
+          props.isCanBo || props.isGiangVien
             ? [
                 <Button
                   onClick={() => {

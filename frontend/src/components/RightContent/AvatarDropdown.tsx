@@ -1,8 +1,10 @@
 import logo from '@/assets/logo.png';
-import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Menu, Spin } from 'antd';
+import SelectRoles from '@/pages/user/Login/SelectRole';
+import { Role } from '@/utils/constants';
+import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Button, Menu, Modal, Spin } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { history, useModel } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
@@ -23,7 +25,7 @@ const loginOut = async () => {
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
-
+  const [visibleRole, setVisibleRole] = useState<boolean>(false);
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
       const { key } = event;
@@ -31,7 +33,12 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         setInitialState({ ...initialState, currentUser: undefined });
         localStorage.removeItem('vaiTro');
         localStorage.removeItem('token');
+        localStorage.removeItem('accessTokens');
         loginOut();
+        return;
+      }
+      if (key === 'settings' && initialState) {
+        setVisibleRole(true);
         return;
       }
       history.push(`/account/${key}`);
@@ -59,6 +66,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   if (!currentUser) {
     return loading;
   }
+  const accessTokens = JSON.parse(localStorage?.getItem('accessTokens') ?? '');
+  const vaiTro = localStorage.getItem('vaiTro');
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       {menu && localStorage.getItem('vaiTro') !== 'Admin' && (
@@ -67,14 +76,17 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
           Trang cá nhân
         </Menu.Item>
       )}
-      {/* {menu && (
-        <Menu.Item key="settings">
-          <SettingOutlined />
-          Cài đặt
-        </Menu.Item>
-      )} */}
-      {menu && localStorage.getItem('vaiTro') !== 'Admin' && <Menu.Divider />}
 
+      {menu && localStorage.getItem('vaiTro') !== 'Admin' && <Menu.Divider />}
+      {accessTokens?.length > 1 && (
+        <>
+          <Menu.Item key="settings">
+            <SettingOutlined />
+            Đổi vai trò
+          </Menu.Item>
+          <Menu.Divider />
+        </>
+      )}
       <Menu.Item key="logout">
         <LogoutOutlined />
         Đăng xuất
@@ -82,26 +94,57 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     </Menu>
   );
   return (
-    <HeaderDropdown overlay={menuHeaderDropdown}>
-      <span className={`${styles.action} ${styles.account}`}>
-        <Avatar
-          size="small"
-          className={styles.avatar}
-          src={
-            <img
-              style={
-                currentUser?.avatar_path ? {} : { objectFit: 'cover', maxWidth: 18, maxHeight: 22 }
-              }
-              src={currentUser.avatar_path || logo}
-            />
-          }
-          alt="avatar"
-        />
-        <span className={`${styles.name} anticon`}>
-          {currentUser?.name || currentUser?.profile?.lastname || ''}
+    <>
+      <HeaderDropdown overlay={menuHeaderDropdown}>
+        <span className={`${styles.action} ${styles.account}`}>
+          <Avatar
+            size="small"
+            className={styles.avatar}
+            src={
+              <img
+                style={
+                  currentUser?.avatar_path
+                    ? {}
+                    : { objectFit: 'cover', maxWidth: 18, maxHeight: 22 }
+                }
+                src={currentUser.avatar_path || logo}
+              />
+            }
+            alt="avatar"
+          />
+          <span className={`${styles.name} anticon`}>
+            {currentUser?.name || currentUser?.profile?.lastname || ''}{' '}
+            {accessTokens?.length > 1 ? `(${Role[vaiTro || '']})` : ''}
+          </span>
         </span>
-      </span>
-    </HeaderDropdown>
+      </HeaderDropdown>
+      <Modal
+        footer={
+          <Button
+            type="primary"
+            onClick={() => {
+              setVisibleRole(false);
+            }}
+          >
+            Hủy
+          </Button>
+        }
+        width="400px"
+        onCancel={() => {
+          setVisibleRole(false);
+        }}
+        visible={visibleRole}
+        title="Chọn vai trò"
+      >
+        <SelectRoles
+          type="changeRole"
+          roles={accessTokens}
+          onClose={() => {
+            setVisibleRole(false);
+          }}
+        />
+      </Modal>
+    </>
   );
 };
 

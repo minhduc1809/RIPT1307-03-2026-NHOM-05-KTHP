@@ -1,15 +1,14 @@
 import Footer from '@/components/Footer';
 import { getInfo, login } from '@/services/ant-design-pro/api';
-import { Role } from '@/utils/constants';
+import data from '@/utils/data';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
-import { Avatar, Card, ConfigProvider, List, message, Modal, Tabs } from 'antd';
+import { Button, ConfigProvider, message, Modal, Tabs } from 'antd';
 import viVN from 'antd/lib/locale/vi_VN';
 import React, { useState } from 'react';
 import { FormattedMessage, history, Link, useIntl, useModel } from 'umi';
 import styles from './index.less';
-import logo from '@/assets/logo.png';
-import data from '@/utils/data';
+import SelectRoles from './SelectRole';
 
 const goto = () => {
   if (!history) return;
@@ -29,13 +28,34 @@ const Login: React.FC = () => {
 
   const intl = useIntl();
 
+  const handleRole = async (role: { token: string; vai_tro: string }) => {
+    const defaultloginSuccessMessage = intl.formatMessage({
+      id: 'pages.login.success',
+      defaultMessage: 'success',
+    });
+    localStorage.setItem('token', role?.token);
+    localStorage.setItem('vaiTro', role?.vai_tro);
+    const info = await getInfo();
+    setInitialState({
+      ...initialState,
+      currentUser: info?.data?.data ?? {},
+    });
+    message.success(defaultloginSuccessMessage);
+    history.push(data?.path?.[role?.vai_tro] ?? '/');
+  };
+
   const handleSubmit = async (values: { login: string; password: string }) => {
     setSubmitting(true);
     try {
       const msg = await login({ ...values });
       if (msg.status === 201 && msg?.data?.data?.accessTokens?.length > 0) {
-        setVisibleRole(true);
-        setArrRole(msg?.data?.data?.accessTokens ?? []);
+        if (msg?.data?.data?.accessTokens?.length === 1) {
+          handleRole(msg?.data?.data?.accessTokens?.[0]);
+        } else {
+          localStorage.setItem('accessTokens', JSON.stringify(msg?.data?.data?.accessTokens ?? []));
+          setVisibleRole(true);
+          setArrRole(msg?.data?.data?.accessTokens ?? []);
+        }
       }
     } catch (error) {
       const defaultloginFailureMessage = intl.formatMessage({
@@ -148,48 +168,30 @@ const Login: React.FC = () => {
             </ProForm>
           </div>
           <Modal
+            footer={
+              <Button
+                type="primary"
+                onClick={() => {
+                  setVisibleRole(false);
+                  localStorage.removeItem('token');
+                  localStorage.removeItem('vaiTro');
+                  localStorage.removeItem('accessTokens');
+                }}
+              >
+                Hủy
+              </Button>
+            }
             width="400px"
-            onCancel={() => setVisibleRole(false)}
+            onCancel={() => {
+              setVisibleRole(false);
+              localStorage.removeItem('token');
+              localStorage.removeItem('vaiTro');
+              localStorage.removeItem('accessTokens');
+            }}
             visible={visibleRole}
             title="Chọn vai trò"
           >
-            <List
-              itemLayout="horizontal"
-              dataSource={arrRole}
-              renderItem={(item) => (
-                <>
-                  <Card
-                    onClick={async () => {
-                      const defaultloginSuccessMessage = intl.formatMessage({
-                        id: 'pages.login.success',
-                        defaultMessage: 'success',
-                      });
-                      localStorage.setItem('token', item?.token);
-                      localStorage.setItem('vaiTro', item?.vai_tro);
-                      const info = await getInfo();
-                      setInitialState({
-                        ...initialState,
-                        currentUser: info?.data?.data ?? {},
-                      });
-                      message.success(defaultloginSuccessMessage);
-                      history.push(data?.path?.[item?.vai_tro] ?? '/');
-                    }}
-                    hoverable
-                  >
-                    <List.Item>
-                      <List.Item.Meta
-                        avatar={
-                          <Avatar style={{ width: 30, height: 40 }} shape="square" src={logo} />
-                        }
-                        title={<a>{Role[item.vai_tro]}</a>}
-                        description={`Đăng nhập với vai trò ${Role[item.vai_tro]}`}
-                      />
-                    </List.Item>{' '}
-                  </Card>
-                  <br />
-                </>
-              )}
-            />
+            <SelectRoles roles={arrRole} type="login" />
           </Modal>
         </ConfigProvider>
       </div>

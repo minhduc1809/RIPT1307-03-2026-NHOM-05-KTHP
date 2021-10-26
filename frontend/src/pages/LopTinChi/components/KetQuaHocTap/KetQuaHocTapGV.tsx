@@ -41,14 +41,14 @@ const KetQuaHocTapGV = (props: { id: number }) => {
     },
     {
       title: 'Họ tên',
-      dataIndex: 'TenDayDu',
+      dataIndex: 'name',
       align: 'center',
       search: 'search',
       // width: 200,
     },
     {
       title: 'Mã sinh viên',
-      dataIndex: 'ma_sv',
+      dataIndex: 'ma_dinh_danh',
       align: 'center',
       width: 150,
       search: 'search',
@@ -60,7 +60,7 @@ const KetQuaHocTapGV = (props: { id: number }) => {
       width: 140,
       render: (val, record) => {
         return edit ? (
-          renderInput([record.ma_sv, 'diem_attendance'], record.diem_attendance)
+          renderInput([record.ma_dinh_danh, 'diem_attendance'], record.diem_attendance)
         ) : (
           <div>{val}</div>
         );
@@ -73,7 +73,7 @@ const KetQuaHocTapGV = (props: { id: number }) => {
       width: 140,
       render: (val, record) => {
         return edit ? (
-          renderInput([record.ma_sv, 'diem_bai_tap'], record.diem_bai_tap)
+          renderInput([record.ma_dinh_danh, 'diem_bai_tap'], record.diem_bai_tap)
         ) : (
           <div>{val}</div>
         );
@@ -88,7 +88,7 @@ const KetQuaHocTapGV = (props: { id: number }) => {
       render: (val, record) => {
         return edit ? (
           renderInput(
-            [record.ma_sv, 'diem_trung_binh_kiem_tra_tren_lop'],
+            [record.ma_dinh_danh, 'diem_trung_binh_kiem_tra_tren_lop'],
             record.diem_trung_binh_kiem_tra_tren_lop,
           )
         ) : (
@@ -103,7 +103,7 @@ const KetQuaHocTapGV = (props: { id: number }) => {
       width: 140,
       render: (val, record) => {
         return edit ? (
-          renderInput([record.ma_sv, 'diem_thi_nghiem'], record.diem_thi_nghiem)
+          renderInput([record.ma_dinh_danh, 'diem_thi_nghiem'], record.diem_thi_nghiem)
         ) : (
           <div>{val}</div>
         );
@@ -116,7 +116,7 @@ const KetQuaHocTapGV = (props: { id: number }) => {
       width: 140,
       render: (val, record) => {
         return edit ? (
-          renderInput([record.ma_sv, 'diem_cuoi_ky'], record.diem_cuoi_ky)
+          renderInput([record.ma_dinh_danh, 'diem_cuoi_ky'], record.diem_cuoi_ky)
         ) : (
           <div>{val}</div>
         );
@@ -131,7 +131,7 @@ const KetQuaHocTapGV = (props: { id: number }) => {
         const danhSachKetQua: LopTinChi.KetQuaHocTap[] = danhSachKetQuaHocTap?.map((item) => {
           return {
             sinh_vien_id: item?.sinh_vien_id?.[0],
-            ...values?.[item.ma_sv],
+            ...values?.[item.ma_dinh_danh],
           };
         });
         giangVienPutKetQuaHocTapByIdLopTinChiModel(Number(props.id), { danhSachKetQua });

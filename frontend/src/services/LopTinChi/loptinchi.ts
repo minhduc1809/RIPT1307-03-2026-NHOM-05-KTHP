@@ -51,7 +51,7 @@ export async function addThongBao(payload: { idLop: any; newValues: any }) {
 
 export async function addThongBaoLopHanhChinh(payload: { idLop: number; newValues: any }) {
   const { idLop, newValues } = payload;
-  return axios.post(`${ip3}/odoo-lop-hanh-chinh/${idLop}/giang-vien/notification`, {
+  return axios.post(`${ip3}/odoo-lop-hanh-chinh/${idLop}/can-bo/notification`, {
     ...newValues,
   });
 }

@@ -1,24 +1,14 @@
-import type { IInfoGV } from '../ant-design-pro/typings';
-
 export declare module APILopHanhChinh {
-  export interface DanhSachSinhVien {
-    ma_sv: string;
-    anhDaiDien: any;
-    id: number;
-    TenDayDu: string;
-    Phai: boolean;
-    NgaySinhC: boolean;
-  }
-
   export interface Data {
     id: number;
     ten_lop_hanh_chinh?: string;
     khoi_lop_id?: any[];
     nganh?: any[];
     chuyen_nganh?: boolean;
-    giangVien: IInfoGV;
+    canBo: Login.Profile;
+    can_bo_id: (string | number)[];
     si_so?: number;
-    danhSachSinhVien?: DanhSachSinhVien[];
+    danhSachSinhVien?: Login.Profile[];
   }
 
   export interface HinhThucDaoTao {
@@ -36,11 +26,11 @@ export declare module APILopHanhChinh {
     id: number;
     nganh: number | string[];
     chuyen_nganh: string;
-    giang_vien_id: number | string[];
+    can_bo_id: number | string[];
     khoi_lop_id: number | string[];
     si_so: number;
     ten_lop_hanh_chinh: string;
-    hinh_thuc_dao_tao_moi: number | string[];
+    hinh_thuc_dao_tao_id: (number | string)[];
     co_so_dao_tao_moi: number | string[];
   }
 

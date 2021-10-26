@@ -8,7 +8,6 @@ import mm from 'moment-timezone';
 import { Component } from 'react';
 import type { Dispatch } from 'umi';
 import { connect } from 'umi';
-import type { CurrentUser } from '../../data';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
@@ -176,7 +175,7 @@ export default connect(
     accountAndcenter,
     loading,
   }: {
-    accountAndcenter: { currentUser: CurrentUser };
+    accountAndcenter: { currentUser: Login.Profile };
     loading: { effects: Record<string, boolean> };
   }) => ({
     currentUser: accountAndcenter.currentUser,

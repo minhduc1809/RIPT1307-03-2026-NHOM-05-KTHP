@@ -11,7 +11,7 @@ const DanhSachLopHanhChinhGiangVien = () => {
   const [dataLopHanhChinh, setdataLopHanhChinh] = useState<APILopHanhChinh.Data[]>([]);
   useEffect(() => {
     const getData = async () => {
-      const res = await getDataLopHanhChinh('giang-vien');
+      const res = await getDataLopHanhChinh('can-bo');
       setdataLopHanhChinh(res?.data?.data ?? []);
     };
     getData();

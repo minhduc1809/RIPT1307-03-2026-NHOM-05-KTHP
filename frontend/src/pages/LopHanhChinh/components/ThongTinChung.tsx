@@ -1,13 +1,11 @@
 import studentIcon from '@/assets/student.png';
 import teacherIcon from '@/assets/teacher.png';
-import type { IInfoGV } from '@/services/ant-design-pro/typings';
-import type { APILopHanhChinh } from '@/services/LopHanhChinh';
 import { Descriptions, List } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
 
 const ThongTinChungLopHanhChinh = (props: {
-  danhSachSinhVien: APILopHanhChinh.DanhSachSinhVien[];
-  giangVien?: IInfoGV.Data;
+  danhSachSinhVien: Login.Profile[];
+  giangVien?: Login.Profile;
   siSo: number;
 }) => {
   return (
@@ -28,11 +26,11 @@ const ThongTinChungLopHanhChinh = (props: {
         renderItem={(item) => (
           <List.Item>
             <List.Item.Meta
-              avatar={<Avatar src={item?.image_path || teacherIcon} />}
+              avatar={<Avatar src={item?.avatar_path || teacherIcon} />}
               title={
                 <div>
                   <b>Họ và tên: </b>
-                  {item?.TenDayDu ?? 'Chưa cập nhật'}
+                  {item?.name || 'Chưa cập nhật'}
                 </div>
               }
               description={
@@ -56,21 +54,21 @@ const ThongTinChungLopHanhChinh = (props: {
           xxl: 4,
         }}
         itemLayout="horizontal"
-        dataSource={props.danhSachSinhVien || []}
-        renderItem={(item: APILopHanhChinh.DanhSachSinhVien) => (
+        dataSource={props.danhSachSinhVien}
+        renderItem={(item: Login.Profile) => (
           <List.Item>
             <List.Item.Meta
-              avatar={<Avatar src={item?.anhDaiDien ?? studentIcon} />}
+              avatar={<Avatar src={item?.avatar_path || studentIcon} />}
               title={
                 <div>
                   <b>Họ và tên: </b>
-                  {item?.TenDayDu ?? ''}
+                  {item?.name || ''}
                 </div>
               }
               description={
                 <div>
                   <b>Mã sinh viên: </b>
-                  {item?.ma_sv ?? ''}
+                  {item?.ma_dinh_danh || ''}
                 </div>
               }
             />

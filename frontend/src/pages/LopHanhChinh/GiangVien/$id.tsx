@@ -1,5 +1,4 @@
 import ThongBao from '@/pages/LopTinChi/components/ThongBao';
-import type { APILopHanhChinh } from '@/services/LopHanhChinh';
 import { getDSSVLopHanhChinh } from '@/services/LopHanhChinh/lophanhchinh';
 import { TeamOutlined } from '@ant-design/icons';
 import { Breadcrumb, Card, Tabs } from 'antd';
@@ -18,9 +17,9 @@ const DetailLopHanhChinh = ({
 
   const { initialState } = useModel('@@initialState');
 
-  const isGiangVien = localStorage.getItem('vaiTro') === 'giang_vien';
+  const isCanBo = localStorage.getItem('vaiTro') === 'can_bo';
 
-  const [danhSachSinhVien, setDanhSachSinhVien] = useState<APILopHanhChinh.DanhSachSinhVien[]>([]);
+  const [danhSachSinhVien, setDanhSachSinhVien] = useState<Login.Profile[]>([]);
   useEffect(() => {
     const getData = async () => {
       const res = await getDSSVLopHanhChinh(id);
@@ -45,7 +44,7 @@ const DetailLopHanhChinh = ({
       }
     >
       <Tabs>
-        <Tabs.TabPane tab={isGiangVien ? 'Danh sách sinh viên' : 'Thông tin chung'} key="1">
+        <Tabs.TabPane tab={isCanBo ? 'Danh sách sinh viên' : 'Thông tin chung'} key="1">
           <ThongTinChung
             danhSachSinhVien={danhSachSinhVien}
             siSo={record?.si_so ?? 0}
@@ -54,7 +53,7 @@ const DetailLopHanhChinh = ({
         </Tabs.TabPane>
 
         <Tabs.TabPane tab="Thông báo" key="4">
-          <ThongBao isGiangVien={isGiangVien} id={id} typeLop="LopHanhChinh" />
+          <ThongBao isCanBo={isCanBo} id={id} typeLop="LopHanhChinh" />
         </Tabs.TabPane>
       </Tabs>
     </Card>
