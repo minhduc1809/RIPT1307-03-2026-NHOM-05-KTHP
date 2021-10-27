@@ -2,7 +2,7 @@ import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
-import { notification } from 'antd';
+import { notification, Tooltip } from 'antd';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
@@ -108,6 +108,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     waterMarkProps: {
       content: initialState?.currentUser?.name,
     },
+    // menuItemRender: (item, dom) => {
+    //   return (
+    //     <Tooltip title={dom}>
+    //       <div>{dom}</div>
+    //     </Tooltip>
+    //   );
+    // },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;

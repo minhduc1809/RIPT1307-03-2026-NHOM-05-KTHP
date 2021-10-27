@@ -22,18 +22,23 @@ declare module DangKyTinChi {
     hocPhanId: number;
     idLopTinChi: number;
     soThuTuLop: number;
-    idNhomLopTinChi: number;
     soThuTuNhom: number;
+    soTinChi: number;
+    maHocPhan: string;
+    idNhomLopTinChi: number;
   }
 
   export interface LopTinChi {
     tenGiangVien: string;
     soThuTuLop: number;
+    soThuTuNhomLop?: number;
     idLop: number;
+    idNhomLop: number | [];
     tongSoSinhVienLop: number;
     siSoLop: number;
+    siSoNhomLop: number;
     soLuongNhom: number;
-    maHoaLichHoc: string;
+    maHoaLichHoc: LichHoc[];
   }
 
   export interface NhomLopTinChi {

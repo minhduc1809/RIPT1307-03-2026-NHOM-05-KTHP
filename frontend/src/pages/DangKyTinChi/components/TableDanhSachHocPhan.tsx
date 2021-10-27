@@ -24,6 +24,7 @@ const TableDanhSachHocPhan = (props: {
         'Danh sách học phần học vượt',
         'Danh sách học phần học lại',
         'Danh sách học phần học cải thiện',
+        'Danh sách học phần được miễn',
       ].map((tableType) => (
         <Select.Option value={tableType} key={tableType}>
           {tableType}
@@ -34,12 +35,12 @@ const TableDanhSachHocPhan = (props: {
 
   return (
     <>
-      {type === 'Tất cả các học phần' && (
+      {/* {type === 'Tất cả các học phần' && (
         <>
           <br />
           {renderSelectTableType()}
         </>
-      )}
+      )} */}
       <List
         style={{ paddingRight: 10 }}
         itemLayout="horizontal"
@@ -65,7 +66,7 @@ const TableDanhSachHocPhan = (props: {
                         },
                       },
               }}
-              title={type === 'Tất cả các học phần' ? <b>{item.title}</b> : renderSelectTableType()}
+              title={renderSelectTableType()}
               columns={props.columns}
               data={item.dataSource}
             />

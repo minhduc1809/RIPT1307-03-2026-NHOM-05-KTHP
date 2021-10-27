@@ -124,10 +124,10 @@ export default () => {
       setLoading(false);
       return;
     }
-    setLoading(true);
+    // setLoading(true);
     const response = await getDSLopTinChiByIdDotAndIdMonHoc(recordDotTinChi.id, idMonHoc);
     setDanhSachLopTinChi(response?.data?.data ?? []);
-    setLoading(false);
+    // setLoading(false);
   };
 
   const getDSNhomLopTinChiByIdLopModel = async (idLopTinChi: number) => {

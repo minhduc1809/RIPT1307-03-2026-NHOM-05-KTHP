@@ -2,20 +2,15 @@ import type { IColumn } from '@/utils/interfaces';
 import { currencyFormat } from '@/utils/utils';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Col, Divider, Result, Row, Table } from 'antd';
-import type { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import InfoDot from './InfoDot';
 import TableDanhSachHocPhan from './TableDanhSachHocPhan';
 import TableDanhSachHocPhanDaChon from './TableDanhSachHocPhanDaChon';
-import TableTemp from '@/components/Table/Table';
 
 interface LopDaChon extends DangKyTinChi.LopTinChi, DangKyTinChi.MonHoc {
-  idNhomLop?: number;
-  soThuTuNhomLop?: number;
   tongSoSinhVienNhomLop?: number;
-  siSoNhomLop?: number;
   loaiNhom?: string;
 }
 
@@ -34,13 +29,10 @@ const TinChi = (props: {
     getDSLopDaDangKyByIdDotModel,
     getThongTinKyHocModel,
     getDSLopTinChiByIdDotAndIdMonHocModel,
-    getDSNhomLopTinChiByIdLopModel,
     setDanhSachLopTinChi,
     danhSachLopTinChi,
     loading,
     danhSachLopDaDangKy,
-    danhSachNhomLopTinChi,
-    setDanhSachNhomLopTinChi,
   } = useModel('dangkytinchi');
 
   const { record } = useModel('kyhoc');
@@ -48,9 +40,6 @@ const TinChi = (props: {
     {} as DangKyTinChi.MonHoc,
   );
 
-  const [recordLopCurrent, setRecordLopCurrent] = useState<DangKyTinChi.LopTinChi>(
-    {} as DangKyTinChi.LopTinChi,
-  );
   const [danhSachLopDaChon, setDanhSachLopDaChon] = useState<LopDaChon[]>([]);
   let tongSoTinChi = 0;
   let tongHocPhi = 0;
@@ -61,67 +50,12 @@ const TinChi = (props: {
     tongSoTinChi += item.soTinChi;
     tongHocPhi += item.hocPhi;
   });
-  const onSelectLopTinChi = async (
-    value: CheckboxChangeEvent,
-    recordLopTinChi: DangKyTinChi.LopTinChi,
-  ) => {
-    if (value.target.checked) {
-      const dsNhomLop = await getDSNhomLopTinChiByIdLopModel(recordLopTinChi.idLop);
-      const lopDaChonCuaHocPhanHienTai = danhSachLopDaChon?.find(
-        (item) => item.idHocPhan === recordHocPhanCurrent.idHocPhan,
-      );
-      if (dsNhomLop?.length === 0) {
-        setDanhSachLopDaChon([
-          ...danhSachLopDaChon?.filter((item) => item.idLop !== lopDaChonCuaHocPhanHienTai?.idLop),
-          { ...recordLopTinChi, ...recordHocPhanCurrent },
-        ]);
-      }
-
-      setRecordLopCurrent(recordLopTinChi);
-    } else {
-      setDanhSachLopDaChon(
-        danhSachLopDaChon?.filter((item) => item.idLop !== recordLopTinChi.idLop),
-      );
-      setRecordLopCurrent({} as DangKyTinChi.LopTinChi);
-      setDanhSachNhomLopTinChi([]);
-    }
-  };
-
-  const onSelectNhomLopTinChi = async (
-    value: CheckboxChangeEvent,
-    recordNhomLopTinChi: DangKyTinChi.NhomLopTinChi,
-  ) => {
-    if (value.target.checked) {
-      const lopDaChonCuaHocPhanHienTai = danhSachLopDaChon?.find(
-        (item) => item.idHocPhan === recordHocPhanCurrent.idHocPhan,
-      );
-      setDanhSachLopDaChon([
-        ...danhSachLopDaChon?.filter((item) => item.idLop !== lopDaChonCuaHocPhanHienTai?.idLop),
-        { ...recordNhomLopTinChi, ...recordLopCurrent, ...recordHocPhanCurrent },
-      ]);
-    } else {
-      setDanhSachLopDaChon(
-        danhSachLopDaChon.filter((item) => item.idNhomLop !== recordNhomLopTinChi.idNhomLop),
-      );
-    }
-  };
 
   const onCell = (recordHP: DangKyTinChi.MonHoc) => ({
     onClick: async () => {
-      setDanhSachNhomLopTinChi([]);
       setDanhSachLopTinChi([]);
       setRecordHocPhanCurrent(recordHP);
       getDSLopTinChiByIdDotAndIdMonHocModel(recordHP.idHocPhan);
-      const recordLopDaChon = danhSachLopDaChon?.find(
-        (lop) => lop.idHocPhan === recordHP.idHocPhan,
-      );
-      if (recordLopDaChon?.idLop) {
-        getDSNhomLopTinChiByIdLopModel(recordLopDaChon.idLop);
-      }
-      setRecordLopCurrent(
-        danhSachLopDaChon?.find((lop) => lop.idHocPhan === recordHP.idHocPhan) ??
-          ({} as DangKyTinChi.LopTinChi),
-      );
     },
     style: { cursor: 'pointer' },
   });
@@ -135,6 +69,26 @@ const TinChi = (props: {
       {val}
     </div>
   );
+
+  const onSelectLopTinChi = async (
+    value: { target: { checked: boolean } },
+    recordLopTinChi: DangKyTinChi.LopTinChi,
+  ) => {
+    if (value.target.checked) {
+      const lopDaChonCuaHocPhanHienTai = danhSachLopDaChon?.find(
+        (item) => item.idHocPhan === recordHocPhanCurrent.idHocPhan,
+      );
+
+      setDanhSachLopDaChon([
+        ...danhSachLopDaChon?.filter((item) => item.idLop !== lopDaChonCuaHocPhanHienTai?.idLop),
+        { ...recordLopTinChi, ...recordHocPhanCurrent },
+      ]);
+    } else {
+      setDanhSachLopDaChon(
+        danhSachLopDaChon?.filter((item) => item.idLop !== recordLopTinChi.idLop),
+      );
+    }
+  };
 
   const columns: IColumn<DangKyTinChi.MonHoc>[] = [
     {
@@ -246,19 +200,32 @@ const TinChi = (props: {
       title: 'Danh sách học phần học cải thiện',
       dataSource: props.danhSachHocPhanHocCaiThien,
     },
+    {
+      title: 'Danh sách học phần được miễn',
+      dataSource: props.danhSachHocPhanMien,
+    },
   ];
 
   const columnsLopTinChi: IColumn<DangKyTinChi.LopTinChi>[] = [
     {
       title: 'Đăng ký',
       dataIndex: 'soThuTuKyHoc',
-      render: (val, recordLopTinChi) => (
-        <Checkbox
-          checked={recordLopCurrent.idLop === recordLopTinChi.idLop}
-          // checked={!!danhSachLopDaChon?.find((item) => item.idLop === recordLopTinChi.idLop)}
-          onChange={(value) => onSelectLopTinChi(value, recordLopTinChi)}
-        />
-      ),
+      render: (val, recordLopTinChi) => {
+        return (
+          <Checkbox
+            checked={
+              !!danhSachLopDaChon?.find(
+                (item) =>
+                  item.idLop === recordLopTinChi?.idLop &&
+                  (typeof item.idNhomLop === 'number'
+                    ? item.idNhomLop === recordLopTinChi.idNhomLop
+                    : true),
+              )?.idLop
+            }
+            onChange={(value) => onSelectLopTinChi(value, recordLopTinChi)}
+          />
+        );
+      },
       width: 100,
       align: 'center',
     },
@@ -271,6 +238,12 @@ const TinChi = (props: {
     {
       title: 'Số thứ tự lớp',
       dataIndex: 'soThuTuLop',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: 'Số thứ tự nhóm',
+      dataIndex: 'soThuTuNhomLop',
       align: 'center',
       width: 100,
     },
@@ -302,10 +275,9 @@ const TinChi = (props: {
       title: 'Lịch học',
       dataIndex: 'maHoaLichHoc',
       align: 'center',
-      render: (val: string) => {
+      render: (val: DangKyTinChi.LichHoc[]) => {
         if (!val) return <div>Chưa cập nhật</div>;
-        const objLichHoc: DangKyTinChi.LichHoc[] = JSON.parse(val) || [];
-        return objLichHoc?.map((item, index) => (
+        return val?.map((item, index) => (
           <div key={index}>
             <span>Thứ: {Number(item.thu) !== 6 ? Number(item.thu) + 2 : 'Chủ nhật'}</span>
             <Divider type="vertical" />
@@ -319,69 +291,10 @@ const TinChi = (props: {
     },
   ];
 
-  const columnsNhomLop: IColumn<DangKyTinChi.NhomLopTinChi>[] = [
-    {
-      title: 'Đăng ký',
-      dataIndex: 'soThuTuKyHoc',
-      render: (val, recordNhomLop) => (
-        <Checkbox
-          checked={!!danhSachLopDaChon?.find((item) => item.idNhomLop === recordNhomLop?.idNhomLop)}
-          onChange={(value) => onSelectNhomLopTinChi(value, recordNhomLop)}
-        />
-      ),
-      width: 100,
-      align: 'center',
-    },
-    {
-      title: 'STT nhóm',
-      dataIndex: 'soThuTuNhomLop',
-      align: 'center',
-      width: 200,
-    },
-    {
-      title: 'Tổng số sinh viên',
-      dataIndex: 'tongSoSinhVienNhomLop',
-      align: 'center',
-      width: 200,
-    },
-    {
-      title: 'Sĩ số tối đa',
-      dataIndex: 'siSoNhomLop',
-      align: 'center',
-      width: 200,
-    },
-    {
-      title: 'Loại nhóm',
-      dataIndex: 'loaiNhom',
-      align: 'center',
-      width: 100,
-    },
-    {
-      title: 'Lịch học',
-      dataIndex: 'maHoaLichHoc',
-      align: 'center',
-      render: (val: string) => {
-        if (!val) return <div>Chưa cập nhật</div>;
-        const objLichHoc: DangKyTinChi.LichHoc[] = JSON.parse(val) || [];
-        return objLichHoc?.map((item, index) => (
-          <div key={index}>
-            <span>Thứ: {Number(item.thu) !== 6 ? Number(item.thu) + 2 : 'Chủ nhật'}</span>
-            <Divider type="vertical" />
-            <span>Tiết bắt đầu: {item.tietBatDau}</span>
-            <Divider type="vertical" />
-            <span>Số tiết: {item.soTiet}</span>
-            <div>Danh sách tuần: {item.danhSachTuan}</div>
-          </div>
-        ));
-      },
-    },
-  ];
-
   useEffect(() => {
     getDotDangKyTinChiByKyHocModel(record?.id);
     getThongTinKyHocModel(record?.id);
     return () => {
-      setDanhSachNhomLopTinChi([]);
       setDanhSachLopTinChi([]);
     };
   }, [record?.id]);
@@ -396,15 +309,15 @@ const TinChi = (props: {
         const hocPhan = props?.danhSachTatCaHocPhan?.[i];
         if (lop.hocPhanId === hocPhan?.idHocPhan) {
           danhSach.push({
-            idNhomLop: lop.idNhomLopTinChi,
+            idNhomLop: lop?.idNhomLopTinChi ?? [],
             soThuTuNhomLop: lop.soThuTuNhom === 0 ? undefined : lop.soThuTuNhom,
             tongSoSinhVienNhomLop: 0,
             siSoNhomLop: 0,
             loaiNhom: '',
             idHocPhan: lop.hocPhanId,
-            maMonHoc: hocPhan?.maMonHoc ?? '',
+            maMonHoc: lop.maHocPhan,
             soThuTuKyHoc: 0,
-            soTinChi: hocPhan?.soTinChi ?? 0,
+            soTinChi: lop?.soTinChi ?? 0,
             tenMonHoc: lop.hocPhan,
             hocPhi: hocPhan?.hocPhi ?? 0,
             tenGiangVien: '',
@@ -413,14 +326,14 @@ const TinChi = (props: {
             tongSoSinhVienLop: 0,
             siSoLop: 0,
             soLuongNhom: 0,
-            maHoaLichHoc: '',
+            maHoaLichHoc: [],
           });
           break;
         }
       }
     });
     setDanhSachLopDaChon(danhSach);
-  }, [danhSachLopDaDangKy.length]);
+  }, [danhSachLopDaDangKy]);
   return (
     <div>
       {recordDotTinChi === null && (
@@ -458,31 +371,8 @@ const TinChi = (props: {
                       />
                     </Col>
                   )}
-                  {danhSachNhomLopTinChi?.length > 0 && (
-                    <Col span={24}>
-                      <Table
-                        loading={loading}
-                        pagination={false}
-                        title={() => <b>Danh sách nhóm</b>}
-                        dataSource={danhSachNhomLopTinChi}
-                        columns={columnsNhomLop}
-                      />
-                    </Col>
-                  )}
                 </>
               )}
-              <Col xs={24}>
-                {/* <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}> */}
-                <TableTemp
-                  otherProps={{
-                    pagination: false,
-                  }}
-                  title={<b>Danh sách học phần được miễn</b>}
-                  data={props.danhSachHocPhanMien}
-                  columns={columns?.filter((item) => item.title !== 'Đăng ký')}
-                />{' '}
-                {/* </Scrollbars> */}
-              </Col>
               <Col xs={24}>
                 <TableDanhSachHocPhanDaChon
                   checkTime={checkTimeDangKy}

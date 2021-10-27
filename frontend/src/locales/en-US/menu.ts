@@ -72,5 +72,7 @@ export default {
   'menu.VanBanHuongDanUser': 'Văn bản hướng dẫn',
   'menu.DichVuMotCuaSinhVien.CTCTSV': 'Phòng CTCTSV',
   'menu.DichVuMotCuaSinhVien': 'Dịch vụ một cửa',
+  'menu.PhanQuyen': 'Phân quyền',
+  'menu.PhanQuyen.ChucNangNhomVaiTro': 'Chức năng - Nhóm vai trò',
   'menu.dva-sample': 'Page mẫu dùng DVA',
 };

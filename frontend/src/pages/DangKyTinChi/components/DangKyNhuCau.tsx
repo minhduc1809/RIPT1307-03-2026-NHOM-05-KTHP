@@ -196,19 +196,7 @@ const DangKyNhuCau = (props: {
                   {/* </Scrollbars> */}
                 </Col>
 
-                <Col xs={24} lg={12}>
-                  {/* <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}> */}
-                  <Table
-                    otherProps={{
-                      pagination: false,
-                    }}
-                    title={<b>Danh sách học phần được miễn</b>}
-                    data={props.danhSachHocPhanMien}
-                    columns={columns?.filter((item) => item.title !== 'Đăng ký')}
-                  />{' '}
-                  {/* </Scrollbars> */}
-                </Col>
-                <Col xs={24} lg={12}>
+                <Col xs={24}>
                   {/* <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}> */}
                   <TableDanhSachHocPhanDaChon
                     checkTime={checkTimeDangKy}

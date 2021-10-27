@@ -71,6 +71,8 @@ export default {
   'menu.VanBanHuongDanUser': 'Văn bản hướng dẫn',
   'menu.DichVuMotCuaSinhVien': 'Dịch vụ một cửa',
   'menu.DichVuMotCuaSinhVien.CTCTSV': 'Phòng CTCTSV',
+  'menu.PhanQuyen': 'Phân quyền',
+  'menu.PhanQuyen.ChucNangNhomVaiTro': 'Chức năng - Nhóm vai trò',
   'menu.dva-sample': 'Page mẫu dùng DVA',
   'menu.DangKyTinChi': 'Đăng ký tín chỉ',
 };
