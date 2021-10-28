@@ -268,9 +268,9 @@ export default defineConfig({
     },
     {
       name: 'PhanQuyen',
-      icon: 'notification',
+      icon: 'DeploymentUnitOutlined',
       path: '/phanquyen',
-      // component: './ThongBao',
+
       access: 'admin',
       routes: [
         {
@@ -278,6 +278,7 @@ export default defineConfig({
           icon: 'smile',
           path: './chucnangvanhomvaitro',
           access: 'admin',
+          component: './PhanQuyen',
         },
       ],
     },
@@ -298,16 +299,8 @@ export default defineConfig({
       component: './LopHanhChinh/GiangVien/$id',
     },
     {
-      hideInMenu: true,
-      icon: 'team',
-      exact: true,
-
-      path: '/blank',
-      component: './Blank',
-    },
-    {
       path: '/',
-      redirect: '/blank',
+      redirect: '/user/login',
     },
     {
       component: '404',
@@ -332,7 +325,7 @@ export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
-  // mfsu: {},
+  mfsu: {},
   webpack5: {},
   exportStatic: {},
 });

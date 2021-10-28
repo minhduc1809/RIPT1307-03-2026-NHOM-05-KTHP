@@ -33,7 +33,6 @@ const Login: React.FC = () => {
     setSubmitting(true);
     try {
       const msg = await adminlogin({ ...values });
-
       if (msg.status === 201 && msg?.data?.data?.accessToken) {
         const defaultloginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
@@ -46,14 +45,10 @@ const Login: React.FC = () => {
           ...initialState,
           currentUser: info?.data?.data,
         });
-
         message.success(defaultloginSuccessMessage);
         history.push(data?.path?.[msg?.data?.data?.user?.systemRole] ?? '/');
-
         return;
       }
-      //
-      // setUserLoginState(msg);
     } catch (error) {
       const defaultloginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',

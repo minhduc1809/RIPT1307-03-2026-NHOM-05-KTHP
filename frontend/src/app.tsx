@@ -110,9 +110,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
     // menuItemRender: (item, dom) => {
     //   return (
-    //     <Tooltip title={dom}>
-    //       <div>{dom}</div>
-    //     </Tooltip>
+    //     // <Tooltip title={item.name}>
+    //     <div>{dom}</div>
+    //     // </Tooltip>
     //   );
     // },
     footerRender: () => <Footer />,
@@ -122,13 +122,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       const vaiTro = localStorage.getItem('vaiTro');
       if (!token && location.pathname !== loginPath && !pathAuth.includes(location.pathname)) {
         history.push(loginPath);
-      } else if (
-        vaiTro &&
-        token &&
-        (location.pathname === loginPath || location.pathname === '/blank')
-      ) {
-        history.push(data.path[`${vaiTro}`]);
-        window.location.reload();
+      } else if (initialState?.currentUser && token && location.pathname === loginPath) {
+        history.push(data.path[`${vaiTro || initialState?.currentUser?.systemRole}`]);
       }
     },
     menuHeaderRender: undefined,

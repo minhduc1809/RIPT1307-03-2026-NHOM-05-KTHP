@@ -3,12 +3,11 @@ import { getInfo, login } from '@/services/ant-design-pro/api';
 import data from '@/utils/data';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
-import { Button, ConfigProvider, message, Modal, Tabs } from 'antd';
+import { ConfigProvider, message, Tabs } from 'antd';
 import viVN from 'antd/lib/locale/vi_VN';
 import React, { useState } from 'react';
 import { FormattedMessage, history, Link, useIntl, useModel } from 'umi';
 import styles from './index.less';
-import SelectRoles from './SelectRole';
 
 const goto = () => {
   if (!history) return;
@@ -23,8 +22,8 @@ const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
-  const [visibleRole, setVisibleRole] = useState<boolean>(false);
-  const [arrRole, setArrRole] = useState<{ vai_tro: string; token: string }[]>([]);
+  // const [visibleRole, setVisibleRole] = useState<boolean>(false);
+  // const [arrRole, setArrRole] = useState<{ vai_tro: string; token: string }[]>([]);
 
   const intl = useIntl();
 
@@ -49,13 +48,14 @@ const Login: React.FC = () => {
     try {
       const msg = await login({ ...values });
       if (msg.status === 201 && msg?.data?.data?.accessTokens?.length > 0) {
-        if (msg?.data?.data?.accessTokens?.length === 1) {
-          handleRole(msg?.data?.data?.accessTokens?.[0]);
-        } else {
-          localStorage.setItem('accessTokens', JSON.stringify(msg?.data?.data?.accessTokens ?? []));
-          setVisibleRole(true);
-          setArrRole(msg?.data?.data?.accessTokens ?? []);
-        }
+        // if (msg?.data?.data?.accessTokens?.length === 1) {
+        handleRole(msg?.data?.data?.accessTokens?.[0]);
+        localStorage.setItem('accessTokens', JSON.stringify(msg?.data?.data?.accessTokens ?? []));
+        // } else {
+        //   localStorage.setItem('accessTokens', JSON.stringify(msg?.data?.data?.accessTokens ?? []));
+        //   setVisibleRole(true);
+        //   setArrRole(msg?.data?.data?.accessTokens ?? []);
+        // }
       }
     } catch (error) {
       const defaultloginFailureMessage = intl.formatMessage({
@@ -167,7 +167,7 @@ const Login: React.FC = () => {
               )}
             </ProForm>
           </div>
-          <Modal
+          {/* <Modal
             footer={
               <Button
                 type="primary"
@@ -192,7 +192,7 @@ const Login: React.FC = () => {
             title="Chọn vai trò"
           >
             <SelectRoles roles={arrRole} type="login" />
-          </Modal>
+          </Modal> */}
         </ConfigProvider>
       </div>
       <Footer />

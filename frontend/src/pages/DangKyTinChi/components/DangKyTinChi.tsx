@@ -1,6 +1,7 @@
 import type { IColumn } from '@/utils/interfaces';
 import { currencyFormat } from '@/utils/utils';
 import { ArrowLeftOutlined } from '@ant-design/icons';
+import { values } from '@umijs/deps/compiled/lodash';
 import { Button, Checkbox, Col, Divider, Result, Row, Table } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -242,27 +243,29 @@ const TinChi = (props: {
       width: 100,
     },
     {
+      title: 'Sinh viên đăng ký lớp',
+      dataIndex: 'tongSoSinhVienLop',
+      align: 'center',
+      render: (val, recordLopTinChi) => (
+        <div>
+          {val}/{recordLopTinChi?.siSoLop}
+        </div>
+      ),
+      width: 100,
+    },
+    {
       title: 'Số thứ tự nhóm',
       dataIndex: 'soThuTuNhomLop',
       align: 'center',
       width: 100,
     },
     {
-      title: 'Tổng số sinh viên',
-      dataIndex: 'tongSoSinhVienLop',
+      title: 'Sinh viên đăng ký nhóm',
+      dataIndex: 'tongSoSinhVienNhomLop',
       align: 'center',
-      width: 100,
-    },
-    {
-      title: 'Sĩ số tối đa',
-      dataIndex: 'siSoLop',
-      align: 'center',
-      width: 100,
-    },
-    {
-      title: 'Số lượng nhóm',
-      dataIndex: 'soLuongNhom',
-      align: 'center',
+      render: (val, recordLopTinChi) => (
+        <div> {recordLopTinChi?.idNhomLop ? `${val}/${recordLopTinChi?.siSoNhomLop}` : ''}</div>
+      ),
       width: 100,
     },
     {
