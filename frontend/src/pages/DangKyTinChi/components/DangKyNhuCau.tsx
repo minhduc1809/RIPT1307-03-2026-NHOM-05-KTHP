@@ -1,13 +1,12 @@
 import type { IColumn } from '@/utils/interfaces';
 import { currencyFormat } from '@/utils/utils';
-import { ArrowRightOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, Result, Row } from 'antd';
+import { ArrowRightOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Col, Popconfirm, Result, Row } from 'antd';
 import type { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import InfoDot from './InfoDot';
-import Table from '@/components/Table/Table';
 import TableDanhSachHocPhan from './TableDanhSachHocPhan';
 import TableDanhSachHocPhanDaChon from './TableDanhSachHocPhanDaChon';
 
@@ -47,11 +46,7 @@ const DangKyNhuCau = (props: {
       danhSachIdTemp.push(recordMonHoc.idHocPhan);
       setDanhSachHocPhanDaChon(danhSachTemp);
       setDanhSachIdHocPhanDaChon(danhSachIdTemp);
-      setTongSoTinChi(tongSoTinChi + recordMonHoc.soTinChi);
-      setTongHocPhi(tongHocPhi + recordMonHoc.hocPhi);
     } else {
-      setTongSoTinChi(tongSoTinChi - recordMonHoc.soTinChi);
-      setTongHocPhi(tongHocPhi - recordMonHoc.hocPhi);
       setDanhSachHocPhanDaChon(
         danhSachTemp
           ?.filter((item) => item.idHocPhan !== recordMonHoc.idHocPhan)
@@ -110,6 +105,29 @@ const DangKyNhuCau = (props: {
           {currencyFormat(val)}
         </div>
       ),
+    },
+    {
+      title: 'Thao tác',
+      width: 80,
+      align: 'center',
+      render: (recordHP) =>
+        recordHP?.idHocPhan > 0 ? (
+          <Popconfirm
+            onConfirm={() => {
+              setDanhSachHocPhanDaChon(
+                danhSachHocPhanDaChon?.filter((item) => item.idHocPhan !== recordHP?.idHocPhan),
+              );
+              setDanhSachIdHocPhanDaChon(
+                danhSachIdHocPhanDaChon?.filter((item) => item !== recordHP?.idHocPhan),
+              );
+            }}
+            title="Bạn có chắc chắn muốn xóa học phần này? sau khi xóa bạn phải bấm nút lưu để lưu lại các thay đổi"
+          >
+            <Button icon={<DeleteOutlined />} type="primary" />
+          </Popconfirm>
+        ) : (
+          <div></div>
+        ),
     },
   ];
 
@@ -171,6 +189,16 @@ const DangKyNhuCau = (props: {
     setTongSoTinChi(tongSoTinChiTemp);
     setTongHocPhi(tongHocPhiTemp);
   }, [recordHocPhan, recordPhieuDangKy]);
+  useEffect(() => {
+    let tongSoTinChiTemp = 0;
+    let tongHocPhiTemp = 0;
+    danhSachHocPhanDaChon?.forEach((item) => {
+      tongSoTinChiTemp += item.soTinChi;
+      tongHocPhiTemp += item.hocPhi;
+    });
+    setTongSoTinChi(tongSoTinChiTemp);
+    setTongHocPhi(tongHocPhiTemp);
+  }, [danhSachHocPhanDaChon.length]);
   return (
     <div>
       {recordDotNhuCau === null && (
@@ -192,7 +220,10 @@ const DangKyNhuCau = (props: {
               <Row gutter={[8, 0]}>
                 <Col xs={24}>
                   {/* <Scrollbars autoHide style={{ height: 'calc(100vh - 350px)' }}> */}
-                  <TableDanhSachHocPhan data={data} columns={columns} />
+                  <TableDanhSachHocPhan
+                    data={data}
+                    columns={columns?.filter((item) => item.title !== 'Thao tác')}
+                  />
                   {/* </Scrollbars> */}
                 </Col>
 

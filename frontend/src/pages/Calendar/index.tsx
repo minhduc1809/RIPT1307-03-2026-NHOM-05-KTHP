@@ -45,6 +45,7 @@ export default () => {
               <>
                 <p>Tên môn học: {record?.info?.ten_hoc_phan ?? ''}</p>
                 <p>ID phòng học Zoom: {record?.info?.id_zoom ?? ''}</p>
+                <p>Mật khẩu phòng học Zoom: {record?.info?.mat_khau_1}</p>
               </>
             )}
             <p>
@@ -60,6 +61,9 @@ export default () => {
                 : 'Chưa cập nhật'}
             </p>
           </b>
+          {record?.loaiSuKien === 'Lịch học' && (
+            <a href={`/loptinchi/${record?.info?.lop_tin_chi_id?.[0]}`}>Chi tiết lớp học</a>
+          )}
         </div>
       ),
     });

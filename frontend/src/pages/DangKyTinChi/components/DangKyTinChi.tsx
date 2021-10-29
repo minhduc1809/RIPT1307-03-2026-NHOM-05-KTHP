@@ -1,8 +1,8 @@
 import type { IColumn } from '@/utils/interfaces';
 import { currencyFormat } from '@/utils/utils';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
 import { values } from '@umijs/deps/compiled/lodash';
-import { Button, Checkbox, Col, Divider, Result, Row, Table } from 'antd';
+import { Button, Checkbox, Col, Divider, Popconfirm, Result, Row, Table } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
@@ -184,6 +184,26 @@ const TinChi = (props: {
           {currencyFormat(val)}
         </div>
       ),
+    },
+    {
+      title: 'Thao tác',
+      width: 80,
+      align: 'center',
+      render: (recordLop) =>
+        recordLop?.idLop ? (
+          <Popconfirm
+            onConfirm={() => {
+              setDanhSachLopDaChon(
+                danhSachLopDaChon?.filter((item) => item.idLop !== recordLop?.idLop),
+              );
+            }}
+            title="Bạn có chắc chắn muốn xóa học phần này? sau khi xóa bạn phải bấm nút lưu để lưu lại các thay đổi"
+          >
+            <Button icon={<DeleteOutlined />} type="primary" />
+          </Popconfirm>
+        ) : (
+          <div></div>
+        ),
     },
   ];
 

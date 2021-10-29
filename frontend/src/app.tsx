@@ -1,8 +1,9 @@
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
-import { PageLoading } from '@ant-design/pro-layout';
+import { PageLoading, SettingDrawer } from '@ant-design/pro-layout';
 import { notification, Tooltip } from 'antd';
+import 'moment/locale/vi';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
@@ -49,7 +50,9 @@ export async function getInitialState(): Promise<{
     return {
       fetchUserInfo,
       currentUser,
-      settings: {},
+      settings: {
+        primaryColor: 'daybreak',
+      },
       authorizedRoles: [],
       isModalSelectRoleVisible: false,
     };
@@ -57,7 +60,7 @@ export async function getInitialState(): Promise<{
 
   return {
     fetchUserInfo,
-    settings: {},
+    settings: { primaryColor: 'daybreak' },
   };
 }
 
@@ -101,7 +104,7 @@ export const request: RequestConfig = {
 };
 
 // ProLayout  https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
@@ -125,6 +128,38 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       } else if (initialState?.currentUser && token && location.pathname === loginPath) {
         history.push(data.path[`${vaiTro || initialState?.currentUser?.systemRole}`]);
       }
+    },
+    menuItemRender: (item, dom) => {
+      return (
+        <Tooltip placement="right" title={item.name}>
+          <div
+            onClick={() => {
+              history.push(item?.path ?? '/');
+            }}
+          >
+            {dom}
+          </div>
+        </Tooltip>
+      );
+    },
+    childrenRender: (dom) => {
+      return (
+        <>
+          {dom}
+          <SettingDrawer
+            hideCopyButton
+            hideHintAlert
+            settings={initialState?.settings}
+            disableUrlParams
+            onSettingChange={(nextSettings) => {
+              return setInitialState({
+                ...initialState,
+                settings: nextSettings,
+              });
+            }}
+          />
+        </>
+      );
     },
     menuHeaderRender: undefined,
     ...initialState?.settings,
