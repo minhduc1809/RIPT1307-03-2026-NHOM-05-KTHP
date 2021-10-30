@@ -16,7 +16,7 @@ const PhanQuyen = () => {
             setVaiTro(val);
           }}
           style={{ width: 200 }}
-          value={vaiTro}
+          value={'can_bo'}
         >
           {['can_bo'].map((item) => (
             <Select.Option key={item} value={item}>

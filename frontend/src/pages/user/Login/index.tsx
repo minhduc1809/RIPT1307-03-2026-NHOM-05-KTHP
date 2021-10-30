@@ -1,6 +1,7 @@
 import Footer from '@/components/Footer';
 import { getInfo, login } from '@/services/ant-design-pro/api';
 import data from '@/utils/data';
+import { getCodeAccess } from '@/utils/utils';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { ConfigProvider, message, Tabs } from 'antd';
@@ -35,9 +36,11 @@ const Login: React.FC = () => {
     localStorage.setItem('token', role?.token);
     localStorage.setItem('vaiTro', role?.vai_tro);
     const info = await getInfo();
+    const arrCodeAccess = await getCodeAccess();
     setInitialState({
       ...initialState,
       currentUser: info?.data?.data ?? {},
+      arrCodeAccess,
     });
     message.success(defaultloginSuccessMessage);
     history.push(data?.path?.[role?.vai_tro] ?? '/');

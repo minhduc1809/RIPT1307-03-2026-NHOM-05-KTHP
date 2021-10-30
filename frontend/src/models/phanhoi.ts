@@ -22,7 +22,7 @@ export default () => {
       condition: { ...condition, daTraLoi, vaiTro },
     });
     setDanhSach(response?.data?.data?.result ?? []);
-    setTotal(response?.data?.total);
+    setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);
   };
 

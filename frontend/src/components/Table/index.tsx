@@ -61,6 +61,8 @@ const TableBase = (props: Props) => {
     condition,
     setFilterInfo,
     setCondition,
+    query,
+    setQuery,
   } = useModel(modelName);
   const model = useModel(modelName);
 
@@ -105,6 +107,7 @@ const TableBase = (props: Props) => {
             width: 188,
             marginBottom: 8,
             display: 'block',
+            outlineColor: 'red',
           }}
         />
         <Button
@@ -139,7 +142,7 @@ const TableBase = (props: Props) => {
     filterIcon: (filtered: any) => (
       <SearchOutlined
         style={{
-          color: filtered || haveCond(dataIndex) ? '#1890ff' : undefined,
+          color: filtered || haveCond(dataIndex) ? '#CC0D00' : undefined,
         }}
         title="Tìm kiếm"
       />
@@ -260,14 +263,24 @@ const TableBase = (props: Props) => {
       // if (!filters?.[key]?.length) {
       //   return;
       // }
+      const type = columns?.find((item) => item.dataIndex === key || item.key === key)?.typeFilter;
+      const value = filters?.[key]?.[0];
+      if (type === 'query') {
+        const tmpQuery = _.clone(query);
+        tmpQuery[key] = value;
+        setQuery(tmpQuery);
+        return;
+      }
+
       const notRegex = columns?.find(
         (item) => item.dataIndex === key || item.key === key,
       )?.notRegex;
-      const value = filters?.[key]?.[0];
+
       const isSearch = typeof value === 'string';
       tmpCond[key] = isSearch && notRegex !== true ? toRegex(value) : value;
       // return 0;
     });
+
     setPage(current);
     setLimit(pageSize);
     setCondition(tmpCond);
@@ -289,6 +302,15 @@ const TableBase = (props: Props) => {
           Thêm mới
         </Button>
       )}
+      <h3 style={{ display: 'inline-block', margin: '0 10px 10px 50px', float: 'right' }}>
+        Tổng số:
+        <Input
+          style={{ width: '90px', fontWeight: 700, fontSize: 16, marginLeft: 10 }}
+          value={total}
+          readOnly
+          // ref={this.setTableBaseRef}
+        />
+      </h3>
       <Table
         scroll={scroll || { x: 1000 }}
         loading={loading}

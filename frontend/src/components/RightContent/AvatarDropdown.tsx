@@ -22,7 +22,6 @@ const loginOut = async () => {
     });
   }
 };
-
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const [visibleRole, setVisibleRole] = useState<boolean>(false);

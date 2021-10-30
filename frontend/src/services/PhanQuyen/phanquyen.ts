@@ -65,3 +65,38 @@ export async function putPhanQuyenChucNangNhomVaiTro(
 ) {
   return axios.put(`${ip3}/phan-quyen/nhom-vai-tro-chuc-nang/bulk`, payload);
 }
+
+/**
+ * thanhpq 29/10/2021
+ * get danh sách user để phân nhóm vai trò
+ * @returns danh sách user
+ */
+
+export async function getUserPhanNhom(payload: { page: number; limit: number; vaiTro: string }) {
+  return axios.get(`${ip3}/phan-quyen/odoo-user-phan-nhom/pageable/vai-tro/${payload.vaiTro}`, {
+    params: payload,
+  });
+}
+
+/**
+ * thanhpq 29/10/2021
+ * gán nhóm vai trò cho 1 user
+ *
+ */
+export async function putUserPhanNhom(payload: {
+  userId: string;
+  danhSachNhomVaiTroId: string[];
+  vaiTro: string;
+}) {
+  return axios.put(`${ip3}/phan-quyen/phan-nhom`, payload);
+}
+
+/**
+ * thanhpq 29/10/2021
+ * get danh sách chức năng được phân quyền của user hiện tại
+ * @returns danh sách chức năng được phân quyền
+ */
+
+export async function getPhanNhomUserCurrent() {
+  return axios.get(`${ip3}/phan-quyen/phan-nhom/me`);
+}

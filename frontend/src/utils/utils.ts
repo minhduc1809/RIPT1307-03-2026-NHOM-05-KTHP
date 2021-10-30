@@ -1,5 +1,7 @@
 /* eslint-disable no-return-assign */
+import { getPhanNhomUserCurrent } from '@/services/PhanQuyen/phanquyen';
 import moment from 'moment';
+import { useModel } from 'umi';
 
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
 const reg =
@@ -170,4 +172,24 @@ export function renderFileListUrl(url: string) {
 export function includes(str1: string, str2: string) {
   // str1 có chứa str2 ko
   return Format(str1).includes(Format(str2));
+}
+
+export async function getCodeAccess() {
+  const vaiTro = localStorage.getItem('vaiTro');
+  const token = localStorage.getItem('token');
+  const arrMaChucNang: string[] = [];
+  if (token && vaiTro) {
+    const response = await getPhanNhomUserCurrent();
+    response?.data?.data?.danhSachNhomVaiTroId?.forEach((item: { danhSachChucNang: string[] }) => {
+      item?.danhSachChucNang?.forEach((maChucNang) => {
+        arrMaChucNang.push(maChucNang);
+      });
+    });
+  }
+  return arrMaChucNang;
+}
+
+export function useCheckAccess(code: string) {
+  const { initialState } = useModel('@@initialState');
+  return initialState?.arrCodeAccess?.includes(code);
 }

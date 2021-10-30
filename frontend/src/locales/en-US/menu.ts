@@ -74,5 +74,6 @@ export default {
   'menu.DichVuMotCuaSinhVien': 'Dịch vụ một cửa',
   'menu.PhanQuyen': 'Phân quyền',
   'menu.PhanQuyen.ChucNangNhomVaiTro': 'Chức năng - Nhóm vai trò',
+  'menu.PhanQuyen.PhanNhom': 'Phân nhóm',
   'menu.dva-sample': 'Page mẫu dùng DVA',
 };

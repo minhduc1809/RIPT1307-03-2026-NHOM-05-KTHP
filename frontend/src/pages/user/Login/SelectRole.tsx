@@ -4,6 +4,7 @@ import logo from '@/assets/logo.png';
 import { getInfo } from '@/services/ant-design-pro/api';
 import data from '@/utils/data';
 import { useModel, history, useIntl } from 'umi';
+import { getCodeAccess } from '@/utils/utils';
 
 const SelectRoles = (props: {
   roles: { token: string; vai_tro: string }[];
@@ -22,9 +23,11 @@ const SelectRoles = (props: {
     localStorage.setItem('token', role?.token);
     localStorage.setItem('vaiTro', role?.vai_tro);
     const info = await getInfo();
+    const arrCodeAccess = await getCodeAccess();
     setInitialState({
       ...initialState,
       currentUser: info?.data?.data ?? {},
+      arrCodeAccess,
     });
     message.success(
       props.type === 'login'

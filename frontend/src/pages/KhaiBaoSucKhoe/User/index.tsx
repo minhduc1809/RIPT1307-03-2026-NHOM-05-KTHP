@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Form from '../components/FormKhaiBao';
 import { useModel } from 'umi';
 import TableLichSuKhaiBao from '../index';
+import { useCheckAccess } from '@/utils/utils';
 
 const KhaiBaoSucKhoeUser = () => {
   const {
@@ -18,6 +19,8 @@ const KhaiBaoSucKhoeUser = () => {
   useEffect(() => {
     getBieuMauKhaiBaoYTeModel();
   }, []);
+
+  const accessableButton = useCheckAccess('dvmc:cho-xu-ly:read-all');
 
   return (
     <Card title="Khai báo sức khỏe">
@@ -48,6 +51,7 @@ const KhaiBaoSucKhoeUser = () => {
               <>
                 <Tooltip title="Thực hiện khai báo">
                   <Button
+                    disabled={!accessableButton}
                     onClick={() => {
                       setVisibleForm(true);
                     }}

@@ -5,10 +5,14 @@ import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select } 
 import { useModel } from 'umi';
 
 const dataSinhVienNam = [
-  { label: 'Năm nhất', value: 1 },
-  { label: 'Năm hai', value: 2 },
-  { label: 'Năm ba', value: 3 },
-  { label: 'Năm tư', value: 4 },
+  { label: 'Năm nhất', value: 0 },
+  { label: 'Năm hai', value: 1 },
+  { label: 'Năm ba', value: 2 },
+  { label: 'Năm tư', value: 3 },
+  {
+    label: 'Năm năm',
+    value: 4,
+  },
 ];
 
 const FormYeuCauCapGiayXacNhanTinhTrangHocTap = () => {

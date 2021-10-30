@@ -8,7 +8,7 @@ import { useModel } from 'umi';
 const FormNhomVaiTro = () => {
   const [form] = Form.useForm();
 
-  const { loading, recordNhomVaiTro, setVisibleForm, edit, postNhomVaiTroModel } =
+  const { loading, recordNhomVaiTro, setVisibleForm, edit, postNhomVaiTroModel, vaiTro } =
     useModel('phanquyen');
   return (
     <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
@@ -32,9 +32,9 @@ const FormNhomVaiTro = () => {
           rules={[...rules.required]}
           name="vaiTro"
           label="Vai trò hệ thống"
-          initialValue={recordNhomVaiTro?.vaiTro}
+          initialValue={'can_bo'}
         >
-          <Select placeholder="Chọn đối tượng">
+          <Select disabled placeholder="Chọn đối tượng">
             {['can_bo'].map((item) => (
               <Select.Option key={item} value={item}>
                 {Role?.[item] ?? ''}

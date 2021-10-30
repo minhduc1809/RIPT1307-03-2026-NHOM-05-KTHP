@@ -65,7 +65,7 @@ class WaterWave extends Component<WaterWaveProps> {
   };
 
   renderChart(type?: string) {
-    const { percent, color = '#1890FF' } = this.props;
+    const { percent, color = '#CC0D00' } = this.props;
     const data = percent / 100;
     cancelAnimationFrame(this.timer);
 

@@ -31,14 +31,14 @@ export default () => {
     setLoading(true);
     const response = await getBieuMauAdmin({ page, limit, condition });
     setDanhSach(response?.data?.data?.result ?? []);
-    setTotal(response?.data?.total);
+    setTotal(response?.data?.data?.total);
     setLoading(false);
   };
   const getBieuMauUserModel = async () => {
     setLoading(true);
     const response = await getBieuMauUser({ page, limit, loai: loaiBieuMau });
     setDanhSach(response?.data?.data?.result ?? []);
-    setTotal(response?.data?.total);
+    setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);
   };
 

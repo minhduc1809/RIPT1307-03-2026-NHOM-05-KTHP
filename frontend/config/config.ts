@@ -139,10 +139,34 @@ export default defineConfig({
       component: './PhanHoi',
     },
     {
+      name: 'Menu',
+      icon: 'SmileOutlined',
+      path: '/menu',
+      maChucNang: 'dvmc:cho-tiep-nhan:read',
+      access: 'routeFilter',
+      routes: [
+        {
+          name: 'Submenu1',
+          icon: 'CalendarOutlined',
+          path: './submenu1',
+          maChucNang: 'dvmc:cho-tiep-nhan:update',
+          access: 'routeFilter',
+        },
+        {
+          name: 'Submenu2',
+          icon: 'CalendarOutlined',
+          path: './submenu2',
+          maChucNang: 'dvmc:cho-tiep-nhan:xu-ly',
+          access: 'routeFilter',
+        },
+      ],
+    },
+    {
       name: 'Calendar',
       icon: 'CalendarOutlined',
       path: '/calendar',
       component: './Calendar',
+      // access: 'routeFilter',
       access: 'sinhVienVaGiangVienVaCanBo',
     },
     {
@@ -270,15 +294,19 @@ export default defineConfig({
       name: 'PhanQuyen',
       icon: 'DeploymentUnitOutlined',
       path: '/phanquyen',
-
       access: 'admin',
       routes: [
         {
           name: 'ChucNangNhomVaiTro',
-          icon: 'smile',
           path: './chucnangvanhomvaitro',
           access: 'admin',
           component: './PhanQuyen',
+        },
+        {
+          name: 'PhanNhom',
+          path: './phannhom',
+          access: 'admin',
+          component: './PhanQuyen/UserQLDT',
         },
       ],
     },

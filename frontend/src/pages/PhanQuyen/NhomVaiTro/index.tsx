@@ -53,7 +53,7 @@ const NhomVaiTro = () => {
               borderRadius: 15,
               marginBottom: 8,
             }}
-            closable
+            closable={!item?.macDinh}
             key={item._id}
           >
             {item._id}
