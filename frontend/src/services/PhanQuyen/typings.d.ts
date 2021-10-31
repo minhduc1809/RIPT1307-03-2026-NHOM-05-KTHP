@@ -13,12 +13,21 @@ declare module PhanQuyen {
     vaiTro: string;
   }
 
+  export interface PhanNhom {
+    nhomVaiTroId: string;
+    mucDo: string;
+    idDoiTuong: string;
+    tenDoiTuong: string;
+  }
+
   export interface UserPhanNhom {
     user: Login.Profile;
     phanNhom: {
-      danhSachNhomVaiTroId: string[];
+      danhSachPhanNhom: PhanNhom[];
       _id: string;
       userId: string;
+      vaiTro: string;
+      service: string;
     };
   }
 
@@ -26,5 +35,10 @@ declare module PhanQuyen {
     danhSachNhomVaiTroId: { _id: string; danhSachChucNang: string[] }[];
     userId: string;
     _id: string;
+  }
+
+  export interface DoiTuongPhanNhom {
+    id: string;
+    name: string;
   }
 }

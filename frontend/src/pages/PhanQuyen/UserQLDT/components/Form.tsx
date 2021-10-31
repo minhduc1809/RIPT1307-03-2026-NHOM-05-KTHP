@@ -1,33 +1,73 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
+import rules from '@/utils/rules';
 import { Button, Card, Form, Select } from 'antd';
+import { useState } from 'react';
 import { useModel } from 'umi';
 
-const FormUserQLDT = () => {
+const FormUserQLDT = (props: {
+  edit: boolean;
+  data: PhanQuyen.PhanNhom[];
+  setData: any;
+  record: PhanQuyen.PhanNhom & { index: number };
+  onCancel: any;
+}) => {
   const [form] = Form.useForm();
-  const { loading, recordUser, setVisibleForm, putUserPhanNhomModel, danhSachNhomVaiTro, vaiTro } =
+  const { danhSachNhomVaiTro, danhSachDoiTuong, getDoiTuongPhanNhomByMucDoModel } =
     useModel('phanquyen');
-
+  const [mucDo, setMucDo] = useState<string | undefined>(props?.record?.mucDo);
   return (
-    <Card title={'Chỉnh sửa nhóm vai trò'}>
+    <Card title={props.edit ? 'Chỉnh sửa' : 'Thêm mới'}>
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          putUserPhanNhomModel({
-            userId: recordUser?.user?.id?.toString() || '',
-            danhSachNhomVaiTroId: values?.danhSachNhomVaiTroId ?? [],
-            vaiTro,
-          });
+          const arrDoiTuong: string[] = values?.doiTuong?.split('||');
+          const cloneData: PhanQuyen.PhanNhom[] = JSON.parse(JSON.stringify(props.data));
+          // if (
+          //   mucDo === 'Tất cả' &&
+          //   cloneData?.find((item) => item.nhomVaiTroId === values?.nhomVaiTroId)
+          // ) {
+          //   message.error('Phân nhóm đã tồn tại');
+          //   return;
+          // }
+          // if (
+          //   mucDo !== 'Tất cả' &&
+          //   cloneData?.find(
+          //     (item) =>
+          //       item.nhomVaiTroId === values?.nhomVaiTroId &&
+          //       item.idDoiTuong === arrDoiTuong?.[0] &&
+          //       item?.tenDoiTuong === arrDoiTuong?.[1],
+          //   )
+          // ) {
+          //   message.error('Phân nhóm đã tồn tại');
+          //   return;
+          // }
+
+          if (props.edit) {
+            cloneData?.splice(props?.record?.index - 1, 1, {
+              ...values,
+              idDoiTuong: arrDoiTuong?.[0],
+              tenDoiTuong: arrDoiTuong?.[1],
+            });
+          } else {
+            cloneData?.unshift({
+              ...values,
+              idDoiTuong: arrDoiTuong?.[0],
+              tenDoiTuong: arrDoiTuong?.[1],
+            });
+          }
+          props.setData(cloneData?.map((item, index) => ({ ...item, index: index + 1 })));
+          props.onCancel();
         }}
         form={form}
       >
         <Form.Item
           label="Nhóm vai trò"
-          name="danhSachNhomVaiTroId"
-          // rules={[...rules.required]}
-          initialValue={recordUser?.phanNhom?.danhSachNhomVaiTroId}
+          name="nhomVaiTroId"
+          rules={[...rules.required]}
+          initialValue={props?.record?.nhomVaiTroId}
         >
-          <Select mode="multiple" showSearch placeholder="Nhóm vai trò">
+          <Select showSearch placeholder="Nhóm vai trò">
             {danhSachNhomVaiTro.map((item) => (
               <Select.Option key={item._id} value={item._id}>
                 {item._id}
@@ -36,11 +76,53 @@ const FormUserQLDT = () => {
           </Select>
         </Form.Item>
 
+        <Form.Item label="Mức độ" name="mucDo" rules={[...rules.required]} initialValue={mucDo}>
+          <Select
+            onChange={(val: string | undefined) => {
+              setMucDo(val);
+              form.setFieldsValue({
+                doiTuong:
+                  val !== props?.record?.mucDo
+                    ? undefined
+                    : `${props.record?.idDoiTuong}||${props?.record?.tenDoiTuong}`,
+              });
+              if (val && val !== 'Tất cả') getDoiTuongPhanNhomByMucDoModel(val);
+            }}
+            showSearch
+            placeholder="Mức độ"
+          >
+            {['Tất cả', 'Đơn vị', 'Lớp tín chỉ', 'Lớp hành chính'].map((item) => (
+              <Select.Option key={item} value={item}>
+                {item}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        {mucDo && mucDo !== 'Tất cả' && (
+          <Form.Item
+            label="Đối tượng"
+            name="doiTuong"
+            rules={[...rules.required]}
+            initialValue={
+              props.edit ? `${props.record?.idDoiTuong}||${props?.record?.tenDoiTuong}` : undefined
+            }
+          >
+            <Select showSearch placeholder="Đối tượng">
+              {danhSachDoiTuong.map((item) => (
+                <Select.Option key={item.id} value={`${item.id}||${item.name}`}>
+                  {item.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
-          <Button loading={loading} style={{ marginRight: 8 }} htmlType="submit" type="primary">
+          <Button style={{ marginRight: 8 }} htmlType="submit" type="primary">
             Lưu
           </Button>
-          <Button onClick={() => setVisibleForm(false)}>Đóng</Button>
+          <Button onClick={() => props.onCancel()}>Đóng</Button>
         </Form.Item>
       </Form>
     </Card>

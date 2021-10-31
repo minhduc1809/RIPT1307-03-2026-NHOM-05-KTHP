@@ -350,6 +350,7 @@ const TableBase = (props: Props) => {
             </Drawer>
           ) : (
             <Modal
+              width={widthDrawer}
               onCancel={() => {
                 setVisibleForm(false);
               }}

@@ -2,10 +2,10 @@ import TableBase from '@/components/Table';
 import { Role } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { EditOutlined } from '@ant-design/icons';
-import { Button, Select, Tag, Tooltip } from 'antd';
+import { Button, Select, Tooltip } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
-import Form from './components/Form';
+import TableNhomChucNang from './components/TableNhomVaiTro';
 
 const UserPhanNhom = () => {
   const {
@@ -48,14 +48,6 @@ const UserPhanNhom = () => {
       render: (val, record) => <div>{record?.user?.ma_dinh_danh ?? ''}</div>,
     },
     {
-      title: 'Nhóm vai trò',
-      dataIndex: ['phanNhom', 'danhSachNhomVaiTroId'],
-      align: 'center',
-      render: (val) => {
-        return val?.map((item: string) => <Tag>{item}</Tag>);
-      },
-    },
-    {
       title: 'Thao tác',
       align: 'center',
       width: 100,
@@ -83,8 +75,9 @@ const UserPhanNhom = () => {
       columns={columns}
       modelName="phanquyen"
       getData={getUserPhanNhomModel}
+      widthDrawer="80%"
       dependencies={[page, limit, vaiTro, query]}
-      Form={Form}
+      Form={TableNhomChucNang}
     >
       <Select
         onChange={(val) => {

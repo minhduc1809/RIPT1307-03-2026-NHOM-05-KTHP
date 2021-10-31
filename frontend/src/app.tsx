@@ -9,7 +9,7 @@ import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
 import { getInfo, getInfoAdmin } from './services/ant-design-pro/api';
 import data from './utils/data';
-import { getCodeAccess } from './utils/utils';
+import { getPhanNhom } from './utils/utils';
 
 const loginPath = '/user/login';
 const pathAuth = ['/admin/login'];
@@ -28,7 +28,19 @@ export async function getInitialState(): Promise<{
   fetchUserInfo?: () => Promise<{ data: { data: Login.Profile & Login.ProfileAdmin } } | undefined>;
   authorizedRoles?: any[];
   isModalSelectRoleVisible?: boolean;
-  arrCodeAccess?: string[];
+  phanNhom?: {
+    userId: string;
+    danhSachPhanNhom: {
+      mucDo: string;
+      tenDoiTuong: string;
+      idDoiTuong: string;
+      nhomVaiTroId: {
+        _id: string;
+        danhSachChucNang: string[];
+      };
+    }[];
+    vaiTro: string;
+  };
 }> {
   const fetchUserInfo: () => Promise<any> = async () => {
     try {
@@ -50,7 +62,7 @@ export async function getInitialState(): Promise<{
 
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
-    const arrCodeAccess = await getCodeAccess();
+    const phanNhom = await getPhanNhom();
     return {
       fetchUserInfo,
       currentUser,
@@ -59,7 +71,7 @@ export async function getInitialState(): Promise<{
       },
       authorizedRoles: [],
       isModalSelectRoleVisible: false,
-      arrCodeAccess,
+      phanNhom,
     };
   }
 

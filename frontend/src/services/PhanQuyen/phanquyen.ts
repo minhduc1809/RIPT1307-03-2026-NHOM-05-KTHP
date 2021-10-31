@@ -85,7 +85,7 @@ export async function getUserPhanNhom(payload: { page: number; limit: number; va
  */
 export async function putUserPhanNhom(payload: {
   userId: string;
-  danhSachNhomVaiTroId: string[];
+  danhSachPhanNhom: PhanQuyen.PhanNhom[];
   vaiTro: string;
 }) {
   return axios.put(`${ip3}/phan-quyen/phan-nhom`, payload);
@@ -99,4 +99,14 @@ export async function putUserPhanNhom(payload: {
 
 export async function getPhanNhomUserCurrent() {
   return axios.get(`${ip3}/phan-quyen/phan-nhom/me`);
+}
+
+/**
+ * thanhpq 30/10/2021
+ * get danh sách đối tượng phân nhóm theo mực độ
+ * @returns danh sách đối tượng phân nhóm
+ */
+
+export async function getDoiTuongPhanNhomByMucDo(mucDo: string) {
+  return axios.get(`${ip3}/phan-quyen/doi-tuong-phan-nhom/muc-do/${mucDo}`);
 }

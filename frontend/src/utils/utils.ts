@@ -174,22 +174,35 @@ export function includes(str1: string, str2: string) {
   return Format(str1).includes(Format(str2));
 }
 
-export async function getCodeAccess() {
+export async function getPhanNhom() {
   const vaiTro = localStorage.getItem('vaiTro');
   const token = localStorage.getItem('token');
-  const arrMaChucNang: string[] = [];
+  let response: any = {};
   if (token && vaiTro) {
-    const response = await getPhanNhomUserCurrent();
-    response?.data?.data?.danhSachNhomVaiTroId?.forEach((item: { danhSachChucNang: string[] }) => {
-      item?.danhSachChucNang?.forEach((maChucNang) => {
-        arrMaChucNang.push(maChucNang);
-      });
-    });
+    response = await getPhanNhomUserCurrent();
   }
-  return arrMaChucNang;
+  return response?.data?.data ?? {};
 }
 
-export function useCheckAccess(code: string) {
+export function handlePhanNhom(initialState: any, code: string, idDoiTuong?: string) {
+  let flag = false;
+  if (initialState?.phanNhom?.danhSachPhanNhom?.length === 0) return false;
+  initialState?.phanNhom?.danhSachPhanNhom?.forEach((item: any) => {
+    const mucDo = item?.mucDo;
+    item?.nhomVaiTroId?.danhSachChucNang?.map((idChucNang: string) => {
+      if (
+        (mucDo === 'Tất cả' && idChucNang === code) ||
+        (mucDo !== 'Tất cả' && idChucNang === code && item?.idDoiTuong === idDoiTuong)
+      ) {
+        flag = true;
+      }
+      return true;
+    });
+  });
+  return flag;
+}
+
+export function useCheckAccess(code: string, idDoiTuong?: string) {
   const { initialState } = useModel('@@initialState');
-  return initialState?.arrCodeAccess?.includes(code);
+  return handlePhanNhom(initialState, code, idDoiTuong);
 }

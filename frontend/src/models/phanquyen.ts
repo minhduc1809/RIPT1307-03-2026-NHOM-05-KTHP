@@ -7,6 +7,7 @@ import {
   postNhomVaiTro,
   putPhanQuyenChucNangNhomVaiTro,
   putUserPhanNhom,
+  getDoiTuongPhanNhomByMucDo,
 } from '@/services/PhanQuyen/phanquyen';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -15,6 +16,7 @@ export default () => {
   const [danhSachNhomVaiTro, setDanhSachNhomVaiTro] = useState<PhanQuyen.NhomVaiTro[]>([]);
   const [danhSachChucNang, setDanhSachChucNang] = useState<PhanQuyen.ChucNang[]>([]);
   const [danhSachLoaiChucNang, setDanhSachLoaiChucNang] = useState<string[]>([]);
+  const [danhSachDoiTuong, setDanhSachDoiTuong] = useState<PhanQuyen.DoiTuongPhanNhom[]>([]);
   const [danhSachUser, setDanhSachUser] = useState<PhanQuyen.UserPhanNhom[]>([]);
   const [recordNhomVaiTro, setRecordNhomVaiTro] = useState<PhanQuyen.NhomVaiTro>();
   const [recordUser, setRecordUser] = useState<PhanQuyen.UserPhanNhom>();
@@ -84,7 +86,7 @@ export default () => {
 
   const putUserPhanNhomModel = async (payload: {
     userId: string;
-    danhSachNhomVaiTroId: string[];
+    danhSachPhanNhom: PhanQuyen.PhanNhom[];
     vaiTro: string;
   }) => {
     setLoading(true);
@@ -95,7 +97,17 @@ export default () => {
     setVisibleForm(false);
   };
 
+  const getDoiTuongPhanNhomByMucDoModel = async (mucDo: string) => {
+    setLoading(true);
+    const response = await getDoiTuongPhanNhomByMucDo(mucDo);
+    setDanhSachDoiTuong(response?.data?.data ?? []);
+    setLoading(false);
+  };
+
   return {
+    getDoiTuongPhanNhomByMucDoModel,
+    danhSachDoiTuong,
+    setDanhSachDoiTuong,
     putUserPhanNhomModel,
     recordUser,
     setRecordUser,

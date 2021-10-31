@@ -1,7 +1,21 @@
+import { handlePhanNhom } from './utils/utils';
+
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
-export default function access(initialState: { arrCodeAccess: string[] }) {
+export default function access(initialState: {
+  phanNhom: {
+    userId: string;
+    danhSachPhanNhom: {
+      mucDo: string;
+      nhomVaiTroId: {
+        _id: string;
+        danhSachChucNang: string[];
+      };
+    }[];
+    vaiTro: string;
+  };
+}) {
   const vaiTro = localStorage.getItem('vaiTro');
   const token = localStorage.getItem('token');
   return {
@@ -16,15 +30,7 @@ export default function access(initialState: { arrCodeAccess: string[] }) {
     sinhVienVaGiangVienVaCanBo:
       token && vaiTro && (vaiTro === 'giang_vien' || vaiTro === 'can_bo' || vaiTro === 'sinh_vien'),
     routeFilter: (route: any) => {
-      let flag = false;
-      if (initialState?.arrCodeAccess?.length === 0) return false;
-      initialState?.arrCodeAccess?.map((item: string) => {
-        if (item === route?.maChucNang) {
-          flag = true;
-        }
-        return true;
-      });
-      return flag;
+      return handlePhanNhom(initialState, route?.maChucNang);
     },
   };
 }
