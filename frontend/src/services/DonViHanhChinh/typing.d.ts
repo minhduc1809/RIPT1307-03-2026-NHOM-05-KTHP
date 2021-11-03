@@ -6,6 +6,16 @@ export declare module IRecordTinh {
     ma: string;
   }
 
+  export interface DonViHanhChinhRecord {
+    maPhuongXa?: string;
+    maQuanHuyen?: string;
+    maTinh?: string;
+    soNhaTenDuong?: string;
+    tenPhuongXa?: string;
+    tenQuanHuyen?: string;
+    tenTinh?: string;
+  }
+
   export interface RootObject {
     data: Datum[];
     statusCode: number;

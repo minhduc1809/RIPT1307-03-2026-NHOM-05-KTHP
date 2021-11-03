@@ -6,6 +6,9 @@ export default () => {
   const [danhSachTinh, setDanhSachTinh] = useState<IRecordTinh.Datum[]>([]);
   const [danhSachQuanHuyen, setDanhSachQuanHuyen] = useState<IRecordTinh.Datum[]>([]);
   const [danhSachXaPhuong, setDanhSachXaPhuong] = useState<IRecordTinh.Datum[]>([]);
+  const [tenTinh, setTenTinh] = useState<string>();
+  const [tenQuanHuyen, setTenQuanHuyen] = useState<string>();
+  const [tenPhuongXa, setTenXaPhuong] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
 
   const getDanhSachTinhModel = async () => {
@@ -30,6 +33,12 @@ export default () => {
   };
 
   return {
+    tenTinh,
+    tenQuanHuyen,
+    tenPhuongXa,
+    setTenTinh,
+    setTenQuanHuyen,
+    setTenXaPhuong,
     getDanhSachXaPhuongModel,
     getDanhSachQuanHuyenModel,
     loading,

@@ -4,10 +4,10 @@ import { getURLImg } from '@/services/LopTinChi/loptinchi';
 import rules from '@/utils/rules';
 import { renderFileListUrl } from '@/utils/utils';
 import { Button, Col, Form, Input, message, Row } from 'antd';
-import mm from 'moment-timezone';
 import { Component } from 'react';
 import type { Dispatch } from 'umi';
 import { connect } from 'umi';
+import mm from 'moment-timezone';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 

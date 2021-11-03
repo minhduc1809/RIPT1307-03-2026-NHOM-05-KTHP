@@ -59,7 +59,7 @@ class PicturesWall extends React.Component {
           fileList={initialList}
           onChange={this.handleChange}
           style={{ width: 300 }}
-          {...(otherProps || {})}
+          {...otherProps}
         >
           {otherProps && !otherProps.disabled && uploadButton}
         </Upload>

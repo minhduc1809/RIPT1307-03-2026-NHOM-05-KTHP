@@ -1,0 +1,172 @@
+/* eslint-disable no-underscore-dangle */
+import rules from '@/utils/rules';
+import {
+  CloseCircleOutlined,
+  CloseOutlined,
+  EyeOutlined,
+  PlusOutlined,
+  SaveOutlined,
+} from '@ant-design/icons';
+import { Button, Card, Form, Input, Modal } from 'antd';
+import { useModel } from 'umi';
+import styles from './block.css';
+import Block from './Block';
+import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
+import { useState } from 'react';
+
+const FormBieuMau = () => {
+  const [form] = Form.useForm();
+  const {
+    loading,
+    record,
+    edit,
+    setVisibleForm,
+    postBieuMauAdminModel,
+    putBieuMauAdminModel,
+    visibleFormBieuMau,
+    setVisibleFormBieuMau,
+  } = useModel('dichvumotcuav2');
+  const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
+  return (
+    <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
+      <Form
+        labelCol={{ span: 24 }}
+        onFinish={async (values) => {
+          const quyTrinhTemp = {
+            quyTrinh: {
+              _id: 'string',
+              danhSachBuoc: [
+                {
+                  _id: 'string',
+                  tenDonVi: 'string',
+                  ten: 'string',
+                  danhSachThaoTac: [
+                    {
+                      tenDonVi: 'string',
+                      _id: 'string',
+                      idDonVi: 'string',
+                    },
+                  ],
+                },
+              ],
+            },
+          };
+          if (edit) {
+            putBieuMauAdminModel({ data: { ...values, ...quyTrinhTemp }, id: record?._id });
+          } else postBieuMauAdminModel({ ...values, ...quyTrinhTemp });
+        }}
+        form={form}
+      >
+        <Form.Item
+          name="ten"
+          label="Tên biểu mẫu"
+          initialValue={record?.ten}
+          rules={[...rules.required, ...rules.text, ...rules.length(100)]}
+        >
+          <Input placeholder="Tên biểu mẫu" />
+        </Form.Item>
+
+        <Form.Item
+          name="ghiChu"
+          label="Ghi chú"
+          initialValue={record?.ghiChu}
+          rules={[...rules.text, ...rules.length(200)]}
+        >
+          <Input.TextArea placeholder="Ghi chú" />
+        </Form.Item>
+
+        <Form.List
+          name="cauHinhBieuMau"
+          initialValue={record?.cauHinhBieuMau ?? []}
+          rules={[
+            {
+              validator: async (_, names) => {
+                if (!names || names.length < 1) {
+                  return Promise.reject(new Error('Ít nhất 1 khối'));
+                }
+                return '';
+              },
+            },
+          ]}
+        >
+          {(fields, { add, remove }, { errors }) => {
+            return (
+              <>
+                {fields.map((field, index) => (
+                  <div key={field.key}>
+                    <Card
+                      className={styles.block}
+                      title={
+                        <>
+                          <div style={{ float: 'left' }}>Khối {index + 1}</div>
+                          <CloseCircleOutlined
+                            style={{ float: 'right' }}
+                            onClick={() => remove(field.name)}
+                          />
+                        </>
+                      }
+                    >
+                      <Block field={{ ...field }} />
+                    </Card>
+                    <br />
+                  </div>
+                ))}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    style={{ width: '100%' }}
+                    icon={<PlusOutlined />}
+                  >
+                    Thêm khối
+                  </Button>
+                  <Form.ErrorList errors={errors} />
+                </Form.Item>
+              </>
+            );
+          }}
+        </Form.List>
+
+        <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
+          <Button
+            icon={<EyeOutlined />}
+            style={{ marginRight: 8 }}
+            onClick={() => {
+              const valueView = form.getFieldsValue(true);
+              setRecordView({ thongTinDichVu: { ...valueView } } as DichVuMotCuaV2.Don);
+              setVisibleFormBieuMau(true);
+            }}
+          >
+            Xem trước
+          </Button>
+          <Button
+            icon={<SaveOutlined />}
+            loading={loading}
+            style={{ marginRight: 8 }}
+            htmlType="submit"
+            type="primary"
+          >
+            {edit ? 'Lưu' : 'Thêm'}
+          </Button>
+          <Button icon={<CloseOutlined />} onClick={() => setVisibleForm(false)}>
+            Đóng
+          </Button>
+        </Form.Item>
+      </Form>
+      <Modal
+        destroyOnClose
+        width="60%"
+        footer={false}
+        visible={visibleFormBieuMau}
+        bodyStyle={{ padding: 0 }}
+        onCancel={() => {
+          setVisibleFormBieuMau(false);
+        }}
+      >
+        <FormView type="view" record={recordView} />
+      </Modal>
+    </Card>
+  );
+};
+
+export default FormBieuMau;

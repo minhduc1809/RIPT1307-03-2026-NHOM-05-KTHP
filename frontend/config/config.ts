@@ -283,6 +283,42 @@ export default defineConfig({
     //   ],
     //   access: 'sinhVien',
     // },
+
+    {
+      name: 'DichVuMotCuaSinhVien',
+      icon: 'Smile',
+      path: '/dichvumotcuasv',
+      routes: [
+        {
+          name: 'TaoDon',
+          path: './taodon',
+          component: './DichVuMotCuaV2/SinhVien/GuiDon',
+          access: 'sinhVien',
+        },
+        {
+          name: 'LichSu',
+          path: './lichsu',
+          component: './DichVuMotCuaV2/SinhVien/LichSu',
+          access: 'sinhVien',
+        },
+      ],
+      access: 'sinhVien',
+    },
+
+    {
+      name: 'DichVuMotCuaAdmin',
+      icon: 'HeartOutlined',
+      path: '/dichvumotcuav2',
+      routes: [
+        {
+          name: 'QuanLyBieuMau',
+          path: './quanlybieumau',
+          component: './DichVuMotCuaV2/QuanLyBieuMau',
+          access: 'admin',
+        },
+      ],
+      access: 'admin',
+    },
     {
       name: 'ThongBao',
       icon: 'notification',

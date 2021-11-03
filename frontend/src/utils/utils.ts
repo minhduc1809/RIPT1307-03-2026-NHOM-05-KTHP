@@ -169,6 +169,20 @@ export function renderFileListUrl(url: string) {
   };
 }
 
+export function renderFileList(arr: string[]) {
+  if (!arr) return { fileList: [] };
+  return {
+    fileList: arr.map((url) => ({
+      remote: true, // file đã có trên server, ko phải là upload file mới
+      name: getNameFile(url),
+      url,
+      status: 'done',
+      size: 0,
+      type: 'img/png',
+    })),
+  };
+}
+
 export function includes(str1: string, str2: string) {
   // str1 có chứa str2 ko
   return Format(str1).includes(Format(str2));

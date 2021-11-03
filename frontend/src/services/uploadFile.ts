@@ -1,11 +1,7 @@
 import { ip3 } from '@/utils/ip';
 import axios from 'axios';
 
-export async function uploadFile(payload: {
-  file: string | Blob;
-  filename: string;
-  public: string;
-}) {
+export async function uploadFile(payload: { file: string | Blob; filename: string; public: any }) {
   const form = new FormData();
   form.append('file', payload?.file);
   form.append('filename', payload?.filename);

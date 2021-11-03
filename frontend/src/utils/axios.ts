@@ -29,7 +29,7 @@ axios.interceptors.response.use(
     // Do something with response data
     response,
   (error) => {
-    switch (error?.response?.data?.detail?.status) {
+    switch (error?.response?.status) {
       case 400:
         notification.error({
           message: 'Bad request',
@@ -76,8 +76,8 @@ axios.interceptors.response.use(
 
       case 500:
         notification.error({
-          description: 'Server gặp lỗi',
-          message: error?.response?.data?.detail?.message || error.message,
+          message: 'Server gặp lỗi',
+          description: error?.response?.data?.detail?.message || error.message,
         });
         break;
 
