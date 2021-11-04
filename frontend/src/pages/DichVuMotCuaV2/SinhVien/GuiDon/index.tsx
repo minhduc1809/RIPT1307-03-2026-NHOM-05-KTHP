@@ -53,7 +53,7 @@ const SinhVienTaoDon = () => {
           setVisibleFormBieuMau(false);
         }}
         footer={false}
-        width="70%"
+        width="800px"
         bodyStyle={{ padding: 0 }}
         visible={visibleFormBieuMau}
       >

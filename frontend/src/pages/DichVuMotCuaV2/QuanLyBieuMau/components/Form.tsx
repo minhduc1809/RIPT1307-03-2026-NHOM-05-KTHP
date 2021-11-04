@@ -1,18 +1,12 @@
 /* eslint-disable no-underscore-dangle */
-import rules from '@/utils/rules';
-import {
-  CloseCircleOutlined,
-  CloseOutlined,
-  EyeOutlined,
-  PlusOutlined,
-  SaveOutlined,
-} from '@ant-design/icons';
-import { Button, Card, Form, Input, Modal } from 'antd';
-import { useModel } from 'umi';
-import styles from './block.css';
-import Block from './Block';
 import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
+import rules from '@/utils/rules';
+import { CloseCircleOutlined, EyeOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Input, Modal } from 'antd';
 import { useState } from 'react';
+import { useModel } from 'umi';
+import Block from './Block';
+import styles from './block.css';
 
 const FormBieuMau = () => {
   const [form] = Form.useForm();
@@ -20,7 +14,6 @@ const FormBieuMau = () => {
     loading,
     record,
     edit,
-    setVisibleForm,
     postBieuMauAdminModel,
     putBieuMauAdminModel,
     visibleFormBieuMau,
@@ -95,6 +88,8 @@ const FormBieuMau = () => {
                 {fields.map((field, index) => (
                   <div key={field.key}>
                     <Card
+                      headStyle={{ padding: '8px 24px' }}
+                      bodyStyle={{ padding: '8px 24px' }}
                       className={styles.block}
                       title={
                         <>
@@ -127,7 +122,7 @@ const FormBieuMau = () => {
           }}
         </Form.List>
 
-        <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
+        <Form.Item style={{ marginBottom: 0, position: 'fixed', top: 14, right: 48 }}>
           <Button
             icon={<EyeOutlined />}
             style={{ marginRight: 8 }}
@@ -148,9 +143,9 @@ const FormBieuMau = () => {
           >
             {edit ? 'Lưu' : 'Thêm'}
           </Button>
-          <Button icon={<CloseOutlined />} onClick={() => setVisibleForm(false)}>
+          {/* <Button icon={<CloseOutlined />} onClick={() => setVisibleForm(false)}>
             Đóng
-          </Button>
+          </Button> */}
         </Form.Item>
       </Form>
       <Modal

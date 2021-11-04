@@ -196,7 +196,7 @@ const DiaChi = (props: Props) => {
               disabled={props?.disabled}
               maxLength={400}
               placeholder="Địa chỉ cụ thể"
-              style={{ marginTop: 10 }}
+              style={{ marginTop: 0 }}
             />
           </Form.Item>
         </Col>

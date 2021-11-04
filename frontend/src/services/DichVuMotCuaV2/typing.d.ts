@@ -1,18 +1,7 @@
 declare module DichVuMotCuaV2 {
-  export interface RelatedElement {
-    label: string;
-    type: string;
-    note: string;
-    isRequired: boolean;
-    min: number;
-    max: number;
-    fileType: string[];
-    value: any;
-  }
-
   export interface DataSource {
     choice: string;
-    relatedElement: RelatedElement[];
+    relatedElement: CauHinhBieuMau[];
   }
 
   export interface CauHinhBieuMau {

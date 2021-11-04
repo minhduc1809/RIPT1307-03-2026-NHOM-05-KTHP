@@ -1,28 +1,36 @@
-import { Upload, Icon, message } from 'antd';
+import { Icon, Upload } from 'antd';
 
 const { Dragger } = Upload;
 
-const props = {
-  name: 'file',
-  multiple: true,
-  action: 'http://www.mocky.io/v2/5cc8019d300000980a055e76',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  height: '100%',
-  overflow: 'auto',
-};
+// const props = {
+//   name: 'file',
+//   multiple: true,
+//   action: 'http://www.mocky.io/v2/5cc8019d300000980a055e76',
+//   onChange(info) {
+//     const { status } = info.file;
+//     if (status !== 'uploading') {
+//       return;
+//     }
+//     if (status === 'done') {
+//       message.success(`${info.file.name} file uploaded successfully.`);
+//     } else if (status === 'error') {
+//       message.error(`${info.file.name} file upload failed.`);
+//     }
+//   },
+//   height: '100%',
+//   overflow: 'auto',
+// };
 
-const UploadDocs = props => {
+const UploadDocs = (props) => {
   const { data } = props;
-  if (data) return <Upload name="Tài liệu" fileList={data} action="https://www.mocky.io/v2/5cc8019d300000980a055e76" />;
+  if (data)
+    return (
+      <Upload
+        name="Tài liệu"
+        fileList={data}
+        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+      />
+    );
   return (
     <div>
       <Dragger {...props}>

@@ -16,28 +16,28 @@ const Block = (props: Props) => {
   let ketQua: string;
   switch (diem?.trang_thai) {
     case TrangThaiHocPhan.MIEN: {
-      backgroundColor = "#fff79f";
-      ketQua = "M";
+      backgroundColor = '#fff79f';
+      ketQua = 'M';
       break;
     }
     case TrangThaiHocPhan.KHONG_DAT: {
-      backgroundColor = "#ffb8bd";
-      
+      backgroundColor = '#ffb8bd';
+
       ketQua = `GPA: ${diem?.diem_thang_4 || '-'}`;
       break;
     }
     case TrangThaiHocPhan.DAT: {
-      backgroundColor = "#a7ff9f";
+      backgroundColor = '#a7ff9f';
       ketQua = `GPA: ${diem?.diem_thang_4 || '-'}`;
       break;
     }
     case TrangThaiHocPhan.CHUA_CO_DIEM: {
-      backgroundColor = "#b9e2ff";
+      backgroundColor = '#b9e2ff';
       ketQua = `GPA: ${diem?.diem_thang_4 || '-'}`;
       break;
     }
     default: {
-      backgroundColor = "#f0f0f0";
+      backgroundColor = '#f0f0f0';
       ketQua = `GPA: ${diem?.diem_thang_4 || '-'}`;
     }
   }

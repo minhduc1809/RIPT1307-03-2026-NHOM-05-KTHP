@@ -12,21 +12,13 @@ import PhuongThucNhanDon from '../../components/PhuongThucNhanDon';
 import ThongTinCaNhan from '../../components/ThongTinCaNhan';
 
 const FormYeuCauCapGiayDangKyVeThangXeBus = () => {
-  const {
-    loaiPhongBan,
-    loaiGiayTo,
-    record,
-    setVisibleForm,
-    edit,
-    loading,
-    postDonSinhVienModel,
-    typeForm,
-  } = useModel('dichvumotcua');
+  const { loaiPhongBan, loaiGiayTo, record, setVisibleForm, edit, loading, postDonSinhVienModel } =
+    useModel('dichvumotcua');
   const { tenTinh, tenPhuongXa, tenQuanHuyen } = useModel('donvihanhchinh');
   const { initialState } = useModel('@@initialState');
   const [check, setCheck] = useState<boolean>(false);
   const [form] = Form.useForm();
-  const readOnly = typeForm === 'view';
+  const readOnly = true;
   return (
     <Card bodyStyle={{ padding: 60, maxWidth: 1000, margin: '0 auto' }} title={loaiGiayTo}>
       <Form

@@ -1,7 +1,6 @@
 import type { IColumn } from '@/utils/interfaces';
 import { currencyFormat } from '@/utils/utils';
 import { ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
-import { values } from '@umijs/deps/compiled/lodash';
 import { Button, Checkbox, Col, Divider, Popconfirm, Result, Row, Table } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';

@@ -8,7 +8,7 @@ import { useModel } from 'umi';
 const FormNhomVaiTro = () => {
   const [form] = Form.useForm();
 
-  const { loading, recordNhomVaiTro, setVisibleForm, edit, postNhomVaiTroModel, vaiTro } =
+  const { loading, recordNhomVaiTro, setVisibleForm, edit, postNhomVaiTroModel } =
     useModel('phanquyen');
   return (
     <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>

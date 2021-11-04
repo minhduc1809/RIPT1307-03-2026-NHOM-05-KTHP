@@ -5,7 +5,7 @@ import { Role } from '@/utils/constants';
 import ChucNang from './ChucNang';
 
 const PhanQuyen = () => {
-  const { vaiTro, setVaiTro } = useModel('phanquyen');
+  const { setVaiTro } = useModel('phanquyen');
 
   return (
     <Card title="Chức năng - Nhóm vai trò">

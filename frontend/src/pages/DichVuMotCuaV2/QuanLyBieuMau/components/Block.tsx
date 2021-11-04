@@ -1,26 +1,59 @@
 import { EFileType, ElementTemplateType, LevelDonViHanhChinh } from '@/utils/constants';
 import rules from '@/utils/rules';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, Form, Input, InputNumber, Row, Select } from 'antd';
-import { useState } from 'react';
+import { CloseCircleOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row, Select } from 'antd';
+import { useState, useEffect } from 'react';
 import { useModel } from 'umi';
+import styles from './block.css';
 
 const Block = (props: {
   field: { name: number; key: number; isListField?: boolean; fieldKey: number };
+  relate?: boolean;
+  indexBlock?: number;
+  indexDataSource?: number;
 }) => {
   const { record } = useModel('dichvumotcuav2');
-  const [type, setType] = useState<string>(record?.cauHinhBieuMau?.[props.field.name]?.type ?? '');
+  const [type, setType] = useState<string>(
+    props?.relate
+      ? record?.cauHinhBieuMau?.[props?.indexBlock ?? 0]?.dataSource?.[props?.indexDataSource ?? 0]
+          ?.relatedElement?.[props.field.name]?.type ?? ''
+      : record?.cauHinhBieuMau?.[props.field.name]?.type ?? '',
+  );
+  const [objectRelate, setObjectRelate] = useState<any>({});
+  useEffect(() => {
+    const objectRelateTemp = {};
+    if (
+      ['DROP_LIST_SINGLE', 'DROP_LIST_MULTI', 'RADIO_BUTTON', 'CHECKLIST']?.includes(
+        record?.cauHinhBieuMau?.[props.field.name]?.type ?? '',
+      )
+    ) {
+      record?.cauHinhBieuMau?.[props.field.name]?.dataSource?.forEach((item, index) => {
+        objectRelateTemp[index] = item.relatedElement?.length > 0;
+      });
+    }
 
+    setObjectRelate(objectRelateTemp);
+  }, []);
   return (
     <>
       <Row gutter={[20, 0]}>
         <Col xs={24} lg={12}>
-          <Form.Item name={[props.field.name, 'label']} label="Tiêu đề" rules={[...rules.required]}>
+          <Form.Item
+            labelCol={{ span: 24 }}
+            name={[props.field.name, 'label']}
+            label="Tiêu đề"
+            rules={[...rules.required]}
+          >
             <Input placeholder="Tiêu đề" />
           </Form.Item>
         </Col>
         <Col xs={24} lg={12}>
-          <Form.Item name={[props.field.name, 'type']} label="Loại" rules={[...rules.required]}>
+          <Form.Item
+            labelCol={{ span: 24 }}
+            name={[props.field.name, 'type']}
+            label="Loại"
+            rules={[...rules.required]}
+          >
             <Select onChange={(val: string) => setType(val)} placeholder="Chọn loại">
               {Object.keys(ElementTemplateType)?.map((item) => (
                 <Select.Option value={item}>{ElementTemplateType?.[item] ?? ''}</Select.Option>
@@ -29,8 +62,8 @@ const Block = (props: {
           </Form.Item>
         </Col>
         <Col xs={24}>
-          <Form.Item name={[props.field.name, 'note']} label="Ghi chú">
-            <Input.TextArea placeholder="Ghi chú" />
+          <Form.Item labelCol={{ span: 24 }} name={[props.field.name, 'note']} label="Ghi chú">
+            <Input.TextArea rows={1} placeholder="Ghi chú" />
           </Form.Item>
         </Col>
       </Row>
@@ -38,12 +71,20 @@ const Block = (props: {
       {type === 'INPUT_NUMBER' && (
         <Row gutter={[20, 0]}>
           <Col xs={24} lg={12}>
-            <Form.Item name={[props.field.name, 'min']} label="Giá trị tối thiểu">
+            <Form.Item
+              labelCol={{ span: 24 }}
+              name={[props.field.name, 'min']}
+              label="Giá trị tối thiểu"
+            >
               <InputNumber style={{ width: '100%' }} placeholder="Giá trị tối thiểu" />
             </Form.Item>
           </Col>
           <Col xs={24} lg={12}>
-            <Form.Item name={[props.field.name, 'max']} label="Giá trị tối đa">
+            <Form.Item
+              labelCol={{ span: 24 }}
+              name={[props.field.name, 'max']}
+              label="Giá trị tối đa"
+            >
               <InputNumber style={{ width: '100%' }} placeholder="Giá trị tối đa" />
             </Form.Item>
           </Col>
@@ -52,6 +93,7 @@ const Block = (props: {
 
       {(type === 'UPLOAD_SINGLE' || type === 'UPLOAD_MULTI') && (
         <Form.Item
+          labelCol={{ span: 24 }}
           name={[props.field.name, 'fileType']}
           label="Loại file"
           rules={[...rules.required]}
@@ -91,6 +133,84 @@ const Block = (props: {
                         className="dynamic-delete-button"
                         onClick={() => remove(field.name)}
                       />
+                      <Form.Item valuePropName="checked">
+                        <Checkbox
+                          checked={objectRelate?.[index]}
+                          onChange={(val) => {
+                            const newObject = {};
+                            newObject[`${index}`] = val.target.checked;
+                            setObjectRelate({ ...objectRelate, ...newObject });
+                          }}
+                        >
+                          Liên quan tới khối khác
+                        </Checkbox>
+                      </Form.Item>
+                      {objectRelate?.[index] && (
+                        <Form.List
+                          name={[`${index}`, 'relatedElement']}
+                          // initialValue={record?.cauHinhBieuMau ?? []}
+                          rules={[
+                            {
+                              validator: async (_, names) => {
+                                if (!names || names.length < 1) {
+                                  return Promise.reject(new Error('Ít nhất 1 khối'));
+                                }
+                                return '';
+                              },
+                            },
+                          ]}
+                        >
+                          {(
+                            fieldsRelate,
+                            { add: addRelate, remove: removeRelate },
+                            { errors: errorsRelate },
+                          ) => {
+                            return (
+                              <>
+                                {fieldsRelate.map((fieldRelate, indexRelate) => (
+                                  <div key={fieldRelate.key}>
+                                    <Card
+                                      headStyle={{ padding: '8px 24px' }}
+                                      bodyStyle={{ padding: '8px 24px' }}
+                                      className={styles.block}
+                                      title={
+                                        <>
+                                          <div style={{ float: 'left' }}>
+                                            Khối liên quan {indexRelate + 1}
+                                          </div>
+                                          <CloseCircleOutlined
+                                            style={{ float: 'right' }}
+                                            onClick={() => removeRelate(fieldRelate.name)}
+                                          />
+                                        </>
+                                      }
+                                    >
+                                      <Block
+                                        indexBlock={props.field.name}
+                                        indexDataSource={index}
+                                        field={{ ...fieldRelate }}
+                                        relate
+                                      />
+                                    </Card>
+                                    <br />
+                                  </div>
+                                ))}
+                                <Form.Item>
+                                  <Button
+                                    type="dashed"
+                                    onClick={() => addRelate()}
+                                    style={{ width: '100%' }}
+                                    icon={<PlusOutlined />}
+                                  >
+                                    Thêm khối liên quan
+                                  </Button>
+                                  <Form.ErrorList errors={errorsRelate} />
+                                </Form.Item>
+                              </>
+                            );
+                          }}
+                        </Form.List>
+                      )}
                     </Form.Item>
                   </>
                 ))}

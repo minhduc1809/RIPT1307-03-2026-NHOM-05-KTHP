@@ -3,7 +3,6 @@ import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
 import { EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Button, Select, Tooltip } from 'antd';
-import type { ColumnProps } from 'antd/lib/table';
 import moment from 'moment';
 import { useModel } from 'umi';
 import Form from './components/Form';

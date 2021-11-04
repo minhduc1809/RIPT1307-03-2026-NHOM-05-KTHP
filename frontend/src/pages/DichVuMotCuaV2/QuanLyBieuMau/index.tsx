@@ -103,7 +103,6 @@ const QuanLyBieuMau = () => {
         width="60%"
         footer={false}
         visible={visible}
-        bodyStyle={{ padding: 0 }}
         onCancel={() => {
           setVisible(false);
         }}

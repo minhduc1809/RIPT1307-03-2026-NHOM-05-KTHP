@@ -7,7 +7,14 @@ export async function getBieuMauAdmin(payload: { condition: any; page: number; l
 }
 
 export async function getDonSinhVien(payload: { condition: any; page: number; limit: number }) {
-  return axios.get(`${ip3}/don-dvmc/my/pageable`, { params: payload });
+  return axios.get(`${ip3}/don-dvmc/my/pageable`, {
+    params: {
+      ...payload,
+      sort: {
+        createdAt: -1,
+      },
+    },
+  });
 }
 
 export async function getAllBieuMau() {
