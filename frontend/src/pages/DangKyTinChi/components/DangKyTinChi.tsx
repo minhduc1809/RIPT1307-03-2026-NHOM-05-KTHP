@@ -1,7 +1,6 @@
 import type { IColumn } from '@/utils/interfaces';
 import { currencyFormat } from '@/utils/utils';
 import { ArrowLeftOutlined, DeleteOutlined } from '@ant-design/icons';
-import { values } from '@umijs/deps/compiled/lodash';
 import { Button, Checkbox, Col, Divider, Popconfirm, Result, Row, Table } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -53,23 +52,29 @@ const TinChi = (props: {
   });
 
   const onCell = (recordHP: DangKyTinChi.MonHoc) => ({
-    onClick: async () => {
-      setDanhSachLopTinChi([]);
-      setRecordHocPhanCurrent(recordHP);
-      getDSLopTinChiByIdDotAndIdMonHocModel(recordHP.idHocPhan);
-    },
+    onClick:
+      recordHP?.trangThaiDangKy === 'Được phép đăng ký'
+        ? async () => {
+            setDanhSachLopTinChi([]);
+            setRecordHocPhanCurrent(recordHP);
+            getDSLopTinChiByIdDotAndIdMonHocModel(recordHP.idHocPhan);
+          }
+        : () => {},
     style: { cursor: 'pointer' },
   });
 
-  const renderCell = (val: string, recordMonHoc: DangKyTinChi.MonHoc) => (
-    <div
-      style={{
-        color: recordMonHoc.idHocPhan === recordHocPhanCurrent?.idHocPhan ? '#CC0D00' : '#000',
-      }}
-    >
-      {val}
-    </div>
-  );
+  const renderCell = (val: string, recordMonHoc: DangKyTinChi.MonHoc) => {
+    const color = recordMonHoc?.trangThaiDangKy === 'Được phép đăng ký' ? '#000000D9' : '#ccc';
+    return (
+      <div
+        style={{
+          color: recordMonHoc.idHocPhan === recordHocPhanCurrent?.idHocPhan ? '#CC0D00' : color,
+        }}
+      >
+        {val}
+      </div>
+    );
+  };
 
   const onSelectLopTinChi = async (
     value: { target: { checked: boolean } },
@@ -123,13 +128,33 @@ const TinChi = (props: {
       dataIndex: 'hocPhi',
       width: 100,
       align: 'center',
-      render: (val, recordMonHoc) => (
+      render: (val, recordMonHoc) => {
+        const color = recordMonHoc?.trangThaiDangKy === 'Được phép đăng ký' ? '#000000D9' : '#ccc';
+        return (
+          <div
+            style={{
+              color: recordMonHoc.idHocPhan === recordHocPhanCurrent?.idHocPhan ? '#CC0D00' : color,
+            }}
+          >
+            {currencyFormat(val)}
+          </div>
+        );
+      },
+      onCell,
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'trangThaiDangKy',
+      width: 200,
+      align: 'center',
+      search: 'search',
+      render: (val, recordHP) => (
         <div
           style={{
-            color: recordMonHoc.idHocPhan === recordHocPhanCurrent?.idHocPhan ? '#CC0D00' : '#000',
+            color: recordHP.idHocPhan === recordHocPhanCurrent?.idHocPhan ? '#CC0D00' : '#000000D9',
           }}
         >
-          {currencyFormat(val)}
+          {val}
         </div>
       ),
       onCell,
@@ -350,6 +375,7 @@ const TinChi = (props: {
             siSoLop: 0,
             soLuongNhom: 0,
             maHoaLichHoc: [],
+            trangThaiDangKy: 'Được phép đăng ký',
           });
           break;
         }

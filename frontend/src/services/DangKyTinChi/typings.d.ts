@@ -58,6 +58,7 @@ declare module DangKyTinChi {
     tenMonHoc: string;
     index?: number;
     hocPhi: number;
+    trangThaiDangKy: string;
   }
 
   export interface LichHoc {
