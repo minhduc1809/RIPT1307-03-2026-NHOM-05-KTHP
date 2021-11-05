@@ -2,7 +2,7 @@
 import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import rules from '@/utils/rules';
 import { CloseCircleOutlined, EyeOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Input, Modal } from 'antd';
+import { Button, Card, Form, Input, Modal, Steps } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import Block from './Block';
@@ -18,6 +18,8 @@ const FormBieuMau = () => {
     putBieuMauAdminModel,
     visibleFormBieuMau,
     setVisibleFormBieuMau,
+    current,
+    setCurrent,
   } = useModel('dichvumotcuav2');
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
   return (
@@ -123,29 +125,41 @@ const FormBieuMau = () => {
         </Form.List>
 
         <Form.Item style={{ marginBottom: 0, position: 'fixed', top: 14, right: 48 }}>
-          <Button
-            icon={<EyeOutlined />}
-            style={{ marginRight: 8 }}
-            onClick={() => {
-              const valueView = form.getFieldsValue(true);
-              setRecordView({ thongTinDichVu: { ...valueView } } as DichVuMotCuaV2.Don);
-              setVisibleFormBieuMau(true);
-            }}
-          >
-            Xem trước
-          </Button>
-          <Button
-            icon={<SaveOutlined />}
-            loading={loading}
-            style={{ marginRight: 8 }}
-            htmlType="submit"
-            type="primary"
-          >
-            {edit ? 'Lưu' : 'Thêm'}
-          </Button>
-          {/* <Button icon={<CloseOutlined />} onClick={() => setVisibleForm(false)}>
+          <div style={{ display: 'flex' }}>
+            <Steps
+              style={{ marginRight: 8, minWidth: 300 }}
+              current={current}
+              onChange={(val) => {
+                setCurrent(val);
+              }}
+            >
+              <Steps.Step title="Quy trình" description="" />
+              <Steps.Step title="Biểu mẫu" description="" />
+            </Steps>
+            <Button
+              icon={<EyeOutlined />}
+              style={{ marginRight: 8 }}
+              onClick={() => {
+                const valueView = form.getFieldsValue(true);
+                setRecordView({ thongTinDichVu: { ...valueView } } as DichVuMotCuaV2.Don);
+                setVisibleFormBieuMau(true);
+              }}
+            >
+              Xem trước
+            </Button>
+            <Button
+              icon={<SaveOutlined />}
+              loading={loading}
+              style={{ marginRight: 8 }}
+              htmlType="submit"
+              type="primary"
+            >
+              {edit ? 'Lưu' : 'Thêm'}
+            </Button>
+            {/* <Button icon={<CloseOutlined />} onClick={() => setVisibleForm(false)}>
             Đóng
           </Button> */}
+          </div>
         </Form.Item>
       </Form>
       <Modal

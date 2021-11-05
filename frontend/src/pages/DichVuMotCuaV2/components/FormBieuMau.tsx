@@ -8,7 +8,7 @@ import { renderFileList } from '@/utils/utils';
 import { Button, Card, Checkbox, DatePicker, Form, Input, InputNumber, Radio, Select } from 'antd';
 import moment from 'moment';
 import mm from 'moment-timezone';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useModel } from 'umi';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
@@ -18,6 +18,20 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
   const { loading, setVisibleFormBieuMau, postDonSinhVienModel, record } =
     useModel('dichvumotcuav2');
   const [valuesForm, setValuesForm] = useState<any>({});
+
+  useEffect(() => {
+    const valuesTemp = {};
+    props?.record?.thongTinDichVu?.cauHinhBieuMau?.forEach((cauHinh) => {
+      valuesTemp[cauHinh.label] = cauHinh?.value;
+      cauHinh?.dataSource?.forEach((data) => {
+        data?.relatedElement?.forEach((item) => {
+          valuesTemp[item.label] = item?.value;
+        });
+      });
+    });
+    setValuesForm(valuesTemp);
+  }, []);
+
   const buildForm = (item: DichVuMotCuaV2.CauHinhBieuMau) => {
     let element = <Input placeholder={item.label} />;
     let initialValue = item?.value;
@@ -112,7 +126,7 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
             hideDiaChiCuThe={item.level !== 4}
             hideQuanHuyen={item.level === 1}
             hideXaPhuong={[1, 2].includes(item.level)}
-            disabled={props.type === 'view'}
+            // disabled={props.type === 'view'}
             initialValue={item?.value}
             form={form}
             fields={{

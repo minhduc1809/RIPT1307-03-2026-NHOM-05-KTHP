@@ -24,6 +24,7 @@ export default () => {
   const [visibleFormBieuMau, setVisibleFormBieuMau] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
+  const [current, setCurrent] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [typeForm, setTypeForm] = useState<string>('add');
 
@@ -90,6 +91,8 @@ export default () => {
   };
 
   return {
+    current,
+    setCurrent,
     typeForm,
     setTypeForm,
     postDonSinhVienModel,

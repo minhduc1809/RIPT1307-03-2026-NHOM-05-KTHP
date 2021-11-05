@@ -2,7 +2,7 @@
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
-import Form from './components/Form';
+import Form from '@/pages/DichVuMotCuaV2/components/Form';
 import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
