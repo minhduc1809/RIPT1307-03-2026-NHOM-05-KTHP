@@ -62,7 +62,7 @@ const QuanLyBieuMau = () => {
                   setRecord(record);
                   setEdit(true);
                   setVisibleForm(true);
-                  setRecordQuyTrinh(record?.quyTrinh);
+                  setRecordQuyTrinh(record?.quyTrinh ?? {});
                   setCurrent(0);
                 }}
                 shape="circle"

@@ -1,6 +1,9 @@
 import rules from '@/utils/rules';
 import { Col, DatePicker, Form, Row, Select } from 'antd';
 import { useModel } from 'umi';
+import mm from 'moment-timezone';
+
+mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const BieuMauThaoTac = (props: {
   field: { name: number; key: number; isListField?: boolean; fieldKey: number };
@@ -28,7 +31,7 @@ const BieuMauThaoTac = (props: {
         >
           <Select placeholder="Chọn đơn vị">
             {danhSach?.map((item) => (
-              <Select.Option value={item.id}>{item.ten_don_vi}</Select.Option>
+              <Select.Option value={item.id.toString()}>{item.ten_don_vi}</Select.Option>
             ))}
           </Select>
         </Form.Item>

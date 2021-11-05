@@ -27,8 +27,11 @@ const FormBieuMau = () => {
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
           if (edit) {
-            putBieuMauAdminModel({ data: { ...values, ...recordQuyTrinh }, id: record?._id });
-          } else postBieuMauAdminModel({ ...values, ...recordQuyTrinh });
+            putBieuMauAdminModel({
+              data: { ...values, quyTrinh: { ...recordQuyTrinh } },
+              id: record?._id,
+            });
+          } else postBieuMauAdminModel({ ...values, quyTrinh: { ...recordQuyTrinh } });
         }}
         form={form}
       >
