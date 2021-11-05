@@ -126,7 +126,7 @@ const Block = (props: {
                 {fields.map((field, index) => (
                   <>
                     <Form.Item label={`Lựa chọn ${index + 1}`} key={field.key}>
-                      <Form.Item name={[`${index}`, 'choice']} rules={[...rules.required]} noStyle>
+                      <Form.Item name={[`${index}`, 'label']} rules={[...rules.required]} noStyle>
                         <Input placeholder="Nhập lựa chọn" style={{ width: '90%' }} />
                       </Form.Item>
                       <MinusCircleOutlined

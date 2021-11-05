@@ -5,7 +5,7 @@ declare module DichVuMotCuaV2 {
   }
 
   export interface CauHinhBieuMau {
-    dataSource: DataSource[];
+    dataSource: CauHinhBieuMau[];
     isRequired: boolean;
     _id: string;
     label: string;
@@ -16,6 +16,7 @@ declare module DichVuMotCuaV2 {
     note: string;
     value: any;
     level: number;
+    relatedElement: CauHinhBieuMau[];
   }
 
   export interface ThaoTacQuyTrinh {

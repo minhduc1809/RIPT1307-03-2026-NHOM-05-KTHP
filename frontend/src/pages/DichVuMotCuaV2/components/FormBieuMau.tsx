@@ -98,8 +98,8 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
         element = (
           <Select placeholder={item.label}>
             {item.dataSource?.map((datasource) => (
-              <Select.Option key={datasource.choice} value={datasource?.choice}>
-                {datasource?.choice}
+              <Select.Option key={datasource?.label} value={datasource?.label}>
+                {datasource?.label}
               </Select.Option>
             ))}
           </Select>
@@ -111,8 +111,8 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
         element = (
           <Select mode="multiple" placeholder={item.label}>
             {item.dataSource?.map((datasource) => (
-              <Select.Option key={datasource.choice} value={datasource?.choice}>
-                {datasource?.choice}
+              <Select.Option key={datasource.label} value={datasource?.label}>
+                {datasource?.label}
               </Select.Option>
             ))}
           </Select>
@@ -144,8 +144,8 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
         element = (
           <Radio.Group>
             {item.dataSource?.map((datasource) => (
-              <Radio key={datasource.choice} value={datasource?.choice}>
-                {datasource?.choice}
+              <Radio key={datasource.label} value={datasource?.label}>
+                {datasource?.label}
               </Radio>
             ))}
           </Radio.Group>
@@ -158,8 +158,8 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
         element = (
           <Checkbox.Group>
             {item.dataSource?.map((datasource) => (
-              <Checkbox key={datasource.choice} value={datasource?.choice}>
-                {datasource?.choice}
+              <Checkbox key={datasource.label} value={datasource?.label}>
+                {datasource?.label}
               </Checkbox>
             ))}
           </Checkbox.Group>
@@ -199,7 +199,7 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
       <div>
         {formItemElement}
         {item?.dataSource?.map((data) => {
-          return valuesForm?.[item.label] === data.choice ? (
+          return valuesForm?.[item.label] === data.label ? (
             data?.relatedElement?.map((ele) => {
               return buildForm(ele);
             })

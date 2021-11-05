@@ -5,7 +5,7 @@ import { CloseCircleOutlined, EyeOutlined, PlusOutlined, SaveOutlined } from '@a
 import { Button, Card, Form, Input, Modal, Steps } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
-import Block from './BlockQuyTrinh';
+import Block from './BlockBieuMau';
 import styles from './block.css';
 
 const FormBieuMau = () => {
