@@ -54,9 +54,9 @@ export default () => {
           <b>
             <p>Tên sự kiện: {record?.tenSuKien ?? ''}</p>
             <p>Loại sự kiện: {`${loaiSuKien || 'Chưa cập nhật'}`}</p>
-            {['Lịch học', 'Lịch giảng dạy'].includes(record?.loaiSuKien) && (
+            {!['Cá nhân'].includes(record?.loaiSuKien) && (
               <>
-                <p>Tên môn học: {record?.info?.ten_hoc_phan ?? ''}</p>
+                <p>Tên môn: {record?.info?.ten_hoc_phan ?? ''}</p>
                 <p>
                   Link phòng học zoom:{' '}
                   {linkZoom ? (
