@@ -1,4 +1,3 @@
-import { toHexa } from '@/utils/utils';
 import { Card, Modal } from 'antd';
 import moment from 'moment';
 import mm from 'moment-timezone';
@@ -40,12 +39,9 @@ export default () => {
   const onSelectEvent = (record: SuKien.Record) => {
     const { loaiSuKien } = record;
     const vaiTro = localStorage.getItem('vaiTro');
-    const linkZoom =
-      vaiTro === 'sinh_vien'
-        ? record?.info?.link_zoom_sinh_vien
-        : record?.info?.link_zoom_giang_vien;
     Modal.info({
       title: 'Chi tiết sự kiện',
+      width: '500px',
       // width: '40%',
       maskClosable: true,
       okText: 'Đóng',
@@ -59,16 +55,26 @@ export default () => {
                 <p>Tên môn: {record?.info?.ten_hoc_phan ?? ''}</p>
                 <p>
                   Link phòng học zoom:{' '}
-                  {linkZoom ? (
-                    <a target="_blank" href={linkZoom}>
+                  {record?.info?.link_zoom ? (
+                    <a target="_blank" href={record?.info?.link_zoom}>
                       Link
                     </a>
                   ) : (
                     ''
                   )}
                 </p>
-                <p>ID phòng học Zoom: {record?.info?.id_zoom ?? ''}</p>
-                <p>Mật khẩu phòng học Zoom: {record?.info?.mat_khau_1}</p>
+                {vaiTro === 'sinh_vien' && (
+                  <>
+                    <p>ID phòng học Zoom: {record?.info?.id_zoom ?? ''}</p>
+                    <p>Mật khẩu phòng học Zoom: {record?.info?.mat_khau_1}</p>
+                  </>
+                )}
+                {vaiTro === 'giang_vien' && (
+                  <>
+                    <p>Tên đăng nhập Zoom: {record?.info?.tai_khoan ?? ''}</p>
+                    <p>Mật khẩu Zoom: {record?.info?.mat_khau}</p>
+                  </>
+                )}
               </>
             )}
             <p>

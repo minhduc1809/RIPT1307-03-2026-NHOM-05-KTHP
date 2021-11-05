@@ -237,14 +237,14 @@ const DangKyNhuCau = (props: {
         tongHocPhiTemp += hocPhanRecord.hocPhi;
       }
     });
-    if (danhSachHocPhanDaChonTemp.length === 0) {
-      props.danhSachHocPhanKyNay?.forEach((item, index) => {
-        danhSachHocPhanDaChonTemp.push({ ...item, index: index + 1 });
-        danhSachIdHocPhanDaChonTemp.push(item.idHocPhan);
-        tongSoTinChiTemp += item.soTinChi;
-        tongHocPhiTemp += item.hocPhi;
-      });
-    }
+    // if (danhSachHocPhanDaChonTemp.length === 0) {
+    //   props.danhSachHocPhanKyNay?.forEach((item, index) => {
+    //     danhSachHocPhanDaChonTemp.push({ ...item, index: index + 1 });
+    //     danhSachIdHocPhanDaChonTemp.push(item.idHocPhan);
+    //     tongSoTinChiTemp += item.soTinChi;
+    //     tongHocPhiTemp += item.hocPhi;
+    //   });
+    // }
     setDanhSachHocPhanDaChon(danhSachHocPhanDaChonTemp);
     setDanhSachIdHocPhanDaChon(danhSachIdHocPhanDaChonTemp);
     setTongSoTinChi(tongSoTinChiTemp);
