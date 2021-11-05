@@ -374,7 +374,7 @@ const TinChi = (props: {
             tongSoSinhVienLop: 0,
             siSoLop: 0,
             soLuongNhom: 0,
-            maHoaLichHoc: [],
+            maHoaLichHoc: lop?.maHoaLichHoc ?? [],
             trangThaiDangKy: 'Được phép đăng ký',
           });
           break;

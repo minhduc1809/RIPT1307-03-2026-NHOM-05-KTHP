@@ -18,6 +18,7 @@ declare module DangKyTinChi {
   }
 
   export interface LopDaDangKy {
+    maHoaLichHoc: LichHoc[];
     hocPhan: string;
     hocPhanId: number;
     idLopTinChi: number;
