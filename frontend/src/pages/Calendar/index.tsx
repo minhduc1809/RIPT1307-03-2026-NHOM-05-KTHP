@@ -24,9 +24,17 @@ const messages = {
   showMore: (total: number) => `+ Xem thêm (${total})`,
 };
 
+const Color = {
+  'Lịch giảng dạy': '#008080B3',
+  'Lịch học': '#008080B3',
+  'Lịch thi': '#CC0D00',
+  'Cá nhân': '#6b8f24b3',
+};
+
 export default () => {
-  const eventPropGetter = (event: { title: string }) => ({
-    style: { backgroundColor: toHexa(event.title) },
+  const eventPropGetter = (event: { title: string; loaiSuKien: string }) => ({
+    // style: { backgroundColor: toHexa(event.title) },
+    style: { backgroundColor: Color?.[event.loaiSuKien] },
   });
 
   const onSelectEvent = (record: SuKien.Record) => {
@@ -41,7 +49,7 @@ export default () => {
           <b>
             <p>Tên sự kiện: {record?.tenSuKien ?? ''}</p>
             <p>Loại sự kiện: {`${loaiSuKien || 'Chưa cập nhật'}`}</p>
-            {record?.loaiSuKien === 'Lịch học' && (
+            {['Lịch học', 'Lịch giảng dạy'].includes(record?.loaiSuKien) && (
               <>
                 <p>Tên môn học: {record?.info?.ten_hoc_phan ?? ''}</p>
                 <p>ID phòng học Zoom: {record?.info?.id_zoom ?? ''}</p>
