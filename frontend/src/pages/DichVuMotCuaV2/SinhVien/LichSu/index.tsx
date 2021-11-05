@@ -71,7 +71,7 @@ const LichSuGuiDon = () => {
       <TableBase
         dataState="danhSachDon"
         widthDrawer="60%"
-        title="Quản lý biểu mẫu"
+        title="Lịch sử gửi đơn"
         modelName="dichvumotcuav2"
         columns={columns}
         loading={loading}

@@ -75,7 +75,7 @@ export default {
   'menu.DichVuMotCuaSinhVien.TaoDon': 'Tạo đơn mới',
   'menu.DichVuMotCuaSinhVien': 'Dịch vụ một cửa',
   'menu.DichVuMotCuaAdmin': 'Dịch vụ một cửa',
-  'menu.DichVuMotCuaAdmin.QuanLyBieuMau': 'Quản lý biểu mẫu',
+  'menu.DichVuMotCuaAdmin.QuanLyBieuMau': 'Quản lý dịch vụ',
   'menu.PhanQuyen': 'Phân quyền',
   'menu.PhanQuyen.ChucNangNhomVaiTro': 'Chức năng - Nhóm vai trò',
   'menu.PhanQuyen.PhanNhom': 'Phân nhóm',

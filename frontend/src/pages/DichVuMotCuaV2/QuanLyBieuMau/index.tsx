@@ -2,7 +2,7 @@
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
-import Form from '@/pages/DichVuMotCuaV2/components/Form';
+import Form from './components/Form';
 import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
@@ -90,7 +90,7 @@ const QuanLyBieuMau = () => {
         hascreate
         widthDrawer="60%"
         formType="Drawer"
-        title="Quản lý biểu mẫu"
+        title="Quản lý dịch vụ"
         modelName="dichvumotcuav2"
         columns={columns}
         loading={loading}
