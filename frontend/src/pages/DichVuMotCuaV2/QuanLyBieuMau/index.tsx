@@ -7,6 +7,7 @@ import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import { useState } from 'react';
+import moment from 'moment';
 
 const QuanLyBieuMau = () => {
   const {
@@ -62,7 +63,20 @@ const QuanLyBieuMau = () => {
                   setRecord(record);
                   setEdit(true);
                   setVisibleForm(true);
-                  setRecordQuyTrinh(record?.quyTrinh ?? {});
+                  setRecordQuyTrinh({
+                    ...(record?.quyTrinh ?? {}),
+                    danhSachBuoc: record?.quyTrinh?.danhSachBuoc?.map((buoc) => {
+                      return {
+                        ...buoc,
+                        danhSachThaoTac: buoc?.danhSachThaoTac?.map((thaoTac) => {
+                          return {
+                            ...thaoTac,
+                            hanXuLy: thaoTac?.hanXuLy ? moment(thaoTac.hanXuLy) : undefined,
+                          };
+                        }),
+                      };
+                    }),
+                  });
                   setCurrent(0);
                 }}
                 shape="circle"

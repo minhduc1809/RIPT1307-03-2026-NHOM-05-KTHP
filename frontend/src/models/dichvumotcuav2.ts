@@ -63,10 +63,10 @@ export default () => {
   };
 
   const putBieuMauAdminModel = async (payload: { data: DichVuMotCuaV2.BieuMau; id?: string }) => {
-    setLoading(true);
+    // setLoading(true);
     await putBieuMauAdmin(payload);
     message.success('Lưu thành công');
-    setLoading(false);
+    // setLoading(false);
     setVisibleForm(false);
     getBieuMauAdminModel();
   };

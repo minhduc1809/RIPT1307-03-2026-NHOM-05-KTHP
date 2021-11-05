@@ -10,7 +10,6 @@ const FormTaoQuyTrinh = () => {
   const [form] = Form.useForm();
   const { loading, recordQuyTrinh, edit, setCurrent, setRecordQuyTrinh } =
     useModel('dichvumotcuav2');
-  debugger;
   const { getAllDonViModel, danhSach } = useModel('donvi');
 
   useEffect(() => {
@@ -32,7 +31,8 @@ const FormTaoQuyTrinh = () => {
                       ...thaoTac,
                       idDonVi: thaoTac?.idDonVi?.toString(),
                       tenDonVi:
-                        danhSach?.find((item) => item.id === thaoTac.idDonVi)?.ten_don_vi ?? '',
+                        danhSach?.find((item) => item.id.toString() === thaoTac.idDonVi)
+                          ?.ten_don_vi ?? '',
                     }),
                   ),
                 };

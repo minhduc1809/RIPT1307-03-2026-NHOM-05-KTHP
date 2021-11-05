@@ -1,9 +1,4 @@
 declare module DichVuMotCuaV2 {
-  export interface DataSource {
-    choice: string;
-    relatedElement: CauHinhBieuMau[];
-  }
-
   export interface CauHinhBieuMau {
     dataSource: CauHinhBieuMau[];
     isRequired: boolean;
@@ -21,7 +16,10 @@ declare module DichVuMotCuaV2 {
 
   export interface ThaoTacQuyTrinh {
     _id: string;
-    idDonVi: number;
+    idDonVi: string;
+    tenDonVi: string;
+    hanXuLy?: string | moment;
+    cauHinh: any;
   }
 
   export interface BuocQuyTrinh {
