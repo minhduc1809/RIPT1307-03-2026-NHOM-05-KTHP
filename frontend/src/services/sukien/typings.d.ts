@@ -9,6 +9,8 @@ declare module SuKien {
     thu: number;
     info: {
       ten_hoc_phan: string;
+      link_zoom_sinh_vien: string;
+      link_zoom_giang_vien: string;
       dien_thoai: string;
       giang_vien_id: [number, string];
       id: number;

@@ -39,6 +39,11 @@ export default () => {
 
   const onSelectEvent = (record: SuKien.Record) => {
     const { loaiSuKien } = record;
+    const vaiTro = localStorage.getItem('vaiTro');
+    const linkZoom =
+      vaiTro === 'sinh_vien'
+        ? record?.info?.link_zoom_sinh_vien
+        : record?.info?.link_zoom_giang_vien;
     Modal.info({
       title: 'Chi tiết sự kiện',
       // width: '40%',
@@ -52,6 +57,16 @@ export default () => {
             {['Lịch học', 'Lịch giảng dạy'].includes(record?.loaiSuKien) && (
               <>
                 <p>Tên môn học: {record?.info?.ten_hoc_phan ?? ''}</p>
+                <p>
+                  Link phòng học zoom:{' '}
+                  {linkZoom ? (
+                    <a target="_blank" href={linkZoom}>
+                      Link
+                    </a>
+                  ) : (
+                    ''
+                  )}
+                </p>
                 <p>ID phòng học Zoom: {record?.info?.id_zoom ?? ''}</p>
                 <p>Mật khẩu phòng học Zoom: {record?.info?.mat_khau_1}</p>
               </>
