@@ -1,53 +1,27 @@
 /* eslint-disable no-underscore-dangle */
-import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
-import { CloseCircleOutlined, EyeOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Modal, Steps } from 'antd';
-import { useState } from 'react';
+import { ArrowRightOutlined, CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Card, Form, Steps } from 'antd';
+import { useEffect } from 'react';
 import { useModel } from 'umi';
 import styles from './block.css';
-import Block from './BlockBieuMau';
+import Block from './BlockQuyTrinh';
 
 const FormTaoQuyTrinh = () => {
   const [form] = Form.useForm();
-  const {
-    loading,
-    record,
-    edit,
-    postBieuMauAdminModel,
-    putBieuMauAdminModel,
-    visibleFormBieuMau,
-    setVisibleFormBieuMau,
-    current,
-    setCurrent,
-  } = useModel('dichvumotcuav2');
-  const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
+  const { loading, record, edit, current, setCurrent } = useModel('dichvumotcuav2');
+  const { getAllDonViModel } = useModel('donvi');
+
+  useEffect(() => {
+    getAllDonViModel();
+  }, []);
+
   return (
     <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          const quyTrinhTemp = {
-            quyTrinh: {
-              _id: 'string',
-              danhSachBuoc: [
-                {
-                  _id: 'string',
-                  tenDonVi: 'string',
-                  ten: 'string',
-                  danhSachThaoTac: [
-                    {
-                      tenDonVi: 'string',
-                      _id: 'string',
-                      idDonVi: 'string',
-                    },
-                  ],
-                },
-              ],
-            },
-          };
-          // if (edit) {
-          //   putBieuMauAdminModel({ data: { ...values, ...quyTrinhTemp }, id: record?._id });
-          // } else postBieuMauAdminModel({ ...values, ...quyTrinhTemp });
+          const abcd = values;
+          debugger;
         }}
         form={form}
       >
@@ -117,25 +91,15 @@ const FormTaoQuyTrinh = () => {
               <Steps.Step title="Quy trình" description="" />
               <Steps.Step title="Biểu mẫu" description="" />
             </Steps>
+
             <Button
-              icon={<EyeOutlined />}
-              style={{ marginRight: 8 }}
-              onClick={() => {
-                const valueView = form.getFieldsValue(true);
-                setRecordView({ thongTinDichVu: { ...valueView } } as DichVuMotCuaV2.Don);
-                setVisibleFormBieuMau(true);
-              }}
-            >
-              Xem trước
-            </Button>
-            <Button
-              icon={<SaveOutlined />}
+              icon={<ArrowRightOutlined />}
               loading={loading}
               style={{ marginRight: 8 }}
               htmlType="submit"
               type="primary"
             >
-              {edit ? 'Lưu' : 'Thêm'}
+              Tiếp theo
             </Button>
             {/* <Button icon={<CloseOutlined />} onClick={() => setVisibleForm(false)}>
             Đóng
@@ -143,18 +107,6 @@ const FormTaoQuyTrinh = () => {
           </div>
         </Form.Item>
       </Form>
-      <Modal
-        destroyOnClose
-        width="60%"
-        footer={false}
-        visible={visibleFormBieuMau}
-        bodyStyle={{ padding: 0 }}
-        onCancel={() => {
-          setVisibleFormBieuMau(false);
-        }}
-      >
-        <FormView type="view" record={recordView} />
-      </Modal>
     </Card>
   );
 };
