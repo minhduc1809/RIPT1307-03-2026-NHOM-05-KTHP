@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { ArrowRightOutlined, CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Steps } from 'antd';
+import { Button, Card, Form } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import styles from './block.css';
@@ -8,26 +8,43 @@ import Block from './BlockQuyTrinh';
 
 const FormTaoQuyTrinh = () => {
   const [form] = Form.useForm();
-  const { loading, record, edit, current, setCurrent } = useModel('dichvumotcuav2');
-  const { getAllDonViModel } = useModel('donvi');
+  const { loading, recordQuyTrinh, edit, setCurrent, setRecordQuyTrinh } =
+    useModel('dichvumotcuav2');
+  const { getAllDonViModel, danhSach } = useModel('donvi');
 
   useEffect(() => {
     getAllDonViModel();
   }, []);
 
   return (
-    <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
+    <Card title={edit ? 'Chỉnh sửa quy trình' : 'Thêm mới quy trình'}>
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          const abcd = values;
-          debugger;
+          const quyTrinh: DichVuMotCuaV2.QuyTrinh = {
+            danhSachBuoc: values?.quyTrinh?.danhSachBuoc?.map(
+              (buoc: DichVuMotCuaV2.BuocQuyTrinh) => {
+                return {
+                  ...buoc,
+                  danhSachThaoTac: buoc?.danhSachThaoTac?.map(
+                    (thaoTac: DichVuMotCuaV2.ThaoTacQuyTrinh) => ({
+                      ...thaoTac,
+                      tenDonVi:
+                        danhSach?.find((item) => item.id === thaoTac.idDonVi)?.ten_don_vi ?? '',
+                    }),
+                  ),
+                };
+              },
+            ),
+          };
+          setRecordQuyTrinh(quyTrinh);
+          setCurrent(1);
         }}
         form={form}
       >
         <Form.List
           name={['quyTrinh', 'danhSachBuoc']}
-          initialValue={record?.quyTrinh?.danhSachBuoc ?? []}
+          initialValue={recordQuyTrinh?.danhSachBuoc ?? []}
           rules={[
             {
               validator: async (_, names) => {
@@ -81,7 +98,7 @@ const FormTaoQuyTrinh = () => {
 
         <Form.Item style={{ marginBottom: 0, position: 'fixed', top: 14, right: 48 }}>
           <div style={{ display: 'flex' }}>
-            <Steps
+            {/* <Steps
               style={{ marginRight: 8, minWidth: 300 }}
               current={current}
               onChange={(val) => {
@@ -90,7 +107,7 @@ const FormTaoQuyTrinh = () => {
             >
               <Steps.Step title="Quy trình" description="" />
               <Steps.Step title="Biểu mẫu" description="" />
-            </Steps>
+            </Steps> */}
 
             <Button
               icon={<ArrowRightOutlined />}

@@ -2,11 +2,11 @@
 import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import rules from '@/utils/rules';
 import { CloseCircleOutlined, EyeOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Input, Modal, Steps } from 'antd';
+import { Button, Card, Form, Input, Modal } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
-import Block from './BlockBieuMau';
 import styles from './block.css';
+import Block from './BlockBieuMau';
 
 const FormBieuMau = () => {
   const [form] = Form.useForm();
@@ -18,37 +18,17 @@ const FormBieuMau = () => {
     putBieuMauAdminModel,
     visibleFormBieuMau,
     setVisibleFormBieuMau,
-    current,
-    setCurrent,
+    recordQuyTrinh,
   } = useModel('dichvumotcuav2');
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
   return (
-    <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
+    <Card title={edit ? 'Chỉnh sửa biểu mẫu' : 'Thêm mới biểu mẫu'}>
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          const quyTrinhTemp = {
-            quyTrinh: {
-              _id: 'string',
-              danhSachBuoc: [
-                {
-                  _id: 'string',
-                  tenDonVi: 'string',
-                  ten: 'string',
-                  danhSachThaoTac: [
-                    {
-                      tenDonVi: 'string',
-                      _id: 'string',
-                      idDonVi: 'string',
-                    },
-                  ],
-                },
-              ],
-            },
-          };
           if (edit) {
-            putBieuMauAdminModel({ data: { ...values, ...quyTrinhTemp }, id: record?._id });
-          } else postBieuMauAdminModel({ ...values, ...quyTrinhTemp });
+            putBieuMauAdminModel({ data: { ...values, ...recordQuyTrinh }, id: record?._id });
+          } else postBieuMauAdminModel({ ...values, ...recordQuyTrinh });
         }}
         form={form}
       >
@@ -126,7 +106,7 @@ const FormBieuMau = () => {
 
         <Form.Item style={{ marginBottom: 0, position: 'fixed', top: 14, right: 48 }}>
           <div style={{ display: 'flex' }}>
-            <Steps
+            {/* <Steps
               style={{ marginRight: 8, minWidth: 300 }}
               current={current}
               onChange={(val) => {
@@ -135,7 +115,7 @@ const FormBieuMau = () => {
             >
               <Steps.Step title="Quy trình" description="" />
               <Steps.Step title="Biểu mẫu" description="" />
-            </Steps>
+            </Steps> */}
             <Button
               icon={<EyeOutlined />}
               style={{ marginRight: 8 }}

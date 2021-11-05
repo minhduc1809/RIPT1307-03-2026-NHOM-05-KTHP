@@ -21,7 +21,7 @@ declare module DichVuMotCuaV2 {
 
   export interface ThaoTacQuyTrinh {
     _id: string;
-    idDonVi: string;
+    idDonVi: number;
   }
 
   export interface BuocQuyTrinh {
@@ -31,7 +31,7 @@ declare module DichVuMotCuaV2 {
   }
 
   export interface QuyTrinh {
-    _id: string;
+    _id?: string;
     danhSachBuoc: BuocQuyTrinh[];
   }
 

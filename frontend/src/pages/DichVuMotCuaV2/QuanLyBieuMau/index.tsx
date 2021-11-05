@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import Form from './components/Form';
 import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
 import { useModel } from 'umi';
@@ -19,6 +19,8 @@ const QuanLyBieuMau = () => {
     setEdit,
     setVisibleForm,
     deleteBieuMauAdminModel,
+    setRecordQuyTrinh,
+    setCurrent,
   } = useModel('dichvumotcuav2');
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
   const [visible, setVisible] = useState<boolean>(false);
@@ -60,6 +62,8 @@ const QuanLyBieuMau = () => {
                   setRecord(record);
                   setEdit(true);
                   setVisibleForm(true);
+                  setRecordQuyTrinh(record?.quyTrinh);
+                  setCurrent(0);
                 }}
                 shape="circle"
                 type="primary"
@@ -87,7 +91,6 @@ const QuanLyBieuMau = () => {
   return (
     <>
       <TableBase
-        hascreate
         widthDrawer="60%"
         formType="Drawer"
         title="Quản lý dịch vụ"
@@ -97,7 +100,22 @@ const QuanLyBieuMau = () => {
         dependencies={[page, limit, condition]}
         getData={getBieuMauAdminModel}
         Form={Form}
-      />
+      >
+        <Button
+          onClick={() => {
+            setVisibleForm(true);
+            setEdit(false);
+            setRecord({} as DichVuMotCuaV2.BieuMau);
+            setRecordQuyTrinh({} as DichVuMotCuaV2.QuyTrinh);
+            setCurrent(0);
+          }}
+          type="primary"
+          icon={<PlusCircleOutlined />}
+        >
+          Thêm mới
+        </Button>
+      </TableBase>
+
       <Modal
         destroyOnClose
         width="60%"

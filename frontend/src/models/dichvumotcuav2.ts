@@ -18,13 +18,14 @@ export default () => {
   const [condition, setCondition] = useState<any>({});
   const [record, setRecord] = useState<DichVuMotCuaV2.BieuMau>();
   const [recordDon, setRecordDon] = useState<DichVuMotCuaV2.Don>();
+  const [recordQuyTrinh, setRecordQuyTrinh] = useState<DichVuMotCuaV2.QuyTrinh>();
   const [loading, setLoading] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
   const [visibleFormBieuMau, setVisibleFormBieuMau] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
-  const [current, setCurrent] = useState<number>(1);
+  const [current, setCurrent] = useState<number>(0);
   const [limit, setLimit] = useState<number>(10);
   const [typeForm, setTypeForm] = useState<string>('add');
 
@@ -91,6 +92,8 @@ export default () => {
   };
 
   return {
+    recordQuyTrinh,
+    setRecordQuyTrinh,
     current,
     setCurrent,
     typeForm,
