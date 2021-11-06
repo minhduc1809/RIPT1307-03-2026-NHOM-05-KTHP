@@ -1,7 +1,7 @@
 import TableTemp from '@/components/Table/Table';
 import type { IColumn } from '@/utils/interfaces';
 import { SaveOutlined } from '@ant-design/icons';
-import { Button, message, Popconfirm } from 'antd';
+import { Button, message, Modal, Popconfirm } from 'antd';
 import moment from 'moment';
 import { useModel } from 'umi';
 
@@ -45,11 +45,16 @@ const TableDanhSachHocPhanDaChon = (props: {
           if (!lichHocBiTrung) arrLichHoc.push({ lich: stringLichHoc, mon: item?.tenMonHoc });
           else if (check === true) {
             check = false;
-            message.error(
-              `Môn ${item?.tenMonHoc ?? ''}, ${lichHocBiTrung?.mon} trùng lịch vào ${
+            Modal.error({
+              content: `Môn ${item?.tenMonHoc ?? ''}, ${lichHocBiTrung?.mon} trùng lịch vào ${
                 lichHocBiTrung?.lich
-              }`,
-            );
+              }.`,
+            });
+            // message.error(
+            //   `Môn ${item?.tenMonHoc ?? ''}, ${lichHocBiTrung?.mon} trùng lịch vào ${
+            //     lichHocBiTrung?.lich
+            //   }`,
+            // );
           }
         });
       });
