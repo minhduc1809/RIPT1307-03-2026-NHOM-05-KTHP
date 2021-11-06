@@ -64,6 +64,7 @@ const DangKyNhuCau = (props: {
       dataIndex: 'soThuTuKyHoc',
       render: (val, recordMonHoc) => (
         <Checkbox
+          disabled={recordMonHoc?.trangThaiDangKy !== 'Được phép đăng ký'}
           checked={danhSachIdHocPhanDaChon.includes(recordMonHoc.idHocPhan)}
           onChange={(value) => onSelectMonHoc(value, recordMonHoc)}
         />
@@ -77,7 +78,20 @@ const DangKyNhuCau = (props: {
       width: 200,
       align: 'center',
       search: 'search',
-      render: (val) => <div style={{ fontWeight: val === 'Tổng' ? 'bold' : 'normal' }}>{val}</div>,
+      render: (val, recordMonHoc) => (
+        <div
+          style={{
+            color:
+              recordMonHoc?.trangThaiDangKy === 'Được phép đăng ký' ||
+              recordMonHoc.tenMonHoc === 'Tổng'
+                ? '#000000D9'
+                : '#ccc',
+            fontWeight: val === 'Tổng' ? 'bold' : 'normal',
+          }}
+        >
+          {val}
+        </div>
+      ),
     },
     {
       title: 'Mã học phần',
@@ -85,6 +99,19 @@ const DangKyNhuCau = (props: {
       width: 200,
       align: 'center',
       search: 'search',
+      render: (val, recordMonHoc) => (
+        <div
+          style={{
+            color:
+              recordMonHoc?.trangThaiDangKy === 'Được phép đăng ký' ||
+              recordMonHoc.tenMonHoc === 'Tổng'
+                ? '#000000D9'
+                : '#ccc',
+          }}
+        >
+          {val}
+        </div>
+      ),
     },
     {
       title: 'Số tín chỉ',
@@ -92,7 +119,17 @@ const DangKyNhuCau = (props: {
       width: 100,
       align: 'center',
       render: (val, recordHP) => (
-        <div style={{ fontWeight: recordHP?.tenMonHoc === 'Tổng' ? 'bold' : 'normal' }}>{val}</div>
+        <div
+          style={{
+            color:
+              recordHP?.trangThaiDangKy === 'Được phép đăng ký' || recordHP.tenMonHoc === 'Tổng'
+                ? '#000000D9'
+                : '#ccc',
+            fontWeight: recordHP?.tenMonHoc === 'Tổng' ? 'bold' : 'normal',
+          }}
+        >
+          {val}
+        </div>
       ),
     },
     {
@@ -101,8 +138,32 @@ const DangKyNhuCau = (props: {
       width: 200,
       align: 'center',
       render: (val, recordHP) => (
-        <div style={{ fontWeight: recordHP?.tenMonHoc === 'Tổng' ? 'bold' : 'normal' }}>
+        <div
+          style={{
+            color:
+              recordHP?.trangThaiDangKy === 'Được phép đăng ký' || recordHP.tenMonHoc === 'Tổng'
+                ? '#000000D9'
+                : '#ccc',
+            fontWeight: recordHP?.tenMonHoc === 'Tổng' ? 'bold' : 'normal',
+          }}
+        >
           {currencyFormat(val)}
+        </div>
+      ),
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'trangThaiDangKy',
+      width: 200,
+      align: 'center',
+      search: 'search',
+      render: (val, recordHP) => (
+        <div
+          style={{
+            color: recordHP?.trangThaiDangKy !== 'Được phép đăng ký' ? '#ccc' : '#000000D9',
+          }}
+        >
+          {val}
         </div>
       ),
     },
@@ -176,14 +237,14 @@ const DangKyNhuCau = (props: {
         tongHocPhiTemp += hocPhanRecord.hocPhi;
       }
     });
-    if (danhSachHocPhanDaChonTemp.length === 0) {
-      props.danhSachHocPhanKyNay?.forEach((item, index) => {
-        danhSachHocPhanDaChonTemp.push({ ...item, index: index + 1 });
-        danhSachIdHocPhanDaChonTemp.push(item.idHocPhan);
-        tongSoTinChiTemp += item.soTinChi;
-        tongHocPhiTemp += item.hocPhi;
-      });
-    }
+    // if (danhSachHocPhanDaChonTemp.length === 0) {
+    //   props.danhSachHocPhanKyNay?.forEach((item, index) => {
+    //     danhSachHocPhanDaChonTemp.push({ ...item, index: index + 1 });
+    //     danhSachIdHocPhanDaChonTemp.push(item.idHocPhan);
+    //     tongSoTinChiTemp += item.soTinChi;
+    //     tongHocPhiTemp += item.hocPhi;
+    //   });
+    // }
     setDanhSachHocPhanDaChon(danhSachHocPhanDaChonTemp);
     setDanhSachIdHocPhanDaChon(danhSachIdHocPhanDaChonTemp);
     setTongSoTinChi(tongSoTinChiTemp);

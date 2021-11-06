@@ -1,7 +1,7 @@
 import TableTemp from '@/components/Table/Table';
 import type { IColumn } from '@/utils/interfaces';
 import { SaveOutlined } from '@ant-design/icons';
-import { Button, Popconfirm } from 'antd';
+import { Button, message, Modal, Popconfirm } from 'antd';
 import moment from 'moment';
 import { useModel } from 'umi';
 
@@ -28,15 +28,52 @@ const TableDanhSachHocPhanDaChon = (props: {
   } else if (props.tongSoTinChi > recordThongTinKyHoc.tinChiDangKyToiDa) {
     textConfirmSave = `Bạn đã đăng ký số tín chỉ lớn hơn ${recordThongTinKyHoc.tinChiDangKyToiDa} tín chỉ theo quy định. Bạn vui lòng đăng ký lại`;
   }
+
+  const checkTrungLichHoc = (danhSachHocPhanDaChon: any[]) => {
+    const arrLichHoc: { lich: string; mon: string }[] = [];
+    let check = true;
+    danhSachHocPhanDaChon?.forEach((item) => {
+      let stringLichHoc = '';
+      item?.maHoaLichHoc?.forEach((lichHoc: DangKyTinChi.LichHoc) => {
+        const thu = Number(lichHoc.thu) !== 6 ? `Thứ ${Number(lichHoc.thu) + 2}` : 'Chủ nhật';
+        stringLichHoc += `${thu || ''}, tiết ${lichHoc?.tietBatDau ?? ''}`;
+        lichHoc?.danhSachTuan?.forEach((tuan: number) => {
+          stringLichHoc += `, Tuần ${tuan.toString()}`;
+          const lichHocBiTrung = arrLichHoc?.find(
+            (itemArrLichHoc) => itemArrLichHoc.lich === stringLichHoc,
+          );
+          if (!lichHocBiTrung) arrLichHoc.push({ lich: stringLichHoc, mon: item?.tenMonHoc });
+          else if (check === true) {
+            check = false;
+            Modal.error({
+              content: `Môn ${item?.tenMonHoc ?? ''}, ${lichHocBiTrung?.mon} trùng lịch vào ${
+                lichHocBiTrung?.lich
+              }.`,
+            });
+            // message.error(
+            //   `Môn ${item?.tenMonHoc ?? ''}, ${lichHocBiTrung?.mon} trùng lịch vào ${
+            //     lichHocBiTrung?.lich
+            //   }`,
+            // );
+          }
+        });
+      });
+    });
+    return check;
+  };
+
   const onSave = () => {
     if (props.tongSoTinChi > recordThongTinKyHoc.tinChiDangKyToiDa) return;
-    const danhSachHocPhan: any = props.danhSachHocPhanDaChon?.map((item) => {
+    const checkTrungLich = checkTrungLichHoc(props?.danhSachHocPhanDaChon ?? []);
+    if (checkTrungLich === false) return;
+    const danhSachHocPhan: any = props?.danhSachHocPhanDaChon?.map((item) => {
       if (current === 0) return { idHocPhan: item.idHocPhan };
       return {
         lop_tin_chi_id: item?.idLop,
         nhom_lop_tin_chi_id: item?.idNhomLop,
       };
     });
+
     if (current === 0) postDanhSachHocPhanDangKyModel(danhSachHocPhan);
     else postDanhSachLopDangKyModel({ data: { danhSachLop: danhSachHocPhan } });
   };

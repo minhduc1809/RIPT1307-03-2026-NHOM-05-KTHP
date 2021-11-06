@@ -1,4 +1,3 @@
-import { toHexa } from '@/utils/utils';
 import { Card, Modal } from 'antd';
 import moment from 'moment';
 import mm from 'moment-timezone';
@@ -24,15 +23,25 @@ const messages = {
   showMore: (total: number) => `+ Xem thêm (${total})`,
 };
 
+const Color = {
+  'Lịch giảng dạy': '#008080B3',
+  'Lịch học': '#008080B3',
+  'Lịch thi': '#CC0D00',
+  'Cá nhân': '#6b8f24b3',
+};
+
 export default () => {
-  const eventPropGetter = (event: { title: string }) => ({
-    style: { backgroundColor: toHexa(event.title) },
+  const eventPropGetter = (event: { title: string; loaiSuKien: string }) => ({
+    // style: { backgroundColor: toHexa(event.title) },
+    style: { backgroundColor: Color?.[event.loaiSuKien] },
   });
 
   const onSelectEvent = (record: SuKien.Record) => {
     const { loaiSuKien } = record;
+    const vaiTro = localStorage.getItem('vaiTro');
     Modal.info({
       title: 'Chi tiết sự kiện',
+      width: '500px',
       // width: '40%',
       maskClosable: true,
       okText: 'Đóng',
@@ -41,11 +50,31 @@ export default () => {
           <b>
             <p>Tên sự kiện: {record?.tenSuKien ?? ''}</p>
             <p>Loại sự kiện: {`${loaiSuKien || 'Chưa cập nhật'}`}</p>
-            {record?.loaiSuKien === 'Lịch học' && (
+            {!['Cá nhân'].includes(record?.loaiSuKien) && (
               <>
-                <p>Tên môn học: {record?.info?.ten_hoc_phan ?? ''}</p>
-                <p>ID phòng học Zoom: {record?.info?.id_zoom ?? ''}</p>
-                <p>Mật khẩu phòng học Zoom: {record?.info?.mat_khau_1}</p>
+                <p>Tên môn: {record?.info?.ten_hoc_phan ?? ''}</p>
+                <p>
+                  Link phòng học zoom:{' '}
+                  {record?.info?.link_zoom ? (
+                    <a target="_blank" href={record?.info?.link_zoom}>
+                      Link
+                    </a>
+                  ) : (
+                    ''
+                  )}
+                </p>
+                {vaiTro === 'sinh_vien' && (
+                  <>
+                    <p>ID phòng học Zoom: {record?.info?.id_zoom ?? ''}</p>
+                    <p>Mật khẩu phòng học Zoom: {record?.info?.mat_khau_1}</p>
+                  </>
+                )}
+                {vaiTro === 'giang_vien' && (
+                  <>
+                    <p>Tên đăng nhập Zoom: {record?.info?.tai_khoan ?? ''}</p>
+                    <p>Mật khẩu Zoom: {record?.info?.mat_khau}</p>
+                  </>
+                )}
               </>
             )}
             <p>

@@ -18,6 +18,7 @@ declare module DangKyTinChi {
   }
 
   export interface LopDaDangKy {
+    maHoaLichHoc: LichHoc[];
     hocPhan: string;
     hocPhanId: number;
     idLopTinChi: number;
@@ -58,6 +59,7 @@ declare module DangKyTinChi {
     tenMonHoc: string;
     index?: number;
     hocPhi: number;
+    trangThaiDangKy: string;
   }
 
   export interface LichHoc {
