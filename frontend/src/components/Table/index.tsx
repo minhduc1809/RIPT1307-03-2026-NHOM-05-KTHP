@@ -302,7 +302,7 @@ const TableBase = (props: Props) => {
           Thêm mới
         </Button>
       )}
-      <h3 style={{ display: 'inline-block', margin: '0 10px 10px 50px', float: 'right' }}>
+      <h3 style={{ display: 'inline-block', margin: '0 0px 10px 50px', float: 'right' }}>
         Tổng số:
         <Input
           style={{ width: '90px', fontWeight: 700, fontSize: 16, marginLeft: 10 }}

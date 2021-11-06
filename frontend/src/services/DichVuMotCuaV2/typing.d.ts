@@ -14,6 +14,21 @@ declare module DichVuMotCuaV2 {
     relatedElement: CauHinhBieuMau[];
   }
 
+  export interface DonThaoTac {
+    _id: string;
+    idDon: Don;
+    idBuoc: string;
+    idThaoTac: string;
+    idDonVi: string;
+    tenDonVi: string;
+    idDichVu: string;
+    nguoiTao: Login.Profile;
+    trangThai: 'PENDING' | 'OK' | 'NOT_OK';
+    nguoiThucHien: Login.Profile;
+    cauHinh: any;
+    info: any;
+  }
+
   export interface ThaoTacQuyTrinh {
     _id: string;
     idDonVi: string;

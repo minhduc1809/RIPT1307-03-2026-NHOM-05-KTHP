@@ -78,6 +78,8 @@ export default {
   'menu.DichVuMotCuaAdmin.QuanLyBieuMau': 'Quản lý dịch vụ',
   'menu.PhanQuyen': 'Phân quyền',
   'menu.PhanQuyen.ChucNangNhomVaiTro': 'Chức năng - Nhóm vai trò',
+  'menu.DichVuMotCuaCanBo': 'Dịch vụ một cửa',
   'menu.PhanQuyen.PhanNhom': 'Phân nhóm',
+  'menu.DichVuMotCuaCanBo.QuanLyDon': 'Quản lý đơn',
   'menu.dva-sample': 'Page mẫu dùng DVA',
 };

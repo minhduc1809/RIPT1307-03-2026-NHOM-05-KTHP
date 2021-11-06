@@ -24,6 +24,10 @@ const FormBieuMau = () => {
   return (
     <Card title={edit ? 'Chỉnh sửa biểu mẫu' : 'Thêm mới biểu mẫu'}>
       <Form
+        // onFieldsChange={(changedFields, allFields) => {
+        //   debugger;
+        // }}
+        scrollToFirstError
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
           if (edit) {

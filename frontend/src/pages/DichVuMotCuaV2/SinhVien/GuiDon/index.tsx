@@ -4,7 +4,7 @@ import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Card, Modal, Select } from 'antd';
 import { useModel } from 'umi';
 import { useEffect } from 'react';
-import Form from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
+import FormBieuMau from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 
 const SinhVienTaoDon = () => {
   const {
@@ -57,7 +57,7 @@ const SinhVienTaoDon = () => {
         bodyStyle={{ padding: 0 }}
         visible={visibleFormBieuMau}
       >
-        <Form
+        <FormBieuMau
           record={
             {
               thongTinDichVu: { ...record },

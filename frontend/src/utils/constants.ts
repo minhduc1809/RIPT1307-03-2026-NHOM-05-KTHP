@@ -15,6 +15,7 @@ export enum ElementTemplateType {
   RADIO_BUTTON = 'Lựa chọn một (Radio)',
   CHECKLIST = 'Lựa chọn nhiều (Checklist)',
   DON_VI_HANH_CHINH = 'Đơn vị hành chính',
+  TABLE = 'Dạng bảng',
 }
 
 export enum EFileType {

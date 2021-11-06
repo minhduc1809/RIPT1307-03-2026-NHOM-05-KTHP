@@ -7,6 +7,9 @@ import {
   getAllBieuMau,
   getDonSinhVien,
   postDonSinhVien,
+  chuyenVienDieuPhoiDuyetDon,
+  getDonThaoTacChuyenVienDieuPhoi,
+  getAllBieuMauChuyenVien,
 } from '@/services/DichVuMotCuaV2/dichvumotcuav2';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -14,11 +17,13 @@ import { useState } from 'react';
 export default () => {
   const [danhSach, setDanhSach] = useState<DichVuMotCuaV2.BieuMau[]>([]);
   const [danhSachDon, setDanhSachDon] = useState<DichVuMotCuaV2.Don[]>([]);
+  const [danhSachDonThaoTac, setDanhSachDonThaoTac] = useState<DichVuMotCuaV2.DonThaoTac[]>([]);
   const [filterInfo, setFilterInfo] = useState<any>({});
   const [condition, setCondition] = useState<any>({});
   const [record, setRecord] = useState<DichVuMotCuaV2.BieuMau>();
   const [recordDon, setRecordDon] = useState<DichVuMotCuaV2.Don>();
   const [recordQuyTrinh, setRecordQuyTrinh] = useState<DichVuMotCuaV2.QuyTrinh>();
+  const [recordDonThaoTac, setRecordDonThaoTac] = useState<DichVuMotCuaV2.DonThaoTac>();
   const [loading, setLoading] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
@@ -28,6 +33,7 @@ export default () => {
   const [current, setCurrent] = useState<number>(0);
   const [limit, setLimit] = useState<number>(10);
   const [typeForm, setTypeForm] = useState<string>('add');
+  const [trangThaiQuanLyDon, setTrangThaiQuanLyDon] = useState<string>('PENDING');
 
   const getBieuMauAdminModel = async () => {
     setLoading(true);
@@ -91,7 +97,43 @@ export default () => {
     setVisibleFormBieuMau(false);
   };
 
+  const getDonThaoTacChuyenVienDieuPhoiModel = async () => {
+    setLoading(true);
+    const response = await getDonThaoTacChuyenVienDieuPhoi({
+      page,
+      limit,
+      condition: { ...condition, trangThai: trangThaiQuanLyDon, idDichVu: record?._id },
+    });
+    setDanhSachDonThaoTac(response?.data?.data?.result ?? []);
+    setTotal(response?.data?.data?.total);
+    setLoading(false);
+  };
+
+  const chuyenVienDieuPhoiDuyetDonModel = async (payload: {
+    type: string;
+    idDonThaoTac: string;
+  }) => {
+    await chuyenVienDieuPhoiDuyetDon(payload);
+    message.success('Xử lý thành công');
+    setVisibleFormBieuMau(false);
+    getDonThaoTacChuyenVienDieuPhoiModel();
+  };
+
+  const getAllBieuMauChuyenVienModel = async () => {
+    const response = await getAllBieuMauChuyenVien();
+    setDanhSach(response?.data?.data ?? {});
+  };
+
   return {
+    recordDonThaoTac,
+    setRecordDonThaoTac,
+    getAllBieuMauChuyenVienModel,
+    trangThaiQuanLyDon,
+    setTrangThaiQuanLyDon,
+    danhSachDonThaoTac,
+    setDanhSachDonThaoTac,
+    getDonThaoTacChuyenVienDieuPhoiModel,
+    chuyenVienDieuPhoiDuyetDonModel,
     recordQuyTrinh,
     setRecordQuyTrinh,
     current,

@@ -39,3 +39,23 @@ export async function postDonSinhVien(payload: {
 }) {
   return axios.post(`${ip3}/don-dvmc/my`, payload);
 }
+
+export async function getDonThaoTacChuyenVienDieuPhoi(payload: {
+  condition: any;
+  page: number;
+  limit: number;
+}) {
+  return axios.get(`${ip3}/don-dvmc/chuyen-vien-dieu-phoi/don-thao-tac/pageable`, {
+    params: payload,
+  });
+}
+
+export async function chuyenVienDieuPhoiDuyetDon(payload: { type: string; idDonThaoTac: string }) {
+  return axios.post(
+    `${ip3}/don-dvmc/chuyen-vien-dieu-phoi/don-thao-tac/${payload.idDonThaoTac}/duyet/${payload.type}`,
+  );
+}
+
+export async function getAllBieuMauChuyenVien() {
+  return axios.get(`${ip3}/don-dvmc/chuyen-vien-dieu-phoi/dvmc/all`);
+}

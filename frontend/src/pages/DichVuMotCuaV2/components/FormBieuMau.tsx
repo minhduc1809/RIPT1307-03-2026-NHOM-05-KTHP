@@ -5,18 +5,44 @@ import { uploadFile } from '@/services/uploadFile';
 import { accessFileUpload } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { renderFileList } from '@/utils/utils';
-import { Button, Card, Checkbox, DatePicker, Form, Input, InputNumber, Radio, Select } from 'antd';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Card,
+  Checkbox,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Popconfirm,
+  Radio,
+  Select,
+} from 'antd';
 import moment from 'moment';
 import mm from 'moment-timezone';
 import { useState, useEffect } from 'react';
 import { useModel } from 'umi';
+import Table from './TableElement';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
-const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; onCancel?: any }) => {
+const FormBieuMau = (props: {
+  record?: DichVuMotCuaV2.Don;
+  type?: string;
+  onCancel?: any;
+  textSaveButton?: string;
+  title?: string;
+  handleAdd?: any;
+}) => {
   const [form] = Form.useForm();
-  const { loading, setVisibleFormBieuMau, postDonSinhVienModel, record } =
-    useModel('dichvumotcuav2');
+  const {
+    loading,
+    setVisibleFormBieuMau,
+    postDonSinhVienModel,
+    record,
+    recordDonThaoTac,
+    chuyenVienDieuPhoiDuyetDonModel,
+  } = useModel('dichvumotcuav2');
   const [valuesForm, setValuesForm] = useState<any>({});
 
   useEffect(() => {
@@ -33,11 +59,12 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
   }, []);
 
   const buildForm = (item: DichVuMotCuaV2.CauHinhBieuMau) => {
-    let element = <Input placeholder={item.label} />;
+    let element = <Input placeholder={item?.label ?? ''} />;
+    let ruleElement: any[] = [...rules.required];
     let initialValue = item?.value;
     switch (item.type) {
       case 'TEXT_AREA': {
-        element = <Input.TextArea rows={3} placeholder={item.label} />;
+        element = <Input.TextArea rows={3} placeholder={item?.label ?? ''} />;
         break;
       }
       case 'INPUT_NUMBER': {
@@ -45,9 +72,9 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
         element = (
           <InputNumber
             style={{ width: '100%' }}
-            placeholder={item.label}
-            min={item.min}
-            max={item.max}
+            placeholder={item?.label ?? ''}
+            min={item?.min ?? 0}
+            max={item?.max ?? 10}
           />
         );
         break;
@@ -65,7 +92,10 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
       }
 
       case 'UPLOAD_SINGLE': {
-        initialValue = renderFileList(item?.value);
+        ruleElement = [...rules.fileRequired];
+        initialValue = renderFileList(
+          item?.value?.map((file: { url: string; type: string }) => file?.url),
+        );
         element = (
           <Upload
             otherProps={{
@@ -79,7 +109,10 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
         break;
       }
       case 'UPLOAD_MULTI': {
-        initialValue = renderFileList(item?.value);
+        ruleElement = [...rules.fileRequired];
+        initialValue = renderFileList(
+          item?.value?.map((file: { url: string; type: string }) => file?.url),
+        );
         element = (
           <Upload
             otherProps={{
@@ -96,8 +129,8 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
       case 'DROP_LIST_SINGLE': {
         initialValue = item?.value;
         element = (
-          <Select placeholder={item.label}>
-            {item.dataSource?.map((datasource) => (
+          <Select placeholder={item?.label ?? ''}>
+            {item?.dataSource?.map((datasource) => (
               <Select.Option key={datasource?.label} value={datasource?.label}>
                 {datasource?.label}
               </Select.Option>
@@ -109,8 +142,8 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
       case 'DROP_LIST_MULTI': {
         initialValue = item?.value;
         element = (
-          <Select mode="multiple" placeholder={item.label}>
-            {item.dataSource?.map((datasource) => (
+          <Select mode="multiple" placeholder={item?.label ?? ''}>
+            {item?.dataSource?.map((datasource) => (
               <Select.Option key={datasource.label} value={datasource?.label}>
                 {datasource?.label}
               </Select.Option>
@@ -123,17 +156,17 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
         initialValue = item?.value;
         element = (
           <DiaChi
-            hideDiaChiCuThe={item.level !== 4}
-            hideQuanHuyen={item.level === 1}
-            hideXaPhuong={[1, 2].includes(item.level)}
+            hideDiaChiCuThe={item?.level !== 4}
+            hideQuanHuyen={item?.level === 1}
+            hideXaPhuong={[1, 2].includes(item?.level)}
             // disabled={props.type === 'view'}
             initialValue={item?.value}
             form={form}
             fields={{
-              tinh: [item.label, 'maTinh'],
-              quanHuyen: [item.label, 'maQuanHuyen'],
-              xaPhuong: [item.label, 'maPhuongXa'],
-              diaChiCuThe: [item.label, 'soNhaTenDuong'],
+              tinh: [item?.label ?? '', 'maTinh'],
+              quanHuyen: [item?.label ?? '', 'maQuanHuyen'],
+              xaPhuong: [item?.label ?? '', 'maPhuongXa'],
+              diaChiCuThe: [item?.label ?? '', 'soNhaTenDuong'],
             }}
           />
         );
@@ -143,8 +176,8 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
         initialValue = item?.value;
         element = (
           <Radio.Group>
-            {item.dataSource?.map((datasource) => (
-              <Radio key={datasource.label} value={datasource?.label}>
+            {item?.dataSource?.map((datasource) => (
+              <Radio key={datasource?.label} value={datasource?.label}>
                 {datasource?.label}
               </Radio>
             ))}
@@ -157,12 +190,46 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
         initialValue = item?.value;
         element = (
           <Checkbox.Group>
-            {item.dataSource?.map((datasource) => (
-              <Checkbox key={datasource.label} value={datasource?.label}>
-                {datasource?.label}
+            {item?.dataSource?.map((datasource) => (
+              <Checkbox key={datasource?.label} value={datasource?.label ?? ''}>
+                {datasource?.label ?? ''}
               </Checkbox>
             ))}
           </Checkbox.Group>
+        );
+        break;
+      }
+      case 'TABLE': {
+        const data = item?.value?.map((recordRow: DichVuMotCuaV2.CauHinhBieuMau[]) => {
+          const row = {};
+          recordRow?.forEach((cell: DichVuMotCuaV2.CauHinhBieuMau) => {
+            row[cell?.label] = cell?.value;
+          });
+          return row;
+        });
+        element = (
+          <Table
+            data={data}
+            recordForm={
+              {
+                thongTinDichVu: { cauHinhBieuMau: item?.relatedElement ?? [] },
+              } as DichVuMotCuaV2.Don
+            }
+            textSaveButton="Lưu"
+            hascreate
+            hasTotal
+            widthDrawer="55%"
+            Form={FormBieuMau}
+            otherProps={{
+              scroll: { x: 700 },
+            }}
+            columns={item?.relatedElement?.map((column) => ({
+              title: column?.label ?? '',
+              dataIndex: `${column?.label}`,
+              align: 'center',
+              width: 200,
+            }))}
+          />
         );
         break;
       }
@@ -189,7 +256,7 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
           </div>
         }
         name={item.label}
-        rules={item.isRequired && item.type !== 'DON_VI_HANH_CHINH' ? [...rules.required] : []}
+        rules={item.isRequired ? ruleElement : []}
         initialValue={initialValue}
       >
         {element}
@@ -230,7 +297,7 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
   };
 
   return (
-    <Card bodyStyle={{ padding: 50 }}>
+    <Card title={props?.title} bodyStyle={{ padding: 50 }}>
       <div style={{ fontWeight: 500, fontSize: '26px', textAlign: 'center' }}>
         {props.record?.thongTinDichVu?.ten ?? ''}
       </div>
@@ -247,20 +314,26 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
           for (const item of Object.keys(values)) {
             let arrUpload = [];
             if (values[item]?.fileList) {
-              arrUpload = values[item]?.fileList?.map(async (file: { originFileObj: any }) => {
-                const response = await uploadFile({
-                  file: file?.originFileObj,
-                  filename: 'fileName',
-                  public: true,
-                });
-                return response?.data?.data?.url;
-              });
+              arrUpload = values[item]?.fileList?.map(
+                async (file: { originFileObj: any; type: string }) => {
+                  const response = await uploadFile({
+                    file: file?.originFileObj,
+                    filename: 'fileName',
+                    public: true,
+                  });
+                  return {
+                    url: response?.data?.data?.url,
+                    type: file.type,
+                  };
+                },
+              );
               // eslint-disable-next-line no-await-in-loop
               objectFileUpload[item] = await Promise.all(arrUpload);
             }
           }
           const valuesFinal = { ...values, ...objectFileUpload };
           const duLieuBieuMau = buildPostData(valuesFinal, record?.cauHinhBieuMau ?? []);
+
           postDonSinhVienModel({
             duLieuBieuMau,
             dichVuId: record?._id ?? '',
@@ -269,21 +342,68 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
         form={form}
       >
         {props.record?.thongTinDichVu?.cauHinhBieuMau?.map((item) => buildForm(item))}
-        {props.record?.thongTinDichVu?.cauHinhBieuMau?.forEach((cauHinh) => {
+        {/* {props.record?.thongTinDichVu?.cauHinhBieuMau?.forEach((cauHinh) => {
           cauHinh?.dataSource?.forEach((data) => {
             data?.relatedElement?.map((item) => buildForm(item));
           });
-        })}
+        })} */}
         <div>
           <b>{props.record?.thongTinDichVu?.ghiChu}</b>
         </div>
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
-          {props.type !== 'view' && (
-            <Button loading={loading} style={{ marginRight: 8 }} htmlType="submit" type="primary">
-              Gửi đơn
+          {!['view', 'handle'].includes(props?.type ?? '') && (
+            <Button
+              icon={<CheckOutlined />}
+              loading={loading}
+              style={{ marginRight: 8 }}
+              htmlType="submit"
+              type="primary"
+            >
+              {props?.textSaveButton || 'Gửi đơn'}
             </Button>
           )}
+          {['handle'].includes(props?.type ?? '') && (
+            <>
+              <Popconfirm
+                title="Bạn có chắc chắn duyệt đơn này?"
+                onConfirm={() => {
+                  if (recordDonThaoTac?._id)
+                    chuyenVienDieuPhoiDuyetDonModel({
+                      type: 'ok',
+                      idDonThaoTac: recordDonThaoTac?._id,
+                    });
+                }}
+              >
+                <Button
+                  style={{
+                    marginRight: 8,
+                    backgroundColor: '#1890ff',
+                    border: '1px solid #1890ff',
+                    color: 'white',
+                  }}
+                  icon={<CheckOutlined />}
+                >
+                  Duyệt
+                </Button>
+              </Popconfirm>
+              <Popconfirm
+                title="Bạn có chắc chắn không duyệt đơn này?"
+                onConfirm={() => {
+                  if (recordDonThaoTac?._id)
+                    chuyenVienDieuPhoiDuyetDonModel({
+                      type: 'not-ok',
+                      idDonThaoTac: recordDonThaoTac?._id,
+                    });
+                }}
+              >
+                <Button type="primary" style={{ marginRight: 8 }} onClick={() => {}}>
+                  Không duyệt
+                </Button>
+              </Popconfirm>
+            </>
+          )}
           <Button
+            icon={<CloseOutlined />}
             onClick={() => (props?.onCancel ? props?.onCancel() : setVisibleFormBieuMau(false))}
           >
             Đóng
@@ -294,4 +414,4 @@ const FormCoCauToChuc = (props: { record?: DichVuMotCuaV2.Don; type?: string; on
   );
 };
 
-export default FormCoCauToChuc;
+export default FormBieuMau;

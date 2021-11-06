@@ -320,6 +320,22 @@ export default defineConfig({
       access: 'admin',
     },
     {
+      name: 'DichVuMotCuaCanBo',
+      icon: 'HeartOutlined',
+      path: './dichvumotcuacanbo',
+      routes: [
+        {
+          name: 'QuanLyDon',
+          path: './quanlydon',
+          // access: 'canBo',
+          access: 'routeFilter',
+          maChucNang: 'don-dvmc-thao-tac:read-all',
+          component: './DichVuMotCuaV2/QuanLyDon',
+        },
+      ],
+      access: 'canBo',
+    },
+    {
       name: 'ThongBao',
       icon: 'notification',
       path: '/thongbao',

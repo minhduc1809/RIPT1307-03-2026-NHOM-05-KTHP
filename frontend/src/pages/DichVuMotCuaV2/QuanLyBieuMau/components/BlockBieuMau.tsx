@@ -1,8 +1,9 @@
 import { EFileType, ElementTemplateType, LevelDonViHanhChinh } from '@/utils/constants';
 import rules from '@/utils/rules';
+import { includes } from '@/utils/utils';
 import { CloseCircleOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row, Select } from 'antd';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import styles from './block.css';
 
@@ -54,7 +55,12 @@ const Block = (props: {
             label="Loại"
             rules={[...rules.required]}
           >
-            <Select onChange={(val: string) => setType(val)} placeholder="Chọn loại">
+            <Select
+              showSearch
+              filterOption={(value, option) => includes(option?.props.children, value)}
+              onChange={(val: string) => setType(val)}
+              placeholder="Chọn loại"
+            >
               {Object.keys(ElementTemplateType)?.map((item) => (
                 <Select.Option value={item}>{ElementTemplateType?.[item] ?? ''}</Select.Option>
               ))}
@@ -230,6 +236,67 @@ const Block = (props: {
           }}
         </Form.List>
       )}
+
+      {['TABLE'].includes(type) && (
+        <Form.List
+          name={[props.field.name, 'relatedElement']}
+          rules={[
+            {
+              validator: async (_, names) => {
+                if (!names || names.length < 1) {
+                  return Promise.reject(new Error('Ít nhất 1 cột'));
+                }
+                return '';
+              },
+            },
+          ]}
+        >
+          {(fields, { add, remove }, { errors }) => {
+            return (
+              <>
+                {fields.map((field, index) => (
+                  <div key={field.key}>
+                    <Card
+                      headStyle={{ padding: '8px 24px' }}
+                      bodyStyle={{ padding: '8px 24px' }}
+                      className={styles.block}
+                      title={
+                        <>
+                          <div style={{ float: 'left' }}>Cột {index + 1}</div>
+                          <CloseCircleOutlined
+                            style={{ float: 'right' }}
+                            onClick={() => remove(field.name)}
+                          />
+                        </>
+                      }
+                    >
+                      <Block
+                        indexBlock={props.field.name}
+                        indexDataSource={index}
+                        relate
+                        field={{ ...field }}
+                      />
+                    </Card>
+                    <br />
+                  </div>
+                ))}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    style={{ width: '100%' }}
+                    icon={<PlusOutlined />}
+                  >
+                    Thêm cột
+                  </Button>
+                  <Form.ErrorList errors={errors} />
+                </Form.Item>
+              </>
+            );
+          }}
+        </Form.List>
+      )}
+
       {type === 'DON_VI_HANH_CHINH' && (
         <Form.Item name={[props.field.name, 'level']} label="Cấp">
           <Select placeholder="Cấp">

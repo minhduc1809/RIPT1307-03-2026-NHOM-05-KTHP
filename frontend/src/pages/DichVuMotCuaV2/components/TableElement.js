@@ -8,6 +8,7 @@ class App extends React.Component {
     searchedColumn: '',
     data: this.props?.data ?? [],
     visible: false,
+    edit: false,
   };
 
   getColumnSearchProps = (dataIndex) => ({
@@ -110,16 +111,23 @@ class App extends React.Component {
           <>
             {this.props?.formType === 'Drawer' ? (
               <Drawer
+                title={this.state.edit ? 'Chỉnh sửa' : 'Thêm mới'}
                 width={this.props?.widthDrawer}
                 onClose={() => {
                   this.setState({ visible: false });
                 }}
                 destroyOnClose
                 footer={false}
-                // bodyStyle={{ padding: 0 }}
+                bodyStyle={{ padding: 0 }}
                 visible={this.state.visible}
               >
                 <Form
+                  // handleAdd={(values) => {
+                  //   debugger;
+                  // }}
+                  title={this.props?.title}
+                  textSaveButton={this.props?.textSaveButton}
+                  record={this.props?.recordForm}
                   onCancel={() => {
                     this.setState({ visible: false });
                   }}
@@ -127,16 +135,19 @@ class App extends React.Component {
               </Drawer>
             ) : (
               <Modal
+                title={this.state.edit ? 'Chỉnh sửa' : 'Thêm mới'}
                 width={this.props?.widthDrawer}
                 onCancel={() => {
                   this.setState({ visible: false });
                 }}
                 destroyOnClose
                 footer={false}
-                // bodyStyle={{ padding: 0 }}
+                bodyStyle={{ padding: 0 }}
                 visible={this.state.visible}
               >
                 <Form
+                  textSaveButton={this.props?.textSaveButton}
+                  record={this.props?.recordForm}
                   onCancel={() => {
                     this.setState({ visible: false });
                   }}

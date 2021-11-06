@@ -76,8 +76,10 @@ export default {
   'menu.DichVuMotCuaAdmin': 'Dịch vụ một cửa',
   'menu.DichVuMotCuaAdmin.QuanLyBieuMau': 'Quản lý dịch vụ',
   'menu.PhanQuyen': 'Phân quyền',
-  'menu.PhanQuyen.ChucNangNhomVaiTro': 'Chức năng-Nhóm vai trò',
+  'menu.PhanQuyen.ChucNangNhomVaiTro': 'Chức năng - Nhóm vai trò',
   'menu.PhanQuyen.PhanNhom': 'Phân nhóm',
+  'menu.DichVuMotCuaCanBo': 'Dịch vụ một cửa',
+  'menu.DichVuMotCuaCanBo.QuanLyDon': 'Quản lý đơn',
   'menu.dva-sample': 'Page mẫu dùng DVA',
   'menu.DangKyTinChi': 'Đăng ký tín chỉ',
 };
