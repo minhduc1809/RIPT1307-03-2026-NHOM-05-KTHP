@@ -1,7 +1,7 @@
 import TableTemp from '@/components/Table/Table';
 import type { IColumn } from '@/utils/interfaces';
 import { SaveOutlined } from '@ant-design/icons';
-import { Button, message, Modal, Popconfirm } from 'antd';
+import { Button, Modal, Popconfirm } from 'antd';
 import moment from 'moment';
 import { useModel } from 'umi';
 
