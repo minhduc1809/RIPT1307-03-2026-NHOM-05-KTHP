@@ -1,14 +1,17 @@
-import { SearchOutlined, PlusCircleFilled } from '@ant-design/icons';
-import { Button, Input, Table, Drawer, Modal } from 'antd';
+import { SearchOutlined, PlusCircleFilled, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Input, Table, Drawer, Modal, Tooltip, Divider, Popconfirm } from 'antd';
 import React from 'react';
+import moment from 'moment';
 
 class App extends React.Component {
   state = {
     searchText: '',
     searchedColumn: '',
-    data: this.props?.data ?? [],
+    data: this.props?.data?.map((item, index) => ({ ...item, index })) ?? [],
     visible: false,
     edit: false,
+    record: this.props?.recordForm,
+    dataCauHinh: [],
   };
 
   getColumnSearchProps = (dataIndex) => ({
@@ -67,6 +70,43 @@ class App extends React.Component {
     this.setState({ searchText: '' });
   };
 
+  handleData = (values) => {
+    let valueFinal = values?.value ?? '';
+    switch (values?.type) {
+      case 'UPLOAD_SINGLE': {
+        valueFinal = values?.value?.[0]?.url;
+        break;
+      }
+      case 'UPLOAD_MULTI': {
+        valueFinal = values?.value?.map((item) => item?.url);
+        break;
+      }
+      case 'DATE_PICKER': {
+        valueFinal = values?.value ? moment(values?.value)?.format('HH:mm DD/MM/YYYY') : undefined;
+        break;
+      }
+      case 'DON_VI_HANH_CHINH': {
+        valueFinal = [
+          values?.value?.soNhaTenDuong,
+          values?.value?.tenPhuongXa,
+          values?.value?.tenQuanHuyen,
+          values?.value?.tenTinh,
+        ]
+          ?.filter((item) => item !== undefined)
+          ?.join(', ');
+        break;
+      }
+      case 'CHECKLIST': {
+        valueFinal = values?.value?.join(', ');
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    return valueFinal;
+  };
+
   render() {
     const Form = this.props?.Form;
     return (
@@ -75,7 +115,7 @@ class App extends React.Component {
         {this.props?.hascreate && (
           <Button
             onClick={() => {
-              this.setState({ visible: true });
+              this.setState({ visible: true, record: this.props?.recordForm, edit: false });
             }}
             icon={<PlusCircleFilled />}
             type="primary"
@@ -97,14 +137,58 @@ class App extends React.Component {
         <Table
           {...this.props?.otherProps}
           title={this.props?.title ? () => this.props.title : false}
-          columns={this.props.columns?.map((item) => {
-            return item?.search === 'search'
-              ? {
-                  ...item,
-                  ...this.getColumnSearchProps(item.dataIndex),
-                }
-              : { ...item };
-          })}
+          columns={[
+            ...this.props.columns?.map((item) => {
+              return item?.search === 'search'
+                ? {
+                    ...item,
+                    ...this.getColumnSearchProps(item.dataIndex),
+                  }
+                : { ...item };
+            }),
+            {
+              title: 'Thao tác',
+              width: 120,
+              align: 'center',
+              fixed: 'right',
+              render: (recordRow) => (
+                <>
+                  <Tooltip title="Chỉnh sửa">
+                    <Button
+                      onClick={() => {
+                        this.setState({
+                          record: {
+                            thongTinDichVu: this.state.dataCauHinh?.find(
+                              (item) => item?.index === recordRow?.index,
+                            ),
+                            index: recordRow?.index,
+                          },
+                          edit: true,
+                          visible: true,
+                        });
+                      }}
+                      type="primary"
+                      shape="circle"
+                      icon={<EditOutlined />}
+                    />
+                  </Tooltip>{' '}
+                  <Divider type="vertical" />
+                  <Tooltip title="Xóa">
+                    <Popconfirm
+                      onConfirm={() => {
+                        this.setState({
+                          data: this.state.data?.filter((item) => item?.index !== recordRow?.index),
+                        });
+                      }}
+                      title={'Bạn có chắc chắn muốn xóa?'}
+                    >
+                      <Button shape="circle" icon={<DeleteOutlined />} />
+                    </Popconfirm>
+                  </Tooltip>
+                </>
+              ),
+            },
+          ]}
           dataSource={this.state?.data ?? []}
         />
         {Form && (
@@ -122,12 +206,41 @@ class App extends React.Component {
                 visible={this.state.visible}
               >
                 <Form
-                  // handleAdd={(values) => {
-                  //   debugger;
-                  // }}
+                  edit={this.state.edit}
+                  handleAdd={(values, valuesFinal) => {
+                    const rowNew = {};
+                    valuesFinal?.forEach((item) => {
+                      rowNew[item?.label] = this.handleData(item);
+                    });
+                    const dataTemp = [rowNew, ...this.state.data];
+                    const dataCauHinhTemp = [valuesFinal, ...this.state.dataCauHinh];
+                    this.setState({
+                      data: dataTemp?.map((item, index) => ({ ...item, index })),
+                      visible: false,
+                      dataCauHinh: dataCauHinhTemp?.map((item, index) => ({ ...item, index })),
+                    });
+                  }}
+                  handleEdit={(values, valuesFinal, position) => {
+                    const rowNew = {};
+                    valuesFinal?.forEach((item) => {
+                      rowNew[item?.label] = this.handleData(item);
+                    });
+                    const dataTemp = [...this.state.data];
+                    dataTemp?.splice(position, 1, rowNew);
+                    const dataCauHinhTemp = [...this.state.dataCauHinh];
+                    dataCauHinhTemp?.splice(position, 1, {
+                      cauHinhBieuMau: valuesFinal,
+                    });
+
+                    this.setState({
+                      data: dataTemp?.map((item, index) => ({ ...item, index })),
+                      visible: false,
+                      dataCauHinh: dataCauHinhTemp?.map((item, index) => ({ ...item, index })),
+                    });
+                  }}
                   title={this.props?.title}
                   textSaveButton={this.props?.textSaveButton}
-                  record={this.props?.recordForm}
+                  record={this.state.record}
                   onCancel={() => {
                     this.setState({ visible: false });
                   }}
@@ -146,8 +259,45 @@ class App extends React.Component {
                 visible={this.state.visible}
               >
                 <Form
+                  edit={this.state.edit}
+                  handleAdd={(values, valuesFinal) => {
+                    const dataTable = this.props?.danhSachDataTable ?? {};
+                    const rowNew = {};
+                    valuesFinal?.forEach((item) => {
+                      rowNew[item?.label] = this.handleData(item);
+                    });
+                    const dataTemp = [rowNew, ...this.state.data];
+                    const dataCauHinhTemp = [
+                      { cauHinhBieuMau: valuesFinal },
+                      ...this.state.dataCauHinh,
+                    ];
+                    dataTable[this.props?.name] = dataCauHinhTemp;
+                    this.props.setDanhSachDataTable(dataTable);
+                    this.setState({
+                      data: dataTemp?.map((item, index) => ({ ...item, index })),
+                      visible: false,
+                      dataCauHinh: dataCauHinhTemp?.map((item, index) => ({ ...item, index })),
+                    });
+                  }}
+                  handleEdit={(values, valuesFinal, position) => {
+                    const rowNew = {};
+                    valuesFinal?.forEach((item) => {
+                      rowNew[item?.label] = this.handleData(item);
+                    });
+                    const dataTemp = [...this.state.data];
+                    dataTemp?.splice(position, 1, rowNew);
+                    const dataCauHinhTemp = [...this.state.dataCauHinh];
+                    dataCauHinhTemp?.splice(position, 1, {
+                      cauHinhBieuMau: valuesFinal,
+                    });
+                    this.setState({
+                      data: dataTemp?.map((item, index) => ({ ...item, index })),
+                      visible: false,
+                      dataCauHinh: dataCauHinhTemp?.map((item, index) => ({ ...item, index })),
+                    });
+                  }}
                   textSaveButton={this.props?.textSaveButton}
-                  record={this.props?.recordForm}
+                  record={this.state.record}
                   onCancel={() => {
                     this.setState({ visible: false });
                   }}

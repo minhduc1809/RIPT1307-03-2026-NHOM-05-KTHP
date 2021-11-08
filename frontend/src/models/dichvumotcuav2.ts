@@ -18,6 +18,8 @@ export default () => {
   const [danhSach, setDanhSach] = useState<DichVuMotCuaV2.BieuMau[]>([]);
   const [danhSachDon, setDanhSachDon] = useState<DichVuMotCuaV2.Don[]>([]);
   const [danhSachDonThaoTac, setDanhSachDonThaoTac] = useState<DichVuMotCuaV2.DonThaoTac[]>([]);
+  const [danhSachDataTable, setDanhSachDataTable] =
+    useState<Record<string, { cauHinhBieuMau: DichVuMotCuaV2.CauHinhBieuMau[] }>[]>();
   const [filterInfo, setFilterInfo] = useState<any>({});
   const [condition, setCondition] = useState<any>({});
   const [record, setRecord] = useState<DichVuMotCuaV2.BieuMau>();
@@ -125,6 +127,8 @@ export default () => {
   };
 
   return {
+    danhSachDataTable,
+    setDanhSachDataTable,
     recordDonThaoTac,
     setRecordDonThaoTac,
     getAllBieuMauChuyenVienModel,

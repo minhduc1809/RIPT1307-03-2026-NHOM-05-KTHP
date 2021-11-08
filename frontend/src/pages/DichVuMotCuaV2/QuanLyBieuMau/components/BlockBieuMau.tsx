@@ -6,33 +6,24 @@ import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row, Select } fr
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import styles from './block.css';
+import lodash from 'lodash';
 
 const Block = (props: {
   field: { name: number; key: number; isListField?: boolean; fieldKey: number };
-  relate?: boolean;
-  indexBlock?: number;
-  indexDataSource?: number;
+  type?: string;
+  fieldName: string;
 }) => {
   const { record } = useModel('dichvumotcuav2');
-  const [type, setType] = useState<string>(
-    props?.relate
-      ? record?.cauHinhBieuMau?.[props?.indexBlock ?? 0]?.dataSource?.[props?.indexDataSource ?? 0]
-          ?.relatedElement?.[props.field.name]?.type ?? ''
-      : record?.cauHinhBieuMau?.[props.field.name]?.type ?? '',
-  );
+  const recordBlock: DichVuMotCuaV2.CauHinhBieuMau = lodash.get(record, props.fieldName, undefined);
+  const [type, setType] = useState<string>(recordBlock?.type ?? '');
   const [objectRelate, setObjectRelate] = useState<any>({});
   useEffect(() => {
     const objectRelateTemp = {};
-    if (
-      ['DROP_LIST_SINGLE', 'DROP_LIST_MULTI', 'RADIO_BUTTON', 'CHECKLIST']?.includes(
-        record?.cauHinhBieuMau?.[props.field.name]?.type ?? '',
-      )
-    ) {
-      record?.cauHinhBieuMau?.[props.field.name]?.dataSource?.forEach((item, index) => {
+    if (['DROP_LIST_SINGLE', 'DROP_LIST_MULTI', 'RADIO_BUTTON', 'CHECKLIST']?.includes(type)) {
+      recordBlock?.dataSource?.forEach((item, index) => {
         objectRelateTemp[index] = item.relatedElement?.length > 0;
       });
     }
-
     setObjectRelate(objectRelateTemp);
   }, []);
   return (
@@ -61,9 +52,11 @@ const Block = (props: {
               onChange={(val: string) => setType(val)}
               placeholder="Chọn loại"
             >
-              {Object.keys(ElementTemplateType)?.map((item) => (
-                <Select.Option value={item}>{ElementTemplateType?.[item] ?? ''}</Select.Option>
-              ))}
+              {Object.keys(ElementTemplateType)
+                ?.filter((item) => item !== props?.type)
+                ?.map((item) => (
+                  <Select.Option value={item}>{ElementTemplateType?.[item] ?? ''}</Select.Option>
+                ))}
             </Select>
           </Form.Item>
         </Col>
@@ -154,7 +147,6 @@ const Block = (props: {
                       {objectRelate?.[index] && (
                         <Form.List
                           name={[`${index}`, 'relatedElement']}
-                          // initialValue={record?.cauHinhBieuMau ?? []}
                           rules={[
                             {
                               validator: async (_, names) => {
@@ -192,10 +184,9 @@ const Block = (props: {
                                       }
                                     >
                                       <Block
-                                        indexBlock={props.field.name}
-                                        indexDataSource={index}
+                                        fieldName={`${props.fieldName}.relatedElement.[${index}]`}
+                                        type={props?.type}
                                         field={{ ...fieldRelate }}
-                                        relate
                                       />
                                     </Card>
                                     <br />
@@ -271,9 +262,8 @@ const Block = (props: {
                       }
                     >
                       <Block
-                        indexBlock={props.field.name}
-                        indexDataSource={index}
-                        relate
+                        fieldName={`${props.fieldName}.relatedElement.[${index}]`}
+                        type="TABLE"
                         field={{ ...field }}
                       />
                     </Card>
@@ -298,7 +288,7 @@ const Block = (props: {
       )}
 
       {type === 'DON_VI_HANH_CHINH' && (
-        <Form.Item name={[props.field.name, 'level']} label="Cấp">
+        <Form.Item rules={[...rules.required]} name={[props.field.name, 'level']} label="Cấp">
           <Select placeholder="Cấp">
             {LevelDonViHanhChinh?.map((item, index) => (
               <Select.Option value={index + 1} key={item}>

@@ -2,6 +2,7 @@
 import TableBase from '@/components/Table/index';
 import Form from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import type { IColumn } from '@/utils/interfaces';
+import { EyeOutlined } from '@ant-design/icons';
 import { Button, Modal, Select } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
@@ -53,27 +54,42 @@ const TableQuanLyDon = () => {
       align: 'center',
       dataIndex: ['idDon', 'thongTinDichVu', 'ten'],
     },
-  ];
-  if (['PENDING'].includes(trangThaiQuanLyDon)) {
-    columns.push({
+    {
       title: 'Thao tác',
       align: 'center',
       fixed: 'right',
       width: 100,
       render: (recordDon: DichVuMotCuaV2.DonThaoTac) => (
-        <Button
-          onClick={() => {
-            setRecordDonThaoTac(recordDon);
-            setVisibleFormBieuMau(true);
-            setType('handle');
-          }}
-          type="link"
-        >
-          Xử lý
-        </Button>
+        <>
+          {['PENDING'].includes(trangThaiQuanLyDon) && (
+            <Button
+              onClick={() => {
+                setRecordDonThaoTac(recordDon);
+                setVisibleFormBieuMau(true);
+                setType('handle');
+              }}
+              type="link"
+            >
+              Xử lý
+            </Button>
+          )}
+          {['OK', 'NOT_OK'].includes(trangThaiQuanLyDon) && (
+            <Button
+              type="primary"
+              shape="circle"
+              onClick={() => {
+                setRecordDonThaoTac(recordDon);
+                setVisibleFormBieuMau(true);
+                setType('view');
+              }}
+              icon={<EyeOutlined />}
+            />
+          )}
+        </>
       ),
-    });
-  }
+    },
+  ];
+
   return (
     <TableBase
       columns={columns}

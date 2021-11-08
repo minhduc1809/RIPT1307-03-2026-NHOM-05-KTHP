@@ -206,14 +206,14 @@ export default defineConfig({
     },
     {
       name: 'LopHanhChinh',
-      icon: 'AuditOutlined',
+      icon: 'TeamOutlined',
       path: '/lophanhchinh',
       component: './LopHanhChinh/SinhVien',
       access: 'sinhVien',
     },
     {
       name: 'LopHanhChinh',
-      icon: 'AuditOutlined',
+      icon: 'TeamOutlined',
       path: '/lophanhchinhgiangvien',
       component: './LopHanhChinh/GiangVien',
       access: 'canBo',
@@ -249,7 +249,7 @@ export default defineConfig({
 
     {
       name: 'LopHanhChinhAdmin',
-      icon: 'AuditOutlined',
+      icon: 'TeamOutlined',
       path: '/lophanhchinhadmin',
       component: './LopHanhChinh/Admin',
       access: 'admin',
@@ -321,7 +321,7 @@ export default defineConfig({
     },
     {
       name: 'DichVuMotCuaCanBo',
-      icon: 'HeartOutlined',
+      icon: 'AuditOutlined',
       path: './dichvumotcuacanbo',
       routes: [
         {

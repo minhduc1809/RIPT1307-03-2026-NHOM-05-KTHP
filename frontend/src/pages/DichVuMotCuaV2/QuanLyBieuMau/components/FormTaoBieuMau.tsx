@@ -24,9 +24,6 @@ const FormBieuMau = () => {
   return (
     <Card title={edit ? 'Chỉnh sửa biểu mẫu' : 'Thêm mới biểu mẫu'}>
       <Form
-        // onFieldsChange={(changedFields, allFields) => {
-        //   debugger;
-        // }}
         scrollToFirstError
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
@@ -90,7 +87,7 @@ const FormBieuMau = () => {
                         </>
                       }
                     >
-                      <Block field={{ ...field }} />
+                      <Block fieldName={`cauHinhBieuMau.[${index}]`} field={{ ...field }} />
                     </Card>
                     <br />
                   </div>

@@ -20,24 +20,30 @@ import {
 } from 'antd';
 import moment from 'moment';
 import mm from 'moment-timezone';
-import { useState, useEffect } from 'react';
+import type { SetStateAction } from 'react';
+import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import Table from './TableElement';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const FormBieuMau = (props: {
-  record?: DichVuMotCuaV2.Don;
+  record?: DichVuMotCuaV2.Don & { index?: number };
   type?: string;
   onCancel?: any;
   textSaveButton?: string;
   title?: string;
   handleAdd?: any;
+  handleDel?: any;
+  handleEdit?: any;
+  edit?: boolean;
 }) => {
   const [form] = Form.useForm();
   const {
     loading,
     setVisibleFormBieuMau,
+    danhSachDataTable,
+    setDanhSachDataTable,
     postDonSinhVienModel,
     record,
     recordDonThaoTac,
@@ -48,10 +54,10 @@ const FormBieuMau = (props: {
   useEffect(() => {
     const valuesTemp = {};
     props?.record?.thongTinDichVu?.cauHinhBieuMau?.forEach((cauHinh) => {
-      valuesTemp[cauHinh.label] = cauHinh?.value;
+      valuesTemp[cauHinh?.label] = cauHinh?.value;
       cauHinh?.dataSource?.forEach((data) => {
         data?.relatedElement?.forEach((item) => {
-          valuesTemp[item.label] = item?.value;
+          valuesTemp[item?.label] = item?.value;
         });
       });
     });
@@ -62,7 +68,7 @@ const FormBieuMau = (props: {
     let element = <Input placeholder={item?.label ?? ''} />;
     let ruleElement: any[] = [...rules.required];
     let initialValue = item?.value;
-    switch (item.type) {
+    switch (item?.type) {
       case 'TEXT_AREA': {
         element = <Input.TextArea rows={3} placeholder={item?.label ?? ''} />;
         break;
@@ -209,6 +215,15 @@ const FormBieuMau = (props: {
         });
         element = (
           <Table
+            name={item?.label}
+            danhSachDataTable={danhSachDataTable}
+            setDanhSachDataTable={(
+              dataTable: SetStateAction<
+                Record<string, { cauHinhBieuMau: DichVuMotCuaV2.CauHinhBieuMau[] }>[] | undefined
+              >,
+            ) => {
+              setDanhSachDataTable(dataTable);
+            }}
             data={data}
             recordForm={
               {
@@ -221,7 +236,7 @@ const FormBieuMau = (props: {
             widthDrawer="55%"
             Form={FormBieuMau}
             otherProps={{
-              scroll: { x: 700 },
+              scroll: { x: 500 },
             }}
             columns={item?.relatedElement?.map((column) => ({
               title: column?.label ?? '',
@@ -239,24 +254,24 @@ const FormBieuMau = (props: {
 
     const formItemElement = (
       <Form.Item
-        key={item.label}
-        extra={item?.note ? <i>{item.note}</i> : false}
+        key={item?.label}
+        extra={item?.note ? <i>{item?.note}</i> : false}
         label={
           <div
-            title={item.label}
+            title={item?.label}
             style={{
-              marginLeft: item.isRequired ? 0 : 10,
+              marginLeft: item?.isRequired ? 0 : 10,
               whiteSpace: 'nowrap',
               maxWidth: 140,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
             }}
           >
-            {item.label}
+            {item?.label}
           </div>
         }
-        name={item.label}
-        rules={item.isRequired ? ruleElement : []}
+        name={item?.label}
+        rules={item?.isRequired ? ruleElement : []}
         initialValue={initialValue}
       >
         {element}
@@ -266,7 +281,8 @@ const FormBieuMau = (props: {
       <div>
         {formItemElement}
         {item?.dataSource?.map((data) => {
-          return valuesForm?.[item.label] === data.label ? (
+          return valuesForm?.[item?.label] === data?.label ||
+            valuesForm?.[item?.label]?.includes(data?.label) ? (
             data?.relatedElement?.map((ele) => {
               return buildForm(ele);
             })
@@ -280,19 +296,34 @@ const FormBieuMau = (props: {
 
   const { tenTinh, tenPhuongXa, tenQuanHuyen } = useModel('donvihanhchinh');
 
+  const buildTableData = (values: { cauHinhBieuMau: DichVuMotCuaV2.CauHinhBieuMau[] }) => {
+    const arrData: { label: string; value: string }[] = [];
+    values?.cauHinhBieuMau?.forEach((cauHinh) => {
+      arrData.push({ label: cauHinh?.label ?? '', value: cauHinh?.value ?? '' });
+    });
+    return arrData;
+  };
+
   const buildPostData = (values: any, arrCauHinh: DichVuMotCuaV2.CauHinhBieuMau[]): any => {
     return (
-      arrCauHinh?.map((item) => ({
-        ...item,
-        dataSource: item?.dataSource?.map((data) => ({
-          ...data,
-          relatedElement: buildPostData(values, data?.relatedElement),
-        })),
-        value:
-          item.type !== 'DON_VI_HANH_CHINH'
-            ? values?.[item.label]
-            : { ...values?.[item.label], tenTinh, tenQuanHuyen, tenPhuongXa },
-      })) ?? []
+      arrCauHinh?.map((item) => {
+        let value = values?.[item?.label];
+        if (item?.type === 'DON_VI_HANH_CHINH')
+          value = { ...values?.[item?.label], tenTinh, tenQuanHuyen, tenPhuongXa };
+        else if (item?.type === 'TABLE') {
+          value = danhSachDataTable?.[item?.label]?.map(
+            (row: { cauHinhBieuMau: DichVuMotCuaV2.CauHinhBieuMau[] }) => buildTableData(row),
+          );
+        }
+        return {
+          ...item,
+          dataSource: item?.dataSource?.map((data) => ({
+            ...data,
+            relatedElement: buildPostData(values, data?.relatedElement),
+          })),
+          value,
+        };
+      }) ?? []
     );
   };
 
@@ -332,12 +363,22 @@ const FormBieuMau = (props: {
             }
           }
           const valuesFinal = { ...values, ...objectFileUpload };
-          const duLieuBieuMau = buildPostData(valuesFinal, record?.cauHinhBieuMau ?? []);
-
-          postDonSinhVienModel({
-            duLieuBieuMau,
-            dichVuId: record?._id ?? '',
-          });
+          const duLieuBieuMau = buildPostData(
+            valuesFinal,
+            props?.handleAdd
+              ? props?.record?.thongTinDichVu?.cauHinhBieuMau ?? []
+              : record?.cauHinhBieuMau ?? [],
+          );
+          if (props?.edit !== null && props?.edit !== undefined) {
+            if (props?.edit === false && props?.handleAdd)
+              props.handleAdd(valuesFinal, duLieuBieuMau);
+            else props.handleEdit(valuesFinal, duLieuBieuMau, props.record?.index);
+          } else {
+            postDonSinhVienModel({
+              duLieuBieuMau,
+              dichVuId: record?._id ?? '',
+            });
+          }
         }}
         form={form}
       >

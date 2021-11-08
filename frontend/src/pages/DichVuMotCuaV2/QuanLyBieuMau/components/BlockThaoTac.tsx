@@ -1,7 +1,7 @@
 import rules from '@/utils/rules';
-import { Col, DatePicker, Form, Row, Select } from 'antd';
-import { useModel } from 'umi';
+import { Col, Form, InputNumber, Row, Select } from 'antd';
 import mm from 'moment-timezone';
+import { useModel } from 'umi';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
@@ -15,16 +15,6 @@ const BieuMauThaoTac = (props: {
       <Col xs={24} lg={12}>
         <Form.Item
           labelCol={{ span: 24 }}
-          name={[props.field.name, 'hanXuLy']}
-          label="Hạn xử lý"
-          rules={[...rules.required]}
-        >
-          <DatePicker showTime style={{ width: '100%' }} format="HH:mm DD/MM/YYYY" />
-        </Form.Item>
-      </Col>
-      <Col xs={24} lg={12}>
-        <Form.Item
-          labelCol={{ span: 24 }}
           name={[props.field.name, 'idDonVi']}
           label="Đơn vị"
           rules={[...rules.required]}
@@ -34,6 +24,16 @@ const BieuMauThaoTac = (props: {
               <Select.Option value={item.id.toString()}>{item.ten_don_vi}</Select.Option>
             ))}
           </Select>
+        </Form.Item>
+      </Col>
+      <Col xs={24} lg={12}>
+        <Form.Item
+          labelCol={{ span: 24 }}
+          name={[props.field.name, 'soNgayXuLy']}
+          label="Số ngày xử lý"
+          rules={[...rules.required]}
+        >
+          <InputNumber style={{ width: '100%' }} placeholder="Số ngày xử lý" min={0} max={300} />
         </Form.Item>
       </Col>
     </Row>
