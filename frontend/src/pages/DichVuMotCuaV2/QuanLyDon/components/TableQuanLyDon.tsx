@@ -11,6 +11,7 @@ import { useModel } from 'umi';
 const TableQuanLyDon = () => {
   const {
     getDonThaoTacChuyenVienDieuPhoiModel,
+    getDonThaoTacChuyenVienXuLyModel,
     page,
     limit,
     condition,
@@ -24,7 +25,9 @@ const TableQuanLyDon = () => {
     setRecordDonThaoTac,
     recordDonThaoTac,
   } = useModel('dichvumotcuav2');
-
+  const { getChuyenVienXuLyDonModel } = useModel('phanquyen');
+  const { pathname } = window.location;
+  const arrPathName = pathname?.split('/') ?? [];
   const [type, setType] = useState<string>('handle');
   const columns: IColumn<DichVuMotCuaV2.DonThaoTac>[] = [
     {
@@ -36,7 +39,7 @@ const TableQuanLyDon = () => {
     {
       title: 'Ngày tạo',
       dataIndex: ['idDon', 'createdAt'],
-      width: 200,
+      width: 150,
       align: 'center',
       render: (val) => (
         <span title={moment(val).format('DD/MM/YYYY HH:mm:ss')}>{moment(val).fromNow()}</span>
@@ -45,7 +48,14 @@ const TableQuanLyDon = () => {
     {
       title: 'Người gửi',
       dataIndex: ['nguoiTao', 'hoTen'],
-      width: 300,
+      width: 200,
+      align: 'center',
+      search: 'search',
+    },
+    {
+      title: 'Đơn vị',
+      dataIndex: 'tenDonVi',
+      width: 200,
       align: 'center',
       search: 'search',
     },
@@ -64,6 +74,9 @@ const TableQuanLyDon = () => {
           {['PENDING'].includes(trangThaiQuanLyDon) && (
             <Button
               onClick={() => {
+                if (arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi') {
+                  getChuyenVienXuLyDonModel(recordDon?.idDonVi);
+                }
                 setRecordDonThaoTac(recordDon);
                 setVisibleFormBieuMau(true);
                 setType('handle');
@@ -97,9 +110,14 @@ const TableQuanLyDon = () => {
       modelName="dichvumotcuav2"
       dataState="danhSachDonThaoTac"
       loading={loading}
-      getData={getDonThaoTacChuyenVienDieuPhoiModel}
+      getData={
+        arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi'
+          ? getDonThaoTacChuyenVienDieuPhoiModel
+          : getDonThaoTacChuyenVienXuLyModel
+      }
     >
       <Select
+        allowClear
         placeholder="Lọc theo loại dịch vụ"
         onChange={(val: string) => {
           setRecord(danhSach?.find((item) => item._id === val));

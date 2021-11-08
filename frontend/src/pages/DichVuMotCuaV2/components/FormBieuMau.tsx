@@ -5,7 +5,7 @@ import { uploadFile } from '@/services/uploadFile';
 import { accessFileUpload } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { renderFileList } from '@/utils/utils';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
@@ -14,6 +14,7 @@ import {
   Form,
   Input,
   InputNumber,
+  Modal,
   Popconfirm,
   Radio,
   Select,
@@ -23,6 +24,7 @@ import mm from 'moment-timezone';
 import type { SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
+import FormDieuPhoi from '../QuanLyDon/components/FormDieuPhoi';
 import Table from './TableElement';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
@@ -48,9 +50,10 @@ const FormBieuMau = (props: {
     record,
     recordDonThaoTac,
     chuyenVienDieuPhoiDuyetDonModel,
+    chuyenVienXuLyDuyetDonModel,
   } = useModel('dichvumotcuav2');
   const [valuesForm, setValuesForm] = useState<any>({});
-
+  const [visibleFormDieuPhoi, setVisibleFormDieuPhoi] = useState<boolean>(false);
   useEffect(() => {
     const valuesTemp = {};
     props?.record?.thongTinDichVu?.cauHinhBieuMau?.forEach((cauHinh) => {
@@ -326,6 +329,8 @@ const FormBieuMau = (props: {
       }) ?? []
     );
   };
+  const { pathname } = window.location;
+  const arrPathName = pathname?.split('/') ?? [];
 
   return (
     <Card title={props?.title} bodyStyle={{ padding: 50 }}>
@@ -383,11 +388,6 @@ const FormBieuMau = (props: {
         form={form}
       >
         {props.record?.thongTinDichVu?.cauHinhBieuMau?.map((item) => buildForm(item))}
-        {/* {props.record?.thongTinDichVu?.cauHinhBieuMau?.forEach((cauHinh) => {
-          cauHinh?.dataSource?.forEach((data) => {
-            data?.relatedElement?.map((item) => buildForm(item));
-          });
-        })} */}
         <div>
           <b>{props.record?.thongTinDichVu?.ghiChu}</b>
         </div>
@@ -408,11 +408,15 @@ const FormBieuMau = (props: {
               <Popconfirm
                 title="Bạn có chắc chắn duyệt đơn này?"
                 onConfirm={() => {
-                  if (recordDonThaoTac?._id)
-                    chuyenVienDieuPhoiDuyetDonModel({
+                  if (recordDonThaoTac?._id) {
+                    const payload = {
                       type: 'ok',
                       idDonThaoTac: recordDonThaoTac?._id,
-                    });
+                    };
+                    if (arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi')
+                      chuyenVienDieuPhoiDuyetDonModel(payload);
+                    else chuyenVienXuLyDuyetDonModel(payload);
+                  }
                 }}
               >
                 <Button
@@ -430,17 +434,35 @@ const FormBieuMau = (props: {
               <Popconfirm
                 title="Bạn có chắc chắn không duyệt đơn này?"
                 onConfirm={() => {
-                  if (recordDonThaoTac?._id)
-                    chuyenVienDieuPhoiDuyetDonModel({
+                  if (recordDonThaoTac?._id) {
+                    const payload = {
                       type: 'not-ok',
                       idDonThaoTac: recordDonThaoTac?._id,
-                    });
+                    };
+                    if (arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi')
+                      chuyenVienDieuPhoiDuyetDonModel(payload);
+                    else chuyenVienXuLyDuyetDonModel(payload);
+                  }
                 }}
               >
                 <Button type="primary" style={{ marginRight: 8 }} onClick={() => {}}>
                   Không duyệt
                 </Button>
               </Popconfirm>
+              <Button
+                style={{
+                  marginRight: 8,
+                  backgroundColor: '#1890ff',
+                  border: '1px solid #1890ff',
+                  color: 'white',
+                }}
+                onClick={() => {
+                  setVisibleFormDieuPhoi(true);
+                }}
+                icon={<ArrowRightOutlined />}
+              >
+                Điều phối
+              </Button>
             </>
           )}
           <Button
@@ -451,6 +473,20 @@ const FormBieuMau = (props: {
           </Button>
         </Form.Item>
       </Form>
+      <Modal
+        bodyStyle={{ padding: 0 }}
+        footer={false}
+        visible={visibleFormDieuPhoi}
+        onCancel={() => {
+          setVisibleFormDieuPhoi(false);
+        }}
+      >
+        <FormDieuPhoi
+          onCancel={() => {
+            setVisibleFormDieuPhoi(false);
+          }}
+        />
+      </Modal>
     </Card>
   );
 };

@@ -111,6 +111,7 @@ const TableNhomChucNang = () => {
             userId: recordUser?.user?.id?.toString() || '',
             danhSachPhanNhom,
             vaiTro,
+            service: 'Odoo',
           });
         }}
         title="Bạn có chắc chắn muốn lưu?"

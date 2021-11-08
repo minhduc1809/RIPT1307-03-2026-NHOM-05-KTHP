@@ -138,35 +138,12 @@ export default defineConfig({
       access: 'admin',
       component: './PhanHoi',
     },
-    {
-      name: 'Menu',
-      icon: 'SmileOutlined',
-      path: '/menu',
-      maChucNang: 'dvmc:cho-tiep-nhan:read',
-      access: 'routeFilter',
-      routes: [
-        {
-          name: 'Submenu1',
-          icon: 'CalendarOutlined',
-          path: './submenu1',
-          maChucNang: 'dvmc:cho-tiep-nhan:update',
-          access: 'routeFilter',
-        },
-        {
-          name: 'Submenu2',
-          icon: 'CalendarOutlined',
-          path: './submenu2',
-          maChucNang: 'dvmc:cho-tiep-nhan:xu-ly',
-          access: 'routeFilter',
-        },
-      ],
-    },
+
     {
       name: 'Calendar',
       icon: 'CalendarOutlined',
       path: '/calendar',
       component: './Calendar',
-      // access: 'routeFilter',
       access: 'sinhVienVaGiangVienVaCanBo',
     },
     {
@@ -326,13 +303,22 @@ export default defineConfig({
       routes: [
         {
           name: 'QuanLyDon',
-          path: './quanlydon',
+          path: './quanlydondieuphoi',
           // access: 'canBo',
           access: 'routeFilter',
           maChucNang: 'don-dvmc-thao-tac:read-all',
           component: './DichVuMotCuaV2/QuanLyDon',
         },
+        {
+          name: 'QuanLyDon',
+          path: './quanlydonchuyenvien',
+          access: 'canBo',
+          // access: 'routeFilter',
+          maChucNang: 'don-dvmc-thao-tac:read-all',
+          component: './DichVuMotCuaV2/QuanLyDon',
+        },
       ],
+
       access: 'canBo',
     },
     {

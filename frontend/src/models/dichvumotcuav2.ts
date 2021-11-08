@@ -10,6 +10,9 @@ import {
   chuyenVienDieuPhoiDuyetDon,
   getDonThaoTacChuyenVienDieuPhoi,
   getAllBieuMauChuyenVien,
+  getDonThaoTacChuyenVienXuLy,
+  chuyenVienXuLyDuyetDon,
+  dieuPhoiDon,
 } from '@/services/DichVuMotCuaV2/dichvumotcuav2';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -121,12 +124,54 @@ export default () => {
     getDonThaoTacChuyenVienDieuPhoiModel();
   };
 
+  const getDonThaoTacChuyenVienXuLyModel = async () => {
+    setLoading(true);
+    const response = await getDonThaoTacChuyenVienXuLy({
+      page,
+      limit,
+      condition: { ...condition, trangThai: trangThaiQuanLyDon, idDichVu: record?._id },
+    });
+    setDanhSachDonThaoTac(response?.data?.data?.result ?? []);
+    setTotal(response?.data?.data?.total);
+    setLoading(false);
+  };
+
+  const chuyenVienXuLyDuyetDonModel = async (payload: { type: string; idDonThaoTac: string }) => {
+    await chuyenVienXuLyDuyetDon(payload);
+    message.success('Xử lý thành công');
+    setVisibleFormBieuMau(false);
+    getDonThaoTacChuyenVienXuLyModel();
+  };
+
   const getAllBieuMauChuyenVienModel = async () => {
     const response = await getAllBieuMauChuyenVien();
     setDanhSach(response?.data?.data ?? {});
   };
 
+  const dieuPhoiDonModel = async (payload: {
+    idDonThaoTac: string;
+    data: {
+      nguoiDuocGiao: {
+        _id: string;
+        hoTen: string;
+        gioiTinh: string;
+        ngaySinh: string;
+        maDinhDanh: string;
+      };
+    };
+  }) => {
+    setLoading(true);
+    await dieuPhoiDon(payload);
+    message.success('Điều phối thành công');
+    setLoading(false);
+    setVisibleFormBieuMau(false);
+    getDonThaoTacChuyenVienDieuPhoiModel();
+  };
+
   return {
+    dieuPhoiDonModel,
+    getDonThaoTacChuyenVienXuLyModel,
+    chuyenVienXuLyDuyetDonModel,
     danhSachDataTable,
     setDanhSachDataTable,
     recordDonThaoTac,

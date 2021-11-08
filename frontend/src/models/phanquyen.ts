@@ -3,11 +3,12 @@ import {
   getAllChucNang,
   getAllLoaiChucNang,
   getAllNhomVaiTro,
+  getChuyenVienXuLyDon,
+  getDoiTuongPhanNhomByMucDo,
   getUserPhanNhom,
   postNhomVaiTro,
   putPhanQuyenChucNangNhomVaiTro,
   putUserPhanNhom,
-  getDoiTuongPhanNhomByMucDo,
 } from '@/services/PhanQuyen/phanquyen';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -18,6 +19,7 @@ export default () => {
   const [danhSachLoaiChucNang, setDanhSachLoaiChucNang] = useState<string[]>([]);
   const [danhSachDoiTuong, setDanhSachDoiTuong] = useState<PhanQuyen.DoiTuongPhanNhom[]>([]);
   const [danhSachUser, setDanhSachUser] = useState<PhanQuyen.UserPhanNhom[]>([]);
+  const [danhSachChuyenVienXuLy, setDanhSachChuyenVienXuLy] = useState<Login.Profile[]>([]);
   const [recordNhomVaiTro, setRecordNhomVaiTro] = useState<PhanQuyen.NhomVaiTro>();
   const [recordUser, setRecordUser] = useState<PhanQuyen.UserPhanNhom>();
   const [filterInfo, setFilterInfo] = useState<any>({});
@@ -88,6 +90,7 @@ export default () => {
     userId: string;
     danhSachPhanNhom: PhanQuyen.PhanNhom[];
     vaiTro: string;
+    service: 'Odoo' | 'Internal';
   }) => {
     setLoading(true);
     await putUserPhanNhom(payload);
@@ -104,7 +107,17 @@ export default () => {
     setLoading(false);
   };
 
+  const getChuyenVienXuLyDonModel = async (idDonVi: string) => {
+    setLoading(true);
+    const response = await getChuyenVienXuLyDon(idDonVi);
+    setDanhSachChuyenVienXuLy(response?.data?.data ?? []);
+    setLoading(false);
+  };
+
   return {
+    getChuyenVienXuLyDonModel,
+    danhSachChuyenVienXuLy,
+    setDanhSachChuyenVienXuLy,
     getDoiTuongPhanNhomByMucDoModel,
     danhSachDoiTuong,
     setDanhSachDoiTuong,

@@ -14,7 +14,7 @@ const QuanLyDon = () => {
   }, []);
 
   return (
-    <Card>
+    <Card title="Quản lý đơn">
       <Tabs
         onChange={(key: string) => {
           setTrangThaiQuanLyDon(key);

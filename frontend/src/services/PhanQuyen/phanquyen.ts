@@ -87,6 +87,7 @@ export async function putUserPhanNhom(payload: {
   userId: string;
   danhSachPhanNhom: PhanQuyen.PhanNhom[];
   vaiTro: string;
+  service: 'Odoo' | 'Internal';
 }) {
   return axios.put(`${ip3}/phan-quyen/phan-nhom`, payload);
 }
@@ -109,4 +110,14 @@ export async function getPhanNhomUserCurrent() {
 
 export async function getDoiTuongPhanNhomByMucDo(mucDo: string) {
   return axios.get(`${ip3}/phan-quyen/doi-tuong-phan-nhom/muc-do/${mucDo}`);
+}
+
+/**
+ * thanhpq 08/11/2021
+ * get danh sách chuyên viên để điều phối đơn 1 cửa
+ * @returns danh sách chuyên viên được phép xử lý đơn
+ */
+
+export async function getChuyenVienXuLyDon(idDonVi: string) {
+  return axios.get(`${ip3}/phan-quyen/phan-nhom/user/odoo/all/don-vi/${idDonVi}`);
 }
