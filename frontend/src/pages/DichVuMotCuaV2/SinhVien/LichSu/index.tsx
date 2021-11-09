@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
 import Form from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
+import { TrangThaiDonDVMC } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { EyeOutlined } from '@ant-design/icons';
 import { Button, Modal, Tabs, Tooltip } from 'antd';
@@ -38,9 +39,19 @@ const LichSuGuiDon = () => {
       align: 'center',
     },
     {
+      title: 'Trạng thái',
+      dataIndex: 'trangThai',
+      align: 'center',
+      width: 150,
+      search: 'filterString',
+      notRegex: true,
+      render: (val) => <div>{TrangThaiDonDVMC?.[val] ?? 'Chưa cập nhật'}</div>,
+    },
+    {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       align: 'center',
+      width: 150,
       render: (val) => <div>{moment(val).format('HH:mm DD/MM/YYYY')}</div>,
     },
     {
@@ -52,6 +63,7 @@ const LichSuGuiDon = () => {
           <>
             <Tooltip title="Chi tiết">
               <Button
+                type="primary"
                 onClick={() => {
                   setRecordView(record);
                   setVisibleFormBieuMau(true);

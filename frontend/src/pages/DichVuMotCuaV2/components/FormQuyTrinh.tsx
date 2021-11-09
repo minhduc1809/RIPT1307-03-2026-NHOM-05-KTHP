@@ -80,7 +80,7 @@ const FormQuyTrinh = (props: {
                   <div>
                     <b>{buoc?.ten ?? ''}</b>
                     <br />
-                    <b>{TrangThaiBuoc?.[recordBuoc?.trangThai ?? 'Chưa cập nhật']}</b>
+                    <b>{TrangThaiBuoc?.[recordBuoc?.trangThai ?? ''] ?? 'Đang chờ'}</b>
                   </div>
                 }
               ></Timeline.Item>
@@ -93,7 +93,8 @@ const FormQuyTrinh = (props: {
                 return (
                   <Timeline.Item dot={IconThaoTac}>
                     <div>
-                      Trạng thái: {TrangThaiThaoTac?.[recordThaoTac?.trangThai ?? 'Chưa cập nhật']}
+                      Trạng thái:{' '}
+                      {TrangThaiThaoTac?.[recordThaoTac?.trangThai ?? ''] ?? 'Chưa xử lý'}
                     </div>
                     <div>
                       Số ngày xử lý:{' '}

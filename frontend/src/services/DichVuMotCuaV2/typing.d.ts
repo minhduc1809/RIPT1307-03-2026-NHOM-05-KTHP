@@ -57,6 +57,7 @@ declare module DichVuMotCuaV2 {
   }
 
   export interface Don {
+    trangThai?: string;
     _id: string;
     thongTinNguoiTao: Login.Profile;
     thongTinDichVu: {

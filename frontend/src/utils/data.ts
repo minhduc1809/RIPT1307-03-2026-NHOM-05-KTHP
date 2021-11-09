@@ -1,4 +1,9 @@
 const data: any = {
+  trangThai: [
+    { value: 'PROCESSING', text: 'Đang xử lý' },
+    { value: 'OK', text: 'Đã duyệt' },
+    { value: 'NOT_OK', text: 'Không duyệt' },
+  ],
   path: {
     sinh_vien: '/calendar',
     giang_vien: '/calendar',
