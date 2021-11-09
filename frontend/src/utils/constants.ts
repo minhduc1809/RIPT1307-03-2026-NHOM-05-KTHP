@@ -38,3 +38,28 @@ export const accessFileUpload = {
   image: 'image/*',
   pdf: '.pdf',
 };
+
+export enum TrangThaiDonDVMC {
+  OK = 'Đã duyệt',
+  NOT_OK = 'Không duyệt',
+  PROCESSING = 'Đang xử lý',
+}
+
+export enum TrangThaiBuoc {
+  OK = 'Đã duyệt',
+  NOT_OK = 'Không duyệt',
+  PROCESSING = 'Đang xử lý',
+}
+
+export enum TrangThaiThaoTac {
+  PENDING = 'Chưa duyệt',
+  OK = 'Đã duyệt',
+  NOT_OK = 'Không duyệt',
+}
+
+export enum ColorTrangThaiDonMotCua {
+  PENDING = 'gray',
+  OK = 'green',
+  NOT_OK = '#CC0D00',
+  PROCESSING = '#1890ff',
+}

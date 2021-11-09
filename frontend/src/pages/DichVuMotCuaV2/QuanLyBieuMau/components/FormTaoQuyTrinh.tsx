@@ -1,22 +1,29 @@
 /* eslint-disable no-underscore-dangle */
 import {
-  ArrowRightOutlined,
+  ArrowLeftOutlined,
   CloseCircleOutlined,
   EyeOutlined,
   PlusOutlined,
+  SaveOutlined,
 } from '@ant-design/icons';
-
 import { Button, Card, Form, Modal } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
+import FormQuyTrinh from '../../components/FormQuyTrinh';
 import styles from './block.css';
 import Block from './BlockQuyTrinh';
-import FormQuyTrinh from '../../components/FormQuyTrinh';
 
 const FormTaoQuyTrinh = () => {
   const [form] = Form.useForm();
-  const { loading, recordQuyTrinh, edit, setCurrent, setRecordQuyTrinh } =
-    useModel('dichvumotcuav2');
+  const {
+    loading,
+    record,
+    edit,
+    putBieuMauAdminModel,
+    postBieuMauAdminModel,
+    recordCauHinhBieuMau,
+    setCurrent,
+  } = useModel('dichvumotcuav2');
   const { getAllDonViModel, danhSach } = useModel('donvi');
   const [visibleQuyTrinh, setVisibleQuyTrinh] = useState<boolean>(false);
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.QuyTrinh>();
@@ -49,14 +56,19 @@ const FormTaoQuyTrinh = () => {
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
           const quyTrinh = buildPostQuyTrinh(values);
-          setRecordQuyTrinh(quyTrinh);
-          setCurrent(1);
+
+          if (edit) {
+            putBieuMauAdminModel({
+              data: { ...recordCauHinhBieuMau, quyTrinh: { ...quyTrinh } },
+              id: record?._id,
+            });
+          } else postBieuMauAdminModel({ ...recordCauHinhBieuMau, quyTrinh: { ...quyTrinh } });
         }}
         form={form}
       >
         <Form.List
           name={['quyTrinh', 'danhSachBuoc']}
-          initialValue={recordQuyTrinh?.danhSachBuoc ?? []}
+          initialValue={record?.quyTrinh?.danhSachBuoc ?? []}
           rules={[
             {
               validator: async (_, names) => {
@@ -111,6 +123,15 @@ const FormTaoQuyTrinh = () => {
         <Form.Item style={{ marginBottom: 0, position: 'fixed', top: 14, right: 48 }}>
           <div style={{ display: 'flex' }}>
             <Button
+              icon={<ArrowLeftOutlined />}
+              loading={loading}
+              style={{ marginRight: 8 }}
+              type="primary"
+              onClick={() => setCurrent(0)}
+            >
+              Quay lại
+            </Button>
+            <Button
               icon={<EyeOutlined />}
               style={{ marginRight: 8 }}
               onClick={() => {
@@ -122,13 +143,13 @@ const FormTaoQuyTrinh = () => {
               Xem trước
             </Button>
             <Button
-              icon={<ArrowRightOutlined />}
+              icon={<SaveOutlined />}
               loading={loading}
               style={{ marginRight: 8 }}
               htmlType="submit"
               type="primary"
             >
-              Tiếp theo
+              Lưu
             </Button>
             {/* <Button icon={<CloseOutlined />} onClick={() => setVisibleForm(false)}>
             Đóng

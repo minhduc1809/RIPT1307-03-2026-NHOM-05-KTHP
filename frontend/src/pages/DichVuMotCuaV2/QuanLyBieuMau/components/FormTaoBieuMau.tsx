@@ -1,7 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import rules from '@/utils/rules';
-import { CloseCircleOutlined, EyeOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
+import {
+  ArrowRightOutlined,
+  CloseCircleOutlined,
+  EyeOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
 import { Button, Card, Form, Input, Modal } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
@@ -12,13 +17,12 @@ const FormBieuMau = () => {
   const [form] = Form.useForm();
   const {
     loading,
-    record,
     edit,
-    postBieuMauAdminModel,
-    putBieuMauAdminModel,
     visibleFormBieuMau,
     setVisibleFormBieuMau,
-    recordQuyTrinh,
+    setRecordCauHinhBieuMau,
+    recordCauHinhBieuMau,
+    setCurrent,
   } = useModel('dichvumotcuav2');
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
   return (
@@ -27,19 +31,15 @@ const FormBieuMau = () => {
         scrollToFirstError
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          if (edit) {
-            putBieuMauAdminModel({
-              data: { ...values, quyTrinh: { ...recordQuyTrinh } },
-              id: record?._id,
-            });
-          } else postBieuMauAdminModel({ ...values, quyTrinh: { ...recordQuyTrinh } });
+          setRecordCauHinhBieuMau(values);
+          setCurrent(1);
         }}
         form={form}
       >
         <Form.Item
           name="ten"
           label="Tên biểu mẫu"
-          initialValue={record?.ten}
+          initialValue={recordCauHinhBieuMau?.ten}
           rules={[...rules.required, ...rules.text, ...rules.length(100)]}
         >
           <Input placeholder="Tên biểu mẫu" />
@@ -48,7 +48,7 @@ const FormBieuMau = () => {
         <Form.Item
           name="ghiChu"
           label="Ghi chú"
-          initialValue={record?.ghiChu}
+          initialValue={recordCauHinhBieuMau?.ghiChu}
           rules={[...rules.text, ...rules.length(200)]}
         >
           <Input.TextArea placeholder="Ghi chú" />
@@ -56,7 +56,7 @@ const FormBieuMau = () => {
 
         <Form.List
           name="cauHinhBieuMau"
-          initialValue={record?.cauHinhBieuMau ?? []}
+          initialValue={recordCauHinhBieuMau?.cauHinhBieuMau ?? []}
           rules={[
             {
               validator: async (_, names) => {
@@ -110,16 +110,6 @@ const FormBieuMau = () => {
 
         <Form.Item style={{ marginBottom: 0, position: 'fixed', top: 14, right: 48 }}>
           <div style={{ display: 'flex' }}>
-            {/* <Steps
-              style={{ marginRight: 8, minWidth: 300 }}
-              current={current}
-              onChange={(val) => {
-                setCurrent(val);
-              }}
-            >
-              <Steps.Step title="Quy trình" description="" />
-              <Steps.Step title="Biểu mẫu" description="" />
-            </Steps> */}
             <Button
               icon={<EyeOutlined />}
               style={{ marginRight: 8 }}
@@ -132,13 +122,13 @@ const FormBieuMau = () => {
               Xem trước
             </Button>
             <Button
-              icon={<SaveOutlined />}
+              icon={<ArrowRightOutlined />}
               loading={loading}
               style={{ marginRight: 8 }}
               htmlType="submit"
               type="primary"
             >
-              {edit ? 'Lưu' : 'Thêm'}
+              {edit ? 'Tiếp theo' : 'Thêm'}
             </Button>
             {/* <Button icon={<CloseOutlined />} onClick={() => setVisibleForm(false)}>
             Đóng

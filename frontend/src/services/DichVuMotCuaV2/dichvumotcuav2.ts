@@ -93,3 +93,7 @@ export async function dieuPhoiDon(payload: {
     payload.data,
   );
 }
+
+export async function getTrangThaiDon(idDon: string, payload: { condition: any }) {
+  return axios.get(`${ip3}/don-dvmc/sinh-vien/me/don-dvmc/${idDon}/buoc`, { params: payload });
+}

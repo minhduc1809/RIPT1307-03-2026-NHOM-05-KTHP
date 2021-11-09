@@ -92,7 +92,11 @@ const LichSuGuiDon = () => {
       >
         <Tabs>
           <Tabs.TabPane tab="Quy trình" key={0}>
-            <FormQuyTrinh type="view" record={recordView?.thongTinDichVu?.quyTrinh} />
+            <FormQuyTrinh
+              type="view"
+              idDon={recordView?._id}
+              record={recordView?.thongTinDichVu?.quyTrinh}
+            />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Biểu mẫu" key={1}>
             <Form type={type} record={recordView} />

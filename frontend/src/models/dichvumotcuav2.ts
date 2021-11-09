@@ -13,6 +13,7 @@ import {
   getDonThaoTacChuyenVienXuLy,
   chuyenVienXuLyDuyetDon,
   dieuPhoiDon,
+  getTrangThaiDon,
 } from '@/services/DichVuMotCuaV2/dichvumotcuav2';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -27,7 +28,15 @@ export default () => {
   const [condition, setCondition] = useState<any>({});
   const [record, setRecord] = useState<DichVuMotCuaV2.BieuMau>();
   const [recordDon, setRecordDon] = useState<DichVuMotCuaV2.Don>();
-  const [recordQuyTrinh, setRecordQuyTrinh] = useState<DichVuMotCuaV2.QuyTrinh>();
+  const [recordCauHinhBieuMau, setRecordCauHinhBieuMau] = useState<DichVuMotCuaV2.BieuMau>({
+    ten: '',
+    _id: '',
+    ghiChu: '',
+    cauHinhBieuMau: [],
+    quyTrinh: {
+      danhSachBuoc: [],
+    },
+  });
   const [recordDonThaoTac, setRecordDonThaoTac] = useState<DichVuMotCuaV2.DonThaoTac>();
   const [loading, setLoading] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
@@ -39,6 +48,7 @@ export default () => {
   const [limit, setLimit] = useState<number>(10);
   const [typeForm, setTypeForm] = useState<string>('add');
   const [trangThaiQuanLyDon, setTrangThaiQuanLyDon] = useState<string>('PENDING');
+  const [recordTrangThaiDon, setRecordTrangThaiDon] = useState<DichVuMotCuaV2.TrangThaiBuoc[]>([]);
 
   const getBieuMauAdminModel = async () => {
     setLoading(true);
@@ -168,7 +178,17 @@ export default () => {
     getDonThaoTacChuyenVienDieuPhoiModel();
   };
 
+  const getTrangThaiDonModel = async (idDon: string) => {
+    setLoading(true);
+    const response = await getTrangThaiDon(idDon, { condition });
+    setRecordTrangThaiDon(response?.data?.data ?? []);
+    setLoading(false);
+  };
+
   return {
+    getTrangThaiDonModel,
+    recordTrangThaiDon,
+    setRecordTrangThaiDon,
     dieuPhoiDonModel,
     getDonThaoTacChuyenVienXuLyModel,
     chuyenVienXuLyDuyetDonModel,
@@ -183,8 +203,8 @@ export default () => {
     setDanhSachDonThaoTac,
     getDonThaoTacChuyenVienDieuPhoiModel,
     chuyenVienDieuPhoiDuyetDonModel,
-    recordQuyTrinh,
-    setRecordQuyTrinh,
+    recordCauHinhBieuMau,
+    setRecordCauHinhBieuMau,
     current,
     setCurrent,
     typeForm,

@@ -8,8 +8,8 @@ const Form = () => {
   return (
     <>
       <div>
-        {current === 0 && <FormTaoQuyTrinh />}
-        {current === 1 && <FormBieuMau />}
+        {current === 1 && <FormTaoQuyTrinh />}
+        {current === 0 && <FormBieuMau />}
       </div>
     </>
   );

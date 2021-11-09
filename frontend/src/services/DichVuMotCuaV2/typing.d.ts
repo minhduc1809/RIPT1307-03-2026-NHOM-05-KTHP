@@ -67,4 +67,23 @@ declare module DichVuMotCuaV2 {
       quyTrinh: QuyTrinh;
     };
   }
+
+  export interface TrangThaiThaoTac {
+    trangThai: string;
+    _id: string;
+    idThaoTac: string;
+    idDonVi: string;
+    tenDonVi: string;
+    soNgayXuLy: number;
+  }
+  export interface TrangThaiBuoc {
+    _id: string;
+    idDichVu: string;
+    idDon: string;
+    nguoiTao: Login.Profile;
+    idBuoc: string;
+    tenBuoc: string;
+    trangThai: string;
+    danhSachThongKeThaoTac: TrangThaiThaoTac[];
+  }
 }
