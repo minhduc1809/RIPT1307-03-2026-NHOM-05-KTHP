@@ -1,13 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
+import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import Form from './components/Form';
-import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
-import { useModel } from 'umi';
-import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
+import { Button, Divider, Modal, Popconfirm, Tabs, Tooltip } from 'antd';
 import { useState } from 'react';
-import moment from 'moment';
+import { useModel } from 'umi';
+import FormQuyTrinh from '../components/FormQuyTrinh';
+import Form from './components/Form';
 
 const QuanLyBieuMau = () => {
   const {
@@ -71,7 +71,7 @@ const QuanLyBieuMau = () => {
                         danhSachThaoTac: buoc?.danhSachThaoTac?.map((thaoTac) => {
                           return {
                             ...thaoTac,
-                            hanXuLy: thaoTac?.hanXuLy ? moment(thaoTac.hanXuLy) : undefined,
+                            hanXuLy: thaoTac?.soNgayXuLy,
                           };
                         }),
                       };
@@ -139,13 +139,21 @@ const QuanLyBieuMau = () => {
           setVisible(false);
         }}
       >
-        <FormView
-          onCancel={() => {
-            setVisible(false);
-          }}
-          type="view"
-          record={recordView}
-        />
+        <Tabs>
+          <Tabs.TabPane tab="Quy trình" key={0}>
+            <FormQuyTrinh type="view" record={recordView?.thongTinDichVu?.quyTrinh} />
+          </Tabs.TabPane>
+
+          <Tabs.TabPane tab="Biểu mẫu" key={1}>
+            <FormView
+              onCancel={() => {
+                setVisible(false);
+              }}
+              type="view"
+              record={recordView}
+            />
+          </Tabs.TabPane>
+        </Tabs>
       </Modal>
     </>
   );

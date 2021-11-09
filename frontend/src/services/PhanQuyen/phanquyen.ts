@@ -119,5 +119,7 @@ export async function getDoiTuongPhanNhomByMucDo(mucDo: string) {
  */
 
 export async function getChuyenVienXuLyDon(idDonVi: string) {
-  return axios.get(`${ip3}/phan-quyen/phan-nhom/user/odoo/all/don-vi/${idDonVi}`);
+  return axios.get(
+    `${ip3}/phan-quyen/phan-nhom/user/odoo/all/don-vi/${idDonVi}?nhomVaiTroId=Chuyên viên xử lý`,
+  );
 }

@@ -33,7 +33,7 @@ declare module DichVuMotCuaV2 {
     _id: string;
     idDonVi: string;
     tenDonVi: string;
-    hanXuLy?: string | moment;
+    soNgayXuLy?: number;
     cauHinh: any;
   }
 

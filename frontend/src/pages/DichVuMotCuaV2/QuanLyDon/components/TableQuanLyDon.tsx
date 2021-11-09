@@ -33,13 +33,13 @@ const TableQuanLyDon = () => {
     {
       title: 'STT',
       dataIndex: 'index',
-      width: 100,
+      width: 80,
       align: 'center',
     },
     {
       title: 'Ngày tạo',
       dataIndex: ['idDon', 'createdAt'],
-      width: 150,
+      width: 120,
       align: 'center',
       render: (val) => (
         <span title={moment(val).format('DD/MM/YYYY HH:mm:ss')}>{moment(val).fromNow()}</span>
@@ -48,14 +48,36 @@ const TableQuanLyDon = () => {
     {
       title: 'Người gửi',
       dataIndex: ['nguoiTao', 'hoTen'],
-      width: 200,
+      width: 150,
       align: 'center',
       search: 'search',
     },
     {
       title: 'Đơn vị',
       dataIndex: 'tenDonVi',
-      width: 200,
+      width: 180,
+      align: 'center',
+      search: 'search',
+    },
+    {
+      title: 'Bước',
+      dataIndex: 'idBuoc',
+      width: 120,
+      align: 'center',
+      render: (val, recordDon) => (
+        <div>
+          {
+            recordDon?.idDon?.thongTinDichVu?.quyTrinh?.danhSachBuoc?.find(
+              (item) => item._id === val,
+            )?.ten
+          }
+        </div>
+      ),
+    },
+    {
+      title: 'Người được giao',
+      dataIndex: ['nguoiDuocGiao', 'hoTen'],
+      width: 150,
       align: 'center',
       search: 'search',
     },

@@ -1,44 +1,54 @@
 /* eslint-disable no-underscore-dangle */
-import { ArrowRightOutlined, CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Card, Form } from 'antd';
-import { useEffect } from 'react';
+import {
+  ArrowRightOutlined,
+  CloseCircleOutlined,
+  EyeOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
+
+import { Button, Card, Form, Modal } from 'antd';
+import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import styles from './block.css';
 import Block from './BlockQuyTrinh';
+import FormQuyTrinh from '../../components/FormQuyTrinh';
 
 const FormTaoQuyTrinh = () => {
   const [form] = Form.useForm();
   const { loading, recordQuyTrinh, edit, setCurrent, setRecordQuyTrinh } =
     useModel('dichvumotcuav2');
   const { getAllDonViModel, danhSach } = useModel('donvi');
-
+  const [visibleQuyTrinh, setVisibleQuyTrinh] = useState<boolean>(false);
+  const [recordView, setRecordView] = useState<DichVuMotCuaV2.QuyTrinh>();
   useEffect(() => {
     getAllDonViModel();
   }, []);
+
+  const buildPostQuyTrinh = (values: { quyTrinh: DichVuMotCuaV2.QuyTrinh }) => {
+    const quyTrinh: DichVuMotCuaV2.QuyTrinh = {
+      danhSachBuoc: values?.quyTrinh?.danhSachBuoc?.map((buoc: DichVuMotCuaV2.BuocQuyTrinh) => {
+        return {
+          ...buoc,
+          danhSachThaoTac: buoc?.danhSachThaoTac?.map(
+            (thaoTac: DichVuMotCuaV2.ThaoTacQuyTrinh) => ({
+              ...thaoTac,
+              idDonVi: thaoTac?.idDonVi?.toString(),
+              tenDonVi:
+                danhSach?.find((item) => item.id.toString() === thaoTac.idDonVi)?.ten_don_vi ?? '',
+            }),
+          ),
+        };
+      }),
+    };
+    return quyTrinh;
+  };
 
   return (
     <Card title={edit ? 'Chỉnh sửa quy trình' : 'Thêm mới quy trình'}>
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          const quyTrinh: DichVuMotCuaV2.QuyTrinh = {
-            danhSachBuoc: values?.quyTrinh?.danhSachBuoc?.map(
-              (buoc: DichVuMotCuaV2.BuocQuyTrinh) => {
-                return {
-                  ...buoc,
-                  danhSachThaoTac: buoc?.danhSachThaoTac?.map(
-                    (thaoTac: DichVuMotCuaV2.ThaoTacQuyTrinh) => ({
-                      ...thaoTac,
-                      idDonVi: thaoTac?.idDonVi?.toString(),
-                      tenDonVi:
-                        danhSach?.find((item) => item.id.toString() === thaoTac.idDonVi)
-                          ?.ten_don_vi ?? '',
-                    }),
-                  ),
-                };
-              },
-            ),
-          };
+          const quyTrinh = buildPostQuyTrinh(values);
           setRecordQuyTrinh(quyTrinh);
           setCurrent(1);
         }}
@@ -100,17 +110,17 @@ const FormTaoQuyTrinh = () => {
 
         <Form.Item style={{ marginBottom: 0, position: 'fixed', top: 14, right: 48 }}>
           <div style={{ display: 'flex' }}>
-            {/* <Steps
-              style={{ marginRight: 8, minWidth: 300 }}
-              current={current}
-              onChange={(val) => {
-                setCurrent(val);
+            <Button
+              icon={<EyeOutlined />}
+              style={{ marginRight: 8 }}
+              onClick={() => {
+                const valueView = form.getFieldsValue(true);
+                setRecordView(buildPostQuyTrinh(valueView));
+                setVisibleQuyTrinh(true);
               }}
             >
-              <Steps.Step title="Quy trình" description="" />
-              <Steps.Step title="Biểu mẫu" description="" />
-            </Steps> */}
-
+              Xem trước
+            </Button>
             <Button
               icon={<ArrowRightOutlined />}
               loading={loading}
@@ -126,6 +136,18 @@ const FormTaoQuyTrinh = () => {
           </div>
         </Form.Item>
       </Form>
+      <Modal
+        destroyOnClose
+        width="60%"
+        footer={false}
+        visible={visibleQuyTrinh}
+        bodyStyle={{ padding: 0 }}
+        onCancel={() => {
+          setVisibleQuyTrinh(false);
+        }}
+      >
+        <FormQuyTrinh record={recordView} />
+      </Modal>
     </Card>
   );
 };

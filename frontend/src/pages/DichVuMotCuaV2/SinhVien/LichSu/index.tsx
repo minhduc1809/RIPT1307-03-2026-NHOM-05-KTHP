@@ -3,10 +3,11 @@ import TableBase from '@/components/Table';
 import Form from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import type { IColumn } from '@/utils/interfaces';
 import { EyeOutlined } from '@ant-design/icons';
-import { Button, Modal, Tooltip } from 'antd';
+import { Button, Modal, Tabs, Tooltip } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
+import FormQuyTrinh from '../../components/FormQuyTrinh';
 
 const LichSuGuiDon = () => {
   const {
@@ -84,12 +85,19 @@ const LichSuGuiDon = () => {
         width="60%"
         footer={false}
         visible={visibleFormBieuMau}
-        bodyStyle={{ padding: 0 }}
+        bodyStyle={{ padding: 18 }}
         onCancel={() => {
           setVisibleFormBieuMau(false);
         }}
       >
-        <Form type={type} record={recordView} />
+        <Tabs>
+          <Tabs.TabPane tab="Quy trình" key={0}>
+            <FormQuyTrinh type="view" record={recordView?.thongTinDichVu?.quyTrinh} />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Biểu mẫu" key={1}>
+            <Form type={type} record={recordView} />
+          </Tabs.TabPane>
+        </Tabs>
       </Modal>
     </>
   );

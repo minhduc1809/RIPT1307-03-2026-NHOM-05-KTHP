@@ -78,6 +78,7 @@ const DiaChi = (props: Props) => {
           lg={props.hideQuanHuyen && props.hideXaPhuong ? 24 : 8}
         >
           <Form.Item
+            style={{ marginBottom: 0 }}
             initialValue={props?.initialValue?.maTinh}
             name={props?.fields?.tinh ?? []}
             rules={props.notRequiredTinh ? [] : [...rules.required]}

@@ -263,7 +263,7 @@ export default defineConfig({
 
     {
       name: 'DichVuMotCuaSinhVien',
-      icon: 'Smile',
+      icon: 'AuditOutlined',
       path: '/dichvumotcuasv',
       routes: [
         {
@@ -284,7 +284,7 @@ export default defineConfig({
 
     {
       name: 'DichVuMotCuaAdmin',
-      icon: 'HeartOutlined',
+      icon: 'AuditOutlined',
       path: '/dichvumotcuav2',
       routes: [
         {
@@ -312,9 +312,9 @@ export default defineConfig({
         {
           name: 'QuanLyDon',
           path: './quanlydonchuyenvien',
-          access: 'canBo',
-          // access: 'routeFilter',
-          maChucNang: 'don-dvmc-thao-tac:read-all',
+          // access: 'canBo',
+          access: 'routeFilter',
+          maChucNang: 'don-dvmc-thao-tac:read-my',
           component: './DichVuMotCuaV2/QuanLyDon',
         },
       ],
@@ -391,7 +391,7 @@ export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
-  mfsu: {},
+  // mfsu: {},
   webpack5: {},
   exportStatic: {},
 });
