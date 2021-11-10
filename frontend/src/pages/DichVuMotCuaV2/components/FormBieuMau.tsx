@@ -225,6 +225,7 @@ const FormBieuMau = (props: {
         });
         element = (
           <Table
+            type={props?.type}
             name={item?.label}
             danhSachDataTable={danhSachDataTable}
             setDanhSachDataTable={(
@@ -242,11 +243,12 @@ const FormBieuMau = (props: {
             }
             textSaveButton="Lưu"
             hascreate
-            hasTotal
+            // hasTotal
             widthDrawer="55%"
             Form={FormBieuMau}
             otherProps={{
               scroll: { x: 500 },
+              pagination: false,
             }}
             columns={item?.relatedElement?.map((column) => ({
               title: column?.label ?? '',
@@ -270,7 +272,7 @@ const FormBieuMau = (props: {
           <div
             title={item?.label}
             style={{
-              marginLeft: item?.isRequired ? 0 : 10,
+              marginLeft: item?.isRequired && item?.type !== 'TABLE' ? 0 : 10,
               whiteSpace: 'nowrap',
               maxWidth: 140,
               overflow: 'hidden',

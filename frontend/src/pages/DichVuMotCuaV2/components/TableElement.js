@@ -109,10 +109,62 @@ class App extends React.Component {
 
   render() {
     const Form = this.props?.Form;
+    const columns = this.props.columns?.map((item) => {
+      return item?.search === 'search'
+        ? {
+            ...item,
+            ...this.getColumnSearchProps(item.dataIndex),
+          }
+        : { ...item };
+    });
+    if (!['view', 'handle'].includes(this.props?.type)) {
+      columns.push({
+        title: 'Thao tác',
+        width: 120,
+        align: 'center',
+        fixed: 'right',
+        render: (recordRow) => (
+          <>
+            <Tooltip title="Chỉnh sửa">
+              <Button
+                onClick={() => {
+                  this.setState({
+                    record: {
+                      thongTinDichVu: this.state.dataCauHinh?.find(
+                        (item) => item?.index === recordRow?.index,
+                      ),
+                      index: recordRow?.index,
+                    },
+                    edit: true,
+                    visible: true,
+                  });
+                }}
+                type="primary"
+                shape="circle"
+                icon={<EditOutlined />}
+              />
+            </Tooltip>{' '}
+            <Divider type="vertical" />
+            <Tooltip title="Xóa">
+              <Popconfirm
+                onConfirm={() => {
+                  this.setState({
+                    data: this.state.data?.filter((item) => item?.index !== recordRow?.index),
+                  });
+                }}
+                title={'Bạn có chắc chắn muốn xóa?'}
+              >
+                <Button shape="circle" icon={<DeleteOutlined />} />
+              </Popconfirm>
+            </Tooltip>
+          </>
+        ),
+      });
+    }
     return (
       <>
         {this.props?.children}
-        {this.props?.hascreate && (
+        {this.props?.hascreate && !['view', 'handle']?.includes(this.props?.type) && (
           <Button
             onClick={() => {
               this.setState({ visible: true, record: this.props?.recordForm, edit: false });
@@ -137,58 +189,7 @@ class App extends React.Component {
         <Table
           {...this.props?.otherProps}
           title={this.props?.title ? () => this.props.title : false}
-          columns={[
-            ...this.props.columns?.map((item) => {
-              return item?.search === 'search'
-                ? {
-                    ...item,
-                    ...this.getColumnSearchProps(item.dataIndex),
-                  }
-                : { ...item };
-            }),
-            {
-              title: 'Thao tác',
-              width: 120,
-              align: 'center',
-              fixed: 'right',
-              render: (recordRow) => (
-                <>
-                  <Tooltip title="Chỉnh sửa">
-                    <Button
-                      onClick={() => {
-                        this.setState({
-                          record: {
-                            thongTinDichVu: this.state.dataCauHinh?.find(
-                              (item) => item?.index === recordRow?.index,
-                            ),
-                            index: recordRow?.index,
-                          },
-                          edit: true,
-                          visible: true,
-                        });
-                      }}
-                      type="primary"
-                      shape="circle"
-                      icon={<EditOutlined />}
-                    />
-                  </Tooltip>{' '}
-                  <Divider type="vertical" />
-                  <Tooltip title="Xóa">
-                    <Popconfirm
-                      onConfirm={() => {
-                        this.setState({
-                          data: this.state.data?.filter((item) => item?.index !== recordRow?.index),
-                        });
-                      }}
-                      title={'Bạn có chắc chắn muốn xóa?'}
-                    >
-                      <Button shape="circle" icon={<DeleteOutlined />} />
-                    </Popconfirm>
-                  </Tooltip>
-                </>
-              ),
-            },
-          ]}
+          columns={columns}
           dataSource={this.state?.data ?? []}
         />
         {Form && (
