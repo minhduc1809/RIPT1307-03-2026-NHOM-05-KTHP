@@ -8,6 +8,7 @@ import {
   PauseCircleOutlined,
 } from '@ant-design/icons';
 import { Card, Timeline } from 'antd';
+import moment from 'moment';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 
@@ -75,12 +76,15 @@ const FormQuyTrinh = (props: {
           <>
             <Timeline style={{ marginLeft: '-100px' }} mode="left">
               <Timeline.Item
+                style={{ marginBottom: 20 }}
                 dot={IconBuoc}
                 label={
-                  <div>
+                  <div style={{ width: 300, float: 'right' }}>
                     <b>{buoc?.ten ?? ''}</b>
                     <br />
-                    <b>{TrangThaiBuoc?.[recordBuoc?.trangThai ?? ''] ?? 'Đang chờ'}</b>
+                    <div>
+                      Trạng thái: {TrangThaiBuoc?.[recordBuoc?.trangThai ?? ''] ?? 'Đang chờ'}
+                    </div>
                   </div>
                 }
               ></Timeline.Item>
@@ -92,15 +96,20 @@ const FormQuyTrinh = (props: {
                 const IconThaoTac = IconTrangThai?.[recordThaoTac?.trangThai ?? 'ANY'];
                 return (
                   <Timeline.Item dot={IconThaoTac}>
+                    <b>{thaoTac?.tenThaoTac}</b>
+                    <div>Đơn vị: {thaoTac?.tenDonVi}</div>
                     <div>
                       Trạng thái:{' '}
                       {TrangThaiThaoTac?.[recordThaoTac?.trangThai ?? ''] ?? 'Chưa xử lý'}
                     </div>
-                    <div>
-                      Số ngày xử lý:{' '}
-                      {thaoTac?.soNgayXuLy ? `${thaoTac?.soNgayXuLy} ngày` : 'Chưa cập nhật'}
-                    </div>
-                    <div>Đơn vị: {thaoTac?.tenDonVi}</div>
+                    {recordThaoTac?.hanXuLy ? (
+                      <div>Hạn xử lý: {moment(recordThaoTac?.hanXuLy)?.format('DD/MM/YYYY')}</div>
+                    ) : (
+                      <div>
+                        Số ngày xử lý:{' '}
+                        {thaoTac?.soNgayXuLy ? `${thaoTac?.soNgayXuLy} ngày` : 'Chưa cập nhật'}
+                      </div>
+                    )}
                   </Timeline.Item>
                 );
               })}

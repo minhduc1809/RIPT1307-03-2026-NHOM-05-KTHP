@@ -11,6 +11,7 @@ import {
   Card,
   Checkbox,
   DatePicker,
+  Divider,
   Form,
   Input,
   InputNumber,
@@ -26,6 +27,8 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import FormDieuPhoi from '../QuanLyDon/components/FormDieuPhoi';
 import Table from './TableElement';
+import ThongTinNguoiTaoDon from './ThongTinNguoiTaoDon';
+import TieuDeBieuMau from './TieuDeBieuMau';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
@@ -39,6 +42,8 @@ const FormBieuMau = (props: {
   handleDel?: any;
   handleEdit?: any;
   edit?: boolean;
+  hideTitle?: boolean;
+  hideCamKet?: boolean;
 }) => {
   const [form] = Form.useForm();
   const {
@@ -54,6 +59,7 @@ const FormBieuMau = (props: {
   } = useModel('dichvumotcuav2');
   const [valuesForm, setValuesForm] = useState<any>({});
   const [visibleFormDieuPhoi, setVisibleFormDieuPhoi] = useState<boolean>(false);
+  const { initialState } = useModel('@@initialState');
   useEffect(() => {
     const valuesTemp = {};
     props?.record?.thongTinDichVu?.cauHinhBieuMau?.forEach((cauHinh) => {
@@ -209,6 +215,7 @@ const FormBieuMau = (props: {
         break;
       }
       case 'TABLE': {
+        ruleElement = [];
         const data = item?.value?.map((recordRow: DichVuMotCuaV2.CauHinhBieuMau[]) => {
           const row = {};
           recordRow?.forEach((cell: DichVuMotCuaV2.CauHinhBieuMau) => {
@@ -331,13 +338,23 @@ const FormBieuMau = (props: {
   };
   const { pathname } = window.location;
   const arrPathName = pathname?.split('/') ?? [];
-
+  const [check, setCheck] = useState<boolean>(false);
   return (
-    <Card title={props?.title} bodyStyle={{ padding: 50 }}>
-      <div style={{ fontWeight: 500, fontSize: '26px', textAlign: 'center' }}>
-        {props.record?.thongTinDichVu?.ten ?? ''}
-      </div>
+    <Card
+      title={props?.title}
+      bodyStyle={{ padding: window.screen.width > 600 ? '30px 50px' : 12 }}
+    >
+      {!props.hideTitle && <TieuDeBieuMau title={props?.record?.thongTinDichVu?.ten ?? ''} />}
+
       <br />
+      {!props.hideTitle && (
+        <>
+          <h3 style={{ fontWeight: 'bold' }}>Thông tin người tạo đơn</h3>
+          <ThongTinNguoiTaoDon record={initialState?.currentUser} />
+          <Divider />
+        </>
+      )}
+      <h3 style={{ fontWeight: 'bold' }}>Thông tin đơn</h3>
       <Form
         onValuesChange={(changeValues, allValues) => {
           setValuesForm(allValues);
@@ -391,9 +408,21 @@ const FormBieuMau = (props: {
         <div>
           <b>{props.record?.thongTinDichVu?.ghiChu}</b>
         </div>
+        {!['view', 'handle'].includes(props?.type ?? '') && !props.hideCamKet && (
+          <Checkbox
+            style={{ marginBottom: 8 }}
+            onChange={(e) => {
+              setCheck(e.target.checked);
+            }}
+          >
+            Tôi xin cam đoan những thông tin trên là hoàn toàn chính xác, nếu sai sự thật tôi sẽ
+            chịu mọi hình thức kỷ luật của Học viện.
+          </Checkbox>
+        )}
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
           {!['view', 'handle'].includes(props?.type ?? '') && (
             <Button
+              disabled={props?.hideCamKet ? false : !check}
               icon={<CheckOutlined />}
               loading={loading}
               style={{ marginRight: 8 }}

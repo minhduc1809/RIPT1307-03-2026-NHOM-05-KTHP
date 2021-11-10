@@ -1,5 +1,5 @@
 import rules from '@/utils/rules';
-import { Col, Form, InputNumber, Row, Select } from 'antd';
+import { Col, Form, Input, InputNumber, Row, Select } from 'antd';
 import mm from 'moment-timezone';
 import { useModel } from 'umi';
 
@@ -12,6 +12,16 @@ const BieuMauThaoTac = (props: {
 
   return (
     <Row gutter={[20, 0]}>
+      <Col xs={24}>
+        <Form.Item
+          labelCol={{ span: 24 }}
+          name={[props.field.name, 'tenThaoTac']}
+          label="Tên thao tác"
+          rules={[...rules.required]}
+        >
+          <Input placeholder="Tên thao tác" />
+        </Form.Item>
+      </Col>
       <Col xs={24} lg={12}>
         <Form.Item
           labelCol={{ span: 24 }}

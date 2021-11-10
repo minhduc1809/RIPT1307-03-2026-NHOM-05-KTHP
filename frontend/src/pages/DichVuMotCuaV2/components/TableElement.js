@@ -206,6 +206,8 @@ class App extends React.Component {
                 visible={this.state.visible}
               >
                 <Form
+                  hideTitle
+                  hideCamKet
                   edit={this.state.edit}
                   handleAdd={(values, valuesFinal) => {
                     const rowNew = {};
@@ -259,6 +261,8 @@ class App extends React.Component {
                 visible={this.state.visible}
               >
                 <Form
+                  hideTitle
+                  hideCamKet
                   edit={this.state.edit}
                   handleAdd={(values, valuesFinal) => {
                     const dataTable = this.props?.danhSachDataTable ?? {};

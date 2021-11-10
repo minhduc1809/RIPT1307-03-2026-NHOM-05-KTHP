@@ -17,7 +17,7 @@ const Block = (props: {
           <Form.Item
             labelCol={{ span: 24 }}
             name={[props.field.name, 'ten']}
-            label="Tên"
+            label="Tên bước"
             rules={[...rules.required]}
           >
             <Input placeholder="Tên bước" />

@@ -2,7 +2,7 @@ import { Descriptions } from 'antd';
 import { useModel } from 'umi';
 
 const DanhMuc = () => {
-  const { thuTuc } = useModel('dichvumotcua');
+  const { thuTuc } = useModel('dichvumotcuav2');
   return (
     <div>
       <h2 style={{ textAlign: 'center' }}>

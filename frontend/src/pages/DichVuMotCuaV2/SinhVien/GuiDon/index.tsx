@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import DanhMuc from '@/pages/DichVuMotCua/components/DanhMuc';
+import DanhMuc from '@/pages/DichVuMotCuaV2/components/DanhMuc';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Card, Modal, Select } from 'antd';
 import { useModel } from 'umi';

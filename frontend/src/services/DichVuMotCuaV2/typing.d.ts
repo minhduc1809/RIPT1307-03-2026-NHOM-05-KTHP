@@ -14,6 +14,26 @@ declare module DichVuMotCuaV2 {
     relatedElement: CauHinhBieuMau[];
   }
 
+  export interface ThuTuc {
+    capDo: string;
+    coQuanCoThamQuyen: string;
+    donViThucHien: string;
+    hoSo: string;
+    ketQuaThucHien: string;
+    linhVuc: string;
+    loaiDon: string;
+    luuY: string;
+    maThuTuc: string;
+    mauBieu: string;
+    phamViPhucVu: string;
+    quyTrinhThucHien: string;
+    tenThuTuc: string;
+    thoiHanGiaiQuyet: string;
+    yeuCau: string;
+    yeuCauTraPhi: string;
+    _id: string;
+  }
+
   export interface DonThaoTac {
     _id: string;
     idDon: Don;
@@ -30,6 +50,7 @@ declare module DichVuMotCuaV2 {
   }
 
   export interface ThaoTacQuyTrinh {
+    tenThaoTac: string;
     _id: string;
     idDonVi: string;
     tenDonVi: string;
@@ -70,6 +91,7 @@ declare module DichVuMotCuaV2 {
   }
 
   export interface TrangThaiThaoTac {
+    hanXuLy: string;
     trangThai: string;
     _id: string;
     idThaoTac: string;

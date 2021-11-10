@@ -78,7 +78,7 @@ const DiaChi = (props: Props) => {
           lg={props.hideQuanHuyen && props.hideXaPhuong ? 24 : 8}
         >
           <Form.Item
-            style={{ marginBottom: 0 }}
+            style={{ marginBottom: props.hideDiaChiCuThe ? 0 : 8 }}
             initialValue={props?.initialValue?.maTinh}
             name={props?.fields?.tinh ?? []}
             rules={props.notRequiredTinh ? [] : [...rules.required]}
@@ -112,6 +112,7 @@ const DiaChi = (props: Props) => {
       {!props.hideQuanHuyen && (
         <Col xs={24} md={12} lg={8}>
           <Form.Item
+            style={{ marginBottom: props.hideDiaChiCuThe ? 0 : 8 }}
             initialValue={props?.initialValue?.maQuanHuyen}
             name={props?.fields?.quanHuyen ?? []}
             rules={props.notRequiredQuanHuyen ? [] : [...rules.required]}
@@ -151,6 +152,7 @@ const DiaChi = (props: Props) => {
       {!props.hideXaPhuong && (
         <Col xs={24} md={12} lg={8}>
           <Form.Item
+            style={{ marginBottom: props.hideDiaChiCuThe ? 0 : 8 }}
             initialValue={props?.initialValue?.maPhuongXa}
             name={props?.fields?.xaPhuong ?? []}
             rules={props?.notRequiredXaPhuong ? [] : [...rules.required]}

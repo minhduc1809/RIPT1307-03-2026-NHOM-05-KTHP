@@ -40,6 +40,7 @@ export default () => {
   const [recordDonThaoTac, setRecordDonThaoTac] = useState<DichVuMotCuaV2.DonThaoTac>();
   const [loading, setLoading] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
+  const [thuTuc, setThuTuc] = useState<DichVuMotCuaV2.ThuTuc>();
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
   const [visibleFormBieuMau, setVisibleFormBieuMau] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
@@ -186,6 +187,8 @@ export default () => {
   };
 
   return {
+    thuTuc,
+    setThuTuc,
     getTrangThaiDonModel,
     recordTrangThaiDon,
     setRecordTrangThaiDon,

@@ -119,7 +119,7 @@ const QuanLyBieuMau = () => {
 
       <Modal
         destroyOnClose
-        width="60%"
+        width="800px"
         footer={false}
         visible={visible}
         onCancel={() => {
