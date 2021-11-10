@@ -38,6 +38,12 @@ export default () => {
     },
   });
   const [recordDonThaoTac, setRecordDonThaoTac] = useState<DichVuMotCuaV2.DonThaoTac>();
+  const [recordThongTinChung, setRecordThongTinChung] = useState<{
+    thongTinThuTuc?: DichVuMotCuaV2.thongTinThuTuc;
+    thongTinHoSo?: string;
+    thongTinQuyTrinh?: string;
+    thongTinYeuCau?: string;
+  }>();
   const [loading, setLoading] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
   const [thuTuc, setThuTuc] = useState<DichVuMotCuaV2.ThuTuc>();
@@ -187,6 +193,8 @@ export default () => {
   };
 
   return {
+    recordThongTinChung,
+    setRecordThongTinChung,
     thuTuc,
     setThuTuc,
     getTrangThaiDonModel,

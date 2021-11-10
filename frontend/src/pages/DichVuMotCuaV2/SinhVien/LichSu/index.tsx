@@ -108,6 +108,7 @@ const LichSuGuiDon = () => {
               type="view"
               idDon={recordView?._id}
               record={recordView?.thongTinDichVu?.quyTrinh}
+              thoiGianTaoDon={recordView?.createdAt}
             />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Biểu mẫu" key={1}>

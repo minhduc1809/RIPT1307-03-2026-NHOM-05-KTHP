@@ -1,13 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
-import rules from '@/utils/rules';
 import {
+  ArrowLeftOutlined,
   ArrowRightOutlined,
   CloseCircleOutlined,
   EyeOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Form, Input, Modal } from 'antd';
+import { Button, Card, Form, Modal } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import styles from './block.css';
@@ -31,29 +31,11 @@ const FormBieuMau = () => {
         scrollToFirstError
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          setRecordCauHinhBieuMau(values);
-          setCurrent(1);
+          setRecordCauHinhBieuMau({ ...recordCauHinhBieuMau, ...values });
+          setCurrent(2);
         }}
         form={form}
       >
-        <Form.Item
-          name="ten"
-          label="Tên biểu mẫu"
-          initialValue={recordCauHinhBieuMau?.ten}
-          rules={[...rules.required, ...rules.text, ...rules.length(100)]}
-        >
-          <Input placeholder="Tên biểu mẫu" />
-        </Form.Item>
-
-        <Form.Item
-          name="ghiChu"
-          label="Ghi chú"
-          initialValue={recordCauHinhBieuMau?.ghiChu}
-          rules={[...rules.text, ...rules.length(200)]}
-        >
-          <Input.TextArea placeholder="Ghi chú" />
-        </Form.Item>
-
         <Form.List
           name="cauHinhBieuMau"
           initialValue={recordCauHinhBieuMau?.cauHinhBieuMau ?? []}
@@ -120,6 +102,15 @@ const FormBieuMau = () => {
               }}
             >
               Xem trước
+            </Button>
+            <Button
+              icon={<ArrowLeftOutlined />}
+              loading={loading}
+              style={{ marginRight: 8 }}
+              type="primary"
+              onClick={() => setCurrent(0)}
+            >
+              Quay lại
             </Button>
             <Button
               icon={<ArrowRightOutlined />}

@@ -5,6 +5,7 @@ import { Button, Card, Modal, Select } from 'antd';
 import { useModel } from 'umi';
 import { useEffect } from 'react';
 import FormBieuMau from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
+import { includes } from '@/utils/utils';
 
 const SinhVienTaoDon = () => {
   const {
@@ -28,6 +29,7 @@ const SinhVienTaoDon = () => {
           setRecord(danhSach?.find((item) => item._id === val));
         }}
         showSearch
+        filterOption={(value, option) => includes(option?.props.children, value)}
         value={record?._id}
         style={{ width: '400px', marginBottom: 20, marginLeft: 8 }}
       >

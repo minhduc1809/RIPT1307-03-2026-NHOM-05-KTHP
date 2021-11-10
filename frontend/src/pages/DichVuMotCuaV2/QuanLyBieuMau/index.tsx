@@ -22,6 +22,7 @@ const QuanLyBieuMau = () => {
     deleteBieuMauAdminModel,
     setRecordCauHinhBieuMau,
     setCurrent,
+    setRecordThongTinChung,
   } = useModel('dichvumotcuav2');
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
   const [visible, setVisible] = useState<boolean>(false);
@@ -65,6 +66,12 @@ const QuanLyBieuMau = () => {
                   setVisibleForm(true);
                   setRecordCauHinhBieuMau(record);
                   setCurrent(0);
+                  setRecordThongTinChung({
+                    thongTinThuTuc: record?.thongTinThuTuc,
+                    thongTinHoSo: record?.thongTinHoSo,
+                    thongTinQuyTrinh: record?.thongTinQuyTrinh,
+                    thongTinYeuCau: record?.thongTinYeuCau,
+                  });
                 }}
                 shape="circle"
                 type="primary"
@@ -108,6 +115,7 @@ const QuanLyBieuMau = () => {
             setEdit(false);
             setRecord({} as DichVuMotCuaV2.BieuMau);
             setRecordCauHinhBieuMau({} as DichVuMotCuaV2.BieuMau);
+            setRecordThongTinChung({});
             setCurrent(0);
           }}
           type="primary"

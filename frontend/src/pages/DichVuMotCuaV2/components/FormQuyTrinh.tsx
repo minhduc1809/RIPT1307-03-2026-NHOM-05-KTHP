@@ -59,6 +59,7 @@ const FormQuyTrinh = (props: {
   idDon?: string;
   record?: DichVuMotCuaV2.QuyTrinh;
   type?: string;
+  thoiGianTaoDon?: string;
 }) => {
   const { getTrangThaiDonModel, recordTrangThaiDon } = useModel('dichvumotcuav2');
   useEffect(() => {
@@ -68,8 +69,31 @@ const FormQuyTrinh = (props: {
   }, [props.idDon]);
 
   return (
-    <Card title={props.type === 'view' ? false : 'Quy trình'}>
-      {props?.record?.danhSachBuoc?.map((buoc) => {
+    <Card title={props?.type === 'view' ? false : 'Quy trình'}>
+      {props?.type === 'view' && (
+        <Timeline style={{ marginLeft: '-100px' }} mode="left">
+          <Timeline.Item
+            style={{ marginBottom: 20 }}
+            dot={IconTrangThai?.OK}
+            label={
+              <div style={{ width: 300, float: 'right' }}>
+                <b>
+                  Tạo đơn thành công vào lúc{' '}
+                  {props?.thoiGianTaoDon
+                    ? moment(props?.thoiGianTaoDon).format('HH:mm DD/MM/YYYY')
+                    : ''}
+                </b>
+              </div>
+            }
+          >
+            <div style={{ height: 30 }}></div>
+          </Timeline.Item>
+          <Timeline.Item style={{ display: 'none' }}>
+            <div style={{ height: 20 }}></div>
+          </Timeline.Item>
+        </Timeline>
+      )}
+      {props?.record?.danhSachBuoc?.map((buoc, index) => {
         const recordBuoc = recordTrangThaiDon?.find((item) => item.idBuoc === buoc._id);
         const IconBuoc = IconTrangThai?.[recordBuoc?.trangThai ?? 'ANY'];
         return (
@@ -87,8 +111,10 @@ const FormQuyTrinh = (props: {
                     </div>
                   </div>
                 }
-              ></Timeline.Item>
-              <br />
+              >
+                <div style={{ height: 30 }}></div>
+              </Timeline.Item>
+
               {buoc?.danhSachThaoTac?.map((thaoTac) => {
                 const recordThaoTac = recordBuoc?.danhSachThongKeThaoTac?.find(
                   (item) => item.idThaoTac === thaoTac._id,
@@ -113,6 +139,11 @@ const FormQuyTrinh = (props: {
                   </Timeline.Item>
                 );
               })}
+              {index !== (props.record?.danhSachBuoc?.length ?? 0) - 1 && (
+                <Timeline.Item style={{ display: 'none' }}>
+                  <div style={{ height: 20 }}></div>
+                </Timeline.Item>
+              )}
             </Timeline>
           </>
         );

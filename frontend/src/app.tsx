@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
-import { PageLoading, SettingDrawer } from '@ant-design/pro-layout';
+import { PageLoading } from '@ant-design/pro-layout';
 import { notification, Tooltip } from 'antd';
 import 'moment/locale/vi';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
@@ -121,7 +121,7 @@ export const request: RequestConfig = {
 };
 
 // ProLayout  https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
@@ -159,25 +159,25 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         </Tooltip>
       );
     },
-    childrenRender: (dom) => {
-      return (
-        <>
-          {dom}
-          <SettingDrawer
-            hideCopyButton
-            hideHintAlert
-            settings={initialState?.settings}
-            disableUrlParams
-            onSettingChange={(nextSettings) => {
-              return setInitialState({
-                ...initialState,
-                settings: nextSettings,
-              });
-            }}
-          />
-        </>
-      );
-    },
+    // childrenRender: (dom) => {
+    //   return (
+    //     <>
+    //       {dom}
+    //       <SettingDrawer
+    //         hideCopyButton
+    //         hideHintAlert
+    //         settings={initialState?.settings}
+    //         disableUrlParams
+    //         onSettingChange={(nextSettings) => {
+    //           return setInitialState({
+    //             ...initialState,
+    //             settings: nextSettings,
+    //           });
+    //         }}
+    //       />
+    //     </>
+    //   );
+    // },
     menuHeaderRender: undefined,
     ...initialState?.settings,
     title: 'PTIT S-Link',

@@ -22,6 +22,7 @@ const FormTaoQuyTrinh = () => {
     putBieuMauAdminModel,
     postBieuMauAdminModel,
     recordCauHinhBieuMau,
+    recordThongTinChung,
     setCurrent,
   } = useModel('dichvumotcuav2');
   const { getAllDonViModel, danhSach } = useModel('donvi');
@@ -53,16 +54,22 @@ const FormTaoQuyTrinh = () => {
   return (
     <Card title={edit ? 'Chỉnh sửa quy trình' : 'Thêm mới quy trình'}>
       <Form
+        scrollToFirstError
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
           const quyTrinh = buildPostQuyTrinh(values);
 
           if (edit) {
             putBieuMauAdminModel({
-              data: { ...recordCauHinhBieuMau, quyTrinh: { ...quyTrinh } },
+              data: { ...recordCauHinhBieuMau, ...recordThongTinChung, quyTrinh: { ...quyTrinh } },
               id: record?._id,
             });
-          } else postBieuMauAdminModel({ ...recordCauHinhBieuMau, quyTrinh: { ...quyTrinh } });
+          } else
+            postBieuMauAdminModel({
+              ...recordCauHinhBieuMau,
+              ...recordThongTinChung,
+              quyTrinh: { ...quyTrinh },
+            });
         }}
         form={form}
       >
@@ -127,7 +134,7 @@ const FormTaoQuyTrinh = () => {
               loading={loading}
               style={{ marginRight: 8 }}
               type="primary"
-              onClick={() => setCurrent(0)}
+              onClick={() => setCurrent(1)}
             >
               Quay lại
             </Button>
@@ -167,7 +174,7 @@ const FormTaoQuyTrinh = () => {
           setVisibleQuyTrinh(false);
         }}
       >
-        <FormQuyTrinh record={recordView} />
+        <FormQuyTrinh type="view" record={recordView} />
       </Modal>
     </Card>
   );
