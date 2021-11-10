@@ -6,7 +6,9 @@ import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row, Select } fr
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import styles from './block.css';
+import logo from '@/assets/student.png';
 import lodash from 'lodash';
+import ElementDescription from './ElementDescription';
 
 const Block = (props: {
   field: { name: number; key: number; isListField?: boolean; fieldKey: number };
@@ -17,6 +19,7 @@ const Block = (props: {
   const recordBlock: DichVuMotCuaV2.CauHinhBieuMau = lodash.get(record, props.fieldName, undefined);
   const [type, setType] = useState<string>(recordBlock?.type ?? '');
   const [objectRelate, setObjectRelate] = useState<any>({});
+  const [itemSelect, setItemSelect] = useState<string>('');
   useEffect(() => {
     const objectRelateTemp = {};
     if (['DROP_LIST_SINGLE', 'DROP_LIST_MULTI', 'RADIO_BUTTON', 'CHECKLIST']?.includes(type)) {
@@ -29,24 +32,18 @@ const Block = (props: {
   return (
     <>
       <Row gutter={[20, 0]}>
-        <Col xs={24} lg={12}>
+        <Col xs={24} lg={type === 'TEXT_BLOCK' ? 24 : 12}>
           <Form.Item
-            labelCol={{ span: 24 }}
-            name={[props.field.name, 'label']}
-            label="Tiêu đề"
-            rules={[...rules.required]}
-          >
-            <Input placeholder="Tiêu đề" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} lg={12}>
-          <Form.Item
+            style={{ marginBottom: 8, position: 'relative' }}
             labelCol={{ span: 24 }}
             name={[props.field.name, 'type']}
             label="Loại"
             rules={[...rules.required]}
           >
             <Select
+              onMouseLeave={() => {
+                setItemSelect('');
+              }}
               showSearch
               filterOption={(value, option) => includes(option?.props.children, value)}
               onChange={(val: string) => setType(val)}
@@ -55,22 +52,80 @@ const Block = (props: {
               {Object.keys(ElementTemplateType)
                 ?.filter((item) => item !== props?.type)
                 ?.map((item) => (
-                  <Select.Option value={item}>{ElementTemplateType?.[item] ?? ''}</Select.Option>
+                  <Select.Option
+                    onMouseEnter={() => {
+                      setItemSelect(item);
+                    }}
+                    value={item}
+                  >
+                    {ElementTemplateType?.[item] ?? ''}
+                  </Select.Option>
                 ))}
             </Select>
           </Form.Item>
+          {itemSelect && (
+            // <div
+            //   style={{
+            //     zIndex: 1000,
+            //     width: 100,
+            //     height: 100,
+            //     position: 'absolute',
+            //     top: 90,
+            //     right: '-110px',
+            //   }}
+            // >
+            //   <img style={{ objectFit: 'cover', width: 100, height: 100 }} src={logo} />
+            // </div>
+            <div style={{ zIndex: 1000 }}>
+              <ElementDescription logo={logo} text="abc" />
+            </div>
+          )}
         </Col>
-        <Col xs={24}>
-          <Form.Item labelCol={{ span: 24 }} name={[props.field.name, 'note']} label="Ghi chú">
-            <Input.TextArea rows={1} placeholder="Ghi chú" />
-          </Form.Item>
-        </Col>
+        {type !== 'TEXT_BLOCK' && (
+          <Col xs={24} lg={12}>
+            <Form.Item
+              style={{ marginBottom: 8 }}
+              labelCol={{ span: 24 }}
+              name={[props.field.name, 'label']}
+              label="Tiêu đề"
+              rules={[...rules.required]}
+            >
+              <Input placeholder="Tiêu đề" />
+            </Form.Item>
+          </Col>
+        )}
+        {type === 'TEXT_BLOCK' && (
+          <Col xs={24}>
+            <Form.Item
+              style={{ marginBottom: 8 }}
+              labelCol={{ span: 24 }}
+              name={[props.field.name, 'label']}
+              label="Nội dung"
+              rules={[...rules.required]}
+            >
+              <Input.TextArea rows={3} placeholder="Nội dung" />
+            </Form.Item>
+          </Col>
+        )}
+        {type !== 'TEXT_BLOCK' && (
+          <Col xs={24}>
+            <Form.Item
+              style={{ marginBottom: 8 }}
+              labelCol={{ span: 24 }}
+              name={[props.field.name, 'note']}
+              label="Ghi chú"
+            >
+              <Input.TextArea rows={1} placeholder="Ghi chú" />
+            </Form.Item>
+          </Col>
+        )}
       </Row>
 
       {type === 'INPUT_NUMBER' && (
         <Row gutter={[20, 0]}>
           <Col xs={24} lg={12}>
             <Form.Item
+              style={{ marginBottom: 8 }}
               labelCol={{ span: 24 }}
               name={[props.field.name, 'min']}
               label="Giá trị tối thiểu"
@@ -80,6 +135,7 @@ const Block = (props: {
           </Col>
           <Col xs={24} lg={12}>
             <Form.Item
+              style={{ marginBottom: 8 }}
               labelCol={{ span: 24 }}
               name={[props.field.name, 'max']}
               label="Giá trị tối đa"
@@ -92,6 +148,7 @@ const Block = (props: {
 
       {(type === 'UPLOAD_SINGLE' || type === 'UPLOAD_MULTI') && (
         <Form.Item
+          style={{ marginBottom: 8 }}
           labelCol={{ span: 24 }}
           name={[props.field.name, 'fileType']}
           label="Loại file"
@@ -124,15 +181,24 @@ const Block = (props: {
               <>
                 {fields.map((field, index) => (
                   <>
-                    <Form.Item label={`Lựa chọn ${index + 1}`} key={field.key}>
-                      <Form.Item name={[`${index}`, 'label']} rules={[...rules.required]} noStyle>
+                    <Form.Item
+                      style={{ marginBottom: 0 }}
+                      label={`Lựa chọn ${index + 1}`}
+                      key={field.key}
+                    >
+                      <Form.Item
+                        style={{ marginBottom: 8 }}
+                        name={[`${index}`, 'label']}
+                        rules={[...rules.required]}
+                        noStyle
+                      >
                         <Input placeholder="Nhập lựa chọn" style={{ width: '90%' }} />
                       </Form.Item>
                       <MinusCircleOutlined
                         className="dynamic-delete-button"
                         onClick={() => remove(field.name)}
                       />
-                      <Form.Item valuePropName="checked">
+                      <Form.Item style={{ marginBottom: 8 }} valuePropName="checked">
                         <Checkbox
                           checked={objectRelate?.[index]}
                           onChange={(val) => {
@@ -168,7 +234,8 @@ const Block = (props: {
                                 {fieldsRelate.map((fieldRelate, indexRelate) => (
                                   <div key={fieldRelate.key}>
                                     <Card
-                                      headStyle={{ padding: '8px 24px' }}
+                                      size="small"
+                                      headStyle={{ padding: '0px 24px' }}
                                       bodyStyle={{ padding: '8px 24px' }}
                                       className={styles.block}
                                       title={
@@ -211,7 +278,7 @@ const Block = (props: {
                     </Form.Item>
                   </>
                 ))}
-                <Form.Item>
+                <Form.Item style={{ marginBottom: 8 }}>
                   <Button
                     type="dashed"
                     onClick={() => add()}
@@ -248,6 +315,7 @@ const Block = (props: {
                 {fields.map((field, index) => (
                   <div key={field.key}>
                     <Card
+                      size="small"
                       headStyle={{ padding: '8px 24px' }}
                       bodyStyle={{ padding: '8px 24px' }}
                       className={styles.block}
@@ -270,7 +338,7 @@ const Block = (props: {
                     <br />
                   </div>
                 ))}
-                <Form.Item>
+                <Form.Item style={{ marginBottom: 8 }}>
                   <Button
                     type="dashed"
                     onClick={() => add()}
@@ -288,7 +356,12 @@ const Block = (props: {
       )}
 
       {type === 'DON_VI_HANH_CHINH' && (
-        <Form.Item rules={[...rules.required]} name={[props.field.name, 'level']} label="Cấp">
+        <Form.Item
+          style={{ marginBottom: 8 }}
+          rules={[...rules.required]}
+          name={[props.field.name, 'level']}
+          label="Cấp"
+        >
           <Select placeholder="Cấp">
             {LevelDonViHanhChinh?.map((item, index) => (
               <Select.Option value={index + 1} key={item}>
@@ -298,9 +371,15 @@ const Block = (props: {
           </Select>
         </Form.Item>
       )}
-      <Form.Item valuePropName="checked" name={[props.field.name, 'isRequired']}>
-        <Checkbox>Bắt buộc</Checkbox>
-      </Form.Item>
+      {type !== 'TEXT_BLOCK' && (
+        <Form.Item
+          style={{ marginBottom: 0 }}
+          valuePropName="checked"
+          name={[props.field.name, 'isRequired']}
+        >
+          <Checkbox>Bắt buộc</Checkbox>
+        </Form.Item>
+      )}
     </>
   );
 };

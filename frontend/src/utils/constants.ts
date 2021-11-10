@@ -16,6 +16,7 @@ export enum ElementTemplateType {
   CHECKLIST = 'Lựa chọn nhiều (Checklist)',
   DON_VI_HANH_CHINH = 'Đơn vị hành chính',
   TABLE = 'Dạng bảng',
+  TEXT_BLOCK = 'Đoạn văn bản',
 }
 
 export enum EFileType {

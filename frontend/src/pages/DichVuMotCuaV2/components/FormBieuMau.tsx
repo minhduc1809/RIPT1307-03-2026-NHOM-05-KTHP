@@ -74,7 +74,7 @@ const FormBieuMau = (props: {
   }, []);
 
   const buildForm = (item: DichVuMotCuaV2.CauHinhBieuMau) => {
-    let element = <Input placeholder={item?.label ?? ''} />;
+    let element = <Input placeholder="Nhập nội dung" />;
     let ruleElement: any[] = [...rules.required];
     let initialValue = item?.value;
     switch (item?.type) {
@@ -260,35 +260,42 @@ const FormBieuMau = (props: {
         );
         break;
       }
+      case 'TEXT_BLOCK': {
+        element = <p>{item?.label ?? ''}</p>;
+        break;
+      }
       default:
         break;
     }
 
-    const formItemElement = (
-      <Form.Item
-        key={item?.label}
-        extra={item?.note ? <i>{item?.note}</i> : false}
-        label={
-          <div
-            title={item?.label}
-            style={{
-              marginLeft: item?.isRequired && item?.type !== 'TABLE' ? 0 : 10,
-              whiteSpace: 'nowrap',
-              maxWidth: 140,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            {item?.label}
-          </div>
-        }
-        name={item?.label}
-        rules={item?.isRequired ? ruleElement : []}
-        initialValue={initialValue}
-      >
-        {element}
-      </Form.Item>
-    );
+    const formItemElement =
+      item?.type === 'TEXT_BLOCK' ? (
+        <div>{element}</div>
+      ) : (
+        <Form.Item
+          key={item?.label}
+          extra={item?.note ? <i>{item?.note}</i> : false}
+          label={
+            <div
+              title={item?.label}
+              style={{
+                marginLeft: item?.isRequired && item?.type !== 'TABLE' ? 0 : 10,
+                whiteSpace: 'nowrap',
+                maxWidth: 140,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {item?.label}
+            </div>
+          }
+          name={item?.label}
+          rules={item?.isRequired ? ruleElement : []}
+          initialValue={initialValue}
+        >
+          {element}
+        </Form.Item>
+      );
     return (
       <div>
         {formItemElement}

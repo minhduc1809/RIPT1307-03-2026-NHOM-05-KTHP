@@ -78,9 +78,9 @@ const FormQuyTrinh = (props: {
             label={
               <div style={{ width: 300, float: 'right' }}>
                 <b>
-                  Tạo đơn thành công vào lúc{' '}
+                  Tạo đơn thành công
                   {props?.thoiGianTaoDon
-                    ? moment(props?.thoiGianTaoDon).format('HH:mm DD/MM/YYYY')
+                    ? `vào lúc ${moment(props?.thoiGianTaoDon).format('HH:mm DD/MM/YYYY')}`
                     : ''}
                 </b>
               </div>

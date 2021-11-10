@@ -14,6 +14,7 @@ const BieuMauThaoTac = (props: {
     <Row gutter={[20, 0]}>
       <Col xs={24}>
         <Form.Item
+          style={{ marginBottom: 8 }}
           labelCol={{ span: 24 }}
           name={[props.field.name, 'tenThaoTac']}
           label="Tên thao tác"
@@ -24,6 +25,7 @@ const BieuMauThaoTac = (props: {
       </Col>
       <Col xs={24} lg={12}>
         <Form.Item
+          style={{ marginBottom: 8 }}
           labelCol={{ span: 24 }}
           name={[props.field.name, 'idDonVi']}
           label="Đơn vị"
@@ -38,6 +40,7 @@ const BieuMauThaoTac = (props: {
       </Col>
       <Col xs={24} lg={12}>
         <Form.Item
+          style={{ marginBottom: 8 }}
           labelCol={{ span: 24 }}
           name={[props.field.name, 'soNgayXuLy']}
           label="Số ngày xử lý"

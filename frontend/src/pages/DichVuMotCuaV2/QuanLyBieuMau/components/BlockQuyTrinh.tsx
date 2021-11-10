@@ -45,7 +45,7 @@ const Block = (props: {
                 <>
                   <div key={field.key}>
                     <Card
-                      headStyle={{ padding: '8px 24px' }}
+                      headStyle={{ padding: '0px 24px' }}
                       bodyStyle={{ padding: '8px 24px' }}
                       className={styles.block}
                       title={
@@ -64,7 +64,7 @@ const Block = (props: {
                   </div>
                 </>
               ))}
-              <Form.Item>
+              <Form.Item style={{ marginBottom: 8 }}>
                 <Button
                   type="dashed"
                   onClick={() => add()}

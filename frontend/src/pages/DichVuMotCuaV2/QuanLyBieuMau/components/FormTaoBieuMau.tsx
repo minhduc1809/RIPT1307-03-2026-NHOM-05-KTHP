@@ -56,7 +56,8 @@ const FormBieuMau = () => {
                 {fields.map((field, index) => (
                   <div key={field.key}>
                     <Card
-                      headStyle={{ padding: '8px 24px' }}
+                      size="small"
+                      headStyle={{ padding: '0px 24px' }}
                       bodyStyle={{ padding: '8px 24px' }}
                       className={styles.block}
                       title={
