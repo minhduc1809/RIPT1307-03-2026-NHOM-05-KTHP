@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import styles from './block.css';
 import ElementDescription from './ElementDescription';
+import { useMediaQuery } from 'react-responsive';
 
 const Block = (props: {
   field: { name: number; key: number; isListField?: boolean; fieldKey: number };
@@ -28,6 +29,10 @@ const Block = (props: {
     }
     setObjectRelate(objectRelateTemp);
   }, []);
+  const isLargeScreen = useMediaQuery({
+    query: '(min-width: 992px)',
+  });
+
   return (
     <>
       <Row gutter={[20, 0]}>
@@ -62,18 +67,18 @@ const Block = (props: {
                 ))}
             </Select>
           </Form.Item>
-          {/* {itemSelect && ( */}
-          <div
-            style={{
-              zIndex: 1000,
-              position: 'absolute',
-              top: 80,
-              right: '-150px',
-            }}
-          >
-            <ElementDescription type={itemSelect} text="abc" />
-          </div>
-          {/* )} */}
+          {itemSelect && (
+            <div
+              style={{
+                zIndex: 1000000,
+                position: 'absolute',
+                top: 80,
+                right: !isLargeScreen ? '10px' : '-190px',
+              }}
+            >
+              <ElementDescription type={itemSelect} text="abc" />
+            </div>
+          )}
         </Col>
         {type !== 'TEXT_BLOCK' && (
           <Col xs={24} lg={12}>

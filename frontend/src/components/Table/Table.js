@@ -6,7 +6,6 @@ class App extends React.Component {
   state = {
     searchText: '',
     searchedColumn: '',
-    data: this.props?.data ?? [],
     visible: false,
   };
 
@@ -104,7 +103,7 @@ class App extends React.Component {
                 }
               : { ...item };
           })}
-          dataSource={this.state?.data ?? []}
+          dataSource={this.props?.data ?? []}
         />
         {Form && (
           <>

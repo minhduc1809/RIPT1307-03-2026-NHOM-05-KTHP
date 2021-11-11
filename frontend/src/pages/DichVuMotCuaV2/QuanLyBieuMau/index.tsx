@@ -5,6 +5,7 @@ import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Divider, Modal, Popconfirm, Tabs, Tooltip } from 'antd';
 import { useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import { useModel } from 'umi';
 import FormQuyTrinh from '../components/FormQuyTrinh';
 import Form from './components/Form';
@@ -31,7 +32,7 @@ const QuanLyBieuMau = () => {
       title: 'STT',
       dataIndex: 'index',
       align: 'center',
-      width: 200,
+      width: 80,
     },
     {
       title: 'Tên',
@@ -43,6 +44,7 @@ const QuanLyBieuMau = () => {
       title: 'Thao tác',
       align: 'center',
       width: 170,
+      fixed: 'right',
       render: (record: DichVuMotCuaV2.BieuMau) => {
         return (
           <>
@@ -96,11 +98,16 @@ const QuanLyBieuMau = () => {
     },
   ];
 
+  const isLargeScreen = useMediaQuery({
+    query: '(min-width: 992px)',
+  });
+
   return (
     <>
       <TableBase
-        widthDrawer="60%"
+        widthDrawer={!isLargeScreen ? '80%' : '60%'}
         formType="Drawer"
+        scroll={{ x: 900 }}
         title="Quản lý dịch vụ"
         modelName="dichvumotcuav2"
         columns={columns}
