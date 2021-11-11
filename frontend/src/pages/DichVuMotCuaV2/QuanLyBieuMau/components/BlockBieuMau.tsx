@@ -3,11 +3,10 @@ import rules from '@/utils/rules';
 import { includes } from '@/utils/utils';
 import { CloseCircleOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row, Select } from 'antd';
+import lodash from 'lodash';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import styles from './block.css';
-import logo from '@/assets/student.png';
-import lodash from 'lodash';
 import ElementDescription from './ElementDescription';
 
 const Block = (props: {
@@ -63,23 +62,18 @@ const Block = (props: {
                 ))}
             </Select>
           </Form.Item>
-          {itemSelect && (
-            // <div
-            //   style={{
-            //     zIndex: 1000,
-            //     width: 100,
-            //     height: 100,
-            //     position: 'absolute',
-            //     top: 90,
-            //     right: '-110px',
-            //   }}
-            // >
-            //   <img style={{ objectFit: 'cover', width: 100, height: 100 }} src={logo} />
-            // </div>
-            <div style={{ zIndex: 1000 }}>
-              <ElementDescription logo={logo} text="abc" />
-            </div>
-          )}
+          {/* {itemSelect && ( */}
+          <div
+            style={{
+              zIndex: 1000,
+              position: 'absolute',
+              top: 80,
+              right: '-150px',
+            }}
+          >
+            <ElementDescription type={itemSelect} text="abc" />
+          </div>
+          {/* )} */}
         </Col>
         {type !== 'TEXT_BLOCK' && (
           <Col xs={24} lg={12}>
