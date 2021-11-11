@@ -77,6 +77,7 @@ const FormBieuMau = (props: {
     let element = <Input placeholder="Nhập nội dung" />;
     let ruleElement: any[] = [...rules.required];
     let initialValue = item?.value;
+    if (!item?.type) return <div></div>;
     switch (item?.type) {
       case 'TEXT_AREA': {
         element = <Input.TextArea rows={3} placeholder={item?.label ?? ''} />;
@@ -89,7 +90,7 @@ const FormBieuMau = (props: {
             style={{ width: '100%' }}
             placeholder={item?.label ?? ''}
             min={item?.min ?? 0}
-            max={item?.max ?? 10}
+            max={item?.max ?? 10000}
           />
         );
         break;
@@ -174,7 +175,10 @@ const FormBieuMau = (props: {
             hideDiaChiCuThe={item?.level !== 4}
             hideQuanHuyen={item?.level === 1}
             hideXaPhuong={[1, 2].includes(item?.level)}
-            // disabled={props.type === 'view'}
+            notRequiredDiaChiCuThe={!item?.isRequired}
+            notRequiredQuanHuyen={!item?.isRequired}
+            notRequiredTinh={!item?.isRequired}
+            notRequiredXaPhuong={!item?.isRequired}
             initialValue={item?.value}
             form={form}
             fields={{
@@ -277,7 +281,7 @@ const FormBieuMau = (props: {
           extra={item?.note ? <i>{item?.note}</i> : false}
           label={
             <div
-              title={item?.label}
+              title={item?.label ?? 'Chưa có tiêu đề'}
               style={{
                 marginLeft: item?.isRequired && item?.type !== 'TABLE' ? 0 : 10,
                 whiteSpace: 'nowrap',
@@ -286,7 +290,7 @@ const FormBieuMau = (props: {
                 textOverflow: 'ellipsis',
               }}
             >
-              {item?.label}
+              {item?.label ?? 'Chưa có tiêu đề'}
             </div>
           }
           name={item?.label}

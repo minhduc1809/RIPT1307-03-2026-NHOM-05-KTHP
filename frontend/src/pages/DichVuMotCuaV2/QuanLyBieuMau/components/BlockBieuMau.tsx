@@ -87,7 +87,7 @@ const Block = (props: {
               labelCol={{ span: 24 }}
               name={[props.field.name, 'label']}
               label="Tiêu đề"
-              rules={[...rules.required]}
+              rules={[...rules.required, ...rules.text]}
             >
               <Input placeholder="Tiêu đề" />
             </Form.Item>
@@ -100,7 +100,7 @@ const Block = (props: {
               labelCol={{ span: 24 }}
               name={[props.field.name, 'label']}
               label="Nội dung"
-              rules={[...rules.required]}
+              rules={[...rules.text, ...rules.required]}
             >
               <Input.TextArea rows={3} placeholder="Nội dung" />
             </Form.Item>
@@ -188,7 +188,7 @@ const Block = (props: {
                       <Form.Item
                         style={{ marginBottom: 8 }}
                         name={[`${index}`, 'label']}
-                        rules={[...rules.required]}
+                        rules={[...rules.required, ...rules.text]}
                         noStyle
                       >
                         <Input placeholder="Nhập lựa chọn" style={{ width: '90%' }} />
@@ -250,7 +250,7 @@ const Block = (props: {
                                       }
                                     >
                                       <Block
-                                        fieldName={`${props.fieldName}.relatedElement.[${index}]`}
+                                        fieldName={`${props.fieldName}.dataSource.[${index}].relatedElement.[${indexRelate}]`}
                                         type={props?.type}
                                         field={{ ...fieldRelate }}
                                       />
@@ -357,6 +357,7 @@ const Block = (props: {
       {type === 'DON_VI_HANH_CHINH' && (
         <Form.Item
           style={{ marginBottom: 8 }}
+          labelCol={{ span: 24 }}
           rules={[...rules.required]}
           name={[props.field.name, 'level']}
           label="Cấp"

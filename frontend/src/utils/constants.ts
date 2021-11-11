@@ -22,7 +22,7 @@ export enum ElementTemplateType {
 export enum EFileType {
   doc = 'Tài liệu (doc, docx)',
   pdf = 'Tài liệu (pdf)',
-  excel = 'Excel (xlsx, xls)',
+  excel = 'Excel (xlsx, xls, xlsm)',
   image = 'Ảnh (png, jpg, jpeg)',
 }
 
@@ -35,8 +35,8 @@ export const LevelDonViHanhChinh = [
 
 export const accessFileUpload = {
   doc: '.doc,.docx',
-  excel: '.xmls, .xls',
-  image: 'image/*',
+  excel: '.xlsm, .xls, .xlsx',
+  image: '.png, .jpg, .jpeg',
   pdf: '.pdf',
 };
 
