@@ -159,25 +159,25 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         </Tooltip>
       );
     },
-    childrenRender: (dom) => {
-      return (
-        <>
-          {dom}
-          <SettingDrawer
-            hideCopyButton
-            hideHintAlert
-            settings={initialState?.settings}
-            disableUrlParams
-            onSettingChange={(nextSettings) => {
-              return setInitialState({
-                ...initialState,
-                settings: nextSettings,
-              });
-            }}
-          />
-        </>
-      );
-    },
+    // childrenRender: (dom) => {
+    //   return (
+    //     <>
+    //       {dom}
+    //       <SettingDrawer
+    //         hideCopyButton
+    //         hideHintAlert
+    //         settings={initialState?.settings}
+    //         disableUrlParams
+    //         onSettingChange={(nextSettings) => {
+    //           return setInitialState({
+    //             ...initialState,
+    //             settings: nextSettings,
+    //           });
+    //         }}
+    //       />
+    //     </>
+    //   );
+    // },
     menuHeaderRender: undefined,
     ...initialState?.settings,
     title: 'PTIT S-Link',
