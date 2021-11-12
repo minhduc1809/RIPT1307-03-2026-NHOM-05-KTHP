@@ -15,8 +15,12 @@ const Block = (props: {
   type?: string;
   fieldName: string;
 }) => {
-  const { record } = useModel('dichvumotcuav2');
-  const recordBlock: DichVuMotCuaV2.CauHinhBieuMau = lodash.get(record, props.fieldName, undefined);
+  const { recordCauHinhBieuMau } = useModel('dichvumotcuav2');
+  const recordBlock: DichVuMotCuaV2.CauHinhBieuMau = lodash.get(
+    recordCauHinhBieuMau,
+    props.fieldName,
+    undefined,
+  );
   const [type, setType] = useState<string>(recordBlock?.type ?? '');
   const [objectRelate, setObjectRelate] = useState<any>({});
   const [itemSelect, setItemSelect] = useState<string>('');

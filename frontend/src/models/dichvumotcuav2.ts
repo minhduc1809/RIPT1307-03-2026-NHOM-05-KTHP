@@ -120,11 +120,15 @@ export default () => {
     duLieuBieuMau: DichVuMotCuaV2.CauHinhBieuMau[];
     dichVuId: string;
   }) => {
-    setLoading(true);
-    await postDonSinhVien(payload);
-    message.success('Gửi đơn thành công');
-    setLoading(false);
-    setVisibleFormBieuMau(false);
+    try {
+      setLoading(true);
+      await postDonSinhVien(payload);
+      message.success('Gửi đơn thành công');
+      setLoading(false);
+      setVisibleFormBieuMau(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const getDonThaoTacChuyenVienDieuPhoiModel = async () => {

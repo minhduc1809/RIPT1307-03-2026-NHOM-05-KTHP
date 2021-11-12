@@ -112,7 +112,12 @@ const LichSuGuiDon = () => {
             />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Biểu mẫu" key={1}>
-            <Form type={type} record={recordView} />
+            <Form
+              hideCamKet
+              infoNguoiTaoDon={recordView?.thongTinNguoiTao}
+              type={type}
+              record={recordView}
+            />
           </Tabs.TabPane>
         </Tabs>
       </Modal>

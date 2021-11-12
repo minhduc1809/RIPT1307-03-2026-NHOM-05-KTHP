@@ -16,6 +16,10 @@ export async function getInfo() {
   return axios.get(`${ip3}/odoo-user/me/profile`);
 }
 
+export async function getInfoSinhVien() {
+  return axios.get(`${ip3}/odoo-user/sinh-vien/me`);
+}
+
 export async function putInfo(payload: Login.Profile) {
   return axios.put(`${ip3}/odoo-user/me/profile`, payload);
 }

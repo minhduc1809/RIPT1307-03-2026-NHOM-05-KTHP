@@ -107,7 +107,7 @@ const FormTaoQuyTrinh = () => {
                         </>
                       }
                     >
-                      <Block field={{ ...field }} />
+                      <Block step={index} field={{ ...field }} />
                     </Card>
                     <br />
                   </div>

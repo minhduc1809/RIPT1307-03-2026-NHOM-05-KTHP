@@ -34,6 +34,7 @@ import TieuDeBieuMau from './TieuDeBieuMau';
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const FormBieuMau = (props: {
+  infoNguoiTaoDon?: Login.Profile;
   record?: DichVuMotCuaV2.Don & { index?: number };
   type?: string;
   onCancel?: any;
@@ -60,7 +61,6 @@ const FormBieuMau = (props: {
   } = useModel('dichvumotcuav2');
   const [valuesForm, setValuesForm] = useState<any>({});
   const [visibleFormDieuPhoi, setVisibleFormDieuPhoi] = useState<boolean>(false);
-  const { initialState } = useModel('@@initialState');
   const buildValuesForm = (
     valuesInit: any,
     name: string,
@@ -396,7 +396,7 @@ const FormBieuMau = (props: {
       {!props.hideTitle && (
         <>
           <h3 style={{ fontWeight: 'bold' }}>Thông tin người tạo đơn</h3>
-          <ThongTinNguoiTaoDon record={initialState?.currentUser} />
+          <ThongTinNguoiTaoDon record={props?.infoNguoiTaoDon} />
           <Divider />
         </>
       )}

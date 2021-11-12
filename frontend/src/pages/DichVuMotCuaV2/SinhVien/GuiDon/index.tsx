@@ -3,9 +3,10 @@ import DanhMuc from '@/pages/DichVuMotCuaV2/components/DanhMuc';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Card, Modal, Select } from 'antd';
 import { useModel } from 'umi';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import FormBieuMau from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import { includes } from '@/utils/utils';
+import { getInfoSinhVien } from '@/services/ant-design-pro/api';
 
 const SinhVienTaoDon = () => {
   const {
@@ -16,8 +17,13 @@ const SinhVienTaoDon = () => {
     setRecord,
     record,
   } = useModel('dichvumotcuav2');
-
+  const [infoSinhVien, setInfoSinhVien] = useState<Login.Profile>();
   useEffect(() => {
+    const getInfoSV = async () => {
+      const res = await getInfoSinhVien();
+      setInfoSinhVien(res?.data?.data ?? {});
+    };
+    getInfoSV();
     getAllBieuMauModel();
   }, []);
 
@@ -25,6 +31,8 @@ const SinhVienTaoDon = () => {
     <Card>
       <b>Loại biểu mẫu:</b>
       <Select
+        notFoundContent="Chưa có biểu mẫu nào"
+        placeholder="Chọn loại biểu mẫu"
         onChange={(val: string) => {
           setRecord(danhSach?.find((item) => item._id === val));
         }}
@@ -40,6 +48,7 @@ const SinhVienTaoDon = () => {
         ))}
       </Select>
       <Button
+        disabled={!record?._id}
         onClick={() => {
           setVisibleFormBieuMau(true);
         }}
@@ -60,6 +69,8 @@ const SinhVienTaoDon = () => {
         visible={visibleFormBieuMau}
       >
         <FormBieuMau
+          type="create"
+          infoNguoiTaoDon={infoSinhVien}
           record={
             {
               thongTinDichVu: { ...record },

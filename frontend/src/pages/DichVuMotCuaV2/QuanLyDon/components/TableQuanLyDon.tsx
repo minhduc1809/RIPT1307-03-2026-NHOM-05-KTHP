@@ -172,7 +172,12 @@ const TableQuanLyDon = () => {
           setVisibleFormBieuMau(false);
         }}
       >
-        <Form type={type} record={recordDonThaoTac?.idDon} />
+        <Form
+          hideCamKet
+          infoNguoiTaoDon={recordDonThaoTac?.nguoiTao}
+          type={type}
+          record={recordDonThaoTac?.idDon}
+        />
       </Modal>
     </TableBase>
   );

@@ -6,9 +6,7 @@ import BlockThaoTac from './BlockThaoTac';
 
 const Block = (props: {
   field: { name: number; key: number; isListField?: boolean; fieldKey: number };
-  relate?: boolean;
-  indexBlock?: number;
-  indexDataSource?: number;
+  step: number;
 }) => {
   return (
     <>
@@ -59,7 +57,7 @@ const Block = (props: {
                         </>
                       }
                     >
-                      <BlockThaoTac field={{ ...field }} />
+                      <BlockThaoTac step={props.step} field={{ ...field }} />
                     </Card>
                     <br />
                   </div>

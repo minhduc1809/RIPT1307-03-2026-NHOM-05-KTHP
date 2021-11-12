@@ -76,11 +76,11 @@ const FormQuyTrinh = (props: {
             style={{ marginBottom: 20 }}
             dot={IconTrangThai?.OK}
             label={
-              <div style={{ width: 300, float: 'right' }}>
+              <div style={{ width: 200, float: 'right' }}>
                 <b>
                   Tạo đơn thành công
                   {props?.thoiGianTaoDon
-                    ? `vào lúc ${moment(props?.thoiGianTaoDon).format('HH:mm DD/MM/YYYY')}`
+                    ? ` vào lúc ${moment(props?.thoiGianTaoDon).format('HH:mm DD/MM/YYYY')}`
                     : ''}
                 </b>
               </div>
@@ -103,7 +103,7 @@ const FormQuyTrinh = (props: {
                 style={{ marginBottom: 20 }}
                 dot={IconBuoc}
                 label={
-                  <div style={{ width: 300, float: 'right' }}>
+                  <div style={{ width: 200, float: 'right' }}>
                     <b>{buoc?.ten ?? ''}</b>
                     <br />
                     <div>
@@ -122,8 +122,8 @@ const FormQuyTrinh = (props: {
                 const IconThaoTac = IconTrangThai?.[recordThaoTac?.trangThai ?? 'ANY'];
                 return (
                   <Timeline.Item dot={IconThaoTac}>
-                    <b>{thaoTac?.tenThaoTac}</b>
-                    <div>Đơn vị: {thaoTac?.tenDonVi}</div>
+                    <b>{thaoTac?.tenThaoTac ?? ''}</b>
+                    <div>Đơn vị: {thaoTac?.tenDonVi ?? ''}</div>
                     <div>
                       Trạng thái:{' '}
                       {TrangThaiThaoTac?.[recordThaoTac?.trangThai ?? ''] ?? 'Chưa xử lý'}

@@ -26,6 +26,12 @@ export enum EFileType {
   image = 'Ảnh (png, jpg, jpeg)',
 }
 
+export enum LoaiDoiTuongXuLyQuyTrinh {
+  DON_VI_CU_THE = 'Đơn vị cụ thể',
+  DON_VI_QUAN_LY = 'Đơn vị quản lý',
+  // CO_VAN_HOC_TAP = 'Cố vấn học tập',
+}
+
 export const LevelDonViHanhChinh = [
   'Tỉnh',
   'Tỉnh, quận',

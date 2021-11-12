@@ -55,6 +55,7 @@ declare module DichVuMotCuaV2 {
     idDonVi: string;
     tenDonVi: string;
     soNgayXuLy?: number;
+    loaiDoiTuongXuLy: string;
     cauHinh: any;
   }
   export interface thongTinThuTuc {

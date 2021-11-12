@@ -32,6 +32,20 @@ declare module Login {
     ten_goi_khac: string;
     dan_toc: string;
     ton_giao: string;
+    ten_nganh: string;
+    ten_don_vi: string;
+    ma_nganh: string;
+    lop_hanh_chinh_id: [number, string];
+    gioiTinh: string;
+    hoTen: string;
+    idDonVi: string;
+    maDonVi: string;
+    maNganh: string;
+    ngaySinh: string;
+    tenDonVi: string;
+    tenNganh: string;
+    tenLopHanhChinh: string;
+    maSinhVien: string;
   }
 
   export interface ProfileAdmin {

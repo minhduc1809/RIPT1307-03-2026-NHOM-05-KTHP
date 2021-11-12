@@ -204,11 +204,12 @@ export function handlePhanNhom(initialState: any, code: string, idDoiTuong?: str
   initialState?.phanNhom?.danhSachPhanNhom?.forEach((item: any) => {
     const mucDo = item?.mucDo;
     item?.nhomVaiTroId?.danhSachChucNang?.map((idChucNang: string) => {
-      if (
-        (mucDo === 'Tất cả' && idChucNang === code) ||
-        (mucDo !== 'Tất cả' && idChucNang === code && item?.idDoiTuong === idDoiTuong)
-      ) {
+      if (mucDo === 'Tất cả' && idChucNang === code) {
         flag = true;
+      }
+      if (mucDo !== 'Tất cả' && idChucNang === code) {
+        if (idDoiTuong === undefined) return true;
+        return item?.idDoiTuong === idDoiTuong;
       }
       return true;
     });
