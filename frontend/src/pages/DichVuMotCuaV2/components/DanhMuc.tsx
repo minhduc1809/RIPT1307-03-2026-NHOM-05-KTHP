@@ -1,14 +1,18 @@
 import { Descriptions } from 'antd';
 import { useModel } from 'umi';
 
-const DanhMuc = () => {
+const DanhMuc = (props: { button: any }) => {
   const { record } = useModel('dichvumotcuav2');
   return (
     <div>
       <h2 style={{ textAlign: 'center' }}>
         Thủ tục số: {record?.thongTinThuTuc?.maThuTuc} {record?.ten}
       </h2>
-      <b style={{ marginLeft: '18%', color: 'black' }}>1.Thông tin thủ tục</b>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <b style={{ marginLeft: '18%', color: 'black' }}>1.Thông tin thủ tục</b>
+        {props?.button}
+      </div>
+
       <div style={{ marginLeft: '18%', marginRight: '18%' }}>
         <Descriptions
           style={{ marginBottom: '15px', marginTop: '5px', minWidth: 300 }}

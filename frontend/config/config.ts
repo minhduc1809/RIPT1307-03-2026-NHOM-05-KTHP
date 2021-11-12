@@ -91,6 +91,12 @@ export default defineConfig({
         // },
       ],
     },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: './TrangChu',
+      icon: 'HomeOutlined',
+    },
     // {
     //   name: 'dva-sample',
     //   icon: 'CalendarOutlined',
@@ -271,6 +277,14 @@ export default defineConfig({
           path: './taodon',
           component: './DichVuMotCuaV2/SinhVien/GuiDon',
           access: 'sinhVien',
+        },
+        {
+          // name: 'DichVuMotCuaSinhVien',
+          hideInMenu: true,
+          // icon: 'team',
+          access: 'sinhVien',
+          path: '/dichvumotcuasv/taodon/:id',
+          component: './DichVuMotCuaV2/SinhVien/GuiDon/$id',
         },
         {
           name: 'LichSu',

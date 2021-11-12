@@ -61,15 +61,19 @@ const FormQuyTrinh = (props: {
   type?: string;
   thoiGianTaoDon?: string;
 }) => {
-  const { getTrangThaiDonModel, recordTrangThaiDon } = useModel('dichvumotcuav2');
+  const { getTrangThaiDonModel, recordTrangThaiDon, setRecordTrangThaiDon, loading } =
+    useModel('dichvumotcuav2');
   useEffect(() => {
     if (props.idDon) {
       getTrangThaiDonModel(props.idDon);
     }
+    return () => {
+      setRecordTrangThaiDon([]);
+    };
   }, [props.idDon]);
 
   return (
-    <Card title={props?.type === 'view' ? false : 'Quy trình'}>
+    <Card loading={loading} title={props?.type === 'view' ? false : 'Quy trình'}>
       {props?.type === 'view' && (
         <Timeline style={{ marginLeft: '-100px' }} mode="left">
           <Timeline.Item
@@ -128,12 +132,26 @@ const FormQuyTrinh = (props: {
                       Trạng thái:{' '}
                       {TrangThaiThaoTac?.[recordThaoTac?.trangThai ?? ''] ?? 'Chưa xử lý'}
                     </div>
-                    {recordThaoTac?.hanXuLy ? (
-                      <div>Hạn xử lý: {moment(recordThaoTac?.hanXuLy)?.format('DD/MM/YYYY')}</div>
+                    {!['OK', 'NOT_OK'].includes(recordThaoTac?.trangThai ?? '') ? (
+                      <div>
+                        {recordThaoTac?.hanXuLy ? (
+                          <div>
+                            Hạn xử lý: {moment(recordThaoTac?.hanXuLy)?.format('DD/MM/YYYY')}
+                          </div>
+                        ) : (
+                          <div>
+                            Số ngày xử lý:{' '}
+                            {thaoTac?.soNgayXuLy ? `${thaoTac?.soNgayXuLy} ngày` : 'Chưa cập nhật'}
+                          </div>
+                        )}
+                      </div>
                     ) : (
                       <div>
-                        Số ngày xử lý:{' '}
-                        {thaoTac?.soNgayXuLy ? `${thaoTac?.soNgayXuLy} ngày` : 'Chưa cập nhật'}
+                        {recordThaoTac?.updatedAt
+                          ? `Vào lúc: ${moment(recordThaoTac?.updatedAt).format(
+                              'HH:mm DD/MM/YYYY',
+                            )}`
+                          : ''}
                       </div>
                     )}
                   </Timeline.Item>

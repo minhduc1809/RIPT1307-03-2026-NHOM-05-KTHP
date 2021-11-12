@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import type { IRecordTinTuc } from './index.d';
 import './styles.less';
 
-export default () => {
+export default (props: { type?: string }) => {
   const [visibleModal, setVisibleModal] = useState(false);
   const [record, setRecord] = useState<TinTuc.Record>();
 
@@ -30,6 +30,7 @@ export default () => {
     ...value,
     index: index + 1,
   }));
+  const isDashboard = props?.type === 'dashboard';
 
   const renderTinTuc = (tinTuc: TinTuc.Record) => {
     if (!tinTuc) {
@@ -39,7 +40,7 @@ export default () => {
     return (
       // eslint-disable-next-line no-underscore-dangle
       <Card key={tinTuc._id} className="tin-tuc-card" hoverable onClick={() => viewMore(tinTuc)}>
-        <div className="tin-tuc-image-wrapper">
+        <div className={'tin-tuc-image-wrapper'}>
           <img style={{ objectFit: 'cover' }} src={tinTuc?.urlAnhDaiDien ?? ''} />
         </div>
         <div className="tin-tuc-content">
@@ -55,22 +56,23 @@ export default () => {
   };
 
   const renderDanhSachTinTuc = () => {
+    const dsTin = isDashboard ? dsTinTuc?.filter((item) => item.index < 4) : dsTinTuc;
     return (
-      <Row className="tin-tuc-wrapper">
-        <Col md={12} xs={24}>
-          {renderTinTuc(_.get(dsTinTuc, '0'))}
+      <Row className={isDashboard ? 'tin-tuc-wrapper-dashboard' : 'tin-tuc-wrapper'}>
+        <Col md={isDashboard ? 24 : 12} xs={24}>
+          {renderTinTuc(_.get(dsTin, '0'))}
         </Col>
-        <Col md={12} xs={24}>
+        <Col md={isDashboard ? 24 : 12} xs={24}>
           <Row>
-            {_.slice(dsTinTuc, 1, 4).map((tinTuc) => (
+            {_.slice(dsTin, 1, 4).map((tinTuc) => (
               <Col span={24} key={tinTuc?._id}>
                 {renderTinTuc(tinTuc)}
               </Col>
             ))}
           </Row>
         </Col>
-        {_.slice(dsTinTuc, 4).map((tinTuc) => (
-          <Col md={8} xs={24} key={tinTuc?._id}>
+        {_.slice(dsTin, 4).map((tinTuc) => (
+          <Col md={isDashboard ? 24 : 8} xs={24} key={tinTuc?._id}>
             {renderTinTuc(tinTuc)}
           </Col>
         ))}
@@ -92,7 +94,10 @@ export default () => {
 
   return (
     <div style={{ backgroundColor: '#fff' }}>
-      <div style={{ maxWidth: 1000, margin: '0 auto' }}>{renderDanhSachTinTuc()}</div>
+      <Card title="Tin tức">
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>{renderDanhSachTinTuc()}</div>
+      </Card>
+
       <Modal
         width="1100px"
         title={record?.moTa}

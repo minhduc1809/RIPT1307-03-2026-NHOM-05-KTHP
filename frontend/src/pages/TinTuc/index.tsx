@@ -2,6 +2,7 @@ import { getDataTinTuc } from '@/services/ant-design-pro/api';
 // import { EyeOutlined } from '@ant-design/icons';
 // import type { ProColumns } from '@ant-design/pro-table';
 import {
+  Card,
   //  Button,
   Col,
   Empty,
@@ -223,39 +224,41 @@ export default () => {
   }));
 
   return (
-    <Row>
-      <Col span={24}>
-        <Row>
-          {!dsTinTuc?.length && (
-            <Empty
-              image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
-              imageStyle={{
-                height: 60,
-              }}
-              description={<span>Không có tin nào</span>}
-            ></Empty>
-          )}
+    <Card title="Tin tức">
+      <Row>
+        <Col span={24}>
           <Row>
-            {dsTinTuc?.map((item, index) => {
-              if (index === 0) {
-                return renderItem(item, handleView, 0);
-              }
-              if (index > 0 && index < 4) {
-                return renderItem(item, handleView, 1);
-              }
-              return <></>;
-            })}
+            {!dsTinTuc?.length && (
+              <Empty
+                image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+                imageStyle={{
+                  height: 60,
+                }}
+                description={<span>Không có tin nào</span>}
+              ></Empty>
+            )}
+            <Row>
+              {dsTinTuc?.map((item, index) => {
+                if (index === 0) {
+                  return renderItem(item, handleView, 0);
+                }
+                if (index > 0 && index < 4) {
+                  return renderItem(item, handleView, 1);
+                }
+                return <></>;
+              })}
+            </Row>
+            <Row>
+              {dsTinTuc?.map((item, index) => {
+                if (index > 3) {
+                  return renderItem(item, handleView, 2);
+                }
+                return <></>;
+              })}
+            </Row>
           </Row>
-          <Row>
-            {dsTinTuc?.map((item, index) => {
-              if (index > 3) {
-                return renderItem(item, handleView, 2);
-              }
-              return <></>;
-            })}
-          </Row>
-        </Row>
-      </Col>
-    </Row>
+        </Col>
+      </Row>
+    </Card>
   );
 };

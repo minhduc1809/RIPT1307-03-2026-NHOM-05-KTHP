@@ -110,6 +110,7 @@ declare module DichVuMotCuaV2 {
   }
 
   export interface TrangThaiThaoTac {
+    updatedAt: string;
     hanXuLy: string;
     trangThai: string;
     _id: string;

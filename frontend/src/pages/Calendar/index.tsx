@@ -30,11 +30,13 @@ const Color = {
   'Cá nhân': '#6b8f24b3',
 };
 
-export default () => {
-  const eventPropGetter = (event: { title: string; loaiSuKien: string }) => ({
+export default (props: { type?: string }) => {
+  const eventPropGetter = (event: { title: string; loaiSuKien?: string }) => ({
     // style: { backgroundColor: toHexa(event.title) },
-    style: { backgroundColor: Color?.[event.loaiSuKien] },
+    style: { backgroundColor: Color?.[event?.loaiSuKien ?? ''] },
   });
+
+  const isDashboard = props?.type === 'dashboard';
 
   const onSelectEvent = (record: SuKien.Record) => {
     const { loaiSuKien } = record;
@@ -131,7 +133,7 @@ export default () => {
         defaultDate={new Date()}
         messages={messages}
         views={['month', 'week', 'day']}
-        style={{ height: 700 }}
+        style={{ height: isDashboard ? 443 : 700 }}
         min={moment('0600', 'HHmm').toDate()}
         max={moment('2100', 'HHmm').toDate()}
         eventPropGetter={eventPropGetter}

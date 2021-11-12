@@ -97,3 +97,11 @@ export async function dieuPhoiDon(payload: {
 export async function getTrangThaiDon(idDon: string, payload: { condition: any }) {
   return axios.get(`${ip3}/don-dvmc/sinh-vien/me/don-dvmc/${idDon}/buoc`, { params: payload });
 }
+
+export async function thongKeDon() {
+  return axios.get(`${ip3}/don-dvmc/my/thong-ke`);
+}
+
+export async function getBieuMauById(idBieuMau: string) {
+  return axios.get(`${ip3}/dvmc/${idBieuMau}`);
+}

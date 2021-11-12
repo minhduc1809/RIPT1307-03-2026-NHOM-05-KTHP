@@ -70,6 +70,7 @@ export default {
   'menu.LopHanhChinhAdmin': 'Lớp hành chính',
   'menu.LopTinChiAdmin': 'Lớp tín chỉ',
   'menu.VanBanHuongDanUser': 'Văn bản hướng dẫn',
+  'menu.Dashboard': 'Trang chủ',
   'menu.DichVuMotCuaSinhVien.CTCTSV': 'Phòng CTCTSV',
   'menu.DichVuMotCuaSinhVien.LichSu': 'Đơn đã gửi',
   'menu.DichVuMotCuaSinhVien.TaoDon': 'Tạo đơn mới',

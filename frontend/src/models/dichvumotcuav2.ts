@@ -14,6 +14,7 @@ import {
   chuyenVienXuLyDuyetDon,
   dieuPhoiDon,
   getTrangThaiDon,
+  getBieuMauById,
 } from '@/services/DichVuMotCuaV2/dichvumotcuav2';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -204,7 +205,13 @@ export default () => {
     setLoading(false);
   };
 
+  const getBieuMauByIdModel = async (idBieuMau: string) => {
+    const response = await getBieuMauById(idBieuMau);
+    setRecord(response?.data?.data ?? {});
+  };
+
   return {
+    getBieuMauByIdModel,
     recordThongTinChung,
     setRecordThongTinChung,
     thuTuc,

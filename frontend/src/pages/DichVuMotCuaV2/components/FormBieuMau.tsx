@@ -240,7 +240,8 @@ const FormBieuMau = (props: {
         const data = item?.value?.map((recordRow: DichVuMotCuaV2.CauHinhBieuMau[]) => {
           const row = {};
           recordRow?.forEach((cell: DichVuMotCuaV2.CauHinhBieuMau) => {
-            row[cell?.label] = cell?.value;
+            row[cell?.label] =
+              typeof cell?.value === 'object' ? cell?.value?.join(', ') : cell?.value;
           });
           return row;
         });
@@ -535,20 +536,22 @@ const FormBieuMau = (props: {
                   Không duyệt
                 </Button>
               </Popconfirm>
-              <Button
-                style={{
-                  marginRight: 8,
-                  backgroundColor: '#1890ff',
-                  border: '1px solid #1890ff',
-                  color: 'white',
-                }}
-                onClick={() => {
-                  setVisibleFormDieuPhoi(true);
-                }}
-                icon={<ArrowRightOutlined />}
-              >
-                Điều phối
-              </Button>
+              {arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi' && (
+                <Button
+                  style={{
+                    marginRight: 8,
+                    backgroundColor: '#1890ff',
+                    border: '1px solid #1890ff',
+                    color: 'white',
+                  }}
+                  onClick={() => {
+                    setVisibleFormDieuPhoi(true);
+                  }}
+                  icon={<ArrowRightOutlined />}
+                >
+                  Điều phối
+                </Button>
+              )}
             </>
           )}
           <Button

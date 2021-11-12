@@ -86,7 +86,7 @@ class App extends React.Component {
             Tổng số:
             <Input
               style={{ width: '90px', fontWeight: 700, fontSize: 16, marginLeft: 10 }}
-              value={this.state?.data?.length ?? 0}
+              value={this.props?.data?.length ?? 0}
               readOnly
               // ref={this.setTableBaseRef}
             />
