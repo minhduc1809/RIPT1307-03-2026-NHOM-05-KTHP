@@ -33,7 +33,9 @@ const BieuMauThaoTac = (props: {
         >
           <Select placeholder="Chọn đơn vị">
             {danhSach?.map((item) => (
-              <Select.Option value={item.id.toString()}>{item.ten_don_vi}</Select.Option>
+              <Select.Option key={item.id} value={item.id.toString()}>
+                {item.ten_don_vi}
+              </Select.Option>
             ))}
           </Select>
         </Form.Item>

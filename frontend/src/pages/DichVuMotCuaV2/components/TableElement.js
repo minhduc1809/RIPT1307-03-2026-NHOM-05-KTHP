@@ -148,6 +148,9 @@ class App extends React.Component {
             <Tooltip title="Xóa">
               <Popconfirm
                 onConfirm={() => {
+                  const dataTable = this.props?.danhSachDataTable ?? {};
+                  dataTable[this.props?.name]?.splice(recordRow?.index, 1);
+                  this.props.setDanhSachDataTable(dataTable);
                   this.setState({
                     data: this.state.data?.filter((item) => item?.index !== recordRow?.index),
                   });

@@ -2,7 +2,7 @@ import { EFileType, ElementTemplateType, LevelDonViHanhChinh } from '@/utils/con
 import rules from '@/utils/rules';
 import { includes } from '@/utils/utils';
 import { CloseCircleOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row, Select } from 'antd';
+import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row, Select, Collapse } from 'antd';
 import lodash from 'lodash';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
@@ -106,271 +106,7 @@ const Block = (props: {
             </Form.Item>
           </Col>
         )}
-        {type !== 'TEXT_BLOCK' && (
-          <Col xs={24}>
-            <Form.Item
-              style={{ marginBottom: 8 }}
-              labelCol={{ span: 24 }}
-              name={[props.field.name, 'note']}
-              label="Ghi chú"
-            >
-              <Input.TextArea rows={1} placeholder="Ghi chú" />
-            </Form.Item>
-          </Col>
-        )}
       </Row>
-
-      {type === 'INPUT_NUMBER' && (
-        <Row gutter={[20, 0]}>
-          <Col xs={24} lg={12}>
-            <Form.Item
-              style={{ marginBottom: 8 }}
-              labelCol={{ span: 24 }}
-              name={[props.field.name, 'min']}
-              label="Giá trị tối thiểu"
-            >
-              <InputNumber style={{ width: '100%' }} placeholder="Giá trị tối thiểu" />
-            </Form.Item>
-          </Col>
-          <Col xs={24} lg={12}>
-            <Form.Item
-              style={{ marginBottom: 8 }}
-              labelCol={{ span: 24 }}
-              name={[props.field.name, 'max']}
-              label="Giá trị tối đa"
-            >
-              <InputNumber style={{ width: '100%' }} placeholder="Giá trị tối đa" />
-            </Form.Item>
-          </Col>
-        </Row>
-      )}
-
-      {(type === 'UPLOAD_SINGLE' || type === 'UPLOAD_MULTI') && (
-        <Form.Item
-          style={{ marginBottom: 8 }}
-          labelCol={{ span: 24 }}
-          name={[props.field.name, 'fileType']}
-          label="Loại file"
-          rules={[...rules.required]}
-        >
-          <Select mode="multiple" placeholder="Chọn loại file">
-            {Object.keys(EFileType)?.map((item) => (
-              <Select.Option value={item}>{EFileType[item]}</Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-      )}
-
-      {['DROP_LIST_SINGLE', 'DROP_LIST_MULTI', 'RADIO_BUTTON', 'CHECKLIST'].includes(type) && (
-        <Form.List
-          name={[props.field.name, 'dataSource']}
-          rules={[
-            {
-              validator: async (_, names) => {
-                if (!names || names.length < 1) {
-                  return Promise.reject(new Error('Ít nhất 1 lựa chọn'));
-                }
-                return '';
-              },
-            },
-          ]}
-        >
-          {(fields, { add, remove }, { errors }) => {
-            return (
-              <>
-                {fields.map((field, index) => (
-                  <>
-                    <Form.Item
-                      style={{ marginBottom: 0 }}
-                      label={`Lựa chọn ${index + 1}`}
-                      key={field.key}
-                    >
-                      <Form.Item
-                        style={{ marginBottom: 8 }}
-                        name={[`${index}`, 'label']}
-                        rules={[...rules.required, ...rules.text]}
-                        noStyle
-                      >
-                        <Input placeholder="Nhập lựa chọn" style={{ width: '90%' }} />
-                      </Form.Item>
-                      <MinusCircleOutlined
-                        className="dynamic-delete-button"
-                        onClick={() => remove(field.name)}
-                      />
-                      <Form.Item style={{ marginBottom: 8 }} valuePropName="checked">
-                        <Checkbox
-                          checked={objectRelate?.[index]}
-                          onChange={(val) => {
-                            const newObject = {};
-                            newObject[`${index}`] = val.target.checked;
-                            setObjectRelate({ ...objectRelate, ...newObject });
-                          }}
-                        >
-                          Liên quan tới khối khác
-                        </Checkbox>
-                      </Form.Item>
-                      {objectRelate?.[index] && (
-                        <Form.List
-                          name={[`${index}`, 'relatedElement']}
-                          rules={[
-                            {
-                              validator: async (_, names) => {
-                                if (!names || names.length < 1) {
-                                  return Promise.reject(new Error('Ít nhất 1 khối'));
-                                }
-                                return '';
-                              },
-                            },
-                          ]}
-                        >
-                          {(
-                            fieldsRelate,
-                            { add: addRelate, remove: removeRelate },
-                            { errors: errorsRelate },
-                          ) => {
-                            return (
-                              <>
-                                {fieldsRelate.map((fieldRelate, indexRelate) => (
-                                  <div key={fieldRelate.key}>
-                                    <Card
-                                      size="small"
-                                      headStyle={{ padding: '0px 24px' }}
-                                      bodyStyle={{ padding: '8px 24px' }}
-                                      className={styles.block}
-                                      title={
-                                        <>
-                                          <div style={{ float: 'left' }}>
-                                            Khối liên quan {indexRelate + 1}
-                                          </div>
-                                          <CloseCircleOutlined
-                                            style={{ float: 'right' }}
-                                            onClick={() => removeRelate(fieldRelate.name)}
-                                          />
-                                        </>
-                                      }
-                                    >
-                                      <Block
-                                        fieldName={`${props.fieldName}.dataSource.[${index}].relatedElement.[${indexRelate}]`}
-                                        type={props?.type}
-                                        field={{ ...fieldRelate }}
-                                      />
-                                    </Card>
-                                    <br />
-                                  </div>
-                                ))}
-                                <Form.Item>
-                                  <Button
-                                    type="dashed"
-                                    onClick={() => addRelate()}
-                                    style={{ width: '100%' }}
-                                    icon={<PlusOutlined />}
-                                  >
-                                    Thêm khối liên quan
-                                  </Button>
-                                  <Form.ErrorList errors={errorsRelate} />
-                                </Form.Item>
-                              </>
-                            );
-                          }}
-                        </Form.List>
-                      )}
-                    </Form.Item>
-                  </>
-                ))}
-                <Form.Item style={{ marginBottom: 8 }}>
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    style={{ width: '100%' }}
-                    icon={<PlusOutlined />}
-                  >
-                    Thêm lựa chọn
-                  </Button>
-                  <Form.ErrorList errors={errors} />
-                </Form.Item>
-              </>
-            );
-          }}
-        </Form.List>
-      )}
-
-      {['TABLE'].includes(type) && (
-        <Form.List
-          name={[props.field.name, 'relatedElement']}
-          rules={[
-            {
-              validator: async (_, names) => {
-                if (!names || names.length < 1) {
-                  return Promise.reject(new Error('Ít nhất 1 cột'));
-                }
-                return '';
-              },
-            },
-          ]}
-        >
-          {(fields, { add, remove }, { errors }) => {
-            return (
-              <>
-                {fields.map((field, index) => (
-                  <div key={field.key}>
-                    <Card
-                      size="small"
-                      headStyle={{ padding: '8px 24px' }}
-                      bodyStyle={{ padding: '8px 24px' }}
-                      className={styles.block}
-                      title={
-                        <>
-                          <div style={{ float: 'left' }}>Cột {index + 1}</div>
-                          <CloseCircleOutlined
-                            style={{ float: 'right' }}
-                            onClick={() => remove(field.name)}
-                          />
-                        </>
-                      }
-                    >
-                      <Block
-                        fieldName={`${props.fieldName}.relatedElement.[${index}]`}
-                        type="TABLE"
-                        field={{ ...field }}
-                      />
-                    </Card>
-                    <br />
-                  </div>
-                ))}
-                <Form.Item style={{ marginBottom: 8 }}>
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    style={{ width: '100%' }}
-                    icon={<PlusOutlined />}
-                  >
-                    Thêm cột
-                  </Button>
-                  <Form.ErrorList errors={errors} />
-                </Form.Item>
-              </>
-            );
-          }}
-        </Form.List>
-      )}
-
-      {type === 'DON_VI_HANH_CHINH' && (
-        <Form.Item
-          style={{ marginBottom: 8 }}
-          labelCol={{ span: 24 }}
-          rules={[...rules.required]}
-          name={[props.field.name, 'level']}
-          label="Cấp"
-        >
-          <Select placeholder="Cấp">
-            {LevelDonViHanhChinh?.map((item, index) => (
-              <Select.Option value={index + 1} key={item}>
-                {item}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-      )}
       {type !== 'TEXT_BLOCK' && (
         <Form.Item
           style={{ marginBottom: 0 }}
@@ -380,6 +116,275 @@ const Block = (props: {
           <Checkbox>Bắt buộc</Checkbox>
         </Form.Item>
       )}
+      <Collapse style={{ padding: 0 }} defaultActiveKey={['1']} ghost>
+        <Collapse.Panel header={<b>Chi tiết</b>} key="1">
+          {type !== 'TEXT_BLOCK' && (
+            <Row>
+              <Col xs={24}>
+                <Form.Item
+                  style={{ marginBottom: 8 }}
+                  labelCol={{ span: 24 }}
+                  name={[props.field.name, 'note']}
+                  label="Ghi chú"
+                >
+                  <Input.TextArea rows={1} placeholder="Ghi chú" />
+                </Form.Item>
+              </Col>
+            </Row>
+          )}
+          {type === 'INPUT_NUMBER' && (
+            <Row gutter={[20, 0]}>
+              <Col xs={24} lg={12}>
+                <Form.Item
+                  style={{ marginBottom: 8 }}
+                  labelCol={{ span: 24 }}
+                  name={[props.field.name, 'min']}
+                  label="Giá trị tối thiểu"
+                >
+                  <InputNumber style={{ width: '100%' }} placeholder="Giá trị tối thiểu" />
+                </Form.Item>
+              </Col>
+              <Col xs={24} lg={12}>
+                <Form.Item
+                  style={{ marginBottom: 8 }}
+                  labelCol={{ span: 24 }}
+                  name={[props.field.name, 'max']}
+                  label="Giá trị tối đa"
+                >
+                  <InputNumber style={{ width: '100%' }} placeholder="Giá trị tối đa" />
+                </Form.Item>
+              </Col>
+            </Row>
+          )}
+
+          {(type === 'UPLOAD_SINGLE' || type === 'UPLOAD_MULTI') && (
+            <Form.Item
+              style={{ marginBottom: 8 }}
+              labelCol={{ span: 24 }}
+              name={[props.field.name, 'fileType']}
+              label="Loại file"
+              rules={[...rules.required]}
+            >
+              <Select mode="multiple" placeholder="Chọn loại file">
+                {Object.keys(EFileType)?.map((item) => (
+                  <Select.Option value={item}>{EFileType[item]}</Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
+
+          {['DROP_LIST_SINGLE', 'DROP_LIST_MULTI', 'RADIO_BUTTON', 'CHECKLIST'].includes(type) && (
+            <Form.List
+              name={[props.field.name, 'dataSource']}
+              rules={[
+                {
+                  validator: async (_, names) => {
+                    if (!names || names.length < 1) {
+                      return Promise.reject(new Error('Ít nhất 1 lựa chọn'));
+                    }
+                    return '';
+                  },
+                },
+              ]}
+            >
+              {(fields, { add, remove }, { errors }) => {
+                return (
+                  <>
+                    {fields.map((field, index) => (
+                      <>
+                        <Form.Item
+                          style={{ marginBottom: 0 }}
+                          label={`Lựa chọn ${index + 1}`}
+                          key={field.key}
+                        >
+                          <Form.Item
+                            style={{ marginBottom: 8 }}
+                            name={[`${index}`, 'label']}
+                            rules={[...rules.required, ...rules.text]}
+                            noStyle
+                          >
+                            <Input placeholder="Nhập lựa chọn" style={{ width: '90%' }} />
+                          </Form.Item>
+                          <MinusCircleOutlined
+                            className="dynamic-delete-button"
+                            onClick={() => remove(field.name)}
+                          />
+                          <Form.Item style={{ marginBottom: 8 }} valuePropName="checked">
+                            <Checkbox
+                              checked={objectRelate?.[index]}
+                              onChange={(val) => {
+                                const newObject = {};
+                                newObject[`${index}`] = val.target.checked;
+                                setObjectRelate({ ...objectRelate, ...newObject });
+                              }}
+                            >
+                              Liên quan tới khối khác
+                            </Checkbox>
+                          </Form.Item>
+                          {objectRelate?.[index] && (
+                            <Form.List
+                              name={[`${index}`, 'relatedElement']}
+                              rules={[
+                                {
+                                  validator: async (_, names) => {
+                                    if (!names || names.length < 1) {
+                                      return Promise.reject(new Error('Ít nhất 1 khối'));
+                                    }
+                                    return '';
+                                  },
+                                },
+                              ]}
+                            >
+                              {(
+                                fieldsRelate,
+                                { add: addRelate, remove: removeRelate },
+                                { errors: errorsRelate },
+                              ) => {
+                                return (
+                                  <>
+                                    {fieldsRelate.map((fieldRelate, indexRelate) => (
+                                      <div key={fieldRelate.key}>
+                                        <Card
+                                          size="small"
+                                          headStyle={{ padding: '0px 24px' }}
+                                          bodyStyle={{ padding: '8px 24px' }}
+                                          className={styles.block}
+                                          title={
+                                            <>
+                                              <div style={{ float: 'left' }}>
+                                                Khối liên quan {indexRelate + 1}
+                                              </div>
+                                              <CloseCircleOutlined
+                                                style={{ float: 'right' }}
+                                                onClick={() => removeRelate(fieldRelate.name)}
+                                              />
+                                            </>
+                                          }
+                                        >
+                                          <Block
+                                            fieldName={`${props.fieldName}.dataSource.[${index}].relatedElement.[${indexRelate}]`}
+                                            type={props?.type}
+                                            field={{ ...fieldRelate }}
+                                          />
+                                        </Card>
+                                        <br />
+                                      </div>
+                                    ))}
+                                    <Form.Item>
+                                      <Button
+                                        type="dashed"
+                                        onClick={() => addRelate()}
+                                        style={{ width: '100%' }}
+                                        icon={<PlusOutlined />}
+                                      >
+                                        Thêm khối liên quan
+                                      </Button>
+                                      <Form.ErrorList errors={errorsRelate} />
+                                    </Form.Item>
+                                  </>
+                                );
+                              }}
+                            </Form.List>
+                          )}
+                        </Form.Item>
+                      </>
+                    ))}
+                    <Form.Item style={{ marginBottom: 8 }}>
+                      <Button
+                        type="dashed"
+                        onClick={() => add()}
+                        style={{ width: '100%' }}
+                        icon={<PlusOutlined />}
+                      >
+                        Thêm lựa chọn
+                      </Button>
+                      <Form.ErrorList errors={errors} />
+                    </Form.Item>
+                  </>
+                );
+              }}
+            </Form.List>
+          )}
+
+          {['TABLE'].includes(type) && (
+            <Form.List
+              name={[props.field.name, 'relatedElement']}
+              rules={[
+                {
+                  validator: async (_, names) => {
+                    if (!names || names.length < 1) {
+                      return Promise.reject(new Error('Ít nhất 1 cột'));
+                    }
+                    return '';
+                  },
+                },
+              ]}
+            >
+              {(fields, { add, remove }, { errors }) => {
+                return (
+                  <>
+                    {fields.map((field, index) => (
+                      <div key={field.key}>
+                        <Card
+                          size="small"
+                          headStyle={{ padding: '8px 24px' }}
+                          bodyStyle={{ padding: '8px 24px' }}
+                          className={styles.block}
+                          title={
+                            <>
+                              <div style={{ float: 'left' }}>Cột {index + 1}</div>
+                              <CloseCircleOutlined
+                                style={{ float: 'right' }}
+                                onClick={() => remove(field.name)}
+                              />
+                            </>
+                          }
+                        >
+                          <Block
+                            fieldName={`${props.fieldName}.relatedElement.[${index}]`}
+                            type="TABLE"
+                            field={{ ...field }}
+                          />
+                        </Card>
+                        <br />
+                      </div>
+                    ))}
+                    <Form.Item style={{ marginBottom: 8 }}>
+                      <Button
+                        type="dashed"
+                        onClick={() => add()}
+                        style={{ width: '100%' }}
+                        icon={<PlusOutlined />}
+                      >
+                        Thêm cột
+                      </Button>
+                      <Form.ErrorList errors={errors} />
+                    </Form.Item>
+                  </>
+                );
+              }}
+            </Form.List>
+          )}
+
+          {type === 'DON_VI_HANH_CHINH' && (
+            <Form.Item
+              style={{ marginBottom: 8 }}
+              labelCol={{ span: 24 }}
+              rules={[...rules.required]}
+              name={[props.field.name, 'level']}
+              label="Cấp"
+            >
+              <Select placeholder="Cấp">
+                {LevelDonViHanhChinh?.map((item, index) => (
+                  <Select.Option value={index + 1} key={item}>
+                    {item}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          )}
+        </Collapse.Panel>
+      </Collapse>
     </>
   );
 };

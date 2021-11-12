@@ -82,21 +82,29 @@ export default () => {
   };
 
   const postBieuMauAdminModel = async (payload: DichVuMotCuaV2.BieuMau) => {
-    setLoading(true);
-    await postBieuMauAdmin(payload);
-    message.success('Thêm thành công');
-    setLoading(false);
-    setVisibleForm(false);
-    getBieuMauAdminModel();
+    try {
+      setLoading(true);
+      await postBieuMauAdmin(payload);
+      message.success('Thêm thành công');
+      setLoading(false);
+      setVisibleForm(false);
+      getBieuMauAdminModel();
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const putBieuMauAdminModel = async (payload: { data: DichVuMotCuaV2.BieuMau; id?: string }) => {
-    // setLoading(true);
-    await putBieuMauAdmin(payload);
-    message.success('Lưu thành công');
-    // setLoading(false);
-    setVisibleForm(false);
-    getBieuMauAdminModel();
+    try {
+      setLoading(true);
+      await putBieuMauAdmin(payload);
+      message.success('Lưu thành công');
+      setLoading(false);
+      setVisibleForm(false);
+      getBieuMauAdminModel();
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const deleteBieuMauAdminModel = async (id: string) => {

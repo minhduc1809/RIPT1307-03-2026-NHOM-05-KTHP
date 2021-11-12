@@ -45,6 +45,7 @@ const Block = (props: {
                 <>
                   <div key={field.key}>
                     <Card
+                      size="small"
                       headStyle={{ padding: '0px 24px' }}
                       bodyStyle={{ padding: '8px 24px' }}
                       className={styles.block}

@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
 import DiaChi from '@/components/DiaChi';
 import Upload from '@/components/Upload/UploadMultiFile';
@@ -60,20 +61,36 @@ const FormBieuMau = (props: {
   const [valuesForm, setValuesForm] = useState<any>({});
   const [visibleFormDieuPhoi, setVisibleFormDieuPhoi] = useState<boolean>(false);
   const { initialState } = useModel('@@initialState');
-  useEffect(() => {
-    const valuesTemp = {};
-    props?.record?.thongTinDichVu?.cauHinhBieuMau?.forEach((cauHinh) => {
-      valuesTemp[cauHinh?.label] = cauHinh?.value;
-      cauHinh?.dataSource?.forEach((data) => {
-        data?.relatedElement?.forEach((item) => {
-          valuesTemp[item?.label] = item?.value;
+  const buildValuesForm = (
+    valuesInit: any,
+    name: string,
+    arrCauHinh: DichVuMotCuaV2.CauHinhBieuMau[],
+  ) => {
+    arrCauHinh?.forEach((cauHinh, indexCauHinh) => {
+      valuesInit[`${name}[${indexCauHinh}].${cauHinh?.label}`] = cauHinh?.value;
+      cauHinh?.dataSource?.forEach((data, indexDataSource) => {
+        data?.relatedElement?.forEach((item, indexElement) => {
+          buildValuesForm(
+            valuesInit,
+            `${name}[${indexCauHinh}].dataSource[${indexDataSource}].relatedElement[${indexElement}]`,
+            data?.relatedElement ?? [],
+          );
         });
       });
+      buildValuesForm(valuesInit, `${name}[${indexCauHinh}]`, cauHinh?.relatedElement ?? []);
     });
+  };
+  useEffect(() => {
+    const valuesTemp = {};
+    buildValuesForm(
+      valuesTemp,
+      'cauHinhBieuMau',
+      props?.record?.thongTinDichVu?.cauHinhBieuMau ?? [],
+    );
     setValuesForm(valuesTemp);
   }, []);
 
-  const buildForm = (item: DichVuMotCuaV2.CauHinhBieuMau) => {
+  const buildForm = (name: string, item: DichVuMotCuaV2.CauHinhBieuMau) => {
     let element = <Input placeholder="Nhập nội dung" />;
     let ruleElement: any[] = [...rules.required];
     let initialValue = item?.value;
@@ -230,7 +247,7 @@ const FormBieuMau = (props: {
         element = (
           <Table
             type={props?.type}
-            name={item?.label}
+            name={`${name}.${item?.label}`}
             danhSachDataTable={danhSachDataTable}
             setDanhSachDataTable={(
               dataTable: SetStateAction<
@@ -293,7 +310,7 @@ const FormBieuMau = (props: {
               {item?.label ?? 'Chưa có tiêu đề'}
             </div>
           }
-          name={item?.label}
+          name={`${name}.${item?.label}`}
           rules={item?.isRequired ? ruleElement : []}
           initialValue={initialValue}
         >
@@ -303,11 +320,14 @@ const FormBieuMau = (props: {
     return (
       <div>
         {formItemElement}
-        {item?.dataSource?.map((data) => {
-          return valuesForm?.[item?.label] === data?.label ||
-            valuesForm?.[item?.label]?.includes(data?.label) ? (
-            data?.relatedElement?.map((ele) => {
-              return buildForm(ele);
+        {item?.dataSource?.map((data, indexDataSource) => {
+          return valuesForm?.[`${name}.${item?.label}`] === data?.label ||
+            valuesForm?.[`${name}.${item?.label}`]?.includes(data?.label) ? (
+            data?.relatedElement?.map((ele, indexEle) => {
+              return buildForm(
+                `${name}.dataSource[${indexDataSource}].relatedElement[${indexEle}]`,
+                ele,
+              );
             })
           ) : (
             <div></div>
@@ -327,22 +347,35 @@ const FormBieuMau = (props: {
     return arrData;
   };
 
-  const buildPostData = (values: any, arrCauHinh: DichVuMotCuaV2.CauHinhBieuMau[]): any => {
+  const buildPostData = (
+    name: string,
+    values: any,
+    arrCauHinh: DichVuMotCuaV2.CauHinhBieuMau[],
+  ): any => {
     return (
-      arrCauHinh?.map((item) => {
-        let value = values?.[item?.label];
+      arrCauHinh?.map((item, index) => {
+        let value = values?.[`${name}[${index}].${item?.label}`];
         if (item?.type === 'DON_VI_HANH_CHINH')
-          value = { ...values?.[item?.label], tenTinh, tenQuanHuyen, tenPhuongXa };
+          value = {
+            ...values?.[`${name}[${index}].${item?.label}`],
+            tenTinh,
+            tenQuanHuyen,
+            tenPhuongXa,
+          };
         else if (item?.type === 'TABLE') {
-          value = danhSachDataTable?.[item?.label]?.map(
+          value = danhSachDataTable?.[`${name}[${index}].${item?.label}`]?.map(
             (row: { cauHinhBieuMau: DichVuMotCuaV2.CauHinhBieuMau[] }) => buildTableData(row),
           );
         }
         return {
           ...item,
-          dataSource: item?.dataSource?.map((data) => ({
+          dataSource: item?.dataSource?.map((data, indexData) => ({
             ...data,
-            relatedElement: buildPostData(values, data?.relatedElement),
+            relatedElement: buildPostData(
+              `cauHinhBieuMau[${index}].dataSource[${indexData}].relatedElement`,
+              values,
+              data?.relatedElement,
+            ),
           })),
           value,
         };
@@ -399,11 +432,13 @@ const FormBieuMau = (props: {
           }
           const valuesFinal = { ...values, ...objectFileUpload };
           const duLieuBieuMau = buildPostData(
+            'cauHinhBieuMau',
             valuesFinal,
             props?.handleAdd
               ? props?.record?.thongTinDichVu?.cauHinhBieuMau ?? []
               : record?.cauHinhBieuMau ?? [],
           );
+
           if (props?.edit !== null && props?.edit !== undefined) {
             if (props?.edit === false && props?.handleAdd)
               props.handleAdd(valuesFinal, duLieuBieuMau);
@@ -417,11 +452,20 @@ const FormBieuMau = (props: {
         }}
         form={form}
       >
-        {props.record?.thongTinDichVu?.cauHinhBieuMau?.map((item) => buildForm(item))}
+        {props?.record?.thongTinDichVu?.cauHinhBieuMau?.length ?? 0 ? (
+          props.record?.thongTinDichVu?.cauHinhBieuMau?.map((item, index) =>
+            buildForm(`cauHinhBieuMau[${index}]`, item),
+          )
+        ) : (
+          <>
+            <div>Chưa tạo thông tin đơn.</div>
+            <br />
+          </>
+        )}
         <div>
           <b>{props.record?.thongTinDichVu?.ghiChu}</b>
         </div>
-        {!['view', 'handle'].includes(props?.type ?? '') && !props.hideCamKet && (
+        {!['handle'].includes(props?.type ?? '') && !props.hideCamKet && (
           <Checkbox
             style={{ marginBottom: 8 }}
             onChange={(e) => {

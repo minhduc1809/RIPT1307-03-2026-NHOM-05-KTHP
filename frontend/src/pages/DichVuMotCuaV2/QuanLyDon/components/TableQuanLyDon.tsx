@@ -62,7 +62,7 @@ const TableQuanLyDon = () => {
     {
       title: 'Bước',
       dataIndex: 'idBuoc',
-      width: 120,
+      width: 200,
       align: 'center',
       render: (val, recordDon) => (
         <div>
@@ -73,6 +73,12 @@ const TableQuanLyDon = () => {
           }
         </div>
       ),
+    },
+    {
+      title: 'Tên thao tác',
+      dataIndex: 'tenThaoTac',
+      width: 200,
+      align: 'center',
     },
     {
       title: 'Người được giao',
@@ -131,6 +137,7 @@ const TableQuanLyDon = () => {
       dependencies={[page, limit, condition, trangThaiQuanLyDon, record?._id]}
       modelName="dichvumotcuav2"
       dataState="danhSachDonThaoTac"
+      scroll={{ x: 1400 }}
       loading={loading}
       getData={
         arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi'

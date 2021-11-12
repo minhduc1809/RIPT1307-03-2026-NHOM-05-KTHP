@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 import rules from '@/utils/rules';
-import { Button, Card, Form, Select } from 'antd';
+import { Button, Card, Form, message, Select } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
 
@@ -22,26 +22,17 @@ const FormUserQLDT = (props: {
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
           const arrDoiTuong: string[] = values?.doiTuong?.split('||');
-          const cloneData: PhanQuyen.PhanNhom[] = JSON.parse(JSON.stringify(props.data));
-          // if (
-          //   mucDo === 'Tất cả' &&
-          //   cloneData?.find((item) => item.nhomVaiTroId === values?.nhomVaiTroId)
-          // ) {
-          //   message.error('Phân nhóm đã tồn tại');
-          //   return;
-          // }
-          // if (
-          //   mucDo !== 'Tất cả' &&
-          //   cloneData?.find(
-          //     (item) =>
-          //       item.nhomVaiTroId === values?.nhomVaiTroId &&
-          //       item.idDoiTuong === arrDoiTuong?.[0] &&
-          //       item?.tenDoiTuong === arrDoiTuong?.[1],
-          //   )
-          // ) {
-          //   message.error('Phân nhóm đã tồn tại');
-          //   return;
-          // }
+          const cloneData: PhanQuyen.PhanNhom[] = JSON.parse(JSON.stringify(props?.data ?? []));
+          const stringValues = `${values?.nhomVaiTroId}||${values?.mucDo}||${arrDoiTuong?.[0]}`;
+          for (let i = 0; i < cloneData.length; i += 1) {
+            if (
+              stringValues ===
+              `${cloneData[i]?.nhomVaiTroId}||${cloneData[i]?.mucDo}||${cloneData[i]?.idDoiTuong}`
+            ) {
+              message.error('Phân nhóm đã tồn tại');
+              return;
+            }
+          }
 
           if (props.edit) {
             cloneData?.splice(props?.record?.index - 1, 1, {
@@ -105,7 +96,9 @@ const FormUserQLDT = (props: {
             name="doiTuong"
             rules={[...rules.required]}
             initialValue={
-              props.edit ? `${props.record?.idDoiTuong}||${props?.record?.tenDoiTuong}` : undefined
+              props.edit && props.record?.mucDo !== 'Tất cả'
+                ? `${props.record?.idDoiTuong}||${props?.record?.tenDoiTuong}`
+                : undefined
             }
           >
             <Select showSearch placeholder="Đối tượng">

@@ -3,6 +3,7 @@ import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
+  ArrowUpOutlined,
   CloseCircleOutlined,
   EyeOutlined,
   PlusOutlined,
@@ -12,6 +13,7 @@ import { useState } from 'react';
 import { useModel } from 'umi';
 import styles from './block.css';
 import Block from './BlockBieuMau';
+import { nanoid } from 'nanoid';
 
 const FormBieuMau = () => {
   const [form] = Form.useForm();
@@ -25,13 +27,31 @@ const FormBieuMau = () => {
     setCurrent,
   } = useModel('dichvumotcuav2');
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
+  const buildPostData = (arrCauHinh: DichVuMotCuaV2.CauHinhBieuMau[]): any => {
+    return (
+      arrCauHinh?.map((item) => {
+        return {
+          ...item,
+          dataSource: item?.dataSource?.map((data) => ({
+            ...data,
+            relatedElement: buildPostData(data?.relatedElement ?? []),
+          })),
+          relatedElement: buildPostData(item?.relatedElement ?? []),
+          _id: item?._id ?? nanoid(),
+        };
+      }) ?? []
+    );
+  };
   return (
     <Card title={edit ? 'Chỉnh sửa biểu mẫu' : 'Thêm mới biểu mẫu'}>
       <Form
         scrollToFirstError
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          setRecordCauHinhBieuMau({ ...recordCauHinhBieuMau, ...values });
+          setRecordCauHinhBieuMau({
+            ...recordCauHinhBieuMau,
+            ...{ cauHinhBieuMau: buildPostData(values?.cauHinhBieuMau ?? []) },
+          });
           setCurrent(2);
         }}
         form={form}
@@ -50,7 +70,7 @@ const FormBieuMau = () => {
             },
           ]}
         >
-          {(fields, { add, remove }, { errors }) => {
+          {(fields, { add, remove, move }, { errors }) => {
             return (
               <>
                 {fields.map((field, index) => (
@@ -67,11 +87,16 @@ const FormBieuMau = () => {
                             style={{ float: 'right' }}
                             onClick={() => remove(field.name)}
                           />
+                          <ArrowUpOutlined
+                            style={{ float: 'right' }}
+                            onClick={() => move(field.name, field.name - 1)}
+                          />
                         </>
                       }
                     >
                       <Block fieldName={`cauHinhBieuMau.[${index}]`} field={{ ...field }} />
                     </Card>
+
                     <br />
                   </div>
                 ))}
@@ -120,7 +145,7 @@ const FormBieuMau = () => {
               htmlType="submit"
               type="primary"
             >
-              {edit ? 'Tiếp theo' : 'Thêm'}
+              Tiếp theo
             </Button>
             {/* <Button icon={<CloseOutlined />} onClick={() => setVisibleForm(false)}>
             Đóng
