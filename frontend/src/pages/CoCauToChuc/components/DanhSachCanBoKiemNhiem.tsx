@@ -4,7 +4,7 @@ import { useModel } from 'umi';
 import data from '@/utils/data';
 
 const DanhSachCanBoKiemNhiem = () => {
-  const { getCanBoKiemNhiemByIdDonViModel, page, limit, loading } = useModel('canbo');
+  const { getCanBoKiemNhiemByIdDonViModel, page, limit, loading, condition } = useModel('canbo');
   const { record } = useModel('donvi');
 
   const columns: IColumn<CanBo.Record>[] = [
@@ -80,7 +80,7 @@ const DanhSachCanBoKiemNhiem = () => {
     <TableBase
       params={record?.id}
       getData={getCanBoKiemNhiemByIdDonViModel}
-      dependencies={[page, limit, record?.id]}
+      dependencies={[page, limit, record?.id, condition]}
       columns={columns}
       loading={loading}
       modelName="canbo"

@@ -11,6 +11,7 @@ import { useModel } from 'umi';
 const CayCoCauToChuc = () => {
   const { danhSach, expandedKeys, loading, setExpandedKeys, setRecord, position, setPosition } =
     useModel('donvi');
+  const { setPage, setLimit, setCondition, setFilterInfo } = useModel('canbo');
   const [searchValue, setSearchValue] = useState<string>('');
   const [data, setData] = useState<DonVi.Record[]>([]);
   const [dataNotTree, setDataNotTree] = useState<DonVi.Record[]>([]);
@@ -69,6 +70,10 @@ const CayCoCauToChuc = () => {
     },
   ) => {
     setRecord(danhSach.find((item) => item.id === info?.node?.id));
+    setPage(1);
+    setLimit(10);
+    setFilterInfo({});
+    setCondition({});
   };
 
   const onChange = (value: string) => {

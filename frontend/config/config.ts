@@ -247,7 +247,7 @@ export default defineConfig({
 
     {
       name: 'CoCauToChuc',
-      icon: 'team',
+      icon: 'ApartmentOutlined',
       path: '/cocautochuc',
       component: './CoCauToChuc',
       access: 'admin',

@@ -12,6 +12,8 @@ const CoCauToChuc = () => {
   const { getAllDonViModel, setRecord, record, visibleForm, setEdit, setVisibleForm } =
     useModel('donvi');
 
+  const { setPage, setLimit, setCondition, setFilterInfo } = useModel('canbo');
+
   useEffect(() => {
     getAllDonViModel();
     return () => {
@@ -46,7 +48,15 @@ const CoCauToChuc = () => {
       </Card>
       <br />
       {record?.ten_don_vi && (
-        <Tabs type="card">
+        <Tabs
+          onChange={() => {
+            setPage(1);
+            setLimit(10);
+            setCondition({});
+            setFilterInfo({});
+          }}
+          type="card"
+        >
           <Tabs.TabPane
             tab={
               ['Hội đồng Học viện', 'Ban giám đốc Học viện', 'Lãnh đạo Học viện'].includes(
