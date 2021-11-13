@@ -302,15 +302,15 @@ const TableBase = (props: Props) => {
           Thêm mới
         </Button>
       )}
-      <h3 style={{ display: 'inline-block', margin: '0 0px 10px 50px', float: 'right' }}>
+      <h4 style={{ display: 'inline-block', margin: '0 0px 8px 50px', float: 'right' }}>
         Tổng số:
         <Input
-          style={{ width: '90px', fontWeight: 700, fontSize: 16, marginLeft: 10 }}
+          style={{ width: '90px', fontWeight: 600, fontSize: 14, marginLeft: 10 }}
           value={total}
           readOnly
           // ref={this.setTableBaseRef}
         />
-      </h3>
+      </h4>
       <Table
         scroll={scroll || { x: 1000 }}
         loading={loading}
@@ -332,11 +332,12 @@ const TableBase = (props: Props) => {
           return { ...item, index: index + 1 + (page - 1) * limit, key: index };
         })}
         columns={columns}
-      ></Table>
+      />
       {Form && (
         <>
           {formType === 'Drawer' ? (
             <Drawer
+              maskClosable={false}
               width={widthDrawer}
               onClose={() => {
                 setVisibleForm(false);
@@ -350,6 +351,7 @@ const TableBase = (props: Props) => {
             </Drawer>
           ) : (
             <Modal
+              maskClosable={false}
               width={widthDrawer}
               onCancel={() => {
                 setVisibleForm(false);

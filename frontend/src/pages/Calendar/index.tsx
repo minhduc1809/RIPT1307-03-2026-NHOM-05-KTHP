@@ -124,7 +124,7 @@ export default (props: { type?: string }) => {
     }),
   );
   return (
-    <Card bordered>
+    <Card title="Thời khóa biểu" bordered>
       <Calendar
         localizer={localizer}
         events={dataCalendar}

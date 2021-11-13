@@ -203,15 +203,17 @@ export function handlePhanNhom(initialState: any, code: string, idDoiTuong?: str
   if (initialState?.phanNhom?.danhSachPhanNhom?.length === 0) return false;
   initialState?.phanNhom?.danhSachPhanNhom?.forEach((item: any) => {
     const mucDo = item?.mucDo;
-    item?.nhomVaiTroId?.danhSachChucNang?.map((idChucNang: string) => {
+    item?.nhomVaiTroId?.danhSachChucNang?.forEach((idChucNang: string) => {
       if (mucDo === 'Tất cả' && idChucNang === code) {
         flag = true;
       }
       if (mucDo !== 'Tất cả' && idChucNang === code) {
-        if (idDoiTuong === undefined) return true;
-        return item?.idDoiTuong === idDoiTuong;
+        if (idDoiTuong === undefined) {
+          flag = true;
+          return;
+        }
+        flag = item?.idDoiTuong === idDoiTuong;
       }
-      return true;
     });
   });
   return flag;

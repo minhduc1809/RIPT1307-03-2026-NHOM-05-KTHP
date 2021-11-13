@@ -21,7 +21,7 @@ const LopHanhChinh = () => {
   const { danhSachSinhVien, canBo, si_so, ten_lop_hanh_chinh } = dataLopHanhChinh;
 
   return (
-    <Card title={`Lớp hành chính ${ten_lop_hanh_chinh || ''}`}>
+    <Card bodyStyle={{ paddingTop: 4 }} title={`Lớp hành chính ${ten_lop_hanh_chinh || ''}`}>
       <Tabs>
         <Tabs.TabPane tab="Thông tin chung" key={0}>
           <ThongTinChungLopHanhChinh

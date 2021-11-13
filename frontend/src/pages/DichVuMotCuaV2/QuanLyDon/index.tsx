@@ -14,7 +14,7 @@ const QuanLyDon = () => {
   }, []);
 
   return (
-    <Card title="Quản lý đơn">
+    <Card bodyStyle={{ padding: '8px 24px 24px 24px' }} title="Quản lý đơn">
       <Tabs
         onChange={(key: string) => {
           setTrangThaiQuanLyDon(key);

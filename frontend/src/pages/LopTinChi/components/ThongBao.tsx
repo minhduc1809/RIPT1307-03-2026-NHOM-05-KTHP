@@ -113,6 +113,20 @@ const ThongBao = (props: {
   ];
   return (
     <>
+      {props.isCanBo ||
+        (props.isGiangVien && (
+          <Button
+            style={{ marginBottom: 8 }}
+            onClick={() => {
+              setEdit(false);
+              setVisibleDrawer(true);
+            }}
+            type="primary"
+          >
+            <PlusCircleFilled />
+            Thêm mới
+          </Button>
+        ))}
       <ProTable<IResThongBaoLopTinChi.Result, API.ApiResponse>
         pagination={{
           showTotal: () => <div></div>,
@@ -122,30 +136,16 @@ const ThongBao = (props: {
             setLimit(limitNumber || 10);
           },
         }}
-        headerTitle="Danh sách thông báo"
         rowKey="key"
         dataSource={dsThongBao ?? []}
         search={false}
-        toolBarRender={() =>
-          props.isCanBo || props.isGiangVien
-            ? [
-                <Button
-                  onClick={() => {
-                    setEdit(false);
-                    setVisibleDrawer(true);
-                  }}
-                  type="primary"
-                >
-                  <PlusCircleFilled />
-                  Thêm mới
-                </Button>,
-              ]
-            : []
-        }
+        toolBarRender={false}
         bordered
         columns={columns}
-      />
+      ></ProTable>
+
       <Drawer
+        maskClosable={false}
         onClose={() => setVisibleDrawer(false)}
         width="60%"
         visible={visibleDrawer}
@@ -153,21 +153,11 @@ const ThongBao = (props: {
         title="Gửi thông báo"
       >
         <Form
-          // initialValues={{}}
           labelCol={{ span: 24 }}
           form={form}
           title={edit ? 'Chỉnh sửa' : 'Thêm mới'}
           onFinish={async (values: any) => {
             setLoading(true);
-            // let response = {
-            //   data: { data: { url: '' } },
-            // };
-            // if (values?.imageUrl)
-            //   response = await getURLImg({
-            //     filename: 'url1',
-            //     public: true,
-            //     file: values?.imageUrl.file.originFileObj,
-            //   });
 
             const newValues = {
               ...values,

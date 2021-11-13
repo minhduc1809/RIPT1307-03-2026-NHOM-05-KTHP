@@ -11,9 +11,7 @@ import FormCoCauToChuc from './components/FormCoCauToChuc';
 const CoCauToChuc = () => {
   const { getAllDonViModel, setRecord, record, visibleForm, setEdit, setVisibleForm } =
     useModel('donvi');
-
   const { setPage, setLimit, setCondition, setFilterInfo } = useModel('canbo');
-
   useEffect(() => {
     getAllDonViModel();
     return () => {
@@ -24,7 +22,7 @@ const CoCauToChuc = () => {
   return (
     <>
       <Card title="Cơ cấu tổ chức">
-        <Row gutter={[16, 16]}>
+        <Row gutter={[16, 8]}>
           <Col span={24}>
             <Button
               type="primary"

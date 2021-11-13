@@ -4,7 +4,7 @@ import { Avatar, List } from 'antd';
 const DanhSachSinhVien = (props: { data: Login.Profile[]; loading: boolean }) => {
   return (
     <>
-      <h3 style={{ fontWeight: 'bold' }}>Số lượng: {props?.data?.length ?? 0} sinh viên</h3>
+      {/* <h3 style={{ fontWeight: 'bold' }}>Số lượng: {props?.data?.length ?? 0} sinh viên</h3> */}
       <List
         // loading={props.loading}
         grid={{

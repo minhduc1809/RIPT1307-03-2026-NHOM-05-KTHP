@@ -30,6 +30,7 @@ const DetailLopHanhChinh = ({
 
   return (
     <Card
+      bodyStyle={{ paddingTop: 4 }}
       title={
         <Breadcrumb style={{ cursor: 'pointer' }}>
           <Breadcrumb.Item

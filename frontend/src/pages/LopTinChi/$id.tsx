@@ -19,6 +19,7 @@ const DetailLopTinChi = ({
   const isGiangVien = localStorage.getItem('vaiTro') === 'giang_vien';
   return (
     <Card
+      bodyStyle={{ paddingTop: 4 }}
       title={
         <Breadcrumb style={{ cursor: 'pointer' }}>
           <Breadcrumb.Item
@@ -29,7 +30,7 @@ const DetailLopTinChi = ({
             <TeamOutlined /> Lớp tín chỉ
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            {record?.ma_lop ?? ''}-{record?.mon_hoc_ids?.[1] ?? ''}
+            {record?.ma_lop ?? ''} - {record?.mon_hoc_ids?.[1] ?? ''}
           </Breadcrumb.Item>
         </Breadcrumb>
       }

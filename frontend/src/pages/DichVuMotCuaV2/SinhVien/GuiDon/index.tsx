@@ -24,7 +24,7 @@ const GuiDon = () => {
       title: 'Dịch vụ',
       dataIndex: 'ten',
       search: 'search',
-      align: 'center',
+      align: 'left',
     },
     {
       title: 'Thao tác',

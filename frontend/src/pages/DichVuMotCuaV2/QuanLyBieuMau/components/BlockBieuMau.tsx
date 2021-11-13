@@ -356,7 +356,7 @@ const Block = (props: {
                             <>
                               <div style={{ float: 'left' }}>Cột {index + 1}</div>
                               <CloseCircleOutlined
-                                style={{ float: 'right' }}
+                                style={{ float: 'right', marginLeft: 8 }}
                                 onClick={() => remove(field.name)}
                               />
                               <ArrowUpOutlined

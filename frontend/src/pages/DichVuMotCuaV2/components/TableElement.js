@@ -179,15 +179,15 @@ class App extends React.Component {
           </Button>
         )}
         {this.props.hasTotal && (
-          <h3 style={{ display: 'inline-block', margin: '0 10px 10px 50px', float: 'right' }}>
+          <h4 style={{ display: 'inline-block', margin: '0 0px 8px 50px', float: 'right' }}>
             Tổng số:
             <Input
-              style={{ width: '90px', fontWeight: 700, fontSize: 16, marginLeft: 10 }}
+              style={{ width: '90px', fontWeight: 600, fontSize: 14, marginLeft: 10 }}
               value={this.state?.data?.length ?? 0}
               readOnly
               // ref={this.setTableBaseRef}
             />
-          </h3>
+          </h4>
         )}
         <Table
           {...this.props?.otherProps}
