@@ -1,5 +1,10 @@
 import rules from '@/utils/rules';
-import { CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  CloseCircleOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
 import { Button, Card, Col, Form, Input, Row } from 'antd';
 import styles from './block.css';
 import BlockThaoTac from './BlockThaoTac';
@@ -36,7 +41,7 @@ const Block = (props: {
           },
         ]}
       >
-        {(fields, { add, remove }, { errors }) => {
+        {(fields, { add, remove, move }, { errors }) => {
           return (
             <>
               {fields.map((field, index) => (
@@ -51,8 +56,16 @@ const Block = (props: {
                         <>
                           <div style={{ float: 'left' }}>Thao tác {index + 1}</div>
                           <CloseCircleOutlined
-                            style={{ float: 'right' }}
+                            style={{ float: 'right', marginLeft: 8 }}
                             onClick={() => remove(field.name)}
+                          />
+                          <ArrowUpOutlined
+                            style={{ float: 'right', marginLeft: 8 }}
+                            onClick={() => move(field.name, field.name - 1)}
+                          />
+                          <ArrowDownOutlined
+                            style={{ float: 'right' }}
+                            onClick={() => move(field.name, field.name + 1)}
                           />
                         </>
                       }

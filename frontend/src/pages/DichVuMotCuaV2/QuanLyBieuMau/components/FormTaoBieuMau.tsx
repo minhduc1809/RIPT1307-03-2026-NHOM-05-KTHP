@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import {
+  ArrowDownOutlined,
   ArrowLeftOutlined,
   ArrowRightOutlined,
   ArrowUpOutlined,
@@ -84,12 +85,16 @@ const FormBieuMau = () => {
                         <>
                           <div style={{ float: 'left' }}>Khối {index + 1}</div>
                           <CloseCircleOutlined
-                            style={{ float: 'right' }}
+                            style={{ float: 'right', marginLeft: 8 }}
                             onClick={() => remove(field.name)}
                           />
                           <ArrowUpOutlined
-                            style={{ float: 'right' }}
+                            style={{ float: 'right', marginLeft: 8 }}
                             onClick={() => move(field.name, field.name - 1)}
+                          />
+                          <ArrowDownOutlined
+                            style={{ float: 'right' }}
+                            onClick={() => move(field.name, field.name + 1)}
                           />
                         </>
                       }

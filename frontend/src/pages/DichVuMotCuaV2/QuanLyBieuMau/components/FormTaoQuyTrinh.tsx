@@ -1,6 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 import {
+  ArrowDownOutlined,
   ArrowLeftOutlined,
+  ArrowUpOutlined,
   CloseCircleOutlined,
   EyeOutlined,
   PlusOutlined,
@@ -87,7 +89,7 @@ const FormTaoQuyTrinh = () => {
             },
           ]}
         >
-          {(fields, { add, remove }, { errors }) => {
+          {(fields, { add, remove, move }, { errors }) => {
             return (
               <>
                 {fields.map((field, index) => (
@@ -101,8 +103,16 @@ const FormTaoQuyTrinh = () => {
                         <>
                           <div style={{ float: 'left' }}>Bước {index + 1}</div>
                           <CloseCircleOutlined
-                            style={{ float: 'right' }}
+                            style={{ float: 'right', marginLeft: 8 }}
                             onClick={() => remove(field.name)}
+                          />
+                          <ArrowUpOutlined
+                            style={{ float: 'right', marginLeft: 8 }}
+                            onClick={() => move(field.name, field.name - 1)}
+                          />
+                          <ArrowDownOutlined
+                            style={{ float: 'right' }}
+                            onClick={() => move(field.name, field.name + 1)}
                           />
                         </>
                       }

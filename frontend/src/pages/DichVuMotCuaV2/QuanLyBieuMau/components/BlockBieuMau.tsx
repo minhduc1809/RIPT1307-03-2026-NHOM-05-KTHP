@@ -1,7 +1,13 @@
 import { EFileType, ElementTemplateType, LevelDonViHanhChinh } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { includes } from '@/utils/utils';
-import { CloseCircleOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  CloseCircleOutlined,
+  MinusCircleOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
 import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row, Select, Collapse } from 'antd';
 import lodash from 'lodash';
 import { useEffect, useState } from 'react';
@@ -241,7 +247,7 @@ const Block = (props: {
                             >
                               {(
                                 fieldsRelate,
-                                { add: addRelate, remove: removeRelate },
+                                { add: addRelate, remove: removeRelate, move },
                                 { errors: errorsRelate },
                               ) => {
                                 return (
@@ -259,8 +265,20 @@ const Block = (props: {
                                                 Khối liên quan {indexRelate + 1}
                                               </div>
                                               <CloseCircleOutlined
-                                                style={{ float: 'right' }}
+                                                style={{ float: 'right', marginLeft: 8 }}
                                                 onClick={() => removeRelate(fieldRelate.name)}
+                                              />
+                                              <ArrowUpOutlined
+                                                style={{ float: 'right', marginLeft: 8 }}
+                                                onClick={() =>
+                                                  move(fieldRelate.name, fieldRelate.name - 1)
+                                                }
+                                              />
+                                              <ArrowDownOutlined
+                                                style={{ float: 'right' }}
+                                                onClick={() =>
+                                                  move(fieldRelate.name, fieldRelate.name + 1)
+                                                }
                                               />
                                             </>
                                           }
@@ -324,7 +342,7 @@ const Block = (props: {
                 },
               ]}
             >
-              {(fields, { add, remove }, { errors }) => {
+              {(fields, { add, remove, move }, { errors }) => {
                 return (
                   <>
                     {fields.map((field, index) => (
@@ -340,6 +358,14 @@ const Block = (props: {
                               <CloseCircleOutlined
                                 style={{ float: 'right' }}
                                 onClick={() => remove(field.name)}
+                              />
+                              <ArrowUpOutlined
+                                style={{ float: 'right', marginLeft: 8 }}
+                                onClick={() => move(field.name, field.name - 1)}
+                              />
+                              <ArrowDownOutlined
+                                style={{ float: 'right' }}
+                                onClick={() => move(field.name, field.name + 1)}
                               />
                             </>
                           }
