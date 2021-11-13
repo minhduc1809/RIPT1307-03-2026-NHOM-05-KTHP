@@ -236,7 +236,16 @@ const FormBieuMau = (props: {
         break;
       }
       case 'TABLE': {
-        ruleElement = [];
+        ruleElement = [
+          {
+            validator: (__: { field: string | number }, value: any, callback: any) => {
+              if (!danhSachDataTable || !danhSachDataTable?.[__?.field]?.length) callback('');
+              callback();
+            },
+            message: `Bắt buộc`,
+            required: true,
+          },
+        ];
         const data = item?.value?.map((recordRow: DichVuMotCuaV2.CauHinhBieuMau[]) => {
           const row = {};
           recordRow?.forEach((cell: DichVuMotCuaV2.CauHinhBieuMau) => {
