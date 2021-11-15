@@ -73,105 +73,105 @@ const Login: React.FC = () => {
     <div className={styles.container}>
       {/* <SelectRole /> */}
       {/* <div className={styles.lang}>{SelectLang && <SelectLang />}</div> */}
-      <div style={{ display: 'flex', flex: 1, alignItems: 'center' }}>
-        <div className={styles.content}>
-          <div className={styles.top}>
-            <div className={styles.header}>
-              <Link to="/">
-                <img alt="logo" className={styles.logo} src="/logo.png" />
-                <span className={styles.title}>Hệ Thống Đào Tạo Trực Tuyến Từ Xa</span>
-              </Link>
-            </div>
+      {/* <div style={{ display: 'flex', flex: 1, alignItems: 'center' }}> */}
+      <div className={styles.content}>
+        <div className={styles.top}>
+          <div className={styles.header}>
+            <Link to="/">
+              <img alt="logo" className={styles.logo} src="/logo.png" />
+              <span className={styles.title}>Hệ Thống Đào Tạo Trực Tuyến Từ Xa</span>
+            </Link>
           </div>
-          <ConfigProvider locale={viVN}>
-            <div className={styles.main}>
-              <ProForm
-                initialValues={{
-                  autoLogin: true,
-                }}
-                submitter={{
-                  searchConfig: {
-                    submitText: intl.formatMessage({
-                      id: 'pages.login.submit',
-                      defaultMessage: 'submit',
-                    }),
+        </div>
+        <ConfigProvider locale={viVN}>
+          <div className={styles.main}>
+            <ProForm
+              initialValues={{
+                autoLogin: true,
+              }}
+              submitter={{
+                searchConfig: {
+                  submitText: intl.formatMessage({
+                    id: 'pages.login.submit',
+                    defaultMessage: 'submit',
+                  }),
+                },
+                render: (_, dom) => dom.pop(), // ko hỉu
+                submitButtonProps: {
+                  loading: submitting,
+                  size: 'large',
+                  style: {
+                    width: '100%',
                   },
-                  render: (_, dom) => dom.pop(), // ko hỉu
-                  submitButtonProps: {
-                    loading: submitting,
-                    size: 'large',
-                    style: {
-                      width: '100%',
-                    },
-                  },
-                }}
-                onFinish={async (values) => {
-                  handleSubmit(values as { login: string; password: string });
-                }}
-              >
-                <Tabs activeKey={type} onChange={setType}>
-                  <Tabs.TabPane
-                    key="account"
-                    tab={intl.formatMessage({
-                      id: 'pages.login.accountLogin.tab',
-                      defaultMessage: 'tab',
-                    })}
-                  />
-                </Tabs>
+                },
+              }}
+              onFinish={async (values) => {
+                handleSubmit(values as { login: string; password: string });
+              }}
+            >
+              <Tabs activeKey={type} onChange={setType}>
+                <Tabs.TabPane
+                  key="account"
+                  tab={intl.formatMessage({
+                    id: 'pages.login.accountLogin.tab',
+                    defaultMessage: 'tab',
+                  })}
+                />
+              </Tabs>
 
-                {type === 'account' && (
-                  <>
-                    <ProFormText
-                      name="login"
-                      fieldProps={{
-                        size: 'large',
-                        prefix: <UserOutlined className={styles.prefixIcon} />,
-                      }}
-                      placeholder={intl.formatMessage({
-                        id: 'pages.login.username.placeholder',
-                        defaultMessage: 'Nhập tên đăng nhập',
-                      })}
-                      rules={[
-                        {
-                          required: true,
-                          message: (
-                            <FormattedMessage
-                              id="pages.login.username.required"
-                              defaultMessage="required!"
-                            />
-                          ),
-                        },
-                        // ...rules.username,
-                      ]}
-                    />
-                    <ProFormText.Password
-                      name="password"
-                      fieldProps={{
-                        size: 'large',
-                        prefix: <LockOutlined className={styles.prefixIcon} />,
-                      }}
-                      placeholder={intl.formatMessage({
-                        id: 'pages.login.password.placeholder',
-                        defaultMessage: 'placeholder: ant.design',
-                      })}
-                      rules={[
-                        {
-                          required: true,
-                          message: (
-                            <FormattedMessage
-                              id="pages.login.password.required"
-                              defaultMessage="required"
-                            />
-                          ),
-                        },
-                        // ...rules.password,
-                      ]}
-                    />
-                  </>
-                )}
-              </ProForm>
-            </div>
-            {/* <Modal
+              {type === 'account' && (
+                <>
+                  <ProFormText
+                    name="login"
+                    fieldProps={{
+                      size: 'large',
+                      prefix: <UserOutlined className={styles.prefixIcon} />,
+                    }}
+                    placeholder={intl.formatMessage({
+                      id: 'pages.login.username.placeholder',
+                      defaultMessage: 'Nhập tên đăng nhập',
+                    })}
+                    rules={[
+                      {
+                        required: true,
+                        message: (
+                          <FormattedMessage
+                            id="pages.login.username.required"
+                            defaultMessage="required!"
+                          />
+                        ),
+                      },
+                      // ...rules.username,
+                    ]}
+                  />
+                  <ProFormText.Password
+                    name="password"
+                    fieldProps={{
+                      size: 'large',
+                      prefix: <LockOutlined className={styles.prefixIcon} />,
+                    }}
+                    placeholder={intl.formatMessage({
+                      id: 'pages.login.password.placeholder',
+                      defaultMessage: 'placeholder: ant.design',
+                    })}
+                    rules={[
+                      {
+                        required: true,
+                        message: (
+                          <FormattedMessage
+                            id="pages.login.password.required"
+                            defaultMessage="required"
+                          />
+                        ),
+                      },
+                      // ...rules.password,
+                    ]}
+                  />
+                </>
+              )}
+            </ProForm>
+          </div>
+          {/* <Modal
             footer={
               <Button
                 type="primary"
@@ -197,9 +197,9 @@ const Login: React.FC = () => {
           >
             <SelectRoles roles={arrRole} type="login" />
           </Modal> */}
-          </ConfigProvider>
-        </div>
+        </ConfigProvider>
       </div>
+      {/* </div> */}
       <Footer />
     </div>
   );

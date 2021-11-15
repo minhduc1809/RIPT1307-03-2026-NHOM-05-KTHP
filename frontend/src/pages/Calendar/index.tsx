@@ -1,7 +1,7 @@
 import { Card, Modal } from 'antd';
 import moment from 'moment';
 import mm from 'moment-timezone';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useModel } from 'umi';
@@ -109,11 +109,11 @@ export default (props: { type?: string }) => {
   };
   const localizer = momentLocalizer(moment);
   const { danhSachSuKien, getSuKienSinhVienByNamModel } = useModel('sukien');
-
+  const [year, setYear] = useState<number>(new Date().getFullYear());
   useEffect(() => {
-    getSuKienSinhVienByNamModel(new Date().getFullYear());
+    getSuKienSinhVienByNamModel(year);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [year]);
   const dataCalendar: { title: string; [x: string]: unknown }[] | undefined = [];
   danhSachSuKien?.forEach((x: SuKien.Record) =>
     dataCalendar.push({
@@ -129,13 +129,16 @@ export default (props: { type?: string }) => {
         localizer={localizer}
         events={dataCalendar}
         defaultView={Views.WEEK}
+        onNavigate={(newDate: Date) => {
+          setYear(moment(newDate).year());
+        }}
         scrollToTime={new Date(1970, 1, 1)}
         defaultDate={new Date()}
         messages={messages}
         views={['month', 'week', 'day']}
         style={{ height: isDashboard ? 443 : 700 }}
         min={moment('0600', 'HHmm').toDate()}
-        max={moment('2100', 'HHmm').toDate()}
+        max={moment('2300', 'HHmm').toDate()}
         eventPropGetter={eventPropGetter}
         onSelectEvent={(record: any) => onSelectEvent(record)}
         components={{ event: (event: any) => eventCustom(event) }}
