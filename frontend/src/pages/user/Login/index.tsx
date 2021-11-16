@@ -79,7 +79,9 @@ const Login: React.FC = () => {
           <div className={styles.header}>
             <Link to="/">
               <img alt="logo" className={styles.logo} src="/logo.png" />
-              <span className={styles.title}>Hệ Thống Đào Tạo Trực Tuyến Từ Xa</span>
+              <span className={styles.title}>
+                HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG - HỆ ĐẠI HỌC TỪ XA
+              </span>
             </Link>
           </div>
         </div>
