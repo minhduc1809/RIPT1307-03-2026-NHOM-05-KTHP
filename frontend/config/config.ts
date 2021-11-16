@@ -267,74 +267,74 @@ export default defineConfig({
     //   access: 'sinhVien',
     // },
 
-    // {
-    //   name: 'DichVuMotCuaSinhVien',
-    //   icon: 'AuditOutlined',
-    //   path: '/dichvumotcuasv',
-    //   routes: [
-    //     {
-    //       name: 'TaoDon',
-    //       path: './taodon',
-    //       component: './DichVuMotCuaV2/SinhVien/GuiDon',
-    //       access: 'sinhVien',
-    //     },
-    //     {
-    //       // name: 'DichVuMotCuaSinhVien',
-    //       hideInMenu: true,
-    //       // icon: 'team',
-    //       access: 'sinhVien',
-    //       path: '/dichvumotcuasv/taodon/:id',
-    //       component: './DichVuMotCuaV2/SinhVien/GuiDon/$id',
-    //     },
-    //     {
-    //       name: 'LichSu',
-    //       path: './lichsu',
-    //       component: './DichVuMotCuaV2/SinhVien/LichSu',
-    //       access: 'sinhVien',
-    //     },
-    //   ],
-    //   access: 'sinhVien',
-    // },
+    {
+      name: 'DichVuMotCuaSinhVien',
+      icon: 'AuditOutlined',
+      path: '/dichvumotcuasv',
+      routes: [
+        {
+          name: 'TaoDon',
+          path: './taodon',
+          component: './DichVuMotCuaV2/SinhVien/GuiDon',
+          access: 'sinhVien',
+        },
+        {
+          // name: 'DichVuMotCuaSinhVien',
+          hideInMenu: true,
+          // icon: 'team',
+          access: 'sinhVien',
+          path: '/dichvumotcuasv/taodon/:id',
+          component: './DichVuMotCuaV2/SinhVien/GuiDon/$id',
+        },
+        {
+          name: 'LichSu',
+          path: './lichsu',
+          component: './DichVuMotCuaV2/SinhVien/LichSu',
+          access: 'sinhVien',
+        },
+      ],
+      access: 'sinhVien',
+    },
 
-    // {
-    //   name: 'DichVuMotCuaAdmin',
-    //   icon: 'AuditOutlined',
-    //   path: '/dichvumotcuav2',
-    //   routes: [
-    //     {
-    //       name: 'QuanLyBieuMau',
-    //       path: './quanlybieumau',
-    //       component: './DichVuMotCuaV2/QuanLyBieuMau',
-    //       access: 'admin',
-    //     },
-    //   ],
-    //   access: 'admin',
-    // },
-    // {
-    //   name: 'DichVuMotCuaCanBo',
-    //   icon: 'AuditOutlined',
-    //   path: './dichvumotcuacanbo',
-    //   routes: [
-    //     {
-    //       name: 'QuanLyDon',
-    //       path: './quanlydondieuphoi',
-    //       // access: 'canBo',
-    //       access: 'routeFilter',
-    //       maChucNang: 'don-dvmc-thao-tac:read-all',
-    //       component: './DichVuMotCuaV2/QuanLyDon',
-    //     },
-    //     {
-    //       name: 'QuanLyDon',
-    //       path: './quanlydonchuyenvien',
-    //       // access: 'canBo',
-    //       access: 'routeFilter',
-    //       maChucNang: 'don-dvmc-thao-tac:read-my',
-    //       component: './DichVuMotCuaV2/QuanLyDon',
-    //     },
-    //   ],
+    {
+      name: 'DichVuMotCuaAdmin',
+      icon: 'AuditOutlined',
+      path: '/dichvumotcuav2',
+      routes: [
+        {
+          name: 'QuanLyBieuMau',
+          path: './quanlybieumau',
+          component: './DichVuMotCuaV2/QuanLyBieuMau',
+          access: 'admin',
+        },
+      ],
+      access: 'admin',
+    },
+    {
+      name: 'DichVuMotCuaCanBo',
+      icon: 'AuditOutlined',
+      path: './dichvumotcuacanbo',
+      routes: [
+        {
+          name: 'QuanLyDon',
+          path: './quanlydondieuphoi',
+          // access: 'canBo',
+          access: 'routeFilter',
+          maChucNang: 'don-dvmc-thao-tac:read-all',
+          component: './DichVuMotCuaV2/QuanLyDon',
+        },
+        {
+          name: 'QuanLyDon',
+          path: './quanlydonchuyenvien',
+          // access: 'canBo',
+          access: 'routeFilter',
+          maChucNang: 'don-dvmc-thao-tac:read-my',
+          component: './DichVuMotCuaV2/QuanLyDon',
+        },
+      ],
 
-    //   access: 'canBo',
-    // },
+      access: 'canBo',
+    },
     {
       name: 'ThongBao',
       icon: 'notification',
