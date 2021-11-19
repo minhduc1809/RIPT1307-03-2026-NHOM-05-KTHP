@@ -124,6 +124,13 @@ export default defineConfig({
       ],
     },
     {
+      name: 'QuanLyLichTuan',
+      icon: 'fileDone',
+      path: '/lich-tuan',
+      access: 'GiangVienVaCanBo',
+      component: './VanPhongSo/QuanLyLichTuan',
+    },
+    {
       name: 'BieuMau',
       icon: 'fileDone',
       path: '/bieumau',

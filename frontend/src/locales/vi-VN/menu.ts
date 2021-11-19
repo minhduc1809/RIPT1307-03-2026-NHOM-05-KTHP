@@ -83,4 +83,5 @@ export default {
   'menu.DichVuMotCuaCanBo.QuanLyDon': 'Quản lý đơn',
   'menu.dva-sample': 'Page mẫu dùng DVA',
   'menu.DangKyTinChi': 'Đăng ký tín chỉ',
+  'menu.QuanLyLichTuan': 'Quản lý lịch tuần',
 };
