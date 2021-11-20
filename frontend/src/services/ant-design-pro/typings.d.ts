@@ -6,9 +6,11 @@ declare module Login {
     ma_dinh_danh: string;
     email: string;
     gioi_tinh: string;
+    vai_tro: string;
   }
 
   export interface Profile {
+    vai_tro: string;
     ma_dinh_danh: string;
     id: number;
     avatar_path: string;

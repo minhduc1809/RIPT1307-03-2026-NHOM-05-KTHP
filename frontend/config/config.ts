@@ -127,7 +127,7 @@ export default defineConfig({
       name: 'QuanLyLichTuan',
       icon: 'fileDone',
       path: '/lich-tuan',
-      access: 'GiangVienVaCanBo',
+      access: 'admin',
       component: './VanPhongSo/QuanLyLichTuan',
     },
     {
@@ -157,13 +157,13 @@ export default defineConfig({
       icon: 'CalendarOutlined',
       path: '/calendar',
       component: './Calendar',
-      access: 'sinhVienVaGiangVienVaCanBo',
+      access: 'sinhVienVaNhanVien',
     },
     {
       name: 'VanBanHuongDanUser',
       icon: 'FileText',
       path: '/vanbanhuongdanuser',
-      access: 'sinhVienVaGiangVienVaCanBo',
+      access: 'sinhVienVaNhanVien',
       component: './VanBanHuongDan',
     },
     {
@@ -171,7 +171,7 @@ export default defineConfig({
       icon: 'NotificationOutlined',
       path: '/quan-ly-tin-tuc',
       component: './QuanLyTinTuc',
-      access: 'sinhVienVaGiangVienVaCanBo',
+      access: 'sinhVienVaNhanVien',
     },
     {
       name: 'VanBanHuongDan',
@@ -192,7 +192,7 @@ export default defineConfig({
       icon: 'SolutionOutlined',
       path: '/loptinchi',
       component: './LopTinChi',
-      access: 'sinhVienVaGiangVien',
+      access: 'sinhVienVaNhanVien',
     },
     {
       name: 'LopHanhChinh',
@@ -206,7 +206,7 @@ export default defineConfig({
       icon: 'TeamOutlined',
       path: '/lophanhchinhgiangvien',
       component: './LopHanhChinh/GiangVien',
-      access: 'canBo',
+      access: 'nhanVien',
     },
     {
       name: 'DangKyTinChi',
@@ -220,14 +220,14 @@ export default defineConfig({
       icon: 'FormOutlined',
       path: '/khaosat',
       component: './KhaoSatSVGV',
-      access: 'sinhVienVaGiangVienVaCanBo',
+      access: 'sinhVienVaNhanVien',
     },
     {
       name: 'KhaiBaoSucKhoe',
       icon: 'HeartOutlined',
       path: '/khaibaosuckhoeuser',
       component: './KhaiBaoSucKhoe/User',
-      access: 'sinhVienVaGiangVienVaCanBo',
+      access: 'sinhVienVaNhanVien',
     },
     {
       name: 'KhaiBaoSucKhoe',
@@ -244,13 +244,6 @@ export default defineConfig({
       component: './LopHanhChinh/Admin',
       access: 'admin',
     },
-    // {
-    //   name: 'LopTinChiAdmin',
-    //   icon: 'TeamOutlined',
-    //   path: '/loptinchiadmin',
-    //   component: './LopTinChi/Admin',
-    //   access: 'admin',
-    // },
 
     {
       name: 'CoCauToChuc',
@@ -259,20 +252,6 @@ export default defineConfig({
       component: './CoCauToChuc',
       access: 'admin',
     },
-    // {
-    //   name: 'DichVuMotCuaSinhVien',
-    //   icon: 'BankOutlined',
-    //   path: '/dichvumotcuasv',
-    //   routes: [
-    //     {
-    //       name: 'CTCTSV',
-    //       path: './ctctsv',
-    //       component: './DichVuMotCua/SinhVien',
-    //       access: 'sinhVien',
-    //     },
-    //   ],
-    //   access: 'sinhVien',
-    // },
 
     {
       name: 'DichVuMotCuaSinhVien',
@@ -325,7 +304,6 @@ export default defineConfig({
         {
           name: 'QuanLyDon',
           path: './quanlydondieuphoi',
-          // access: 'canBo',
           access: 'routeFilter',
           maChucNang: 'don-dvmc-thao-tac:read-all',
           component: './DichVuMotCuaV2/QuanLyDon',
@@ -333,14 +311,13 @@ export default defineConfig({
         {
           name: 'QuanLyDon',
           path: './quanlydonchuyenvien',
-          // access: 'canBo',
           access: 'routeFilter',
           maChucNang: 'don-dvmc-thao-tac:read-my',
           component: './DichVuMotCuaV2/QuanLyDon',
         },
       ],
 
-      access: 'canBo',
+      access: 'nhanVien',
     },
     {
       name: 'ThongBao',
@@ -373,7 +350,7 @@ export default defineConfig({
       hideInMenu: true,
       icon: 'team',
       exact: true,
-      access: 'sinhVienVaGiangVien',
+      access: 'sinhVienVaNhanVien',
       path: '/loptinchi/:id',
       component: './LopTinChi/$id',
     },
@@ -381,7 +358,7 @@ export default defineConfig({
       hideInMenu: true,
       icon: 'team',
       exact: true,
-      access: 'canBo',
+      access: 'nhanVien',
       path: '/lophanhchinhgiangvien/:id',
       component: './LopHanhChinh/GiangVien/$id',
     },

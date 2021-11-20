@@ -1,6 +1,5 @@
 export enum Role {
-  giang_vien = 'Giảng viên',
-  can_bo = 'Cán bộ',
+  nhan_vien = 'Nhân viên',
 }
 
 export enum ElementTemplateType {

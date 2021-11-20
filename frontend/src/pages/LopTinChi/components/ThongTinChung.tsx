@@ -4,7 +4,6 @@ import type { Key } from 'react';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import DanhSachSinhVien from './DanhSachSinhVien';
-import logo from '@/assets/logo.png';
 
 const ThongTinChung = (props: { id: number; isGiangVien: boolean }) => {
   const { isGiangVien } = props;

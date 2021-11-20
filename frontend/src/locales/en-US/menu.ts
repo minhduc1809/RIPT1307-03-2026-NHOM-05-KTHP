@@ -83,4 +83,5 @@ export default {
   'menu.PhanQuyen.PhanNhom': 'Phân nhóm',
   'menu.DichVuMotCuaCanBo.QuanLyDon': 'Quản lý đơn',
   'menu.dva-sample': 'Page mẫu dùng DVA',
+  'menu.QuanLyLichTuan': 'Quản lý lịch tuần',
 };

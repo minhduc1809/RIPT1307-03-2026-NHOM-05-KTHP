@@ -17,7 +17,7 @@ const DetailLopHanhChinh = ({
 
   const { initialState } = useModel('@@initialState');
 
-  const isCanBo = localStorage.getItem('vaiTro') === 'can_bo';
+  const isNhanVien = localStorage.getItem('vaiTro') === 'nhan_vien';
 
   const [danhSachSinhVien, setDanhSachSinhVien] = useState<Login.Profile[]>([]);
   useEffect(() => {
@@ -45,7 +45,7 @@ const DetailLopHanhChinh = ({
       }
     >
       <Tabs>
-        <Tabs.TabPane tab={isCanBo ? 'Danh sách sinh viên' : 'Thông tin chung'} key="1">
+        <Tabs.TabPane tab={isNhanVien ? 'Danh sách sinh viên' : 'Thông tin chung'} key="1">
           <ThongTinChung
             danhSachSinhVien={danhSachSinhVien}
             siSo={record?.si_so ?? 0}
@@ -54,7 +54,7 @@ const DetailLopHanhChinh = ({
         </Tabs.TabPane>
 
         <Tabs.TabPane tab="Thông báo" key="4">
-          <ThongBao isCanBo={isCanBo} id={id} typeLop="LopHanhChinh" />
+          <ThongBao isNhanVien={isNhanVien} id={id} typeLop="LopHanhChinh" />
         </Tabs.TabPane>
       </Tabs>
     </Card>

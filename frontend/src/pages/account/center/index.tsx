@@ -76,8 +76,7 @@ class Center extends Component<CenterProps, CenterState> {
     let gioiTinhText = 'Chưa xác định';
     if (currentUser?.gioi_tinh === '0') gioiTinhText = 'Nam';
     else if (currentUser.gioi_tinh === '1') gioiTinhText = 'Nữ';
-    if (role === 'giang_vien') roleText = 'Giảng viên';
-    else if (role === 'can_bo') roleText = 'Cán bộ';
+    if (role === 'nhan_vien') roleText = 'Nhân viên';
     else if (role === 'sinh_vien') roleText = 'Sinh viên';
     return (
       <div className={styles.detail}>

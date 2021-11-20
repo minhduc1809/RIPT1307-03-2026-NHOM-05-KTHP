@@ -16,7 +16,7 @@ const DetailLopTinChi = ({
   match: { params: { id: number } };
 }) => {
   const { record } = useModel('loptinchi');
-  const isGiangVien = localStorage.getItem('vaiTro') === 'giang_vien';
+  const isNhanVien = localStorage.getItem('vaiTro') === 'nhan_vien';
   return (
     <Card
       bodyStyle={{ paddingTop: 4 }}
@@ -36,19 +36,19 @@ const DetailLopTinChi = ({
       }
     >
       <Tabs>
-        <Tabs.TabPane tab={isGiangVien ? 'Danh sách sinh viên' : 'Thông tin chung'} key="1">
-          <ThongTinChung id={id} isGiangVien={isGiangVien} />
+        <Tabs.TabPane tab={isNhanVien ? 'Danh sách sinh viên' : 'Thông tin chung'} key="1">
+          <ThongTinChung id={id} isGiangVien={isNhanVien} />
         </Tabs.TabPane>
-        {isGiangVien && (
+        {isNhanVien && (
           <Tabs.TabPane tab="Điểm danh" key="2">
             <DiemDanh idLopTinChi={id} />
           </Tabs.TabPane>
         )}
         <Tabs.TabPane tab="Kết quả học tập" key="3">
-          {isGiangVien ? <KetQuaHocTapGV id={id} /> : <KetQuaHocTapSV id={id} />}
+          {isNhanVien ? <KetQuaHocTapGV id={id} /> : <KetQuaHocTapSV id={id} />}
         </Tabs.TabPane>
         <Tabs.TabPane tab="Thông báo" key="4">
-          <ThongBao isGiangVien={isGiangVien} id={id} typeLop="LopTinChi" />
+          <ThongBao isNhanVien={isNhanVien} id={id} typeLop="LopTinChi" />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Học liệu số" key="5">
           <HocLieuSo />

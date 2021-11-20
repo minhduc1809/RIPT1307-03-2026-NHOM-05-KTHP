@@ -71,7 +71,7 @@ export default (props: { type?: string }) => {
                     <p>Mật khẩu phòng học Zoom: {record?.info?.mat_khau_1}</p>
                   </>
                 )}
-                {vaiTro === 'giang_vien' && (
+                {vaiTro === 'nhan_vien' && (
                   <>
                     <p>Tên đăng nhập Zoom: {record?.info?.tai_khoan ?? ''}</p>
                     <p>Mật khẩu Zoom: {record?.info?.mat_khau}</p>

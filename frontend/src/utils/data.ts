@@ -6,15 +6,13 @@ const data: any = {
   ],
   path: {
     sinh_vien: '/dashboard',
-    giang_vien: '/dashboard',
-    can_bo: '/dashboard',
+    nhan_vien: '/dashboard',
     Admin: '/danhmuc/chudechung',
   },
   doiTuong: ['Vai trò', 'Tất cả'],
   vaiTro: [
     { value: 'sinh_vien', text: 'Sinh viên' },
-    { value: 'giang_vien', text: 'Giảng viên' },
-    { value: 'can_bo', text: 'Cán bộ' },
+    { value: 'nhan_vien', text: 'Nhân viên' },
   ],
   gioiTinh: ['Nam', 'Nữ'],
   'info.anToan': [

@@ -124,9 +124,8 @@ const FormBaiHoc = () => {
           >
             <Select mode="multiple" placeholder="Chọn vai trò">
               {[
-                { value: 'giang_vien', name: 'Giảng viên' },
+                { value: 'nhan_vien', name: 'Nhân viên' },
                 { value: 'sinh_vien', name: 'Sinh viên' },
-                { value: 'can_bo', name: 'Cán bộ' },
               ].map((item) => (
                 <Select.Option key={item.value} value={item.value}>
                   {item.name}

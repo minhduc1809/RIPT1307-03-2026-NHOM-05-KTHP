@@ -62,7 +62,7 @@ export async function addThongBaoLopHanhChinh(payload: { idLop: number; newValue
  * @returns dùng cho get ds sv cho sv + giảng viên
  */
 export async function getThongTinChungLopTinChiById(idLop: number) {
-  if (localStorage.getItem('vaiTro') === 'giang_vien') {
+  if (localStorage.getItem('vaiTro') === 'nhan_vien') {
     return axios.get(`${ip3}/odoo-lop-tin-chi/${idLop}/giang-vien/sv`);
   }
   return axios.get(`${ip3}/odoo-lop-tin-chi/${idLop}/sinh-vien/gv-sv`);

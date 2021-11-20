@@ -20,15 +20,11 @@ export default function access(initialState: {
   const token = localStorage.getItem('token');
   return {
     admin: token && vaiTro && vaiTro === 'Admin',
-    giangVien: token && vaiTro && vaiTro === 'giang_vien',
+    nhanVien: token && vaiTro && vaiTro === 'nhan_vien',
     sinhVien: token && vaiTro && vaiTro === 'sinh_vien',
     quanTri: token && vaiTro && vaiTro === 'quan_tri',
     chuyenVien: token && vaiTro && vaiTro === 'chuyen_vien',
-    sinhVienVaGiangVien: token && vaiTro && (vaiTro === 'giang_vien' || vaiTro === 'sinh_vien'),
-    canBo: token && vaiTro && vaiTro === 'can_bo',
-    giangVienVaCanBo: token && vaiTro && (vaiTro === 'giang_vien' || vaiTro === 'can_bo'),
-    sinhVienVaGiangVienVaCanBo:
-      token && vaiTro && (vaiTro === 'giang_vien' || vaiTro === 'can_bo' || vaiTro === 'sinh_vien'),
+    sinhVienVaNhanVien: token && vaiTro && (vaiTro === 'nhan_vien' || vaiTro === 'sinh_vien'),
     routeFilter: (route: any) => {
       return handlePhanNhom(initialState, route?.maChucNang);
     },

@@ -23,18 +23,16 @@ const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
-  // const [visibleRole, setVisibleRole] = useState<boolean>(false);
-  // const [arrRole, setArrRole] = useState<{ vai_tro: string; token: string }[]>([]);
 
   const intl = useIntl();
 
-  const handleRole = async (role: { token: string; vai_tro: string }) => {
+  const handleRole = async (role: { accessToken: string; user: Login.Profile }) => {
     const defaultloginSuccessMessage = intl.formatMessage({
       id: 'pages.login.success',
       defaultMessage: 'success',
     });
-    localStorage.setItem('token', role?.token);
-    localStorage.setItem('vaiTro', role?.vai_tro);
+    localStorage.setItem('token', role?.accessToken);
+    localStorage.setItem('vaiTro', role?.user?.vai_tro);
     const info = await getInfo();
     const phanNhom = await getPhanNhom();
     setInitialState({
@@ -43,22 +41,15 @@ const Login: React.FC = () => {
       phanNhom,
     });
     message.success(defaultloginSuccessMessage);
-    history.push(data?.path?.[role?.vai_tro] ?? '/');
+    history.push(data?.path?.[role?.user?.vai_tro] ?? '/');
   };
 
   const handleSubmit = async (values: { login: string; password: string }) => {
     setSubmitting(true);
     try {
       const msg = await login({ ...values });
-      if (msg.status === 201 && msg?.data?.data?.accessTokens?.length > 0) {
-        // if (msg?.data?.data?.accessTokens?.length === 1) {
-        handleRole(msg?.data?.data?.accessTokens?.[0]);
-        localStorage.setItem('accessTokens', JSON.stringify(msg?.data?.data?.accessTokens ?? []));
-        // } else {
-        //   localStorage.setItem('accessTokens', JSON.stringify(msg?.data?.data?.accessTokens ?? []));
-        //   setVisibleRole(true);
-        //   setArrRole(msg?.data?.data?.accessTokens ?? []);
-        // }
+      if (msg.status === 201) {
+        handleRole(msg?.data?.data);
       }
     } catch (error) {
       const defaultloginFailureMessage = intl.formatMessage({
@@ -71,9 +62,6 @@ const Login: React.FC = () => {
   };
   return (
     <div className={styles.container}>
-      {/* <SelectRole /> */}
-      {/* <div className={styles.lang}>{SelectLang && <SelectLang />}</div> */}
-      {/* <div style={{ display: 'flex', flex: 1, alignItems: 'center' }}> */}
       <div className={styles.content}>
         <div className={styles.top}>
           <div className={styles.header}>
@@ -173,35 +161,9 @@ const Login: React.FC = () => {
               )}
             </ProForm>
           </div>
-          {/* <Modal
-            footer={
-              <Button
-                type="primary"
-                onClick={() => {
-                  setVisibleRole(false);
-                  localStorage.removeItem('token');
-                  localStorage.removeItem('vaiTro');
-                  localStorage.removeItem('accessTokens');
-                }}
-              >
-                Hủy
-              </Button>
-            }
-            width="400px"
-            onCancel={() => {
-              setVisibleRole(false);
-              localStorage.removeItem('token');
-              localStorage.removeItem('vaiTro');
-              localStorage.removeItem('accessTokens');
-            }}
-            visible={visibleRole}
-            title="Chọn vai trò"
-          >
-            <SelectRoles roles={arrRole} type="login" />
-          </Modal> */}
         </ConfigProvider>
       </div>
-      {/* </div> */}
+
       <Footer />
     </div>
   );

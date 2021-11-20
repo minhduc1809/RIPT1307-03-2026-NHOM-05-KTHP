@@ -15,12 +15,7 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import ViewThongBao from './ViewThongBao';
 
-const ThongBao = (props: {
-  id: number;
-  isCanBo?: boolean;
-  typeLop: string;
-  isGiangVien?: boolean;
-}) => {
+const ThongBao = (props: { id: number; isNhanVien?: boolean; typeLop: string }) => {
   const [visibleDrawer, setVisibleDrawer] = useState<boolean>(false);
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
@@ -38,18 +33,18 @@ const ThongBao = (props: {
             page,
             limit,
             idLop: props?.id,
-            role: props.isGiangVien ? 'giang-vien' : 'sinh-vien',
+            role: props.isNhanVien ? 'giang-vien' : 'sinh-vien',
           })
         : await getThongBaoLopHanhChinhById({
             idLop: props.id,
-            role: props.isCanBo ? 'can-bo' : 'sinh-vien',
+            role: props.isNhanVien ? 'can-bo' : 'sinh-vien',
             data: { page, limit },
           });
     setdataThongBao(res?.data?.data?.result);
   };
   useEffect(() => {
     getData();
-  }, [props?.id, props.isCanBo, state, page, limit]);
+  }, [props?.id, props.isNhanVien, state, page, limit]);
 
   const dsThongBao = dataThongBao?.map((value, index) => ({
     ...value,
@@ -113,20 +108,19 @@ const ThongBao = (props: {
   ];
   return (
     <>
-      {props.isCanBo ||
-        (props.isGiangVien && (
-          <Button
-            style={{ marginBottom: 8 }}
-            onClick={() => {
-              setEdit(false);
-              setVisibleDrawer(true);
-            }}
-            type="primary"
-          >
-            <PlusCircleFilled />
-            Thêm mới
-          </Button>
-        ))}
+      {props.isNhanVien && (
+        <Button
+          style={{ marginBottom: 8 }}
+          onClick={() => {
+            setEdit(false);
+            setVisibleDrawer(true);
+          }}
+          type="primary"
+        >
+          <PlusCircleFilled />
+          Thêm mới
+        </Button>
+      )}
       <ProTable<IResThongBaoLopTinChi.Result, API.ApiResponse>
         pagination={{
           showTotal: () => <div></div>,

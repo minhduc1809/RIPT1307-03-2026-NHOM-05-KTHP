@@ -27,7 +27,6 @@ export async function getInitialState(): Promise<{
   partner_id?: number;
   fetchUserInfo?: () => Promise<{ data: { data: Login.Profile & Login.ProfileAdmin } } | undefined>;
   authorizedRoles?: any[];
-  isModalSelectRoleVisible?: boolean;
   phanNhom?: {
     userId: string;
     danhSachPhanNhom: {
@@ -70,7 +69,6 @@ export async function getInitialState(): Promise<{
         primaryColor: 'daybreak',
       },
       authorizedRoles: [],
-      isModalSelectRoleVisible: false,
       phanNhom,
     };
   }

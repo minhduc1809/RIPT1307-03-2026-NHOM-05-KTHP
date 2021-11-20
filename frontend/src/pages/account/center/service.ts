@@ -4,7 +4,7 @@ import request from 'umi-request';
 export async function queryCurrent() {
   const role = localStorage.getItem('vaiTro');
   let path = 'sinh-vien';
-  if (role === 'giang_vien') path = 'giang-vien';
+  if (role === 'nhan_vien') path = 'giang-vien';
   return request(`${ip3}/odoo-user/${path}/me`);
 }
 

@@ -34,7 +34,7 @@ const KhaiBaoSucKhoe = () => {
 
   let titleColumn = 'Mã sinh viên/giảng viên';
   if (vaiTro === 'sinh_vien') titleColumn = 'Mã sinh viên';
-  else if (vaiTro === 'giang_vien') titleColumn = 'Mã giảng viên';
+  else if (vaiTro === 'nhan_vien') titleColumn = 'Mã giảng viên';
 
   const columns: IColumn<BieuMau.Record>[] = [
     {

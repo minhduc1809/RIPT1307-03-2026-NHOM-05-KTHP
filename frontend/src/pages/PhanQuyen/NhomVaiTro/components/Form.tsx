@@ -32,10 +32,10 @@ const FormNhomVaiTro = () => {
           rules={[...rules.required]}
           name="vaiTro"
           label="Vai trò hệ thống"
-          initialValue={'can_bo'}
+          initialValue={'nhan_vien'}
         >
           <Select disabled placeholder="Chọn đối tượng">
-            {['can_bo'].map((item) => (
+            {['nhan_vien'].map((item) => (
               <Select.Option key={item} value={item}>
                 {Role?.[item] ?? ''}
               </Select.Option>

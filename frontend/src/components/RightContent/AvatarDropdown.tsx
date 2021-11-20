@@ -1,10 +1,8 @@
 import logo from '@/assets/logo.png';
-import SelectRoles from '@/pages/user/Login/SelectRole';
-import { Role } from '@/utils/constants';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Menu, Modal, Spin } from 'antd';
+import { Avatar, Menu, Spin } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { history, useModel } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
@@ -24,7 +22,7 @@ const loginOut = async () => {
 };
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
-  const [visibleRole, setVisibleRole] = useState<boolean>(false);
+
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
       const { key } = event;
@@ -34,10 +32,6 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         localStorage.removeItem('token');
         localStorage.removeItem('accessTokens');
         loginOut();
-        return;
-      }
-      if (key === 'settings' && initialState) {
-        setVisibleRole(true);
         return;
       }
       history.push(`/account/${key}`);
@@ -70,7 +64,6 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     ? JSON.parse(localStorage?.getItem('accessTokens') ?? '')
     : [];
 
-  const vaiTro = localStorage.getItem('vaiTro');
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       {menu && localStorage.getItem('vaiTro') !== 'Admin' && (
@@ -116,37 +109,10 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
             alt="avatar"
           />
           <span className={`${styles.name} anticon`}>
-            {currentUser?.name || currentUser?.profile?.lastname || ''}{' '}
-            {accessTokens?.length > 1 ? `(${Role[vaiTro || '']})` : ''}
+            {currentUser?.name || currentUser?.profile?.lastname || ''}
           </span>
         </span>
       </HeaderDropdown>
-      <Modal
-        footer={
-          <Button
-            type="primary"
-            onClick={() => {
-              setVisibleRole(false);
-            }}
-          >
-            Hủy
-          </Button>
-        }
-        width="400px"
-        onCancel={() => {
-          setVisibleRole(false);
-        }}
-        visible={visibleRole}
-        title="Chọn vai trò"
-      >
-        <SelectRoles
-          type="changeRole"
-          roles={accessTokens}
-          onClose={() => {
-            setVisibleRole(false);
-          }}
-        />
-      </Modal>
     </>
   );
 };

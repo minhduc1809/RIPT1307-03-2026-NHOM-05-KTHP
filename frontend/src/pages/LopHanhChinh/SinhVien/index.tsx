@@ -6,13 +6,13 @@ import { useEffect, useState } from 'react';
 import ThongTinChungLopHanhChinh from '../components/ThongTinChung';
 
 const LopHanhChinh = () => {
-  const isGiangVien = localStorage.getItem('vaiTro') === 'giang_vien';
+  const isNhanVien = localStorage.getItem('vaiTro') === 'nhan_vien';
   const [dataLopHanhChinh, setdataLopHanhChinh] = useState<APILopHanhChinh.Data>(
     {} as APILopHanhChinh.Data,
   );
   useEffect(() => {
     const getData = async () => {
-      const res = await getDataLopHanhChinh(isGiangVien ? 'can-bo' : 'sinh-vien');
+      const res = await getDataLopHanhChinh(isNhanVien ? 'can-bo' : 'sinh-vien');
       setdataLopHanhChinh(res?.data?.data ?? {});
     };
     getData();
@@ -31,7 +31,7 @@ const LopHanhChinh = () => {
           />
         </Tabs.TabPane>
         <Tabs.TabPane tab="Thông báo" key={1}>
-          <ThongBao isGiangVien={isGiangVien} id={dataLopHanhChinh?.id} typeLop="LopHanhChinh" />
+          <ThongBao isNhanVien={isNhanVien} id={dataLopHanhChinh?.id} typeLop="LopHanhChinh" />
         </Tabs.TabPane>
       </Tabs>
     </Card>
