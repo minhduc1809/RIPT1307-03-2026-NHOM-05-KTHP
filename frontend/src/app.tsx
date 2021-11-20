@@ -126,13 +126,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     waterMarkProps: {
       content: initialState?.currentUser?.name,
     },
-    // menuItemRender: (item, dom) => {
-    //   return (
-    //     // <Tooltip title={item.name}>
-    //     <div>{dom}</div>
-    //     // </Tooltip>
-    //   );
-    // },
+
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
@@ -148,6 +142,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       return (
         <Tooltip placement="right" title={item.name}>
           <div
+            style={{ flex: 'auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
             onClick={() => {
               history.push(item?.path ?? '/');
             }}
@@ -157,6 +152,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         </Tooltip>
       );
     },
+
     // childrenRender: (dom) => {
     //   return (
     //     <>
