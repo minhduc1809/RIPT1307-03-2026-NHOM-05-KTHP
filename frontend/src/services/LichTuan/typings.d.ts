@@ -1,5 +1,6 @@
 declare module LichTuan {
   export interface Record {
+    trangThai?: string;
     _id?: string;
     noiDungCongViec?: string;
     thoiGianBatDau?: string;
@@ -11,6 +12,6 @@ declare module LichTuan {
     donViPhoiHop?: string;
     luuY?: string;
     ghiChu?: string;
-    thoiGian?: any;
+    thoiGian?: string;
   }
 }

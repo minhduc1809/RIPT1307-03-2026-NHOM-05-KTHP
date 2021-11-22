@@ -1,4 +1,11 @@
 /* eslint-disable no-underscore-dangle */
+import {
+  CheckCircleOutlined,
+  CheckOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  StopOutlined,
+} from '@ant-design/icons';
 import { Button, Card, Modal, Popconfirm, Typography } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -28,18 +35,32 @@ const tmp: any = Calendar;
 
 const DnDCalendar = withDragAndDrop(tmp);
 
+const colorLichTuan = {
+  'Chờ duyệt': '#ff4d4f',
+  'Đã duyệt': '#1890ff',
+  'Không duyệt': '#cacaca',
+};
+
 const SuKien = (props: any) => {
   const {
     getModel,
     getBanChinhThucModel,
     danhSach,
     danhSachChinhThuc,
-    edit,
     setEdit,
     delModel,
     phatHanhLichTuanModel,
     updModel,
+    setRecord,
+    record,
+    loading,
+    exportLichTuanModel,
   } = useModel('lichtuan');
+
+  const [week, setWeek] = useState<number>(moment(new Date()).week());
+  const [year, setYear] = useState<number>(new Date().getFullYear());
+  const [view, setView] = useState<string>('week');
+
   useEffect(() => {
     if (props.loaiLichTuan === 'nhap') {
       getModel();
@@ -51,37 +72,43 @@ const SuKien = (props: any) => {
 
   const [visibleModal, setVisibleModal] = useState(false);
   const [showModalLichTuan, setShowModalLichTuan] = useState(false);
-  const [recordLichTuan, setRecordLichTuan] = useState<LichTuan.Record>({} as any);
 
-  const onCacelModel = () => {
+  const onCancelModel = () => {
     setVisibleModal(false);
-    setRecordLichTuan({} as any);
-    setShowModalLichTuan(false);
   };
 
   let lichTuanFinal: any[] = [];
   if (props.loaiLichTuan === 'nhap') {
     lichTuanFinal = danhSach;
   } else if (props.loaiLichTuan === 'chinhthuc') {
-    lichTuanFinal = danhSachChinhThuc;
+    lichTuanFinal = danhSachChinhThuc?.map((item) => ({ ...item, chuaPhatHanh: false }));
   }
   const dataLichTuan = lichTuanFinal?.map((event) => ({
     ...event,
     start: moment(event?.thoiGianBatDau).toDate(),
     end: moment(event?.thoiGianKetThuc).toDate(),
     loai: 'lichtuan',
-    title: `Lịch tuần: ${event?.noiDungCongViec ?? ''}`,
+    title: (
+      <div>
+        {event?.chuaPhatHanh === false && <CheckCircleOutlined style={{ marginRight: 4 }} />}
+        {`Lịch tuần: ${event?.noiDungCongViec ?? ''}`}
+      </div>
+    ),
     desc: event?.diaDiem,
   }));
 
-  const onCancelModelXemLichTuan = () => {
-    setShowModalLichTuan(false);
-    setRecordLichTuan({} as any);
+  const eventPropGetter = (event: any) => {
+    return {
+      style: {
+        backgroundColor: colorLichTuan?.[event?.trangThai],
+        border: `1px solid ${colorLichTuan?.[event?.trangThai]}`,
+      },
+    };
   };
 
   const themMoiSuKien = () => {
     setVisibleModal(true);
-    setRecordLichTuan({} as any);
+    setRecord({} as LichTuan.Record);
     setEdit(false);
   };
 
@@ -91,10 +118,22 @@ const SuKien = (props: any) => {
   };
 
   const xoaLichTuan = () => {
-    delModel(recordLichTuan._id);
+    delModel(record?._id);
     setShowModalLichTuan(false);
     getBanChinhThucModel();
     getModel();
+  };
+
+  const exportLichTuan = () => {
+    exportLichTuanModel(week, year);
+  };
+
+  const handleDuyet = (trangThai: string) => {
+    updModel({
+      trangThai,
+      _id: record?._id,
+    });
+    setShowModalLichTuan(false);
   };
 
   const phatHanhLichTuan = (type: boolean) => {
@@ -102,8 +141,8 @@ const SuKien = (props: any) => {
     if (type) {
       weekOfYear += 1;
     }
-    const year = moment().year();
-    phatHanhLichTuanModel(weekOfYear, year);
+    const currentYear = moment().year();
+    phatHanhLichTuanModel(weekOfYear, currentYear);
   };
 
   const handleSelect = () => {
@@ -137,7 +176,15 @@ const SuKien = (props: any) => {
         bordered={false}
         title={
           props.loaiLichTuan === 'chinhthuc' ? (
-            false
+            <Button
+              type="primary"
+              disabled={view !== 'week'}
+              onClick={exportLichTuan}
+              loading={loading}
+              style={{ float: 'left', fontWeight: 'bold' }}
+            >
+              Xuất lịch tuần
+            </Button>
           ) : (
             <div style={{ fontWeight: 'bold' }}>
               <Button
@@ -148,7 +195,7 @@ const SuKien = (props: any) => {
                 type="primary"
                 onClick={() => themMoiSuKien()}
               >
-                Thêm mới sự kiện
+                Thêm mới cuộc họp
               </Button>
               <Popconfirm
                 onConfirm={() => phatHanhLichTuan(true)}
@@ -171,6 +218,19 @@ const SuKien = (props: any) => {
         }
       >
         <DnDCalendar
+          onView={(viewType) => {
+            setView(viewType);
+          }}
+          onNavigate={
+            props.loaiLichTuan === 'chinhthuc'
+              ? (newDate) => {
+                  const weekCurrent: number = moment(newDate).week();
+                  const yearCurrent: number = moment(newDate).year();
+                  setWeek(weekCurrent);
+                  setYear(yearCurrent);
+                }
+              : () => {}
+          }
           localizer={localizer}
           selectable
           events={dataLichTuan}
@@ -181,7 +241,7 @@ const SuKien = (props: any) => {
           onEventResize={moveEvent}
           onSelectEvent={(event: any) => {
             setShowModalLichTuan(true);
-            setRecordLichTuan(event);
+            setRecord(event);
           }}
           onSelectSlot={() => handleSelect()}
           messages={messages}
@@ -190,28 +250,59 @@ const SuKien = (props: any) => {
           min={moment('0600', 'HHmm').toDate()}
           max={moment('2300', 'HHmm').toDate()}
           popup
+          eventPropGetter={eventPropGetter}
         />
       </Card>
 
-      <Modal visible={visibleModal} footer={null} onCancel={() => onCacelModel()} destroyOnClose>
-        <FormLichTuan onCancel={onCacelModel} record={recordLichTuan} edit={edit} />
+      <Modal
+        bodyStyle={{ padding: 0 }}
+        visible={visibleModal}
+        footer={null}
+        onCancel={() => onCancelModel()}
+        destroyOnClose
+      >
+        <FormLichTuan onCancel={onCancelModel} />
       </Modal>
 
       <Modal
         footer={
-          props.loaiLichTuan === 'chinhthuc'
-            ? false
-            : [
-                <Button type="primary" onClick={() => chinhSuaLichTuan()}>
-                  Sửa
-                </Button>,
-                <Popconfirm title="Bạn có chắc chắn muốn xóa?" onConfirm={() => xoaLichTuan()}>
-                  <Button type="primary">Xóa</Button>
-                </Popconfirm>,
-                <Button type="default" onClick={() => onCancelModelXemLichTuan()}>
-                  Đóng
-                </Button>,
-              ]
+          props.loaiLichTuan === 'chinhthuc' ? (
+            false
+          ) : (
+            <>
+              {['Chờ duyệt', 'Không duyệt'].includes(record?.trangThai ?? '') && (
+                <Button
+                  onClick={() => {
+                    handleDuyet('Đã duyệt');
+                  }}
+                  style={{ backgroundColor: '#1890ff', border: '1px solid #1890ff', color: '#fff' }}
+                  icon={<CheckOutlined />}
+                >
+                  Duyệt
+                </Button>
+              )}
+              {['Đã duyệt', 'Chờ duyệt'].includes(record?.trangThai ?? '') && (
+                <Button
+                  onClick={() => {
+                    handleDuyet('Không duyệt');
+                  }}
+                  style={{ backgroundColor: '#CC0D00', border: '1px solid #CC0D00', color: '#fff' }}
+                  icon={<StopOutlined />}
+                >
+                  Không duyệt
+                </Button>
+              )}
+              <Button icon={<EditOutlined />} onClick={() => chinhSuaLichTuan()}>
+                Sửa
+              </Button>
+
+              <Popconfirm title="Bạn có chắc chắn muốn xóa?" onConfirm={() => xoaLichTuan()}>
+                <Button icon={<DeleteOutlined />} type="primary">
+                  Xóa
+                </Button>
+              </Popconfirm>
+            </>
+          )
         }
         destroyOnClose
         onCancel={() => setShowModalLichTuan(false)}
@@ -220,29 +311,27 @@ const SuKien = (props: any) => {
       >
         <div>
           <Typography.Paragraph>
-            Thời gian bắt đầu: {moment(recordLichTuan?.thoiGianBatDau).format('HH:mm DD/MM/YYYY')}
+            Thời gian bắt đầu: {moment(record?.thoiGianBatDau).format('HH:mm DD/MM/YYYY')}
           </Typography.Paragraph>
           <Typography.Paragraph>
-            Thời gian Kết thúc: {moment(recordLichTuan?.thoiGianKetThuc).format('HH:mm DD/MM/YYYY')}
+            Thời gian Kết thúc: {moment(record?.thoiGianKetThuc).format('HH:mm DD/MM/YYYY')}
           </Typography.Paragraph>
-          <Typography.Paragraph>Địa điểm: {recordLichTuan?.diaDiem ?? ''}</Typography.Paragraph>
+          <Typography.Paragraph>Địa điểm: {record?.diaDiem ?? ''}</Typography.Paragraph>
 
           <Typography.Paragraph>
-            Nội dung công việc: {recordLichTuan?.noiDungCongViec ?? ''}
+            Nội dung công việc: {record?.noiDungCongViec ?? ''}
           </Typography.Paragraph>
-          <Typography.Paragraph>Chủ trì: {recordLichTuan?.chuTri ?? ''}</Typography.Paragraph>
+          <Typography.Paragraph>Chủ trì: {record?.chuTri ?? ''}</Typography.Paragraph>
           <Typography.Paragraph>
-            Thành phần tham dự: {recordLichTuan?.thanhPhanThamDu ?? ''}
-          </Typography.Paragraph>
-          <Typography.Paragraph>
-            Đơn vị chuẩn bị: {recordLichTuan?.donViChuanBi ?? 'Không có'}
+            Thành phần tham dự: {record?.thanhPhanThamDu ?? ''}
           </Typography.Paragraph>
           <Typography.Paragraph>
-            Đơn vị phối hợp: {recordLichTuan?.donViPhoiHop ?? 'Không có'}
+            Đơn vị chuẩn bị: {record?.donViChuanBi ?? 'Không có'}
           </Typography.Paragraph>
           <Typography.Paragraph>
-            Ghi chú: {recordLichTuan?.ghiChu ?? 'Không có'}
+            Đơn vị phối hợp: {record?.donViPhoiHop ?? 'Không có'}
           </Typography.Paragraph>
+          <Typography.Paragraph>Ghi chú: {record?.ghiChu ?? 'Không có'}</Typography.Paragraph>
         </div>
       </Modal>
     </div>

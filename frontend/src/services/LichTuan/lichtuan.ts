@@ -30,3 +30,7 @@ export async function upd(payload: LichTuan.Record) {
 export async function phatHanhLichTuan(payload: { tuan: number; nam: number }) {
   return axios.post(`${ip3}/lich-tuan/phat-hanh-lich-tuan/${payload.tuan}/${payload.nam}`);
 }
+
+export async function exportLichTuan(payload: { tuan: number; nam: number }) {
+  return axios.get(`${ip3}/lich-tuan/export/tuan/${payload.tuan}/nam/${payload.nam}`);
+}

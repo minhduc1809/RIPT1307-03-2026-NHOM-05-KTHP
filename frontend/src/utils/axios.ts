@@ -35,6 +35,7 @@ axios.interceptors.response.use(
           message: 'Bad request',
           description:
             data.error[error?.response?.data?.detail?.errorCode] ||
+            error?.response?.data?.errorDescription ||
             error?.data?.detail?.message ||
             error?.message,
         });

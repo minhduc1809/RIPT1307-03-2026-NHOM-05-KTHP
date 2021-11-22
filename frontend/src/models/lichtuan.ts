@@ -6,6 +6,7 @@ import {
   add,
   upd,
   del,
+  exportLichTuan,
 } from '@/services/LichTuan/lichtuan';
 import { message } from 'antd';
 import moment from 'moment';
@@ -33,7 +34,13 @@ export default () => {
     setDanhSachChinhThuc(response?.data?.data ?? []);
     setLoading(false);
   };
-
+  const getModel = async () => {
+    const response = await get({
+      page: 1,
+      limit: 1000,
+    });
+    setDanhSach(response?.data?.data?.result ?? []);
+  };
   const phatHanhLichTuanModel = async (tuan: number, nam: number) => {
     setLoading(true);
     try {
@@ -42,8 +49,8 @@ export default () => {
         nam,
       });
       message.success('Phát hành thành công');
-
       getBanChinhThucModel();
+      getModel();
       setLoading(false);
     } catch (error: any) {
       const { response } = error;
@@ -52,17 +59,9 @@ export default () => {
     }
   };
 
-  const getModel = async () => {
-    const response = await get({
-      page: 1,
-      limit: 1000,
-    });
-    setDanhSach(response?.data?.data?.result ?? []);
-  };
-
   const addModel = async (payload: LichTuan.Record) => {
     setLoading(true);
-    await add({ ...payload });
+    await add(payload);
     getModel();
     message.success('Thêm mới thành công');
     setLoading(false);
@@ -70,7 +69,8 @@ export default () => {
 
   const updModel = async (payload: LichTuan.Record) => {
     setLoading(true);
-    await upd({ ...payload });
+    const response = await upd(payload);
+    setRecord(response?.data?.data);
     getModel();
     message.success('Cập nhật thành công');
     setLoading(false);
@@ -81,9 +81,18 @@ export default () => {
     await del({ _id });
     message.success('Xóa thành công');
     setLoading(false);
+    getModel();
+  };
+
+  const exportLichTuanModel = async (tuan: number, nam: number) => {
+    setLoading(true);
+    const response = await exportLichTuan({ tuan, nam });
+    window.open(response?.data?.data?.url, '_blank');
+    setLoading(false);
   };
 
   return {
+    exportLichTuanModel,
     danhSachChinhThuc,
     getModel,
     getBanChinhThucModel,

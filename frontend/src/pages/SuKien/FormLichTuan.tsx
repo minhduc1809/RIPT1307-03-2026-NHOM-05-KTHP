@@ -8,29 +8,22 @@ import { useModel } from 'umi';
 
 const { RangePicker } = DatePicker;
 
-const FormLichTuan = (props: { onCancel: any; record: LichTuan.Record; edit: boolean }) => {
-  const { addModel, updModel } = useModel('lichtuan');
+const FormLichTuan = (props: { onCancel: any }) => {
+  const { addModel, updModel, edit, record } = useModel('lichtuan');
 
   const [form] = Form.useForm();
   return (
-    <Card title={props.edit ? 'Chỉnh sửa' : 'Thêm mới'}>
+    <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values: LichTuan.Record) => {
-          if (!props.edit) {
-            values.thoiGianBatDau = values?.thoiGian[0];
-            values.thoiGianKetThuc = values?.thoiGian[1];
-
-            delete values.thoiGian;
-
+          values.thoiGianBatDau = values?.thoiGian?.[0];
+          values.thoiGianKetThuc = values?.thoiGian?.[1];
+          delete values.thoiGian;
+          if (!edit) {
             await addModel({ ...values });
           } else {
-            values.thoiGianBatDau = values?.thoiGian[0];
-            values.thoiGianKetThuc = values?.thoiGian[1];
-
-            delete values.thoiGian;
-            values._id = props.record._id;
-
+            values._id = record?._id;
             await updModel({ ...values });
           }
           props?.onCancel();
@@ -39,79 +32,79 @@ const FormLichTuan = (props: { onCancel: any; record: LichTuan.Record; edit: boo
       >
         <Form.Item
           rules={[...rules.required]}
-          initialValue={props?.record?.noiDungCongViec}
+          initialValue={record?.noiDungCongViec}
           name="noiDungCongViec"
           label="Nội dung công việc"
           style={{ marginBottom: 0 }}
         >
-          <Input.TextArea rows={3} />
+          <Input.TextArea placeholder="Nội dung công việc" rows={3} />
         </Form.Item>
         <Form.Item
           initialValue={[
-            props?.record?.thoiGianBatDau ? moment(props?.record?.thoiGianBatDau) : undefined,
-            props?.record?.thoiGianKetThuc ? moment(props?.record?.thoiGianKetThuc) : undefined,
+            record?.thoiGianBatDau ? moment(record?.thoiGianBatDau) : undefined,
+            record?.thoiGianKetThuc ? moment(record?.thoiGianKetThuc) : undefined,
           ]}
           rules={[...rules.required]}
           name="thoiGian"
           label="Thời gian bắt đầu - kết thúc"
           style={{ marginBottom: 0 }}
         >
-          <RangePicker showTime format="HH:mm DD/MM/YYYY" />
+          <RangePicker style={{ width: '100%' }} showTime format="HH:mm DD/MM/YYYY" />
         </Form.Item>
         <Form.Item
-          initialValue={props?.record?.diaDiem}
+          initialValue={record?.diaDiem}
           rules={[...rules.required]}
           name="diaDiem"
           label="Địa điểm"
           style={{ marginBottom: 0 }}
         >
-          <Input />
+          <Input placeholder="Địa điểm" />
         </Form.Item>
         <Form.Item
-          initialValue={props?.record?.chuTri}
+          initialValue={record?.chuTri}
           rules={[...rules.required]}
           name="chuTri"
           label="Chủ trì"
           style={{ marginBottom: 0 }}
         >
-          <Input />
+          <Input placeholder="Chủ trì" />
         </Form.Item>
         <Form.Item
-          initialValue={props?.record?.thanhPhanThamDu}
+          initialValue={record?.thanhPhanThamDu}
           rules={[...rules.required]}
           name="thanhPhanThamDu"
           label="Thành phần tham dự"
           style={{ marginBottom: 0 }}
         >
-          <Input.TextArea rows={3} />
+          <Input.TextArea placeholder="Thành phần tham dự" rows={3} />
         </Form.Item>
         <Form.Item
           name="donViChuanBi"
           label="Đơn vị chuẩn bị"
           style={{ marginBottom: 0 }}
-          initialValue={props?.record?.donViChuanBi}
+          initialValue={record?.donViChuanBi}
         >
-          <Input />
+          <Input placeholder="Đơn vị chuẩn bị" />
         </Form.Item>
         <Form.Item
           name="donViPhoiHop"
           label="Đơn vị phối hợp"
           style={{ marginBottom: 0 }}
-          initialValue={props?.record?.donViPhoiHop}
+          initialValue={record?.donViPhoiHop}
         >
-          <Input />
+          <Input placeholder="Đơn vị phối hợp" />
         </Form.Item>
         <Form.Item
           rules={[...rules.required]}
           name="ghiChu"
           label="Ghi chú"
-          initialValue={props?.record?.ghiChu}
+          initialValue={record?.ghiChu}
         >
-          <Input.TextArea rows={3} />
+          <Input.TextArea placeholder="Ghi chú (nếu có)" rows={3} />
         </Form.Item>
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
           <Button style={{ marginRight: 8 }} htmlType="submit" type="primary">
-            {props.edit ? 'Chỉnh sửa' : 'Thêm mới'}
+            {edit ? 'Lưu' : 'Thêm mới'}
           </Button>
           <Button
             onClick={() => {
