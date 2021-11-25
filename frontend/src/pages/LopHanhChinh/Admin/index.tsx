@@ -33,7 +33,7 @@ const LopHanhChinhAdmin = () => {
     },
     {
       title: 'Giảng viên',
-      dataIndex: 'giang_vien_id',
+      dataIndex: 'can_bo_id',
       width: 200,
       align: 'center',
       render: (val) => <div>{val?.[1] ?? ''}</div>,

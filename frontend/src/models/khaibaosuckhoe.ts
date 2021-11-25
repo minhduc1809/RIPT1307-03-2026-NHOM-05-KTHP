@@ -13,7 +13,7 @@ export default () => {
   const [danhSach, setDanhSach] = useState<KhaiBaoSucKhoe.Record[]>([]);
   const [filterInfo, setFilterInfo] = useState<any>({});
   const [condition, setCondition] = useState<any>({});
-  const [bieuMau, setBieuMau] = useState<BieuMau.Record>({} as BieuMau.Record);
+  const [bieuMau, setBieuMau] = useState<BieuMau.Record>();
   const [record, setRecord] = useState<KhaiBaoSucKhoe.Record>();
   const [loading, setLoading] = useState<boolean>(true);
   const [edit, setEdit] = useState<boolean>(false);
@@ -25,7 +25,7 @@ export default () => {
   const getBieuMauKhaiBaoYTeModel = async () => {
     setLoading(true);
     const response = await getBieuMauKhaiBaoYTe();
-    setBieuMau(response?.data?.data ?? {});
+    setBieuMau(response?.data?.data);
     setLoading(false);
   };
 
@@ -42,15 +42,17 @@ export default () => {
   };
 
   const getLichSuKhaiBaoModel = async (userId: string) => {
+    if (!bieuMau) return;
     setLoading(true);
-    await getLichSuKhaiBaoByUserId({ idBieuMau: bieuMau._id, userId });
+    await getLichSuKhaiBaoByUserId({ idBieuMau: bieuMau?._id, userId });
     setLoading(false);
   };
 
   const khaiBaoYTeModel = async (payload: {
-    idBieuMau: string;
+    idBieuMau?: string;
     danhSachTraLoi: KhaiBaoSucKhoe.TraLoiRecord[];
   }) => {
+    if (!payload.idBieuMau) return;
     setLoading(true);
     await khaiBaoYTe(payload);
     message.success('Khai báo thành công');

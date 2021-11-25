@@ -33,7 +33,7 @@ export async function getBieuMauKhaiBaoYTe() {
 }
 
 export async function khaiBaoYTe(payload: {
-  idBieuMau: string;
+  idBieuMau?: string;
   danhSachTraLoi: KhaiBaoSucKhoe.TraLoiRecord[];
 }) {
   return axios.post(`${ip3}/bieu-mau/khai-bao-y-te/me`, payload);

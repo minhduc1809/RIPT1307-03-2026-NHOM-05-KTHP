@@ -68,7 +68,7 @@ export declare module BuoiHoc {
     ngay_bd: string;
     tiet_bd: number;
     so_tiet: number;
-    giang_vien_id: (number | string)[];
+    can_bo_id: (number | string)[];
     giang_vien_da_diem_danh: boolean;
     dien_thoai: string;
     tai_khoan: string;

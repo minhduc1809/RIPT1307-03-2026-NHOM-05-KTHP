@@ -82,13 +82,15 @@ export default (props: { type?: string }) => {
 
   if (_.isEmpty(dsTinTuc)) {
     return (
-      <Empty
-        image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
-        imageStyle={{
-          height: 60,
-        }}
-        description={<span>Không có tin nào</span>}
-      ></Empty>
+      <Card title="Tin tức">
+        <Empty
+          image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+          imageStyle={{
+            height: 60,
+          }}
+          description={<span>Không có tin nào</span>}
+        ></Empty>
+      </Card>
     );
   }
 

@@ -8,10 +8,14 @@ export default () => {
   const [loading, setLoading] = useState(true);
 
   const getTienTrinhHocTapModel = async () => {
-    setLoading(true);
-    const response = await getTienTrinhHocTap();
-    setTienTrinhHocTap(response?.data?.data ?? []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const response = await getTienTrinhHocTap();
+      setTienTrinhHocTap(response?.data?.data ?? []);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   return { tienTrinhHocTap, loading, setLoading, setTienTrinhHocTap, getTienTrinhHocTapModel };

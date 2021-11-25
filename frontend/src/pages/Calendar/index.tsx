@@ -49,49 +49,48 @@ export default (props: { type?: string }) => {
       okText: 'Đóng',
       content: (
         <div>
-          <b>
-            <p>Tên sự kiện: {record?.tenSuKien ?? ''}</p>
-            <p>Loại sự kiện: {`${loaiSuKien || 'Chưa cập nhật'}`}</p>
-            {!['Cá nhân'].includes(record?.loaiSuKien) && (
-              <>
-                <p>Tên môn: {record?.info?.ten_hoc_phan ?? ''}</p>
-                <p>
-                  Link phòng học zoom:{' '}
-                  {record?.info?.link_zoom ? (
-                    <a target="_blank" href={record?.info?.link_zoom}>
-                      Link
-                    </a>
-                  ) : (
-                    ''
-                  )}
-                </p>
-                {vaiTro === 'sinh_vien' && (
-                  <>
-                    <p>ID phòng học Zoom: {record?.info?.id_zoom ?? ''}</p>
-                    <p>Mật khẩu phòng học Zoom: {record?.info?.mat_khau_1}</p>
-                  </>
+          <p>Tên sự kiện: {record?.tenSuKien ?? ''}</p>
+          <p>Loại sự kiện: {`${loaiSuKien || 'Chưa cập nhật'}`}</p>
+          {!['Cá nhân'].includes(record?.loaiSuKien) && (
+            <>
+              <p>Tên môn: {record?.info?.ten_hoc_phan ?? ''}</p>
+              <p>
+                Link phòng học zoom:{' '}
+                {record?.info?.link_zoom ? (
+                  <a target="_blank" href={record?.info?.link_zoom}>
+                    Link
+                  </a>
+                ) : (
+                  ''
                 )}
-                {vaiTro === 'nhan_vien' && (
-                  <>
-                    <p>Tên đăng nhập Zoom: {record?.info?.tai_khoan ?? ''}</p>
-                    <p>Mật khẩu Zoom: {record?.info?.mat_khau}</p>
-                  </>
-                )}
-              </>
-            )}
-            <p>
-              Thời gian bắt đầu:{' '}
-              {record?.thoiGianBatDau
-                ? moment(record?.thoiGianBatDau).format('HH:mm DD/MM/YYYY')
-                : 'Chưa cập nhật'}
-            </p>
-            <p>
-              Thời gian kết thúc:{' '}
-              {record?.thoiGianKetThuc
-                ? moment(record?.thoiGianKetThuc).format('HH:mm DD/MM/YYYY')
-                : 'Chưa cập nhật'}
-            </p>
-          </b>
+              </p>
+              {vaiTro === 'sinh_vien' && (
+                <>
+                  <p>ID phòng học Zoom: {record?.info?.id_zoom ?? ''}</p>
+                  <p>Mật khẩu phòng học Zoom: {record?.info?.mat_khau_1}</p>
+                </>
+              )}
+              {vaiTro === 'nhan_vien' && (
+                <>
+                  <p>Tên đăng nhập Zoom: {record?.info?.tai_khoan ?? ''}</p>
+                  <p>Mật khẩu Zoom: {record?.info?.mat_khau}</p>
+                </>
+              )}
+            </>
+          )}
+          <p>
+            Thời gian bắt đầu:{' '}
+            {record?.thoiGianBatDau
+              ? moment(record?.thoiGianBatDau).format('HH:mm DD/MM/YYYY')
+              : 'Chưa cập nhật'}
+          </p>
+          <p>
+            Thời gian kết thúc:{' '}
+            {record?.thoiGianKetThuc
+              ? moment(record?.thoiGianKetThuc).format('HH:mm DD/MM/YYYY')
+              : 'Chưa cập nhật'}
+          </p>
+
           {record?.loaiSuKien === 'Lịch học' && (
             <a href={`/loptinchi/${record?.info?.lop_tin_chi_id?.[0]}`}>Chi tiết lớp học</a>
           )}

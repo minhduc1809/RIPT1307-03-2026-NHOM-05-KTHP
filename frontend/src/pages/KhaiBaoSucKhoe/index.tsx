@@ -105,7 +105,7 @@ const KhaiBaoSucKhoe = () => {
       columns={columns}
       getData={vaiTro === 'Admin' ? getKhaiBaoYTeAdminModel : getLichSuKhaiBaoUserModel}
       loading={loading}
-      dependencies={[bieuMau._id, page, limit, condition]}
+      dependencies={[bieuMau?._id, page, limit, condition]}
       modelName="khaibaosuckhoe"
       title="Khai báo sức khỏe"
       formType="Drawer"

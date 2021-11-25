@@ -80,10 +80,14 @@ export default () => {
   };
 
   const getDanhSachHocPhanDangKyModel = async () => {
-    // setLoading(true);
-    const response = await getDanhSachHocPhanDangKy();
-    setRecordHocPhan(response?.data?.data);
-    // setLoading(false);
+    try {
+      setLoading(true);
+      const response = await getDanhSachHocPhanDangKy();
+      setRecordHocPhan(response?.data?.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const postDanhSachHocPhanDangKyModel = async (danhSachHocPhan: { idHocPhan: number }[]) => {

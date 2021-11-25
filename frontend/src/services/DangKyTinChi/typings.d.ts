@@ -91,7 +91,7 @@ declare module DangKyTinChi {
       ma_sinh_vien: number;
       ten_lop_hanh_chinh: string | boolean;
       so_dien_thoai: string | boolean;
-      giang_vien_id: string | boolean;
+      can_bo_id: string | boolean;
       display_name: string;
       create_uid: (string | number)[];
       create_date: string;

@@ -11,7 +11,7 @@ declare module SuKien {
       ten_hoc_phan: string;
       link_zoom: string;
       dien_thoai: string;
-      giang_vien_id: [number, string];
+      can_bo_id: [number, string];
       id: number;
       id_zoom: string;
       lop_tin_chi_id: [number, string];

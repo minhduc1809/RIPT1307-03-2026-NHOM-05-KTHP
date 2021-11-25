@@ -83,15 +83,15 @@ const FormTraLoiKhaoSat = () => {
               danhSachTraLoi.push(traLoi);
             });
           });
-          khaiBaoYTeModel({ idBieuMau: bieuMau._id, danhSachTraLoi });
+          khaiBaoYTeModel({ idBieuMau: bieuMau?._id, danhSachTraLoi });
         }}
         labelCol={{ span: 24 }}
         form={form}
       >
-        <h3>{bieuMau.tieuDe}</h3>
-        <p>{bieuMau.moTa}</p>
+        <h3>{bieuMau?.tieuDe ?? ''}</h3>
+        <p>{bieuMau?.moTa ?? ''}</p>
         <div>
-          {bieuMau.danhSachKhoi?.map((item: BieuMau.Khoi, indexKhoi) => (
+          {bieuMau?.danhSachKhoi?.map((item: BieuMau.Khoi, indexKhoi) => (
             <Card hoverable key={indexKhoi}>
               <div>{item.tieuDe}</div>
               <div>{item.moTa}</div>

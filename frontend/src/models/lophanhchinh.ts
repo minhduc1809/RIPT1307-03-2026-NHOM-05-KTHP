@@ -22,6 +22,7 @@ export default () => {
     const response = await getAllHinhThucDaoTao();
     setDanhSachHinhThucDaoTao(response?.data?.data ?? []);
     setLoading(false);
+    setHinhThucDaoTao(response?.data?.data?.[0]?.id);
   };
 
   const getLopChinhAdminModel = async () => {

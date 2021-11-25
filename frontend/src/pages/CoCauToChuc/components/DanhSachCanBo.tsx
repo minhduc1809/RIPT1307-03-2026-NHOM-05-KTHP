@@ -16,7 +16,7 @@ const DanhSachCanBo = () => {
     },
     {
       title: 'Họ và tên',
-      dataIndex: 'TenDayDu',
+      dataIndex: 'name',
       align: 'center',
       width: '200px',
       search: 'search',

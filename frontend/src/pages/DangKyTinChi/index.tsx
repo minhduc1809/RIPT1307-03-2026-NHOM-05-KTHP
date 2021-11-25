@@ -8,7 +8,7 @@ const DangKyTinChi = () => {
   const { Step } = Steps;
 
   const {
-    getAllKyHocModel,
+    getAllKyHocSinhVienModel,
     danhSach,
     record,
     setRecord,
@@ -18,7 +18,7 @@ const DangKyTinChi = () => {
     useModel('dangkytinchi');
 
   useEffect(() => {
-    getAllKyHocModel();
+    getAllKyHocSinhVienModel();
     getDanhSachHocPhanDangKyModel();
   }, []);
 
@@ -51,7 +51,12 @@ const DangKyTinChi = () => {
       title={
         <>
           Đăng ký tín chỉ
-          <Select onChange={onChangeKyHoc} style={{ width: 205, marginLeft: 8 }} value={record?.id}>
+          <Select
+            placeholder="Chọn kỳ học"
+            onChange={onChangeKyHoc}
+            style={{ width: 205, marginLeft: 8 }}
+            value={record?.id}
+          >
             {danhSach?.map((item) => (
               <Select.Option key={item.id} value={item.id}>
                 Kỳ {item.ten_ky_nam_hoc} năm học {item.nam_hoc_id[1]}{' '}

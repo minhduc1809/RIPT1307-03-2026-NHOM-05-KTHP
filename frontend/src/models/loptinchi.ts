@@ -122,6 +122,7 @@ export default () => {
   };
 
   return {
+    setDanhSach,
     giangVienPutKetQuaHocTapByIdLopTinChiModel,
     setDanhSachKetQuaHocTap,
     giangVienGetKetQuaHocTapByIdLopTinChiModel,
