@@ -1,6 +1,7 @@
 export default {
   'pages.layouts.userLayout.title': 'HỆ THỐNG ĐÀO TẠO TRỰC TUYẾN TỪ XA',
-  'pages.login.accountLogin.tab': 'Tài khoản đăng nhập',
+  'pages.login.accountLogin.tab': 'Tài khoản người dùng',
+  'pages.login.accountLoginAdmin.tab': 'Tài khoản quản trị viên',
   'pages.login.accountRegister.tab': 'Đăng ký tài khoản',
   'pages.login.accountLogin.errorMessage': 'Incorrect username/password（admin/ant.design)',
   'pages.login.failure': 'Đăng nhập thất bại, tài khoản hoặc mật khẩu chưa đúng!',

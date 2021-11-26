@@ -1,5 +1,5 @@
 import Footer from '@/components/Footer';
-import { getInfo, login } from '@/services/ant-design-pro/api';
+import { adminlogin, getInfo, getInfoAdmin, login } from '@/services/ant-design-pro/api';
 import data from '@/utils/data';
 import { getPhanNhom } from '@/utils/utils';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
@@ -47,9 +47,29 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: { login: string; password: string }) => {
     setSubmitting(true);
     try {
-      const msg = await login({ ...values });
-      if (msg.status === 201) {
-        handleRole(msg?.data?.data);
+      if (type === 'account') {
+        const msg = await login({ ...values });
+        if (msg.status === 201) {
+          handleRole(msg?.data?.data);
+        }
+      } else {
+        const msg = await adminlogin({ ...values, username: values?.login ?? '' });
+        if (msg.status === 201 && msg?.data?.data?.accessToken) {
+          const defaultloginSuccessMessage = intl.formatMessage({
+            id: 'pages.login.success',
+            defaultMessage: 'success',
+          });
+          localStorage.setItem('token', msg?.data?.data?.accessToken);
+          localStorage.setItem('vaiTro', msg?.data?.data.user.systemRole);
+          const info = await getInfoAdmin();
+          setInitialState({
+            ...initialState,
+            currentUser: info?.data?.data,
+          });
+          message.success(defaultloginSuccessMessage);
+          history.push(data?.path?.[msg?.data?.data?.user?.systemRole] ?? '/');
+          return;
+        }
       }
     } catch (error) {
       const defaultloginFailureMessage = intl.formatMessage({
@@ -107,9 +127,16 @@ const Login: React.FC = () => {
                     defaultMessage: 'tab',
                   })}
                 />
+                <Tabs.TabPane
+                  key="accountAdmin"
+                  tab={intl.formatMessage({
+                    id: 'pages.login.accountLoginAdmin.tab',
+                    defaultMessage: 'tab',
+                  })}
+                />
               </Tabs>
 
-              {type === 'account' && (
+              {(type === 'account' || type === 'accountAdmin') && (
                 <>
                   <ProFormText
                     name="login"

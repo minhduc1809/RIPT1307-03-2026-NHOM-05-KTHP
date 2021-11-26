@@ -32,7 +32,7 @@ export async function login(payload: { login?: string; password?: string }) {
   return axios.post(`${ip3}/odoo-auth/login/web`, payload);
 }
 
-export async function adminlogin(payload: { login?: string; password?: string }) {
+export async function adminlogin(payload: { username?: string; password?: string }) {
   return axios.post(`${ip3}/auth/login/web`, payload);
 }
 

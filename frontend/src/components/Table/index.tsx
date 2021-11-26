@@ -68,7 +68,6 @@ const TableBase = (props: Props) => {
 
   useEffect(() => {
     getData(params);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     // return () => {
     //   setCondition({});
     //   setFilterInfo({});
@@ -77,10 +76,13 @@ const TableBase = (props: Props) => {
 
   let searchInput: Input | null = null;
 
-  const getCondValue = (dataIndex: string) => filterInfo?.[dataIndex] ?? [];
+  const getCondValue = (dataIndex: any) => {
+    const type = typeof dataIndex;
+    return _.get(filterInfo, type === 'string' ? dataIndex : dataIndex?.join('.'), []);
+  };
 
   // kiểm tra xem dataIndex có vừa được search hay ko
-  const haveCond = (dataIndex: string) => getCondValue(dataIndex).length > 0;
+  const haveCond = (dataIndex: string) => getCondValue(dataIndex)?.length > 0;
 
   const getSearch = (dataIndex: any) => ({
     filterDropdown: ({
