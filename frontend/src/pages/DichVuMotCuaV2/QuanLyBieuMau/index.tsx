@@ -25,6 +25,9 @@ const QuanLyBieuMau = () => {
     setCurrent,
     setRecordThongTinChung,
   } = useModel('dichvumotcuav2');
+
+  const { getProductByCodeModel } = useModel('thanhtoan');
+
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
   const [visible, setVisible] = useState<boolean>(false);
   const columns: IColumn<DichVuMotCuaV2.BieuMau>[] = [
@@ -38,7 +41,7 @@ const QuanLyBieuMau = () => {
       title: 'Tên',
       dataIndex: 'ten',
       search: 'search',
-      align: 'center',
+      align: 'left',
     },
     {
       title: 'Thao tác',
@@ -63,6 +66,9 @@ const QuanLyBieuMau = () => {
             <Tooltip title="Chỉnh sửa">
               <Button
                 onClick={() => {
+                  if (record?.thongTinThuTuc?.maLePhi) {
+                    getProductByCodeModel(record?.thongTinThuTuc?.maLePhi);
+                  }
                   setRecord(record);
                   setEdit(true);
                   setVisibleForm(true);

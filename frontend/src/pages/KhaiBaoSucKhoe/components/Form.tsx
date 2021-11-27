@@ -53,11 +53,11 @@ const FormBaiHoc = () => {
     <Card loading={loading} title="Chi tiết khai báo">
       <Form labelCol={{ span: 24 }} form={form}>
         <p>
-          <h3>{bieuMau.tieuDe}</h3>
+          <h3>{bieuMau?.tieuDe}</h3>
         </p>
-        <p>{bieuMau.moTa}</p>
+        <p>{bieuMau?.moTa}</p>
         <div>
-          {bieuMau.danhSachKhoi?.map((item: BieuMau.Khoi) => (
+          {bieuMau?.danhSachKhoi?.map((item: BieuMau.Khoi) => (
             <>
               <div>{item.tieuDe}</div>
               <div>{item.moTa}</div>

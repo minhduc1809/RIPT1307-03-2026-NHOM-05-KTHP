@@ -18,7 +18,7 @@ export async function getDonSinhVien(payload: { condition: any; page: number; li
 }
 
 export async function getAllBieuMau() {
-  return axios.get(`${ip3}/dvmc`);
+  return axios.get(`${ip3}/dvmc/me/all`);
 }
 
 export async function postBieuMauAdmin(payload: DichVuMotCuaV2.BieuMau) {
@@ -34,6 +34,7 @@ export async function deleteBieuMauAdmin(id: string) {
 }
 
 export async function postDonSinhVien(payload: {
+  soLuong?: number;
   duLieuBieuMau: DichVuMotCuaV2.CauHinhBieuMau[];
   dichVuId: string;
 }) {

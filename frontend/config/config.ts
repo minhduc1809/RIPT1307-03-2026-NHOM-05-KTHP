@@ -125,7 +125,7 @@ export default defineConfig({
     },
     {
       name: 'QuanLyLichTuan',
-      icon: 'fileDone',
+      icon: 'calendar',
       path: '/lich-tuan',
       access: 'admin',
       component: './VanPhongSo/QuanLyLichTuan',

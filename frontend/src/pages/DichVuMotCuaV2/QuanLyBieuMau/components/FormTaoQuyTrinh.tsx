@@ -103,7 +103,7 @@ const FormTaoQuyTrinh = () => {
                         <>
                           <div style={{ float: 'left' }}>Bước {index + 1}</div>
                           <CloseCircleOutlined
-                            style={{ float: 'right', marginRight: 8 }}
+                            style={{ float: 'right', marginLeft: 8 }}
                             onClick={() => remove(field.name)}
                           />
                           <ArrowUpOutlined

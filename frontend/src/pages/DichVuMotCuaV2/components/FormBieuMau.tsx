@@ -455,6 +455,7 @@ const FormBieuMau = (props: {
             else props.handleEdit(valuesFinal, duLieuBieuMau, props.record?.index);
           } else {
             postDonSinhVienModel({
+              soLuong: values?.soLuong,
               duLieuBieuMau,
               dichVuId: record?._id ?? '',
             });
@@ -463,9 +464,16 @@ const FormBieuMau = (props: {
         form={form}
       >
         {props?.record?.thongTinDichVu?.cauHinhBieuMau?.length ?? 0 ? (
-          props.record?.thongTinDichVu?.cauHinhBieuMau?.map((item, index) =>
-            buildForm(`cauHinhBieuMau[${index}]`, item),
-          )
+          <>
+            {props.record?.thongTinDichVu?.cauHinhBieuMau?.map((item, index) =>
+              buildForm(`cauHinhBieuMau[${index}]`, item),
+            )}
+            {record?.thongTinThuTuc?.yeuCauTraPhi && record?.thongTinThuTuc?.tinhTienTheoSoLuong && (
+              <Form.Item rules={[...rules.required]} label="Số lượng" name="soLuong">
+                <InputNumber min={1} max={100} placeholder="Số lượng" />
+              </Form.Item>
+            )}
+          </>
         ) : (
           <>
             <div>Chưa tạo thông tin đơn.</div>

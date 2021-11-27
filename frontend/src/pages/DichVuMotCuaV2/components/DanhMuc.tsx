@@ -1,8 +1,14 @@
 import { Descriptions } from 'antd';
 import { useModel } from 'umi';
+import { useEffect } from 'react';
+import { currencyFormat } from '@/utils/utils';
 
 const DanhMuc = (props: { button: any }) => {
   const { record } = useModel('dichvumotcuav2');
+  const { record: recordProduct, getProductByCodeModel } = useModel('thanhtoan');
+  useEffect(() => {
+    if (record?.thongTinThuTuc?.maLePhi) getProductByCodeModel(record?.thongTinThuTuc?.maLePhi);
+  }, [record]);
   return (
     <div>
       <h2 style={{ textAlign: 'center' }}>
@@ -33,7 +39,18 @@ const DanhMuc = (props: { button: any }) => {
             {record?.thongTinThuTuc?.thoiHanGiaiQuyet}
           </Descriptions.Item>
           <Descriptions.Item label="TTHC yêu cầu trả phí, lệ phí">
-            {record?.thongTinThuTuc?.yeuCauTraPhi}
+            {record?.thongTinThuTuc?.yeuCauTraPhi ? 'Có' : 'Không'}
+          </Descriptions.Item>
+          <Descriptions.Item label="Tính tiền theo số lượng">
+            {record?.thongTinThuTuc?.tinhTienTheoSoLuong ? 'Có' : 'Không'}
+          </Descriptions.Item>
+          <Descriptions.Item label="Mức lệ phí">
+            {recordProduct?.currentPrice?.unitAmount
+              ? `${currencyFormat(recordProduct?.currentPrice?.unitAmount)} đồng`
+              : ''}
+          </Descriptions.Item>
+          <Descriptions.Item label="Đơn vị tính">
+            {recordProduct?.unitLabel ?? ''}
           </Descriptions.Item>
           <Descriptions.Item label="Cơ quan có thẩm quyền">
             {record?.thongTinThuTuc?.coQuanCoThamQuyen}

@@ -30,7 +30,7 @@ declare module DichVuMotCuaV2 {
     tenThuTuc: string;
     thoiHanGiaiQuyet: string;
     yeuCau: string;
-    yeuCauTraPhi: string;
+    yeuCauTraPhi: boolean;
     _id: string;
   }
 
@@ -64,12 +64,14 @@ declare module DichVuMotCuaV2 {
     donViThucHien?: string;
     capDo?: string;
     thoiHanGiaiQuyet?: string;
-    yeuCauTraPhi?: string;
+    yeuCauTraPhi?: boolean;
     coQuanCoThamQuyen?: string;
     phamViPhucVu?: string;
     ketQuaThucHien?: string;
     mauBieu?: string;
     luuY?: string;
+    maLePhi: string;
+    tinhTienTheoSoLuong: boolean;
   }
 
   export interface BuocQuyTrinh {
@@ -87,6 +89,8 @@ declare module DichVuMotCuaV2 {
     _id: string;
     ten: string;
     ghiChu: string;
+    mucLePhi: number;
+    donViTinh: string;
     cauHinhBieuMau: CauHinhBieuMau[];
     quyTrinh: QuyTrinh;
     thongTinThuTuc?: thongTinThuTuc;
@@ -96,10 +100,10 @@ declare module DichVuMotCuaV2 {
   }
 
   export interface Don {
-    createdAt: string;
+    createdAt?: string;
     trangThai?: string;
-    _id: string;
-    thongTinNguoiTao: Login.Profile;
+    _id?: string;
+    thongTinNguoiTao?: Login.Profile;
     thongTinDichVu: {
       _id: string;
       cauHinhBieuMau: CauHinhBieuMau[];
