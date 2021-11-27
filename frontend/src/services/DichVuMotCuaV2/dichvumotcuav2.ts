@@ -34,7 +34,7 @@ export async function deleteBieuMauAdmin(id: string) {
 }
 
 export async function postDonSinhVien(payload: {
-  soLuong?: number;
+  soLuongThanhToan?: number;
   duLieuBieuMau: DichVuMotCuaV2.CauHinhBieuMau[];
   dichVuId: string;
 }) {

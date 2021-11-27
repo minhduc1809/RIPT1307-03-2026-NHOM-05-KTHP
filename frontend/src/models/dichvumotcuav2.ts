@@ -122,7 +122,7 @@ export default () => {
   };
 
   const postDonSinhVienModel = async (payload: {
-    soLuong?: number;
+    soLuongThanhToan?: number;
     duLieuBieuMau: DichVuMotCuaV2.CauHinhBieuMau[];
     dichVuId: string;
   }) => {
