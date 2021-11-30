@@ -37,6 +37,12 @@ const TableQuanLyDon = () => {
       align: 'center',
     },
     {
+      title: 'Dịch vụ',
+      align: 'center',
+      dataIndex: ['idDon', 'thongTinDichVu', 'ten'],
+    },
+
+    {
       title: 'Ngày tạo',
       dataIndex: ['idDon', 'createdAt'],
       width: 120,
@@ -44,6 +50,13 @@ const TableQuanLyDon = () => {
       render: (val) => (
         <span title={moment(val).format('DD/MM/YYYY HH:mm:ss')}>{moment(val).fromNow()}</span>
       ),
+    },
+    {
+      title: 'Hạn xử lý',
+      dataIndex: 'hanXuLy',
+      width: 120,
+      align: 'center',
+      render: (val) => <span>{moment(val).format('HH:mm DD/MM/YYYY')}</span>,
     },
     {
       title: 'Người gửi',
@@ -87,11 +100,7 @@ const TableQuanLyDon = () => {
       align: 'center',
       search: 'search',
     },
-    {
-      title: 'Dịch vụ',
-      align: 'center',
-      dataIndex: ['idDon', 'thongTinDichVu', 'ten'],
-    },
+
     {
       title: 'Thao tác',
       align: 'center',
@@ -137,7 +146,7 @@ const TableQuanLyDon = () => {
       dependencies={[page, limit, condition, trangThaiQuanLyDon, record?._id]}
       modelName="dichvumotcuav2"
       dataState="danhSachDonThaoTac"
-      scroll={{ x: 1400 }}
+      scroll={{ x: 1500 }}
       loading={loading}
       getData={
         arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi'

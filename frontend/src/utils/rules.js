@@ -195,17 +195,13 @@ const rules = {
     },
   ],
 
-  fileLimit: [
+  fileLimit: (len) => [
     {
       validator: (__, value, callback) => {
-        if (_.get(value, 'fileList', []).length > 15) callback('');
+        if (_.get(value, 'fileList', []).length > len) callback('');
         callback();
       },
-      message: 'Số lượng không quá 15 file',
-    },
-    {
-      required: true,
-      message: 'Bắt buộc',
+      message: `Số lượng không quá ${len} file`,
     },
   ],
 };

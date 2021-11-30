@@ -21,11 +21,11 @@ const FormDieuPhoi = (props: { onCancel: any }) => {
             idDonThaoTac: recordDonThaoTac._id,
             data: {
               nguoiDuocGiao: {
-                _id: chuyenVien?.id?.toString() ?? '',
-                hoTen: chuyenVien?.name ?? '',
+                _id: chuyenVien?.id?.toString() || '',
+                hoTen: chuyenVien?.name || '',
                 gioiTinh: chuyenVien?.gioi_tinh || '',
-                ngaySinh: chuyenVien?.ngay_sinh ?? '',
-                maDinhDanh: chuyenVien?.ma_dinh_danh ?? '',
+                ngaySinh: chuyenVien?.ngay_sinh || '',
+                maDinhDanh: chuyenVien?.ma_dinh_danh || '',
               },
             },
           });
@@ -50,7 +50,17 @@ const FormDieuPhoi = (props: { onCancel: any }) => {
         </Form.Item>
 
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
-          <Button loading={loading} style={{ marginRight: 8 }} htmlType="submit" type="primary">
+          <Button
+            loading={loading}
+            style={{
+              marginRight: 8,
+              backgroundColor: '#1890ff',
+              border: '1px solid #1890ff',
+              color: 'white',
+            }}
+            htmlType="submit"
+            type="primary"
+          >
             Gửi
           </Button>
           <Button

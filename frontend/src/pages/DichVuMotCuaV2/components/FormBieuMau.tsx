@@ -17,7 +17,6 @@ import {
   Input,
   InputNumber,
   Modal,
-  Popconfirm,
   Radio,
   Select,
 } from 'antd';
@@ -27,6 +26,7 @@ import type { SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import FormDieuPhoi from '../QuanLyDon/components/FormDieuPhoi';
+import FormXuLyDon from '../QuanLyDon/components/FormXuLyDon';
 import Table from './TableElement';
 import ThongTinNguoiTaoDon from './ThongTinNguoiTaoDon';
 import TieuDeBieuMau from './TieuDeBieuMau';
@@ -56,11 +56,12 @@ const FormBieuMau = (props: {
     postDonSinhVienModel,
     record,
     recordDonThaoTac,
-    chuyenVienDieuPhoiDuyetDonModel,
-    chuyenVienXuLyDuyetDonModel,
   } = useModel('dichvumotcuav2');
+
   const [valuesForm, setValuesForm] = useState<any>({});
   const [visibleFormDieuPhoi, setVisibleFormDieuPhoi] = useState<boolean>(false);
+  const [visibleFormXuLy, setVisibleFormXuLy] = useState<boolean>(false);
+  const [typeXuLy, setTypeXuLy] = useState<string>('ok');
   const buildValuesForm = (
     valuesInit: any,
     name: string,
@@ -455,7 +456,6 @@ const FormBieuMau = (props: {
             else props.handleEdit(valuesFinal, duLieuBieuMau, props.record?.index);
           } else {
             postDonSinhVienModel({
-              soLuongThanhToan: values?.soLuongThanhToan,
               duLieuBieuMau,
               dichVuId: record?._id ?? '',
             });
@@ -464,23 +464,9 @@ const FormBieuMau = (props: {
         form={form}
       >
         {props?.record?.thongTinDichVu?.cauHinhBieuMau?.length ?? 0 ? (
-          <>
-            {props.record?.thongTinDichVu?.cauHinhBieuMau?.map((item, index) =>
-              buildForm(`cauHinhBieuMau[${index}]`, item),
-            )}
-            {record?.thongTinThuTuc?.yeuCauTraPhi &&
-              record?.thongTinThuTuc?.tinhTienTheoSoLuong &&
-              !(props?.edit !== null && props?.edit !== undefined) && (
-                <Form.Item
-                  initialValue={props?.record?.soLuongThanhToan}
-                  rules={[...rules.required]}
-                  label="Số lượng"
-                  name="soLuongThanhToan"
-                >
-                  <InputNumber min={1} max={100} placeholder="Số lượng" />
-                </Form.Item>
-              )}
-          </>
+          props.record?.thongTinDichVu?.cauHinhBieuMau?.map((item, index) =>
+            buildForm(`cauHinhBieuMau[${index}]`, item),
+          )
         ) : (
           <>
             <div>Chưa tạo thông tin đơn.</div>
@@ -498,9 +484,34 @@ const FormBieuMau = (props: {
             }}
           >
             Tôi xin cam đoan những thông tin trên là hoàn toàn chính xác, nếu sai sự thật tôi sẽ
-            chịu mọi hình thức kỷ luật của Học viện.
+            chịu mọi hình thức kỷ luật.
           </Checkbox>
         )}
+
+        {(recordDonThaoTac?.urlFileDinhKem?.length || recordDonThaoTac?.info?.ghiChuXuLy) && (
+          <>
+            <Divider />
+            <h3 style={{ fontWeight: 'bold' }}>Thông tin xử lý đơn</h3>
+            {recordDonThaoTac?.urlFileDinhKem?.length !== 0 && (
+              <Form.Item label="Kết quả xử lý">
+                {recordDonThaoTac?.urlFileDinhKem?.map((item, index) => (
+                  <>
+                    <a href={item} target="_blank">
+                      File đính kèm {index + 1}
+                    </a>
+                    <br />
+                  </>
+                ))}
+              </Form.Item>
+            )}
+            {recordDonThaoTac?.info?.ghiChuXuLy && (
+              <Form.Item label="Ghi chú xử lý">
+                {recordDonThaoTac?.info?.ghiChuXuLy ?? ''}
+              </Form.Item>
+            )}
+          </>
+        )}
+
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
           {!['view', 'handle'].includes(props?.type ?? '') && (
             <Button
@@ -516,50 +527,38 @@ const FormBieuMau = (props: {
           )}
           {['handle'].includes(props?.type ?? '') && (
             <>
-              <Popconfirm
-                title="Bạn có chắc chắn duyệt đơn này?"
-                onConfirm={() => {
-                  if (recordDonThaoTac?._id) {
-                    const payload = {
-                      type: 'ok',
-                      idDonThaoTac: recordDonThaoTac?._id,
-                    };
-                    if (arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi')
-                      chuyenVienDieuPhoiDuyetDonModel(payload);
-                    else chuyenVienXuLyDuyetDonModel(payload);
-                  }
+              <Button
+                onClick={() => {
+                  setVisibleFormXuLy(true);
+                  setTypeXuLy('ok');
+                }}
+                style={{
+                  marginRight: 8,
+                  backgroundColor: '#007F3E',
+                  border: '1px solid #007F3E',
+                  color: 'white',
+                }}
+                icon={<CheckOutlined />}
+              >
+                Duyệt
+              </Button>
+
+              <Button
+                onClick={() => {
+                  setVisibleFormXuLy(true);
+                  setTypeXuLy('not-ok');
+                }}
+                type="primary"
+                style={{
+                  marginRight: 8,
+                  backgroundColor: '#CC0D00',
+                  border: '1px solid #CC0D00',
+                  color: 'white',
                 }}
               >
-                <Button
-                  style={{
-                    marginRight: 8,
-                    backgroundColor: '#1890ff',
-                    border: '1px solid #1890ff',
-                    color: 'white',
-                  }}
-                  icon={<CheckOutlined />}
-                >
-                  Duyệt
-                </Button>
-              </Popconfirm>
-              <Popconfirm
-                title="Bạn có chắc chắn không duyệt đơn này?"
-                onConfirm={() => {
-                  if (recordDonThaoTac?._id) {
-                    const payload = {
-                      type: 'not-ok',
-                      idDonThaoTac: recordDonThaoTac?._id,
-                    };
-                    if (arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi')
-                      chuyenVienDieuPhoiDuyetDonModel(payload);
-                    else chuyenVienXuLyDuyetDonModel(payload);
-                  }
-                }}
-              >
-                <Button type="primary" style={{ marginRight: 8 }} onClick={() => {}}>
-                  Không duyệt
-                </Button>
-              </Popconfirm>
+                Không duyệt
+              </Button>
+
               {arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi' && (
                 <Button
                   style={{
@@ -587,6 +586,7 @@ const FormBieuMau = (props: {
         </Form.Item>
       </Form>
       <Modal
+        destroyOnClose
         bodyStyle={{ padding: 0 }}
         footer={false}
         visible={visibleFormDieuPhoi}
@@ -597,6 +597,22 @@ const FormBieuMau = (props: {
         <FormDieuPhoi
           onCancel={() => {
             setVisibleFormDieuPhoi(false);
+          }}
+        />
+      </Modal>
+      <Modal
+        destroyOnClose
+        bodyStyle={{ padding: 0 }}
+        footer={false}
+        visible={visibleFormXuLy}
+        onCancel={() => {
+          setVisibleFormXuLy(false);
+        }}
+      >
+        <FormXuLyDon
+          type={typeXuLy}
+          onCancel={() => {
+            setVisibleFormXuLy(false);
           }}
         />
       </Modal>

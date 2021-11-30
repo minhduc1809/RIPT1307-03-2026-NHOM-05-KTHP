@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import { Descriptions } from 'antd';
 import moment from 'moment';
 
@@ -11,13 +12,20 @@ const ThongTinNguoiTaoDon = (props: { record?: Login.Profile }) => {
         Ngày sinh:{' '}
         {props?.record?.ngay_sinh
           ? moment(props?.record?.ngay_sinh)?.format('DD-MM-YYYY')
-          : props?.record?.ngaySinh?.split('-')?.reverse()?.join('-')}
+          : props?.record?.ngaySinh !== 'false'
+          ? props?.record?.ngaySinh?.split('-')?.reverse()?.join('-')
+          : 'Chưa cập nhật'}
       </Descriptions.Item>
       <Descriptions.Item>
         Mã sinh viên: {props?.record?.ma_dinh_danh || props?.record?.maSinhVien || ''}
       </Descriptions.Item>
       <Descriptions.Item>
-        Khoa: {props?.record?.ten_don_vi || props?.record?.tenDonVi || ''}
+        Khoa:{' '}
+        {props?.record?.ten_don_vi
+          ? props?.record?.ten_don_vi
+          : props?.record?.tenDonVi !== 'false'
+          ? props?.record?.tenDonVi
+          : 'Chưa cập nhật'}
       </Descriptions.Item>
       <Descriptions.Item>
         Lớp: {props?.record?.lop_hanh_chinh_id?.[1] || props?.record?.tenLopHanhChinh || ''}

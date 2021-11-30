@@ -1,9 +1,10 @@
 /* eslint-disable no-return-assign */
 import { getPhanNhomUserCurrent } from '@/services/PhanQuyen/phanquyen';
+import { uploadFile } from '@/services/uploadFile';
+import { message } from 'antd';
 import moment from 'moment';
 import { useModel } from 'umi';
 
-/* eslint no-useless-escape:0 import/prefer-default-export:0 */
 const reg =
   /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
@@ -223,3 +224,43 @@ export function useCheckAccess(code: string, idDoiTuong?: string) {
   const { initialState } = useModel('@@initialState');
   return handlePhanNhom(initialState, code, idDoiTuong);
 }
+
+export const toISOString = (date: moment.MomentInput) => {
+  if (date) {
+    return moment(date).startOf('day').toISOString();
+  }
+  return undefined;
+};
+
+export const uploadMultiFile = async (arrFile: any[]) => {
+  const url: string[] = arrFile
+    ?.filter((item) => item?.remote === true)
+    ?.map((item) => item?.url ?? '');
+  if (!arrFile) return [];
+  let arrUrl: string[] = [];
+  const arrUpload = arrFile
+    ?.filter((item) => item?.remote !== true)
+    ?.map(async (file: { originFileObj: any; type: string }) => {
+      const response = await uploadFile({
+        file: file?.originFileObj,
+        filename: 'fileName',
+        public: true,
+      });
+      return response?.data?.data?.url;
+    });
+  arrUrl = await Promise.all(arrUpload);
+  return [...url, ...arrUrl];
+};
+
+export const checkFileSize = (arrFile: any[]) => {
+  let check = true;
+  arrFile
+    ?.filter((item) => item?.remote !== true)
+    ?.forEach((item) => {
+      if (item?.size / 1024 / 1024 > 8) {
+        check = false;
+        message.error(`file ${item?.name} có dung lượng > 8mb`);
+      }
+    });
+  return check;
+};

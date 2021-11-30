@@ -293,6 +293,12 @@ export default defineConfig({
           component: './DichVuMotCuaV2/QuanLyBieuMau',
           access: 'admin',
         },
+        {
+          name: 'QuanLyDon',
+          path: './quanlydonadmin',
+          component: './DichVuMotCuaV2/QuanLyDon/admin',
+          access: 'admin',
+        },
       ],
       access: 'admin',
     },

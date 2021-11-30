@@ -1,16 +1,25 @@
+/* eslint-disable no-underscore-dangle */
 import { Card, Tabs } from 'antd';
-import TableQuanLyDon from './components/TableQuanLyDon';
-import { useModel } from 'umi';
 import { useEffect } from 'react';
+import { useModel } from 'umi';
+import TableQuanLyDon from './components/TableQuanLyDon';
 
 const { TabPane } = Tabs;
 
 const QuanLyDon = () => {
-  const { trangThaiQuanLyDon, setTrangThaiQuanLyDon, getAllBieuMauChuyenVienModel } =
-    useModel('dichvumotcuav2');
+  const {
+    trangThaiQuanLyDon,
+    setTrangThaiQuanLyDon,
+    getAllBieuMauChuyenVienDieuPhoiModel,
+    getAllBieuMauChuyenVienTiepNhanModel,
+  } = useModel('dichvumotcuav2');
 
+  const { pathname } = window.location;
+  const arrPathName = pathname?.split('/') ?? [];
   useEffect(() => {
-    getAllBieuMauChuyenVienModel();
+    if (arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi')
+      getAllBieuMauChuyenVienDieuPhoiModel();
+    else getAllBieuMauChuyenVienTiepNhanModel();
   }, []);
 
   return (

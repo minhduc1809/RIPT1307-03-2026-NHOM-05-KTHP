@@ -4,17 +4,21 @@ import {
   postBieuMauAdmin,
   putBieuMauAdmin,
   deleteBieuMauAdmin,
-  getAllBieuMau,
+  userGetAllBieuMau,
   getDonSinhVien,
   postDonSinhVien,
   chuyenVienDieuPhoiDuyetDon,
   getDonThaoTacChuyenVienDieuPhoi,
-  getAllBieuMauChuyenVien,
+  getAllBieuMauChuyenVienDieuPhoi,
+  getAllBieuMauChuyenVienTiepNhan,
   getDonThaoTacChuyenVienXuLy,
   chuyenVienXuLyDuyetDon,
   dieuPhoiDon,
   getTrangThaiDon,
   getBieuMauById,
+  adminGetAllBieuMau,
+  adminGetDonSinhVien,
+  adminGetTrangThaiDon,
 } from '@/services/DichVuMotCuaV2/dichvumotcuav2';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -30,8 +34,6 @@ export default () => {
   const [record, setRecord] = useState<DichVuMotCuaV2.BieuMau>();
   const [recordDon, setRecordDon] = useState<DichVuMotCuaV2.Don>();
   const [recordCauHinhBieuMau, setRecordCauHinhBieuMau] = useState<DichVuMotCuaV2.BieuMau>({
-    mucLePhi: 0,
-    donViTinh: '',
     ten: '',
     _id: '',
     ghiChu: '',
@@ -42,8 +44,6 @@ export default () => {
   });
   const [recordDonThaoTac, setRecordDonThaoTac] = useState<DichVuMotCuaV2.DonThaoTac>();
   const [recordThongTinChung, setRecordThongTinChung] = useState<{
-    mucLePhi?: number;
-    donViTinh?: string;
     thongTinThuTuc?: DichVuMotCuaV2.thongTinThuTuc;
     thongTinHoSo?: string;
     thongTinQuyTrinh?: string;
@@ -60,6 +60,7 @@ export default () => {
   const [limit, setLimit] = useState<number>(10);
   const [typeForm, setTypeForm] = useState<string>('add');
   const [trangThaiQuanLyDon, setTrangThaiQuanLyDon] = useState<string>('PENDING');
+  const [trangThaiQuanLyDonAdmin, setTrangThaiQuanLyDonAdmin] = useState<string>('PROCESSING');
   const [recordTrangThaiDon, setRecordTrangThaiDon] = useState<DichVuMotCuaV2.TrangThaiBuoc[]>([]);
 
   const getBieuMauAdminModel = async () => {
@@ -80,7 +81,15 @@ export default () => {
 
   const getAllBieuMauModel = async () => {
     setLoading(true);
-    const response = await getAllBieuMau();
+    const response = await userGetAllBieuMau();
+    setDanhSach(response?.data?.data ?? []);
+    setRecord(response?.data?.data?.[0]);
+    setLoading(false);
+  };
+
+  const adminGetAllBieuMauModel = async () => {
+    setLoading(true);
+    const response = await adminGetAllBieuMau();
     setDanhSach(response?.data?.data ?? []);
     setRecord(response?.data?.data?.[0]);
     setLoading(false);
@@ -122,7 +131,6 @@ export default () => {
   };
 
   const postDonSinhVienModel = async (payload: {
-    soLuongThanhToan?: number;
     duLieuBieuMau: DichVuMotCuaV2.CauHinhBieuMau[];
     dichVuId: string;
   }) => {
@@ -132,11 +140,7 @@ export default () => {
       message.success('Gửi đơn thành công');
       setLoading(false);
       setVisibleFormBieuMau(false);
-    } catch (error: any) {
-      const { response } = error;
-      if (response?.data?.errorCode === 2 && response?.data?.statusCode === 400) {
-        message.error('Đơn của bạn đang được xử lý, vui lòng không tạo thêm đơn mới');
-      }
+    } catch (error) {
       setLoading(false);
     }
   };
@@ -156,6 +160,9 @@ export default () => {
   const chuyenVienDieuPhoiDuyetDonModel = async (payload: {
     type: string;
     idDonThaoTac: string;
+    data: {
+      urlFileDinhKem: string[];
+    };
   }) => {
     await chuyenVienDieuPhoiDuyetDon(payload);
     message.success('Xử lý thành công');
@@ -175,15 +182,42 @@ export default () => {
     setLoading(false);
   };
 
-  const chuyenVienXuLyDuyetDonModel = async (payload: { type: string; idDonThaoTac: string }) => {
+  const adminGetDonModel = async () => {
+    setLoading(true);
+    const response = await adminGetDonSinhVien({
+      page,
+      limit,
+      condition: {
+        ...condition,
+        trangThai: trangThaiQuanLyDonAdmin,
+        'thongTinDichVu._id': record?._id,
+      },
+    });
+    setDanhSachDon(response?.data?.data?.result ?? []);
+    setTotal(response?.data?.data?.total);
+    setLoading(false);
+  };
+
+  const chuyenVienXuLyDuyetDonModel = async (payload: {
+    type: string;
+    idDonThaoTac: string;
+    data: {
+      urlFileDinhKem: string[];
+    };
+  }) => {
     await chuyenVienXuLyDuyetDon(payload);
     message.success('Xử lý thành công');
     setVisibleFormBieuMau(false);
     getDonThaoTacChuyenVienXuLyModel();
   };
 
-  const getAllBieuMauChuyenVienModel = async () => {
-    const response = await getAllBieuMauChuyenVien();
+  const getAllBieuMauChuyenVienDieuPhoiModel = async () => {
+    const response = await getAllBieuMauChuyenVienDieuPhoi();
+    setDanhSach(response?.data?.data ?? {});
+  };
+
+  const getAllBieuMauChuyenVienTiepNhanModel = async () => {
+    const response = await getAllBieuMauChuyenVienTiepNhan();
     setDanhSach(response?.data?.data ?? {});
   };
 
@@ -199,17 +233,28 @@ export default () => {
       };
     };
   }) => {
-    setLoading(true);
-    await dieuPhoiDon(payload);
-    message.success('Điều phối thành công');
-    setLoading(false);
-    setVisibleFormBieuMau(false);
-    getDonThaoTacChuyenVienDieuPhoiModel();
+    try {
+      setLoading(true);
+      await dieuPhoiDon(payload);
+      message.success('Điều phối thành công');
+      setLoading(false);
+      setVisibleFormBieuMau(false);
+      getDonThaoTacChuyenVienDieuPhoiModel();
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const getTrangThaiDonModel = async (idDon: string) => {
     setLoading(true);
     const response = await getTrangThaiDon(idDon, { condition });
+    setRecordTrangThaiDon(response?.data?.data ?? []);
+    setLoading(false);
+  };
+
+  const adminGetTrangThaiDonModel = async (idDon: string) => {
+    setLoading(true);
+    const response = await adminGetTrangThaiDon(idDon, { condition });
     setRecordTrangThaiDon(response?.data?.data ?? []);
     setLoading(false);
   };
@@ -220,6 +265,11 @@ export default () => {
   };
 
   return {
+    trangThaiQuanLyDonAdmin,
+    setTrangThaiQuanLyDonAdmin,
+    adminGetTrangThaiDonModel,
+    adminGetDonModel,
+    adminGetAllBieuMauModel,
     getBieuMauByIdModel,
     recordThongTinChung,
     setRecordThongTinChung,
@@ -235,7 +285,8 @@ export default () => {
     setDanhSachDataTable,
     recordDonThaoTac,
     setRecordDonThaoTac,
-    getAllBieuMauChuyenVienModel,
+    getAllBieuMauChuyenVienDieuPhoiModel,
+    getAllBieuMauChuyenVienTiepNhanModel,
     trangThaiQuanLyDon,
     setTrangThaiQuanLyDon,
     danhSachDonThaoTac,

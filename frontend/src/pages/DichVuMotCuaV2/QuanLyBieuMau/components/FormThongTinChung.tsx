@@ -1,9 +1,8 @@
 import rules from '@/utils/rules';
-import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row } from 'antd';
+import { Button, Card, Col, Form, Input, Row } from 'antd';
 import { useModel } from 'umi';
 import TinyEditor from '@/components/TinyEditor/Tiny';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import { useState, useEffect } from 'react';
 
 const FormThongTinChung = () => {
   const [form] = Form.useForm();
@@ -16,23 +15,6 @@ const FormThongTinChung = () => {
     setRecordCauHinhBieuMau,
     recordCauHinhBieuMau,
   } = useModel('dichvumotcuav2');
-
-  const { record } = useModel('thanhtoan');
-  useEffect(() => {
-    form.setFieldsValue({
-      mucLePhi: record?.currentPrice?.unitAmount,
-      donViTinh: record?.unitLabel,
-    });
-  }, [record]);
-
-  const [yeuCauTraPhi, setYeuCauTraPhi] = useState<boolean>(
-    recordThongTinChung?.thongTinThuTuc?.yeuCauTraPhi ?? false,
-  );
-
-  const [tinhTienTheoSoLuong, setTinhTienTheoSoLuong] = useState<boolean>(
-    recordThongTinChung?.thongTinThuTuc?.tinhTienTheoSoLuong ?? false,
-  );
-
   return (
     <Card title={edit ? 'Chỉnh sửa thông tin chung' : 'Thêm mới thông tin chung'}>
       <Form
@@ -40,13 +22,7 @@ const FormThongTinChung = () => {
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
           setRecordThongTinChung({
-            ...values,
-            thongTinThuTuc: {
-              ...values?.thongTinThuTuc,
-              yeuCauTraPhi,
-              tinhTienTheoSoLuong,
-              maLePhi: record?.code,
-            },
+            thongTinThuTuc: values?.thongTinThuTuc,
             thongTinHoSo: values?.thongTinHoSo?.text ?? '',
             thongTinQuyTrinh: values?.thongTinQuyTrinh?.text ?? '',
             thongTinYeuCau: values?.thongTinYeuCau?.text ?? '',
@@ -132,7 +108,16 @@ const FormThongTinChung = () => {
               <Input placeholder="Thời hạn giải quyết" />
             </Form.Item>
           </Col>
-
+          <Col md={12}>
+            <Form.Item
+              name={['thongTinThuTuc', 'yeuCauTraPhi']}
+              label="Yêu cầu trả phí"
+              initialValue={recordThongTinChung?.thongTinThuTuc?.yeuCauTraPhi}
+              rules={[...rules.text, ...rules.length(200)]}
+            >
+              <Input placeholder="Yêu cầu trả phí" />
+            </Form.Item>
+          </Col>
           <Col md={12}>
             <Form.Item
               name={['thongTinThuTuc', 'coQuanCoThamQuyen']}
@@ -183,64 +168,6 @@ const FormThongTinChung = () => {
               <Input placeholder="Lưu ý" />
             </Form.Item>
           </Col>
-          <Col md={12}>
-            <Form.Item
-              name={['thongTinThuTuc', 'yeuCauTraPhi']}
-              initialValue={recordThongTinChung?.thongTinThuTuc?.yeuCauTraPhi}
-            >
-              <Checkbox
-                checked={yeuCauTraPhi}
-                onChange={(e) => {
-                  setYeuCauTraPhi(e.target.checked);
-                }}
-              />{' '}
-              Yêu cầu trả phí
-            </Form.Item>
-          </Col>
-          {yeuCauTraPhi && (
-            <>
-              <Col md={12}>
-                <Form.Item
-                  name={['thongTinThuTuc', 'tinhTienTheoSoLuong']}
-                  initialValue={recordThongTinChung?.thongTinThuTuc?.tinhTienTheoSoLuong}
-                >
-                  <Checkbox
-                    checked={tinhTienTheoSoLuong}
-                    onChange={(e) => {
-                      setTinhTienTheoSoLuong(e.target.checked);
-                    }}
-                  />{' '}
-                  Tính tiền theo số lượng
-                </Form.Item>
-              </Col>
-              <Col style={{ marginTop: '-12px' }} md={12}>
-                <Form.Item
-                  name="mucLePhi"
-                  label="Mức lệ phí"
-                  rules={[...rules.required]}
-                  initialValue={record?.currentPrice?.unitAmount}
-                >
-                  <InputNumber
-                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    style={{ width: '100%' }}
-                    placeholder="Mức lệ phí"
-                    max={10000000}
-                    min={0}
-                  />
-                </Form.Item>
-              </Col>
-              <Col style={{ marginTop: '-12px' }} md={12}>
-                <Form.Item
-                  name="donViTinh"
-                  label="Đơn vị tính"
-                  initialValue={record?.unitLabel}
-                  rules={[...rules.text, ...rules.required, ...rules.length(30)]}
-                >
-                  <Input placeholder="Đơn vị tính" />
-                </Form.Item>
-              </Col>
-            </>
-          )}
         </Row>
         <h3 style={{ fontWeight: 'bold' }}>Thông tin hồ sơ</h3>
         <Row>

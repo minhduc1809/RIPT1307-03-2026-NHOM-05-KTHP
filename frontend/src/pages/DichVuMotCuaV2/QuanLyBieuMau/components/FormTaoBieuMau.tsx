@@ -139,14 +139,7 @@ const FormBieuMau = () => {
               loading={loading}
               style={{ marginRight: 8 }}
               type="primary"
-              onClick={() => {
-                const valueView = form.getFieldsValue(true);
-                setRecordCauHinhBieuMau({
-                  ...recordCauHinhBieuMau,
-                  ...{ cauHinhBieuMau: buildPostData(valueView?.cauHinhBieuMau ?? []) },
-                });
-                setCurrent(0);
-              }}
+              onClick={() => setCurrent(0)}
             >
               Quay lại
             </Button>

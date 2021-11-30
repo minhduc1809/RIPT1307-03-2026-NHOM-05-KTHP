@@ -33,6 +33,25 @@ const SinhVienTaoDon = ({
   }, []);
   return (
     <Card>
+      {/* <b>Loại biểu mẫu: {record?.ten ?? ''}</b> */}
+      {/* <Select
+        notFoundContent="Chưa có biểu mẫu nào"
+        placeholder="Chọn loại biểu mẫu"
+        onChange={(val: string) => {
+          setRecord(danhSach?.find((item) => item._id === val));
+        }}
+        showSearch
+        filterOption={(value, option) => includes(option?.props.children, value)}
+        value={record?._id}
+        style={{ width: '400px', marginBottom: 20, marginLeft: 8 }}
+      >
+        {danhSach?.map((item) => (
+          <Select.Option key={item._id} value={item._id}>
+            {item.ten}
+          </Select.Option>
+        ))}
+      </Select> */}
+
       <Modal
         destroyOnClose
         onCancel={() => {

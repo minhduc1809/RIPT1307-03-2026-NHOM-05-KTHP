@@ -61,11 +61,21 @@ const FormQuyTrinh = (props: {
   type?: string;
   thoiGianTaoDon?: string;
 }) => {
-  const { getTrangThaiDonModel, recordTrangThaiDon, setRecordTrangThaiDon, loading } =
-    useModel('dichvumotcuav2');
+  const {
+    getTrangThaiDonModel,
+    recordTrangThaiDon,
+    setRecordTrangThaiDon,
+    loading,
+    adminGetTrangThaiDonModel,
+  } = useModel('dichvumotcuav2');
+
+  const { pathname } = window.location;
+  const arrPathName = pathname?.split('/') ?? [];
   useEffect(() => {
     if (props.idDon) {
-      getTrangThaiDonModel(props.idDon);
+      if (arrPathName?.[arrPathName.length - 1] === 'quanlydonadmin')
+        adminGetTrangThaiDonModel(props.idDon);
+      else getTrangThaiDonModel(props.idDon);
     }
     return () => {
       setRecordTrangThaiDon([]);
