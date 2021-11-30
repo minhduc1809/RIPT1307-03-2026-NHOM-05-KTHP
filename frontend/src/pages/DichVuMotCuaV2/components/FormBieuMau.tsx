@@ -468,11 +468,18 @@ const FormBieuMau = (props: {
             {props.record?.thongTinDichVu?.cauHinhBieuMau?.map((item, index) =>
               buildForm(`cauHinhBieuMau[${index}]`, item),
             )}
-            {record?.thongTinThuTuc?.yeuCauTraPhi && record?.thongTinThuTuc?.tinhTienTheoSoLuong && (
-              <Form.Item rules={[...rules.required]} label="Số lượng" name="soLuongThanhToan">
-                <InputNumber min={1} max={100} placeholder="Số lượng" />
-              </Form.Item>
-            )}
+            {record?.thongTinThuTuc?.yeuCauTraPhi &&
+              record?.thongTinThuTuc?.tinhTienTheoSoLuong &&
+              !(props?.edit !== null && props?.edit !== undefined) && (
+                <Form.Item
+                  initialValue={props?.record?.soLuongThanhToan}
+                  rules={[...rules.required]}
+                  label="Số lượng"
+                  name="soLuongThanhToan"
+                >
+                  <InputNumber min={1} max={100} placeholder="Số lượng" />
+                </Form.Item>
+              )}
           </>
         ) : (
           <>

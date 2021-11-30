@@ -103,6 +103,7 @@ declare module DichVuMotCuaV2 {
     createdAt?: string;
     trangThai?: string;
     _id?: string;
+    soLuongThanhToan: number;
     thongTinNguoiTao?: Login.Profile;
     thongTinDichVu: {
       _id: string;
