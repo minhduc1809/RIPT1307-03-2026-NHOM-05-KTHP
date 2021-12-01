@@ -23,7 +23,7 @@ const ThongTinNguoiTaoDon = (props: { record?: Login.Profile }) => {
         Khoa:{' '}
         {props?.record?.ten_don_vi
           ? props?.record?.ten_don_vi
-          : props?.record?.tenDonVi !== 'false'
+          : props?.record?.tenDonVi && props?.record?.tenDonVi !== 'false'
           ? props?.record?.tenDonVi
           : 'Chưa cập nhật'}
       </Descriptions.Item>

@@ -95,7 +95,7 @@ const FormBieuMau = (props: {
     let element = <Input placeholder="Nhập nội dung" />;
     let ruleElement: any[] = [...rules.required];
     let initialValue = item?.value;
-    if (!item?.type) return <div></div>;
+    if (!item?.type) return <div />;
     switch (item?.type) {
       case 'TEXT_AREA': {
         element = <Input.TextArea rows={3} placeholder={item?.label ?? ''} />;
@@ -341,7 +341,7 @@ const FormBieuMau = (props: {
               );
             })
           ) : (
-            <div></div>
+            <div />
           );
         })}
       </div>
@@ -456,6 +456,7 @@ const FormBieuMau = (props: {
             else props.handleEdit(valuesFinal, duLieuBieuMau, props.record?.index);
           } else {
             postDonSinhVienModel({
+              soLuongThanhToan: values?.soLuongThanhToan,
               duLieuBieuMau,
               dichVuId: record?._id ?? '',
             });
@@ -464,9 +465,24 @@ const FormBieuMau = (props: {
         form={form}
       >
         {props?.record?.thongTinDichVu?.cauHinhBieuMau?.length ?? 0 ? (
-          props.record?.thongTinDichVu?.cauHinhBieuMau?.map((item, index) =>
-            buildForm(`cauHinhBieuMau[${index}]`, item),
-          )
+          <>
+            {props.record?.thongTinDichVu?.cauHinhBieuMau?.map((item, index) =>
+              buildForm(`cauHinhBieuMau[${index}]`, item),
+            )}
+            {((record?.thongTinThuTuc?.yeuCauTraPhi &&
+              record?.thongTinThuTuc?.tinhTienTheoSoLuong) ||
+              props?.record?.trangThaiThanhToan) &&
+              !(props?.edit !== null && props?.edit !== undefined) && (
+                <Form.Item
+                  initialValue={props?.record?.soLuongThanhToan}
+                  rules={[...rules.required]}
+                  label="Số lượng"
+                  name="soLuongThanhToan"
+                >
+                  <InputNumber min={1} max={100} placeholder="Số lượng" />
+                </Form.Item>
+              )}
+          </>
         ) : (
           <>
             <div>Chưa tạo thông tin đơn.</div>

@@ -29,7 +29,7 @@ const TieuDeBieuMau = (props: { title: string }) => {
         <i>
           <u>Kính gửi:</u>
         </i>{' '}
-        <b>HIỆU TRƯỞNG TRƯỜNG ĐẠI HỌC CÔNG NGHỆ - ĐHQGHN</b>
+        <b>Học viện Công nghệ Bưu chính Viễn thông</b>
       </p>
     </>
   );

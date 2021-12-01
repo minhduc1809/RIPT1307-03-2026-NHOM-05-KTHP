@@ -44,6 +44,8 @@ export default () => {
   });
   const [recordDonThaoTac, setRecordDonThaoTac] = useState<DichVuMotCuaV2.DonThaoTac>();
   const [recordThongTinChung, setRecordThongTinChung] = useState<{
+    mucLePhi?: number;
+    donViTinh?: string;
     thongTinThuTuc?: DichVuMotCuaV2.thongTinThuTuc;
     thongTinHoSo?: string;
     thongTinQuyTrinh?: string;
@@ -131,6 +133,7 @@ export default () => {
   };
 
   const postDonSinhVienModel = async (payload: {
+    soLuongThanhToan?: number;
     duLieuBieuMau: DichVuMotCuaV2.CauHinhBieuMau[];
     dichVuId: string;
   }) => {
@@ -140,7 +143,11 @@ export default () => {
       message.success('Gửi đơn thành công');
       setLoading(false);
       setVisibleFormBieuMau(false);
-    } catch (error) {
+    } catch (error: any) {
+      const { response } = error;
+      if (response?.data?.errorCode === 2 && response?.data?.statusCode === 400) {
+        message.error('Đơn của bạn đang được xử lý, vui lòng không tạo thêm đơn mới');
+      }
       setLoading(false);
     }
   };

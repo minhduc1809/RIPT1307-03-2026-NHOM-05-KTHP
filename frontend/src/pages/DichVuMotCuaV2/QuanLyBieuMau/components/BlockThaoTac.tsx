@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Col, Form, Input, InputNumber, Row, Select } from 'antd';
 import mm from 'moment-timezone';
 import { useModel } from 'umi';
+import { includes } from '@/utils/utils';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
@@ -70,7 +71,11 @@ const BieuMauThaoTac = (props: {
             label="Đơn vị"
             rules={[...rules.required]}
           >
-            <Select placeholder="Chọn đơn vị">
+            <Select
+              filterOption={(value, option) => includes(option?.props.children, value)}
+              showSearch
+              placeholder="Chọn đơn vị"
+            >
               {danhSach?.map((item) => (
                 <Select.Option key={item.id} value={item.id.toString()}>
                   {item.ten_don_vi}

@@ -1,12 +1,11 @@
 import DemoPie from '@/components/Chart/Pie';
 import {
   thongKeDonVi,
-  thongKeNhanSu,
-  thongKeThongBao,
-  thongKePhanHoi,
   thongkeDVMC,
+  thongKeNhanSu,
+  thongKePhanHoi,
+  thongKeThongBao,
 } from '@/services/Dashboard/dashboard';
-import { number2color } from '@antv/util';
 import { Badge, Card, Col, Statistic } from 'antd';
 import { useEffect, useState } from 'react';
 

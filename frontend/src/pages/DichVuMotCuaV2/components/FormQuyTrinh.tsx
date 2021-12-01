@@ -100,10 +100,10 @@ const FormQuyTrinh = (props: {
               </div>
             }
           >
-            <div style={{ height: 30 }}></div>
+            <div style={{ height: 30 }} />
           </Timeline.Item>
           <Timeline.Item style={{ display: 'none' }}>
-            <div style={{ height: 20 }}></div>
+            <div style={{ height: 20 }} />
           </Timeline.Item>
         </Timeline>
       )}
@@ -126,7 +126,7 @@ const FormQuyTrinh = (props: {
                   </div>
                 }
               >
-                <div style={{ height: 30 }}></div>
+                <div style={{ height: 30 }} />
               </Timeline.Item>
 
               {buoc?.danhSachThaoTac?.map((thaoTac) => {
@@ -169,7 +169,7 @@ const FormQuyTrinh = (props: {
               })}
               {index !== (props.record?.danhSachBuoc?.length ?? 0) - 1 && (
                 <Timeline.Item style={{ display: 'none' }}>
-                  <div style={{ height: 20 }}></div>
+                  <div style={{ height: 20 }} />
                 </Timeline.Item>
               )}
             </Timeline>
