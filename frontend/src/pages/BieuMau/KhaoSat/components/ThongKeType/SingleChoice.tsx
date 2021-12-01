@@ -20,14 +20,8 @@ const Donut = (props: { ketQua: BieuMau.ThongKeLuaChon; tong: number }) => {
   };
   return (
     <div>
-      <Chart
-        height={window.innerHeight}
-        data={dv}
-        scale={cols}
-        // padding={[80, 100, 80, 80]}
-        forceFit
-      >
-        <Coord type={'theta'} radius={0.6} innerRadius={0.7} />
+      <Chart height={400} data={dv} scale={cols} padding={0} forceFit>
+        <Coord type={'theta'} radius={0.6} innerRadius={0.8} />
         <Axis name="percent" />
         <Legend position="bottom" />
         <Tooltip
