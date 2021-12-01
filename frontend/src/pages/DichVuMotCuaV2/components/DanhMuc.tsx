@@ -52,17 +52,17 @@ const DanhMuc = (props: { button: any }) => {
       <p
         style={{ marginLeft: '18%' }}
         dangerouslySetInnerHTML={{ __html: record?.thongTinHoSo ?? '' }}
-      ></p>
+      />
       <b style={{ marginLeft: '18%', color: 'black' }}>3. Quy trình thực hiện</b>
       <p
         style={{ marginLeft: '18%', marginRight: '18%' }}
         dangerouslySetInnerHTML={{ __html: record?.thongTinQuyTrinh ?? '' }}
-      ></p>
+      />
       <b style={{ marginLeft: '18%', color: 'black' }}>4. Yêu cầu</b>
       <p
         style={{ marginLeft: '18%', marginRight: '18%' }}
         dangerouslySetInnerHTML={{ __html: record?.thongTinYeuCau ?? '' }}
-      ></p>
+      />
     </div>
   );
 };

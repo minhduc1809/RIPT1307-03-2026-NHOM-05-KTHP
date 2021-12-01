@@ -16,3 +16,7 @@ export async function thongKeThongBao() {
 export async function thongKePhanHoi() {
   return axios.get(`${ip3}/dashboard/thong-ke-phan-hoi`);
 }
+
+export async function thongkeDVMC() {
+  return axios.get(`${ip3}/dashboard/thong-ke-dvmc`);
+}

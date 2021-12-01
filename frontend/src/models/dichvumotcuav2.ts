@@ -91,7 +91,7 @@ export default () => {
     setLoading(true);
     const response = await adminGetAllBieuMau();
     setDanhSach(response?.data?.data ?? []);
-    setRecord(response?.data?.data?.[0]);
+    // setRecord(response?.data?.data?.[0]);
     setLoading(false);
   };
 

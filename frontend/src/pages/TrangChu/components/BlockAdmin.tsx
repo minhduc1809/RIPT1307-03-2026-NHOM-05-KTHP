@@ -4,7 +4,9 @@ import {
   thongKeNhanSu,
   thongKeThongBao,
   thongKePhanHoi,
+  thongkeDVMC,
 } from '@/services/Dashboard/dashboard';
+import { number2color } from '@antv/util';
 import { Badge, Card, Col, Statistic } from 'antd';
 import { useEffect, useState } from 'react';
 
@@ -22,7 +24,12 @@ const BlockAdmin = () => {
   }>({ soLuongNhanVien: 0, soLuongSinhVien: 0 });
   const [loading, setLoading] = useState<boolean>(false);
   const [dataThongKeDonVi, setDataThongKeDonVi] = useState<ThongKeDonVi[]>([]);
-
+  const [dataThongKeDVMC, setDataThongKeDVMC] = useState<{
+    totalDonDVMC: number;
+    totalDangXuLy: number;
+    totalDaDuyet: number;
+    totalKhongDuyet: number;
+  }>({ totalDaDuyet: 0, totalDangXuLy: 0, totalDonDVMC: 0, totalKhongDuyet: 0 });
   const [dataThongKeThongBao, setDataThongKeThongBao] = useState<{
     totalThongBao: number;
     totalThongBaoHeThong: number;
@@ -63,6 +70,11 @@ const BlockAdmin = () => {
     setDataThongKeThongBao(res?.data?.data);
   };
 
+  const getThongKeDVMC = async () => {
+    const res = await thongkeDVMC();
+    setDataThongKeDVMC(res?.data?.data);
+  };
+
   const getThongKePhanHoi = async () => {
     const res = await thongKePhanHoi();
     setDataThongKePhanHoi(res?.data?.data);
@@ -72,11 +84,12 @@ const BlockAdmin = () => {
     getThongKePhanHoi();
     getThongKeThongBao();
     getThongKeDonVi();
+    getThongKeDVMC();
   }, []);
 
   return (
     <>
-      <Col xs={24} md={12} xl={8}>
+      <Col xs={24} md={12} xl={6}>
         <Card>
           <Statistic
             title={<div style={{ fontSize: 16 }}>Tổng số tài khoản</div>}
@@ -87,9 +100,11 @@ const BlockAdmin = () => {
           <br />
           <Badge color="red" />
           Sinh viên: {dataThongKeNhanSu?.soLuongSinhVien}
+          <br />
+          <br />
         </Card>
       </Col>
-      <Col xs={24} md={12} xl={8}>
+      <Col xs={24} md={12} xl={6}>
         <Card>
           <Statistic
             title={<div style={{ fontSize: 16 }}>Số lượng thông báo</div>}
@@ -100,10 +115,11 @@ const BlockAdmin = () => {
           <br />
           <Badge color="red" />
           TB từ người dùng:{' '}
-          {dataThongKeThongBao?.totalThongBao - dataThongKeThongBao?.totalThongBaoHeThong}
+          {dataThongKeThongBao?.totalThongBao - dataThongKeThongBao?.totalThongBaoHeThong} <br />
+          <br />
         </Card>
       </Col>
-      <Col xs={24} md={12} xl={8}>
+      <Col xs={24} md={12} xl={6}>
         <Card>
           <Statistic
             title={<div style={{ fontSize: 16 }}>Số lượng phản hồi</div>}
@@ -114,6 +130,24 @@ const BlockAdmin = () => {
           <br />
           <Badge color="red" />
           Chưa trả lời: {dataThongKePhanHoi?.totalPhanHoi - dataThongKePhanHoi?.daTraLoi}
+          <br />
+          <br />
+        </Card>
+      </Col>
+      <Col xs={24} md={12} xl={6}>
+        <Card>
+          <Statistic
+            title={<div style={{ fontSize: 16 }}>Số lượng đơn DVMC</div>}
+            value={dataThongKeDVMC?.totalDonDVMC ?? 0}
+          />
+          <Badge color="blue" />
+          Đang xử lý: {dataThongKeDVMC?.totalDangXuLy ?? 0}
+          <br />
+          <Badge color="green" />
+          Đã duyệt: {dataThongKeDVMC?.totalDaDuyet ?? 0}
+          <br />
+          <Badge color="red" />
+          Không duyệt: {dataThongKeDVMC?.totalKhongDuyet ?? 0}
         </Card>
       </Col>
       <Col xs={24} lg={12}>
