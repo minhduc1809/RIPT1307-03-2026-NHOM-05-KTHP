@@ -2,13 +2,16 @@ import ThoiKhoaBieu from '@/pages/Calendar';
 import TinTuc from '@/pages/QuanLyTinTuc';
 import { Col, Row } from 'antd';
 import BlockSinhVien from './components/BlockSinhVien';
+import { useAccess } from 'umi';
+import BlockAdmin from './components/BlockAdmin';
 
 const TrangChu = () => {
-  const vaiTro = localStorage?.getItem('vaiTro');
+  const access = useAccess();
   return (
     <>
       <Row gutter={[20, 20]}>
-        {vaiTro === 'sinh_vien' && <BlockSinhVien />}
+        {access.sinhVien && <BlockSinhVien />}
+        {access.admin && <BlockAdmin />}
         <Col xs={24} lg={14} xl={16}>
           <ThoiKhoaBieu type="dashboard" />
         </Col>

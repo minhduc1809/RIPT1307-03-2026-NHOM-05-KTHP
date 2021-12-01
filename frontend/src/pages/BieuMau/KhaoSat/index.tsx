@@ -201,7 +201,7 @@ const KhaoSat = () => {
       widthDrawer="60%"
       // scroll={{ x: 1200 }}
       Form={formTable}
-    ></TableBase>
+    />
   );
 };
 
