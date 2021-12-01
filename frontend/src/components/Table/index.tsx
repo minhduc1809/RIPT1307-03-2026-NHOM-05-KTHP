@@ -2,7 +2,7 @@
 import data from '@/utils/data';
 import type { IColumn } from '@/utils/interfaces';
 import { toRegex } from '@/utils/utils';
-import { PlusCircleFilled, SearchOutlined } from '@ant-design/icons';
+import { CloseOutlined, PlusCircleFilled, SearchOutlined } from '@ant-design/icons';
 import { Button, Card, Drawer, Input, Modal, Table } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import type { FilterValue } from 'antd/lib/table/interface';
@@ -126,6 +126,12 @@ const TableBase = (props: Props) => {
         <Button
           onClick={() => {
             clearFilters();
+            const filter = { ...filterInfo };
+            const cond = { ...condition };
+            filter[dataIndex] = [];
+            cond[dataIndex] = undefined;
+            setFilterInfo(filter);
+            setCondition(cond);
           }}
           size="small"
           style={{ width: 90 }}
@@ -339,17 +345,21 @@ const TableBase = (props: Props) => {
         <>
           {formType === 'Drawer' ? (
             <Drawer
+              closeIcon={false}
               maskClosable={false}
               width={widthDrawer}
-              onClose={() => {
-                setVisibleForm(false);
-              }}
               destroyOnClose
               footer={false}
               bodyStyle={{ padding: 0 }}
               visible={visibleForm}
             >
               <Form />
+              <CloseOutlined
+                onClick={() => {
+                  setVisibleForm(false);
+                }}
+                style={{ position: 'absolute', top: 24, right: 24, cursor: 'pointer' }}
+              />
             </Drawer>
           ) : (
             <Modal

@@ -12,12 +12,16 @@ const TrangChu = () => {
       <Row gutter={[20, 20]}>
         {access.sinhVien && <BlockSinhVien />}
         {access.admin && <BlockAdmin />}
-        <Col xs={24} lg={14} xl={16}>
-          <ThoiKhoaBieu type="dashboard" />
-        </Col>
-        <Col xs={24} lg={10} xl={8}>
-          <TinTuc type="dashboard" />
-        </Col>
+        {access.sinhVienVaNhanVien && (
+          <>
+            <Col xs={24} lg={14} xl={16}>
+              <ThoiKhoaBieu type="dashboard" />
+            </Col>
+            <Col xs={24} lg={10} xl={8}>
+              <TinTuc type="dashboard" />
+            </Col>
+          </>
+        )}
       </Row>
     </>
   );

@@ -20,7 +20,7 @@ const BlockAdmin = () => {
     soLuongNhanVien: number;
     soLuongSinhVien: number;
   }>({ soLuongNhanVien: 0, soLuongSinhVien: 0 });
-
+  const [loading, setLoading] = useState<boolean>(false);
   const [dataThongKeDonVi, setDataThongKeDonVi] = useState<ThongKeDonVi[]>([]);
 
   const [dataThongKeThongBao, setDataThongKeThongBao] = useState<{
@@ -34,6 +34,7 @@ const BlockAdmin = () => {
   }>({ totalPhanHoi: 0, daTraLoi: 0 });
 
   const getThongKeDonVi = async () => {
+    setLoading(true);
     const resNhanSu = await thongKeNhanSu();
     setDataThongKeNhanSu(resNhanSu?.data?.data ?? {});
     const resDonVi = await thongKeDonVi();
@@ -54,6 +55,7 @@ const BlockAdmin = () => {
         soLuongSinhVien: resNhanSu?.data?.data?.soLuongSinhVien - sumSV,
       },
     ]);
+    setLoading(false);
   };
 
   const getThongKeThongBao = async () => {
@@ -115,7 +117,11 @@ const BlockAdmin = () => {
         </Card>
       </Col>
       <Col xs={24} lg={12}>
-        <Card bodyStyle={{ padding: 0 }} title="Thống kê cán bộ/giảng viên theo đơn vị">
+        <Card
+          loading={loading}
+          bodyStyle={{ padding: 0 }}
+          title="Thống kê cán bộ/giảng viên theo đơn vị"
+        >
           <DemoPie
             height={350}
             hideLegend
@@ -128,7 +134,7 @@ const BlockAdmin = () => {
         </Card>
       </Col>
       <Col xs={24} lg={12}>
-        <Card bodyStyle={{ padding: 0 }} title="Thống kê sinh viên theo đơn vị">
+        <Card loading={loading} bodyStyle={{ padding: 0 }} title="Thống kê sinh viên theo đơn vị">
           <DemoPie
             height={350}
             hideLegend
