@@ -114,7 +114,7 @@ const PhanHoi = () => {
       >
         {[
           { value: 'sinh_vien', name: 'Sinh viên' },
-          { value: 'nhan_vien', name: 'Nhân viên' },
+          { value: 'nhan_vien', name: 'Cán bộ, giảng viên' },
         ]?.map((item) => (
           <Select.Option key={item.value} value={item.value}>
             {item.name}

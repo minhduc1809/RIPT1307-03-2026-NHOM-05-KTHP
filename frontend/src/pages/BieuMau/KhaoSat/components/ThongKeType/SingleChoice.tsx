@@ -14,7 +14,7 @@ const Donut = (props: { ketQua: BieuMau.ThongKeLuaChon; tong: number }) => {
   const cols = {
     percent: {
       formatter: (val: number) => {
-        return `${val * 100}%`;
+        return `${(val * 100).toFixed(2)}%`;
       },
     },
   };
@@ -45,7 +45,7 @@ const Donut = (props: { ketQua: BieuMau.ThongKeLuaChon; tong: number }) => {
             (noiDungLuaChon, percent) => {
               return {
                 name: noiDungLuaChon,
-                value: `${percent * 100}%`,
+                value: `${(percent * 100).toFixed(2)}%`,
               };
             },
           ]}

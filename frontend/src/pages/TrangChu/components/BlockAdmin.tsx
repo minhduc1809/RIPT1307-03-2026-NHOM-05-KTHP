@@ -6,8 +6,9 @@ import {
   thongKePhanHoi,
   thongKeThongBao,
 } from '@/services/Dashboard/dashboard';
-import { Badge, Card, Col, Statistic } from 'antd';
+import { Badge, Card, Col, Statistic, Tag } from 'antd';
 import { useEffect, useState } from 'react';
+import Table from '@/components/Table/Table';
 
 type ThongKeDonVi = {
   tenDonVi: string;
@@ -176,6 +177,46 @@ const BlockAdmin = () => {
               x: item.tenDonVi,
               y: item.soLuongSinhVien,
             }))}
+          />
+        </Card>
+      </Col>
+      <Col span={24}>
+        <Card>
+          <Table
+            columns={[
+              {
+                title: 'STT',
+                dataIndex: 'index',
+                align: 'center',
+                width: 80,
+              },
+              {
+                title: 'Tên đơn vị',
+                dataIndex: 'tenDonVi',
+                align: 'center',
+                width: 200,
+              },
+              {
+                title: 'Mã đơn vị',
+                dataIndex: 'maDonVi',
+                align: 'center',
+                width: 200,
+                render: (val: string) => <Tag color="green">{val}</Tag>,
+              },
+              {
+                title: 'Số Cán bộ/Giảng viên',
+                dataIndex: 'soLuongNhanVien',
+                align: 'center',
+                width: 200,
+              },
+              {
+                title: 'Số sinh viên',
+                dataIndex: 'soLuongSinhVien',
+                align: 'center',
+                width: 200,
+              },
+            ]}
+            data={dataThongKeDonVi?.map((item, index) => ({ ...item, index: index + 1 }))}
           />
         </Card>
       </Col>

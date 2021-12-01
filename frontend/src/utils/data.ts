@@ -12,7 +12,7 @@ const data: any = {
   doiTuong: ['Vai trò', 'Tất cả'],
   vaiTro: [
     { value: 'sinh_vien', text: 'Sinh viên' },
-    { value: 'nhan_vien', text: 'Nhân viên' },
+    { value: 'nhan_vien', text: 'Cán bộ, giảng viên' },
   ],
   gioiTinh: ['Nam', 'Nữ'],
   'info.anToan': [

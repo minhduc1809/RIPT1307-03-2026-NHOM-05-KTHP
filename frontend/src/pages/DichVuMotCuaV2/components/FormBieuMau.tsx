@@ -188,6 +188,7 @@ const FormBieuMau = (props: {
       }
       case 'DON_VI_HANH_CHINH': {
         initialValue = item?.value;
+        ruleElement = [];
         element = (
           <DiaChi
             hideDiaChiCuThe={item?.level !== 4}
@@ -200,10 +201,10 @@ const FormBieuMau = (props: {
             initialValue={item?.value}
             form={form}
             fields={{
-              tinh: [item?.label ?? '', 'maTinh'],
-              quanHuyen: [item?.label ?? '', 'maQuanHuyen'],
-              xaPhuong: [item?.label ?? '', 'maPhuongXa'],
-              diaChiCuThe: [item?.label ?? '', 'soNhaTenDuong'],
+              tinh: [`${name}.${item?.label ?? ''}`, 'maTinh'],
+              quanHuyen: [`${name}.${item?.label ?? ''}`, 'maQuanHuyen'],
+              xaPhuong: [`${name}.${item?.label ?? ''}`, 'maPhuongXa'],
+              diaChiCuThe: [`${name}.${item?.label ?? ''}`, 'soNhaTenDuong'],
             }}
           />
         );
@@ -318,10 +319,15 @@ const FormBieuMau = (props: {
                 textOverflow: 'ellipsis',
               }}
             >
+              {item.type === 'DON_VI_HANH_CHINH' && item.isRequired && (
+                <span style={{ color: '#ff4d4f', fontSize: 14, fontFamily: 'SimSun, sans-serif' }}>
+                  *
+                </span>
+              )}{' '}
               {item?.label ?? 'Chưa có tiêu đề'}
             </div>
           }
-          name={`${name}.${item?.label}`}
+          name={item.type === 'DON_VI_HANH_CHINH' ? undefined : `${name}.${item?.label}`}
           rules={item?.isRequired ? ruleElement : []}
           initialValue={initialValue}
         >
@@ -366,14 +372,14 @@ const FormBieuMau = (props: {
     return (
       arrCauHinh?.map((item, index) => {
         let value = values?.[`${name}[${index}].${item?.label}`];
-        if (item?.type === 'DON_VI_HANH_CHINH')
+        if (item?.type === 'DON_VI_HANH_CHINH') {
           value = {
             ...values?.[`${name}[${index}].${item?.label}`],
             tenTinh,
             tenQuanHuyen,
             tenPhuongXa,
           };
-        else if (item?.type === 'TABLE') {
+        } else if (item?.type === 'TABLE') {
           value = danhSachDataTable?.[`${name}[${index}].${item?.label}`]?.map(
             (row: { cauHinhBieuMau: DichVuMotCuaV2.CauHinhBieuMau[] }) => buildTableData(row),
           );
@@ -449,7 +455,6 @@ const FormBieuMau = (props: {
               ? props?.record?.thongTinDichVu?.cauHinhBieuMau ?? []
               : record?.cauHinhBieuMau ?? [],
           );
-
           if (props?.edit !== null && props?.edit !== undefined) {
             if (props?.edit === false && props?.handleAdd)
               props.handleAdd(valuesFinal, duLieuBieuMau);
