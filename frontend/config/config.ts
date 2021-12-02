@@ -97,6 +97,12 @@ export default defineConfig({
       component: './TrangChu',
       icon: 'HomeOutlined',
     },
+    {
+      path: '/baivietchung',
+      name: 'BaiVietChung',
+      component: './BaiVietChung',
+      icon: 'HomeOutlined',
+    },
     // {
     //   name: 'dva-sample',
     //   icon: 'CalendarOutlined',
