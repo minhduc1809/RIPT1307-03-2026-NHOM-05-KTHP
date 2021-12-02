@@ -14,7 +14,7 @@ const ThongTinNguoiTaoDon = (props: { record?: Login.Profile }) => {
           ? moment(props?.record?.ngay_sinh)?.format('DD-MM-YYYY')
           : props?.record?.ngaySinh !== 'false'
           ? props?.record?.ngaySinh?.split('-')?.reverse()?.join('-')
-          : 'Chưa cập nhật'}
+          : ''}
       </Descriptions.Item>
       <Descriptions.Item>
         Mã sinh viên: {props?.record?.ma_dinh_danh || props?.record?.maSinhVien || ''}
@@ -25,7 +25,7 @@ const ThongTinNguoiTaoDon = (props: { record?: Login.Profile }) => {
           ? props?.record?.ten_don_vi
           : props?.record?.tenDonVi && props?.record?.tenDonVi !== 'false'
           ? props?.record?.tenDonVi
-          : 'Chưa cập nhật'}
+          : ''}
       </Descriptions.Item>
       <Descriptions.Item>
         Lớp: {props?.record?.lop_hanh_chinh_id?.[1] || props?.record?.tenLopHanhChinh || ''}

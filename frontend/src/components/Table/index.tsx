@@ -126,10 +126,11 @@ const TableBase = (props: Props) => {
         <Button
           onClick={() => {
             clearFilters();
+            const type = typeof dataIndex;
             const filter = { ...filterInfo };
             const cond = { ...condition };
-            filter[dataIndex] = [];
-            cond[dataIndex] = undefined;
+            filter[type === 'string' ? dataIndex : dataIndex?.join('.')] = [];
+            cond[type === 'string' ? dataIndex : dataIndex?.join('.')] = undefined;
             setFilterInfo(filter);
             setCondition(cond);
           }}
@@ -150,7 +151,7 @@ const TableBase = (props: Props) => {
     filterIcon: (filtered: any) => (
       <SearchOutlined
         style={{
-          color: filtered || haveCond(dataIndex) ? '#CC0D00' : undefined,
+          color: filtered || haveCond(dataIndex) ? '#007F3E' : undefined,
         }}
         title="Tìm kiếm"
       />
