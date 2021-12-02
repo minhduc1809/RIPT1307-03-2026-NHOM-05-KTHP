@@ -41,17 +41,21 @@ const DanhMuc = (props: { button: any }) => {
           <Descriptions.Item label="TTHC yêu cầu trả phí, lệ phí">
             {record?.thongTinThuTuc?.yeuCauTraPhi ? 'Có' : 'Không'}
           </Descriptions.Item>
-          <Descriptions.Item label="Tính tiền theo số lượng">
-            {record?.thongTinThuTuc?.tinhTienTheoSoLuong ? 'Có' : 'Không'}
-          </Descriptions.Item>
-          <Descriptions.Item label="Mức lệ phí">
-            {recordProduct?.currentPrice?.unitAmount
-              ? `${currencyFormat(recordProduct?.currentPrice?.unitAmount)} đồng`
-              : ''}
-          </Descriptions.Item>
-          <Descriptions.Item label="Đơn vị tính">
-            {recordProduct?.unitLabel ?? ''}
-          </Descriptions.Item>
+          {record?.thongTinThuTuc?.yeuCauTraPhi && (
+            <>
+              <Descriptions.Item label="Tính tiền theo số lượng">
+                {record?.thongTinThuTuc?.tinhTienTheoSoLuong ? 'Có' : 'Không'}
+              </Descriptions.Item>
+              <Descriptions.Item label="Mức lệ phí">
+                {recordProduct?.currentPrice?.unitAmount
+                  ? `${currencyFormat(recordProduct?.currentPrice?.unitAmount)} đồng`
+                  : ''}
+              </Descriptions.Item>
+              <Descriptions.Item label="Đơn vị tính">
+                {recordProduct?.unitLabel ?? ''}
+              </Descriptions.Item>
+            </>
+          )}
           <Descriptions.Item label="Cơ quan có thẩm quyền">
             {record?.thongTinThuTuc?.coQuanCoThamQuyen}
           </Descriptions.Item>
