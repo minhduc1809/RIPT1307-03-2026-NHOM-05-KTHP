@@ -102,6 +102,7 @@ export default defineConfig({
       name: 'BaiVietChung',
       component: './BaiVietChung',
       icon: 'HomeOutlined',
+      access: 'admin',
     },
     // {
     //   name: 'dva-sample',
@@ -154,7 +155,7 @@ export default defineConfig({
       name: 'PhanHoi',
       icon: 'QuestionOutlined',
       path: '/phanhoi',
-      access: 'admin',
+      access: 'adminVaSinhVien',
       component: './PhanHoi',
     },
 

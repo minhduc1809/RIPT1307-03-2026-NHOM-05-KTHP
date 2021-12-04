@@ -1,4 +1,9 @@
-import { getPhanHoiAdmin, traLoiPhanHoi } from '@/services/PhanHoi/phanhoi';
+import {
+  getPhanHoiAdmin,
+  getPhanHoiUser,
+  postPhanHoiUser,
+  traLoiPhanHoi,
+} from '@/services/PhanHoi/phanhoi';
 import { message } from 'antd';
 import { useState } from 'react';
 
@@ -14,6 +19,7 @@ export default () => {
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
+  const [edit, setEdit] = useState<boolean>(false);
   const getPhanHoiAdminModel = async () => {
     setLoading(true);
     const response = await getPhanHoiAdmin({
@@ -35,7 +41,32 @@ export default () => {
     getPhanHoiAdminModel();
   };
 
+  const getPhanHoiUserModel = async () => {
+    setLoading(true);
+    const response = await getPhanHoiUser({
+      page,
+      limit,
+      daTraLoi,
+    });
+    setDanhSach(response?.data?.data?.result ?? []);
+    setTotal(response?.data?.data?.total ?? 0);
+    setLoading(false);
+  };
+
+  const userPostPhanHoiModel = async (payload: { noiDungPhanHoi: string }) => {
+    setLoading(true);
+    await postPhanHoiUser(payload);
+    message.success('Gửi phản hồi thành công');
+    setVisibleForm(false);
+    setLoading(false);
+    getPhanHoiUserModel();
+  };
+
   return {
+    edit,
+    setEdit,
+    userPostPhanHoiModel,
+    getPhanHoiUserModel,
     filterInfo,
     condition,
     setFilterInfo,

@@ -25,11 +25,11 @@ export default () => {
     setHinhThucDaoTao(response?.data?.data?.[0]?.id);
   };
 
-  const getLopChinhAdminModel = async () => {
+  const getLopHanhChinhAdminModel = async (payload?: { page: number; limit: number }) => {
     setLoading(true);
     const response = await getLopHanhChinhAdmin({
-      page,
-      limit,
+      page: payload ? payload.page : page,
+      limit: payload ? payload.limit : limit,
       condition: {
         ...condition,
         hinh_thuc_dao_tao_id: hinhThucDaoTao === -1 ? undefined : hinhThucDaoTao,
@@ -42,7 +42,7 @@ export default () => {
 
   return {
     getAllHinhThucDaoTaoModel,
-    getLopChinhAdminModel,
+    getLopHanhChinhAdminModel,
     record,
     setRecord,
     total,

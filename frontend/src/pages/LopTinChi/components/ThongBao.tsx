@@ -44,6 +44,10 @@ const ThongBao = (props: { id: number; isNhanVien?: boolean; typeLop: string }) 
   };
   useEffect(() => {
     getData();
+    form.setFieldsValue({
+      title: undefined,
+      htmlContent: undefined,
+    });
   }, [props?.id, props.isNhanVien, state, page, limit]);
 
   const dsThongBao = dataThongBao?.map((value, index) => ({
@@ -123,7 +127,7 @@ const ThongBao = (props: { id: number; isNhanVien?: boolean; typeLop: string }) 
       )}
       <ProTable<IResThongBaoLopTinChi.Result, API.ApiResponse>
         pagination={{
-          showTotal: () => <div></div>,
+          showTotal: () => <div />,
           pageSize: limit,
           onChange: (pageNumber: number, limitNumber?: number) => {
             setPage(pageNumber);
@@ -136,7 +140,7 @@ const ThongBao = (props: { id: number; isNhanVien?: boolean; typeLop: string }) 
         toolBarRender={false}
         bordered
         columns={columns}
-      ></ProTable>
+      />
 
       <Drawer
         maskClosable={false}
@@ -152,7 +156,6 @@ const ThongBao = (props: { id: number; isNhanVien?: boolean; typeLop: string }) 
           title={edit ? 'Chỉnh sửa' : 'Thêm mới'}
           onFinish={async (values: any) => {
             setLoading(true);
-
             const newValues = {
               ...values,
               // imageUrl: response?.data?.data?.url,
@@ -167,6 +170,7 @@ const ThongBao = (props: { id: number; isNhanVien?: boolean; typeLop: string }) 
                 message.success('Thêm mới thành công');
                 setstate(state + 1);
                 setVisibleDrawer(false);
+                setLoading(false);
                 return true;
               }
             } catch (error) {

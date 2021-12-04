@@ -4,10 +4,12 @@ import type { IColumn } from '@/utils/interfaces';
 import { EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Button, Select, Tooltip } from 'antd';
 import moment from 'moment';
-import { useModel } from 'umi';
+import { useModel, useAccess } from 'umi';
 import Form from './components/Form';
+import FormGuiPhanHoi from './components/FormGuiPhanHoi';
 
 const PhanHoi = () => {
+  const access = useAccess();
   const {
     loading,
     setVisibleForm,
@@ -20,6 +22,7 @@ const PhanHoi = () => {
     daTraLoi,
     vaiTro,
     condition,
+    getPhanHoiUserModel,
   } = useModel('phanhoi');
 
   const handleEdit = (record: PhanHoi.Record) => {
@@ -40,13 +43,21 @@ const PhanHoi = () => {
       align: 'center',
       search: 'search',
       width: 150,
+      hide: access.admin ? false : true,
     },
     {
       title: 'Người gửi',
       dataIndex: 'hoTenNguoiPhanHoi',
       align: 'center',
       search: 'search',
-      width: 200,
+      width: 170,
+    },
+    {
+      title: 'Người trả lời',
+      dataIndex: 'hoTenNguoiTraLoi',
+      align: 'center',
+      width: 150,
+      hide: !daTraLoi,
     },
     {
       title: 'Câu hỏi',
@@ -56,14 +67,23 @@ const PhanHoi = () => {
       // width: 200,
     },
     {
+      title: 'Câu trả lời',
+      dataIndex: 'noiDungTraLoi',
+      align: 'center',
+      search: 'search',
+      hide: !daTraLoi,
+      // width: 200,
+    },
+    {
       title: 'Thời gian hỏi',
       dataIndex: 'thoiGianHoi',
       align: 'center',
       render: (val) => <div>{moment(val).format('HH:mm DD/MM/YYYY')}</div>,
-      width: 200,
+      width: 150,
     },
     {
       title: 'Thao tác',
+      hide: access.admin ? false : true,
       align: 'center',
       width: 100,
       render: (record) => (
@@ -78,15 +98,6 @@ const PhanHoi = () => {
     },
   ];
 
-  if (daTraLoi) {
-    columns.splice(3, 0, {
-      title: 'Người trả lời',
-      dataIndex: 'hoTenNguoiTraLoi',
-      align: 'center',
-      width: 200,
-    });
-  }
-
   const onChangeVaiTro = (value: string) => {
     setVaiTro(value);
   };
@@ -98,29 +109,33 @@ const PhanHoi = () => {
 
   return (
     <TableBase
+      scroll={{ x: 900 }}
       columns={columns}
-      getData={getPhanHoiAdminModel}
+      getData={access.admin ? getPhanHoiAdminModel : getPhanHoiUserModel}
       loading={loading}
+      hascreate={access.admin ? false : true}
       dependencies={[vaiTro, daTraLoi, page, limit, condition]}
       modelName="phanhoi"
       title="Phản hồi"
-      Form={Form}
+      Form={access.admin ? Form : FormGuiPhanHoi}
     >
-      <Select
-        placeholder="Lọc theo vai trò người gửi"
-        onChange={onChangeVaiTro}
-        value={vaiTro}
-        style={{ width: 220, marginBottom: 8, marginRight: 8 }}
-      >
-        {[
-          { value: 'sinh_vien', name: 'Sinh viên' },
-          { value: 'nhan_vien', name: 'Cán bộ, giảng viên' },
-        ]?.map((item) => (
-          <Select.Option key={item.value} value={item.value}>
-            {item.name}
-          </Select.Option>
-        ))}
-      </Select>
+      {access.admin && (
+        <Select
+          placeholder="Lọc theo vai trò người gửi"
+          onChange={onChangeVaiTro}
+          value={vaiTro}
+          style={{ width: 220, marginBottom: 8, marginRight: 8 }}
+        >
+          {[
+            { value: 'sinh_vien', name: 'Sinh viên' },
+            { value: 'nhan_vien', name: 'Cán bộ, giảng viên' },
+          ]?.map((item) => (
+            <Select.Option key={item.value} value={item.value}>
+              {item.name}
+            </Select.Option>
+          ))}
+        </Select>
+      )}
       <Select
         placeholder="Lọc theo trạng thái"
         onChange={onChangeTrangThai}

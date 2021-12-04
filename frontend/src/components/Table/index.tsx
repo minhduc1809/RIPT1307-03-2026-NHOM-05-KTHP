@@ -340,7 +340,7 @@ const TableBase = (props: Props) => {
         dataSource={model?.[dataState || 'danhSach']?.map((item: any, index: number) => {
           return { ...item, index: index + 1 + (page - 1) * limit, key: index };
         })}
-        columns={columns}
+        columns={columns?.filter((item) => item?.hide !== true)}
       />
       {Form && (
         <>

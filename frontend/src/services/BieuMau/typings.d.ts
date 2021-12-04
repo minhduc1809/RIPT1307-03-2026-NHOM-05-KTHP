@@ -28,6 +28,12 @@ declare module BieuMau {
   }
 
   export interface Record {
+    danhSachLopTinChi: string[];
+    danhSachLopHanhChinh: string[];
+    danhSachNguoiDung: string[];
+    danhSachKhoaHoc: string[];
+    danhSachNganhHoc: string[];
+    loaiDoiTuongSuDung: string[];
     coCamKet: boolean;
     noiDungCamKet: string;
     thoiGian?: string[];

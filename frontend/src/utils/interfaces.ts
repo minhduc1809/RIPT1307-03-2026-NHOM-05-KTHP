@@ -5,4 +5,5 @@ export interface IColumn<T> extends ICol<T> {
   columnKey?: string;
   notRegex?: boolean;
   typeFilter?: 'query' | 'condition';
+  hide?: boolean;
 }

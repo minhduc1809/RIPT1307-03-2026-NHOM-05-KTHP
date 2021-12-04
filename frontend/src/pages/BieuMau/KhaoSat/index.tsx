@@ -28,8 +28,10 @@ const KhaoSat = () => {
     edit,
     getBieuMauThongKeModel,
   } = useModel('bieumau');
+  const { getLopHanhChinhAdminModel } = useModel('lophanhchinh');
   const [form, setForm] = useState<string>('edit');
   useEffect(() => {
+    getLopHanhChinhAdminModel({ page: 1, limit: 1000 });
     setLoaiBieuMau('Khảo sát');
   }, []);
 

@@ -11,7 +11,7 @@ const LopHanhChinhAdmin = () => {
     page,
     limit,
     loading,
-    getLopChinhAdminModel,
+    getLopHanhChinhAdminModel,
     getAllHinhThucDaoTaoModel,
     hinhThucDaoTao,
     danhSachHinhThucDaoTao,
@@ -20,6 +20,9 @@ const LopHanhChinhAdmin = () => {
 
   useEffect(() => {
     getAllHinhThucDaoTaoModel();
+    return () => {
+      setHinhThucDaoTao(-1);
+    };
   }, []);
 
   const columns: IColumn<APILopHanhChinh.RecordAdmin>[] = [
@@ -67,7 +70,7 @@ const LopHanhChinhAdmin = () => {
       loading={loading}
       dependencies={[page, limit, condition, hinhThucDaoTao]}
       title="Danh sách lớp hành chính"
-      getData={getLopChinhAdminModel}
+      getData={getLopHanhChinhAdminModel}
       modelName="lophanhchinh"
     >
       <Select

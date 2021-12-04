@@ -14,7 +14,10 @@ const FormBaiHoc = () => {
 
   const { loading, record, setVisibleForm, edit, putBieuMauModel, addBieuMauModel } =
     useModel('bieumau');
-  const [doiTuong, setDoiTuong] = useState<string>(record?.doiTuong ?? 'Tất cả');
+
+  const { danhSach } = useModel('lophanhchinh');
+
+  const [doiTuong, setDoiTuong] = useState<string[]>(record?.loaiDoiTuongSuDung ?? ['Tất cả']);
   const [camKet, setCamKet] = useState<boolean>(record?.coCamKet ?? true);
   return (
     <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
@@ -76,21 +79,29 @@ const FormBaiHoc = () => {
           <Col xs={24} sm={12} md={8}>
             <Form.Item
               rules={[...rules.required]}
-              name="doiTuong"
+              name="loaiDoiTuongSuDung"
               label="Đối tượng"
               initialValue={doiTuong}
             >
               <Select
-                onChange={(val: string) => {
-                  setDoiTuong(val);
+                mode="multiple"
+                onChange={(val: string[]) => {
+                  if (val.includes('Tất cả')) {
+                    form.setFieldsValue({
+                      loaiDoiTuongSuDung: ['Tất cả'],
+                    });
+                  }
+                  setDoiTuong(val.includes('Tất cả') ? ['Tất cả'] : val);
                 }}
                 placeholder="Chọn đối tượng"
               >
-                {['Tất cả', 'Vai trò'].map((item) => (
-                  <Select.Option key={item} value={item}>
-                    {item}
-                  </Select.Option>
-                ))}
+                {['Tất cả', 'Vai trò', 'Lớp tín chỉ', 'Lớp hành chính', 'Ngành', 'Khóa'].map(
+                  (item) => (
+                    <Select.Option key={item} value={item}>
+                      {item}
+                    </Select.Option>
+                  ),
+                )}
               </Select>
             </Form.Item>
           </Col>
@@ -115,7 +126,23 @@ const FormBaiHoc = () => {
             </Form.Item>
           </Col>
         </Row>
-        {doiTuong === 'Vai trò' && (
+        {doiTuong.includes('Lớp hành chính') && (
+          <Form.Item
+            // rules={[...rules.required]}
+            name="danhSachLopHanhChinh"
+            label="Lớp hành chính"
+            initialValue={record?.danhSachLopHanhChinh ?? []}
+          >
+            <Select showSearch allowClear mode="multiple" placeholder="Lớp hành chính">
+              {danhSach.map((item) => (
+                <Select.Option key={item.ten_lop_hanh_chinh} value={item.ten_lop_hanh_chinh}>
+                  {item.ten_lop_hanh_chinh}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+        {doiTuong.includes('Vai trò') && (
           <Form.Item
             rules={[...rules.required]}
             name="danhSachVaiTro"
