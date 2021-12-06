@@ -28,12 +28,23 @@ const KhaoSat = () => {
     edit,
     getBieuMauThongKeModel,
   } = useModel('bieumau');
-  const { getLopHanhChinhAdminModel } = useModel('lophanhchinh');
+  const { getLopHanhChinhAdminModel, condition: condLopHanhChinh } = useModel('lophanhchinh');
   const { getAllNganhModel } = useModel('nganh');
+  const { adminGetLopTinChi, condition: condLopTinChi } = useModel('loptinchi');
+  const { getKhoaHocModel } = useModel('khoahoc');
   const [form, setForm] = useState<string>('edit');
+
   useEffect(() => {
-    getLopHanhChinhAdminModel({ page: 1, limit: 1000 });
+    adminGetLopTinChi(100);
+  }, [condLopTinChi]);
+
+  useEffect(() => {
+    getLopHanhChinhAdminModel({ page: 1, limit: 100 });
+  }, [condLopHanhChinh]);
+
+  useEffect(() => {
     getAllNganhModel();
+    getKhoaHocModel({ pageParam: 1, limitParam: 1000 });
     setLoaiBieuMau('Khảo sát');
   }, []);
 

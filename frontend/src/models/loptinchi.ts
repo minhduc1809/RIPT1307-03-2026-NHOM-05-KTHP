@@ -16,6 +16,7 @@ import {
   sinhVienGetKetQuaHocTapByIdLopTinChi,
   giangVienGetLopTinChiByHocKy,
   giangVienPutKetQuaHocTapByIdLopTinChi,
+  getLopTinChi,
 } from '@/services/LopTinChi/loptinchi';
 import type { IResThongBaoLopTinChi, LopTinChi } from '@/services/LopTinChi/typings';
 import { message } from 'antd';
@@ -166,7 +167,15 @@ export default () => {
     setLoading(false);
   };
 
+  const adminGetLopTinChi = async (limitParam?: number) => {
+    setLoading(true);
+    const response = await getLopTinChi({ page, limit: limitParam || limit, condition });
+    setDanhSach(response?.data?.data?.result ?? []);
+    setLoading(false);
+  };
+
   return {
+    adminGetLopTinChi,
     setDanhSachDiemTongKet,
     danhSachDiemTongKet,
     giangVienGetDiemTongKetSinhVienByIdSinhVienModel,

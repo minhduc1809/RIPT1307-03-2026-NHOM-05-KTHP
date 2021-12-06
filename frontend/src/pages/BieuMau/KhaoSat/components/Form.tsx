@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { useModel } from 'umi';
 import Block from './Block';
 import styles from './block.css';
+import _ from 'lodash';
 
 const FormBaiHoc = () => {
   const [form] = Form.useForm();
@@ -16,11 +17,22 @@ const FormBaiHoc = () => {
   const { loading, record, setVisibleForm, edit, putBieuMauModel, addBieuMauModel } =
     useModel('bieumau');
 
-  const { danhSach } = useModel('lophanhchinh');
+  const { danhSach, setCondition: setCondLopHanhChinh } = useModel('lophanhchinh');
   const { danhSach: danhSachNganh } = useModel('nganh');
+  const { danhSach: danhSachLopTinChi, setCondition } = useModel('loptinchi');
+  const { danhSach: danhSachKhoaHoc } = useModel('khoahoc');
 
   const [doiTuong, setDoiTuong] = useState<string[]>(record?.loaiDoiTuongSuDung ?? []);
   const [camKet, setCamKet] = useState<boolean>(record?.coCamKet ?? true);
+
+  const debouncedSearchLopTinChi = _.debounce((value) => {
+    setCondition({ ten_lop_tin_chi: value });
+  }, 500);
+
+  const debouncedSearchLopHanhChinh = _.debounce((value) => {
+    setCondLopHanhChinh({ ten_lop_hanh_chinh: value });
+  }, 500);
+
   return (
     <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
       <Form
@@ -78,7 +90,7 @@ const FormBaiHoc = () => {
           />
         </Form.Item>
         <Row gutter={[20, 0]}>
-          <Col xs={24} sm={12} md={8}>
+          <Col xs={24} sm={12} md={12}>
             <Form.Item
               rules={[...rules.required]}
               name="loaiDoiTuongSuDung"
@@ -107,7 +119,7 @@ const FormBaiHoc = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8}>
+          <Col xs={24} sm={12} md={6}>
             <Form.Item name="kichHoat" label="Kích hoạt" initialValue={record?.kichHoat ?? true}>
               <Radio.Group>
                 <Radio value={true}>Có</Radio>
@@ -115,7 +127,7 @@ const FormBaiHoc = () => {
               </Radio.Group>
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8}>
+          <Col xs={24} sm={12} md={6}>
             <Form.Item name="coCamKet" label="Có cam kết" initialValue={record?.coCamKet ?? true}>
               <Radio.Group
                 onChange={(val) => {
@@ -130,15 +142,69 @@ const FormBaiHoc = () => {
         </Row>
         {doiTuong.includes('Lớp hành chính') && (
           <Form.Item
-            rules={[...rules.required]}
+            // rules={[...rules.required]}
             name="danhSachLopHanhChinh"
             label="Lớp hành chính"
             initialValue={record?.danhSachLopHanhChinh ?? []}
           >
-            <Select showSearch allowClear mode="multiple" placeholder="Lớp hành chính">
+            <Select
+              onSearch={(value) => {
+                debouncedSearchLopHanhChinh(value);
+              }}
+              showSearch
+              allowClear
+              mode="multiple"
+              placeholder="Lớp hành chính"
+            >
               {danhSach.map((item) => (
                 <Select.Option key={item.ten_lop_hanh_chinh} value={item.ten_lop_hanh_chinh}>
                   {item.ten_lop_hanh_chinh}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+        {doiTuong.includes('Lớp tín chỉ') && (
+          <Form.Item
+            // rules={[...rules.required]}
+            name="danhSachLopTinChi"
+            label="Lớp tín chỉ"
+            initialValue={record?.danhSachLopTinChi ?? []}
+          >
+            <Select
+              onSearch={(value) => {
+                debouncedSearchLopTinChi(value);
+              }}
+              showSearch
+              allowClear
+              mode="multiple"
+              placeholder="Tìm kiếm theo tên lớp"
+            >
+              {danhSachLopTinChi.map((item) => (
+                <Select.Option key={item.ten_lop_tin_chi} value={item.ten_lop_tin_chi}>
+                  {item.ten_lop_tin_chi}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+        {doiTuong.includes('Khóa') && (
+          <Form.Item
+            // rules={[...rules.required]}
+            name="danhSachKhoaHoc"
+            label="Khóa"
+            initialValue={record?.danhSachKhoaHoc ?? []}
+          >
+            <Select
+              filterOption={(value, option) => includes(option?.props.children, value)}
+              showSearch
+              allowClear
+              mode="multiple"
+              placeholder="Chọn khóa"
+            >
+              {danhSachKhoaHoc?.map((item) => (
+                <Select.Option key={item.display_name} value={item.display_name}>
+                  {item.display_name}
                 </Select.Option>
               ))}
             </Select>
@@ -200,7 +266,7 @@ const FormBaiHoc = () => {
           initialValue={record?.danhSachKhoi ?? []}
           rules={[
             {
-              validator: async (_, names) => {
+              validator: async (validate, names) => {
                 if (!names || names.length < 1) {
                   return Promise.reject(new Error('Ít nhất 1 khối'));
                 }

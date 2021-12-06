@@ -1,5 +1,6 @@
 export declare module LopTinChi {
   export interface Record {
+    ten_lop_tin_chi: string;
     id: number;
     ky_nam_hoc_id: [number, string];
     ma_hoc_phan: string;

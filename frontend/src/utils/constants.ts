@@ -21,7 +21,7 @@ export enum ElementTemplateType {
 export enum EFileType {
   doc = 'Tài liệu (doc, docx)',
   pdf = 'Tài liệu (pdf)',
-  excel = 'Excel (xlsx, xls, xlsm)',
+  excel = 'Excel (xlsx, xls)',
   image = 'Ảnh (png, jpg, jpeg)',
 }
 
