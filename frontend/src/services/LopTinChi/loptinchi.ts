@@ -98,3 +98,7 @@ export async function giangVienPutKetQuaHocTapByIdLopTinChi(
 ) {
   return axios.put(`${ip3}/odoo-lop-tin-chi/${idLop}/giang-vien/ket-qua-hoc-tap`, data);
 }
+
+export async function getLopTinChi(payload: { page: number; limit: number; condition: any }) {
+  return axios.get(`${ip3}/odoo-lop-tin-chi/pageable`, { params: payload });
+}

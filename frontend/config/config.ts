@@ -101,7 +101,7 @@ export default defineConfig({
       path: '/baivietchung',
       name: 'BaiVietChung',
       component: './BaiVietChung',
-      icon: 'HomeOutlined',
+      icon: 'EditOutlined',
       access: 'admin',
     },
     // {
@@ -151,11 +151,19 @@ export default defineConfig({
         },
       ],
     },
+
+    {
+      name: 'GocHocTap',
+      icon: 'EditOutlined',
+      path: '/gochoctap',
+      access: 'sinhVien',
+      component: './LopTinChi/GocHocTap',
+    },
+
     {
       name: 'PhanHoi',
       icon: 'QuestionOutlined',
       path: '/phanhoi',
-      access: 'adminVaSinhVien',
       component: './PhanHoi',
     },
 

@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 import rules from '@/utils/rules';
+import { includes } from '@/utils/utils';
 import { CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Card, Col, DatePicker, Form, Input, Radio, Row, Select } from 'antd';
 import moment from 'moment';
@@ -16,8 +17,9 @@ const FormBaiHoc = () => {
     useModel('bieumau');
 
   const { danhSach } = useModel('lophanhchinh');
+  const { danhSach: danhSachNganh } = useModel('nganh');
 
-  const [doiTuong, setDoiTuong] = useState<string[]>(record?.loaiDoiTuongSuDung ?? ['Tất cả']);
+  const [doiTuong, setDoiTuong] = useState<string[]>(record?.loaiDoiTuongSuDung ?? []);
   const [camKet, setCamKet] = useState<boolean>(record?.coCamKet ?? true);
   return (
     <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
@@ -128,7 +130,7 @@ const FormBaiHoc = () => {
         </Row>
         {doiTuong.includes('Lớp hành chính') && (
           <Form.Item
-            // rules={[...rules.required]}
+            rules={[...rules.required]}
             name="danhSachLopHanhChinh"
             label="Lớp hành chính"
             initialValue={record?.danhSachLopHanhChinh ?? []}
@@ -137,6 +139,28 @@ const FormBaiHoc = () => {
               {danhSach.map((item) => (
                 <Select.Option key={item.ten_lop_hanh_chinh} value={item.ten_lop_hanh_chinh}>
                   {item.ten_lop_hanh_chinh}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+        {doiTuong.includes('Ngành') && (
+          <Form.Item
+            rules={[...rules.required]}
+            name="danhSachNganhHoc"
+            label="Ngành học"
+            initialValue={record?.danhSachNganhHoc ?? []}
+          >
+            <Select
+              filterOption={(value, option) => includes(option?.props.children, value)}
+              showSearch
+              allowClear
+              mode="multiple"
+              placeholder="Ngành học"
+            >
+              {danhSachNganh.map((item) => (
+                <Select.Option key={item.ma_nganh} value={item.ma_nganh}>
+                  {item.ten_nganh} ({item.ten_nganh_viet_tat})
                 </Select.Option>
               ))}
             </Select>

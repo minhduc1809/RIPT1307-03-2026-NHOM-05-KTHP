@@ -66,7 +66,8 @@ const LopTinChi = () => {
   }, []);
 
   useEffect(() => {
-    if (vaiTro === 'nhan_vien') getAllKyHocByHinhThucDaoTaoGiangVienModel(hinhThucDaoTao);
+    if (vaiTro === 'nhan_vien' && !record?.id)
+      getAllKyHocByHinhThucDaoTaoGiangVienModel(hinhThucDaoTao);
     else getAllKyHocSinhVienModel();
   }, [hinhThucDaoTao]);
 

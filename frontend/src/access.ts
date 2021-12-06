@@ -20,7 +20,6 @@ export default function access(initialState: {
   const token = localStorage.getItem('token');
   return {
     admin: token && vaiTro && vaiTro === 'Admin',
-    adminVaSinhVien: token && vaiTro && (vaiTro === 'Admin' || vaiTro === 'sinh_vien'),
     nhanVien: token && vaiTro && vaiTro === 'nhan_vien',
     sinhVien: token && vaiTro && vaiTro === 'sinh_vien',
     quanTri: token && vaiTro && vaiTro === 'quan_tri',

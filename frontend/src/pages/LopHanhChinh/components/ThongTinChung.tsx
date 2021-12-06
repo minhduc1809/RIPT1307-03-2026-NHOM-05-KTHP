@@ -1,16 +1,22 @@
 import studentIcon from '@/assets/student.png';
 import teacherIcon from '@/assets/teacher.png';
-import { Descriptions, List } from 'antd';
+import { Button, Descriptions, List, Modal } from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
+import { useState } from 'react';
+import styles from '../index.css';
+import KetQuaHocTapSinhVien from './KetQuaHocTap';
 
 const ThongTinChungLopHanhChinh = (props: {
   danhSachSinhVien: Login.Profile[];
   giangVien?: Login.Profile;
   siSo: number;
 }) => {
+  const [visible, setVisible] = useState<boolean>(false);
+  const [recordSinhVien, setRecordSinhVien] = useState<Login.Profile>();
+
   return (
     <>
-      <Descriptions title={`Sĩ số: ${props.siSo ?? 0} sinh viên`} />
+      <Descriptions title={`Sĩ số: ${props?.danhSachSinhVien?.length ?? 0} sinh viên`} />
       <Descriptions title="Cố vấn học tập:" />
       <List
         grid={{
@@ -56,7 +62,14 @@ const ThongTinChungLopHanhChinh = (props: {
         itemLayout="horizontal"
         dataSource={props.danhSachSinhVien}
         renderItem={(item: Login.Profile) => (
-          <List.Item>
+          <List.Item
+            onClick={() => {
+              setRecordSinhVien(item);
+              setVisible(true);
+            }}
+            style={{ cursor: 'pointer', borderRadius: 5, padding: 12 }}
+            className={styles.thongtinchung}
+          >
             <List.Item.Meta
               avatar={<Avatar src={item?.avatar_path || studentIcon} />}
               title={
@@ -75,6 +88,27 @@ const ThongTinChungLopHanhChinh = (props: {
           </List.Item>
         )}
       />
+      <Modal
+        destroyOnClose
+        width="1000px"
+        onCancel={() => {
+          setVisible(false);
+        }}
+        footer={
+          <Button
+            type="primary"
+            onClick={() => {
+              setVisible(false);
+            }}
+          >
+            OK
+          </Button>
+        }
+        title="Kết quả học tập"
+        visible={visible}
+      >
+        <KetQuaHocTapSinhVien sinhVien={recordSinhVien} />
+      </Modal>
     </>
   );
 };

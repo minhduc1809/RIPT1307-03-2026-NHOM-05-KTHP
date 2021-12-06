@@ -85,5 +85,6 @@ export default {
   'menu.DangKyTinChi': 'Đăng ký tín chỉ',
   'menu.QuanLyLichTuan': 'Quản lý lịch tuần',
   'menu.DichVuMotCuaAdmin.QuanLyDon': 'Quản lý đơn',
+  'menu.GocHocTap': 'Góc học tập',
   'menu.BaiVietChung': 'Bài viết chung',
 };

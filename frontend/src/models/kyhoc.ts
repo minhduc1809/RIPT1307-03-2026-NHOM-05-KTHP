@@ -1,4 +1,8 @@
-import { getAllKyHocByHinhThucDaoTaoGiangVien, getAllKyHocSinhVien } from '@/services/kyhoc/kyhoc';
+import {
+  getAllKyHocByHinhThucDaoTaoGiangVien,
+  getAllKyHocSinhVien,
+  giangVienGetAllKyHocSinhVienByIdSinhVien,
+} from '@/services/kyhoc/kyhoc';
 import { useState } from 'react';
 
 export default () => {
@@ -20,7 +24,15 @@ export default () => {
     setLoading(false);
   };
 
+  const giangVienGetAllKyHocSinhVienByIdSinhVienModel = async (idSinhVien: number) => {
+    const response = await giangVienGetAllKyHocSinhVienByIdSinhVien(idSinhVien);
+    setDanhSach(response?.data?.data ?? []);
+    setRecord(response?.data?.data?.[0]);
+    setLoading(false);
+  };
+
   return {
+    giangVienGetAllKyHocSinhVienByIdSinhVienModel,
     getAllKyHocSinhVienModel,
     danhSach,
     record,

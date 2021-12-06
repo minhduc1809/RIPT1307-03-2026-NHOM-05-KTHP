@@ -1,4 +1,10 @@
 import {
+  giangVienGetDiemThanhPhanSinhVienByIdSinhVienIdHocKy,
+  giangVienGetDiemTongKetSinhVienByIdSinhVien,
+  sinhVienGetDiemThanhPhanByHocKy,
+  sinhVienGetDiemTongKetByHocKy,
+} from '@/services/LopTinChi/ketquahoctap';
+import {
   getDanhSachSinhVienByIdNhomLop,
   getInfoMonHoc,
   sinhVienGetLopTinChiByHocKy,
@@ -18,6 +24,9 @@ import { useState } from 'react';
 export default () => {
   const [danhSach, setDanhSach] = useState<LopTinChi.Record[]>([]);
   const [danhSachNhomLop, setDanhSachNhomLop] = useState<LopTinChi.NhomLopTinChi[]>();
+  const [danhSachDiemThanhPhanTheoKy, setDanhSachDiemThanhPhanTheoKy] = useState<
+    LopTinChi.DiemThanhPhan[]
+  >([]);
   const [idNhomLop, setIdNhomLop] = useState<number>(-1);
   const [filterInfo, setFilterInfo] = useState<any>({});
   const [condition, setCondition] = useState<any>({});
@@ -26,6 +35,8 @@ export default () => {
   const [ketQuaHocTap, setKetQuaHocTap] = useState<LopTinChi.KetQuaHocTap>();
   const [danhSachKetQuaHocTap, setDanhSachKetQuaHocTap] = useState<LopTinChi.KetQuaHocTap[]>([]);
   const [record, setRecord] = useState<LopTinChi.Record>({} as any);
+  const [recordDiemTongKet, setRecordDiemTongKet] = useState<LopTinChi.DiemTongKet>();
+  const [danhSachDiemTongKet, setDanhSachDiemTongKet] = useState<LopTinChi.DiemTongKet[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
@@ -62,6 +73,40 @@ export default () => {
     setLoading(true);
     const response = await getThongBaoLopTinChiById(payload);
     setThongBao(response?.data?.data?.result);
+    setLoading(false);
+  };
+
+  const sinhVienGetDiemThanhPhanByHocKyModel = async (idHocKy: number) => {
+    setLoading(true);
+    const response = await sinhVienGetDiemThanhPhanByHocKy(idHocKy);
+    setDanhSachDiemThanhPhanTheoKy(response?.data?.data ?? []);
+    setLoading(false);
+  };
+
+  const sinhVienGetDiemTongKetByHocKyModel = async (idHocKy: number) => {
+    setLoading(true);
+    const response = await sinhVienGetDiemTongKetByHocKy(idHocKy);
+    setRecordDiemTongKet(response?.data?.data);
+    setLoading(false);
+  };
+
+  const giangVienGetDiemThanhPhanSinhVienByIdSinhVienIdHocKyModel = async (
+    idSinhVien: number,
+    idHocKy: number,
+  ) => {
+    setLoading(true);
+    const response = await giangVienGetDiemThanhPhanSinhVienByIdSinhVienIdHocKy(
+      idSinhVien,
+      idHocKy,
+    );
+    setDanhSachDiemThanhPhanTheoKy(response?.data?.data ?? []);
+    setLoading(false);
+  };
+
+  const giangVienGetDiemTongKetSinhVienByIdSinhVienModel = async (idSinhVien: number) => {
+    setLoading(true);
+    const response = await giangVienGetDiemTongKetSinhVienByIdSinhVien(idSinhVien);
+    setDanhSachDiemTongKet(response?.data?.data ?? []);
     setLoading(false);
   };
 
@@ -122,6 +167,16 @@ export default () => {
   };
 
   return {
+    setDanhSachDiemTongKet,
+    danhSachDiemTongKet,
+    giangVienGetDiemTongKetSinhVienByIdSinhVienModel,
+    giangVienGetDiemThanhPhanSinhVienByIdSinhVienIdHocKyModel,
+    sinhVienGetDiemTongKetByHocKyModel,
+    recordDiemTongKet,
+    setRecordDiemTongKet,
+    danhSachDiemThanhPhanTheoKy,
+    setDanhSachDiemThanhPhanTheoKy,
+    sinhVienGetDiemThanhPhanByHocKyModel,
     setDanhSach,
     giangVienPutKetQuaHocTapByIdLopTinChiModel,
     setDanhSachKetQuaHocTap,
