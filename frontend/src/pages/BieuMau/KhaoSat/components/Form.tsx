@@ -47,7 +47,7 @@ const FormBaiHoc = () => {
           if (edit)
             putBieuMauModel({
               id: record._id,
-              data: { ...values, thoiGianBatDau, thoiGianKetThuc },
+              data: { ...values, thoiGianBatDau, thoiGianKetThuc, doiTuong: 'Tất cả' },
             });
           else
             addBieuMauModel({
@@ -55,6 +55,7 @@ const FormBaiHoc = () => {
               loai: 'Khảo sát',
               thoiGianBatDau,
               thoiGianKetThuc,
+              doiTuong: 'Tất cả',
             });
         }}
         form={form}

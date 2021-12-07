@@ -32,11 +32,11 @@ export default () => {
     setLoading(false);
   };
 
-  const adminPutProfileUserModel = async (payload: Login.Profile & { user_id: number }) => {
-    if (!payload.user_id) return;
+  const adminPutProfileUserModel = async (payload: Login.Profile & { partner_id: number }) => {
+    if (!payload.partner_id) return;
     setLoading(true);
     await putUser(payload);
-    message.success('Sửa thành công');
+    message.success('Lưu thành công');
     setLoading(false);
     getUserModel();
     setVisibleForm(false);

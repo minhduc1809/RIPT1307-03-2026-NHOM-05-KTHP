@@ -50,20 +50,28 @@ export default () => {
   };
 
   const addBieuMauModel = async (payload: BieuMau.Record) => {
-    setLoading(true);
-    await addBieuMau(payload);
-    message.success('Thêm thành công');
-    setLoading(false);
-    getBieuMauAdminModel();
-    setVisibleForm(false);
+    try {
+      setLoading(true);
+      await addBieuMau(payload);
+      message.success('Thêm thành công');
+      setLoading(false);
+      getBieuMauAdminModel();
+      setVisibleForm(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
   const putBieuMauModel = async (payload: { id: string; data: BieuMau.Record }) => {
-    setLoading(true);
-    await putBieuMau(payload);
-    message.success('Sửa thành công');
-    setLoading(false);
-    getBieuMauAdminModel();
-    setVisibleForm(false);
+    try {
+      setLoading(true);
+      await putBieuMau(payload);
+      message.success('Sửa thành công');
+      setLoading(false);
+      getBieuMauAdminModel();
+      setVisibleForm(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   const kichHoatBieuMauModel = async (payload: { id: string; data: { kichHoat: boolean } }) => {

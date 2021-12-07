@@ -10,6 +10,7 @@ declare module Login {
   }
 
   export interface Profile {
+    partner_id: any;
     vai_tro: string;
     ma_dinh_danh: string;
     id: number;

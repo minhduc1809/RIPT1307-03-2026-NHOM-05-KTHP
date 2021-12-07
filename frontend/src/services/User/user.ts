@@ -9,6 +9,6 @@ export async function adminChangePassword(payload: { user_id?: number; password:
   return axios.post(`${ip3}/odoo-user/admin/change-password`, payload);
 }
 
-export async function putUser(payload: Login.Profile & { user_id: number }) {
+export async function putUser(payload: Login.Profile & { partner_id: number }) {
   return axios.put(`${ip3}/odoo-user/admin/profile`, payload);
 }
