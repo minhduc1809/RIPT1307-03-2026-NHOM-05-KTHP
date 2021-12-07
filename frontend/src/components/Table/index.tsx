@@ -151,7 +151,7 @@ const TableBase = (props: Props) => {
     filterIcon: (filtered: any) => (
       <SearchOutlined
         style={{
-          color: filtered || haveCond(dataIndex) ? '#007F3E' : undefined,
+          color: filtered || haveCond(dataIndex) ? '#CC0D00' : undefined,
         }}
         title="Tìm kiếm"
       />

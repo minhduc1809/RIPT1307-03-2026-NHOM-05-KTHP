@@ -24,11 +24,13 @@ const TableQuanLyDonAdmin = () => {
     danhSach,
     record,
     setRecord,
+    setDanhSach,
   } = useModel('dichvumotcuav2');
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
   const [type, setType] = useState<string>('view');
   useEffect(() => {
     adminGetAllBieuMauModel();
+    return () => setDanhSach([]);
   }, []);
   const columns: IColumn<DichVuMotCuaV2.Don>[] = [
     {

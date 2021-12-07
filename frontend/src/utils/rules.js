@@ -153,11 +153,9 @@ const rules = {
       message: 'Độ dài ít nhất 4 kí tự, không sử dụng ký tự khoảng trắng',
     },
     // {
-    //   pattern: new RegExp(
-    //     '^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z~!@#$%^&*(_)+/<>?}{:;",.=|]+$'
-    //   ),
-    //   message: 'Bao gồm cả chữ và số'
-    // }
+    //   pattern: new RegExp('^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z~!@#$%^&*(_)+/<>?}{:;",.=|]+$'),
+    //   message: 'Bao gồm cả chữ và số',
+    // },
   ],
   CMND: [
     {

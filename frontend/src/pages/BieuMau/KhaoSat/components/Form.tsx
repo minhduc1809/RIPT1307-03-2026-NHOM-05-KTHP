@@ -40,6 +40,9 @@ const FormBaiHoc = () => {
         onFinish={async (values: BieuMau.Record) => {
           const thoiGianBatDau = values?.thoiGian?.[0] ?? values.thoiGianBatDau;
           const thoiGianKetThuc = values?.thoiGian?.[1] ?? values.thoiGianKetThuc;
+          if (values?.loaiDoiTuongSuDung?.includes('Tất cả')) {
+            values.loaiDoiTuongSuDung = [];
+          }
           delete values.thoiGian;
           if (edit)
             putBieuMauModel({

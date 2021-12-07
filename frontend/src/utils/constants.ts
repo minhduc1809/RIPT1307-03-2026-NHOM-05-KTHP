@@ -1,5 +1,6 @@
 export enum Role {
   nhan_vien = 'Cán bộ, giảng viên',
+  sinh_vien = 'Sinh viên',
 }
 
 export enum ElementTemplateType {

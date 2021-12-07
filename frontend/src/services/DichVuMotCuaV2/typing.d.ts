@@ -100,9 +100,11 @@ declare module DichVuMotCuaV2 {
     thongTinHoSo?: string;
     thongTinQuyTrinh?: string;
     thongTinYeuCau?: string;
+    loaiDichVu?: 'DVMC' | 'VAN_PHONG_SO';
   }
 
   export interface Don {
+    loaiDichVu?: 'DVMC' | 'VAN_PHONG_SO';
     createdAt?: string;
     trangThai?: string;
     _id?: string;

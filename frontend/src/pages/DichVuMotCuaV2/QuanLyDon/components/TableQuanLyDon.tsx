@@ -5,7 +5,7 @@ import type { IColumn } from '@/utils/interfaces';
 import { EyeOutlined } from '@ant-design/icons';
 import { Button, Modal, Select } from 'antd';
 import moment from 'moment';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useModel } from 'umi';
 
 const TableQuanLyDon = () => {
@@ -23,8 +23,12 @@ const TableQuanLyDon = () => {
     visibleFormBieuMau,
     setVisibleFormBieuMau,
     setRecordDonThaoTac,
+    setDanhSach,
     recordDonThaoTac,
   } = useModel('dichvumotcuav2');
+  useEffect(() => {
+    return () => setDanhSach([]);
+  }, []);
   const { getChuyenVienXuLyDonModel } = useModel('phanquyen');
   const { pathname } = window.location;
   const arrPathName = pathname?.split('/') ?? [];

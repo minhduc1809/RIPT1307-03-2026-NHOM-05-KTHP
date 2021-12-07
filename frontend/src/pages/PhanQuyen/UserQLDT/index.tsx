@@ -86,7 +86,7 @@ const UserPhanNhom = () => {
         value={vaiTro}
         style={{ width: 220, marginBottom: 8, marginRight: 8 }}
       >
-        {Object.keys(Role)?.map((item) => (
+        {['nhan_vien']?.map((item) => (
           <Select.Option key={item} value={item}>
             {Role?.[item]}
           </Select.Option>

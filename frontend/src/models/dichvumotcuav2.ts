@@ -33,7 +33,9 @@ export default () => {
   const [condition, setCondition] = useState<any>({});
   const [record, setRecord] = useState<DichVuMotCuaV2.BieuMau>();
   const [recordDon, setRecordDon] = useState<DichVuMotCuaV2.Don>();
+  const [loaiDichVu, setLoaiDichVu] = useState<string>('DVMC');
   const [recordCauHinhBieuMau, setRecordCauHinhBieuMau] = useState<DichVuMotCuaV2.BieuMau>({
+    loaiDichVu: 'DVMC',
     ten: '',
     _id: '',
     ghiChu: '',
@@ -67,7 +69,11 @@ export default () => {
 
   const getBieuMauAdminModel = async () => {
     setLoading(true);
-    const response = await getBieuMauAdmin({ page, limit, condition });
+    const response = await getBieuMauAdmin({
+      page,
+      limit,
+      condition: { ...condition, loaiDichVu },
+    });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);
@@ -272,6 +278,8 @@ export default () => {
   };
 
   return {
+    loaiDichVu,
+    setLoaiDichVu,
     trangThaiQuanLyDonAdmin,
     setTrangThaiQuanLyDonAdmin,
     adminGetTrangThaiDonModel,

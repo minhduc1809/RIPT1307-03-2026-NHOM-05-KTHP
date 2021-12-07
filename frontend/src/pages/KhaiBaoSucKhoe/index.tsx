@@ -62,7 +62,7 @@ const KhaiBaoSucKhoe = () => {
       dataIndex: 'vaiTro',
       align: 'center',
       search: vaiTro === 'Admin' ? 'filterString' : undefined,
-      render: (val) => <div>{val === 'sinh_vien' ? 'Sinh viên' : 'Giảng viên'}</div>,
+      render: (val) => <div>{val === 'sinh_vien' ? 'Sinh viên' : 'Cán bộ, giảng viên'}</div>,
     },
     {
       title: 'Thời gian khai báo',
@@ -111,7 +111,7 @@ const KhaiBaoSucKhoe = () => {
       formType="Drawer"
       widthDrawer="60%"
       Form={Form}
-    ></TableBase>
+    />
   );
 };
 

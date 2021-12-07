@@ -3,6 +3,7 @@ import TableBase from '@/components/Table';
 import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { useEffect } from 'react';
 import { Button, Divider, Modal, Popconfirm, Tabs, Tooltip } from 'antd';
 import { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -24,10 +25,20 @@ const QuanLyBieuMau = () => {
     setRecordCauHinhBieuMau,
     setCurrent,
     setRecordThongTinChung,
+    loaiDichVu,
+    setLoaiDichVu,
+    setDanhSach,
   } = useModel('dichvumotcuav2');
 
   const { getProductByCodeModel } = useModel('thanhtoan');
-
+  const { pathname } = window.location;
+  const arrPathName = pathname?.split('/') ?? [];
+  useEffect(() => {
+    setLoaiDichVu(arrPathName?.[arrPathName.length - 1] === 'dvmc' ? 'DVMC' : 'VAN_PHONG_SO');
+    return () => {
+      setDanhSach([]);
+    };
+  }, []);
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
   const [visible, setVisible] = useState<boolean>(false);
   const columns: IColumn<DichVuMotCuaV2.BieuMau>[] = [
@@ -38,7 +49,7 @@ const QuanLyBieuMau = () => {
       width: 80,
     },
     {
-      title: 'Tên',
+      title: 'Tên dịch vụ',
       dataIndex: 'ten',
       search: 'search',
       align: 'left',
@@ -118,7 +129,7 @@ const QuanLyBieuMau = () => {
         modelName="dichvumotcuav2"
         columns={columns}
         loading={loading}
-        dependencies={[page, limit, condition]}
+        dependencies={[page, limit, condition, loaiDichVu]}
         getData={getBieuMauAdminModel}
         Form={Form}
       >

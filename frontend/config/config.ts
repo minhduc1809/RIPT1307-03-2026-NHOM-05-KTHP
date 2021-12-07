@@ -304,13 +304,33 @@ export default defineConfig({
       routes: [
         {
           name: 'QuanLyBieuMau',
-          path: './quanlybieumau',
+          path: './quanlybieumau/dvmc',
           component: './DichVuMotCuaV2/QuanLyBieuMau',
           access: 'admin',
         },
         {
           name: 'QuanLyDon',
-          path: './quanlydonadmin',
+          path: './quanlydonadmin/dvmc',
+          component: './DichVuMotCuaV2/QuanLyDon/admin',
+          access: 'admin',
+        },
+      ],
+      access: 'admin',
+    },
+    {
+      name: 'VanPhongSoAdmin',
+      icon: 'AuditOutlined',
+      path: '/vanphongso',
+      routes: [
+        {
+          name: 'QuanLyBieuMau',
+          path: './quanlybieumau/vps',
+          component: './DichVuMotCuaV2/QuanLyBieuMau',
+          access: 'admin',
+        },
+        {
+          name: 'QuanLyDon',
+          path: './quanlydonadmin/vps',
           component: './DichVuMotCuaV2/QuanLyDon/admin',
           access: 'admin',
         },
@@ -345,6 +365,13 @@ export default defineConfig({
       icon: 'notification',
       path: '/thongbao',
       component: './ThongBao',
+      access: 'admin',
+    },
+    {
+      name: 'QuanLyTaiKhoan',
+      icon: 'UserOutlined',
+      path: '/quanlytaikhoan',
+      component: 'QuanLyTaiKhoan',
       access: 'admin',
     },
     {

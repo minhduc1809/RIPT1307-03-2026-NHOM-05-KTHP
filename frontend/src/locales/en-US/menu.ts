@@ -87,4 +87,6 @@ export default {
   'menu.DichVuMotCuaAdmin.QuanLyDon': 'Quản lý đơn',
   'menu.BaiVietChung': 'Bài viết chung',
   'menu.GocHocTap': 'Góc học tập',
+  'menu.QuanLyTaiKhoan': 'Quản lý tài khoản',
+  'menu.VanPhongSoAdmin': 'Văn phòng số',
 };
