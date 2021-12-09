@@ -68,11 +68,14 @@ const TableBase = (props: Props) => {
 
   useEffect(() => {
     getData(params);
-    // return () => {
-    //   setCondition({});
-    //   setFilterInfo({});
-    // };
   }, [...dependencies]);
+
+  useEffect(() => {
+    return () => {
+      setCondition({});
+      setFilterInfo({});
+    };
+  }, []);
 
   let searchInput: Input | null = null;
 

@@ -17,8 +17,7 @@ const QuanLyDon = () => {
   const { pathname } = window.location;
   const arrPathName = pathname?.split('/') ?? [];
   useEffect(() => {
-    if (arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi')
-      getAllBieuMauChuyenVienDieuPhoiModel();
+    if (arrPathName?.includes('quanlydondieuphoi')) getAllBieuMauChuyenVienDieuPhoiModel();
     else getAllBieuMauChuyenVienTiepNhanModel();
   }, []);
 

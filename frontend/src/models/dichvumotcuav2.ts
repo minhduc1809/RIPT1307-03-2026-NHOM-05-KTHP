@@ -33,9 +33,9 @@ export default () => {
   const [condition, setCondition] = useState<any>({});
   const [record, setRecord] = useState<DichVuMotCuaV2.BieuMau>();
   const [recordDon, setRecordDon] = useState<DichVuMotCuaV2.Don>();
-  const [loaiDichVu, setLoaiDichVu] = useState<string>('DVMC');
+  const [loaiDichVu, setLoaiDichVu] = useState<'DVMC' | 'VAN_PHONG_SO'>('DVMC');
   const [recordCauHinhBieuMau, setRecordCauHinhBieuMau] = useState<DichVuMotCuaV2.BieuMau>({
-    loaiDichVu: 'DVMC',
+    loaiDichVu: loaiDichVu,
     ten: '',
     _id: '',
     ghiChu: '',
@@ -67,12 +67,12 @@ export default () => {
   const [trangThaiQuanLyDonAdmin, setTrangThaiQuanLyDonAdmin] = useState<string>('PROCESSING');
   const [recordTrangThaiDon, setRecordTrangThaiDon] = useState<DichVuMotCuaV2.TrangThaiBuoc[]>([]);
 
-  const getBieuMauAdminModel = async () => {
+  const getBieuMauAdminModel = async (loaiDichVuParam?: string) => {
     setLoading(true);
     const response = await getBieuMauAdmin({
       page,
       limit,
-      condition: { ...condition, loaiDichVu },
+      condition: { ...condition, loaiDichVu: loaiDichVuParam || loaiDichVu },
     });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);
@@ -95,18 +95,20 @@ export default () => {
     setLoading(false);
   };
 
-  const adminGetAllBieuMauModel = async () => {
+  const adminGetAllBieuMauModel = async (loaiDichVuParam?: string) => {
     setLoading(true);
-    const response = await adminGetAllBieuMau();
+    const response = await adminGetAllBieuMau({
+      condition: { loaiDichVu: loaiDichVuParam || loaiDichVu },
+    });
     setDanhSach(response?.data?.data ?? []);
-    // setRecord(response?.data?.data?.[0]);
+    setRecord(response?.data?.data?.[0]);
     setLoading(false);
   };
 
   const postBieuMauAdminModel = async (payload: DichVuMotCuaV2.BieuMau) => {
     try {
       setLoading(true);
-      await postBieuMauAdmin(payload);
+      await postBieuMauAdmin({ ...payload, loaiDichVu });
       message.success('Thêm thành công');
       setLoading(false);
       setVisibleForm(false);
@@ -119,7 +121,13 @@ export default () => {
   const putBieuMauAdminModel = async (payload: { data: DichVuMotCuaV2.BieuMau; id?: string }) => {
     try {
       setLoading(true);
-      await putBieuMauAdmin(payload);
+      await putBieuMauAdmin({
+        ...payload,
+        data: {
+          ...payload.data,
+          loaiDichVu,
+        },
+      });
       message.success('Lưu thành công');
       setLoading(false);
       setVisibleForm(false);
@@ -195,13 +203,15 @@ export default () => {
     setLoading(false);
   };
 
-  const adminGetDonModel = async () => {
+  const adminGetDonModel = async (loaiDichVuParam: string) => {
+    if (!record?._id) return;
     setLoading(true);
     const response = await adminGetDonSinhVien({
       page,
       limit,
       condition: {
         ...condition,
+        loaiDichVu: loaiDichVuParam || loaiDichVu,
         trangThai: trangThaiQuanLyDonAdmin,
         'thongTinDichVu._id': record?._id,
       },

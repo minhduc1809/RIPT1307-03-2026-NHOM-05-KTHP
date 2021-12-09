@@ -15,9 +15,13 @@ export default () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
-  const getUserModel = async () => {
+  const getUserModel = async (payload?: { pageParam?: number; limitParam?: number }) => {
     setLoading(true);
-    const response = await getUser({ page, limit, condition });
+    const response = await getUser({
+      page: payload?.pageParam ?? page,
+      limit: payload?.limitParam ?? limit,
+      condition,
+    });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);

@@ -9,6 +9,9 @@ import { Button, Card, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
+import mm from 'moment-timezone';
+
+mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const FormTinTuc = () => {
   const [form] = Form.useForm();

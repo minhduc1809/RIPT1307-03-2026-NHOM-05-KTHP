@@ -31,8 +31,8 @@ export async function userGetAllBieuMau() {
   return axios.get(`${ip3}/dvmc/me/all`);
 }
 
-export async function adminGetAllBieuMau() {
-  return axios.get(`${ip3}/dvmc`);
+export async function adminGetAllBieuMau(payload: { condition: any }) {
+  return axios.get(`${ip3}/dvmc`, { params: payload });
 }
 
 export async function postBieuMauAdmin(payload: DichVuMotCuaV2.BieuMau) {

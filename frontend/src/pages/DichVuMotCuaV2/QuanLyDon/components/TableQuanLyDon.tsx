@@ -115,7 +115,7 @@ const TableQuanLyDon = () => {
           {['PENDING'].includes(trangThaiQuanLyDon) && (
             <Button
               onClick={() => {
-                if (arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi') {
+                if (arrPathName?.includes('quanlydondieuphoi')) {
                   getChuyenVienXuLyDonModel(recordDon?.idDonVi);
                 }
                 setRecordDonThaoTac(recordDon);
@@ -153,7 +153,7 @@ const TableQuanLyDon = () => {
       scroll={{ x: 1500 }}
       loading={loading}
       getData={
-        arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi'
+        arrPathName?.includes('quanlydondieuphoi')
           ? getDonThaoTacChuyenVienDieuPhoiModel
           : getDonThaoTacChuyenVienXuLyModel
       }

@@ -25,7 +25,6 @@ const QuanLyBieuMau = () => {
     setRecordCauHinhBieuMau,
     setCurrent,
     setRecordThongTinChung,
-    loaiDichVu,
     setLoaiDichVu,
     setDanhSach,
   } = useModel('dichvumotcuav2');
@@ -34,7 +33,7 @@ const QuanLyBieuMau = () => {
   const { pathname } = window.location;
   const arrPathName = pathname?.split('/') ?? [];
   useEffect(() => {
-    setLoaiDichVu(arrPathName?.[arrPathName.length - 1] === 'dvmc' ? 'DVMC' : 'VAN_PHONG_SO');
+    setLoaiDichVu(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
     return () => {
       setDanhSach([]);
     };
@@ -84,7 +83,7 @@ const QuanLyBieuMau = () => {
                   setEdit(true);
                   setVisibleForm(true);
                   setRecordCauHinhBieuMau(record);
-                  setCurrent(0);
+                  setCurrent(arrPathName?.includes('dvmc') ? 0 : 1);
                   setRecordThongTinChung({
                     thongTinThuTuc: record?.thongTinThuTuc,
                     thongTinHoSo: record?.thongTinHoSo,
@@ -129,8 +128,10 @@ const QuanLyBieuMau = () => {
         modelName="dichvumotcuav2"
         columns={columns}
         loading={loading}
-        dependencies={[page, limit, condition, loaiDichVu]}
-        getData={getBieuMauAdminModel}
+        dependencies={[page, limit, condition]}
+        getData={() =>
+          getBieuMauAdminModel(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO')
+        }
         Form={Form}
       >
         <Button
@@ -140,7 +141,7 @@ const QuanLyBieuMau = () => {
             setRecord({} as DichVuMotCuaV2.BieuMau);
             setRecordCauHinhBieuMau({} as DichVuMotCuaV2.BieuMau);
             setRecordThongTinChung({});
-            setCurrent(0);
+            setCurrent(arrPathName?.includes('dvmc') ? 0 : 1);
           }}
           type="primary"
           icon={<PlusCircleOutlined />}

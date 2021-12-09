@@ -580,7 +580,7 @@ const FormBieuMau = (props: {
                 Không duyệt
               </Button>
 
-              {arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi' && (
+              {arrPathName?.includes('quanlydondieuphoi') && (
                 <Button
                   style={{
                     marginRight: 8,

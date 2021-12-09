@@ -9,12 +9,13 @@ import {
   EyeOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Form, Modal } from 'antd';
+import { Button, Card, Form, Input, Modal } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import styles from './block.css';
 import Block from './BlockBieuMau';
 import { nanoid } from 'nanoid';
+import rules from '@/utils/rules';
 
 const FormBieuMau = () => {
   const [form] = Form.useForm();
@@ -26,6 +27,7 @@ const FormBieuMau = () => {
     setRecordCauHinhBieuMau,
     recordCauHinhBieuMau,
     setCurrent,
+    loaiDichVu,
   } = useModel('dichvumotcuav2');
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
   const buildPostData = (arrCauHinh: DichVuMotCuaV2.CauHinhBieuMau[]): any => {
@@ -51,12 +53,36 @@ const FormBieuMau = () => {
         onFinish={async (values) => {
           setRecordCauHinhBieuMau({
             ...recordCauHinhBieuMau,
-            ...{ cauHinhBieuMau: buildPostData(values?.cauHinhBieuMau ?? []) },
+            cauHinhBieuMau: buildPostData(values?.cauHinhBieuMau ?? []),
+            ten: values?.ten,
+            ghiChu: values?.ghiChu,
           });
           setCurrent(2);
         }}
         form={form}
       >
+        {loaiDichVu === 'VAN_PHONG_SO' && (
+          <>
+            <Form.Item
+              name="ten"
+              label="Tên biểu mẫu"
+              initialValue={recordCauHinhBieuMau?.ten}
+              rules={[...rules.required, ...rules.text, ...rules.length(100)]}
+            >
+              <Input placeholder="Tên biểu mẫu" />
+            </Form.Item>
+
+            <Form.Item
+              name="ghiChu"
+              label="Ghi chú"
+              initialValue={recordCauHinhBieuMau?.ghiChu}
+              rules={[...rules.text, ...rules.length(200)]}
+            >
+              <Input.TextArea placeholder="Ghi chú" />
+            </Form.Item>
+          </>
+        )}
+
         <Form.List
           name="cauHinhBieuMau"
           initialValue={recordCauHinhBieuMau?.cauHinhBieuMau ?? []}
@@ -134,15 +160,17 @@ const FormBieuMau = () => {
             >
               Xem trước
             </Button>
-            <Button
-              icon={<ArrowLeftOutlined />}
-              loading={loading}
-              style={{ marginRight: 8 }}
-              type="primary"
-              onClick={() => setCurrent(0)}
-            >
-              Quay lại
-            </Button>
+            {loaiDichVu === 'DVMC' && (
+              <Button
+                icon={<ArrowLeftOutlined />}
+                loading={loading}
+                style={{ marginRight: 8 }}
+                type="primary"
+                onClick={() => setCurrent(0)}
+              >
+                Quay lại
+              </Button>
+            )}
             <Button
               icon={<ArrowRightOutlined />}
               loading={loading}

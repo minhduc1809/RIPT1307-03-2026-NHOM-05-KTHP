@@ -10,6 +10,9 @@ import { useModel } from 'umi';
 import Block from './Block';
 import styles from './block.css';
 import _ from 'lodash';
+import mm from 'moment-timezone';
+
+mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const FormBaiHoc = () => {
   const [form] = Form.useForm();
@@ -19,9 +22,10 @@ const FormBaiHoc = () => {
 
   const { danhSach, setCondition: setCondLopHanhChinh } = useModel('lophanhchinh');
   const { danhSach: danhSachNganh } = useModel('nganh');
+  const { danhSach: danhSachUser, setCondition: setCondUser, condition } = useModel('user');
   const { danhSach: danhSachLopTinChi, setCondition } = useModel('loptinchi');
   const { danhSach: danhSachKhoaHoc } = useModel('khoahoc');
-
+  const [vaiTro, setVaiTro] = useState<string[]>(record?.danhSachVaiTro ?? []);
   const [doiTuong, setDoiTuong] = useState<string[]>(record?.loaiDoiTuongSuDung ?? []);
   const [camKet, setCamKet] = useState<boolean>(record?.coCamKet ?? true);
 
@@ -31,6 +35,10 @@ const FormBaiHoc = () => {
 
   const debouncedSearchLopHanhChinh = _.debounce((value) => {
     setCondLopHanhChinh({ ten_lop_hanh_chinh: value });
+  }, 500);
+
+  const debouncedSearchUser = _.debounce((value) => {
+    setCondUser({ ma_dinh_danh: value });
   }, 500);
 
   return (
@@ -243,13 +251,49 @@ const FormBaiHoc = () => {
             label="Vai trò"
             initialValue={record?.danhSachVaiTro}
           >
-            <Select mode="multiple" placeholder="Chọn vai trò">
+            <Select
+              onChange={(val: string[]) => {
+                setVaiTro(val);
+                setCondUser({
+                  ...condition,
+                  vai_tro: {
+                    $in: val,
+                  },
+                });
+              }}
+              mode="multiple"
+              placeholder="Chọn vai trò"
+            >
               {[
                 { value: 'nhan_vien', name: 'Cán bộ, giảng viên' },
                 { value: 'sinh_vien', name: 'Sinh viên' },
               ].map((item) => (
                 <Select.Option key={item.value} value={item.value}>
                   {item.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+        {vaiTro?.length > 0 && (
+          <Form.Item
+            // rules={[...rules.required]}
+            name="danhSachNguoiDung"
+            label="Người dùng cụ thể"
+            initialValue={record?.danhSachNguoiDung ?? []}
+          >
+            <Select
+              onSearch={(value) => {
+                debouncedSearchUser(value);
+              }}
+              showSearch
+              allowClear
+              mode="multiple"
+              placeholder="Tìm kiếm theo mã định danh"
+            >
+              {danhSachUser.map((item) => (
+                <Select.Option key={item?.ma_dinh_danh} value={item?.ma_nganh}>
+                  {item?.name} ({item?.ma_dinh_danh})
                 </Select.Option>
               ))}
             </Select>

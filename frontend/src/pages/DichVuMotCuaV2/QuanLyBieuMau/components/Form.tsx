@@ -5,7 +5,7 @@ import FormThongTinChung from './FormThongTinChung';
 import { useEffect } from 'react';
 
 const Form = () => {
-  const { current } = useModel('dichvumotcuav2');
+  const { current, loaiDichVu } = useModel('dichvumotcuav2');
   const { setRecord } = useModel('thanhtoan');
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const Form = () => {
       <div>
         {current === 2 && <FormTaoQuyTrinh />}
         {current === 1 && <FormBieuMau />}
-        {current === 0 && <FormThongTinChung />}
+        {current === 0 && loaiDichVu === 'DVMC' && <FormThongTinChung />}
       </div>
     </>
   );

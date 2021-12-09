@@ -60,7 +60,6 @@ const FormTaoQuyTrinh = () => {
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
           const quyTrinh = buildPostQuyTrinh(values);
-
           if (edit) {
             putBieuMauAdminModel({
               data: { ...recordCauHinhBieuMau, ...recordThongTinChung, quyTrinh: { ...quyTrinh } },

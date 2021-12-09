@@ -73,8 +73,7 @@ const FormQuyTrinh = (props: {
   const arrPathName = pathname?.split('/') ?? [];
   useEffect(() => {
     if (props.idDon) {
-      if (arrPathName?.[arrPathName.length - 1] === 'quanlydonadmin')
-        adminGetTrangThaiDonModel(props.idDon);
+      if (arrPathName?.includes('quanlydonadmin')) adminGetTrangThaiDonModel(props.idDon);
       else getTrangThaiDonModel(props.idDon);
     }
     return () => {

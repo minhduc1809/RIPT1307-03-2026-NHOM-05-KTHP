@@ -36,8 +36,7 @@ const FormXuLyDon = (props: { type: string; onCancel: any }) => {
               },
             },
           };
-          if (arrPathName?.[arrPathName.length - 1] === 'quanlydondieuphoi')
-            chuyenVienDieuPhoiDuyetDonModel(payload);
+          if (arrPathName?.includes('quanlydondieuphoi')) chuyenVienDieuPhoiDuyetDonModel(payload);
           else chuyenVienXuLyDuyetDonModel(payload);
           props?.onCancel();
         }}

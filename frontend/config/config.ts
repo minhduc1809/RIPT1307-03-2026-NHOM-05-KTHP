@@ -131,13 +131,6 @@ export default defineConfig({
       ],
     },
     {
-      name: 'QuanLyLichTuan',
-      icon: 'calendar',
-      path: '/lich-tuan',
-      access: 'admin',
-      component: './VanPhongSo/QuanLyLichTuan',
-    },
-    {
       name: 'BieuMau',
       icon: 'fileDone',
       path: '/bieumau',
@@ -322,6 +315,13 @@ export default defineConfig({
       icon: 'AuditOutlined',
       path: '/vanphongso',
       routes: [
+        {
+          name: 'QuanLyLichTuan',
+          icon: 'calendar',
+          path: './lich-tuan',
+          access: 'admin',
+          component: './VanPhongSo/QuanLyLichTuan',
+        },
         {
           name: 'QuanLyBieuMau',
           path: './quanlybieumau/vps',

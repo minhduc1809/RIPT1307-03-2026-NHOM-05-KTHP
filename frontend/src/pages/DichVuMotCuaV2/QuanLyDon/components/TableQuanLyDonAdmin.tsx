@@ -24,13 +24,24 @@ const TableQuanLyDonAdmin = () => {
     danhSach,
     record,
     setRecord,
+    setLoaiDichVu,
+    setCondition,
+    setFilterInfo,
     setDanhSach,
   } = useModel('dichvumotcuav2');
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
   const [type, setType] = useState<string>('view');
+  const { pathname } = window.location;
+  const arrPathName = pathname?.split('/') ?? [];
   useEffect(() => {
-    adminGetAllBieuMauModel();
-    return () => setDanhSach([]);
+    setLoaiDichVu(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
+    adminGetAllBieuMauModel(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
+    return () => {
+      setDanhSach([]);
+      setRecord({} as DichVuMotCuaV2.BieuMau);
+      setCondition({});
+      setFilterInfo({});
+    };
   }, []);
   const columns: IColumn<DichVuMotCuaV2.Don>[] = [
     {
@@ -111,11 +122,19 @@ const TableQuanLyDonAdmin = () => {
         <Select
           allowClear
           placeholder="Lọc theo loại dịch vụ"
-          onChange={(val: string) => {
-            setRecord(danhSach?.find((item) => item._id === val));
+          onChange={(val: string | undefined) => {
+            setRecord(
+              val
+                ? danhSach?.find((item) => item._id === val)
+                : ({
+                    _id: {
+                      $in: danhSach?.map((item) => item._id),
+                    },
+                  } as any),
+            );
           }}
           showSearch
-          value={record?._id}
+          value={typeof record?._id === 'string' ? record?._id : undefined}
           style={{ width: '400px' }}
         >
           {danhSach?.map((item) => (

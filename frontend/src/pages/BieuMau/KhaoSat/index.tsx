@@ -32,7 +32,12 @@ const KhaoSat = () => {
   const { getAllNganhModel } = useModel('nganh');
   const { adminGetLopTinChi, condition: condLopTinChi } = useModel('loptinchi');
   const { getKhoaHocModel } = useModel('khoahoc');
+  const { getUserModel, condition: condUser, setCondition } = useModel('user');
   const [form, setForm] = useState<string>('edit');
+
+  useEffect(() => {
+    getUserModel({ pageParam: 1, limitParam: 100 });
+  }, [condUser]);
 
   useEffect(() => {
     adminGetLopTinChi(100);
@@ -46,6 +51,10 @@ const KhaoSat = () => {
     getAllNganhModel();
     getKhoaHocModel({ pageParam: 1, limitParam: 1000 });
     setLoaiBieuMau('Khảo sát');
+
+    return () => {
+      setCondition({ vai_tro: 'sinh_vien' });
+    };
   }, []);
 
   const handleEdit = (record: BieuMau.Record) => {

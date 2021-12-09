@@ -82,7 +82,7 @@ export default {
   'menu.DichVuMotCuaCanBo.QuanLyDon': 'Quản lý đơn',
   'menu.dva-sample': 'Page mẫu dùng DVA',
   'menu.DangKyTinChi': 'Đăng ký tín chỉ',
-  'menu.QuanLyLichTuan': 'Quản lý lịch tuần',
+  'menu.VanPhongSoAdmin.QuanLyLichTuan': 'Quản lý lịch tuần',
   'menu.DichVuMotCuaAdmin.QuanLyBieuMau': 'Quản lý dịch vụ',
   'menu.DichVuMotCuaAdmin.QuanLyDon': 'Quản lý đơn',
   'menu.GocHocTap': 'Góc học tập',
