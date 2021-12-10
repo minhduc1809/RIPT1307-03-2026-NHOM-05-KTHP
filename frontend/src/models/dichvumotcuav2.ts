@@ -87,9 +87,11 @@ export default () => {
     setLoading(false);
   };
 
-  const getAllBieuMauModel = async () => {
+  const getAllBieuMauModel = async (loaiDichVuParam?: string) => {
     setLoading(true);
-    const response = await userGetAllBieuMau();
+    const response = await userGetAllBieuMau({
+      condition: { loaiDichVu: loaiDichVuParam || loaiDichVu },
+    });
     setDanhSach(response?.data?.data ?? []);
     setRecord(response?.data?.data?.[0]);
     setLoading(false);

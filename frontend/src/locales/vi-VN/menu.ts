@@ -91,4 +91,7 @@ export default {
   'menu.VanPhongSoAdmin': 'Văn phòng số',
   'menu.VanPhongSoAdmin.QuanLyBieuMau': 'Quản lý dịch vụ',
   'menu.VanPhongSoAdmin.QuanLyDon': 'Quản lý đơn',
+  'menu.VanPhongSoNhanVien': 'Văn phòng số',
+  'menu.VanPhongSoNhanVien.TaoDon': 'Tạo đơn mới',
+  'menu.VanPhongSoNhanVien.LichSu': 'Đơn đã gửi',
 };

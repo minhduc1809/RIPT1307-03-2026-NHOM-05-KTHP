@@ -16,15 +16,24 @@ const LichSuGuiDon = () => {
     limit,
     condition,
     getDonSinhVienModel,
-    getAllBieuMauModel,
     loading,
     visibleFormBieuMau,
     setVisibleFormBieuMau,
+    setDanhSach,
+    setLoaiDichVu,
+    setRecord,
   } = useModel('dichvumotcuav2');
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
   const [type, setType] = useState<string>('view');
+  const { pathname } = window.location;
+  const arrPathName = pathname?.split('/') ?? [];
   useEffect(() => {
-    getAllBieuMauModel();
+    setRecord({} as DichVuMotCuaV2.BieuMau);
+    setLoaiDichVu(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
+    // getAllBieuMauModel(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
+    return () => {
+      setDanhSach([]);
+    };
   }, []);
   const columns: IColumn<DichVuMotCuaV2.Don>[] = [
     {

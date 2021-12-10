@@ -1,4 +1,4 @@
-import { Descriptions } from 'antd';
+import { Button, Descriptions } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 
@@ -13,14 +13,14 @@ const HocLieuSo = () => {
     <>
       <Descriptions bordered labelStyle={{ minWidth: 200, width: 200 }}>
         <Descriptions.Item span={3} label="Học liệu số">
-          {/* <Button
+          <Button
             onClick={() => {
               window.open(`https://dhs.ptit.edu.vn${infoMonHoc?.url_danh_sach_hoc_lieu}`);
             }}
             type="primary"
           >
             Vào học
-          </Button> */}
+          </Button>
         </Descriptions.Item>
         <Descriptions.Item span={3} label="Nội dung chi tiết">
           {infoMonHoc?.noi_dung_chi_tiet && (

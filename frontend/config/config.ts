@@ -268,7 +268,7 @@ export default defineConfig({
       routes: [
         {
           name: 'TaoDon',
-          path: './taodon',
+          path: './taodon/dvmc',
           component: './DichVuMotCuaV2/SinhVien/GuiDon',
           access: 'sinhVien',
         },
@@ -277,17 +277,46 @@ export default defineConfig({
           hideInMenu: true,
           // icon: 'team',
           access: 'sinhVien',
-          path: '/dichvumotcuasv/taodon/:id',
+          path: '/dichvumotcuasv/taodon/dvmc/:id',
           component: './DichVuMotCuaV2/SinhVien/GuiDon/$id',
         },
         {
           name: 'LichSu',
-          path: './lichsu',
+          path: './lichsu/dvmc',
           component: './DichVuMotCuaV2/SinhVien/LichSu',
           access: 'sinhVien',
         },
       ],
       access: 'sinhVien',
+    },
+
+    {
+      name: 'VanPhongSoNhanVien',
+      icon: 'AuditOutlined',
+      path: '/vanphongsonhanvien',
+      routes: [
+        {
+          name: 'TaoDon',
+          path: './taodon/vps',
+          component: './DichVuMotCuaV2/SinhVien/GuiDon',
+          access: 'nhanVien',
+        },
+        {
+          // name: 'DichVuMotCuaSinhVien',
+          hideInMenu: true,
+          // icon: 'team',
+          access: 'nhanVien',
+          path: '/vanphongsonhanvien/taodon/vps/:id',
+          component: './DichVuMotCuaV2/SinhVien/GuiDon/$id',
+        },
+        {
+          name: 'LichSu',
+          path: './lichsu/vps',
+          component: './DichVuMotCuaV2/SinhVien/LichSu',
+          access: 'nhanVien',
+        },
+      ],
+      access: 'nhanVien',
     },
 
     {
@@ -357,7 +386,6 @@ export default defineConfig({
           component: './DichVuMotCuaV2/QuanLyDon',
         },
       ],
-
       access: 'nhanVien',
     },
     {

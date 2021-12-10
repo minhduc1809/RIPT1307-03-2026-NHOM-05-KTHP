@@ -89,4 +89,7 @@ export default {
   'menu.GocHocTap': 'Góc học tập',
   'menu.QuanLyTaiKhoan': 'Quản lý tài khoản',
   'menu.VanPhongSoAdmin': 'Văn phòng số',
+  'menu.VanPhongSoNhanVien': 'Văn phòng số',
+  'menu.VanPhongSoNhanVien.TaoDon': 'Tạo đơn mới',
+  'menu.VanPhongSoNhanVien.LichSu': 'Đơn đã gửi',
 };

@@ -57,7 +57,6 @@ const FormBieuMau = (props: {
     record,
     recordDonThaoTac,
   } = useModel('dichvumotcuav2');
-
   const [valuesForm, setValuesForm] = useState<any>({});
   const [visibleFormDieuPhoi, setVisibleFormDieuPhoi] = useState<boolean>(false);
   const [visibleFormXuLy, setVisibleFormXuLy] = useState<boolean>(false);

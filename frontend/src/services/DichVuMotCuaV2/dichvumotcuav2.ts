@@ -27,8 +27,8 @@ export async function adminGetDonSinhVien(payload: {
   });
 }
 
-export async function userGetAllBieuMau() {
-  return axios.get(`${ip3}/dvmc/me/all`);
+export async function userGetAllBieuMau(payload: { condition: any }) {
+  return axios.get(`${ip3}/dvmc/me/all`, { params: payload });
 }
 
 export async function adminGetAllBieuMau(payload: { condition: any }) {
