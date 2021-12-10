@@ -20,12 +20,15 @@ export default () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [edit, setEdit] = useState<boolean>(false);
-  const getPhanHoiAdminModel = async () => {
+  const getPhanHoiAdminModel = async (idHinhThuc?: number) => {
     setLoading(true);
     const response = await getPhanHoiAdmin({
       page,
       limit,
       condition: { ...condition, daTraLoi, vaiTro },
+      idHinhThuc:
+        idHinhThuc ||
+        (condition?.hinhThucDaoTaoId !== -1 ? condition?.hinhThucDaoTaoId : undefined),
     });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);

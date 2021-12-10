@@ -52,7 +52,7 @@ const GuiDon = () => {
         <Tooltip title="Sử dụng dịch vụ">
           <Button
             onClick={() => {
-              if (isDVMC) history.push(`/dichvumotcuasv/taodon/${record?._id}`);
+              if (isDVMC) history.push(`/dichvumotcuasv/taodon/dvmc/${recordBieuMau?._id}`);
               else {
                 setRecord(recordBieuMau);
                 setVisibleFormBieuMau(true);

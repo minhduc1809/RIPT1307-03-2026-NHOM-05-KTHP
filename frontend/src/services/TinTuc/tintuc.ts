@@ -1,7 +1,12 @@
 import axios from '@/utils/axios';
 import { ip3 } from '@/utils/ip';
 
-export async function getTinTuc(payload: { page: number; limit: number; condition?: any }) {
+export async function getTinTuc(payload: {
+  page: number;
+  limit: number;
+  condition?: any;
+  idHinhThuc: number;
+}) {
   return axios.get(`${ip3}/tin-tuc/pageable`, { params: payload });
 }
 

@@ -14,6 +14,7 @@ export default () => {
   const [record, setRecord] = useState<VanBanHuongDan.ThuMuc>({} as VanBanHuongDan.ThuMuc);
   const [recordFile, setRecordFile] = useState<VanBanHuongDan.TepTin>({} as VanBanHuongDan.TepTin);
   const [loading, setLoading] = useState<boolean>(true);
+  const [condition, setCondition] = useState<any>({});
   const [edit, setEdit] = useState<boolean>(false);
   const [editFile, setEditFile] = useState<boolean>(false);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
@@ -23,9 +24,15 @@ export default () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
-  const getThuMucModel = async () => {
+  const getThuMucModel = async (idHinhThuc?: number) => {
     setLoading(true);
-    const response = await getThuMucAdmin({ page, limit });
+    const response = await getThuMucAdmin({
+      page,
+      limit,
+      idHinhThuc:
+        idHinhThuc ||
+        (condition?.hinhThucDaoTaoId !== -1 ? condition?.hinhThucDaoTaoId : undefined),
+    });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);
@@ -67,6 +74,8 @@ export default () => {
   };
 
   return {
+    condition,
+    setCondition,
     getThuMucUserModel,
     setLoading,
     setRecord,

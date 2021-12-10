@@ -5,11 +5,12 @@ import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Button, Divider, Modal, Popconfirm, Popover, Select, Tooltip } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useModel, useAccess } from 'umi';
 import Form from './components/Form';
 import ViewTinTuc from './components/ViewTinTuc';
 
 const TinTuc = () => {
+  const access = useAccess();
   const {
     loading,
     chuDe,
@@ -28,6 +29,7 @@ const TinTuc = () => {
   const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [recordTT, setRecordTT] = useState<TinTuc.Record>({} as TinTuc.Record);
   const { getAllChuDeModel, danhSach } = useModel('chude');
+  const { getAllHinhThucDaoTaoModel, danhSachHinhThucDaoTao } = useModel('lophanhchinh');
 
   const handleEdit = (record: TinTuc.Record) => {
     setRecord(record);
@@ -129,6 +131,7 @@ const TinTuc = () => {
 
   useEffect(() => {
     getAllChuDeModel();
+    getAllHinhThucDaoTaoModel();
   }, []);
 
   const onChangeLoaiTinTuc = (value: string) => {
@@ -150,6 +153,25 @@ const TinTuc = () => {
       Form={Form}
       hascreate
     >
+      {access.admin && (
+        <Select
+          value={condition?.hinhThucDaoTaoId ?? -1}
+          onChange={(val: number) => {
+            setCondition({ ...condition, hinhThucDaoTaoId: val });
+          }}
+          style={{ marginBottom: 8, width: 250, marginRight: 8 }}
+        >
+          <Select.Option value={-1} key={-1}>
+            Tất cả hình thức đào tạo
+          </Select.Option>
+          {danhSachHinhThucDaoTao?.map((item) => (
+            <Select.Option key={item.id} value={item.id}>
+              {item.ten_hinh_thuc_dao_tao}
+            </Select.Option>
+          ))}
+        </Select>
+      )}
+
       <Select
         onChange={onChangeLoaiTinTuc}
         value={chuDe}

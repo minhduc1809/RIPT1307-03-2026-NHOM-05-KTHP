@@ -1,14 +1,13 @@
 /* eslint-disable no-underscore-dangle */
-import { useModel } from 'umi';
-import { DeleteOutlined, EditOutlined, PaperClipOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Divider, Input, Modal, Popconfirm, Table, Tooltip } from 'antd';
-import Form from './FormFile';
-import { useState } from 'react';
-import { includes } from '@/utils/utils';
 import type { IColumn } from '@/utils/interfaces';
+import { DeleteOutlined, EditOutlined, PaperClipOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
+import Table from '@/components/Table/Table';
+import { useAccess, useModel } from 'umi';
+import Form from './FormFile';
 
-const FileList = (props: { data: VanBanHuongDan.TepTin[] }) => {
-  const vaiTro = localStorage.getItem('vaiTro');
+const FileList = () => {
+  const access = useAccess();
   const {
     visibleFormFile,
     setVisibleFormFile,
@@ -17,11 +16,7 @@ const FileList = (props: { data: VanBanHuongDan.TepTin[] }) => {
     setRecordFile,
     setEditFile,
   } = useModel('vanbanhuongdan');
-  const [data, setData] = useState<VanBanHuongDan.TepTin[]>(
-    props.data?.map((item, index) => {
-      return { ...item, index: index + 1 };
-    }),
-  );
+
   const delFile = (id: string) => {
     putThuMucModel({
       id: record._id,
@@ -44,15 +39,6 @@ const FileList = (props: { data: VanBanHuongDan.TepTin[] }) => {
     setEditFile(false);
   };
 
-  const onSearch = (value: string) => {
-    const newData = props?.data?.filter((item) => includes(item.ten, value));
-    setData(
-      newData?.map((item, index) => {
-        return { ...item, index: index + 1 };
-      }),
-    );
-  };
-
   const columns: IColumn<VanBanHuongDan.TepTin>[] = [
     {
       title: 'STT',
@@ -63,6 +49,7 @@ const FileList = (props: { data: VanBanHuongDan.TepTin[] }) => {
     {
       title: 'Tên văn bản',
       dataIndex: 'ten',
+      search: 'search',
       align: 'center',
       width: 250,
     },
@@ -85,7 +72,7 @@ const FileList = (props: { data: VanBanHuongDan.TepTin[] }) => {
     },
   ];
 
-  if (vaiTro === 'Admin')
+  if (access.adminVaQuanTri)
     columns.push({
       title: 'Thao tác',
       align: 'center',
@@ -116,34 +103,16 @@ const FileList = (props: { data: VanBanHuongDan.TepTin[] }) => {
 
   return (
     <>
-      <div style={{ display: 'flex' }}>
-        {vaiTro === 'Admin' && (
-          <Button type="primary" style={{ marginBottom: 8, marginRight: 8 }} onClick={handleAdd}>
-            <PlusOutlined />
-            Thêm mới
-          </Button>
-        )}
-        <Input.Search
-          style={{ width: 300, marginBottom: 8 }}
-          placeholder="Tìm kiếm theo tên văn bản"
-          onSearch={onSearch}
-          enterButton
-          allowClear
-        />
-      </div>
+      {access.adminVaQuanTri && (
+        <Button type="primary" style={{ marginBottom: 8, marginRight: 8 }} onClick={handleAdd}>
+          <PlusOutlined />
+          Thêm mới
+        </Button>
+      )}
 
       <Table
-        pagination={{
-          total: data?.length,
-          showSizeChanger: true,
-          pageSizeOptions: ['10', '25', '50', '100'],
-          showTotal: (tongSo: number) => {
-            return <div>Tổng số: {tongSo}</div>;
-          },
-        }}
-        scroll={{ x: 1000 }}
         columns={columns}
-        dataSource={data}
+        data={record?.danhSachTep?.reverse()?.map((item, index) => ({ ...item, index: index + 1 }))}
       />
       <Modal
         maskClosable={false}

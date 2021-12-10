@@ -7,6 +7,7 @@ import moment from 'moment';
 import { useModel, useAccess } from 'umi';
 import Form from './components/Form';
 import FormGuiPhanHoi from './components/FormGuiPhanHoi';
+import { useEffect } from 'react';
 
 const PhanHoi = () => {
   const access = useAccess();
@@ -22,13 +23,20 @@ const PhanHoi = () => {
     daTraLoi,
     vaiTro,
     condition,
+    setCondition,
     getPhanHoiUserModel,
   } = useModel('phanhoi');
+
+  const { getAllHinhThucDaoTaoModel, danhSachHinhThucDaoTao } = useModel('lophanhchinh');
 
   const handleEdit = (record: PhanHoi.Record) => {
     setRecord(record);
     setVisibleForm(true);
   };
+
+  useEffect(() => {
+    getAllHinhThucDaoTaoModel();
+  }, []);
 
   const columns: IColumn<PhanHoi.Record>[] = [
     {
@@ -120,21 +128,39 @@ const PhanHoi = () => {
       Form={access.admin ? Form : FormGuiPhanHoi}
     >
       {access.admin && (
-        <Select
-          placeholder="Lọc theo vai trò người gửi"
-          onChange={onChangeVaiTro}
-          value={vaiTro}
-          style={{ width: 220, marginBottom: 8, marginRight: 8 }}
-        >
-          {[
-            { value: 'sinh_vien', name: 'Sinh viên' },
-            { value: 'nhan_vien', name: 'Cán bộ, giảng viên' },
-          ]?.map((item) => (
-            <Select.Option key={item.value} value={item.value}>
-              {item.name}
+        <>
+          <Select
+            value={condition?.hinhThucDaoTaoId ?? -1}
+            onChange={(val: number) => {
+              setCondition({ ...condition, hinhThucDaoTaoId: val });
+            }}
+            style={{ marginBottom: 8, width: 250, marginRight: 8 }}
+          >
+            <Select.Option value={-1} key={-1}>
+              Tất cả hình thức đào tạo
             </Select.Option>
-          ))}
-        </Select>
+            {danhSachHinhThucDaoTao?.map((item) => (
+              <Select.Option key={item.id} value={item.id}>
+                {item.ten_hinh_thuc_dao_tao}
+              </Select.Option>
+            ))}
+          </Select>
+          <Select
+            placeholder="Lọc theo vai trò người gửi"
+            onChange={onChangeVaiTro}
+            value={vaiTro}
+            style={{ width: 220, marginBottom: 8, marginRight: 8 }}
+          >
+            {[
+              { value: 'sinh_vien', name: 'Sinh viên' },
+              { value: 'nhan_vien', name: 'Cán bộ, giảng viên' },
+            ]?.map((item) => (
+              <Select.Option key={item.value} value={item.value}>
+                {item.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </>
       )}
       <Select
         placeholder="Lọc theo trạng thái"

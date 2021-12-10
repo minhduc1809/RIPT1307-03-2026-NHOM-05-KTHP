@@ -236,13 +236,17 @@ export default () => {
     getDonThaoTacChuyenVienXuLyModel();
   };
 
-  const getAllBieuMauChuyenVienDieuPhoiModel = async () => {
-    const response = await getAllBieuMauChuyenVienDieuPhoi();
+  const getAllBieuMauChuyenVienDieuPhoiModel = async (loaiDichVuParam?: string) => {
+    const response = await getAllBieuMauChuyenVienDieuPhoi({
+      condition: { loaiDichVu: loaiDichVuParam || loaiDichVu },
+    });
     setDanhSach(response?.data?.data ?? {});
   };
 
-  const getAllBieuMauChuyenVienTiepNhanModel = async () => {
-    const response = await getAllBieuMauChuyenVienTiepNhan();
+  const getAllBieuMauChuyenVienTiepNhanModel = async (loaiDichVuParam?: string) => {
+    const response = await getAllBieuMauChuyenVienTiepNhan({
+      condition: { loaiDichVu: loaiDichVuParam || loaiDichVu },
+    });
     setDanhSach(response?.data?.data ?? {});
   };
 

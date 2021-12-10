@@ -1,12 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, List, Modal, Popconfirm, Tooltip, Typography } from 'antd';
+import { Avatar, Button, Card, List, Modal, Popconfirm, Select, Tooltip, Typography } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useModel, useAccess } from 'umi';
 import Form from './components/Form';
 import FileList from './components/FileList';
 
 const VanBanHuongDan = () => {
+  const access = useAccess();
   const {
     getThuMucModel,
     loading,
@@ -24,8 +25,12 @@ const VanBanHuongDan = () => {
     delThuMucModel,
     visibleFileList,
     setVisibleFileList,
+    condition,
+    setCondition,
     getThuMucUserModel,
   } = useModel('vanbanhuongdan');
+
+  const { danhSachHinhThucDaoTao, getAllHinhThucDaoTaoModel } = useModel('lophanhchinh');
 
   const handleEdit = (thuMuc: VanBanHuongDan.ThuMuc) => {
     setEdit(true);
@@ -79,16 +84,38 @@ const VanBanHuongDan = () => {
     setVisibleFileList(true);
     setRecord(thuMuc);
   };
-  const vaiTro = localStorage.getItem('vaiTro');
+
   useEffect(() => {
-    if (vaiTro === 'Admin') getThuMucModel();
+    if (access.adminVaQuanTri) getAllHinhThucDaoTaoModel();
+  }, []);
+
+  useEffect(() => {
+    if (access.adminVaQuanTri) getThuMucModel();
     else getThuMucUserModel();
-  }, [page, limit]);
+  }, [page, limit, condition]);
 
   return (
     <>
       <Card title="Văn bản hướng dẫn">
-        {vaiTro === 'Admin' && (
+        {access.admin && (
+          <Select
+            value={condition?.hinhThucDaoTaoId ?? -1}
+            onChange={(val: number) => {
+              setCondition({ ...condition, hinhThucDaoTaoId: val });
+            }}
+            style={{ marginBottom: 8, width: 250, marginRight: 8 }}
+          >
+            <Select.Option value={-1} key={-1}>
+              Tất cả hình thức đào tạo
+            </Select.Option>
+            {danhSachHinhThucDaoTao?.map((item) => (
+              <Select.Option key={item.id} value={item.id}>
+                {item.ten_hinh_thuc_dao_tao}
+              </Select.Option>
+            ))}
+          </Select>
+        )}
+        {access.adminVaQuanTri && (
           <Button onClick={handleAdd} style={{ marginBottom: 8 }} type="primary">
             <PlusOutlined /> Thêm mới
           </Button>
@@ -119,7 +146,7 @@ const VanBanHuongDan = () => {
               onMouseOut={(e) => handleOnMouseOut(e.target)}
               onMouseOver={(e) => handleOnMouseOver(e.target)}
               actions={
-                vaiTro === 'Admin'
+                access.adminVaQuanTri
                   ? [
                       <Tooltip title="Chỉnh sửa">
                         <Button
@@ -192,7 +219,7 @@ const VanBanHuongDan = () => {
         onCancel={() => setVisibleFileList(false)}
         visible={visibleFileList}
       >
-        <FileList data={record.danhSachTep?.reverse()} />
+        <FileList />
       </Modal>
     </>
   );

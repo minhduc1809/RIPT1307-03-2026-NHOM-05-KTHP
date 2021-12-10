@@ -100,12 +100,12 @@ export async function chuyenVienXuLyDuyetDon(payload: {
   );
 }
 
-export async function getAllBieuMauChuyenVienDieuPhoi() {
-  return axios.get(`${ip3}/don-dvmc/chuyen-vien-dieu-phoi/dvmc/all`);
+export async function getAllBieuMauChuyenVienDieuPhoi(payload: { condition: any }) {
+  return axios.get(`${ip3}/don-dvmc/chuyen-vien-dieu-phoi/dvmc/all`, { params: payload });
 }
 
-export async function getAllBieuMauChuyenVienTiepNhan() {
-  return axios.get(`${ip3}/don-dvmc/chuyen-vien-tiep-nhan/dvmc/all`);
+export async function getAllBieuMauChuyenVienTiepNhan(payload: { condition: any }) {
+  return axios.get(`${ip3}/don-dvmc/chuyen-vien-tiep-nhan/dvmc/all`, { params: payload });
 }
 
 export async function dieuPhoiDon(payload: {

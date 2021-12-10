@@ -92,4 +92,5 @@ export default {
   'menu.VanPhongSoNhanVien': 'Văn phòng số',
   'menu.VanPhongSoNhanVien.TaoDon': 'Tạo đơn mới',
   'menu.VanPhongSoNhanVien.LichSu': 'Đơn đã gửi',
+  'menu.VanPhongSoNhanVien.QuanLyDon': 'Quản lý đơn',
 };

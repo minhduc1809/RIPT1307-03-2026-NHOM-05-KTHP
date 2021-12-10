@@ -15,12 +15,15 @@ export default () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
-  const getTinTucModel = async () => {
+  const getTinTucModel = async (idHinhThuc?: number) => {
     setLoading(true);
     const response = await getTinTuc({
       page,
       limit,
       condition,
+      idHinhThuc:
+        idHinhThuc ||
+        (condition?.hinhThucDaoTaoId !== -1 ? condition?.hinhThucDaoTaoId : undefined),
     });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);

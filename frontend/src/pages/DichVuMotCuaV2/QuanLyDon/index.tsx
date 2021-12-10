@@ -16,9 +16,11 @@ const QuanLyDon = () => {
 
   const { pathname } = window.location;
   const arrPathName = pathname?.split('/') ?? [];
+  const isDVMC = arrPathName?.includes('dvmc');
   useEffect(() => {
-    if (arrPathName?.includes('quanlydondieuphoi')) getAllBieuMauChuyenVienDieuPhoiModel();
-    else getAllBieuMauChuyenVienTiepNhanModel();
+    if (arrPathName?.includes('quanlydondieuphoi'))
+      getAllBieuMauChuyenVienDieuPhoiModel(isDVMC ? 'DVMC' : 'VAN_PHONG_SO');
+    else getAllBieuMauChuyenVienTiepNhanModel(isDVMC ? 'DVMC' : 'VAN_PHONG_SO');
   }, []);
 
   return (

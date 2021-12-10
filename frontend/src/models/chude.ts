@@ -28,12 +28,15 @@ export default () => {
     setDanhSachLoaiChuDe(response?.data?.data ?? []);
     setLoading(false);
   };
-  const getChuDeModel = async () => {
+  const getChuDeModel = async (idHinhThuc?: number) => {
     setLoading(true);
     const response = await getChuDe({
       page,
       limit,
       condition: { ...condition, type: loaiChuDe === 'Tất cả' ? undefined : loaiChuDe },
+      idHinhThuc:
+        idHinhThuc ||
+        (condition?.hinhThucDaoTaoId !== -1 ? condition?.hinhThucDaoTaoId : undefined),
     });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);

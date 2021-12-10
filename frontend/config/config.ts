@@ -114,19 +114,21 @@ export default defineConfig({
       name: 'DanhMuc',
       icon: 'container',
       path: '/danhmuc',
-      access: 'admin',
+      access: 'adminVaQuanTri',
       routes: [
         {
           name: 'ChuDeChung',
           icon: 'smile',
           path: './chudechung',
           component: './DanhMuc/ChuDe',
+          access: 'adminVaQuanTri',
         },
         {
           name: 'TinTuc',
           icon: 'smile',
           path: './tintuc',
           component: './DanhMuc/TinTuc',
+          access: 'adminVaQuanTri',
         },
       ],
     },
@@ -185,7 +187,7 @@ export default defineConfig({
       name: 'VanBanHuongDan',
       icon: 'FileText',
       path: '/vanbanhuongdan',
-      access: 'admin',
+      access: 'adminVaQuanTri',
       component: './VanBanHuongDan',
     },
     {
@@ -315,6 +317,20 @@ export default defineConfig({
           component: './DichVuMotCuaV2/SinhVien/LichSu',
           access: 'nhanVien',
         },
+        {
+          name: 'QuanLyDon',
+          path: './quanlydondieuphoi/vps',
+          access: 'routeFilter',
+          maChucNang: 'don-dvmc-thao-tac:read-all',
+          component: './DichVuMotCuaV2/QuanLyDon',
+        },
+        {
+          name: 'QuanLyDon',
+          path: './quanlydonchuyenvien/vps',
+          access: 'routeFilter',
+          maChucNang: 'don-dvmc-thao-tac:read-my',
+          component: './DichVuMotCuaV2/QuanLyDon',
+        },
       ],
       access: 'nhanVien',
     },
@@ -373,14 +389,14 @@ export default defineConfig({
       routes: [
         {
           name: 'QuanLyDon',
-          path: './quanlydondieuphoi',
+          path: './quanlydondieuphoi/dvmc',
           access: 'routeFilter',
           maChucNang: 'don-dvmc-thao-tac:read-all',
           component: './DichVuMotCuaV2/QuanLyDon',
         },
         {
           name: 'QuanLyDon',
-          path: './quanlydonchuyenvien',
+          path: './quanlydonchuyenvien/dvmc',
           access: 'routeFilter',
           maChucNang: 'don-dvmc-thao-tac:read-my',
           component: './DichVuMotCuaV2/QuanLyDon',
@@ -388,6 +404,7 @@ export default defineConfig({
       ],
       access: 'nhanVien',
     },
+
     {
       name: 'ThongBao',
       icon: 'notification',

@@ -3,7 +3,7 @@ import { ip3 } from '@/utils/ip';
 
 const url = 'thu-muc-van-ban';
 
-export async function getThuMucAdmin(payload: { page: number; limit: number }) {
+export async function getThuMucAdmin(payload: { page: number; limit: number; idHinhThuc: number }) {
   return axios.get(`${ip3}/${url}/pageable`, { params: payload });
 }
 

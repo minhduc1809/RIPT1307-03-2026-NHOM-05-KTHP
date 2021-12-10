@@ -8,6 +8,7 @@ const data: any = {
     sinh_vien: '/dashboard',
     nhan_vien: '/dashboard',
     Admin: '/dashboard',
+    quan_tri: '/dashboard',
   },
   doiTuong: ['Vai trò', 'Tất cả'],
   vaiTro: [
@@ -53,7 +54,7 @@ const data: any = {
     BAD_REQUEST_DUPLICATE_EMAIL: 'Đã tồn tại tài khoản sử dụng email này',
     UNAUTHORIZED_WRONG_PASSWORD: 'Tên tài khoản hoặc mật khẩu chưa chính xác',
     UNAUTHORIZED_USERNAME_NOT_FOUND: 'Tên tài khoản hoặc mật khẩu chưa chính xác',
-    BAD_REQUEST_ID_EXISTED: 'Mã chủ đề đã tồn tại',
+    BAD_REQUEST_ID_EXISTED: 'Mã đã tồn tại',
     BAD_REQUEST_STILL_PROCESSING:
       'Đơn của bạn đang được xử lý. Vui lòng không tạo thêm yêu cầu mới.',
   },

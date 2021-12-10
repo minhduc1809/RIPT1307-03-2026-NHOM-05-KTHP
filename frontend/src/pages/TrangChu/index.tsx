@@ -11,7 +11,7 @@ const TrangChu = () => {
     <>
       <Row gutter={[20, 20]}>
         {access.sinhVien && <BlockSinhVien />}
-        {access.admin && <BlockAdmin />}
+        {(access.admin || access.quanTri) && <BlockAdmin />}
         {access.sinhVienVaNhanVien && (
           <>
             <Col xs={24} lg={14} xl={16}>

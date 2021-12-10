@@ -4,5 +4,6 @@ declare module ChuDe {
     name: string;
     type: string;
     order: number;
+    hinhThucDaoTaoId: number;
   }
 }
