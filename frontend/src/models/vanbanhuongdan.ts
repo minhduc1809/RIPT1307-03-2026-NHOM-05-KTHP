@@ -47,6 +47,7 @@ export default () => {
   };
 
   const addThuMucModel = async (payload: VanBanHuongDan.ThuMuc) => {
+    if (!payload?.hinhThucDaoTaoId) return;
     setLoading(true);
     await addThuMuc(payload);
     message.success('Thêm thành công');

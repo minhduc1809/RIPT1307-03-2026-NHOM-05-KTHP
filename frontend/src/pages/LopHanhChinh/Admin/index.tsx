@@ -33,6 +33,7 @@ const LopHanhChinhAdmin = () => {
       width: 200,
       align: 'center',
       search: 'search',
+      notRegex: true,
     },
     {
       title: 'Giảng viên',

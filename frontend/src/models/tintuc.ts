@@ -31,6 +31,7 @@ export default () => {
   };
 
   const addTinTucModel = async (payload: TinTuc.Record) => {
+    if (!payload?.hinhThucDaoTaoId) return;
     setLoading(true);
     await addTinTuc(payload);
     message.success('Thêm thành công');

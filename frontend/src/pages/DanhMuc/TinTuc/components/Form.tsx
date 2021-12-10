@@ -8,17 +8,20 @@ import { renderFileListUrl } from '@/utils/utils';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useModel, useAccess } from 'umi';
 import mm from 'moment-timezone';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const FormTinTuc = () => {
+  const access = useAccess();
   const [form] = Form.useForm();
-  const { loading, record, setVisibleForm, edit, putTinTucModel, addTinTucModel } =
+  const { loading, record, setVisibleForm, edit, putTinTucModel, addTinTucModel, condition } =
     useModel('tintuc');
   const [doiTuong, setDoiTuong] = useState<string>(record?.doiTuong ?? 'Tất cả');
   const { danhSach } = useModel('chude');
+  const { danhSachHinhThucDaoTao } = useModel('lophanhchinh');
+  const { initialState } = useModel('@@initialState');
   return (
     <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
       <Form
@@ -32,10 +35,17 @@ const FormTinTuc = () => {
             });
             values.urlAnhDaiDien = response?.data?.data?.url;
           } else values.urlAnhDaiDien = values.urlAnhDaiDien.fileList?.[0]?.url;
-          // eslint-disable-next-line no-underscore-dangle
           if (edit)
             putTinTucModel({ id: record._id, data: { ...values, noiDung: values?.noiDung?.text } });
-          else addTinTucModel({ ...values, noiDung: values?.noiDung?.text });
+          else
+            addTinTucModel({
+              ...values,
+              noiDung: values?.noiDung?.text,
+              hinhThucDaoTaoId:
+                access.quanTri === true
+                  ? initialState?.currentUser?.hinh_thuc_dao_tao_id ?? 0
+                  : values?.hinhThucDaoTaoId,
+            });
         }}
         form={form}
       >
@@ -138,6 +148,26 @@ const FormTinTuc = () => {
               ].map((item) => (
                 <Select.Option key={item.value} value={item.value}>
                   {item.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+
+        {access.admin && (
+          <Form.Item
+            rules={[...rules.required]}
+            name="hinhThucDaoTaoId"
+            label="Hình thức đào tạo"
+            initialValue={
+              record?.hinhThucDaoTaoId ||
+              (condition?.hinhThucDaoTaoId !== -1 ? condition?.hinhThucDaoTaoId : undefined)
+            }
+          >
+            <Select placeholder="Hình thức đào tạo">
+              {danhSachHinhThucDaoTao?.map((item) => (
+                <Select.Option key={item.id} value={item.id}>
+                  {item.ten_hinh_thuc_dao_tao}
                 </Select.Option>
               ))}
             </Select>

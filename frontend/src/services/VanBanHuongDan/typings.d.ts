@@ -17,5 +17,6 @@ declare module VanBanHuongDan {
     moTa: string;
     danhSachTep: TepTin[];
     _id: string;
+    hinhThucDaoTaoId: number;
   }
 }
