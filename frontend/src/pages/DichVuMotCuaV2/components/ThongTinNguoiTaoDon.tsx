@@ -26,7 +26,7 @@ const ThongTinNguoiTaoDon = (props: { record?: Login.Profile }) => {
         {props?.record?.ma_dinh_danh || props?.record?.maSinhVien || ''}
       </Descriptions.Item>
       <Descriptions.Item>
-        Khoa:{' '}
+        {loaiDichVu === 'DVMC' ? 'Khoa' : 'Đơn vị'}:
         {props?.record?.ten_don_vi
           ? props?.record?.ten_don_vi
           : props?.record?.tenDonVi && props?.record?.tenDonVi !== 'false'

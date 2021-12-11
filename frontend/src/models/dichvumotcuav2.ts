@@ -168,37 +168,42 @@ export default () => {
     }
   };
 
-  const getDonThaoTacChuyenVienDieuPhoiModel = async () => {
+  const getDonThaoTacChuyenVienDieuPhoiModel = async (loaiDichVuParam?: string) => {
+    if (
+      loaiDichVuParam &&
+      danhSach?.filter((item) => item.loaiDichVu === loaiDichVuParam)?.length === 0
+    )
+      return;
     setLoading(true);
     const response = await getDonThaoTacChuyenVienDieuPhoi({
       page,
       limit,
-      condition: { ...condition, trangThai: trangThaiQuanLyDon, idDichVu: record?._id },
+      condition: {
+        ...condition,
+        trangThai: trangThaiQuanLyDon,
+        idDichVu: record?._id || danhSach?.map((item) => item._id),
+      },
     });
     setDanhSachDonThaoTac(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total);
     setLoading(false);
   };
 
-  const chuyenVienDieuPhoiDuyetDonModel = async (payload: {
-    type: string;
-    idDonThaoTac: string;
-    data: {
-      urlFileDinhKem: string[];
-    };
-  }) => {
-    await chuyenVienDieuPhoiDuyetDon(payload);
-    message.success('Xử lý thành công');
-    setVisibleFormBieuMau(false);
-    getDonThaoTacChuyenVienDieuPhoiModel();
-  };
-
-  const getDonThaoTacChuyenVienXuLyModel = async () => {
+  const getDonThaoTacChuyenVienXuLyModel = async (loaiDichVuParam?: string) => {
+    if (
+      loaiDichVuParam &&
+      danhSach?.filter((item) => item.loaiDichVu === loaiDichVuParam)?.length === 0
+    )
+      return;
     setLoading(true);
     const response = await getDonThaoTacChuyenVienXuLy({
       page,
       limit,
-      condition: { ...condition, trangThai: trangThaiQuanLyDon, idDichVu: record?._id },
+      condition: {
+        ...condition,
+        trangThai: trangThaiQuanLyDon,
+        idDichVu: record?._id || danhSach?.map((item) => item._id),
+      },
     });
     setDanhSachDonThaoTac(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total);
@@ -236,18 +241,31 @@ export default () => {
     getDonThaoTacChuyenVienXuLyModel();
   };
 
+  const chuyenVienDieuPhoiDuyetDonModel = async (payload: {
+    type: string;
+    idDonThaoTac: string;
+    data: {
+      urlFileDinhKem: string[];
+    };
+  }) => {
+    await chuyenVienDieuPhoiDuyetDon(payload);
+    message.success('Xử lý thành công');
+    setVisibleFormBieuMau(false);
+    getDonThaoTacChuyenVienDieuPhoiModel();
+  };
+
   const getAllBieuMauChuyenVienDieuPhoiModel = async (loaiDichVuParam?: string) => {
     const response = await getAllBieuMauChuyenVienDieuPhoi({
       condition: { loaiDichVu: loaiDichVuParam || loaiDichVu },
     });
-    setDanhSach(response?.data?.data ?? {});
+    setDanhSach(response?.data?.data ?? []);
   };
 
   const getAllBieuMauChuyenVienTiepNhanModel = async (loaiDichVuParam?: string) => {
     const response = await getAllBieuMauChuyenVienTiepNhan({
       condition: { loaiDichVu: loaiDichVuParam || loaiDichVu },
     });
-    setDanhSach(response?.data?.data ?? {});
+    setDanhSach(response?.data?.data ?? []);
   };
 
   const dieuPhoiDonModel = async (payload: {

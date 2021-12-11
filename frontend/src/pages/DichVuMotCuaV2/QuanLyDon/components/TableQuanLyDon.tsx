@@ -5,7 +5,7 @@ import type { IColumn } from '@/utils/interfaces';
 import { EyeOutlined } from '@ant-design/icons';
 import { Button, Modal, Select } from 'antd';
 import moment from 'moment';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useModel } from 'umi';
 
 const TableQuanLyDon = () => {
@@ -23,16 +23,14 @@ const TableQuanLyDon = () => {
     visibleFormBieuMau,
     setVisibleFormBieuMau,
     setRecordDonThaoTac,
-    setDanhSach,
     recordDonThaoTac,
   } = useModel('dichvumotcuav2');
-  useEffect(() => {
-    return () => setDanhSach([]);
-  }, []);
+
   const { getChuyenVienXuLyDonModel } = useModel('phanquyen');
   const { pathname } = window.location;
   const arrPathName = pathname?.split('/') ?? [];
   const [type, setType] = useState<string>('handle');
+  const isDVMC = arrPathName?.includes('dvmc');
   const columns: IColumn<DichVuMotCuaV2.DonThaoTac>[] = [
     {
       title: 'STT',
@@ -147,25 +145,33 @@ const TableQuanLyDon = () => {
   return (
     <TableBase
       columns={columns}
-      dependencies={[page, limit, condition, trangThaiQuanLyDon, record?._id]}
+      dependencies={[page, limit, condition, trangThaiQuanLyDon, record?._id, danhSach]}
       modelName="dichvumotcuav2"
       dataState="danhSachDonThaoTac"
       scroll={{ x: 1500 }}
       loading={loading}
-      getData={
-        arrPathName?.includes('quanlydondieuphoi')
-          ? getDonThaoTacChuyenVienDieuPhoiModel
-          : getDonThaoTacChuyenVienXuLyModel
-      }
+      getData={() => {
+        if (arrPathName?.includes('quanlydondieuphoi'))
+          getDonThaoTacChuyenVienDieuPhoiModel(isDVMC ? 'DVMC' : 'VAN_PHONG_SO');
+        else getDonThaoTacChuyenVienXuLyModel(isDVMC ? 'DVMC' : 'VAN_PHONG_SO');
+      }}
     >
       <Select
         allowClear
         placeholder="Lọc theo loại dịch vụ"
-        onChange={(val: string) => {
-          setRecord(danhSach?.find((item) => item._id === val));
+        onChange={(val: string | undefined) => {
+          setRecord(
+            val
+              ? danhSach?.find((item) => item._id === val)
+              : ({
+                  _id: {
+                    $in: danhSach?.map((item) => item._id),
+                  },
+                } as any),
+          );
         }}
         showSearch
-        value={record?._id}
+        value={typeof record?._id === 'string' ? record?._id : undefined}
         style={{ width: '400px' }}
       >
         {danhSach?.map((item) => (

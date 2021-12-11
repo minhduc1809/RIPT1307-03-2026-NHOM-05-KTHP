@@ -25,9 +25,6 @@ const TableQuanLyDonAdmin = () => {
     record,
     setRecord,
     setLoaiDichVu,
-    setCondition,
-    setFilterInfo,
-    setDanhSach,
   } = useModel('dichvumotcuav2');
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
   const [type, setType] = useState<string>('view');
@@ -36,12 +33,6 @@ const TableQuanLyDonAdmin = () => {
   useEffect(() => {
     setLoaiDichVu(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
     adminGetAllBieuMauModel(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
-    return () => {
-      setDanhSach([]);
-      setRecord({} as DichVuMotCuaV2.BieuMau);
-      setCondition({});
-      setFilterInfo({});
-    };
   }, []);
   const columns: IColumn<DichVuMotCuaV2.Don>[] = [
     {

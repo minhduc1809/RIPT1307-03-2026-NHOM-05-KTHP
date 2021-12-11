@@ -6,12 +6,21 @@ import TableQuanLyDonAdmin from './components/TableQuanLyDonAdmin';
 const { TabPane } = Tabs;
 
 const QuanLyDonAdmin = () => {
-  const { trangThaiQuanLyDonAdmin, setTrangThaiQuanLyDonAdmin, setDanhSach } =
-    useModel('dichvumotcuav2');
+  const {
+    trangThaiQuanLyDonAdmin,
+    setTrangThaiQuanLyDonAdmin,
+    setDanhSach,
+    setRecord,
+    setCondition,
+    setFilterInfo,
+  } = useModel('dichvumotcuav2');
 
   useEffect(() => {
     return () => {
       setDanhSach([]);
+      setRecord({} as DichVuMotCuaV2.BieuMau);
+      setCondition({});
+      setFilterInfo({});
     };
   }, []);
 

@@ -12,15 +12,27 @@ const QuanLyDon = () => {
     setTrangThaiQuanLyDon,
     getAllBieuMauChuyenVienDieuPhoiModel,
     getAllBieuMauChuyenVienTiepNhanModel,
+    setRecord,
+    setDanhSach,
+    setCondition,
+    setFilterInfo,
+    setLoaiDichVu,
   } = useModel('dichvumotcuav2');
 
   const { pathname } = window.location;
   const arrPathName = pathname?.split('/') ?? [];
   const isDVMC = arrPathName?.includes('dvmc');
   useEffect(() => {
+    setLoaiDichVu(isDVMC ? 'DVMC' : 'VAN_PHONG_SO');
     if (arrPathName?.includes('quanlydondieuphoi'))
       getAllBieuMauChuyenVienDieuPhoiModel(isDVMC ? 'DVMC' : 'VAN_PHONG_SO');
     else getAllBieuMauChuyenVienTiepNhanModel(isDVMC ? 'DVMC' : 'VAN_PHONG_SO');
+    return () => {
+      setDanhSach([]);
+      setRecord({} as DichVuMotCuaV2.BieuMau);
+      setCondition({});
+      setFilterInfo({});
+    };
   }, []);
 
   return (
