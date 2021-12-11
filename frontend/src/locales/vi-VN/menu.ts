@@ -55,7 +55,7 @@ export default {
   'menu.Structure': 'Tiến trình học tập',
   'menu.LopTinChi': 'Lớp tín chỉ',
   'menu.DanhMuc': 'Danh mục',
-  'menu.DanhMuc.TinTuc': 'Quản lý tin tức',
+  'menu.TinTuc': 'Quản lý tin tức',
   'menu.DanhMuc.ChuDeChung': 'Chủ đề chung',
   'menu.BieuMau': 'Biểu mẫu',
   'menu.KhaoSat': 'Khảo sát',

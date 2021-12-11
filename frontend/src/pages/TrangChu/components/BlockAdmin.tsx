@@ -195,12 +195,14 @@ const BlockAdmin = () => {
                 dataIndex: 'tenDonVi',
                 align: 'center',
                 width: 200,
+                search: 'search',
               },
               {
                 title: 'Mã đơn vị',
                 dataIndex: 'maDonVi',
                 align: 'center',
                 width: 200,
+                search: 'search',
                 render: (val: string) => <Tag color="green">{val}</Tag>,
               },
               {

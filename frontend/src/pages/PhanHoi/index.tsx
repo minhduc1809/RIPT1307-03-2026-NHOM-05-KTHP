@@ -119,48 +119,48 @@ const PhanHoi = () => {
     <TableBase
       scroll={{ x: 900 }}
       columns={columns}
-      getData={access.admin ? getPhanHoiAdminModel : getPhanHoiUserModel}
+      getData={access.adminVaQuanTri ? getPhanHoiAdminModel : getPhanHoiUserModel}
       loading={loading}
-      hascreate={access.admin ? false : true}
+      hascreate={access.adminVaQuanTri ? false : true}
       dependencies={[vaiTro, daTraLoi, page, limit, condition]}
       modelName="phanhoi"
       title="Phản hồi"
-      Form={access.admin ? Form : FormGuiPhanHoi}
+      Form={access.adminVaQuanTri ? Form : FormGuiPhanHoi}
     >
       {access.admin && (
-        <>
-          <Select
-            value={condition?.hinhThucDaoTaoId ?? -1}
-            onChange={(val: number) => {
-              setCondition({ ...condition, hinhThucDaoTaoId: val });
-            }}
-            style={{ marginBottom: 8, width: 250, marginRight: 8 }}
-          >
-            <Select.Option value={-1} key={-1}>
-              Tất cả hình thức đào tạo
+        <Select
+          value={condition?.hinhThucDaoTaoId ?? -1}
+          onChange={(val: number) => {
+            setCondition({ ...condition, hinhThucDaoTaoId: val });
+          }}
+          style={{ marginBottom: 8, width: 250, marginRight: 8 }}
+        >
+          <Select.Option value={-1} key={-1}>
+            Tất cả hình thức đào tạo
+          </Select.Option>
+          {danhSachHinhThucDaoTao?.map((item) => (
+            <Select.Option key={item.id} value={item.id}>
+              {item.ten_hinh_thuc_dao_tao}
             </Select.Option>
-            {danhSachHinhThucDaoTao?.map((item) => (
-              <Select.Option key={item.id} value={item.id}>
-                {item.ten_hinh_thuc_dao_tao}
-              </Select.Option>
-            ))}
-          </Select>
-          <Select
-            placeholder="Lọc theo vai trò người gửi"
-            onChange={onChangeVaiTro}
-            value={vaiTro}
-            style={{ width: 220, marginBottom: 8, marginRight: 8 }}
-          >
-            {[
-              { value: 'sinh_vien', name: 'Sinh viên' },
-              { value: 'nhan_vien', name: 'Cán bộ, giảng viên' },
-            ]?.map((item) => (
-              <Select.Option key={item.value} value={item.value}>
-                {item.name}
-              </Select.Option>
-            ))}
-          </Select>
-        </>
+          ))}
+        </Select>
+      )}
+      {access.adminVaQuanTri && (
+        <Select
+          placeholder="Lọc theo vai trò người gửi"
+          onChange={onChangeVaiTro}
+          value={vaiTro}
+          style={{ width: 220, marginBottom: 8, marginRight: 8 }}
+        >
+          {[
+            { value: 'sinh_vien', name: 'Sinh viên' },
+            { value: 'nhan_vien', name: 'Cán bộ, giảng viên' },
+          ]?.map((item) => (
+            <Select.Option key={item.value} value={item.value}>
+              {item.name}
+            </Select.Option>
+          ))}
+        </Select>
       )}
       <Select
         placeholder="Lọc theo trạng thái"

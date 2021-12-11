@@ -101,6 +101,7 @@ const VanBanHuongDan = () => {
           <Select
             value={condition?.hinhThucDaoTaoId ?? -1}
             onChange={(val: number) => {
+              setPage(1);
               setCondition({ ...condition, hinhThucDaoTaoId: val });
             }}
             style={{ marginBottom: 8, width: 250, marginRight: 8 }}
@@ -189,7 +190,18 @@ const VanBanHuongDan = () => {
                     <Typography.Text strong>{`${item.ten || 'CHƯA ĐẶT TÊN'}`}</Typography.Text>
                   </div>
                 }
-                description={<div onClick={() => showFileList(item)}>{item.moTa || ''}</div>}
+                description={
+                  <div onClick={() => showFileList(item)}>
+                    <div>Mô tả: {item.moTa || ''}</div>
+                    <div>Số lượng văn bản: {item?.danhSachTep?.length ?? 0}</div>
+                    <div>
+                      Hình thức đào tạo:{' '}
+                      {danhSachHinhThucDaoTao?.find(
+                        (hinhThuc) => hinhThuc.id === item.hinhThucDaoTaoId,
+                      )?.display_name ?? ''}
+                    </div>
+                  </div>
+                }
               />
             </List.Item>
           )}

@@ -123,14 +123,14 @@ export default defineConfig({
           component: './DanhMuc/ChuDe',
           access: 'adminVaQuanTri',
         },
-        {
-          name: 'TinTuc',
-          icon: 'smile',
-          path: './tintuc',
-          component: './DanhMuc/TinTuc',
-          access: 'adminVaQuanTri',
-        },
       ],
+    },
+    {
+      name: 'TinTuc',
+      icon: 'FileProtectOutlined',
+      path: '/quantritintuc',
+      component: './DanhMuc/TinTuc',
+      access: 'adminVaQuanTri',
     },
     {
       name: 'BieuMau',
@@ -294,7 +294,7 @@ export default defineConfig({
 
     {
       name: 'VanPhongSoNhanVien',
-      icon: 'AuditOutlined',
+      icon: 'PaperClipOutlined',
       path: '/vanphongsonhanvien',
       routes: [
         {
@@ -357,7 +357,7 @@ export default defineConfig({
     },
     {
       name: 'VanPhongSoAdmin',
-      icon: 'AuditOutlined',
+      icon: 'PaperClipOutlined',
       path: '/vanphongso',
       routes: [
         {
