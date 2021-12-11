@@ -46,7 +46,7 @@ const PhanHoi = () => {
       width: 80,
     },
     {
-      title: `Mã ${vaiTro === 'sinh_vien' ? 'sinh viên' : 'giảng viên'}`,
+      title: 'Mã định danh',
       dataIndex: 'maSv',
       align: 'center',
       search: 'search',

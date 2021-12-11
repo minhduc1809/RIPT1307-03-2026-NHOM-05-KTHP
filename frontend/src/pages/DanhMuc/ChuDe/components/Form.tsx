@@ -36,18 +36,6 @@ const FormChuDe = () => {
         }}
         form={form}
       >
-        {!edit && (
-          <Form.Item
-            name="_id"
-            label="Mã chủ đề"
-            // eslint-disable-next-line no-underscore-dangle
-            initialValue={record?._id}
-            rules={[...rules.required, ...rules.text, ...rules.length(30)]}
-          >
-            <Input placeholder="Mã chủ đề" />
-          </Form.Item>
-        )}
-
         <Form.Item
           name="name"
           label="Tên chủ đề"

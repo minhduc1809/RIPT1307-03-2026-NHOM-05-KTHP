@@ -166,7 +166,11 @@ const FormBieuMau = () => {
                 loading={loading}
                 style={{ marginRight: 8 }}
                 type="primary"
-                onClick={() => setCurrent(0)}
+                onClick={() => {
+                  const valueView = form.getFieldsValue(true);
+                  setRecordCauHinhBieuMau({ ...recordCauHinhBieuMau, ...valueView });
+                  setCurrent(0);
+                }}
               >
                 Quay lại
               </Button>
@@ -180,9 +184,6 @@ const FormBieuMau = () => {
             >
               Tiếp theo
             </Button>
-            {/* <Button icon={<CloseOutlined />} onClick={() => setVisibleForm(false)}>
-            Đóng
-          </Button> */}
           </div>
         </Form.Item>
       </Form>

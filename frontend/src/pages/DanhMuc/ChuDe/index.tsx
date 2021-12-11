@@ -44,13 +44,6 @@ const LopTinChi = () => {
       width: 80,
     },
     {
-      title: 'Mã chủ đề',
-      dataIndex: '_id',
-      align: 'center',
-      width: 150,
-      search: 'search',
-    },
-    {
       title: 'Tên chủ đề',
       dataIndex: 'name',
       align: 'center',
@@ -147,7 +140,7 @@ const LopTinChi = () => {
       title="Chủ đề chung"
       Form={Form}
     >
-      {access.adminVaQuanTri && (
+      {access.admin && (
         <Select
           value={condition?.hinhThucDaoTaoId ?? -1}
           onChange={(val: number) => {

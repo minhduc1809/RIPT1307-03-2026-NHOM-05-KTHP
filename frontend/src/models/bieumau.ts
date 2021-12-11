@@ -25,8 +25,10 @@ export default () => {
   const [edit, setEdit] = useState<boolean>(false);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
+  const [current, setCurrent] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
+
   const getBieuMauAdminModel = async () => {
     setLoading(true);
     const response = await getBieuMauAdmin({ page, limit, condition });
@@ -117,6 +119,8 @@ export default () => {
   };
 
   return {
+    current,
+    setCurrent,
     getIdBieuMauDaTraLoiModel,
     listIdBieuMauDaTraLoi,
     setListIdBieuMauDaTraLoi,

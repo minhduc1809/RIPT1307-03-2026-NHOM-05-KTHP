@@ -20,6 +20,7 @@ const FormTaoQuyTrinh = () => {
   const {
     loading,
     record,
+    setRecord,
     edit,
     putBieuMauAdminModel,
     postBieuMauAdminModel,
@@ -144,7 +145,11 @@ const FormTaoQuyTrinh = () => {
               loading={loading}
               style={{ marginRight: 8 }}
               type="primary"
-              onClick={() => setCurrent(1)}
+              onClick={() => {
+                const valueView = form.getFieldsValue(true);
+                setRecord({ ...record, ...valueView });
+                setCurrent(1);
+              }}
             >
               Quay lại
             </Button>

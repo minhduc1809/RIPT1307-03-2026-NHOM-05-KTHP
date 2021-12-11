@@ -1,27 +1,23 @@
-import { CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Input } from 'antd';
+import {
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  CloseCircleOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
+import { Button, Card, Form, Input, Tooltip } from 'antd';
 import BlockQuestion from './BlockQuestion';
+import styles from './block.css';
 
 const Block = (props: {
   field: { name: number; key: number; isListField?: boolean; fieldKey: number };
 }) => {
   return (
     <>
-      <Form.Item
-        name={[props.field.name, 'tieuDe']}
-        label="Tiêu đề"
-        // rules={[...rules.required]}
-        // initialValue={record?.moTa}
-      >
+      <Form.Item style={{ marginBottom: 12 }} name={[props.field.name, 'tieuDe']} label="Tiêu đề">
         <Input placeholder="Tiêu đề" />
       </Form.Item>
-      <Form.Item
-        name={[props.field.name, 'moTa']}
-        label="Mô tả"
-        // rules={[...rules.required]}
-        // initialValue={record?.moTa}
-      >
-        <Input.TextArea rows={3} placeholder="Mô tả" />
+      <Form.Item name={[props.field.name, 'moTa']} label="Mô tả">
+        <Input.TextArea rows={2} placeholder="Mô tả" />
       </Form.Item>
       <Form.List
         name={[props.field.name, 'danhSachCauHoi']}
@@ -36,21 +32,38 @@ const Block = (props: {
           },
         ]}
       >
-        {(fields, { add, remove }, { errors }) => {
+        {(fields, { add, remove, move }, { errors }) => {
           return (
             <>
               {fields.map((field, index) => (
                 <>
                   <Card
-                    // className={styles.block}
+                    size="small"
+                    headStyle={{ padding: '0px 24px' }}
+                    bodyStyle={{ padding: '8px 24px' }}
                     key={field.key}
+                    className={styles.block}
                     title={
                       <>
                         <div style={{ float: 'left' }}>Câu hỏi {index + 1}</div>
-                        <CloseCircleOutlined
-                          style={{ float: 'right' }}
-                          onClick={() => remove(field.name)}
-                        />
+                        <Tooltip title="Xóa">
+                          <CloseCircleOutlined
+                            style={{ float: 'right', marginTop: 4, marginLeft: 8 }}
+                            onClick={() => remove(field.name)}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Di chuyển lên">
+                          <ArrowUpOutlined
+                            style={{ float: 'right', marginTop: 4, marginLeft: 8 }}
+                            onClick={() => move(field.name, field.name - 1)}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Di chuyển xuống">
+                          <ArrowDownOutlined
+                            style={{ float: 'right', marginTop: 4 }}
+                            onClick={() => move(field.name, field.name + 1)}
+                          />
+                        </Tooltip>
                       </>
                     }
                   >
