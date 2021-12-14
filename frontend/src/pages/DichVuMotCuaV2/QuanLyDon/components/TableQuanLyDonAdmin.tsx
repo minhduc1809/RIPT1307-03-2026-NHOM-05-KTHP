@@ -3,12 +3,13 @@ import TableBase from '@/components/Table';
 import Form from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import { TrangThaiDonDVMC } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import { EyeOutlined } from '@ant-design/icons';
-import { Button, Modal, Select, Tabs, Tooltip } from 'antd';
+import { ExportOutlined, EyeOutlined } from '@ant-design/icons';
+import { Button, Divider, Dropdown, Menu, Modal, Select, Tabs, Tooltip } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import FormQuyTrinh from '../../components/FormQuyTrinh';
+import ThanhToan from '@/components/ThanhToan';
 
 const TableQuanLyDonAdmin = () => {
   const {
@@ -25,6 +26,7 @@ const TableQuanLyDonAdmin = () => {
     record,
     setRecord,
     setLoaiDichVu,
+    exportDonModel,
   } = useModel('dichvumotcuav2');
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
   const [type, setType] = useState<string>('view');
@@ -34,6 +36,12 @@ const TableQuanLyDonAdmin = () => {
     setLoaiDichVu(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
     adminGetAllBieuMauModel(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
   }, []);
+  const onClickMenuExport = (idDon: string, item: { key: 'MAU_DON' | 'TRA_LOI' }) => {
+    exportDonModel({
+      idDon,
+      mauExport: item.key,
+    });
+  };
   const columns: IColumn<DichVuMotCuaV2.Don>[] = [
     {
       title: 'STT',
@@ -68,6 +76,13 @@ const TableQuanLyDonAdmin = () => {
       render: (val) => <div>{TrangThaiDonDVMC?.[val] ?? 'Chưa cập nhật'}</div>,
     },
     {
+      title: 'Trạng thái thanh toán',
+      dataIndex: 'trangThaiThanhToan',
+      width: 150,
+      align: 'center',
+      render: (val) => <div>{val || 'Dịch vụ không tính phí'}</div>,
+    },
+    {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       align: 'center',
@@ -77,13 +92,26 @@ const TableQuanLyDonAdmin = () => {
     {
       title: 'Thao tác',
       align: 'center',
-      width: 100,
+      width: 120,
+      fixed: 'right',
       render: (recordDon: DichVuMotCuaV2.Don) => {
         return (
           <>
+            <Tooltip title="Xuất mẫu">
+              <Dropdown
+                overlay={
+                  <Menu onClick={(item: any) => onClickMenuExport(recordDon?._id ?? '', item)}>
+                    <Menu.Item key="MAU_DON">Mẫu đơn</Menu.Item>
+                    <Menu.Item key="TRA_LOI">Mẫu trả kết quả</Menu.Item>
+                  </Menu>
+                }
+              >
+                <Button shape="circle" loading={loading} icon={<ExportOutlined />} type="primary" />
+              </Dropdown>
+            </Tooltip>
+            <Divider type="vertical" />
             <Tooltip title="Chi tiết">
               <Button
-                type="primary"
                 onClick={() => {
                   setRecordView(recordDon);
                   setVisibleFormBieuMau(true);
@@ -105,6 +133,7 @@ const TableQuanLyDonAdmin = () => {
         dataState="danhSachDon"
         widthDrawer="60%"
         modelName="dichvumotcuav2"
+        scroll={{ x: 1300 }}
         columns={columns}
         loading={loading}
         dependencies={[page, limit, condition, trangThaiQuanLyDonAdmin, record?._id]}
@@ -138,7 +167,7 @@ const TableQuanLyDonAdmin = () => {
 
       <Modal
         destroyOnClose
-        width="60%"
+        width="820px"
         footer={false}
         visible={visibleFormBieuMau}
         bodyStyle={{ padding: 18 }}
@@ -163,6 +192,11 @@ const TableQuanLyDonAdmin = () => {
               record={recordView}
             />
           </Tabs.TabPane>
+          {recordView?.identityCode && (
+            <Tabs.TabPane tab="Thông tin thanh toán" key={2}>
+              <ThanhToan record={recordView} />
+            </Tabs.TabPane>
+          )}
         </Tabs>
       </Modal>
     </>

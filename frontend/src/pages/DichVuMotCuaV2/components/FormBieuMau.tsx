@@ -6,7 +6,7 @@ import { uploadFile } from '@/services/uploadFile';
 import { accessFileUpload } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { renderFileList } from '@/utils/utils';
-import { ArrowRightOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, CheckOutlined, CloseOutlined, StopOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
@@ -282,12 +282,20 @@ const FormBieuMau = (props: {
               scroll: { x: 500 },
               pagination: false,
             }}
-            columns={item?.relatedElement?.map((column) => ({
-              title: column?.label ?? '',
-              dataIndex: `${column?.label}`,
-              align: 'center',
-              width: 200,
-            }))}
+            columns={item?.relatedElement?.map((column) => {
+              return {
+                title: column?.label ?? '',
+                dataIndex: `${column?.label}`,
+                align: 'center',
+                width: 200,
+                render: (val: any) =>
+                  column?.type === 'DATE_PICKER' ? (
+                    <div>{val ? moment(val)?.format('DD/MM/YYYY') : val}</div>
+                  ) : (
+                    <div>{val}</div>
+                  ),
+              };
+            })}
           />
         );
         break;
@@ -548,6 +556,7 @@ const FormBieuMau = (props: {
           {['handle'].includes(props?.type ?? '') && (
             <>
               <Button
+                size="small"
                 onClick={() => {
                   setVisibleFormXuLy(true);
                   setTypeXuLy('ok');
@@ -568,6 +577,8 @@ const FormBieuMau = (props: {
                   setVisibleFormXuLy(true);
                   setTypeXuLy('not-ok');
                 }}
+                size="small"
+                icon={<StopOutlined />}
                 type="primary"
                 style={{
                   marginRight: 8,
@@ -581,6 +592,7 @@ const FormBieuMau = (props: {
 
               {arrPathName?.includes('quanlydondieuphoi') && (
                 <Button
+                  size="small"
                   style={{
                     marginRight: 8,
                     backgroundColor: '#1890ff',
@@ -598,6 +610,7 @@ const FormBieuMau = (props: {
             </>
           )}
           <Button
+            size="small"
             icon={<CloseOutlined />}
             onClick={() => (props?.onCancel ? props?.onCancel() : setVisibleFormBieuMau(false))}
           >

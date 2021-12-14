@@ -18,6 +18,7 @@ const GuiDon = () => {
     visibleFormBieuMau,
     setVisibleFormBieuMau,
   } = useModel('dichvumotcuav2');
+  const { getSettingByKeyModel } = useModel('setting');
   const { pathname } = window.location;
   const arrPathName = pathname?.split('/') ?? [];
   const isDVMC = arrPathName?.includes('dvmc');
@@ -28,6 +29,7 @@ const GuiDon = () => {
     return () => {
       setDanhSach([]);
       setRecord({} as DichVuMotCuaV2.BieuMau);
+      getSettingByKeyModel('HDTT');
     };
   }, []);
 

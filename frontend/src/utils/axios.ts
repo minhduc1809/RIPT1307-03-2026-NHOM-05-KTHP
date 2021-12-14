@@ -30,7 +30,7 @@ axios.interceptors.response.use(
     response,
   (error) => {
     switch (error?.response?.status) {
-      case 400:
+      case 400: {
         notification.error({
           message: 'Bad request',
           description:
@@ -42,6 +42,7 @@ axios.interceptors.response.use(
             error?.message,
         });
         break;
+      }
 
       case 401:
         notification.error({

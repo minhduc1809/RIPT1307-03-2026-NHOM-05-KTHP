@@ -24,4 +24,38 @@ declare module ThanhToan {
     updatedAt: string;
     currentPrice: Price;
   }
+
+  export interface Item {
+    _id: string;
+    priceId: string;
+    quantity: number;
+    productCode: string;
+    productId: string;
+    productName: string;
+    unitAmount: number;
+    unitLabel: string;
+  }
+
+  export interface Invoice {
+    transactionDate: string;
+    status: string;
+    _id: string;
+    code: string;
+    amountPaid: number;
+    createdAt: string;
+    customerInfo: {
+      _id: string;
+      name: string;
+      customerId: string;
+      cmtCccd: string;
+      address: string;
+    };
+    identityCode: string;
+    items: Item[];
+    paidHistory: any[];
+    updatedAt: string;
+    amountDue: number;
+    amountRemaining: number;
+    amountRefund: number;
+  }
 }

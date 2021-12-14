@@ -2,11 +2,11 @@
 import TableBase from '@/components/Table/index';
 import Form from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import type { IColumn } from '@/utils/interfaces';
-import { EyeOutlined } from '@ant-design/icons';
-import { Button, Modal, Select } from 'antd';
+import { Button, Divider, Dropdown, Menu, Modal, Select, Tabs } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
+import ThanhToan from '@/components/ThanhToan';
 
 const TableQuanLyDon = () => {
   const {
@@ -24,6 +24,7 @@ const TableQuanLyDon = () => {
     setVisibleFormBieuMau,
     setRecordDonThaoTac,
     recordDonThaoTac,
+    exportDonModel,
   } = useModel('dichvumotcuav2');
 
   const { getChuyenVienXuLyDonModel } = useModel('phanquyen');
@@ -31,6 +32,12 @@ const TableQuanLyDon = () => {
   const arrPathName = pathname?.split('/') ?? [];
   const [type, setType] = useState<string>('handle');
   const isDVMC = arrPathName?.includes('dvmc');
+  const onClickMenuExport = (idDon: string, item: { key: 'MAU_DON' | 'TRA_LOI' }) => {
+    exportDonModel({
+      idDon,
+      mauExport: item.key,
+    });
+  };
   const columns: IColumn<DichVuMotCuaV2.DonThaoTac>[] = [
     {
       title: 'STT',
@@ -66,6 +73,13 @@ const TableQuanLyDon = () => {
       width: 150,
       align: 'center',
       search: 'search',
+    },
+    {
+      title: 'Trạng thái thanh toán',
+      dataIndex: ['idDon', 'trangThaiThanhToan'],
+      width: 150,
+      align: 'center',
+      render: (val) => <div>{val || 'Dịch vụ không tính phí'}</div>,
     },
     {
       title: 'Đơn vị',
@@ -107,11 +121,26 @@ const TableQuanLyDon = () => {
       title: 'Thao tác',
       align: 'center',
       fixed: 'right',
-      width: 100,
+      width: 160,
       render: (recordDon: DichVuMotCuaV2.DonThaoTac) => (
         <>
+          <Dropdown
+            overlay={
+              <Menu onClick={(item: any) => onClickMenuExport(recordDon?.idDon?._id ?? '', item)}>
+                <Menu.Item key="MAU_DON">Mẫu đơn</Menu.Item>
+                <Menu.Item key="TRA_LOI">Mẫu trả kết quả</Menu.Item>
+              </Menu>
+            }
+          >
+            <Button style={{ padding: 0 }} shape="circle" loading={loading} type="link">
+              Xuất mẫu
+            </Button>
+          </Dropdown>
+
+          <Divider type="vertical" />
           {['PENDING'].includes(trangThaiQuanLyDon) && (
             <Button
+              style={{ padding: 0 }}
               onClick={() => {
                 if (arrPathName?.includes('quanlydondieuphoi')) {
                   getChuyenVienXuLyDonModel(recordDon?.idDonVi);
@@ -127,15 +156,17 @@ const TableQuanLyDon = () => {
           )}
           {['OK', 'NOT_OK'].includes(trangThaiQuanLyDon) && (
             <Button
-              type="primary"
+              style={{ padding: 0 }}
+              type="link"
               shape="circle"
               onClick={() => {
                 setRecordDonThaoTac(recordDon);
                 setVisibleFormBieuMau(true);
                 setType('view');
               }}
-              icon={<EyeOutlined />}
-            />
+            >
+              Chi tiết
+            </Button>
           )}
         </>
       ),
@@ -148,7 +179,7 @@ const TableQuanLyDon = () => {
       dependencies={[page, limit, condition, trangThaiQuanLyDon, record?._id, danhSach]}
       modelName="dichvumotcuav2"
       dataState="danhSachDonThaoTac"
-      scroll={{ x: 1500 }}
+      scroll={{ x: 1650 }}
       loading={loading}
       getData={() => {
         if (arrPathName?.includes('quanlydondieuphoi'))
@@ -183,20 +214,28 @@ const TableQuanLyDon = () => {
 
       <Modal
         destroyOnClose
-        width="60%"
+        width="850px"
         footer={false}
         visible={visibleFormBieuMau}
-        bodyStyle={{ padding: 0 }}
         onCancel={() => {
           setVisibleFormBieuMau(false);
         }}
       >
-        <Form
-          hideCamKet
-          infoNguoiTaoDon={recordDonThaoTac?.nguoiTao}
-          type={type}
-          record={recordDonThaoTac?.idDon}
-        />
+        <Tabs>
+          <Tabs.TabPane tab="Biểu mẫu" key={0}>
+            <Form
+              hideCamKet
+              infoNguoiTaoDon={recordDonThaoTac?.nguoiTao}
+              type={type}
+              record={recordDonThaoTac?.idDon}
+            />
+          </Tabs.TabPane>
+          {recordDonThaoTac?.idDon?.identityCode && (
+            <Tabs.TabPane tab="Thông tin thanh toán" key={2}>
+              <ThanhToan record={recordDonThaoTac?.idDon} />
+            </Tabs.TabPane>
+          )}
+        </Tabs>
       </Modal>
     </TableBase>
   );

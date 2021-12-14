@@ -59,7 +59,7 @@ class App extends React.Component {
           init={{
             language_url: '/lang/vi_VN.js',
             language: 'vi_VN',
-            height: 500,
+            height: this?.props?.height ?? 500,
             menubar: 'file edit view insert format tools table help',
             plugins: [
               'print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',

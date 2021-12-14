@@ -136,7 +136,7 @@ export function trim(str: string) {
 }
 
 export function currencyFormat(num: number) {
-  return num?.toFixed(0)?.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+  return num?.toFixed(0)?.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') ?? '';
 }
 export function chuanHoa(ten: any) {
   return trim(ten)
@@ -161,6 +161,21 @@ export function renderFileListUrl(url: string) {
     fileList: [
       {
         name: getNameFile(url),
+        url,
+        status: 'done',
+        size: 0,
+        type: 'img/png',
+      },
+    ],
+  };
+}
+
+export function renderFileListUrlWithName(url: string, fileName?: string) {
+  if (!url) return { fileList: [] };
+  return {
+    fileList: [
+      {
+        name: fileName || getNameFile(url),
         url,
         status: 'done',
         size: 0,

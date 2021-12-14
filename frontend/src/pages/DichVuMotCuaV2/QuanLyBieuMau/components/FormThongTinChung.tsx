@@ -1,9 +1,12 @@
-import rules from '@/utils/rules';
-import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row } from 'antd';
-import { useModel } from 'umi';
 import TinyEditor from '@/components/TinyEditor/Tiny';
+import Upload from '@/components/Upload/UploadMultiFile';
+import { uploadFile } from '@/services/uploadFile';
+import rules from '@/utils/rules';
+import { renderFileListUrlWithName } from '@/utils/utils';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import { useState, useEffect } from 'react';
+import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row } from 'antd';
+import { useEffect, useState } from 'react';
+import { useModel } from 'umi';
 
 const FormThongTinChung = () => {
   const [form] = Form.useForm();
@@ -33,12 +36,28 @@ const FormThongTinChung = () => {
     recordThongTinChung?.thongTinThuTuc?.tinhTienTheoSoLuong ?? false,
   );
 
+  const buildUpLoadFile = async (values: any, name: string) => {
+    if (values?.[name]?.fileList?.[0]?.originFileObj) {
+      const response = await uploadFile({
+        file: values?.[name]?.fileList?.[0]?.originFileObj,
+        filename: values?.[name]?.fileList?.[0]?.name?.split('.')?.[0] ?? 'fileName',
+        public: true,
+      });
+      return {
+        ...response?.data?.data?.file,
+        _id: response?.data?.data?.file?.id,
+      };
+    } else return values?.[name]?.fileList?.[0]?.url ? recordCauHinhBieuMau?.[name] : {};
+  };
+
   return (
     <Card title={edit ? 'Chỉnh sửa thông tin chung' : 'Thêm mới thông tin chung'}>
       <Form
         scrollToFirstError
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
+          values.fileMau = await buildUpLoadFile(values, 'fileMau');
+          values.fileTraLoi = await buildUpLoadFile(values, 'fileTraLoi');
           setRecordThongTinChung({
             ...values,
             thongTinThuTuc: {
@@ -80,6 +99,54 @@ const FormThongTinChung = () => {
               rules={[...rules.text, ...rules.length(200)]}
             >
               <Input.TextArea placeholder="Ghi chú" />
+            </Form.Item>
+          </Col>
+          <Col md={12}>
+            <Form.Item
+              rules={[...rules.fileName]}
+              name="fileMau"
+              label="Biểu mẫu đơn"
+              initialValue={
+                recordCauHinhBieuMau?.fileMau?.url
+                  ? renderFileListUrlWithName(
+                      recordCauHinhBieuMau?.fileMau?.url,
+                      recordCauHinhBieuMau?.fileMau?.filename,
+                    )
+                  : { fileList: [] }
+              }
+            >
+              <Upload
+                otherProps={{
+                  maxCount: 1,
+                  accept: '.docx',
+                  multiple: false,
+                  showUploadList: { showDownloadIcon: false },
+                }}
+              />
+            </Form.Item>
+          </Col>
+          <Col md={12}>
+            <Form.Item
+              rules={[...rules.fileName]}
+              name="fileTraLoi"
+              label="Biểu mẫu kết quả"
+              initialValue={
+                recordCauHinhBieuMau?.fileTraLoi?.url
+                  ? renderFileListUrlWithName(
+                      recordCauHinhBieuMau?.fileTraLoi?.url,
+                      recordCauHinhBieuMau?.fileTraLoi?.filename,
+                    )
+                  : { fileList: [] }
+              }
+            >
+              <Upload
+                otherProps={{
+                  maxCount: 1,
+                  accept: '.docx',
+                  multiple: false,
+                  showUploadList: { showDownloadIcon: false },
+                }}
+              />
             </Form.Item>
           </Col>
           <Col md={12}>
@@ -250,7 +317,7 @@ const FormThongTinChung = () => {
             initialValue={{ text: recordThongTinChung?.thongTinHoSo ?? '' }}
             // rules={[...rules.text]}
           >
-            <TinyEditor height={650} />
+            <TinyEditor height={350} />
           </Form.Item>
         </Row>
         <h3 style={{ fontWeight: 'bold' }}>Quy trình thực hiện</h3>
@@ -261,7 +328,7 @@ const FormThongTinChung = () => {
             initialValue={{ text: recordThongTinChung?.thongTinQuyTrinh ?? '' }}
             // rules={[...rules.text]}
           >
-            <TinyEditor height={650} />
+            <TinyEditor height={350} />
           </Form.Item>
         </Row>
         <h3 style={{ fontWeight: 'bold' }}>Yêu cầu</h3>
@@ -272,7 +339,7 @@ const FormThongTinChung = () => {
             initialValue={{ text: recordThongTinChung?.thongTinYeuCau ?? '' }}
             // rules={[...rules.text]}
           >
-            <TinyEditor height={650} />
+            <TinyEditor height={350} />
           </Form.Item>
         </Row>
 

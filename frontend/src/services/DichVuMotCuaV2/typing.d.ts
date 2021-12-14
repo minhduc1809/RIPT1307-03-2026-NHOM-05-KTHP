@@ -88,6 +88,13 @@ declare module DichVuMotCuaV2 {
     danhSachBuoc: BuocQuyTrinh[];
   }
 
+  export interface FileInfo {
+    _id: string;
+    filename: string;
+    url: string;
+    mimetype: string;
+  }
+
   export interface BieuMau {
     _id: string;
     ten: string;
@@ -101,6 +108,8 @@ declare module DichVuMotCuaV2 {
     thongTinQuyTrinh?: string;
     thongTinYeuCau?: string;
     loaiDichVu?: 'DVMC' | 'VAN_PHONG_SO';
+    fileTraLoi?: FileInfo;
+    fileMau?: FileInfo;
   }
 
   export interface Don {
@@ -108,6 +117,8 @@ declare module DichVuMotCuaV2 {
     createdAt?: string;
     trangThai?: string;
     _id?: string;
+    idHoaDon?: string;
+    identityCode?: string;
     soLuongThanhToan?: number;
     trangThaiThanhToan?: string;
     thongTinNguoiTao?: Login.Profile;

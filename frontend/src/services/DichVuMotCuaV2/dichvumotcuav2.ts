@@ -141,3 +141,9 @@ export async function thongKeDon() {
 export async function getBieuMauById(idBieuMau: string) {
   return axios.get(`${ip3}/dvmc/${idBieuMau}`);
 }
+
+export async function exportDon(payload: { idDon: string; mauExport: 'MAU_DON' | 'TRA_LOI' }) {
+  return axios.get(`${ip3}/don-dvmc/${payload.idDon}/export/word/?mauExport=${payload.mauExport}`, {
+    responseType: 'arraybuffer',
+  });
+}

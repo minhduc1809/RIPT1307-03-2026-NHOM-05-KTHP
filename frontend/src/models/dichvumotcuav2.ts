@@ -19,9 +19,12 @@ import {
   adminGetAllBieuMau,
   adminGetDonSinhVien,
   adminGetTrangThaiDon,
+  exportDon,
 } from '@/services/DichVuMotCuaV2/dichvumotcuav2';
 import { message } from 'antd';
 import { useState } from 'react';
+import FileDownload from 'js-file-download';
+import { useModel } from 'umi';
 
 export default () => {
   const [danhSach, setDanhSach] = useState<DichVuMotCuaV2.BieuMau[]>([]);
@@ -66,6 +69,8 @@ export default () => {
   const [trangThaiQuanLyDon, setTrangThaiQuanLyDon] = useState<string>('PENDING');
   const [trangThaiQuanLyDonAdmin, setTrangThaiQuanLyDonAdmin] = useState<string>('PROCESSING');
   const [recordTrangThaiDon, setRecordTrangThaiDon] = useState<DichVuMotCuaV2.TrangThaiBuoc[]>([]);
+
+  const { setVisibleForm: setVisibleFormThanhToan } = useModel('thanhtoan');
 
   const getBieuMauAdminModel = async (loaiDichVuParam?: string) => {
     setLoading(true);
@@ -155,10 +160,12 @@ export default () => {
   }) => {
     try {
       setLoading(true);
-      await postDonSinhVien(payload);
+      const response = await postDonSinhVien(payload);
+      setRecordDon(response?.data?.data ?? {});
       message.success('Gửi đơn thành công');
       setLoading(false);
       setVisibleFormBieuMau(false);
+      setVisibleFormThanhToan(true);
     } catch (error: any) {
       const { response } = error;
       if (response?.data?.errorCode === 2 && response?.data?.statusCode === 400) {
@@ -311,7 +318,19 @@ export default () => {
     setRecord(response?.data?.data ?? {});
   };
 
+  const exportDonModel = async (payload: { idDon: string; mauExport: 'MAU_DON' | 'TRA_LOI' }) => {
+    try {
+      setLoading(true);
+      const response = await exportDon(payload);
+      FileDownload(response.data, `dondichvu.doc`);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
+  };
+
   return {
+    exportDonModel,
     loaiDichVu,
     setLoaiDichVu,
     trangThaiQuanLyDonAdmin,

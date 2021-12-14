@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+import ThanhToan from '@/components/ThanhToan';
 import DanhMuc from '@/pages/DichVuMotCuaV2/components/DanhMuc';
 import FormBieuMau from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import { getInfoSinhVien } from '@/services/ant-design-pro/api';
@@ -14,22 +15,21 @@ const SinhVienTaoDon = ({
 }: {
   match: { params: { id: string } };
 }) => {
-  const {
-    // danhSach,
-    visibleFormBieuMau,
-    setVisibleFormBieuMau,
-    // setRecord,
-    record,
-    getBieuMauByIdModel,
-  } = useModel('dichvumotcuav2');
+  const { visibleFormBieuMau, setVisibleFormBieuMau, record, getBieuMauByIdModel, recordDon } =
+    useModel('dichvumotcuav2');
+  const { visibleForm, setVisibleForm } = useModel('thanhtoan');
   const [infoSinhVien, setInfoSinhVien] = useState<Login.Profile>();
   useEffect(() => {
+    window.scroll({ top: 0 });
     const getInfoSV = async () => {
       const res = await getInfoSinhVien();
       setInfoSinhVien(res?.data?.data ?? {});
     };
     getInfoSV();
     getBieuMauByIdModel(id);
+    return () => {
+      setVisibleForm(false);
+    };
   }, []);
   return (
     <Card>
@@ -53,6 +53,29 @@ const SinhVienTaoDon = ({
           }
         />
       </Modal>
+      {record?.thongTinThuTuc?.yeuCauTraPhi && (
+        <Modal
+          maskClosable={false}
+          title="Thanh toán (Sinh viên có thể xem lại các thông tin này ở mục 'Đơn đã gửi')"
+          destroyOnClose
+          onCancel={() => {
+            setVisibleForm(false);
+          }}
+          footer={
+            <Button
+              onClick={() => {
+                setVisibleForm(false);
+              }}
+            >
+              Đóng
+            </Button>
+          }
+          width="800px"
+          visible={visibleForm}
+        >
+          <ThanhToan record={recordDon} />
+        </Modal>
+      )}
       <DanhMuc
         button={
           <Button

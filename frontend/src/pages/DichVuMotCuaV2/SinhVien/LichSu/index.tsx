@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
+import ThanhToan from '@/components/ThanhToan';
 import Form from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import { TrangThaiDonDVMC } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
@@ -30,7 +31,6 @@ const LichSuGuiDon = () => {
   useEffect(() => {
     setRecord({} as DichVuMotCuaV2.BieuMau);
     setLoaiDichVu(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
-    // getAllBieuMauModel(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
     return () => {
       setDanhSach([]);
     };
@@ -45,7 +45,7 @@ const LichSuGuiDon = () => {
     {
       title: 'Loại đơn',
       dataIndex: ['thongTinDichVu', 'ten'],
-      align: 'center',
+      align: 'left',
     },
     {
       title: 'Trạng thái',
@@ -103,7 +103,7 @@ const LichSuGuiDon = () => {
 
       <Modal
         destroyOnClose
-        width="60%"
+        width="850px"
         footer={false}
         visible={visibleFormBieuMau}
         bodyStyle={{ padding: 18 }}
@@ -128,6 +128,11 @@ const LichSuGuiDon = () => {
               record={recordView}
             />
           </Tabs.TabPane>
+          {recordView?.identityCode && (
+            <Tabs.TabPane tab="Thông tin thanh toán" key={2}>
+              <ThanhToan record={recordView} />
+            </Tabs.TabPane>
+          )}
         </Tabs>
       </Modal>
     </>

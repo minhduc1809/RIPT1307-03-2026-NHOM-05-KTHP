@@ -193,6 +193,35 @@ const rules = {
     },
   ],
 
+  fileName: [
+    {
+      validator: (__, value, callback) => {
+        const re = new RegExp(
+          '^[ 0-9a-z_\\-aàáạảãâầấậẩẫăằắặẳẵeèéẹẻẽêềếệểễiìíịỉĩoòóọỏõôồốộổỗơờớợởỡuùúụủũưừứựửữyỳýỵỷỹdđ]{1,100}$',
+        );
+
+        value?.fileList?.map((item) => {
+          if (!re.test(item?.name?.split('.')?.[0])) callback('');
+        });
+        callback();
+      },
+      message: 'Tên file chỉ bao gồm chữ cái viết thường, số, ký tự - và ký tự _',
+    },
+  ],
+
+  fileType: (arrType) => [
+    {
+      validator: (__, value, callback) => {
+        value?.fileList?.map((item) => {
+          const type = item?.name?.split('.')?.pop();
+          if (!arrType?.includes(type)) callback('');
+        });
+        callback();
+      },
+      message: `Chỉ được tải lên file dạng ${arrType?.join(', ')}`,
+    },
+  ],
+
   fileLimit: (len) => [
     {
       validator: (__, value, callback) => {
