@@ -52,7 +52,6 @@ export default () => {
   };
 
   const addChuDeModel = async (payload: ChuDe.Record) => {
-    if (!payload.hinhThucDaoTaoId) return;
     try {
       setLoading(true);
       await addChuDe(payload);

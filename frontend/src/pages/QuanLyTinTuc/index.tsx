@@ -41,7 +41,7 @@ export default (props: { type?: string }) => {
       // eslint-disable-next-line no-underscore-dangle
       <Card key={tinTuc._id} className="tin-tuc-card" hoverable onClick={() => viewMore(tinTuc)}>
         <div className={'tin-tuc-image-wrapper'}>
-          <img style={{ objectFit: 'cover' }} src={tinTuc?.urlAnhDaiDien ?? ''} />
+          <img src={tinTuc?.urlAnhDaiDien ?? ''} />
         </div>
         <div className="tin-tuc-content">
           <Typography.Title level={4} ellipsis={{ rows: 2 }} className="tin-tuc-tieu-de">
@@ -89,7 +89,7 @@ export default (props: { type?: string }) => {
             height: 60,
           }}
           description={<span>Không có tin nào</span>}
-        ></Empty>
+        />
       </Card>
     );
   }

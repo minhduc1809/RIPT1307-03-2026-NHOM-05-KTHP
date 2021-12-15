@@ -29,9 +29,18 @@ export default () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
-  const getBieuMauAdminModel = async () => {
+  const getBieuMauAdminModel = async (hinhThucDaoTaoId?: number) => {
     setLoading(true);
-    const response = await getBieuMauAdmin({ page, limit, condition });
+    const response = await getBieuMauAdmin({
+      page,
+      limit,
+      condition: {
+        ...condition,
+        hinhThucDaoTaoId:
+          hinhThucDaoTaoId ||
+          (condition?.hinhThucDaoTaoId !== -1 ? condition?.hinhThucDaoTaoId : undefined),
+      },
+    });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total);
     setLoading(false);

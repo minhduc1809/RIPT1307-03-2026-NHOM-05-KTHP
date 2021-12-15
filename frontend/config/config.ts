@@ -133,19 +133,21 @@ export default defineConfig({
       access: 'adminVaQuanTri',
     },
     {
-      name: 'BieuMau',
-      icon: 'fileDone',
-      path: '/bieumau',
+      name: 'KhaoSat',
+      icon: 'form',
+      path: '/quanlykhaosat',
+      component: './BieuMau/KhaoSat',
       access: 'admin',
-      routes: [
-        {
-          name: 'KhaoSat',
-          icon: 'smile',
-          path: './khaosat',
-          component: './BieuMau/KhaoSat',
-        },
-      ],
     },
+    // {
+    //   name: 'BieuMau',
+    //   icon: 'fileDone',
+    //   path: '/bieumau',
+    //   access: 'admin',
+    //   routes: [
+
+    //   ],
+    // },
 
     {
       name: 'GocHocTap',

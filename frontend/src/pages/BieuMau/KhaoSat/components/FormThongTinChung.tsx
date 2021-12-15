@@ -21,6 +21,7 @@ const FormBaiHoc = () => {
   const { danhSach: danhSachUser, setCondition: setCondUser } = useModel('user');
   const { danhSach: danhSachLopTinChi, setCondition } = useModel('loptinchi');
   const { danhSach: danhSachKhoaHoc } = useModel('khoahoc');
+  const { danhSachHinhThucDaoTao } = useModel('lophanhchinh');
   const [doiTuong, setDoiTuong] = useState<string[]>(record?.loaiDoiTuongSuDung ?? []);
   const [camKet, setCamKet] = useState<boolean>(record?.coCamKet ?? true);
 
@@ -45,6 +46,12 @@ const FormBaiHoc = () => {
           const thoiGianKetThuc = values?.thoiGian?.[1] ?? values.thoiGianKetThuc;
           if (values?.loaiDoiTuongSuDung?.includes('Tất cả')) {
             values.loaiDoiTuongSuDung = [];
+          }
+          if (values?.hinhThucDaoTaoId === -1) {
+            values.hinhThucDaoTaoId = undefined;
+            values.isTatCaHe = true;
+          } else {
+            values.isTatCaHe = false;
           }
           delete values.thoiGian;
           setRecord({
@@ -75,23 +82,44 @@ const FormBaiHoc = () => {
         >
           <Input.TextArea rows={3} placeholder="Tiêu đề" />
         </Form.Item>
-        <Form.Item
-          name="thoiGian"
-          label="Thời gian bắt đầu - Thời gian kết thúc"
-          initialValue={[
-            record?.thoiGianBatDau ? moment(record?.thoiGianBatDau) : undefined,
-            record?.thoiGianKetThuc ? moment(record?.thoiGianKetThuc) : undefined,
-          ]}
-        >
-          <DatePicker.RangePicker
-            format="HH:mm DD-MM-YYYY"
-            disabledDate={(cur) => moment(cur).isBefore(moment())}
-            style={{ width: '100%' }}
-            placeholder={['Thời gian bắt đầu', 'Thời gian kết thúc']}
-            showTime
-          />
-        </Form.Item>
+
         <Row gutter={[20, 0]}>
+          <Col xs={24} sm={12} md={12}>
+            <Form.Item
+              name="thoiGian"
+              label="Thời gian bắt đầu - Thời gian kết thúc"
+              initialValue={[
+                record?.thoiGianBatDau ? moment(record?.thoiGianBatDau) : undefined,
+                record?.thoiGianKetThuc ? moment(record?.thoiGianKetThuc) : undefined,
+              ]}
+            >
+              <DatePicker.RangePicker
+                format="HH:mm DD-MM-YYYY"
+                disabledDate={(cur) => moment(cur).isBefore(moment())}
+                style={{ width: '100%' }}
+                placeholder={['Thời gian bắt đầu', 'Thời gian kết thúc']}
+                showTime
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12} md={12}>
+            <Form.Item
+              initialValue={edit && record?.isTatCaHe ? -1 : record?.hinhThucDaoTaoId}
+              name="hinhThucDaoTaoId"
+              label="Hình thức đào tạo"
+            >
+              <Select placeholder="Hình thức đào tạo">
+                <Select.Option value={-1} key={-1}>
+                  Tất cả hình thức đào tạo
+                </Select.Option>
+                {danhSachHinhThucDaoTao?.map((item) => (
+                  <Select.Option key={item.id} value={item.id}>
+                    {item.ten_hinh_thuc_dao_tao}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
           <Col xs={24} sm={12} md={12}>
             <Form.Item
               rules={[...rules.required]}
@@ -222,7 +250,7 @@ const FormBaiHoc = () => {
         )}
         {doiTuong.includes('Ngành') && (
           <Form.Item
-            rules={[...rules.required]}
+            // rules={[...rules.required]}
             name="danhSachNganhHoc"
             label="Ngành học"
             initialValue={record?.danhSachNganhHoc ?? []}

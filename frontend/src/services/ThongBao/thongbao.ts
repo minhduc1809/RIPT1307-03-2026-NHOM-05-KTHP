@@ -5,6 +5,10 @@ export async function getThongBaoAdmin(payload: { page: number; limit: number; c
   return axios.get(`${ip3}/notification/pageable`, { params: payload });
 }
 
+export async function postThongBaoGeneral(payload: ThongBao.PostRecord) {
+  return axios.post(`${ip3}/notification/general`, payload);
+}
+
 export async function postThongBaoByDonVi(payload: ThongBao.PostRecord) {
   return axios.post(`${ip3}/notification/type/don-vi`, payload);
 }

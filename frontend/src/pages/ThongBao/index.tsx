@@ -1,17 +1,48 @@
-import { useModel } from 'umi';
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
-import { Button, Modal, Select, Tooltip } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
-import { useState } from 'react';
-import ViewThongBao from './components/ViewThongBao';
+import { Button, Modal, Select, Tooltip } from 'antd';
+import { useEffect, useState } from 'react';
+import { useModel, useAccess } from 'umi';
 import Form from './components/Form';
+import ViewThongBao from './components/ViewThongBao';
 
 const ThongBao = () => {
-  const { getThongBaoAdminModel, page, limit, loading, condition, loaiThongBao, setLoaiThongBao } =
+  const { getThongBaoAdminModel, page, limit, loading, condition, setCondition } =
     useModel('thongbao');
   const [visible, setVisible] = useState<boolean>(false);
   const [record, setRecord] = useState<ThongBao.Record>();
+  const access = useAccess();
+  const {
+    getLopHanhChinhAdminModel,
+    condition: condLopHanhChinh,
+    getAllHinhThucDaoTaoModel,
+    danhSachHinhThucDaoTao,
+  } = useModel('lophanhchinh');
+  const { getAllNganhModel } = useModel('nganh');
+  const { adminGetLopTinChi, condition: condLopTinChi } = useModel('loptinchi');
+  const { getKhoaHocModel } = useModel('khoahoc');
+  const { getUserModel, condition: condUser } = useModel('user');
+  const { getAllDonViModel } = useModel('donvi');
+  useEffect(() => {
+    getUserModel({ pageParam: 1, limitParam: 100 });
+  }, [condUser]);
+
+  useEffect(() => {
+    adminGetLopTinChi(100);
+  }, [condLopTinChi]);
+
+  useEffect(() => {
+    getLopHanhChinhAdminModel({ page: 1, limit: 100 });
+  }, [condLopHanhChinh]);
+
+  useEffect(() => {
+    getAllHinhThucDaoTaoModel();
+    getAllDonViModel();
+    getAllNganhModel();
+    getKhoaHocModel({ pageParam: 1, limitParam: 1000 });
+  }, []);
+
   const onCell = (recordThongBao: ThongBao.Record) => ({
     onClick: () => {
       setVisible(true);
@@ -87,26 +118,26 @@ const ThongBao = () => {
         widthDrawer="60%"
         formType="Drawer"
         getData={getThongBaoAdminModel}
-        dependencies={[page, limit, condition, loaiThongBao]}
+        dependencies={[page, limit, condition]}
       >
-        <Select
-          onChange={(val: string) => {
-            setLoaiThongBao(val);
-          }}
-          style={{ width: 200, marginRight: 8, marginBottom: 8 }}
-          value={loaiThongBao}
-        >
-          {[
-            { value: 'TAT_CA', label: 'Chung' },
-            { value: 'DON_VI', label: 'Gửi tới đơn vị cụ thể' },
-            { value: 'VAI_TRO', label: 'Gửi theo vai trò' },
-            { value: 'TAI_KHOAN', label: 'Gửi tới tài khoản cụ thể' },
-          ].map((item) => (
-            <Select.Option key={item.value} value={item.value}>
-              {item.label}
+        {access.admin && (
+          <Select
+            value={condition?.hinhThucDaoTaoId ?? -1}
+            onChange={(val: number) => {
+              setCondition({ ...condition, hinhThucDaoTaoId: val });
+            }}
+            style={{ marginBottom: 8, width: 250, marginRight: 8 }}
+          >
+            <Select.Option value={-1} key={-1}>
+              Tất cả hình thức đào tạo
             </Select.Option>
-          ))}
-        </Select>
+            {danhSachHinhThucDaoTao?.map((item) => (
+              <Select.Option key={item.id} value={item.id}>
+                {item.ten_hinh_thuc_dao_tao}
+              </Select.Option>
+            ))}
+          </Select>
+        )}
       </TableBase>
       <Modal
         width="80%"

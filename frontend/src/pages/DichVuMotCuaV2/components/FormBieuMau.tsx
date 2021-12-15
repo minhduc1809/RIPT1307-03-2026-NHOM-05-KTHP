@@ -543,6 +543,7 @@ const FormBieuMau = (props: {
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
           {!['view', 'handle'].includes(props?.type ?? '') && (
             <Button
+              size="small"
               disabled={props?.hideCamKet ? false : !check}
               icon={<CheckOutlined />}
               loading={loading}

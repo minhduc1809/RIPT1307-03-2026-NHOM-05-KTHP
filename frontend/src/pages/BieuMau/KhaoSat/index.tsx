@@ -2,16 +2,17 @@
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined, EyeOutlined, PieChartOutlined } from '@ant-design/icons';
-import { Button, Divider, Popconfirm, Popover, Switch, Tooltip } from 'antd';
+import { Button, Divider, Popconfirm, Popover, Select, Switch, Tooltip } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useModel, useAccess } from 'umi';
 import Form from './components/Form';
 import FormViewDetail from './components/FormViewDetail';
 import ThongKe from './components/ThongKe';
 
 const KhaoSat = () => {
+  const access = useAccess();
   const {
     getBieuMauAdminModel,
     delBieuMauModel,
@@ -26,13 +27,15 @@ const KhaoSat = () => {
     kichHoatBieuMauModel,
     condition,
     edit,
+    setCondition,
     getBieuMauThongKeModel,
   } = useModel('bieumau');
   const { getLopHanhChinhAdminModel, condition: condLopHanhChinh } = useModel('lophanhchinh');
   const { getAllNganhModel } = useModel('nganh');
+  const { danhSachHinhThucDaoTao, getAllHinhThucDaoTaoModel } = useModel('lophanhchinh');
   const { adminGetLopTinChi, condition: condLopTinChi } = useModel('loptinchi');
   const { getKhoaHocModel } = useModel('khoahoc');
-  const { getUserModel, condition: condUser, setCondition } = useModel('user');
+  const { getUserModel, condition: condUser, setCondition: setConditionUser } = useModel('user');
   const [form, setForm] = useState<string>('edit');
 
   useEffect(() => {
@@ -51,9 +54,9 @@ const KhaoSat = () => {
     getAllNganhModel();
     getKhoaHocModel({ pageParam: 1, limitParam: 1000 });
     setLoaiBieuMau('Khảo sát');
-
+    getAllHinhThucDaoTaoModel();
     return () => {
-      setCondition({ vai_tro: 'sinh_vien' });
+      setConditionUser({ vai_tro: 'sinh_vien' });
     };
   }, []);
 
@@ -225,7 +228,26 @@ const KhaoSat = () => {
       widthDrawer="60%"
       // scroll={{ x: 1200 }}
       Form={formTable}
-    />
+    >
+      {access.admin && (
+        <Select
+          value={condition?.hinhThucDaoTaoId ?? -1}
+          onChange={(val: number) => {
+            setCondition({ ...condition, hinhThucDaoTaoId: val });
+          }}
+          style={{ marginBottom: 8, width: 250, marginRight: 8 }}
+        >
+          <Select.Option value={-1} key={-1}>
+            Tất cả hình thức đào tạo
+          </Select.Option>
+          {danhSachHinhThucDaoTao?.map((item) => (
+            <Select.Option key={item.id} value={item.id}>
+              {item.ten_hinh_thuc_dao_tao}
+            </Select.Option>
+          ))}
+        </Select>
+      )}
+    </TableBase>
   );
 };
 

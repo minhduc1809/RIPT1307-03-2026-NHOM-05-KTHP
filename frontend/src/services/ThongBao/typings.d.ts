@@ -32,12 +32,19 @@ declare module ThongBao {
   }
 
   export interface PostRecord {
-    donViIds?: number[];
-    roles?: string[];
     title: string;
     description: string;
-    htmlContent: string;
-    content: string;
-    imageUrl: string;
+    content?: string;
+    htmlContent?: string;
+    imageUrl?: string;
+    hinhThucDaoTaoId?: number;
+    loaiDoiTuong: string[];
+    lopHanhChinhList?: number[];
+    lopTinChiList?: number[];
+    nganhList?: number[];
+    donViList?: number[];
+    khoaList?: number[];
+    userIds?: string[];
+    roles?: string[];
   }
 }

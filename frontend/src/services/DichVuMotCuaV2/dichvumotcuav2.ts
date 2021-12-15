@@ -27,6 +27,26 @@ export async function adminGetDonSinhVien(payload: {
   });
 }
 
+export async function chuyenVienDieuPhoiGetDonSinhVien(payload: {
+  condition: any;
+  page: number;
+  limit: number;
+}) {
+  return axios.get(`${ip3}/don-dvmc/chuyen-vien-dieu-phoi/don/pageable`, {
+    params: payload,
+  });
+}
+
+export async function chuyenVienTiepNhanGetDonSinhVien(payload: {
+  condition: any;
+  page: number;
+  limit: number;
+}) {
+  return axios.get(`${ip3}/don-dvmc/chuyen-vien-tiep-nhan/don/pageable`, {
+    params: payload,
+  });
+}
+
 export async function userGetAllBieuMau(payload: { condition: any }) {
   return axios.get(`${ip3}/dvmc/me/all`, { params: payload });
 }

@@ -20,6 +20,8 @@ import {
   adminGetDonSinhVien,
   adminGetTrangThaiDon,
   exportDon,
+  chuyenVienDieuPhoiGetDonSinhVien,
+  chuyenVienTiepNhanGetDonSinhVien,
 } from '@/services/DichVuMotCuaV2/dichvumotcuav2';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -235,6 +237,42 @@ export default () => {
     setLoading(false);
   };
 
+  const chuyenVienDieuPhoiGetDonModel = async (loaiDichVuParam: string) => {
+    if (!record?._id) return;
+    setLoading(true);
+    const response = await chuyenVienDieuPhoiGetDonSinhVien({
+      page,
+      limit,
+      condition: {
+        ...condition,
+        loaiDichVu: loaiDichVuParam || loaiDichVu,
+        trangThai: trangThaiQuanLyDonAdmin,
+        'thongTinDichVu._id': record?._id,
+      },
+    });
+    setDanhSachDon(response?.data?.data?.result ?? []);
+    setTotal(response?.data?.data?.total);
+    setLoading(false);
+  };
+
+  const chuyenVienXuLyGetDonModel = async (loaiDichVuParam: string) => {
+    if (!record?._id) return;
+    setLoading(true);
+    const response = await chuyenVienTiepNhanGetDonSinhVien({
+      page,
+      limit,
+      condition: {
+        ...condition,
+        loaiDichVu: loaiDichVuParam || loaiDichVu,
+        trangThai: trangThaiQuanLyDonAdmin,
+        'thongTinDichVu._id': record?._id,
+      },
+    });
+    setDanhSachDon(response?.data?.data?.result ?? []);
+    setTotal(response?.data?.data?.total);
+    setLoading(false);
+  };
+
   const chuyenVienXuLyDuyetDonModel = async (payload: {
     type: string;
     idDonThaoTac: string;
@@ -330,6 +368,8 @@ export default () => {
   };
 
   return {
+    chuyenVienDieuPhoiGetDonModel,
+    chuyenVienXuLyGetDonModel,
     exportDonModel,
     loaiDichVu,
     setLoaiDichVu,

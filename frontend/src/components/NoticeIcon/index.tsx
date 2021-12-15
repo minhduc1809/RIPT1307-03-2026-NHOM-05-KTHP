@@ -37,7 +37,8 @@ const getNoticeData = (notices: ThongBao.Record[]): ThongBao.Record[] => {
 
 const NoticeIconView = () => {
   const { initialState } = useModel('@@initialState');
-  const { danhSach, getThongBaoModel, total, page, limit } = useModel('thongbao');
+  const { danhSachNoticeIcon, getThongBaoModel, totalNoticeIcon, pageNoticeIcon, limitNoticeIcon } =
+    useModel('thongbao');
   const { currentUser } = initialState || {};
   const [notices, setNotices] = useState<ThongBao.Record[]>([]);
   const [view, setView] = useState<boolean>(false);
@@ -46,11 +47,11 @@ const NoticeIconView = () => {
 
   useEffect(() => {
     getThongBaoModel();
-  }, [page, limit]);
+  }, [pageNoticeIcon, limitNoticeIcon]);
 
   useEffect(() => {
-    setNotices(danhSach);
-  }, [danhSach]);
+    setNotices(danhSachNoticeIcon);
+  }, [danhSachNoticeIcon]);
 
   const noticeData = getNoticeData(notices);
   const unreadMsg = noticeData?.filter((item) => item.unread);
@@ -84,7 +85,7 @@ const NoticeIconView = () => {
       >
         <NoticeIcon.Tab
           tabKey="notification"
-          count={currentUser && total}
+          count={currentUser && totalNoticeIcon}
           list={noticeData}
           title="Thông báo"
           emptyText="Bạn đã xem tất cả thông báo"
