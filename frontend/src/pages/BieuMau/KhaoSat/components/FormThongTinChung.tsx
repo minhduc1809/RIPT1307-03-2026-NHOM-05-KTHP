@@ -97,7 +97,9 @@ const FormBaiHoc = () => {
               rules={[...rules.required]}
               name="loaiDoiTuongSuDung"
               label="Đối tượng"
-              initialValue={doiTuong}
+              initialValue={
+                edit && record?.loaiDoiTuongSuDung?.length === 0 ? ['Tất cả'] : doiTuong
+              }
             >
               <Select
                 mode="multiple"
@@ -233,7 +235,7 @@ const FormBaiHoc = () => {
               placeholder="Ngành học"
             >
               {danhSachNganh.map((item) => (
-                <Select.Option key={item.ma_nganh} value={item.ma_nganh}>
+                <Select.Option key={item.ten_nganh_viet_tat} value={item.ten_nganh_viet_tat}>
                   {item.ten_nganh} ({item.ten_nganh_viet_tat})
                 </Select.Option>
               ))}
@@ -274,9 +276,10 @@ const FormBaiHoc = () => {
               allowClear
               mode="multiple"
               placeholder="Tìm kiếm theo mã định danh"
+              filterOption={(value, option) => includes(option?.props.children, value)}
             >
               {danhSachUser.map((item) => (
-                <Select.Option key={item?.ma_dinh_danh} value={item?.ma_nganh}>
+                <Select.Option key={item?.id?.toString() ?? ''} value={item?.id?.toString() ?? ''}>
                   {item?.name} ({item?.ma_dinh_danh})
                 </Select.Option>
               ))}
