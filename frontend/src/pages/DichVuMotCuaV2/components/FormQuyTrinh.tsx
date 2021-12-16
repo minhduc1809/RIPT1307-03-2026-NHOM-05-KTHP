@@ -237,22 +237,24 @@ const FormQuyTrinh = (props: {
           </>
         );
       })}
-      <Modal
-        destroyOnClose
-        width="850px"
-        footer={false}
-        visible={visibleFormBieuMau}
-        onCancel={() => {
-          setVisibleFormBieuMau(false);
-        }}
-      >
-        <FormBieuMau
-          hideCamKet
-          infoNguoiTaoDon={recordDonThaoTacModel?.nguoiTao}
-          type={type}
-          record={recordDonThaoTacModel?.idDon}
-        />
-      </Modal>
+      {access.nhanVien && (
+        <Modal
+          destroyOnClose
+          width="850px"
+          footer={false}
+          visible={visibleFormBieuMau}
+          onCancel={() => {
+            setVisibleFormBieuMau(false);
+          }}
+        >
+          <FormBieuMau
+            hideCamKet
+            infoNguoiTaoDon={recordDonThaoTacModel?.nguoiTao}
+            type={type}
+            record={recordDonThaoTacModel?.idDon}
+          />
+        </Modal>
+      )}
     </Card>
   );
 };
