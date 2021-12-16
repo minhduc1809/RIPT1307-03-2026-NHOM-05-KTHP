@@ -14,7 +14,7 @@ import {
   getDonThaoTacChuyenVienXuLy,
   chuyenVienXuLyDuyetDon,
   dieuPhoiDon,
-  getTrangThaiDon,
+  sinhVienGetTrangThaiDon,
   getBieuMauById,
   adminGetAllBieuMau,
   adminGetDonSinhVien,
@@ -22,6 +22,8 @@ import {
   exportDon,
   chuyenVienDieuPhoiGetDonSinhVien,
   chuyenVienTiepNhanGetDonSinhVien,
+  chuyenVienDieuPhoiGetTrangThaiDon,
+  chuyenVienTiepNhanGetTrangThaiDon,
 } from '@/services/DichVuMotCuaV2/dichvumotcuav2';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -63,13 +65,14 @@ export default () => {
   const [thuTuc, setThuTuc] = useState<DichVuMotCuaV2.ThuTuc>();
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
   const [visibleFormBieuMau, setVisibleFormBieuMau] = useState<boolean>(false);
+  const [visibleFormDon, setVisibleFormDon] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [current, setCurrent] = useState<number>(0);
   const [limit, setLimit] = useState<number>(10);
   const [typeForm, setTypeForm] = useState<string>('add');
-  const [trangThaiQuanLyDon, setTrangThaiQuanLyDon] = useState<string>('PENDING');
-  const [trangThaiQuanLyDonAdmin, setTrangThaiQuanLyDonAdmin] = useState<string>('PROCESSING');
+  const [trangThaiQuanLyDonThaoTac, setTrangThaiQuanLyDonThaoTac] = useState<string>('PENDING');
+  const [trangThaiQuanLyDon, setTrangThaiQuanLyDon] = useState<string>('PROCESSING');
   const [recordTrangThaiDon, setRecordTrangThaiDon] = useState<DichVuMotCuaV2.TrangThaiBuoc[]>([]);
 
   const { setVisibleForm: setVisibleFormThanhToan } = useModel('thanhtoan');
@@ -177,7 +180,12 @@ export default () => {
     }
   };
 
-  const getDonThaoTacChuyenVienDieuPhoiModel = async (loaiDichVuParam?: string) => {
+  const getDonThaoTacChuyenVienDieuPhoiModel = async (
+    loaiDichVuParam?: string,
+    conditionParams?: any,
+    pageParams?: number,
+    limitParams?: number,
+  ) => {
     if (
       loaiDichVuParam &&
       danhSach?.filter((item) => item.loaiDichVu === loaiDichVuParam)?.length === 0
@@ -185,11 +193,11 @@ export default () => {
       return;
     setLoading(true);
     const response = await getDonThaoTacChuyenVienDieuPhoi({
-      page,
-      limit,
-      condition: {
+      page: pageParams || page,
+      limit: limitParams || limit,
+      condition: conditionParams || {
         ...condition,
-        trangThai: trangThaiQuanLyDon,
+        trangThai: trangThaiQuanLyDonThaoTac,
         idDichVu: record?._id || danhSach?.map((item) => item._id),
       },
     });
@@ -198,7 +206,30 @@ export default () => {
     setLoading(false);
   };
 
-  const getDonThaoTacChuyenVienXuLyModel = async (loaiDichVuParam?: string) => {
+  const chuyenVienDieuPhoiGetDonModel = async (loaiDichVuParam?: string) => {
+    if (!record?._id) return;
+    setLoading(true);
+    const response = await chuyenVienDieuPhoiGetDonSinhVien({
+      page,
+      limit,
+      condition: {
+        ...condition,
+        loaiDichVu: loaiDichVuParam || loaiDichVu,
+        trangThai: trangThaiQuanLyDon,
+        'thongTinDichVu._id': record?._id,
+      },
+    });
+    setDanhSachDon(response?.data?.data?.result ?? []);
+    setTotal(response?.data?.data?.total);
+    setLoading(false);
+  };
+
+  const getDonThaoTacChuyenVienXuLyModel = async (
+    loaiDichVuParam?: string,
+    conditionParams?: any,
+    pageParams?: number,
+    limitParams?: number,
+  ) => {
     if (
       loaiDichVuParam &&
       danhSach?.filter((item) => item.loaiDichVu === loaiDichVuParam)?.length === 0
@@ -206,11 +237,11 @@ export default () => {
       return;
     setLoading(true);
     const response = await getDonThaoTacChuyenVienXuLy({
-      page,
-      limit,
-      condition: {
+      page: pageParams || page,
+      limit: limitParams || limit,
+      condition: conditionParams || {
         ...condition,
-        trangThai: trangThaiQuanLyDon,
+        trangThai: trangThaiQuanLyDonThaoTac,
         idDichVu: record?._id || danhSach?.map((item) => item._id),
       },
     });
@@ -228,7 +259,7 @@ export default () => {
       condition: {
         ...condition,
         loaiDichVu: loaiDichVuParam || loaiDichVu,
-        trangThai: trangThaiQuanLyDonAdmin,
+        trangThai: trangThaiQuanLyDon,
         'thongTinDichVu._id': record?._id,
       },
     });
@@ -237,25 +268,7 @@ export default () => {
     setLoading(false);
   };
 
-  const chuyenVienDieuPhoiGetDonModel = async (loaiDichVuParam: string) => {
-    if (!record?._id) return;
-    setLoading(true);
-    const response = await chuyenVienDieuPhoiGetDonSinhVien({
-      page,
-      limit,
-      condition: {
-        ...condition,
-        loaiDichVu: loaiDichVuParam || loaiDichVu,
-        trangThai: trangThaiQuanLyDonAdmin,
-        'thongTinDichVu._id': record?._id,
-      },
-    });
-    setDanhSachDon(response?.data?.data?.result ?? []);
-    setTotal(response?.data?.data?.total);
-    setLoading(false);
-  };
-
-  const chuyenVienXuLyGetDonModel = async (loaiDichVuParam: string) => {
+  const chuyenVienXuLyGetDonModel = async (loaiDichVuParam?: string) => {
     if (!record?._id) return;
     setLoading(true);
     const response = await chuyenVienTiepNhanGetDonSinhVien({
@@ -264,12 +277,28 @@ export default () => {
       condition: {
         ...condition,
         loaiDichVu: loaiDichVuParam || loaiDichVu,
-        trangThai: trangThaiQuanLyDonAdmin,
+        trangThai: trangThaiQuanLyDon,
         'thongTinDichVu._id': record?._id,
       },
     });
     setDanhSachDon(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total);
+    setLoading(false);
+  };
+
+  const chuyenVienDieuPhoiGetTrangThaiDonModel = async (idDon?: string) => {
+    if (!idDon) return;
+    setLoading(true);
+    const response = await chuyenVienDieuPhoiGetTrangThaiDon(idDon, { condition });
+    setRecordTrangThaiDon(response?.data?.data ?? []);
+    setLoading(false);
+  };
+
+  const chuyenVienTiepNhanGetTrangThaiDonModel = async (idDon?: string) => {
+    if (!idDon) return;
+    setLoading(true);
+    const response = await chuyenVienTiepNhanGetTrangThaiDon(idDon, { condition });
+    setRecordTrangThaiDon(response?.data?.data ?? []);
     setLoading(false);
   };
 
@@ -283,7 +312,8 @@ export default () => {
     await chuyenVienXuLyDuyetDon(payload);
     message.success('Xử lý thành công');
     setVisibleFormBieuMau(false);
-    getDonThaoTacChuyenVienXuLyModel();
+    getDonThaoTacChuyenVienXuLyModel(undefined, { idDon: recordDon?._id }, 1, 100);
+    chuyenVienTiepNhanGetTrangThaiDonModel(recordDon?._id);
   };
 
   const chuyenVienDieuPhoiDuyetDonModel = async (payload: {
@@ -296,13 +326,15 @@ export default () => {
     await chuyenVienDieuPhoiDuyetDon(payload);
     message.success('Xử lý thành công');
     setVisibleFormBieuMau(false);
-    getDonThaoTacChuyenVienDieuPhoiModel();
+    getDonThaoTacChuyenVienDieuPhoiModel(undefined, { idDon: recordDon?._id }, 1, 100);
+    chuyenVienDieuPhoiGetTrangThaiDonModel(recordDon?._id);
   };
 
   const getAllBieuMauChuyenVienDieuPhoiModel = async (loaiDichVuParam?: string) => {
     const response = await getAllBieuMauChuyenVienDieuPhoi({
       condition: { loaiDichVu: loaiDichVuParam || loaiDichVu },
     });
+    setRecord(response?.data?.data?.[0]);
     setDanhSach(response?.data?.data ?? []);
   };
 
@@ -310,6 +342,7 @@ export default () => {
     const response = await getAllBieuMauChuyenVienTiepNhan({
       condition: { loaiDichVu: loaiDichVuParam || loaiDichVu },
     });
+    setRecord(response?.data?.data?.[0]);
     setDanhSach(response?.data?.data ?? []);
   };
 
@@ -331,15 +364,16 @@ export default () => {
       message.success('Điều phối thành công');
       setLoading(false);
       setVisibleFormBieuMau(false);
-      getDonThaoTacChuyenVienDieuPhoiModel();
+      getDonThaoTacChuyenVienDieuPhoiModel(undefined, { idDon: recordDon?._id }, 1, 100);
+      chuyenVienDieuPhoiGetTrangThaiDonModel(recordDon?._id);
     } catch (error) {
       setLoading(false);
     }
   };
 
-  const getTrangThaiDonModel = async (idDon: string) => {
+  const sinhVienGetTrangThaiDonModel = async (idDon: string) => {
     setLoading(true);
-    const response = await getTrangThaiDon(idDon, { condition });
+    const response = await sinhVienGetTrangThaiDon(idDon, { condition });
     setRecordTrangThaiDon(response?.data?.data ?? []);
     setLoading(false);
   };
@@ -363,18 +397,23 @@ export default () => {
       FileDownload(response.data, `dondichvu.doc`);
       setLoading(false);
     } catch (err) {
+      message.error('Biểu mẫu không tồn tại');
       setLoading(false);
     }
   };
 
   return {
+    visibleFormDon,
+    setVisibleFormDon,
+    chuyenVienTiepNhanGetTrangThaiDonModel,
+    chuyenVienDieuPhoiGetTrangThaiDonModel,
     chuyenVienDieuPhoiGetDonModel,
     chuyenVienXuLyGetDonModel,
     exportDonModel,
     loaiDichVu,
     setLoaiDichVu,
-    trangThaiQuanLyDonAdmin,
-    setTrangThaiQuanLyDonAdmin,
+    trangThaiQuanLyDon,
+    setTrangThaiQuanLyDon,
     adminGetTrangThaiDonModel,
     adminGetDonModel,
     adminGetAllBieuMauModel,
@@ -383,7 +422,7 @@ export default () => {
     setRecordThongTinChung,
     thuTuc,
     setThuTuc,
-    getTrangThaiDonModel,
+    sinhVienGetTrangThaiDonModel,
     recordTrangThaiDon,
     setRecordTrangThaiDon,
     dieuPhoiDonModel,
@@ -395,8 +434,8 @@ export default () => {
     setRecordDonThaoTac,
     getAllBieuMauChuyenVienDieuPhoiModel,
     getAllBieuMauChuyenVienTiepNhanModel,
-    trangThaiQuanLyDon,
-    setTrangThaiQuanLyDon,
+    trangThaiQuanLyDonThaoTac,
+    setTrangThaiQuanLyDonThaoTac,
     danhSachDonThaoTac,
     setDanhSachDonThaoTac,
     getDonThaoTacChuyenVienDieuPhoiModel,

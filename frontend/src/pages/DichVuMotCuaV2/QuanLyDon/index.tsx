@@ -2,7 +2,7 @@
 import { Card, Tabs } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
-import TableQuanLyDon from './components/TableQuanLyDon';
+import TableQuanLyDon from './components/TableQuanLyDonChuyenVien';
 
 const { TabPane } = Tabs;
 
@@ -43,7 +43,7 @@ const QuanLyDon = () => {
         }}
         activeKey={trangThaiQuanLyDon}
       >
-        <TabPane tab="Chờ xử lý" key="PENDING" />
+        <TabPane tab="Chờ xử lý" key="PROCESSING" />
         <TabPane tab="Duyệt" key="OK" />
         <TabPane tab="Không duyệt" key="NOT_OK" />
       </Tabs>

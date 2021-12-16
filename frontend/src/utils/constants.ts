@@ -70,3 +70,17 @@ export enum ColorTrangThaiDonMotCua {
   NOT_OK = '#CC0D00',
   PROCESSING = '#1890ff',
 }
+
+export const Setting = {
+  navTheme: 'dark',
+  primaryColor: '#CC0D00',
+  layout: 'mix',
+  contentWidth: 'Fluid',
+  fixedHeader: false,
+  fixSiderbar: true,
+  colorWeak: false,
+  title: 'PTIT S-Link',
+  pwa: false,
+  logo: '/favicon.ico',
+  iconfontUrl: '',
+};

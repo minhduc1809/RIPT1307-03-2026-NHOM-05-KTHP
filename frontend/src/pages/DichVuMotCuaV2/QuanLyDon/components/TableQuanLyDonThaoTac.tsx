@@ -16,7 +16,7 @@ const TableQuanLyDon = () => {
     limit,
     condition,
     loading,
-    trangThaiQuanLyDon,
+    trangThaiQuanLyDonThaoTac,
     danhSach,
     record,
     setRecord,
@@ -138,7 +138,7 @@ const TableQuanLyDon = () => {
           </Dropdown>
 
           <Divider type="vertical" />
-          {['PENDING'].includes(trangThaiQuanLyDon) && (
+          {['PENDING'].includes(trangThaiQuanLyDonThaoTac) && (
             <Button
               style={{ padding: 0 }}
               onClick={() => {
@@ -154,7 +154,7 @@ const TableQuanLyDon = () => {
               Xử lý
             </Button>
           )}
-          {['OK', 'NOT_OK'].includes(trangThaiQuanLyDon) && (
+          {['OK', 'NOT_OK'].includes(trangThaiQuanLyDonThaoTac) && (
             <Button
               style={{ padding: 0 }}
               type="link"
@@ -176,7 +176,7 @@ const TableQuanLyDon = () => {
   return (
     <TableBase
       columns={columns}
-      dependencies={[page, limit, condition, trangThaiQuanLyDon, record?._id, danhSach]}
+      dependencies={[page, limit, condition, trangThaiQuanLyDonThaoTac, record?._id, danhSach]}
       modelName="dichvumotcuav2"
       dataState="danhSachDonThaoTac"
       scroll={{ x: 1650 }}

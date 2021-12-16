@@ -7,8 +7,8 @@ const { TabPane } = Tabs;
 
 const QuanLyDonAdmin = () => {
   const {
-    trangThaiQuanLyDonAdmin,
-    setTrangThaiQuanLyDonAdmin,
+    trangThaiQuanLyDon,
+    setTrangThaiQuanLyDon,
     setDanhSach,
     setRecord,
     setCondition,
@@ -28,9 +28,9 @@ const QuanLyDonAdmin = () => {
     <Card bodyStyle={{ padding: '8px 24px 24px 24px' }} title="Quản lý đơn">
       <Tabs
         onChange={(key: string) => {
-          setTrangThaiQuanLyDonAdmin(key);
+          setTrangThaiQuanLyDon(key);
         }}
-        activeKey={trangThaiQuanLyDonAdmin}
+        activeKey={trangThaiQuanLyDon}
       >
         <TabPane tab="Chờ xử lý" key="PROCESSING" />
         <TabPane tab="Duyệt" key="OK" />

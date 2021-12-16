@@ -1,41 +1,41 @@
 /* eslint-disable no-underscore-dangle */
-import TableBase from '@/components/Table';
+import TableBase from '@/components/Table/index';
 import Form from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
-import { TrangThaiDonDVMC } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import { ExportOutlined, EyeOutlined } from '@ant-design/icons';
 import { Button, Divider, Dropdown, Menu, Modal, Select, Tabs, Tooltip } from 'antd';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useModel } from 'umi';
-import FormQuyTrinh from '../../components/FormQuyTrinh';
 import ThanhToan from '@/components/ThanhToan';
+import { TrangThaiDonDVMC } from '@/utils/constants';
+import { ExportOutlined, EyeOutlined } from '@ant-design/icons';
+import FormQuyTrinh from '../../components/FormQuyTrinh';
 
-const TableQuanLyDonAdmin = () => {
+const TableQuanLyDon = () => {
   const {
+    chuyenVienDieuPhoiGetDonModel,
+    chuyenVienXuLyGetDonModel,
+    getDonThaoTacChuyenVienDieuPhoiModel,
+    getDonThaoTacChuyenVienXuLyModel,
     page,
     limit,
     condition,
-    adminGetDonModel,
     loading,
-    visibleFormBieuMau,
-    adminGetAllBieuMauModel,
-    setVisibleFormBieuMau,
     trangThaiQuanLyDon,
     danhSach,
     record,
     setRecord,
-    setLoaiDichVu,
+    visibleFormDon,
+    setVisibleFormDon,
+    recordDon,
+    setRecordDon,
     exportDonModel,
   } = useModel('dichvumotcuav2');
-  const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
-  const [type, setType] = useState<string>('view');
+
   const { pathname } = window.location;
   const arrPathName = pathname?.split('/') ?? [];
-  useEffect(() => {
-    setLoaiDichVu(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
-    adminGetAllBieuMauModel(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
-  }, []);
+  const [type, setType] = useState<string>('handle');
+  const isDVMC = arrPathName?.includes('dvmc');
   const onClickMenuExport = (idDon: string, item: { key: 'MAU_DON' | 'TRA_LOI' }) => {
     exportDonModel({
       idDon,
@@ -94,13 +94,15 @@ const TableQuanLyDonAdmin = () => {
       align: 'center',
       width: 120,
       fixed: 'right',
-      render: (recordDon: DichVuMotCuaV2.Don) => {
+      render: (recordDonColumn: DichVuMotCuaV2.Don) => {
         return (
           <>
             <Tooltip title="Xuất mẫu">
               <Dropdown
                 overlay={
-                  <Menu onClick={(item: any) => onClickMenuExport(recordDon?._id ?? '', item)}>
+                  <Menu
+                    onClick={(item: any) => onClickMenuExport(recordDonColumn?._id ?? '', item)}
+                  >
                     <Menu.Item key="MAU_DON">Mẫu đơn</Menu.Item>
                     <Menu.Item key="TRA_LOI">Mẫu trả kết quả</Menu.Item>
                   </Menu>
@@ -113,8 +115,22 @@ const TableQuanLyDonAdmin = () => {
             <Tooltip title="Chi tiết">
               <Button
                 onClick={() => {
-                  setRecordView(recordDon);
-                  setVisibleFormBieuMau(true);
+                  if (arrPathName?.includes('quanlydondieuphoi'))
+                    getDonThaoTacChuyenVienDieuPhoiModel(
+                      undefined,
+                      { idDon: recordDonColumn?._id },
+                      1,
+                      100,
+                    );
+                  else
+                    getDonThaoTacChuyenVienXuLyModel(
+                      undefined,
+                      { idDon: recordDonColumn?._id },
+                      1,
+                      100,
+                    );
+                  setRecordDon(recordDonColumn);
+                  setVisibleFormDon(true);
                   setType('view');
                 }}
                 shape="circle"
@@ -128,79 +144,82 @@ const TableQuanLyDonAdmin = () => {
   ];
 
   return (
-    <>
-      <TableBase
-        dataState="danhSachDon"
-        widthDrawer="60%"
-        modelName="dichvumotcuav2"
-        scroll={{ x: 1300 }}
-        columns={columns}
-        loading={loading}
-        dependencies={[page, limit, condition, trangThaiQuanLyDon, record?._id]}
-        getData={adminGetDonModel}
+    <TableBase
+      columns={columns}
+      dependencies={[page, limit, condition, trangThaiQuanLyDon, record?._id, danhSach]}
+      modelName="dichvumotcuav2"
+      dataState="danhSachDon"
+      scroll={{ x: 1350 }}
+      loading={loading}
+      getData={() => {
+        if (arrPathName?.includes('quanlydondieuphoi'))
+          chuyenVienDieuPhoiGetDonModel(isDVMC ? 'DVMC' : 'VAN_PHONG_SO');
+        else chuyenVienXuLyGetDonModel(isDVMC ? 'DVMC' : 'VAN_PHONG_SO');
+      }}
+    >
+      <Select
+        allowClear
+        placeholder="Lọc theo loại dịch vụ"
+        onChange={(val: string | undefined) => {
+          setRecord(
+            val
+              ? danhSach?.find((item) => item._id === val)
+              : ({
+                  _id: {
+                    $in: danhSach?.map((item) => item._id),
+                  },
+                } as any),
+          );
+        }}
+        showSearch
+        value={typeof record?._id === 'string' ? record?._id : undefined}
+        style={{ width: '400px' }}
       >
-        <Select
-          allowClear
-          placeholder="Lọc theo loại dịch vụ"
-          onChange={(val: string | undefined) => {
-            setRecord(
-              val
-                ? danhSach?.find((item) => item._id === val)
-                : ({
-                    _id: {
-                      $in: danhSach?.map((item) => item._id),
-                    },
-                  } as any),
-            );
-          }}
-          showSearch
-          value={typeof record?._id === 'string' ? record?._id : undefined}
-          style={{ width: '400px' }}
-        >
-          {danhSach?.map((item) => (
-            <Select.Option key={item._id} value={item._id}>
-              {item.ten}
-            </Select.Option>
-          ))}
-        </Select>
-      </TableBase>
+        {danhSach?.map((item) => (
+          <Select.Option key={item._id} value={item._id}>
+            {item.ten}
+          </Select.Option>
+        ))}
+      </Select>
 
       <Modal
         destroyOnClose
-        width="820px"
+        width="850px"
         footer={false}
-        visible={visibleFormBieuMau}
-        bodyStyle={{ padding: 18 }}
+        visible={visibleFormDon}
         onCancel={() => {
-          setVisibleFormBieuMau(false);
+          setVisibleFormDon(false);
         }}
       >
         <Tabs>
           <Tabs.TabPane tab="Quy trình" key={0}>
             <FormQuyTrinh
               type="view"
-              idDon={recordView?._id}
-              record={recordView?.thongTinDichVu?.quyTrinh}
-              thoiGianTaoDon={recordView?.createdAt}
+              idDon={recordDon?._id}
+              record={recordDon?.thongTinDichVu?.quyTrinh}
+              thoiGianTaoDon={recordDon?.createdAt}
             />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Biểu mẫu" key={1}>
             <Form
               hideCamKet
-              infoNguoiTaoDon={recordView?.thongTinNguoiTao}
+              infoNguoiTaoDon={recordDon?.thongTinNguoiTao}
               type={type}
-              record={recordView}
+              onCancel={() => {
+                setVisibleFormDon(false);
+              }}
+              record={recordDon}
             />
           </Tabs.TabPane>
-          {recordView?.identityCode && (
+          {recordDon?.identityCode && (
             <Tabs.TabPane tab="Thông tin thanh toán" key={2}>
-              <ThanhToan record={recordView} />
+              <ThanhToan record={recordDon} />
             </Tabs.TabPane>
           )}
         </Tabs>
       </Modal>
-    </>
+    </TableBase>
   );
 };
 
-export default TableQuanLyDonAdmin;
+export default TableQuanLyDon;

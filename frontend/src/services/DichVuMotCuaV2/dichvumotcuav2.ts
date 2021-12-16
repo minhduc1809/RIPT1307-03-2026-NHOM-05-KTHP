@@ -146,8 +146,22 @@ export async function dieuPhoiDon(payload: {
   );
 }
 
-export async function getTrangThaiDon(idDon: string, payload: { condition: any }) {
+export async function sinhVienGetTrangThaiDon(idDon: string, payload: { condition: any }) {
   return axios.get(`${ip3}/don-dvmc/sinh-vien/me/don-dvmc/${idDon}/buoc`, { params: payload });
+}
+
+export async function chuyenVienDieuPhoiGetTrangThaiDon(
+  idDon: string,
+  payload: { condition: any },
+) {
+  return axios.get(`${ip3}/don-dvmc/chuyen-vien-dieu-phoi/${idDon}/buoc`, { params: payload });
+}
+
+export async function chuyenVienTiepNhanGetTrangThaiDon(
+  idDon: string,
+  payload: { condition: any },
+) {
+  return axios.get(`${ip3}/don-dvmc/chuyen-vien-tiep-nhan/${idDon}/buoc`, { params: payload });
 }
 
 export async function adminGetTrangThaiDon(idDon: string, payload: { condition: any }) {

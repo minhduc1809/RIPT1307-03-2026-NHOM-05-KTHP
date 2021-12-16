@@ -6,7 +6,6 @@ import { uploadFile } from '@/services/uploadFile';
 import { accessFileUpload } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { renderFileList } from '@/utils/utils';
-import { ArrowRightOutlined, CheckOutlined, CloseOutlined, StopOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
@@ -543,9 +542,7 @@ const FormBieuMau = (props: {
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
           {!['view', 'handle'].includes(props?.type ?? '') && (
             <Button
-              size="small"
               disabled={props?.hideCamKet ? false : !check}
-              icon={<CheckOutlined />}
               loading={loading}
               style={{ marginRight: 8 }}
               htmlType="submit"
@@ -557,7 +554,6 @@ const FormBieuMau = (props: {
           {['handle'].includes(props?.type ?? '') && (
             <>
               <Button
-                size="small"
                 onClick={() => {
                   setVisibleFormXuLy(true);
                   setTypeXuLy('ok');
@@ -568,7 +564,6 @@ const FormBieuMau = (props: {
                   border: '1px solid #007F3E',
                   color: 'white',
                 }}
-                icon={<CheckOutlined />}
               >
                 Duyệt
               </Button>
@@ -578,8 +573,6 @@ const FormBieuMau = (props: {
                   setVisibleFormXuLy(true);
                   setTypeXuLy('not-ok');
                 }}
-                size="small"
-                icon={<StopOutlined />}
                 type="primary"
                 style={{
                   marginRight: 8,
@@ -593,7 +586,6 @@ const FormBieuMau = (props: {
 
               {arrPathName?.includes('quanlydondieuphoi') && (
                 <Button
-                  size="small"
                   style={{
                     marginRight: 8,
                     backgroundColor: '#1890ff',
@@ -603,7 +595,6 @@ const FormBieuMau = (props: {
                   onClick={() => {
                     setVisibleFormDieuPhoi(true);
                   }}
-                  icon={<ArrowRightOutlined />}
                 >
                   Điều phối
                 </Button>
@@ -611,8 +602,6 @@ const FormBieuMau = (props: {
             </>
           )}
           <Button
-            size="small"
-            icon={<CloseOutlined />}
             onClick={() => (props?.onCancel ? props?.onCancel() : setVisibleFormBieuMau(false))}
           >
             Đóng

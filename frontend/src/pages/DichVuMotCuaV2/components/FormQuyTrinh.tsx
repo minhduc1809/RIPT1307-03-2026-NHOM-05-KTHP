@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { TrangThaiBuoc, TrangThaiThaoTac } from '@/utils/constants';
+import { Setting, TrangThaiBuoc, TrangThaiThaoTac } from '@/utils/constants';
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
@@ -7,10 +7,11 @@ import {
   LoadingOutlined,
   PauseCircleOutlined,
 } from '@ant-design/icons';
-import { Card, Timeline } from 'antd';
+import { Button, Card, Modal, Timeline } from 'antd';
 import moment from 'moment';
-import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useEffect, useState } from 'react';
+import { useAccess, useModel } from 'umi';
+import FormBieuMau from './FormBieuMau';
 
 const IconTrangThai = {
   PENDING: (
@@ -61,25 +62,45 @@ const FormQuyTrinh = (props: {
   type?: string;
   thoiGianTaoDon?: string;
 }) => {
+  const access = useAccess();
   const {
-    getTrangThaiDonModel,
+    sinhVienGetTrangThaiDonModel,
+    chuyenVienDieuPhoiGetTrangThaiDonModel,
+    chuyenVienTiepNhanGetTrangThaiDonModel,
     recordTrangThaiDon,
+    setRecordDonThaoTac,
+    recordDonThaoTac: recordDonThaoTacModel,
     setRecordTrangThaiDon,
     loading,
+    visibleFormBieuMau,
+    setVisibleFormBieuMau,
     adminGetTrangThaiDonModel,
+    danhSachDonThaoTac,
+    setDanhSachDonThaoTac,
   } = useModel('dichvumotcuav2');
 
   const { pathname } = window.location;
   const arrPathName = pathname?.split('/') ?? [];
+
+  const [type, setType] = useState<string>('handle');
   useEffect(() => {
     if (props.idDon) {
-      if (arrPathName?.includes('quanlydonadmin')) adminGetTrangThaiDonModel(props.idDon);
-      else getTrangThaiDonModel(props.idDon);
+      if (access.admin) adminGetTrangThaiDonModel(props.idDon);
+      else if (access.sinhVien) sinhVienGetTrangThaiDonModel(props.idDon);
+      else {
+        if (arrPathName?.includes('quanlydondieuphoi'))
+          chuyenVienDieuPhoiGetTrangThaiDonModel(props.idDon);
+        else chuyenVienTiepNhanGetTrangThaiDonModel(props.idDon);
+      }
     }
+  }, [props.idDon]);
+
+  useEffect(() => {
     return () => {
       setRecordTrangThaiDon([]);
+      setDanhSachDonThaoTac([]);
     };
-  }, [props.idDon]);
+  }, []);
 
   return (
     <Card loading={loading} title={props?.type === 'view' ? false : 'Quy trình'}>
@@ -108,6 +129,7 @@ const FormQuyTrinh = (props: {
       )}
       {props?.record?.danhSachBuoc?.map((buoc, index) => {
         const recordBuoc = recordTrangThaiDon?.find((item) => item.idBuoc === buoc._id);
+        const recordDonThaoTac = danhSachDonThaoTac?.find((item) => item.idBuoc === buoc._id);
         const IconBuoc = IconTrangThai?.[recordBuoc?.trangThai ?? 'ANY'];
         return (
           <>
@@ -132,10 +154,22 @@ const FormQuyTrinh = (props: {
                 const recordThaoTac = recordBuoc?.danhSachThongKeThaoTac?.find(
                   (item) => item.idThaoTac === thaoTac._id,
                 );
+                const checkThaoTac = thaoTac._id === recordDonThaoTac?.idThaoTac;
                 const IconThaoTac = IconTrangThai?.[recordThaoTac?.trangThai ?? 'ANY'];
                 return (
                   <Timeline.Item dot={IconThaoTac}>
-                    <b>{thaoTac?.tenThaoTac ?? ''}</b>
+                    <b
+                      style={{
+                        color:
+                          recordDonThaoTac &&
+                          recordDonThaoTac?.trangThai === 'PENDING' &&
+                          checkThaoTac
+                            ? Setting.primaryColor
+                            : '#000',
+                      }}
+                    >
+                      {thaoTac?.tenThaoTac ?? ''}
+                    </b>
                     <div>Đơn vị: {thaoTac?.tenDonVi ?? ''}</div>
                     <div>
                       Trạng thái:{' '}
@@ -153,15 +187,43 @@ const FormQuyTrinh = (props: {
                             {thaoTac?.soNgayXuLy ? `${thaoTac?.soNgayXuLy} ngày` : 'Chưa cập nhật'}
                           </div>
                         )}
+                        {recordDonThaoTac && checkThaoTac && (
+                          <Button
+                            onClick={() => {
+                              setType('handle');
+                              setRecordDonThaoTac(recordDonThaoTac);
+                              setVisibleFormBieuMau(true);
+                            }}
+                            style={{ padding: 0 }}
+                            type="link"
+                          >
+                            Xử lý
+                          </Button>
+                        )}
                       </div>
                     ) : (
-                      <div>
-                        {recordThaoTac?.updatedAt
-                          ? `Vào lúc: ${moment(recordThaoTac?.updatedAt).format(
-                              'HH:mm DD/MM/YYYY',
-                            )}`
-                          : ''}
-                      </div>
+                      <>
+                        <div>
+                          {recordThaoTac?.updatedAt
+                            ? `Vào lúc: ${moment(recordThaoTac?.updatedAt).format(
+                                'HH:mm DD/MM/YYYY',
+                              )}`
+                            : ''}
+                        </div>
+                        {recordDonThaoTac && checkThaoTac && (
+                          <Button
+                            onClick={() => {
+                              setType('view');
+                              setRecordDonThaoTac(recordDonThaoTac);
+                              setVisibleFormBieuMau(true);
+                            }}
+                            style={{ padding: 0 }}
+                            type="link"
+                          >
+                            Chi tiết
+                          </Button>
+                        )}
+                      </>
                     )}
                   </Timeline.Item>
                 );
@@ -175,6 +237,22 @@ const FormQuyTrinh = (props: {
           </>
         );
       })}
+      <Modal
+        destroyOnClose
+        width="850px"
+        footer={false}
+        visible={visibleFormBieuMau}
+        onCancel={() => {
+          setVisibleFormBieuMau(false);
+        }}
+      >
+        <FormBieuMau
+          hideCamKet
+          infoNguoiTaoDon={recordDonThaoTacModel?.nguoiTao}
+          type={type}
+          record={recordDonThaoTacModel?.idDon}
+        />
+      </Modal>
     </Card>
   );
 };
