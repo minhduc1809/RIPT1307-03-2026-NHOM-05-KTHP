@@ -2,24 +2,27 @@
 /* eslint-disable no-underscore-dangle */
 import Upload from '@/components/Upload/UploadMultiFile';
 import rules from '@/utils/rules';
-import { checkFileSize, renderFileList, uploadMultiFile } from '@/utils/utils';
+import { checkFileSize, uploadMultiFile } from '@/utils/utils';
 import { Button, Card, Form, Input } from 'antd';
 import { useModel } from 'umi';
 
-const FormXuLyDon = (props: { type: string; onCancel: any }) => {
+const FormXuLyDon = (props: { type: string; onCancel: any; traKetQua?: boolean }) => {
   const [form] = Form.useForm();
   const {
     loading,
     recordDonThaoTac,
+    recordDon,
     setLoading,
     chuyenVienDieuPhoiDuyetDonModel,
     chuyenVienXuLyDuyetDonModel,
+    traKetQuaModel,
   } = useModel('dichvumotcuav2');
   const { pathname } = window.location;
   const arrPathName = pathname?.split('/') ?? [];
   return (
     <Card title={props.type === 'ok' ? 'Duyệt' : 'Không duyệt'}>
       <Form
+        labelCol={{ span: 24 }}
         onFinish={async (values) => {
           if (!recordDonThaoTac?._id) return;
           const checkSize = checkFileSize(values?.urlFileDinhKem?.fileList ?? []);
@@ -38,12 +41,22 @@ const FormXuLyDon = (props: { type: string; onCancel: any }) => {
           };
           if (arrPathName?.includes('quanlydondieuphoi')) chuyenVienDieuPhoiDuyetDonModel(payload);
           else chuyenVienXuLyDuyetDonModel(payload);
+          if (props?.traKetQua === true) {
+            const ketQuaDinhKem = await uploadMultiFile(values?.ketQuaDinhKem?.fileList);
+            traKetQuaModel(
+              {
+                ketQuaText: values?.ketQuaText ?? '',
+                ketQuaDinhKem,
+              },
+              recordDon?._id,
+            );
+          }
           props?.onCancel();
         }}
         form={form}
       >
         <Form.Item
-          initialValue={recordDonThaoTac?.info?.ghiChuXuLy}
+          // initialValue={recordDonThaoTac?.info?.ghiChuXuLy}
           name="ghiChuXuLy"
           rules={[...rules.text]}
           label="Ghi chú xử lý (nếu có)"
@@ -59,7 +72,7 @@ const FormXuLyDon = (props: { type: string; onCancel: any }) => {
             </>
           }
           rules={[...rules.fileLimit(5)]}
-          initialValue={renderFileList(recordDonThaoTac?.urlFileDinhKem ?? [])}
+          // initialValue={renderFileList(recordDonThaoTac?.urlFileDinhKem ?? [])}
           label="Kết quả xử lý (nếu có)"
         >
           <Upload
@@ -70,7 +83,39 @@ const FormXuLyDon = (props: { type: string; onCancel: any }) => {
             }}
           />
         </Form.Item>
-
+        {props?.traKetQua === true && (
+          <>
+            <b>Trả kết quả:</b>
+            <Form.Item
+              // initialValue={recordDonThaoTac?.info?.ghiChuXuLy}
+              name="ketQuaText"
+              rules={[...rules.text]}
+              label="Nội dung"
+            >
+              <Input.TextArea rows={2} placeholder="Nhập nội dung" />
+            </Form.Item>
+            <Form.Item
+              name="ketQuaDinhKem"
+              extra={
+                <>
+                  <div>Định dạng file: pdf, doc, docx</div>
+                  <div>Tối đa 5 file, dung lượng mỗi file không quá 8Mb</div>
+                </>
+              }
+              rules={[...rules.fileLimit(5)]}
+              // initialValue={renderFileList(recordDonThaoTac?.urlFileDinhKem ?? [])}
+              label="Tệp đính kèm (nếu có)"
+            >
+              <Upload
+                otherProps={{
+                  accept: '.pdf, .doc,.docx',
+                  multiple: true,
+                  showUploadList: { showDownloadIcon: false },
+                }}
+              />
+            </Form.Item>
+          </>
+        )}
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
           <Button
             loading={loading}

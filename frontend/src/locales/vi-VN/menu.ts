@@ -95,4 +95,5 @@ export default {
   'menu.VanPhongSoNhanVien.TaoDon': 'Tạo đơn mới',
   'menu.VanPhongSoNhanVien.LichSu': 'Đơn đã gửi',
   'menu.VanPhongSoNhanVien.QuanLyDon': 'Quản lý đơn',
+  'menu.ToChucCanBo': 'Tổ chức cán bộ',
 };

@@ -33,10 +33,14 @@ export default () => {
     const response = await getChuDe({
       page,
       limit,
-      condition: { ...condition, type: loaiChuDe === 'Tất cả' ? undefined : loaiChuDe },
+      condition: {
+        ...condition,
+        type: loaiChuDe === 'Tất cả' ? undefined : loaiChuDe,
+        hinhThucDaoTaoId: undefined,
+      },
       idHinhThuc:
         idHinhThuc ||
-        (condition?.hinhThucDaoTaoId !== -1 ? condition?.hinhThucDaoTaoId : undefined),
+        (condition?.hinhThucDaoTaoId === -1 ? undefined : condition?.hinhThucDaoTaoId),
     });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);

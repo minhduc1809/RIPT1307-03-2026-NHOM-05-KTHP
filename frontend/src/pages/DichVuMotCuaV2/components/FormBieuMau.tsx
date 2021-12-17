@@ -45,6 +45,7 @@ const FormBieuMau = (props: {
   edit?: boolean;
   hideTitle?: boolean;
   hideCamKet?: boolean;
+  traKetQua?: boolean;
 }) => {
   const [form] = Form.useForm();
   const {
@@ -633,6 +634,7 @@ const FormBieuMau = (props: {
         }}
       >
         <FormXuLyDon
+          traKetQua={props?.traKetQua ?? false}
           type={typeXuLy}
           onCancel={() => {
             setVisibleFormXuLy(false);

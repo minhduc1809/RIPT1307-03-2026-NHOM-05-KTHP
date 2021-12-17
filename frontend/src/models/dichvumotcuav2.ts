@@ -24,6 +24,7 @@ import {
   chuyenVienTiepNhanGetDonSinhVien,
   chuyenVienDieuPhoiGetTrangThaiDon,
   chuyenVienTiepNhanGetTrangThaiDon,
+  traKetQua,
 } from '@/services/DichVuMotCuaV2/dichvumotcuav2';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -402,7 +403,24 @@ export default () => {
     }
   };
 
+  const traKetQuaModel = async (
+    payload: {
+      ketQuaText: string;
+      ketQuaDinhKem: string[];
+    },
+    idDon?: string,
+  ) => {
+    if (!idDon) return;
+    setLoading(true);
+    await traKetQua(idDon, payload);
+    message.success('Trả kết quả thành công');
+    setLoading(false);
+    getDonThaoTacChuyenVienXuLyModel(undefined, { idDon: recordDon?._id }, 1, 100);
+    chuyenVienTiepNhanGetTrangThaiDonModel(recordDon?._id);
+  };
+
   return {
+    traKetQuaModel,
     visibleFormDon,
     setVisibleFormDon,
     chuyenVienTiepNhanGetTrangThaiDonModel,

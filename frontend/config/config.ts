@@ -418,7 +418,14 @@ export default defineConfig({
       name: 'QuanLyTaiKhoan',
       icon: 'UserOutlined',
       path: '/quanlytaikhoan',
-      component: 'QuanLyTaiKhoan',
+      component: './QuanLyTaiKhoan',
+      access: 'admin',
+    },
+    {
+      name: 'ToChucCanBo',
+      icon: 'UserOutlined',
+      path: '/tochuccanbo',
+      component: './ToChucCanBo',
       access: 'admin',
     },
     {

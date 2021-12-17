@@ -20,7 +20,7 @@ export default () => {
     const response = await getTinTuc({
       page,
       limit,
-      condition,
+      condition: { ...condition, hinhThucDaoTaoId: undefined },
       idHinhThuc:
         idHinhThuc ||
         (condition?.hinhThucDaoTaoId !== -1 ? condition?.hinhThucDaoTaoId : undefined),

@@ -81,7 +81,8 @@ const FormQuyTrinh = (props: {
 
   const { pathname } = window.location;
   const arrPathName = pathname?.split('/') ?? [];
-
+  const [checkLastStep, setCheckLastStep] = useState<boolean>(false);
+  const lastStep = props?.record?.danhSachBuoc?.[props?.record?.danhSachBuoc?.length - 1 ?? 0];
   const [type, setType] = useState<string>('handle');
   useEffect(() => {
     if (props.idDon) {
@@ -131,6 +132,7 @@ const FormQuyTrinh = (props: {
         const recordBuoc = recordTrangThaiDon?.find((item) => item.idBuoc === buoc._id);
         const recordDonThaoTac = danhSachDonThaoTac?.find((item) => item.idBuoc === buoc._id);
         const IconBuoc = IconTrangThai?.[recordBuoc?.trangThai ?? 'ANY'];
+        const isDonThaoTacOBuocCuoi = recordDonThaoTac?.idBuoc === lastStep?._id;
         return (
           <>
             <Timeline style={{ marginLeft: '-100px' }} mode="left">
@@ -170,7 +172,7 @@ const FormQuyTrinh = (props: {
                     >
                       {thaoTac?.tenThaoTac ?? ''}
                     </b>
-                    <div>Đơn vị: {thaoTac?.tenDonVi ?? ''}</div>
+                    <div>Đơn vị: {thaoTac?.tenDonVi || 'Đơn vị quản lý'}</div>
                     <div>
                       Trạng thái:{' '}
                       {TrangThaiThaoTac?.[recordThaoTac?.trangThai ?? ''] ?? 'Chưa xử lý'}
@@ -193,6 +195,7 @@ const FormQuyTrinh = (props: {
                               setType('handle');
                               setRecordDonThaoTac(recordDonThaoTac);
                               setVisibleFormBieuMau(true);
+                              setCheckLastStep(isDonThaoTacOBuocCuoi);
                             }}
                             style={{ padding: 0 }}
                             type="link"
@@ -252,6 +255,7 @@ const FormQuyTrinh = (props: {
             infoNguoiTaoDon={recordDonThaoTacModel?.nguoiTao}
             type={type}
             record={recordDonThaoTacModel?.idDon}
+            traKetQua={checkLastStep}
           />
         </Modal>
       )}
