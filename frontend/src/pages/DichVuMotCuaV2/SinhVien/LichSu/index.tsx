@@ -48,6 +48,31 @@ const LichSuGuiDon = () => {
       align: 'left',
     },
     {
+      title: 'Ghi chú kết quả',
+      dataIndex: 'ketQuaText',
+      align: 'center',
+      width: 300,
+    },
+    {
+      title: 'File kết quả đính kèm',
+      dataIndex: 'ketQuaDinhKem',
+      align: 'center',
+      width: 200,
+      render: (val: string[]) => (
+        <div>
+          {val?.map((item, index) => (
+            <>
+              <a href={item} target="_blank">
+                File kết quả {index + 1}
+              </a>
+              <br />
+            </>
+          ))}
+        </div>
+      ),
+      width: 200,
+    },
+    {
       title: 'Trạng thái',
       dataIndex: 'trangThai',
       align: 'center',

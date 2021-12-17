@@ -135,7 +135,7 @@ const FormQuyTrinh = (props: {
         const isDonThaoTacOBuocCuoi = recordDonThaoTac?.idBuoc === lastStep?._id;
         return (
           <>
-            <Timeline style={{ marginLeft: '-100px' }} mode="left">
+            <Timeline key={recordBuoc?._id} style={{ marginLeft: '-100px' }} mode="left">
               <Timeline.Item
                 style={{ marginBottom: 20 }}
                 dot={IconBuoc}
@@ -159,7 +159,7 @@ const FormQuyTrinh = (props: {
                 const checkThaoTac = thaoTac._id === recordDonThaoTac?.idThaoTac;
                 const IconThaoTac = IconTrangThai?.[recordThaoTac?.trangThai ?? 'ANY'];
                 return (
-                  <Timeline.Item dot={IconThaoTac}>
+                  <Timeline.Item key={recordThaoTac?._id} dot={IconThaoTac}>
                     <b
                       style={{
                         color:

@@ -1,6 +1,6 @@
 import { Space } from 'antd';
 import React from 'react';
-import { useModel } from 'umi';
+import { useModel, useAccess } from 'umi';
 import NoticeIcon from '../NoticeIcon';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
@@ -8,6 +8,7 @@ import styles from './index.less';
 export type SiderTheme = 'light' | 'dark';
 
 const GlobalHeaderRight: React.FC = () => {
+  const access = useAccess();
   const { initialState } = useModel('@@initialState');
 
   if (!initialState || !initialState.settings) {
@@ -23,7 +24,7 @@ const GlobalHeaderRight: React.FC = () => {
 
   return (
     <Space className={className}>
-      <NoticeIcon />
+      {!access.admin && <NoticeIcon />}
       <Avatar menu />
     </Space>
   );

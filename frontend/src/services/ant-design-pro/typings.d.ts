@@ -51,6 +51,9 @@ declare module Login {
     tenNganh: string;
     tenLopHanhChinh: string;
     maSinhVien: string;
+    don_vi_goc: number;
+    chuc_danh: string;
+    email_to_chuc: string;
   }
 
   export interface ProfileAdmin {

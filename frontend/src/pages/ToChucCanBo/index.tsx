@@ -1,14 +1,30 @@
 import TableBase from '@/components/Table';
 import data from '@/utils/data';
 import type { IColumn } from '@/utils/interfaces';
-import { EditOutlined } from '@ant-design/icons';
-import { Button, Tooltip } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, Divider, Popconfirm, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import Form from './components/Form';
+import { useEffect } from 'react';
 
 const QuanLyTaiKhoan = () => {
-  const { getCanBoModel, page, limit, condition, loading, setVisibleForm, setRecord } =
-    useModel('tochuccanbo');
+  const {
+    getCanBoModel,
+    page,
+    limit,
+    condition,
+    loading,
+    setVisibleForm,
+    setRecord,
+    setEdit,
+    deleteCanBoModel,
+  } = useModel('tochuccanbo');
+  const { getAllDonViModel } = useModel('donvi');
+
+  useEffect(() => {
+    getAllDonViModel();
+  }, []);
+
   const columns: IColumn<Login.Profile>[] = [
     {
       title: 'STT',
@@ -47,21 +63,39 @@ const QuanLyTaiKhoan = () => {
       render: (val) => <div>{val ? data?.gioiTinh?.[Number(val)] : ''}</div>,
     },
     {
+      title: 'Chức danh',
+      dataIndex: 'chuc_danh',
+      width: 200,
+      align: 'center',
+      search: 'search',
+    },
+    {
       title: 'Thao tác',
       align: 'center',
       width: 100,
-      render: (record) => (
+      render: (record: Login.Profile) => (
         <>
           <Tooltip title="Chỉnh sửa">
             <Button
-              type="primary"
               onClick={() => {
                 setVisibleForm(true);
+                setEdit(true);
                 setRecord(record);
               }}
               icon={<EditOutlined />}
               shape="circle"
             />
+          </Tooltip>
+          <Divider type="vertical" />
+          <Tooltip title="Xóa">
+            <Popconfirm
+              title="Bạn có chắc chắn muốn xóa?"
+              onConfirm={() => {
+                deleteCanBoModel(record.id);
+              }}
+            >
+              <Button type="primary" icon={<DeleteOutlined />} shape="circle" />
+            </Popconfirm>
           </Tooltip>
         </>
       ),

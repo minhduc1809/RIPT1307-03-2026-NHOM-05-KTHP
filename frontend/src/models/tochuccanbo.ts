@@ -1,4 +1,4 @@
-import { postCanBo, putCanBo } from '@/services/ToChucCanBo/tochuccanbo';
+import { deleteCanBo, postCanBo, putCanBo } from '@/services/ToChucCanBo/tochuccanbo';
 import { getUser } from '@/services/User/user';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -34,17 +34,19 @@ export default () => {
       await postCanBo(payload);
       message.success('Thêm thành công');
       getCanBoModel();
+      setVisibleForm(false);
       setLoading(false);
     } catch (error) {
       setLoading(false);
     }
   };
 
-  const putCanBoModel = async (payload: ToChucCanBo.Record & { id: number }) => {
+  const putCanBoModel = async (idCanBo: number, payload: ToChucCanBo.Record) => {
     try {
       setLoading(true);
-      await putCanBo(payload);
+      await putCanBo(idCanBo, payload);
       message.success('Sửa thành công');
+      setVisibleForm(false);
       getCanBoModel();
       setLoading(false);
     } catch (error) {
@@ -52,7 +54,16 @@ export default () => {
     }
   };
 
+  const deleteCanBoModel = async (idCanBo: number) => {
+    setLoading(true);
+    await deleteCanBo(idCanBo);
+    message.success('Xóa thành công');
+    setLoading(false);
+    getCanBoModel();
+  };
+
   return {
+    deleteCanBoModel,
     putCanBoModel,
     postCanBoModel,
     visibleFormCapLaiMatKhau,
