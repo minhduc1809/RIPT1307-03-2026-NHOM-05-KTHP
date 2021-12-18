@@ -3,11 +3,10 @@ import TableBase from '@/components/Table';
 import FormView from '@/pages/DichVuMotCuaV2/components/FormBieuMau';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { useEffect } from 'react';
-import { Button, Divider, Modal, Popconfirm, Tabs, Tooltip } from 'antd';
-import { useState } from 'react';
+import { Button, Divider, Modal, Popconfirm, Select, Tabs, Tooltip } from 'antd';
+import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { useModel } from 'umi';
+import { useAccess, useModel } from 'umi';
 import FormQuyTrinh from '../components/FormQuyTrinh';
 import Form from './components/Form';
 
@@ -22,19 +21,23 @@ const QuanLyBieuMau = () => {
     setEdit,
     setVisibleForm,
     deleteBieuMauAdminModel,
-    setRecordCauHinhBieuMau,
     setCurrent,
-    setRecordThongTinChung,
     setLoaiDichVu,
     setDanhSach,
+    setCondition,
   } = useModel('dichvumotcuav2');
 
+  const access = useAccess();
+
   const { getProductByCodeModel } = useModel('thanhtoan');
+  const { getAllHinhThucDaoTaoModel, danhSachHinhThucDaoTao } = useModel('lophanhchinh');
   const { pathname } = window.location;
   const arrPathName = pathname?.split('/') ?? [];
   useEffect(() => {
     setLoaiDichVu(arrPathName?.includes('dvmc') ? 'DVMC' : 'VAN_PHONG_SO');
+    getAllHinhThucDaoTaoModel();
     return () => {
+      setRecord({} as DichVuMotCuaV2.BieuMau);
       setDanhSach([]);
     };
   }, []);
@@ -52,6 +55,15 @@ const QuanLyBieuMau = () => {
       dataIndex: 'ten',
       search: 'search',
       align: 'left',
+    },
+    {
+      title: 'Hình thức đào tạo',
+      dataIndex: 'hinhThucDaoTaoId',
+      align: 'center',
+      hide: !access.admin,
+      render: (val) => (
+        <div>{danhSachHinhThucDaoTao?.find((item) => item.id === val)?.display_name}</div>
+      ),
     },
     {
       title: 'Thao tác',
@@ -82,14 +94,8 @@ const QuanLyBieuMau = () => {
                   setRecord(record);
                   setEdit(true);
                   setVisibleForm(true);
-                  setRecordCauHinhBieuMau(record);
+
                   setCurrent(arrPathName?.includes('dvmc') ? 0 : 1);
-                  setRecordThongTinChung({
-                    thongTinThuTuc: record?.thongTinThuTuc,
-                    thongTinHoSo: record?.thongTinHoSo,
-                    thongTinQuyTrinh: record?.thongTinQuyTrinh,
-                    thongTinYeuCau: record?.thongTinYeuCau,
-                  });
                 }}
                 shape="circle"
                 type="primary"
@@ -134,13 +140,29 @@ const QuanLyBieuMau = () => {
         }
         Form={Form}
       >
+        {access.admin && (
+          <Select
+            value={condition?.hinhThucDaoTaoId ?? -1}
+            onChange={(val: number) => {
+              setCondition({ ...condition, hinhThucDaoTaoId: val });
+            }}
+            style={{ marginBottom: 8, width: 250, marginRight: 8 }}
+          >
+            <Select.Option value={-1} key={-1}>
+              Tất cả hình thức đào tạo
+            </Select.Option>
+            {danhSachHinhThucDaoTao?.map((item) => (
+              <Select.Option key={item.id} value={item.id}>
+                {item.ten_hinh_thuc_dao_tao}
+              </Select.Option>
+            ))}
+          </Select>
+        )}
         <Button
           onClick={() => {
             setVisibleForm(true);
             setEdit(false);
             setRecord({} as DichVuMotCuaV2.BieuMau);
-            setRecordCauHinhBieuMau({} as DichVuMotCuaV2.BieuMau);
-            setRecordThongTinChung({});
             setCurrent(arrPathName?.includes('dvmc') ? 0 : 1);
           }}
           type="primary"

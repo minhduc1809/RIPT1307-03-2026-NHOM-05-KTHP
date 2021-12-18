@@ -324,7 +324,7 @@ const TableBase = (props: Props) => {
         />
       </h4>
       <Table
-        scroll={scroll || { x: 1000 }}
+        scroll={scroll || { x: 1100 }}
         loading={loading}
         bordered={border || false}
         pagination={{

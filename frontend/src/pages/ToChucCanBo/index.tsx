@@ -72,7 +72,8 @@ const QuanLyTaiKhoan = () => {
     {
       title: 'Thao tác',
       align: 'center',
-      width: 100,
+      width: 120,
+      fixed: 'right',
       render: (record: Login.Profile) => (
         <>
           <Tooltip title="Chỉnh sửa">

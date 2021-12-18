@@ -24,8 +24,6 @@ const FormTaoQuyTrinh = () => {
     edit,
     putBieuMauAdminModel,
     postBieuMauAdminModel,
-    recordCauHinhBieuMau,
-    recordThongTinChung,
     setCurrent,
   } = useModel('dichvumotcuav2');
   const { getAllDonViModel, danhSach } = useModel('donvi');
@@ -63,15 +61,14 @@ const FormTaoQuyTrinh = () => {
           const quyTrinh = buildPostQuyTrinh(values);
           if (edit) {
             putBieuMauAdminModel({
-              data: { ...recordCauHinhBieuMau, ...recordThongTinChung, quyTrinh: { ...quyTrinh } },
+              data: { ...record, quyTrinh: { ...quyTrinh } } as DichVuMotCuaV2.BieuMau,
               id: record?._id,
             });
           } else
             postBieuMauAdminModel({
-              ...recordCauHinhBieuMau,
-              ...recordThongTinChung,
+              ...record,
               quyTrinh: { ...quyTrinh },
-            });
+            } as DichVuMotCuaV2.BieuMau);
         }}
         form={form}
       >

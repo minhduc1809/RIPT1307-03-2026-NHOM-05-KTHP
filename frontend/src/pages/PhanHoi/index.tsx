@@ -70,14 +70,15 @@ const PhanHoi = () => {
     {
       title: 'Câu hỏi',
       dataIndex: 'noiDungPhanHoi',
-      align: 'center',
+      align: 'left',
       search: 'search',
+
       // width: 200,
     },
     {
       title: 'Câu trả lời',
       dataIndex: 'noiDungTraLoi',
-      align: 'center',
+      align: 'left',
       search: 'search',
       hide: !daTraLoi,
       // width: 200,

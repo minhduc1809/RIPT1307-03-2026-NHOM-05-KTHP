@@ -110,6 +110,8 @@ declare module DichVuMotCuaV2 {
     loaiDichVu?: 'DVMC' | 'VAN_PHONG_SO';
     fileTraLoi?: FileInfo;
     fileMau?: FileInfo;
+    phamVi?: string;
+    hinhThucDaoTaoId?: number;
   }
 
   export interface Don {

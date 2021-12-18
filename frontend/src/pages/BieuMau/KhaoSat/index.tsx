@@ -35,12 +35,13 @@ const KhaoSat = () => {
   const { danhSachHinhThucDaoTao, getAllHinhThucDaoTaoModel } = useModel('lophanhchinh');
   const { adminGetLopTinChi, condition: condLopTinChi } = useModel('loptinchi');
   const { getKhoaHocModel } = useModel('khoahoc');
-  const { getUserModel, condition: condUser, setCondition: setConditionUser } = useModel('user');
+  const { getUserMetaDataFilterModel, conditionNguoiDungCuThe, setConditionNguoiDungCuThe } =
+    useModel('user');
   const [form, setForm] = useState<string>('edit');
 
   useEffect(() => {
-    getUserModel({ pageParam: 1, limitParam: 100 });
-  }, [condUser]);
+    getUserMetaDataFilterModel(1, 10000);
+  }, [conditionNguoiDungCuThe]);
 
   useEffect(() => {
     adminGetLopTinChi(100);
@@ -56,7 +57,7 @@ const KhaoSat = () => {
     setLoaiBieuMau('Khảo sát');
     getAllHinhThucDaoTaoModel();
     return () => {
-      setConditionUser({ vai_tro: 'sinh_vien' });
+      setConditionNguoiDungCuThe({});
     };
   }, []);
 
@@ -123,12 +124,20 @@ const KhaoSat = () => {
     },
     {
       title: 'Đối tượng',
-      dataIndex: 'doiTuong',
-      search: 'filterString',
-      notRegex: true,
+      dataIndex: 'loaiDoiTuongSuDung',
       align: 'center',
       width: 200,
       onCell,
+    },
+    {
+      title: 'Hình thức đào tạo',
+      dataIndex: 'hinhThucDaoTaoId',
+      align: 'center',
+      width: 200,
+      hide: !access.admin,
+      render: (val) => (
+        <div>{danhSachHinhThucDaoTao?.find((item) => item.id === val)?.display_name}</div>
+      ),
     },
     {
       title: 'Trạng thái',

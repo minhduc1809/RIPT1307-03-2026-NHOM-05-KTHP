@@ -22,7 +22,7 @@ export default () => {
     const response = await getAllHinhThucDaoTao();
     setDanhSachHinhThucDaoTao(response?.data?.data ?? []);
     setLoading(false);
-    setHinhThucDaoTao(response?.data?.data?.[0]?.id);
+    // setHinhThucDaoTao(response?.data?.data?.[0]?.id);
   };
 
   const getLopHanhChinhAdminModel = async (payload?: { page: number; limit: number }) => {

@@ -40,7 +40,7 @@ const LichSuGuiDon = () => {
       title: 'STT',
       dataIndex: 'index',
       align: 'center',
-      width: 200,
+      width: 80,
     },
     {
       title: 'Loại đơn',
@@ -51,7 +51,7 @@ const LichSuGuiDon = () => {
       title: 'Ghi chú kết quả',
       dataIndex: 'ketQuaText',
       align: 'center',
-      width: 300,
+      width: 200,
     },
     {
       title: 'File kết quả đính kèm',
@@ -70,7 +70,6 @@ const LichSuGuiDon = () => {
           ))}
         </div>
       ),
-      width: 200,
     },
     {
       title: 'Trạng thái',
@@ -92,6 +91,7 @@ const LichSuGuiDon = () => {
       title: 'Thao tác',
       align: 'center',
       width: 100,
+      fixed: 'right',
       render: (record: DichVuMotCuaV2.Don) => {
         return (
           <>

@@ -24,13 +24,15 @@ const FormBieuMau = () => {
     edit,
     visibleFormBieuMau,
     setVisibleFormBieuMau,
-    setRecordCauHinhBieuMau,
-    recordCauHinhBieuMau,
+    record,
+    setRecord,
     setCurrent,
     loaiDichVu,
   } = useModel('dichvumotcuav2');
   const [recordView, setRecordView] = useState<DichVuMotCuaV2.Don>();
-  const buildPostData = (arrCauHinh: DichVuMotCuaV2.CauHinhBieuMau[]): any => {
+  const buildPostData = (
+    arrCauHinh: DichVuMotCuaV2.CauHinhBieuMau[],
+  ): DichVuMotCuaV2.CauHinhBieuMau[] => {
     return (
       arrCauHinh?.map((item) => {
         return {
@@ -51,12 +53,10 @@ const FormBieuMau = () => {
         scrollToFirstError
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          setRecordCauHinhBieuMau({
-            ...recordCauHinhBieuMau,
+          setRecord({
+            ...record,
             cauHinhBieuMau: buildPostData(values?.cauHinhBieuMau ?? []),
-            ten: values?.ten,
-            ghiChu: values?.ghiChu,
-          });
+          } as DichVuMotCuaV2.BieuMau);
           setCurrent(2);
         }}
         form={form}
@@ -66,7 +66,7 @@ const FormBieuMau = () => {
             <Form.Item
               name="ten"
               label="Tên biểu mẫu"
-              initialValue={recordCauHinhBieuMau?.ten}
+              initialValue={record?.ten}
               rules={[...rules.required, ...rules.text, ...rules.length(100)]}
             >
               <Input placeholder="Tên biểu mẫu" />
@@ -75,7 +75,7 @@ const FormBieuMau = () => {
             <Form.Item
               name="ghiChu"
               label="Ghi chú"
-              initialValue={recordCauHinhBieuMau?.ghiChu}
+              initialValue={record?.ghiChu}
               rules={[...rules.text, ...rules.length(200)]}
             >
               <Input.TextArea placeholder="Ghi chú" />
@@ -85,7 +85,7 @@ const FormBieuMau = () => {
 
         <Form.List
           name="cauHinhBieuMau"
-          initialValue={recordCauHinhBieuMau?.cauHinhBieuMau ?? []}
+          initialValue={record?.cauHinhBieuMau ?? []}
           rules={[
             {
               validator: async (_, names) => {
@@ -168,7 +168,7 @@ const FormBieuMau = () => {
                 type="primary"
                 onClick={() => {
                   const valueView = form.getFieldsValue(true);
-                  setRecordCauHinhBieuMau({ ...recordCauHinhBieuMau, ...valueView });
+                  setRecord({ ...record, ...valueView });
                   setCurrent(0);
                 }}
               >

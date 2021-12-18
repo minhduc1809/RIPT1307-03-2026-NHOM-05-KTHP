@@ -22,11 +22,12 @@ const ThongBao = () => {
   const { getAllNganhModel } = useModel('nganh');
   const { adminGetLopTinChi, condition: condLopTinChi } = useModel('loptinchi');
   const { getKhoaHocModel } = useModel('khoahoc');
-  const { getUserModel, condition: condUser } = useModel('user');
+  const { conditionNguoiDungCuThe, getUserMetaDataFilterModel, setConditionNguoiDungCuThe } =
+    useModel('user');
   const { getAllDonViModel } = useModel('donvi');
   useEffect(() => {
-    getUserModel({ pageParam: 1, limitParam: 100 });
-  }, [condUser]);
+    getUserMetaDataFilterModel(1, 10000);
+  }, [conditionNguoiDungCuThe]);
 
   useEffect(() => {
     adminGetLopTinChi(100);
@@ -41,6 +42,9 @@ const ThongBao = () => {
     getAllDonViModel();
     getAllNganhModel();
     getKhoaHocModel({ pageParam: 1, limitParam: 1000 });
+    return () => {
+      setConditionNguoiDungCuThe({});
+    };
   }, []);
 
   const onCell = (recordThongBao: ThongBao.Record) => ({
@@ -88,9 +92,20 @@ const ThongBao = () => {
       onCell,
     },
     {
+      title: 'Hình thức đào tạo',
+      dataIndex: 'hinhThucDaoTaoId',
+      align: 'center',
+      width: 200,
+      hide: !access.admin,
+      render: (val) => (
+        <div>{danhSachHinhThucDaoTao?.find((item) => item.id === val)?.display_name}</div>
+      ),
+    },
+    {
       title: 'Thao tác',
       align: 'center',
       width: 100,
+      fixed: 'right',
       render: (recordThongBao) => (
         <Tooltip title="Xem chi tiết">
           <Button

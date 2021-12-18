@@ -4,16 +4,19 @@ import TinyEditor from '@/components/TinyEditor/Tiny';
 import UploadAvatar from '@/components/Upload/UploadAvatar';
 import { getURLImg } from '@/services/LopTinChi/loptinchi';
 import rules from '@/utils/rules';
-import { includes, renderFileListUrl } from '@/utils/utils';
+import { includes, renderFileListUrl, toRegex } from '@/utils/utils';
 import { Button, Card, Form, Input, Select } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useModel, useAccess } from 'umi';
 import _ from 'lodash';
 
 const FormThongBaoAdmin = () => {
+  const access = useAccess();
   const [form] = Form.useForm();
   const { loading, record, setVisibleForm, postThongBaoGeneralModel } = useModel('thongbao');
   const [nguoiNhan, setNguoiNhan] = useState<string[]>([]);
+  const [phamVi, setPhamVi] = useState<string>();
+
   const { danhSach: danhSachDonVi } = useModel('donvi');
   const {
     danhSach: danhSachLopHanhChinh,
@@ -21,26 +24,35 @@ const FormThongBaoAdmin = () => {
     danhSachHinhThucDaoTao,
   } = useModel('lophanhchinh');
   const { danhSach: danhSachNganh } = useModel('nganh');
-  const { danhSach: danhSachUser, setCondition: setCondUser } = useModel('user');
+  const { danhSachNguoiDungCuThe, setConditionNguoiDungCuThe, conditionNguoiDungCuThe } =
+    useModel('user');
   const { danhSach: danhSachLopTinChi, setCondition } = useModel('loptinchi');
   const { danhSach: danhSachKhoaHoc } = useModel('khoahoc');
-
+  const isNguoiDungCuThe = nguoiNhan?.includes('Người dùng cụ thể');
   const debouncedSearchLopTinChi = _.debounce((value) => {
     setCondition({ ten_lop_tin_chi: value });
-  }, 500);
+  }, 800);
 
   const debouncedSearchLopHanhChinh = _.debounce((value) => {
     setCondLopHanhChinh({ ten_lop_hanh_chinh: value });
-  }, 500);
+  }, 800);
 
   const debouncedSearchUser = _.debounce((value) => {
-    setCondUser({ ma_dinh_danh: value });
-  }, 500);
+    setConditionNguoiDungCuThe({ ...conditionNguoiDungCuThe, code: toRegex(value) });
+  }, 800);
   return (
     <Card title={'Thêm mới'}>
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
+          if (isNguoiDungCuThe) {
+            values.lopHanhChinhList = [];
+            values.lopTinChiList = [];
+            values.nganhList = [];
+            values.donViList = [];
+            values.khoaList = [];
+            values.roles = [];
+          }
           if (values.imageUrl.fileList?.[0]?.originFileObj) {
             const response = await getURLImg({
               filename: 'url1',
@@ -76,8 +88,13 @@ const FormThongBaoAdmin = () => {
                 form.setFieldsValue({
                   loaiDoiTuong: ['Tất cả'],
                 });
-              }
-              setNguoiNhan(val.includes('Tất cả') ? ['Tất cả'] : val);
+                setNguoiNhan(['Tất cả']);
+              } else if (val.includes('Người dùng cụ thể')) {
+                form.setFieldsValue({
+                  loaiDoiTuong: ['Người dùng cụ thể'],
+                });
+                setNguoiNhan(['Người dùng cụ thể']);
+              } else setNguoiNhan(val);
             }}
             placeholder="Người nhận"
           >
@@ -97,28 +114,49 @@ const FormThongBaoAdmin = () => {
             ))}
           </Select>
         </Form.Item>
-        {nguoiNhan?.includes('Tất cả') && (
-          <Form.Item name="hinhThucDaoTaoId" label="Hình thức đào tạo">
-            <Select placeholder="Hình thức đào tạo">
-              <Select.Option value={-1} key={-1}>
-                Tất cả hình thức đào tạo
-              </Select.Option>
-              {danhSachHinhThucDaoTao?.map((item) => (
-                <Select.Option key={item.id} value={item.id}>
-                  {item.ten_hinh_thuc_dao_tao}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
+        {nguoiNhan?.includes('Tất cả') && access.admin && (
+          <>
+            <Form.Item rules={[...rules.required]} name="phamVi" label="Phạm vi">
+              <Select onChange={(val: string) => setPhamVi(val)} placeholder="Phạm vi">
+                {['Tất cả', 'Hình thức đào tạo'].map((item) => (
+                  <Select.Option key={item} value={item}>
+                    {item}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            {phamVi === 'Hình thức đào tạo' && (
+              <Form.Item
+                rules={[...rules.required]}
+                name="hinhThucDaoTaoId"
+                label="Hình thức đào tạo"
+              >
+                <Select placeholder="Hình thức đào tạo">
+                  {danhSachHinhThucDaoTao?.map((item) => (
+                    <Select.Option key={item.id} value={item.id}>
+                      {item.ten_hinh_thuc_dao_tao}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            )}
+          </>
         )}
-        {nguoiNhan?.includes('Vai trò') && (
+
+        {(nguoiNhan?.includes('Vai trò') || isNguoiDungCuThe) && (
           <Form.Item
-            rules={[...rules.required]}
+            // rules={[...rules.required]}
             name="roles"
-            label="Vai trò"
+            label={isNguoiDungCuThe ? 'Lọc theo vai trò' : 'Vai trò'}
             initialValue={record?.roles}
           >
-            <Select mode="multiple" placeholder="Chọn vai trò">
+            <Select
+              onChange={(val) => {
+                setConditionNguoiDungCuThe({ ...conditionNguoiDungCuThe, vaiTroList: val });
+              }}
+              mode="multiple"
+              placeholder="Chọn vai trò"
+            >
               {[
                 { value: 'sinh_vien', name: 'Sinh viên' },
                 { value: 'nhan_vien', name: 'Cán bộ, giảng viên' },
@@ -131,9 +169,16 @@ const FormThongBaoAdmin = () => {
           </Form.Item>
         )}
 
-        {nguoiNhan?.includes('Đơn vị') && (
-          <Form.Item rules={[...rules.required]} name="donViList" label="Đơn vị">
+        {(nguoiNhan?.includes('Đơn vị') || isNguoiDungCuThe) && (
+          <Form.Item name="donViList" label={isNguoiDungCuThe ? 'Lọc theo đơn vị' : 'Đơn vị'}>
             <Select
+              maxTagCount={8}
+              onChange={(val: number[]) => {
+                setConditionNguoiDungCuThe({
+                  ...conditionNguoiDungCuThe,
+                  donViIds: val.length > 0 ? val?.map((item) => item.toString()) : undefined,
+                });
+              }}
               showSearch
               filterOption={(value, option) => includes(option?.props.children, value)}
               mode="multiple"
@@ -148,13 +193,20 @@ const FormThongBaoAdmin = () => {
           </Form.Item>
         )}
 
-        {nguoiNhan.includes('Lớp hành chính') && (
+        {(nguoiNhan.includes('Lớp hành chính') || isNguoiDungCuThe) && (
           <Form.Item
             // rules={[...rules.required]}
             name="lopHanhChinhList"
-            label="Lớp hành chính"
+            label={isNguoiDungCuThe ? 'Lọc theo lớp hành chính' : 'Lớp hành chính'}
           >
             <Select
+              maxTagCount={8}
+              onChange={(val: number[]) => {
+                setConditionNguoiDungCuThe({
+                  ...conditionNguoiDungCuThe,
+                  lopHanhChinhIds: val.length > 0 ? val?.map((item) => item.toString()) : undefined,
+                });
+              }}
               filterOption={(value, option) => includes(option?.props.children, value)}
               onSearch={(value) => {
                 debouncedSearchLopHanhChinh(value);
@@ -172,13 +224,20 @@ const FormThongBaoAdmin = () => {
             </Select>
           </Form.Item>
         )}
-        {nguoiNhan.includes('Lớp tín chỉ') && (
+        {(nguoiNhan.includes('Lớp tín chỉ') || isNguoiDungCuThe) && (
           <Form.Item
             // rules={[...rules.required]}
             name="lopTinChiList"
-            label="Lớp tín chỉ"
+            label={isNguoiDungCuThe ? 'Lọc theo lớp tín chỉ' : 'Lớp tín chỉ'}
           >
             <Select
+              maxTagCount={8}
+              onChange={(val: number[]) => {
+                setConditionNguoiDungCuThe({
+                  ...conditionNguoiDungCuThe,
+                  lopTinChiIds: val.length > 0 ? val?.map((item) => item.toString()) : undefined,
+                });
+              }}
               filterOption={(value, option) => includes(option?.props.children, value)}
               onSearch={(value) => {
                 debouncedSearchLopTinChi(value);
@@ -196,13 +255,20 @@ const FormThongBaoAdmin = () => {
             </Select>
           </Form.Item>
         )}
-        {nguoiNhan.includes('Khóa') && (
+        {(nguoiNhan.includes('Khóa') || isNguoiDungCuThe) && (
           <Form.Item
             // rules={[...rules.required]}
             name="khoaList"
-            label="Khóa"
+            label={isNguoiDungCuThe ? 'Lọc theo khóa' : 'Khóa'}
           >
             <Select
+              maxTagCount={8}
+              onChange={(val: number[]) => {
+                setConditionNguoiDungCuThe({
+                  ...conditionNguoiDungCuThe,
+                  khoaSinhVienIds: val.length > 0 ? val?.map((item) => item.toString()) : undefined,
+                });
+              }}
               filterOption={(value, option) => includes(option?.props.children, value)}
               showSearch
               allowClear
@@ -217,9 +283,16 @@ const FormThongBaoAdmin = () => {
             </Select>
           </Form.Item>
         )}
-        {nguoiNhan.includes('Ngành') && (
-          <Form.Item name="nganhList" label="Ngành học">
+        {(nguoiNhan.includes('Ngành') || isNguoiDungCuThe) && (
+          <Form.Item name="nganhList" label={isNguoiDungCuThe ? 'Lọc theo ngành học' : 'Ngành học'}>
             <Select
+              maxTagCount={8}
+              onChange={(val: number[]) => {
+                setConditionNguoiDungCuThe({
+                  ...conditionNguoiDungCuThe,
+                  nganhIds: val.length > 0 ? val?.map((item) => item.toString()) : undefined,
+                });
+              }}
               filterOption={(value, option) => includes(option?.props.children, value)}
               showSearch
               allowClear
@@ -236,7 +309,7 @@ const FormThongBaoAdmin = () => {
         )}
 
         {nguoiNhan.includes('Người dùng cụ thể') && (
-          <Form.Item rules={[...rules.required]} name="userIds" label="Người dùng cụ thể">
+          <Form.Item rules={[...rules.required]} name="userCodeList" label="Người dùng cụ thể">
             <Select
               onSearch={(value) => {
                 debouncedSearchUser(value);
@@ -245,11 +318,12 @@ const FormThongBaoAdmin = () => {
               allowClear
               mode="multiple"
               placeholder="Tìm kiếm theo mã định danh"
-              filterOption={(value, option) => includes(option?.props.children, value)}
+              maxTagCount={8}
+              // filterOption={(value, option) => includes(option?.props.children, value)}
             >
-              {danhSachUser.map((item) => (
-                <Select.Option key={item?.id?.toString() ?? ''} value={item?.id?.toString() ?? ''}>
-                  {item?.name} ({item?.ma_dinh_danh})
+              {danhSachNguoiDungCuThe.map((item) => (
+                <Select.Option key={item?.code} value={item?.code}>
+                  {item?.name} ({item?.code})
                 </Select.Option>
               ))}
             </Select>

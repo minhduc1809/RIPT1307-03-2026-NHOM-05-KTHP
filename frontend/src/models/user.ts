@@ -1,11 +1,13 @@
-import { adminChangePassword, getUser, putUser } from '@/services/User/user';
+import { adminChangePassword, getUser, getUserMetaDataFilter, putUser } from '@/services/User/user';
 import { message } from 'antd';
 import { useState } from 'react';
 
 export default () => {
   const [danhSach, setDanhSach] = useState<Login.Profile[]>([]);
+  const [danhSachNguoiDungCuThe, setDanhSachNguoiDungCuThe] = useState<User.NguoiDungCuThe[]>([]);
   const [filterInfo, setFilterInfo] = useState<any>({});
   const [condition, setCondition] = useState<any>({ vai_tro: 'sinh_vien' });
+  const [conditionNguoiDungCuThe, setConditionNguoiDungCuThe] = useState<any>({});
   const [record, setRecord] = useState<Login.Profile>({} as Login.Profile);
   const [loading, setLoading] = useState<boolean>(true);
   const [edit, setEdit] = useState<boolean>(false);
@@ -46,7 +48,17 @@ export default () => {
     setVisibleForm(false);
   };
 
+  const getUserMetaDataFilterModel = async (pageParam?: number, limitParam?: number) => {
+    const response = await getUserMetaDataFilter(conditionNguoiDungCuThe, pageParam, limitParam);
+    setDanhSachNguoiDungCuThe(response?.data?.data?.result ?? []);
+  };
+
   return {
+    danhSachNguoiDungCuThe,
+    setDanhSachNguoiDungCuThe,
+    setConditionNguoiDungCuThe,
+    conditionNguoiDungCuThe,
+    getUserMetaDataFilterModel,
     visibleFormCapLaiMatKhau,
     setVisibleFormCapLaiMatKhau,
     adminPutProfileUserModel,

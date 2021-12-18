@@ -42,25 +42,25 @@ export default () => {
   const [record, setRecord] = useState<DichVuMotCuaV2.BieuMau>();
   const [recordDon, setRecordDon] = useState<DichVuMotCuaV2.Don>();
   const [loaiDichVu, setLoaiDichVu] = useState<'DVMC' | 'VAN_PHONG_SO'>('DVMC');
-  const [recordCauHinhBieuMau, setRecordCauHinhBieuMau] = useState<DichVuMotCuaV2.BieuMau>({
-    loaiDichVu: loaiDichVu,
-    ten: '',
-    _id: '',
-    ghiChu: '',
-    cauHinhBieuMau: [],
-    quyTrinh: {
-      danhSachBuoc: [],
-    },
-  });
+  // const [recordCauHinhBieuMau, setRecordCauHinhBieuMau] = useState<DichVuMotCuaV2.BieuMau>({
+  //   loaiDichVu: loaiDichVu,
+  //   ten: '',
+  //   _id: '',
+  //   ghiChu: '',
+  //   cauHinhBieuMau: [],
+  //   quyTrinh: {
+  //     danhSachBuoc: [],
+  //   },
+  // });
   const [recordDonThaoTac, setRecordDonThaoTac] = useState<DichVuMotCuaV2.DonThaoTac>();
-  const [recordThongTinChung, setRecordThongTinChung] = useState<{
-    mucLePhi?: number;
-    donViTinh?: string;
-    thongTinThuTuc?: DichVuMotCuaV2.thongTinThuTuc;
-    thongTinHoSo?: string;
-    thongTinQuyTrinh?: string;
-    thongTinYeuCau?: string;
-  }>();
+  // const [recordThongTinChung, setRecordThongTinChung] = useState<{
+  //   mucLePhi?: number;
+  //   donViTinh?: string;
+  //   thongTinThuTuc?: DichVuMotCuaV2.thongTinThuTuc;
+  //   thongTinHoSo?: string;
+  //   thongTinQuyTrinh?: string;
+  //   thongTinYeuCau?: string;
+  // }>();
   const [loading, setLoading] = useState<boolean>(false);
   const [edit, setEdit] = useState<boolean>(false);
   const [thuTuc, setThuTuc] = useState<DichVuMotCuaV2.ThuTuc>();
@@ -83,7 +83,12 @@ export default () => {
     const response = await getBieuMauAdmin({
       page,
       limit,
-      condition: { ...condition, loaiDichVu: loaiDichVuParam || loaiDichVu },
+      condition: {
+        ...condition,
+        loaiDichVu: loaiDichVuParam || loaiDichVu,
+        hinhThucDaoTaoId:
+          condition?.hinhThucDaoTaoId === -1 ? undefined : condition?.hinhThucDaoTaoId,
+      },
     });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);
@@ -436,8 +441,8 @@ export default () => {
     adminGetDonModel,
     adminGetAllBieuMauModel,
     getBieuMauByIdModel,
-    recordThongTinChung,
-    setRecordThongTinChung,
+    // recordThongTinChung,
+    // setRecordThongTinChung,
     thuTuc,
     setThuTuc,
     sinhVienGetTrangThaiDonModel,
@@ -458,8 +463,8 @@ export default () => {
     setDanhSachDonThaoTac,
     getDonThaoTacChuyenVienDieuPhoiModel,
     chuyenVienDieuPhoiDuyetDonModel,
-    recordCauHinhBieuMau,
-    setRecordCauHinhBieuMau,
+    // recordCauHinhBieuMau,
+    // setRecordCauHinhBieuMau,
     current,
     setCurrent,
     typeForm,

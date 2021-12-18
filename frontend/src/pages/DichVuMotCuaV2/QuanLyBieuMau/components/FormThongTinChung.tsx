@@ -4,23 +4,17 @@ import { uploadFile } from '@/services/uploadFile';
 import rules from '@/utils/rules';
 import { renderFileListUrlWithName } from '@/utils/utils';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row } from 'antd';
+import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useAccess, useModel } from 'umi';
 
 const FormThongTinChung = () => {
+  const access = useAccess();
   const [form] = Form.useForm();
-  const {
-    loading,
-    edit,
-    setCurrent,
-    recordThongTinChung,
-    setRecordThongTinChung,
-    setRecordCauHinhBieuMau,
-    recordCauHinhBieuMau,
-  } = useModel('dichvumotcuav2');
-
+  const { loading, edit, setCurrent, record: recordDichVu, setRecord } = useModel('dichvumotcuav2');
+  const [phamVi, setPhamVi] = useState<string>(recordDichVu?.phamVi ?? '');
   const { record } = useModel('thanhtoan');
+  const { danhSachHinhThucDaoTao } = useModel('lophanhchinh');
   useEffect(() => {
     form.setFieldsValue({
       mucLePhi: record?.currentPrice?.unitAmount,
@@ -29,11 +23,11 @@ const FormThongTinChung = () => {
   }, [record]);
 
   const [yeuCauTraPhi, setYeuCauTraPhi] = useState<boolean>(
-    recordThongTinChung?.thongTinThuTuc?.yeuCauTraPhi ?? false,
+    recordDichVu?.thongTinThuTuc?.yeuCauTraPhi ?? false,
   );
 
   const [tinhTienTheoSoLuong, setTinhTienTheoSoLuong] = useState<boolean>(
-    recordThongTinChung?.thongTinThuTuc?.tinhTienTheoSoLuong ?? false,
+    recordDichVu?.thongTinThuTuc?.tinhTienTheoSoLuong ?? false,
   );
 
   const buildUpLoadFile = async (values: any, name: string) => {
@@ -47,7 +41,7 @@ const FormThongTinChung = () => {
         ...response?.data?.data?.file,
         _id: response?.data?.data?.file?.id,
       };
-    } else return values?.[name]?.fileList?.[0]?.url ? recordCauHinhBieuMau?.[name] : {};
+    } else return values?.[name]?.fileList?.[0]?.url ? recordDichVu?.[name] : {};
   };
 
   return (
@@ -58,7 +52,8 @@ const FormThongTinChung = () => {
         onFinish={async (values) => {
           values.fileMau = await buildUpLoadFile(values, 'fileMau');
           values.fileTraLoi = await buildUpLoadFile(values, 'fileTraLoi');
-          setRecordThongTinChung({
+          setRecord({
+            ...recordDichVu,
             ...values,
             thongTinThuTuc: {
               ...values?.thongTinThuTuc,
@@ -69,9 +64,6 @@ const FormThongTinChung = () => {
             thongTinHoSo: values?.thongTinHoSo?.text ?? '',
             thongTinQuyTrinh: values?.thongTinQuyTrinh?.text ?? '',
             thongTinYeuCau: values?.thongTinYeuCau?.text ?? '',
-          });
-          setRecordCauHinhBieuMau({
-            ...recordCauHinhBieuMau,
             ten: values?.ten,
             ghiChu: values?.ghiChu,
           });
@@ -85,7 +77,7 @@ const FormThongTinChung = () => {
             <Form.Item
               name="ten"
               label="Tên biểu mẫu"
-              initialValue={recordCauHinhBieuMau?.ten}
+              initialValue={recordDichVu?.ten}
               rules={[...rules.required, ...rules.text, ...rules.length(100)]}
             >
               <Input placeholder="Tên biểu mẫu" />
@@ -95,7 +87,7 @@ const FormThongTinChung = () => {
             <Form.Item
               name="ghiChu"
               label="Ghi chú"
-              initialValue={recordCauHinhBieuMau?.ghiChu}
+              initialValue={recordDichVu?.ghiChu}
               rules={[...rules.text, ...rules.length(200)]}
             >
               <Input.TextArea placeholder="Ghi chú" />
@@ -107,10 +99,10 @@ const FormThongTinChung = () => {
               name="fileMau"
               label="Biểu mẫu đơn"
               initialValue={
-                recordCauHinhBieuMau?.fileMau?.url
+                recordDichVu?.fileMau?.url
                   ? renderFileListUrlWithName(
-                      recordCauHinhBieuMau?.fileMau?.url,
-                      recordCauHinhBieuMau?.fileMau?.filename,
+                      recordDichVu?.fileMau?.url,
+                      recordDichVu?.fileMau?.filename,
                     )
                   : { fileList: [] }
               }
@@ -131,10 +123,10 @@ const FormThongTinChung = () => {
               name="fileTraLoi"
               label="Biểu mẫu kết quả"
               initialValue={
-                recordCauHinhBieuMau?.fileTraLoi?.url
+                recordDichVu?.fileTraLoi?.url
                   ? renderFileListUrlWithName(
-                      recordCauHinhBieuMau?.fileTraLoi?.url,
-                      recordCauHinhBieuMau?.fileTraLoi?.filename,
+                      recordDichVu?.fileTraLoi?.url,
+                      recordDichVu?.fileTraLoi?.filename,
                     )
                   : { fileList: [] }
               }
@@ -149,11 +141,50 @@ const FormThongTinChung = () => {
               />
             </Form.Item>
           </Col>
+          {access.admin && (
+            <>
+              <Col md={12}>
+                <Form.Item
+                  initialValue={recordDichVu?.phamVi}
+                  rules={[...rules.required]}
+                  name="phamVi"
+                  label="Phạm vi"
+                >
+                  <Select onChange={(val: string) => setPhamVi(val)} placeholder="Phạm vi">
+                    {['Tất cả', 'Hình thức đào tạo'].map((item) => (
+                      <Select.Option key={item} value={item}>
+                        {item}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              {phamVi === 'Hình thức đào tạo' && (
+                <Col md={12}>
+                  <Form.Item
+                    initialValue={recordDichVu?.hinhThucDaoTaoId}
+                    rules={[...rules.required]}
+                    name="hinhThucDaoTaoId"
+                    label="Hình thức đào tạo"
+                  >
+                    <Select placeholder="Hình thức đào tạo">
+                      {danhSachHinhThucDaoTao?.map((item) => (
+                        <Select.Option key={item.id} value={item.id}>
+                          {item.ten_hinh_thuc_dao_tao}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              )}
+            </>
+          )}
           <Col md={12}>
             <Form.Item
               name={['thongTinThuTuc', 'maThuTuc']}
               label="Mã thủ tục"
-              initialValue={recordThongTinChung?.thongTinThuTuc?.maThuTuc}
+              initialValue={recordDichVu?.thongTinThuTuc?.maThuTuc}
               rules={[...rules.text, ...rules.length(200)]}
             >
               <Input placeholder="Mã thủ tục" />
@@ -163,7 +194,7 @@ const FormThongTinChung = () => {
             <Form.Item
               name={['thongTinThuTuc', 'linhVuc']}
               label="Lĩnh vực"
-              initialValue={recordThongTinChung?.thongTinThuTuc?.linhVuc}
+              initialValue={recordDichVu?.thongTinThuTuc?.linhVuc}
               rules={[...rules.text, ...rules.length(200)]}
             >
               <Input placeholder="Lĩnh vực" />
@@ -173,7 +204,7 @@ const FormThongTinChung = () => {
             <Form.Item
               name={['thongTinThuTuc', 'donViThucHien']}
               label="Đơn vị thực hiện"
-              initialValue={recordThongTinChung?.thongTinThuTuc?.donViThucHien}
+              initialValue={recordDichVu?.thongTinThuTuc?.donViThucHien}
               rules={[...rules.text, ...rules.length(200)]}
             >
               <Input placeholder="Đơn vị thực hiện" />
@@ -183,7 +214,7 @@ const FormThongTinChung = () => {
             <Form.Item
               name={['thongTinThuTuc', 'capDo']}
               label="Cấp độ"
-              initialValue={recordThongTinChung?.thongTinThuTuc?.capDo}
+              initialValue={recordDichVu?.thongTinThuTuc?.capDo}
               rules={[...rules.text, ...rules.length(200)]}
             >
               <Input placeholder="Cấp độ" />
@@ -193,7 +224,7 @@ const FormThongTinChung = () => {
             <Form.Item
               name={['thongTinThuTuc', 'thoiHanGiaiQuyet']}
               label="Thời hạn giải quyết"
-              initialValue={recordThongTinChung?.thongTinThuTuc?.thoiHanGiaiQuyet}
+              initialValue={recordDichVu?.thongTinThuTuc?.thoiHanGiaiQuyet}
               rules={[...rules.text, ...rules.length(200)]}
             >
               <Input placeholder="Thời hạn giải quyết" />
@@ -204,7 +235,7 @@ const FormThongTinChung = () => {
             <Form.Item
               name={['thongTinThuTuc', 'coQuanCoThamQuyen']}
               label="Cơ quan có thẩm quyền"
-              initialValue={recordThongTinChung?.thongTinThuTuc?.coQuanCoThamQuyen}
+              initialValue={recordDichVu?.thongTinThuTuc?.coQuanCoThamQuyen}
               rules={[...rules.text, ...rules.length(200)]}
             >
               <Input placeholder="Cơ quan có thẩm quyền" />
@@ -214,7 +245,7 @@ const FormThongTinChung = () => {
             <Form.Item
               name={['thongTinThuTuc', 'phamViPhucVu']}
               label="Phạm vi phục vụ"
-              initialValue={recordThongTinChung?.thongTinThuTuc?.phamViPhucVu}
+              initialValue={recordDichVu?.thongTinThuTuc?.phamViPhucVu}
               rules={[...rules.text, ...rules.length(200)]}
             >
               <Input placeholder="Phạm vi phục vụ" />
@@ -224,7 +255,7 @@ const FormThongTinChung = () => {
             <Form.Item
               name={['thongTinThuTuc', 'ketQuaThucHien']}
               label="Kết quả thực hiện"
-              initialValue={recordThongTinChung?.thongTinThuTuc?.ketQuaThucHien}
+              initialValue={recordDichVu?.thongTinThuTuc?.ketQuaThucHien}
               rules={[...rules.text, ...rules.length(200)]}
             >
               <Input placeholder="Kết quả thực hiện" />
@@ -234,7 +265,7 @@ const FormThongTinChung = () => {
             <Form.Item
               name={['thongTinThuTuc', 'mauBieu']}
               label="Mẫu biểu"
-              initialValue={recordThongTinChung?.thongTinThuTuc?.mauBieu}
+              initialValue={recordDichVu?.thongTinThuTuc?.mauBieu}
               rules={[...rules.text, ...rules.length(200)]}
             >
               <Input placeholder="Mẫu biểu" />
@@ -244,7 +275,7 @@ const FormThongTinChung = () => {
             <Form.Item
               name={['thongTinThuTuc', 'luuY']}
               label="Lưu ý"
-              initialValue={recordThongTinChung?.thongTinThuTuc?.luuY}
+              initialValue={recordDichVu?.thongTinThuTuc?.luuY}
               rules={[...rules.text, ...rules.length(200)]}
             >
               <Input placeholder="Lưu ý" />
@@ -253,7 +284,7 @@ const FormThongTinChung = () => {
           <Col md={12}>
             <Form.Item
               name={['thongTinThuTuc', 'yeuCauTraPhi']}
-              initialValue={recordThongTinChung?.thongTinThuTuc?.yeuCauTraPhi}
+              initialValue={recordDichVu?.thongTinThuTuc?.yeuCauTraPhi}
             >
               <Checkbox
                 checked={yeuCauTraPhi}
@@ -269,7 +300,7 @@ const FormThongTinChung = () => {
               <Col md={12}>
                 <Form.Item
                   name={['thongTinThuTuc', 'tinhTienTheoSoLuong']}
-                  initialValue={recordThongTinChung?.thongTinThuTuc?.tinhTienTheoSoLuong}
+                  initialValue={recordDichVu?.thongTinThuTuc?.tinhTienTheoSoLuong}
                 >
                   <Checkbox
                     checked={tinhTienTheoSoLuong}
@@ -314,7 +345,7 @@ const FormThongTinChung = () => {
           <Form.Item
             name="thongTinHoSo"
             label=""
-            initialValue={{ text: recordThongTinChung?.thongTinHoSo ?? '' }}
+            initialValue={{ text: recordDichVu?.thongTinHoSo ?? '' }}
             // rules={[...rules.text]}
           >
             <TinyEditor height={350} />
@@ -325,7 +356,7 @@ const FormThongTinChung = () => {
           <Form.Item
             name="thongTinQuyTrinh"
             label=""
-            initialValue={{ text: recordThongTinChung?.thongTinQuyTrinh ?? '' }}
+            initialValue={{ text: recordDichVu?.thongTinQuyTrinh ?? '' }}
             // rules={[...rules.text]}
           >
             <TinyEditor height={350} />
@@ -336,7 +367,7 @@ const FormThongTinChung = () => {
           <Form.Item
             name="thongTinYeuCau"
             label=""
-            initialValue={{ text: recordThongTinChung?.thongTinYeuCau ?? '' }}
+            initialValue={{ text: recordDichVu?.thongTinYeuCau ?? '' }}
             // rules={[...rules.text]}
           >
             <TinyEditor height={350} />

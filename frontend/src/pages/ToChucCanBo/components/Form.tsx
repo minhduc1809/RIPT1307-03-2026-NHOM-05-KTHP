@@ -65,8 +65,8 @@ const FormToChucCanBo = () => {
           </Col>
           <Col xs={24}>
             <Form.Item
-              initialValue={record?.don_vi_goc}
-              name="don_vi_goc"
+              initialValue={record?.don_vi_id}
+              name="don_vi_id"
               label="Đơn vị"
               rules={[...rules.required]}
             >
