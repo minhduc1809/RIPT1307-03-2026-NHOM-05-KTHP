@@ -17,12 +17,14 @@ export default () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
 
-  const getAllHinhThucDaoTaoModel = async () => {
+  const getAllHinhThucDaoTaoModel = async (isSetRecord?: boolean) => {
     setLoading(true);
     const response = await getAllHinhThucDaoTao();
     setDanhSachHinhThucDaoTao(response?.data?.data ?? []);
     setLoading(false);
-    // setHinhThucDaoTao(response?.data?.data?.[0]?.id);
+    if (isSetRecord === true) {
+      setHinhThucDaoTao(response?.data?.data?.[0]?.id);
+    }
   };
 
   const getLopHanhChinhAdminModel = async (payload?: { page: number; limit: number }) => {

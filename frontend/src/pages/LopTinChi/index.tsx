@@ -62,7 +62,7 @@ const LopTinChi = () => {
   ];
 
   useEffect(() => {
-    if (vaiTro === 'nhan_vien') getAllHinhThucDaoTaoModel();
+    if (vaiTro === 'nhan_vien') getAllHinhThucDaoTaoModel(true);
   }, []);
 
   useEffect(() => {
