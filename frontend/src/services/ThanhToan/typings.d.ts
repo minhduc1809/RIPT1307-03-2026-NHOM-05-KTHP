@@ -36,6 +36,21 @@ declare module ThanhToan {
     unitLabel: string;
   }
 
+  export interface PaidHistory {
+    amountPaid: number;
+    nguoiThucHien: {
+      hoTen: string;
+      userId: string;
+      username: string;
+      _id: string;
+    };
+    paymentType: string;
+    transactionDate: string;
+    transactionId: string;
+    type: string;
+    _id: string;
+  }
+
   export interface Invoice {
     transactionDate: string;
     status: string;

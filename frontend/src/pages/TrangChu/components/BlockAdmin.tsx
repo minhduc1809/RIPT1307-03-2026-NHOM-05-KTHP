@@ -199,7 +199,7 @@ const BlockAdmin = () => {
               },
               {
                 title: 'Mã đơn vị',
-                dataIndex: 'maDonVi',
+                dataIndex: '_id',
                 align: 'center',
                 width: 200,
                 search: 'search',

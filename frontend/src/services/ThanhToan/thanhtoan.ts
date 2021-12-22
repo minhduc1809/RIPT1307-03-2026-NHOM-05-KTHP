@@ -19,6 +19,16 @@ export async function payInvoiceByIdentityCode(
   return axios.put(`${ip3}/SLINK-MANUAL/thanh-toan/invoice/${identityCode}/pay`, payload);
 }
 
+export async function editInvoiceByIdentityCode(
+  identityCode: string,
+  payload: {
+    amountPaid: number;
+    transactionDate?: string;
+  },
+) {
+  return axios.put(`${ip3}/SLINK-MANUAL/thanh-toan/invoice/${identityCode}/edit`, payload);
+}
+
 export async function refundInvoiceByIdentityCode(
   identityCode: string,
   payload: {

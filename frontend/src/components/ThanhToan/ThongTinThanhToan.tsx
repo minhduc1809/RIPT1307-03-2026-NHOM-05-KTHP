@@ -1,8 +1,9 @@
 import rules from '@/utils/rules';
 import { currencyFormat } from '@/utils/utils';
-import { EditOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Descriptions, Form, InputNumber } from 'antd';
+import { EditOutlined, FormOutlined } from '@ant-design/icons';
+import { Button, DatePicker, Descriptions, Form, InputNumber, Popconfirm } from 'antd';
 import moment from 'moment';
+import { useState } from 'react';
 import { useAccess, useModel } from 'umi';
 
 // import { DescriptionWrapper } from './index.style';
@@ -12,11 +13,15 @@ export interface ThongTinThanhToanProps {
 }
 
 const ThongTinThanhToan = (props: ThongTinThanhToanProps) => {
-  // const [edit, setEdit] = useState<boolean>(false);
+  const [edit, setEdit] = useState<boolean>(false);
   const [form] = Form.useForm();
   const access = useAccess();
-  const { invoice, payInvoiceByIdentityCodeModel, refundInvoiceByIdentityCodeModel } =
-    useModel('thanhtoan');
+  const {
+    invoice,
+    payInvoiceByIdentityCodeModel,
+    refundInvoiceByIdentityCodeModel,
+    editInvoiceByIdentityCodeModel,
+  } = useModel('thanhtoan');
   return (
     <Form
       form={form}
@@ -56,54 +61,52 @@ const ThongTinThanhToan = (props: ThongTinThanhToanProps) => {
         <Descriptions.Item label="Số tiền phải nộp">
           {currencyFormat(invoice?.amountDue ?? 0)} đ
         </Descriptions.Item>
-        {/* {edit ? (
+        {!edit ? (
           <Descriptions.Item label="Số tiền đã nộp">
             {currencyFormat(invoice?.amountPaid ?? 0)} đ
           </Descriptions.Item>
-        ) : ( */}
-        <Descriptions.Item label="Số tiền đã nộp">
-          {currencyFormat(invoice?.amountPaid ?? 0)} đ
-          {/* <Form.Item name='amountPaidEdit'>
-         <InputNumber
-                        max={1000000000}
-                        style={{ width: 180 }}
-                        placeholder="Số tiền đã nộp"
-                        min={0}
-                      />
-         </Form.Item> */}
-          {/* <Popconfirm
-                      title="Bạn có chắc chắn chỉnh sửa số tiền đã thanh toán của thí sinh không?"
-                      onConfirm={async () => {
-                        const amountPaid = form.getFieldValue('amountPaidEdit');
-
-                        await this.props.dispatch({
-                          type: 'timeline/editThanhToan',
-                          payload: {
-                            amountPaid,
-                            _id: this.props?._id,
-                          },
-                        });
-                        if (this.props.onCancel) {
-                          this.props.onCancel();
-                        }
-                      }}
-                    >
-                      <Button type="primary" style={{ marginLeft: 10 }}>
-                        Lưu
-                      </Button>
-                    </Popconfirm>
-
-                    <Button
-                      type="danger"
-                      onClick={() => {
-                        this.setState({ edit: false });
-                      }}
-                      style={{ marginLeft: 8 }}
-                    >
-                      Hủy
-                    </Button> */}
-        </Descriptions.Item>
-        {/* )} */}
+        ) : (
+          <Descriptions.Item label="Số tiền đã nộp">
+            <div style={{ display: 'flex' }}>
+              <Form.Item
+                rules={[...rules.required]}
+                name="amountPaidEdit"
+                style={{ marginBottom: 0 }}
+                initialValue={invoice?.amountPaid ?? 0}
+              >
+                <InputNumber
+                  formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  max={1000000000}
+                  style={{ width: 180 }}
+                  placeholder="Số tiền đã nộp"
+                  min={0}
+                />
+              </Form.Item>
+              <Popconfirm
+                title="Bạn có chắc chắn chỉnh sửa số tiền đã thanh toán của thí sinh không?"
+                onConfirm={async () => {
+                  const amountPaid = form.getFieldValue('amountPaidEdit');
+                  if (amountPaid >= 0)
+                    editInvoiceByIdentityCodeModel(invoice?.identityCode ?? '', {
+                      amountPaid,
+                    });
+                }}
+              >
+                <Button type="primary" style={{ marginLeft: 10 }}>
+                  Lưu
+                </Button>
+              </Popconfirm>
+              <Button
+                onClick={() => {
+                  setEdit(false);
+                }}
+                style={{ marginLeft: 8 }}
+              >
+                Hủy
+              </Button>
+            </div>
+          </Descriptions.Item>
+        )}
         <Descriptions.Item label="Số tiền còn lại phải nộp">
           {currencyFormat(invoice?.amountRemaining ?? 0)} đ
         </Descriptions.Item>
@@ -174,22 +177,23 @@ const ThongTinThanhToan = (props: ThongTinThanhToanProps) => {
           )}
       </Descriptions>
 
-      {/* {invoice?.amountPaid&&invoice.amountPaid > 0 && (
-                <Button
-                  onClick={() => {
-                    this.setState({ edit: true });
-                  }}
-                  style={{ marginRight: 8 }}
-                  icon="form"
-                  type="danger"
-                >
-                  Chỉnh sửa
-                </Button>
-              )} */}
       {((invoice?.amountRemaining && invoice.amountRemaining > 0) ||
         (invoice?.amountRefund && invoice.amountRefund > 0)) &&
       access.nhanVien ? (
         <Form.Item style={{ textAlign: 'center', marginBottom: 0, marginTop: 8 }}>
+          {invoice?.amountPaid && invoice.amountPaid > 0 && access.nhanVien ? (
+            <Button
+              onClick={() => {
+                setEdit(true);
+              }}
+              style={{ marginRight: 8 }}
+              icon={<FormOutlined />}
+            >
+              Chỉnh sửa
+            </Button>
+          ) : (
+            <></>
+          )}
           <Button
             icon={<EditOutlined />}
             type="primary"

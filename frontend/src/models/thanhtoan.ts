@@ -1,4 +1,5 @@
 import {
+  editInvoiceByIdentityCode,
   getInvoiceByIdentityCode,
   getProductByCode,
   payInvoiceByIdentityCode,
@@ -55,7 +56,23 @@ export default () => {
     setLoading(false);
   };
 
+  const editInvoiceByIdentityCodeModel = async (
+    identityCode: string,
+    payload: {
+      amountPaid: number;
+      transactionDate?: string;
+    },
+  ) => {
+    if (!identityCode) return;
+    setLoading(true);
+    await editInvoiceByIdentityCode(identityCode, payload);
+    message.success('Cập nhật thanh toán thành công');
+    getInvoiceByIdentityCodeModel(identityCode);
+    setLoading(false);
+  };
+
   return {
+    editInvoiceByIdentityCodeModel,
     refundInvoiceByIdentityCodeModel,
     loading,
     setLoading,
