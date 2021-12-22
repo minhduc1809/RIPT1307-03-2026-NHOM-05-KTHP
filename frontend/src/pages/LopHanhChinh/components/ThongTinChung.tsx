@@ -5,6 +5,7 @@ import Avatar from 'antd/lib/avatar/avatar';
 import { useState } from 'react';
 import styles from '../index.css';
 import KetQuaHocTapSinhVien from './KetQuaHocTap';
+import { useAccess } from 'umi';
 
 const ThongTinChungLopHanhChinh = (props: {
   danhSachSinhVien: Login.Profile[];
@@ -13,7 +14,7 @@ const ThongTinChungLopHanhChinh = (props: {
 }) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [recordSinhVien, setRecordSinhVien] = useState<Login.Profile>();
-
+  const access = useAccess();
   return (
     <>
       <Descriptions title={`Sĩ số: ${props?.danhSachSinhVien?.length ?? 0} sinh viên`} />
@@ -64,8 +65,10 @@ const ThongTinChungLopHanhChinh = (props: {
         renderItem={(item: Login.Profile) => (
           <List.Item
             onClick={() => {
-              setRecordSinhVien(item);
-              setVisible(true);
+              if (!access.sinhVien) {
+                setRecordSinhVien(item);
+                setVisible(true);
+              }
             }}
             style={{ cursor: 'pointer', borderRadius: 5, padding: 12 }}
             className={styles.thongtinchung}
@@ -88,27 +91,29 @@ const ThongTinChungLopHanhChinh = (props: {
           </List.Item>
         )}
       />
-      <Modal
-        destroyOnClose
-        width="1000px"
-        onCancel={() => {
-          setVisible(false);
-        }}
-        footer={
-          <Button
-            type="primary"
-            onClick={() => {
-              setVisible(false);
-            }}
-          >
-            OK
-          </Button>
-        }
-        title="Kết quả học tập"
-        visible={visible}
-      >
-        <KetQuaHocTapSinhVien sinhVien={recordSinhVien} />
-      </Modal>
+      {!access.sinhVien && (
+        <Modal
+          destroyOnClose
+          width="1000px"
+          onCancel={() => {
+            setVisible(false);
+          }}
+          footer={
+            <Button
+              type="primary"
+              onClick={() => {
+                setVisible(false);
+              }}
+            >
+              OK
+            </Button>
+          }
+          title="Kết quả học tập"
+          visible={visible}
+        >
+          <KetQuaHocTapSinhVien sinhVien={recordSinhVien} />
+        </Modal>
+      )}
     </>
   );
 };
