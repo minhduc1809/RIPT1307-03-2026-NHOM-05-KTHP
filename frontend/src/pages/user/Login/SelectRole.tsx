@@ -4,7 +4,7 @@ import logo from '@/assets/logo.png';
 import { getInfo } from '@/services/ant-design-pro/api';
 import data from '@/utils/data';
 import { useModel, history, useIntl } from 'umi';
-import { getPhanNhom } from '@/utils/utils';
+// import { getPhanNhom } from '@/utils/utils';
 
 const SelectRoles = (props: {
   roles: { token: string; vai_tro: string }[];
@@ -23,11 +23,11 @@ const SelectRoles = (props: {
     localStorage.setItem('token', role?.token);
     localStorage.setItem('vaiTro', role?.vai_tro);
     const info = await getInfo();
-    const phanNhom = await getPhanNhom();
+    // const phanNhom = await getPhanNhom();
     setInitialState({
       ...initialState,
       currentUser: info?.data?.data ?? {},
-      phanNhom,
+      // phanNhom,
     });
     message.success(
       props.type === 'login'

@@ -1,16 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
 import axios from '@/utils/axios';
-import { ip, ip3 } from '@/utils/ip';
-import { request } from 'umi';
-
-export async function getDataTinTuc(options?: { [key: string]: any }) {
-  return request<IRecordTinTuc.RootObject>(`${ip}/odoo-user-service/tin-tuc/me/pageable`, {
-    method: 'GET',
-    params: { page: 1, limit: 20 },
-    ...(options || {}),
-  });
-}
+import { ip3 } from '@/utils/ip';
 
 export async function getInfo() {
   return axios.get(`${ip3}/odoo-user/me/profile`);

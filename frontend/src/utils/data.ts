@@ -7,7 +7,7 @@ const data: any = {
   path: {
     sinh_vien: '/dashboard',
     nhan_vien: '/dashboard',
-    Admin: '/dashboard',
+    Admin: '/baivietchung',
     quan_tri: '/dashboard',
   },
   doiTuong: ['Vai trò', 'Tất cả'],

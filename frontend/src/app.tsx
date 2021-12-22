@@ -9,7 +9,7 @@ import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
 import { getInfo, getInfoAdmin } from './services/ant-design-pro/api';
 import data from './utils/data';
-import { getPhanNhom } from './utils/utils';
+// import { getPhanNhom } from './utils/utils';
 
 const loginPath = '/user/login';
 const pathAuth = ['/admin/login'];
@@ -61,7 +61,7 @@ export async function getInitialState(): Promise<{
 
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
-    const phanNhom = await getPhanNhom();
+    // const phanNhom = await getPhanNhom();
     return {
       fetchUserInfo,
       currentUser,
@@ -69,7 +69,7 @@ export async function getInitialState(): Promise<{
         primaryColor: 'daybreak',
       },
       authorizedRoles: [],
-      phanNhom,
+      // phanNhom,
     };
   }
 

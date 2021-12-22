@@ -3,6 +3,7 @@ import data from '@/utils/data';
 import type { IColumn } from '@/utils/interfaces';
 import { toRegex } from '@/utils/utils';
 import { CloseOutlined, PlusCircleFilled, SearchOutlined } from '@ant-design/icons';
+import type { TableProps } from 'antd';
 import { Button, Card, Drawer, Input, Modal, Table } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import type { FilterValue } from 'antd/lib/table/interface';
@@ -17,16 +18,15 @@ type Props = {
   columns: IColumn<any>[];
   title?: React.ReactNode;
   widthDrawer?: string | number;
-  // eslint-disable-next-line @typescript-eslint/ban-types
   getData: Function;
   dependencies?: any[];
   loading: boolean;
   params?: any;
   children?: React.ReactNode;
   border?: boolean;
-  scroll?: { x?: number; y?: number };
   hascreate?: boolean;
   dataState?: string;
+  otherProps?: TableProps<any>;
 };
 
 const TableBase = (props: Props) => {
@@ -41,10 +41,10 @@ const TableBase = (props: Props) => {
     children,
     params,
     border,
-    scroll,
     hascreate,
     widthDrawer,
     dataState,
+    otherProps,
   } = props;
   let { columns } = props;
   const {
@@ -324,7 +324,6 @@ const TableBase = (props: Props) => {
         />
       </h4>
       <Table
-        scroll={scroll || { x: 1100 }}
         loading={loading}
         bordered={border || false}
         pagination={{
@@ -344,6 +343,7 @@ const TableBase = (props: Props) => {
           return { ...item, index: index + 1 + (page - 1) * limit, key: index };
         })}
         columns={columns?.filter((item) => item?.hide !== true)}
+        {...otherProps}
       />
       {Form && (
         <>

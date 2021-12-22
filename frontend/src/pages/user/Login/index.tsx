@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer';
 import { adminlogin, getInfo, getInfoAdmin, login } from '@/services/ant-design-pro/api';
 import data from '@/utils/data';
-import { getPhanNhom } from '@/utils/utils';
+// import { getPhanNhom } from '@/utils/utils';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { ConfigProvider, message, Tabs } from 'antd';
@@ -34,11 +34,11 @@ const Login: React.FC = () => {
     localStorage.setItem('token', role?.accessToken);
     localStorage.setItem('vaiTro', role?.user?.vai_tro);
     const info = await getInfo();
-    const phanNhom = await getPhanNhom();
+    // const phanNhom = await getPhanNhom();
     setInitialState({
       ...initialState,
       currentUser: info?.data?.data ?? {},
-      phanNhom,
+      // phanNhom,
     });
     message.success(defaultloginSuccessMessage);
     history.push(data?.path?.[role?.user?.vai_tro] ?? '/');
@@ -87,9 +87,7 @@ const Login: React.FC = () => {
           <div className={styles.header}>
             <Link to="/">
               <img alt="logo" className={styles.logo} src="/logo.png" />
-              <span className={styles.title}>
-                HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG - HỆ ĐẠI HỌC TỪ XA
-              </span>
+              <span className={styles.title}>HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG</span>
             </Link>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import UploadAvatar from '@/components/Upload/UploadAvatar';
 import { getInfo, putInfo } from '@/services/ant-design-pro/api';
-import { getURLImg } from '@/services/LopTinChi/loptinchi';
+// import { getURLImg } from '@/services/LopTinChi/loptinchi';
 import rules from '@/utils/rules';
 import { renderFileListUrl } from '@/utils/utils';
 import { Button, Col, Form, Input, message, Row } from 'antd';
@@ -42,12 +42,12 @@ class BaseView extends Component<BaseViewProps> {
 
     let avatar_path = '';
     if (val.avatar_path.fileList?.[0]?.originFileObj) {
-      const responseUpload = await getURLImg({
-        filename: 'url1',
-        public: true,
-        file: val?.avatar_path.fileList?.[0].originFileObj,
-      });
-      avatar_path = responseUpload?.data?.data?.url;
+      // const responseUpload = await getURLImg({
+      //   filename: 'url1',
+      //   public: true,
+      //   file: val?.avatar_path.fileList?.[0].originFileObj,
+      // });
+      // avatar_path = responseUpload?.data?.data?.url;
     } else avatar_path = val.avatar_path.fileList?.[0]?.url;
     const response = await putInfo({
       ...val,
@@ -165,7 +165,7 @@ class BaseView extends Component<BaseViewProps> {
         </Form>
       </div>
     ) : (
-      <div></div>
+      <div />
     );
   }
 }
