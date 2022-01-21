@@ -1,5 +1,5 @@
-import Footer from '@/components/Footer';
 import { adminlogin, getInfo, getInfoAdmin, login } from '@/services/ant-design-pro/api';
+import { Setting } from '@/utils/constants';
 import data from '@/utils/data';
 // import { getPhanNhom } from '@/utils/utils';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
@@ -7,7 +7,7 @@ import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { ConfigProvider, message, Tabs } from 'antd';
 import viVN from 'antd/lib/locale/vi_VN';
 import React, { useState } from 'react';
-import { FormattedMessage, history, Link, useIntl, useModel } from 'umi';
+import { FormattedMessage, history, useIntl, useModel } from 'umi';
 import styles from './index.less';
 
 const goto = () => {
@@ -82,17 +82,19 @@ const Login: React.FC = () => {
   };
   return (
     <div className={styles.container}>
+      <div className={styles.image} />
       <div className={styles.content}>
-        <div className={styles.top}>
-          <div className={styles.header}>
-            <Link to="/">
-              <img alt="logo" className={styles.logo} src="/logo.png" />
-              <span className={styles.title}>HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG</span>
-            </Link>
-          </div>
-        </div>
         <ConfigProvider locale={viVN}>
           <div className={styles.main}>
+            <div
+              style={{
+                textAlign: 'center',
+                fontSize: 38,
+                color: Setting.primaryColor,
+              }}
+            >
+              Đăng nhập
+            </div>
             <ProForm
               initialValues={{
                 autoLogin: true,
@@ -188,8 +190,6 @@ const Login: React.FC = () => {
           </div>
         </ConfigProvider>
       </div>
-
-      <Footer />
     </div>
   );
 };
