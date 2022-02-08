@@ -95,14 +95,16 @@ class App extends React.Component {
         <Table
           {...this.props?.otherProps}
           title={this.props?.title ? () => this.props.title : false}
-          columns={this.props.columns?.map((item) => {
-            return item?.search === 'search'
-              ? {
-                  ...item,
-                  ...this.getColumnSearchProps(item.dataIndex),
-                }
-              : { ...item };
-          })}
+          columns={this.props.columns
+            ?.filter((item) => !item.hide)
+            ?.map((item) => {
+              return item?.search === 'search'
+                ? {
+                    ...item,
+                    ...this.getColumnSearchProps(item.dataIndex),
+                  }
+                : { ...item };
+            })}
           dataSource={this.props?.data ?? []}
         />
         {Form && (

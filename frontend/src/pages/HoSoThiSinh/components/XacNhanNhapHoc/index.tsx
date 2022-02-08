@@ -23,12 +23,8 @@ const XacNhanNhapHoc = () => {
     tenDotTuyenSinh: 'Đợt 1',
   };
 
-  const hoaDon = {
-    identityCode: '123456',
-  };
-
   return (
-    <div>
+    <>
       <p>
         <b>Hội đồng tuyển sinh - Học viện Công nghệ Bưu chính Viễn thông thông báo và chúc mừng:</b>
       </p>
@@ -196,7 +192,7 @@ const XacNhanNhapHoc = () => {
           }
         </>
       )}
-    </div>
+    </>
   );
 };
 

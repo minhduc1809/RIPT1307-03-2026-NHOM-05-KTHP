@@ -1,18 +1,17 @@
 import {
   BankOutlined,
   CheckSquareOutlined,
-  ContainerOutlined,
   DollarOutlined,
   FileTextOutlined,
   FormOutlined,
 } from '@ant-design/icons';
-import { Breadcrumb, Card, Tabs } from 'antd';
-import DangKyXetTuyen from './DangKyXetTuyen';
-import NhapHoc from './NhapHoc';
-import XacNhanNhapHoc from './XacNhanNhapHoc';
+import { Card, Tabs } from 'antd';
 import { useModel } from 'umi';
-import ThanhToan from '@/components/ThanhToan';
+import DangKyXetTuyen from './DangKyXetTuyen';
 import VanBanHuongDan from './HuongDan';
+import NhapHoc from './NhapHoc';
+import CongNo from './ThanhToan';
+import XacNhanNhapHoc from './XacNhanNhapHoc';
 
 const ChiTietHoSo = (props: {
   location: {
@@ -29,21 +28,21 @@ const ChiTietHoSo = (props: {
   return (
     <Card
       bodyStyle={{ paddingTop: 10 }}
-      title={
-        <Breadcrumb>
-          <Breadcrumb.Item href="/hosothisinh/dottuyensinh">
-            <ContainerOutlined />
-            <span>Đợt {props.location.query.idDot} năm 2022</span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item
-            href={`/hosothisinh/dottuyensinh/dot?idDot=${props.location.query.idDot}`}
-          >
-            <ContainerOutlined />
-            <span>Danh sách phương thức xét tuyển</span>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>Phương thức {props.location.query.idPhuongThuc}</Breadcrumb.Item>
-        </Breadcrumb>
-      }
+      // title={
+      //   <Breadcrumb>
+      //     <Breadcrumb.Item href="/hosothisinh/dottuyensinh">
+      //       <ContainerOutlined />
+      //       <span>Đợt {props.location.query.idDot} năm 2022</span>
+      //     </Breadcrumb.Item>
+      //     <Breadcrumb.Item
+      //       href={`/hosothisinh/dottuyensinh/dot?idDot=${props.location.query.idDot}`}
+      //     >
+      //       <ContainerOutlined />
+      //       <span>Danh sách phương thức xét tuyển</span>
+      //     </Breadcrumb.Item>
+      //     <Breadcrumb.Item>Phương thức {props.location.query.idPhuongThuc}</Breadcrumb.Item>
+      //   </Breadcrumb>
+      // }
     >
       <Tabs onChange={onChangeTab} defaultActiveKey={tab}>
         <Tabs.TabPane
@@ -86,7 +85,7 @@ const ChiTietHoSo = (props: {
           }
           key="4"
         >
-          <ThanhToan />
+          <CongNo />
         </Tabs.TabPane>
         <Tabs.TabPane
           tab={
