@@ -6,7 +6,7 @@ import Table from '@/components/Table/Table';
 import { currencyFormat } from '@/utils/utils';
 import moment from 'moment';
 
-const ThanhToan = (props: { record?: DichVuMotCuaV2.Don }) => {
+const ThanhToan = (props: { record?: { identityCode: string; trangThaiThanhToan: string } }) => {
   // const { record, getSettingByKeyModel } = useModel('setting');
   const { getInvoiceByIdentityCodeModel, invoice, setInvoice } = useModel('thanhtoan');
   const access = useAccess();

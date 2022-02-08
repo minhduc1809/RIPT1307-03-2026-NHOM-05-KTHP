@@ -24,7 +24,7 @@ export default {
   'pages.login.forgotPassword': 'Quên mật khẩu ?',
   'pages.login.submit': 'Đăng nhập',
   'pages.login.loginWith': 'Login with :',
-  'pages.login.registerAccount': 'Đăng ký',
+  'pages.login.registerAccount': 'Đăng ký tài khoản',
   'pages.welcome.advancedComponent': 'Advanced Component',
   'pages.welcome.link': 'Welcome',
   'pages.welcome.advancedLayout': 'Advanced Layout',

@@ -10,6 +10,9 @@ declare module Login {
   }
 
   export interface Profile {
+    quocTich: string;
+    noiCapCmtCccd: string;
+    ngayCapCmtCccd: string;
     don_vi_id: [number, string];
     systemRole: string;
     partner_id: any;

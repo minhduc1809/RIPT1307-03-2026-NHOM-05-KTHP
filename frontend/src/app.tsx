@@ -174,6 +174,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     // },
     menuHeaderRender: undefined,
     ...initialState?.settings,
-    title: 'PTIT S-Link',
+    title: 'Xét tuyển PTIT',
   };
 };

@@ -55,12 +55,6 @@ export default defineConfig({
           redirect: '/user/login',
         },
         {
-          name: 'register-result',
-          icon: 'smile',
-          path: '/user/register-result',
-          component: './user/register-result',
-        },
-        {
           name: 'register',
           icon: 'smile',
           path: '/user/register',
@@ -83,29 +77,24 @@ export default defineConfig({
           path: '/account/center',
           component: './account/center',
         },
-        // {
-        //   name: 'settings',
-        //   icon: 'smile',
-        //   path: '/account/settings',
-        //   component: './account/settings',
-        // },
       ],
     },
     {
-      path: '/baivietchung',
-      name: 'BaiVietChung',
-      component: './BaiVietChung',
-      icon: 'EditOutlined',
-      access: 'admin',
+      name: 'hosothisinh',
+      path: '/hosothisinh/dottuyensinh',
+      icon: 'UserOutlined',
+      component: './HoSoThiSinh',
     },
-
-    // {
-    //   name: 'dva-sample',
-    //   icon: 'CalendarOutlined',
-    //   path: '/dva-sample',
-    //   component: './DvaSample',
-    // },
-
+    {
+      path: '/hosothisinh/dottuyensinh/dot',
+      hideInMenu: true,
+      component: './HoSoThiSinh/components/DanhSachPhuongThuc.tsx',
+    },
+    {
+      path: '/hosothisinh/dottuyensinh/phuongthuctuyensinh',
+      hideInMenu: true,
+      component: './HoSoThiSinh/components/ChiTietHoSo.tsx',
+    },
     {
       path: '/',
       redirect: '/user/login',

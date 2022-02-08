@@ -1,6 +1,6 @@
 {
-  "name": "PTIT S-Link",
-  "short_name": "PTIT S-Link",
+  "name": "Xét tuyển PTIT",
+  "short_name": "Xét tuyển PTIT",
   "display": "standalone",
   "start_url": "./?utm_source=homescreen",
   "theme_color": "#002140",

@@ -79,7 +79,7 @@ export const Setting = {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'PTIT S-Link',
+  title: 'Xét tuyển PTIT',
   pwa: false,
   logo: '/favicon.ico',
   iconfontUrl: '',

@@ -10,6 +10,7 @@ export default () => {
 
   return (
     <DefaultFooter
+      style={{ backgroundColor: '#fff' }}
       copyright={`2021 ${defaultMessage}`}
       links={[
         {
