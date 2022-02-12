@@ -1,4 +1,5 @@
 import {
+  ArrowLeftOutlined,
   BankOutlined,
   CheckSquareOutlined,
   DollarOutlined,
@@ -58,7 +59,7 @@ const ChiTietHoSo = (props: {
         <Tabs.TabPane
           tab={
             <>
-              <CheckSquareOutlined /> Xác nhận nhập học
+              <CheckSquareOutlined /> Kết quả xét tuyển
             </>
           }
           key="2"

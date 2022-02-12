@@ -136,7 +136,7 @@ const Timeline = (props: { idDot: string }) => {
 
   return (
     <>
-      <b style={{ fontSize: 18 }}>Các mốc thời gian đợt {props.idDot} năm 2022</b>
+      <b style={{ fontSize: 16 }}>Các mốc thời gian đợt {props.idDot} năm 2022</b>
       <br />
       {typeof checkDay === 'number' && checkDay + 1 < data.length && (
         <>
@@ -145,7 +145,7 @@ const Timeline = (props: { idDot: string }) => {
               color: Setting.primaryColor,
               display: 'flex',
               alignItems: 'baseline',
-              fontSize: 18,
+              fontSize: 16,
             }}
           >
             {data[checkDay + 1].description ?? ''}:
@@ -170,7 +170,7 @@ const Timeline = (props: { idDot: string }) => {
                   color: Setting.primaryColor,
                   display: 'flex',
                   alignItems: 'baseline',
-                  fontSize: 18,
+                  fontSize: 16,
                   marginLeft: 5,
                 }}
               >
@@ -182,7 +182,7 @@ const Timeline = (props: { idDot: string }) => {
         </>
       )}
       {checkDay === false && <i style={{ color: '#0065ca' }}>Đã kết thúc đợt xét tuyển.</i>}
-      <Card>
+      <Card bodyStyle={{ padding: 8 }}>
         <Steps
           direction={isLargeScreen ? 'horizontal' : 'vertical'}
           current={typeof checkDay === 'number' ? checkDay : data.length - 1}
@@ -192,9 +192,11 @@ const Timeline = (props: { idDot: string }) => {
             <Steps.Step
               key={item.title}
               title={
-                item?.title !== 'Chưa xác định'
-                  ? moment(item?.title).format('HH:mm DD/MM/YYYY')
-                  : item?.title
+                <b style={{ fontSize: 14 }}>
+                  {item?.title !== 'Chưa xác định'
+                    ? moment(item?.title).format('HH:mm DD/MM/YYYY')
+                    : item?.title}
+                </b>
               }
               description={item?.description}
             />

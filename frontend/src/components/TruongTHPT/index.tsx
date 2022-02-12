@@ -32,7 +32,7 @@ type Props = {
   };
 };
 
-const DiaChi = (props: Props) => {
+const TruongTHPT = (props: Props) => {
   const {
     danhSachQuanHuyen,
     danhSachTinh,
@@ -79,6 +79,7 @@ const DiaChi = (props: Props) => {
             initialValue={props?.initialValue?.maTinh}
             name={props?.fields?.tinh ?? []}
             rules={props.notRequiredTinh ? [] : [...rules.required]}
+            label="Chọn tỉnh/TP"
           >
             <Select
               disabled={props?.disabled}
@@ -113,6 +114,7 @@ const DiaChi = (props: Props) => {
             initialValue={props?.initialValue?.maQuanHuyen}
             name={props?.fields?.quanHuyen ?? []}
             rules={props.notRequiredQuanHuyen ? [] : [...rules.required]}
+            label="Chọn quận/huyện"
           >
             <Select
               notFoundContent="Bạn chưa chọn Tỉnh"
@@ -152,6 +154,7 @@ const DiaChi = (props: Props) => {
             initialValue={props?.initialValue?.maPhuongXa}
             name={props?.fields?.xaPhuong ?? []}
             rules={props?.notRequiredXaPhuong ? [] : [...rules.required]}
+            label="Tên trường"
           >
             <Select
               notFoundContent="Bạn chưa chọn Quận huyện"
@@ -169,7 +172,7 @@ const DiaChi = (props: Props) => {
               }}
               showSearch
               allowClear
-              placeholder="Xã/Phường"
+              placeholder="Tên trường"
               optionFilterProp="children"
               filterOption={(value, option) => includes(option?.props.children, value)}
             >
@@ -182,7 +185,30 @@ const DiaChi = (props: Props) => {
           </Form.Item>
         </Col>
       )}
-      {!props.hideDiaChiCuThe && (
+      <Col xs={24} lg={12}>
+        <Form.Item
+          labelCol={{ span: 24 }}
+          wrapperCol={{ span: 24 }}
+          label="Mã tỉnh"
+          style={{ width: '100%', marginBottom: '0' }}
+        >
+          <Input placeholder="Chưa chọn tỉnh" disabled style={{ width: '100%' }} />
+        </Form.Item>
+      </Col>
+      <Col xs={24} lg={12}>
+        <Form.Item
+          labelCol={{ span: 24 }}
+          wrapperCol={{ span: 24 }}
+          label="Mã trường"
+          style={{
+            width: '100%',
+            marginBottom: '0',
+          }}
+        >
+          <Input placeholder="Chưa chọn trường" style={{ width: '100%' }} disabled />
+        </Form.Item>
+      </Col>
+      {/* {!props.hideDiaChiCuThe && (
         <Col span={24}>
           <Form.Item
             initialValue={props?.initialValue?.soNhaTenDuong}
@@ -198,9 +224,9 @@ const DiaChi = (props: Props) => {
             />
           </Form.Item>
         </Col>
-      )}
+      )} */}
     </Row>
   );
 };
 
-export default DiaChi;
+export default TruongTHPT;

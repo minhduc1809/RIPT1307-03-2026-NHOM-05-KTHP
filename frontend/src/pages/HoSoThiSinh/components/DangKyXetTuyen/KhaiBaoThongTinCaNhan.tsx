@@ -1,82 +1,112 @@
-import { Card, Col, DatePicker, Descriptions, Divider, Form, Input, Row, Select } from 'antd';
+import DiaChi from '@/components/DiaChi';
+import { FormItem } from '@/components/FormItem';
+import { ArrowRightOutlined } from '@ant-design/icons';
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select } from 'antd';
 import moment from 'moment';
+import { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useModel } from 'umi';
 
 const KhaiBaoThongTinCaNhan = () => {
   const [form] = Form.useForm();
+
   const { initialState } = useModel('@@initialState');
   const { danhSachDanToc, danhSachTonGiao } = useModel('dantoctongiao');
+  const [tenTinh, setTenTinh] = useState<string>();
+  const [tenQuanHuyen, setTenQuanHuyen] = useState<string>();
+  const [tenPhuongXa, setTenXaPhuong] = useState<string>();
   const isMobile = useMediaQuery({
     query: '(max-width: 576px)',
   });
   return (
-    <Card
-      bordered
-      title={
-        <div className="cardTitle">
-          <b>Kê khai thông tin cá nhân chi tiết</b>
-        </div>
-      }
-    >
-      <Descriptions
-        bordered
-        column={isMobile ? 3 : 6}
-        style={{ marginBottom: 30 }}
-        layout={isMobile ? 'vertical' : 'horizontal'}
-      >
-        <Descriptions.Item label="Họ và tên" span={3}>
-          {initialState?.currentUser?.name ?? ''}
-        </Descriptions.Item>
-        {/* <Descriptions.Item label="Ngày sinh" span={3}>
-          {moment(initialState?.currentUser?.ngaySinh).format('DD/MM/YYYY')}
-        </Descriptions.Item> */}
-        <Descriptions.Item label="CMTND/CCCD" span={3}>
-          {initialState?.currentUser?.so_cmnd}
-        </Descriptions.Item>
-        <Descriptions.Item label="Ngày cấp " span={3}>
-          {moment(initialState?.currentUser?.ngayCapCmtCccd).format('DD/MM/YYYY')}
-        </Descriptions.Item>
-        <Descriptions.Item label="Nơi cấp " span={3}>
-          {initialState?.currentUser?.noiCapCmtCccd ?? ''}
-        </Descriptions.Item>
-        {/* <Descriptions.Item label="Dân tộc" span={3}>
-          {initialState?.currentUser?.dan_toc ?? ''}
-        </Descriptions.Item>
-        <Descriptions.Item label="Tôn giáo" span={3}>
-          {initialState?.currentUser?.ton_giao ?? ''}
-        </Descriptions.Item>
-        <Descriptions.Item label="Giới tính" span={3}>
-          {initialState?.currentUser?.gioiTinh ? 'Nữ' : 'Nam'}
-        </Descriptions.Item> */}
-
-        <Descriptions.Item label="Email" span={3}>
-          {initialState?.currentUser?.email ?? ''}
-        </Descriptions.Item>
-        <Descriptions.Item label="Quốc tịch" span={3}>
-          {initialState?.currentUser?.quocTich ?? 'Việt Nam'}
-        </Descriptions.Item>
-        <Descriptions.Item label="Số điện thoại" span={3}>
-          {initialState?.currentUser?.so_dien_thoai ?? ''}
-        </Descriptions.Item>
-      </Descriptions>
-      <Divider plain>
-        <strong>Thông tin bổ sung</strong>
-      </Divider>
-      <Form labelCol={{ span: 24 }} form={form}>
+    <Card bodyStyle={{ paddingTop: 0 }} bordered>
+      <Form labelCol={{ span: 24 }} form={form} onFinish={(value) => {}}>
+        <Divider plain>
+          <strong>Thông tin cơ bản</strong>
+        </Divider>
         <Row gutter={[20, 0]}>
           <Col xs={24} lg={8}>
-            <Form.Item name="ngaySinh" label="Ngày sinh">
+            <FormItem
+              initialValue={initialState?.currentUser?.name ?? ''}
+              label="Họ và tên"
+              name="hoTen"
+            >
+              <Input placeholder="Nhập họ và tên" />
+            </FormItem>
+          </Col>
+          <Col xs={24} lg={8}>
+            <FormItem
+              initialValue={initialState?.currentUser?.so_cmnd}
+              label="Số CMT/CCCD"
+              name="cmtCccd"
+            >
+              <Input placeholder="Nhập số CMT/CCCD" />
+            </FormItem>
+          </Col>
+          <Col xs={24} lg={8}>
+            <FormItem
+              initialValue={
+                initialState?.currentUser?.ngayCapCmtCccd
+                  ? moment(initialState?.currentUser?.ngayCapCmtCccd).format('DD/MM/YYYY')
+                  : undefined
+              }
+              name="ngayCapCmtCccd"
+              label="Ngày cấp"
+            >
+              <DatePicker
+                placeholder="Ngày cấp DD/MM/YYYY"
+                format="DD/MM/YYYY"
+                disabledDate={(cur) => moment(cur).isAfter(moment())}
+                style={{ width: '100%' }}
+              />
+            </FormItem>
+          </Col>
+          <Col xs={24} lg={8}>
+            <FormItem
+              initialValue={initialState?.currentUser?.noiCapCmtCccd ?? ''}
+              label="Nơi cấp"
+              name="noiCapCmtCccd"
+            >
+              <Input placeholder="Nhập nơi cấp CMT/CCCD" />
+            </FormItem>
+          </Col>
+          <Col xs={24} lg={8}>
+            <FormItem
+              initialValue={initialState?.currentUser?.email ?? ''}
+              label="Email"
+              name="email"
+            >
+              <Input placeholder="Nhập email" />
+            </FormItem>
+          </Col>
+          <Col xs={24} lg={8}>
+            <FormItem
+              initialValue={initialState?.currentUser?.so_dien_thoai ?? ''}
+              label="Số điện thoại"
+              name="soDienThoai"
+            >
+              <Input placeholder="Nhập số điện thoại" />
+            </FormItem>
+          </Col>
+        </Row>
+
+        <Divider plain>
+          <strong>Thông tin bổ sung</strong>
+        </Divider>
+        <Row gutter={[20, 0]}>
+          <Col xs={24} lg={8}>
+            <FormItem name="ngaySinh" label="Ngày sinh">
+              {/* startof date */}
               <DatePicker
                 placeholder="Ngày sinh DD/MM/YYYY"
                 format="DD/MM/YYYY"
                 disabledDate={(cur) => moment(cur).isAfter(moment())}
                 style={{ width: '100%' }}
               />
-            </Form.Item>
+            </FormItem>
           </Col>
           <Col xs={24} lg={8}>
-            <Form.Item label="Giới tính" name="gioiTinh">
+            <FormItem label="Giới tính" name="gioiTinh">
               <Select placeholder="Giới tính">
                 {['Nam', 'Nữ', 'Khác'].map((item, index) => (
                   <Select.Option key={item} value={index}>
@@ -84,10 +114,10 @@ const KhaiBaoThongTinCaNhan = () => {
                   </Select.Option>
                 ))}
               </Select>
-            </Form.Item>
+            </FormItem>
           </Col>
           <Col xs={24} lg={8}>
-            <Form.Item label="Dân tộc" name="danToc">
+            <FormItem label="Dân tộc" name="danToc">
               <Select showSearch placeholder="Dân tộc">
                 {danhSachDanToc.map((item) => (
                   <Select.Option key={item.tenDanToc} value={item.tenDanToc}>
@@ -95,15 +125,15 @@ const KhaiBaoThongTinCaNhan = () => {
                   </Select.Option>
                 ))}
               </Select>
-            </Form.Item>
+            </FormItem>
           </Col>
           <Col xs={24} lg={8}>
-            <Form.Item label="Quốc tịch" name="quocTich">
+            <FormItem label="Quốc tịch" name="quocTich">
               <Input placeholder="Nhập quốc tịch" />
-            </Form.Item>
+            </FormItem>
           </Col>
           <Col xs={24} lg={8}>
-            <Form.Item label="Tôn giáo" name="tonGiao">
+            <FormItem label="Tôn giáo" name="tonGiao">
               <Select placeholder="Tôn giáo">
                 {danhSachTonGiao.map((item) => (
                   <Select.Option key={item.tenTonGiao} value={item.tenTonGiao}>
@@ -111,11 +141,40 @@ const KhaiBaoThongTinCaNhan = () => {
                   </Select.Option>
                 ))}
               </Select>
-            </Form.Item>
+            </FormItem>
+          </Col>
+          <Col xs={24} lg={8}>
+            <FormItem label="Số điện thoại" name="soDienThoai">
+              <Input placeholder="Nhập số điện thoại" />
+            </FormItem>
+          </Col>
+          <Col xs={24}>
+            <FormItem label="Địa chỉ">
+              <DiaChi
+                form={form}
+                fields={{
+                  tinh: ['diaChi', 'maTinh'],
+                  quanHuyen: ['diaChi', 'maQuanHuyen'],
+                  xaPhuong: ['diaChi', 'maPhuongXa'],
+                  diaChiCuThe: ['diaChi', 'soNhaTenDuong'],
+                }}
+                setTen={{ setTenTinh, setTenQuanHuyen, setTenXaPhuong }}
+              />
+            </FormItem>
           </Col>
           <Col xs={24} lg={8} />
-          <Col xs={24} lg={8} />
         </Row>
+        <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
+          <Button
+            icon={<ArrowRightOutlined />}
+            loading={false}
+            style={{ marginRight: 8 }}
+            htmlType="submit"
+            type="primary"
+          >
+            Bước 2/4
+          </Button>
+        </Form.Item>
       </Form>
     </Card>
   );

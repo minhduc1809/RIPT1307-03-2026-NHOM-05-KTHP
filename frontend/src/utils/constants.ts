@@ -1,75 +1,43 @@
-export enum Role {
-  nhan_vien = 'Cán bộ, giảng viên',
-  sinh_vien = 'Sinh viên',
-}
-
-export enum ElementTemplateType {
-  TEXT_INPUT = 'Nhập Text 1 dòng',
-  TEXT_AREA = 'Nhập Text nhiều dòng',
-  INPUT_NUMBER = 'Nhập số',
-  DATE_PICKER = 'Chọn ngày tháng',
-  UPLOAD_SINGLE = 'Chọn 1 file',
-  UPLOAD_MULTI = 'Chọn nhiều file',
-  DROP_LIST_SINGLE = 'Lựa chọn một (dạng Droplist)',
-  DROP_LIST_MULTI = 'Lựa chọn nhiều (dạng Droplist)',
-  RADIO_BUTTON = 'Lựa chọn một (Radio)',
-  CHECKLIST = 'Lựa chọn nhiều (Checklist)',
-  DON_VI_HANH_CHINH = 'Đơn vị hành chính',
-  TABLE = 'Dạng bảng',
-  TEXT_BLOCK = 'Đoạn văn bản',
-}
-
-export enum EFileType {
-  doc = 'Tài liệu (doc, docx)',
-  pdf = 'Tài liệu (pdf)',
-  excel = 'Excel (xlsx, xls)',
-  image = 'Ảnh (png, jpg, jpeg)',
-}
-
-export enum LoaiDoiTuongXuLyQuyTrinh {
-  DON_VI_CU_THE = 'Đơn vị cụ thể',
-  DON_VI_QUAN_LY = 'Đơn vị quản lý',
-  // CO_VAN_HOC_TAP = 'Cố vấn học tập',
-}
-
-export const LevelDonViHanhChinh = [
-  'Tỉnh',
-  'Tỉnh, quận',
-  'Tỉnh, quận, xã',
-  'Tỉnh, quận, xã, số nhà tên đường',
+export const doiTuongUuTienTuyenSinh = [
+  'Không thuộc diện ưu tiên',
+  '01',
+  '02',
+  '03',
+  '04',
+  '05',
+  '06',
+  '07',
 ];
 
-export const accessFileUpload = {
-  doc: '.doc,.docx',
-  excel: '.xlsm, .xls, .xlsx',
-  image: '.png, .jpg, .jpeg',
-  pdf: '.pdf',
+export const khuVucUuTien = [
+  { value: 'KV1', label: 'KV1' },
+  { value: 'KV2_NT', label: 'KV2-NT' },
+  { value: 'KV2', label: 'KV2' },
+  { value: 'KV3', label: 'KV3' },
+];
+
+export const hanhKiem = ['Tốt', 'Khá', 'Trung bình', 'Yếu'];
+
+export const ToHopXetTuyen = {
+  A00: ['Toán học', 'Vật lý', 'Hóa học'],
+  A01: ['Toán học', 'Vật lý', 'Tiếng Anh'],
+  C00: ['Ngữ văn', 'Lịch sử', 'Địa lý'],
+  C01: ['Ngữ văn', 'Toán học', 'Vật lý'],
+  C02: ['Ngữ văn', 'Toán học', 'Hóa học'],
+  D01: ['Ngữ văn', 'Toán học', 'Tiếng Anh'],
+  D07: ['Toán học', 'Hóa học', 'Tiếng Anh'],
+  D09: ['Toán học', 'Lịch sử', 'Tiếng Anh'],
 };
 
-export enum TrangThaiDonDVMC {
-  OK = 'Đã duyệt',
-  NOT_OK = 'Không duyệt',
-  PROCESSING = 'Đang xử lý',
-}
-
-export enum TrangThaiBuoc {
-  OK = 'Đã duyệt',
-  NOT_OK = 'Không duyệt',
-  PROCESSING = 'Đang xử lý',
-}
-
-export enum TrangThaiThaoTac {
-  PENDING = 'Chưa duyệt',
-  OK = 'Đã duyệt',
-  NOT_OK = 'Không duyệt',
-}
-
-export enum ColorTrangThaiDonMotCua {
-  PENDING = 'gray',
-  OK = 'green',
-  NOT_OK = '#CC0D00',
-  PROCESSING = '#1890ff',
-}
+export const MonToHop = {
+  'Toán học': 'tongKetToan',
+  'Vật lý': 'tongKetLy',
+  'Hóa học': 'tongKetHoa',
+  'Ngữ văn': 'tongKetVan',
+  'Tiếng Anh': 'tongKetNgoaiNgu',
+  'Lịch sử': 'tongKetSu',
+  'Địa lý': 'tongKetDia',
+};
 
 export const Setting = {
   navTheme: 'dark',

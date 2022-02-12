@@ -1,6 +1,8 @@
 import { useModel } from 'umi';
+import DangKyNguyenVong from './DangKyNguyenVong';
 import KhaiBaoThongTinCaNhan from './KhaiBaoThongTinCaNhan';
 import QuaTrinhHocTap from './QuaTrinhHocTap';
+import RaSoatHoSo from './RaSoatHoSo';
 
 const Content = () => {
   const { current } = useModel('hosothisinh');
@@ -11,6 +13,12 @@ const Content = () => {
       break;
     case 1:
       contentComponent = <QuaTrinhHocTap />;
+      break;
+    case 2:
+      contentComponent = <DangKyNguyenVong />;
+      break;
+    case 3:
+      contentComponent = <RaSoatHoSo />;
       break;
   }
 

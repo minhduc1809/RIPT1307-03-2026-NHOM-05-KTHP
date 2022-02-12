@@ -30,6 +30,13 @@ const TableKhoanThu = (props: { type: 'dathanhtoan' | 'chuathanhtoan' }) => {
       render: (val) => <div>{currencyFormat(val)}</div>,
     },
     {
+      title: 'Mã thanh toán',
+      dataIndex: 'identityCode',
+      width: 100,
+      align: 'center',
+      render: () => <div>1234567</div>,
+    },
+    {
       title: 'Ngày thanh toán',
       dataIndex: 'ngayThanhToan',
       width: 200,
