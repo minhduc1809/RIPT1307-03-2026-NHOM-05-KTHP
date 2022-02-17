@@ -1,4 +1,4 @@
-import { Button, Col, Popconfirm } from 'antd';
+import { Button, Card, Col, Popconfirm, Row } from 'antd';
 import { useModel } from 'umi';
 
 const XacNhanNhapHoc = () => {
@@ -24,41 +24,49 @@ const XacNhanNhapHoc = () => {
   };
 
   return (
-    <>
+    <Card title="Kết quả xét tuyển">
       <p>
         <b>Hội đồng tuyển sinh - Học viện Công nghệ Bưu chính Viễn thông thông báo và chúc mừng:</b>
       </p>
-      <p>
-        <Col xl={6} sm={12} xs={24}>
+      <Row>
+        <Col xl={8} sm={12} xs={24}>
           Thí sinh: <b>{initialState?.currentUser?.name ?? ''}</b>
         </Col>
+        <Col xl={8} sm={12} xs={24}>
+          Ngày sinh: <b>{initialState?.currentUser?.ngay_sinh?.split('-')?.reverse()?.join('-')}</b>
+        </Col>
         {thongTinDotAll?.maHeThongDot?.startsWith('THPT') && (
-          <Col xl={6} sm={12} xs={24}>
+          <Col xl={8} sm={12} xs={24}>
             Số báo danh: <b>{ketQua?.soBaoDanh ?? ''}</b>
           </Col>
         )}
-        <Col xl={6} sm={12} xs={24}>
-          Mã xét tuyển: <b>{ketQua?.maHoSo ?? ''}</b>
+        <Col xl={8} sm={12} xs={24}>
+          Mã hồ sơ: <b>{ketQua?.maHoSo ?? ''}</b>
         </Col>
 
-        <Col xl={6} sm={12} xs={24}>
+        <Col xl={8} sm={12} xs={24}>
           Số CCCD/CMND: <b>{ketQua?.thiSinh?.cmtCccd ?? ''}</b>
         </Col>
-      </p>
+      </Row>
       <br />
       <div>
-        Đã đáp ứng điều kiện điểm xét tuyển Đại học chính quy{' '}
-        {thongTinDotAll?.tenDotTuyenSinh ?? ''} năm {new Date().getFullYear()}, cụ thể như sau:
+        Thí sinh đã đạt ngưỡng điểm trúng tuyển vào đại học hệ chính quy theo phương thức 1 năm{' '}
+        {new Date().getFullYear()}, cụ thể như sau:
       </div>
 
       <div>
         <div>
-          - <b>{ketQua?.nguyenVong?.tenNganh}</b>{' '}
+          - Ngành: <b>{ketQua?.nguyenVong?.tenNganh}-CNTT</b>{' '}
         </div>
         <div>
-          - Nguyện vọng trúng tuyển: <b>{ketQua?.nguyenVong?.soThuTu}</b>{' '}
+          - Thứ tự nguyện vọng trúng tuyển: <b>{ketQua?.nguyenVong?.soThuTu}</b>{' '}
         </div>
       </div>
+      <div>
+        Thí sinh phải thực hiện xác nhận nhập học để được công nhận trúng tuyển chính thức trong
+        thời gian từ ... đến ...
+      </div>
+      <br />
       {ketQua?.trangThaiXacNhan && (
         <div>
           {/* <div style={{ color: 'red' }}>
@@ -192,7 +200,7 @@ const XacNhanNhapHoc = () => {
           }
         </>
       )}
-    </>
+    </Card>
   );
 };
 

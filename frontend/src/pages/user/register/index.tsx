@@ -38,7 +38,6 @@ const Register = (props: { back: any }) => {
             style={{
               color: Setting.primaryColor,
               fontSize: 18,
-              fontFamily: "'Times New Roman', Times, serif",
             }}
           >
             Thông tin đăng ký

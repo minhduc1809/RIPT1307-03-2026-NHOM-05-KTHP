@@ -8,10 +8,10 @@ export default () => (
     style={{
       background: 'none',
     }}
-    subTitle="Sorry, the page you visited does not exist."
+    subTitle="Xin lỗi, trang không tồn tại."
     extra={
       <Link to="/">
-        <Button type="primary">Back Home</Button>
+        <Button type="primary">Về trang chủ</Button>
       </Link>
     }
   />

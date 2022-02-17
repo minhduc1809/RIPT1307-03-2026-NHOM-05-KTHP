@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { Avatar, Button, List, Modal, Typography } from 'antd';
+import { Avatar, Button, Card, List, Modal, Typography } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import FileList from './components/FileList';
@@ -67,7 +67,7 @@ const VanBanHuongDan = () => {
   }, [page, limit, condition, phamVi]);
 
   return (
-    <>
+    <Card title="Hướng dẫn">
       <List
         loading={loading}
         split
@@ -146,7 +146,7 @@ const VanBanHuongDan = () => {
       >
         <FileList type="User" />
       </Modal>
-    </>
+    </Card>
   );
 };
 

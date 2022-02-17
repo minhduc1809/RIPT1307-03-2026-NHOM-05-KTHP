@@ -1,0 +1,130 @@
+import Footer from '@/components/Footer';
+import Header from '@/components/Header';
+import { Button, Divider, Select } from 'antd';
+import { history, useModel } from 'umi';
+import styles from './index.css';
+
+const LuaChonPhuongThuc = () => {
+  const { initialState, setInitialState } = useModel('@@initialState');
+  const danhSachDotTuyenSinh = [
+    {
+      id: 1,
+      title: 'Xét tuyển kết hợp theo đề án tuyển sinh của Học viện',
+      time: 'Kết thúc nộp hồ sơ tuyển sinh: Còn 23 ngày 0 giờ 11 phút 44 giây (18:00 09/02/2022)',
+      isCoHoSo: 'Thí sinh có hồ sơ xét tuyển',
+      trangThai: 'Chưa khóa',
+    },
+    {
+      id: 2,
+      title: 'Xét tuyển kết hợp theo đề án tuyển sinh của Học viện',
+      time: 'Bắt đầu đăng ký xét tuyển: Còn 23 ngày 0 giờ 11 phút 44 giây (18:00 09/02/2022)',
+      isCoHoSo: 'Thí sinh không có hồ sơ xét tuyển',
+    },
+    {
+      id: 3,
+      title: 'Xét tuyển kết hợp theo đề án tuyển sinh của Học viện',
+      time: 'Kết thúc nộp hồ sơ tuyển sinh: Còn 23 ngày 0 giờ 11 phút 44 giây (18:00 09/02/2022)',
+      isCoHoSo: 'Thí sinh có hồ sơ xét tuyển',
+      trangThai: 'Chưa khóa',
+    },
+    {
+      id: 4,
+      title: 'Xét tuyển kết hợp theo đề án tuyển sinh của Học viện',
+      time: 'Bắt đầu đăng ký xét tuyển: Còn 23 ngày 0 giờ 11 phút 44 giây (18:00 09/02/2022)',
+      isCoHoSo: 'Thí sinh không có hồ sơ xét tuyển',
+    },
+  ];
+  return (
+    <>
+      {/* <div style={{ position: 'fixed', zIndex: 1000, width: '100%' }}> */}
+      <Header />
+      {/* </div> */}
+
+      <div style={{ display: 'flex' }}>
+        <div style={{ fontSize: 16 }} className={styles.background}>
+          <div className={styles.container}>
+            {/* <div className={styles.contentleft}>
+              <img
+                style={{ margin: '0 auto', maxWidth: 150, maxHeight: 250 }}
+                width="60%"
+                src={logo}
+                alt=""
+              />
+            </div> */}
+            <div style={{ width: 1000 }}>
+              <div className={styles.content}>
+                <div className={styles['content-top']}>
+                  <b style={{ fontSize: 18 }}>Xin chào {initialState?.currentUser?.name},</b>
+                  <div>
+                    Bạn đang tham gia xét tuyển vào Học viện Công nghệ Bưu chính viễn thông hệ Đại
+                    học Chính quy
+                  </div>
+                </div>
+              </div>
+              <div className={styles.form}>
+                <div className={styles.title}>Vui lòng chọn phương thức để tiếp tục:</div>
+                <br />
+                <Select value={2022} style={{ width: 200 }}>
+                  <Select.Option value={2022}>Năm tuyển sinh 2022</Select.Option>
+                </Select>
+                <div>
+                  {danhSachDotTuyenSinh?.map((item, index) => (
+                    <div
+                      key={item.id}
+                      className={styles.answer}
+                      onClick={() => {
+                        localStorage.setItem('phuongThuc', item.id.toString());
+                        localStorage.setItem('dot', item.id.toString());
+                        history.push('/hosothisinh/dottuyensinh/dot');
+                      }}
+                    >
+                      <Button type="default" size="large" shape="circle">
+                        {index + 1}
+                      </Button>
+                      <div style={{ marginLeft: 8 }}>
+                        <div>
+                          <b>
+                            Phương thức {index + 1}: {item?.title ?? ''}
+                          </b>
+                          <div>{item.time}</div> <div>{item.isCoHoSo}</div>
+                          <div>Trạng thái: {item?.trangThai ?? ''}</div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {danhSachDotTuyenSinh?.length === 0 && (
+                  <div>Chưa có thông tin về các đợt tuyển sinh ở kỳ tuyển sinh năm nay</div>
+                )}
+              </div>
+              <Divider style={{ marginBottom: 0 }} />
+              <div className={styles.footer}>
+                <Button
+                  className={styles['footer-btn']}
+                  type="link"
+                  onClick={() => {
+                    setInitialState({ ...initialState, currentUser: undefined });
+                    localStorage.removeItem('vaiTro');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('accessTokens');
+                    localStorage.removeItem('phuongThuc');
+                    localStorage.removeItem('dot');
+                    history.push({
+                      pathname: '/user/login',
+                    });
+                  }}
+                >
+                  Quay lại đăng nhập
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </>
+  );
+};
+
+export default LuaChonPhuongThuc;

@@ -208,7 +208,7 @@ const TableNguyenVong = () => {
           : ' nút mũi tên lên hoặc xuống ở cột thao tác đối với mỗi nguyện vọng'}
       </p>
       <Button
-        disabled={danhSachNguyenVong?.length > 2}
+        disabled={danhSachNguyenVong?.length > 1}
         type="primary"
         icon={<PlusOutlined />}
         onClick={() => {
@@ -229,7 +229,10 @@ const TableNguyenVong = () => {
             <Col span={3} style={styleHeader}>
               Thứ tự nguyện vọng
             </Col>
-            <Col span={5} style={styleHeader}>
+            <Col span={2} style={styleHeader}>
+              Mã ngành
+            </Col>
+            <Col span={4} style={styleHeader}>
               Tên ngành
             </Col>
             <Col span={3} style={styleHeader}>
@@ -241,7 +244,7 @@ const TableNguyenVong = () => {
             <Col span={6} style={styleHeader}>
               Điểm ưu tiên
             </Col>
-            <Col span={3} style={styleHeader}>
+            <Col span={2} style={styleHeader}>
               Điểm xét tuyển
             </Col>
           </Row>
@@ -288,8 +291,10 @@ const TableNguyenVong = () => {
                                   <Col span={3} style={{ ...styleRow }}>
                                     {_.get(item, 'soThuTu', 1)}
                                   </Col>
-
-                                  <Col span={5} style={styleRow}>
+                                  <Col span={2} style={styleRow}>
+                                    {_.get(item, 'maNganh', '')}
+                                  </Col>
+                                  <Col span={4} style={styleRow}>
                                     {_.get(item, 'tenNganh', '')}
                                   </Col>
                                   <Col span={3} style={{ ...styleRow }}>
@@ -315,7 +320,7 @@ const TableNguyenVong = () => {
                                         ),
                                     )}
                                   </Col>
-                                  <Col span={3} style={styleRow}>
+                                  <Col span={2} style={styleRow}>
                                     {item?.diemQuyDoi?.tongDiem ?? ''}
                                   </Col>
                                 </Row>

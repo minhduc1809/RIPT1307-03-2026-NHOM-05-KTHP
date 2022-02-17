@@ -50,5 +50,10 @@ export default {
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
   'menu.register-result': 'Kết quả đăng ký',
-  'menu.hosothisinh': 'Hồ sơ thí sinh',
+  'menu.HoSoThiSinh': 'Hồ sơ thí sinh',
+  'menu.DangKyXetTuyen': 'Đăng ký xét tuyển',
+  'menu.KetQuaXetTuyen': 'Kết quả xét tuyển',
+  'menu.NhapHoc': 'Nhập học',
+  'menu.ThanhToan': 'Thanh toán',
+  'menu.HuongDan': 'Hướng dẫn',
 };

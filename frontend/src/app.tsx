@@ -2,13 +2,16 @@ import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
-import { notification, Tooltip } from 'antd';
+import { notification } from 'antd';
 import 'moment/locale/vi';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
+import NotAccessible from './pages/exception/403';
+import NotFoundContent from './pages/exception/404';
 import { getInfo, getInfoAdmin } from './services/ant-design-pro/api';
 import data from './utils/data';
+
 // import { getPhanNhom } from './utils/utils';
 
 const loginPath = '/user/login';
@@ -121,6 +124,8 @@ export const request: RequestConfig = {
 // ProLayout  https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
+    unAccessible: <NotAccessible />,
+    noFound: <NotFoundContent />,
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
@@ -140,16 +145,16 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
     menuItemRender: (item, dom) => {
       return (
-        <Tooltip placement="right" title={item.name}>
-          <div
-            style={{ flex: 'auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
-            onClick={() => {
-              history.push(item?.path ?? '/');
-            }}
-          >
-            {dom}
-          </div>
-        </Tooltip>
+        // <Tooltip placement="right" title={item.name}>
+        <div
+          style={{ flex: 'auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
+          onClick={() => {
+            history.push(item?.path ?? '/');
+          }}
+        >
+          {dom}
+        </div>
+        // </Tooltip>
       );
     },
 

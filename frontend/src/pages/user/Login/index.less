@@ -42,7 +42,7 @@
   display: block;
   width: 400px;
   min-height: 100vh;
-  padding: 40px 40px 55px 40px;
+  padding: 40px 40px 0px 40px;
 
   @media screen and (max-width: @screen-sm) {
     width: 95%;
@@ -93,7 +93,7 @@
     width: calc(100% - 400px);
   }
   .main {
-    padding-top: 100px;
+    padding-top: 80px;
   }
 }
 
@@ -108,7 +108,7 @@
 
   .main {
     width: 450px;
-    padding-top: 100px;
+    padding-top: 80px;
   }
 }
 
@@ -135,8 +135,7 @@
   top: 2px;
   color: @heading-color;
   font-weight: 600;
-  font-size: 33px;
-  font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 30px;
 }
 
 .desc {
@@ -216,4 +215,11 @@
 
 .facebookButton:hover {
   cursor: pointer;
+}
+
+.titleSystemName {
+  text-align: center;
+  line-height: 40px;
+  font-size: 33px;
+  color: #CC0D00;
 }

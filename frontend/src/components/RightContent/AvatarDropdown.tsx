@@ -31,6 +31,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         localStorage.removeItem('vaiTro');
         localStorage.removeItem('token');
         localStorage.removeItem('accessTokens');
+        localStorage.removeItem('phuongThuc');
+        localStorage.removeItem('dot');
         loginOut();
         return;
       }

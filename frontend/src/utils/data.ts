@@ -5,7 +5,7 @@ const data: any = {
     { value: 'NOT_OK', text: 'Không duyệt' },
   ],
   path: {
-    sinh_vien: '/hosothisinh/dottuyensinh',
+    sinh_vien: '/phuongthucxettuyen',
     nhan_vien: '/dashboard',
     Admin: '/baivietchung',
     quan_tri: '/dashboard',

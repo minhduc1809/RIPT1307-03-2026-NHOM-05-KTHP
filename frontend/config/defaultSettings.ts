@@ -8,7 +8,7 @@ const Settings: LayoutSettings & {
   primaryColor: '#CC0D00',
   layout: 'top',
   contentWidth: 'Fluid',
-  fixedHeader: false,
+  fixedHeader: true,
   fixSiderbar: true,
   colorWeak: false,
   title: 'Xét tuyển PTIT',

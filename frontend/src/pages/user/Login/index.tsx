@@ -13,6 +13,8 @@ import GoogleLogin from 'react-google-login';
 import { FormattedMessage, history, Link, useIntl, useModel } from 'umi';
 import Register from '../register';
 import styles from './index.less';
+import logo from '@/assets/logo.png';
+import Footer from '@/components/Footer';
 
 const goto = () => {
   if (!history) return;
@@ -123,11 +125,11 @@ const Login: React.FC = () => {
               <div
                 style={{
                   textAlign: 'center',
-                  fontSize: 36,
+                  fontSize: 30,
                   color: Setting.primaryColor,
                 }}
               >
-                Đăng nhập
+                <img style={{ width: 25, height: 35 }} src={logo} /> HỆ THỐNG XÉT TUYỂN TRỰC TUYẾN
               </div>
               <ProForm
                 initialValues={{
@@ -297,6 +299,7 @@ const Login: React.FC = () => {
                   </>
                 )}
               </ProForm>
+              <Footer />
             </div>
           </ConfigProvider>
         ) : (
@@ -307,7 +310,6 @@ const Login: React.FC = () => {
           />
         )}
       </div>
-      {/* <Footer /> */}
     </div>
   );
 };

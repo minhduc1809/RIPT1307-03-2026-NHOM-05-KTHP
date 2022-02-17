@@ -10,7 +10,7 @@ mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const { Countdown } = Statistic;
 
-const Timeline = (props: { idDot: string }) => {
+const Timeline = () => {
   const { tab } = useModel('hosothisinh');
 
   const isLargeScreen = useMediaQuery({
@@ -134,54 +134,59 @@ const Timeline = (props: { idDot: string }) => {
     setupTimeline();
   }, [tab]);
 
+  const idDot = localStorage.getItem('dot');
+
   return (
     <>
-      <b style={{ fontSize: 16 }}>Các mốc thời gian đợt {props.idDot} năm 2022</b>
-      <br />
-      {typeof checkDay === 'number' && checkDay + 1 < data.length && (
-        <>
-          <div
-            style={{
-              color: Setting.primaryColor,
-              display: 'flex',
-              alignItems: 'baseline',
-              fontSize: 16,
-            }}
-          >
-            {data[checkDay + 1].description ?? ''}:
-            {deadline ? (
-              <>
-                <Countdown
-                  style={{ marginRight: 5 }}
-                  value={deadline}
-                  format="Còn D ngày H giờ m phút s giây"
-                  valueStyle={{
-                    color: '#0065ca',
-                    fontStyle: 'italic',
+      <div>
+        <b style={{ fontSize: 16 }}>Các mốc thời gian đợt {idDot} năm 2022</b>
+        <br />
+        {typeof checkDay === 'number' && checkDay + 1 < data.length && (
+          <>
+            <div
+              style={{
+                color: Setting.primaryColor,
+                display: 'flex',
+                alignItems: 'baseline',
+                fontSize: 16,
+              }}
+            >
+              {data[checkDay + 1].description ?? ''}:
+              {deadline ? (
+                <>
+                  <Countdown
+                    style={{ marginRight: 5 }}
+                    value={deadline}
+                    format="Còn D ngày H giờ m phút s giây"
+                    valueStyle={{
+                      color: '#0065ca',
+                      fontStyle: 'italic',
+                      marginLeft: 5,
+                    }}
+                    onFinish={finishStep}
+                  />{' '}
+                  ({moment(deadline)?.format('HH:mm DD/MM/YYYY')})
+                </>
+              ) : (
+                <div
+                  style={{
+                    color: Setting.primaryColor,
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    fontSize: 16,
                     marginLeft: 5,
                   }}
-                  onFinish={finishStep}
-                />{' '}
-                ({moment(deadline)?.format('HH:mm DD/MM/YYYY')})
-              </>
-            ) : (
-              <div
-                style={{
-                  color: Setting.primaryColor,
-                  display: 'flex',
-                  alignItems: 'baseline',
-                  fontSize: 16,
-                  marginLeft: 5,
-                }}
-              >
-                {' '}
-                Chưa xác định
-              </div>
-            )}
-          </div>
-        </>
-      )}
-      {checkDay === false && <i style={{ color: '#0065ca' }}>Đã kết thúc đợt xét tuyển.</i>}
+                >
+                  {' '}
+                  Chưa xác định
+                </div>
+              )}
+            </div>
+          </>
+        )}
+        {checkDay === false && <i style={{ color: '#0065ca' }}>Đã kết thúc đợt xét tuyển.</i>}
+      </div>
+
       <Card bodyStyle={{ padding: 8 }}>
         <Steps
           direction={isLargeScreen ? 'horizontal' : 'vertical'}

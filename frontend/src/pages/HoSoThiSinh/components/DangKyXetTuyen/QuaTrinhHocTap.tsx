@@ -418,6 +418,48 @@ const QuaTrinhHocTap = () => {
           {toHop?.length > 0 && (
             <>
               <Divider plain>
+                <b>Điểm TBC lớp 10</b>
+              </Divider>
+
+              {arrMonHoc?.map((item) => (
+                <Col key={item} xs={12} sm={12} md={8}>
+                  <FormItem
+                    labelCol={{ span: 24 }}
+                    wrapperCol={{ span: 24 }}
+                    label={item}
+                    style={{ width: '100%', marginBottom: '0' }}
+                  >
+                    <InputNumber
+                      placeholder="Số thập phân dạng 0.0"
+                      min={0}
+                      max={10}
+                      style={{ width: '100%' }}
+                    />
+                  </FormItem>
+                </Col>
+              ))}
+              <Divider plain>
+                <b>Điểm TBC lớp 11</b>
+              </Divider>
+
+              {arrMonHoc?.map((item) => (
+                <Col key={item} xs={12} sm={12} md={8}>
+                  <FormItem
+                    labelCol={{ span: 24 }}
+                    wrapperCol={{ span: 24 }}
+                    label={item}
+                    style={{ width: '100%', marginBottom: '0' }}
+                  >
+                    <InputNumber
+                      placeholder="Số thập phân dạng 0.0"
+                      min={0}
+                      max={10}
+                      style={{ width: '100%' }}
+                    />
+                  </FormItem>
+                </Col>
+              ))}
+              <Divider plain>
                 <b>Điểm TBC lớp 12</b>
               </Divider>
 

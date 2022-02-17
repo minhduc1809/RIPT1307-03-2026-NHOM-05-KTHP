@@ -21,12 +21,7 @@ export const hanhKiem = ['Tốt', 'Khá', 'Trung bình', 'Yếu'];
 export const ToHopXetTuyen = {
   A00: ['Toán học', 'Vật lý', 'Hóa học'],
   A01: ['Toán học', 'Vật lý', 'Tiếng Anh'],
-  C00: ['Ngữ văn', 'Lịch sử', 'Địa lý'],
-  C01: ['Ngữ văn', 'Toán học', 'Vật lý'],
-  C02: ['Ngữ văn', 'Toán học', 'Hóa học'],
   D01: ['Ngữ văn', 'Toán học', 'Tiếng Anh'],
-  D07: ['Toán học', 'Hóa học', 'Tiếng Anh'],
-  D09: ['Toán học', 'Lịch sử', 'Tiếng Anh'],
 };
 
 export const MonToHop = {

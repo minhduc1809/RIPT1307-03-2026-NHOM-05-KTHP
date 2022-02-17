@@ -2,8 +2,10 @@ import { LockOutlined, PrinterOutlined, RollbackOutlined, UnlockOutlined } from 
 import { Button, Col, Popconfirm, Row, Table, Tag } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
+import { useModel } from 'umi';
 
 const RaSoatHoSo = () => {
+  const { danhSachNguyenVong } = useModel('hosothisinh');
   const titleCol: any = { fontWeight: 'bold', textAlign: 'left' };
   const contentCol: any = { textAlign: 'center' };
   const record: any = {
@@ -19,9 +21,16 @@ const RaSoatHoSo = () => {
       align: 'center',
       key: 'soThuTu',
     },
+    {
+      title: 'Mã ngành',
+      width: 200,
+      align: 'center',
+      dataIndex: 'maNganh',
+      key: 'sss',
+    },
 
     {
-      title: 'Tên ngành xét tuyển',
+      title: 'Tên ngành',
       width: 200,
       align: 'center',
       dataIndex: 'tenNganh',
@@ -76,10 +85,9 @@ const RaSoatHoSo = () => {
   return (
     <div style={{ maxWidth: 1000, padding: 24, margin: '0px auto' }}>
       <h3 style={{ textAlign: 'center', fontWeight: 'bold' }}>
-        PHIẾU ĐĂNG KÝ XÉT TUYỂN ĐẠI HỌC CHÍNH QUY{' '}
-        <span style={{ textTransform: 'uppercase' }}>Đợt 1</span> NĂM 2021
+        PHIẾU ĐĂNG KÝ XÉT TUYỂN ĐẠI HỌC CHÍNH QUY NĂM 2021
       </h3>
-      <p style={{ fontWeight: 'bold', margin: '20px 0px 5px 0px' }}>I. THÔNG TIN CÁ NHÂN</p>
+      <div style={{ fontWeight: 'bold', margin: '20px 0px 5px 0px' }}>I. THÔNG TIN CÁ NHÂN</div>
       <Row>
         <Col lg={12} xl={12}>
           <Row>
@@ -219,9 +227,9 @@ const RaSoatHoSo = () => {
         </Row>
       </Row>
 
-      <p style={{ fontWeight: 'bold', margin: '20px 0px 5px 0px' }}>
-        III. THÔNG TIN ĐĂNG KÝ XÉT TUYỂN
-      </p>
+      <div style={{ fontWeight: 'bold', margin: '20px 0px 5px 0px' }}>
+        II. THÔNG TIN ĐĂNG KÝ XÉT TUYỂN
+      </div>
       <p style={{ margin: '5px 0px', fontWeight: 'bold' }}>
         1. Thông tin về trường THPT mà thí sinh theo học:
       </p>
@@ -300,7 +308,7 @@ const RaSoatHoSo = () => {
         bordered
         pagination={false}
         columns={columnsNguyenVong}
-        dataSource={record?.danhSachNguyenVong ?? []}
+        dataSource={danhSachNguyenVong || []}
         scroll={{ x: 900 }}
       />
       <br />

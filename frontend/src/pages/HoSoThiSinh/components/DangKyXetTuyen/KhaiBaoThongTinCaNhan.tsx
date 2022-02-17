@@ -144,8 +144,8 @@ const KhaiBaoThongTinCaNhan = () => {
             </FormItem>
           </Col>
           <Col xs={24} lg={8}>
-            <FormItem label="Số điện thoại" name="soDienThoai">
-              <Input placeholder="Nhập số điện thoại" />
+            <FormItem label="Facebook" name="facebook">
+              <Input placeholder="Facebook" />
             </FormItem>
           </Col>
           <Col xs={24}>
