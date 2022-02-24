@@ -3,9 +3,16 @@ import { adminlogin, getInfo, getInfoAdmin, login } from '@/services/ant-design-
 import { Setting } from '@/utils/constants';
 import data from '@/utils/data';
 // import { getPhanNhom } from '@/utils/utils';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  FileExcelOutlined,
+  FileTextOutlined,
+  LockOutlined,
+  NotificationOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+} from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
-import { Button, Col, ConfigProvider, Divider, message, Row, Tabs } from 'antd';
+import { Button, Col, ConfigProvider, Divider, message, Row, Tabs, Tooltip } from 'antd';
 import viVN from 'antd/lib/locale/vi_VN';
 import React, { useState } from 'react';
 import FacebookLogin from 'react-facebook-login';
@@ -15,6 +22,7 @@ import Register from '../register';
 import styles from './index.less';
 import logo from '@/assets/logo.png';
 import Footer from '@/components/Footer';
+import { useMediaQuery } from 'react-responsive';
 
 const goto = () => {
   if (!history) return;
@@ -26,6 +34,12 @@ const goto = () => {
 };
 
 const Login: React.FC = () => {
+  const isMediumScreen = useMediaQuery({
+    query: '(min-width: 768px)',
+  });
+  const isNotSmallScreen = useMediaQuery({
+    query: '(min-width: 411px)',
+  });
   const [submitting, setSubmitting] = useState(false);
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -117,7 +131,6 @@ const Login: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.image} />
       <div className={styles.content}>
         {isLogin ? (
           <ConfigProvider locale={viVN}>
@@ -129,7 +142,8 @@ const Login: React.FC = () => {
                   color: Setting.primaryColor,
                 }}
               >
-                <img style={{ width: 25, height: 35 }} src={logo} /> HỆ THỐNG XÉT TUYỂN TRỰC TUYẾN
+                <img style={{ width: 25, height: 35 }} src={logo} /> HỆ THỐNG
+                <div style={{ fontSize: isNotSmallScreen ? 25 : 22 }}>XÉT TUYỂN TRỰC TUYẾN</div>
               </div>
               <ProForm
                 initialValues={{
@@ -215,7 +229,6 @@ const Login: React.FC = () => {
                                   Đăng nhập với Google
                                 </Button>
                               )}
-                              className={styles.googleButton}
                             />
                           </Col>
                         </Row>
@@ -299,7 +312,13 @@ const Login: React.FC = () => {
                   </>
                 )}
               </ProForm>
-              <Footer />
+              {isNotSmallScreen ? (
+                <div style={{ width: '100%', position: 'absolute', bottom: 0, left: 0 }}>
+                  <Footer />
+                </div>
+              ) : (
+                <br />
+              )}
             </div>
           </ConfigProvider>
         ) : (
@@ -308,6 +327,51 @@ const Login: React.FC = () => {
               setIsLogin(true);
             }}
           />
+        )}
+      </div>
+      <div className={styles.image}>
+        {isMediumScreen && (
+          <div className={styles.containericonhuongdan}>
+            <Tooltip title="Đề án tuyển sinh">
+              <Button
+                onClick={() => window.open('https://tuyensinh.ptit.edu.vn/deantuyensinh')}
+                className={styles.iconhuongdan}
+                icon={<NotificationOutlined />}
+                shape="circle"
+              />
+            </Tooltip>
+            <Tooltip title="Tài liệu HDSD">
+              <Button
+                onClick={() =>
+                  window.open(
+                    'https://drive.google.com/drive/folders/1iD7GxppVjBIkT_ZqAFFeDRkgg7s8iTMp',
+                  )
+                }
+                className={styles.iconhuongdan}
+                icon={<FileTextOutlined />}
+                shape="circle"
+              />
+            </Tooltip>
+            <Tooltip title="Video HDSD">
+              <Button
+                className={styles.iconhuongdan}
+                icon={<VideoCameraOutlined />}
+                shape="circle"
+              />
+            </Tooltip>
+            <Tooltip title="Danh mục trường THPT chuyên">
+              <Button
+                onClick={() =>
+                  window.open(
+                    'https://docs.google.com/spreadsheets/d/1duPQykk4uM6tqdKy6ZAj59zocxadDBNmrUJAsblPk2M/edit?usp=sharing',
+                  )
+                }
+                className={styles.iconhuongdan}
+                icon={<FileExcelOutlined />}
+                shape="circle"
+              />
+            </Tooltip>
+          </div>
         )}
       </div>
     </div>

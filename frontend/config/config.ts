@@ -85,17 +85,17 @@ export default defineConfig({
       component: './ChonPhuongThuc',
       access: 'sinhVien',
     },
-    // {
-    //   name: 'HoSoThiSinh',
-    //   path: '/hosothisinh/dottuyensinh',
-    //   icon: 'UserOutlined',
-    //   component: './HoSoThiSinh',
-    // },
     {
-      path: '/hosothisinh/dottuyensinh/dot',
+      layout: false,
+      path: '/dotxettuyen',
+      component: './ChonDot',
+      access: 'sinhVien',
+    },
+    {
+      path: '/hosothisinh/phuongthucxettuyen/chitiet',
       hideInMenu: true,
       layout: false,
-      component: './HoSoThiSinh/components/DanhSachPhuongThuc.tsx',
+      component: './ChonPhuongThuc/ChiTietPhuongThuc.tsx',
     },
     {
       path: '/hosothisinh/dottuyensinh/phuongthuctuyensinh',
@@ -131,6 +131,125 @@ export default defineConfig({
       path: '/huongdan',
       icon: 'FileTextOutlined',
       component: './HoSoThiSinh/components/HuongDan',
+    },
+    {
+      name: 'QuanTriChiTiet',
+      path: '/quantrichitiet',
+      icon: 'FormOutlined',
+      access: 'admin',
+      routes: [
+        {
+          name: 'ThongTinChung',
+          path: './thongtinchung',
+        },
+        {
+          name: 'TiepNhanHoSoXetTuyen',
+          path: './tiepnhanhoso',
+          routes: [
+            {
+              name: 'HoSoChuaKhoa',
+              path: './hosochuakhoa',
+            },
+            {
+              name: 'HoSoDaKhoa',
+              path: './hosodakhoa',
+            },
+            {
+              name: 'HoSoDaTiepNhan',
+              path: './hosodatiepnhan',
+            },
+            {
+              name: 'HoSoKhongTiepNhan',
+              path: './hosokhongtiepnhan',
+            },
+          ],
+        },
+        {
+          name: 'ThucHienXetTuyen',
+          path: './thuchienxettuyen',
+          routes: [
+            {
+              name: 'ChiTieuXetTuyen',
+              path: './chitieuxettuyen',
+            },
+            {
+              name: 'KetQuaXetTuyen',
+              path: './ketquaxettuyen',
+            },
+          ],
+        },
+        {
+          name: 'TiepNhanHoSoNhapHoc',
+          path: './tiepnhanhosonhaphoc',
+          routes: [
+            {
+              name: 'DanhSachChuaXacNhanNhapHoc',
+              path: './danhsachchuaxacnhannhaphoc',
+            },
+            {
+              name: 'DanhSachDaXacNhanNhapHoc',
+              path: './danhsachdaxacnhannhaphoc',
+            },
+            {
+              name: 'DanhSachHoanThienHoSoNhapHoc',
+              path: './danhsachdahoanthienhosonhaphoc',
+            },
+            {
+              name: 'DanhSachDuDieuKienNhapHoc',
+              path: './danhsachdudieukiennhaphoc',
+            },
+          ],
+        },
+        {
+          name: 'QuanLyHDSD',
+          path: './quanlyhdsd',
+        },
+      ],
+    },
+    {
+      name: 'QuanTriChung',
+      path: './quantrichung',
+      access: 'admin',
+      routes: [
+        {
+          name: 'QuanLyTaiKhoan',
+          path: './quanlytaikhoan',
+        },
+        {
+          name: 'QuanLyNganhHoc',
+          path: './quanlynganhhoc',
+        },
+        {
+          name: 'QuanLyNamTuyenSinh',
+          path: './quanlynamtuyensinh',
+        },
+        {
+          name: 'QuanLyPhuongThucXetTuyen',
+          path: './quanlyphuongthucxettuyen',
+        },
+        {
+          name: 'ToChucTuyenSinh',
+          path: './tochuctuyensinh',
+          routes: [
+            {
+              name: 'DotTuyenSinh',
+              path: './dottuyensinh',
+            },
+            {
+              name: 'DotNhapHoc',
+              path: './dotnhaphoc',
+            },
+          ],
+        },
+        {
+          name: 'QuanLyKinhPhiChung',
+          path: './quanlykinhphichung',
+        },
+        {
+          name: 'QuanLyHoSo',
+          path: './quanlyhoso',
+        },
+      ],
     },
     {
       path: '/',

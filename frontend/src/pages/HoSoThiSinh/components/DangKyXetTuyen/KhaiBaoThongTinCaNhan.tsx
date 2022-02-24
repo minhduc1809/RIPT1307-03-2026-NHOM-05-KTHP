@@ -1,7 +1,18 @@
 import DiaChi from '@/components/DiaChi';
 import { FormItem } from '@/components/FormItem';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import { Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select } from 'antd';
+import {
+  AutoComplete,
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  Divider,
+  Form,
+  Input,
+  Row,
+  Select,
+} from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -12,6 +23,7 @@ const KhaiBaoThongTinCaNhan = () => {
 
   const { initialState } = useModel('@@initialState');
   const { danhSachDanToc, danhSachTonGiao } = useModel('dantoctongiao');
+  const { danhSachTinh } = useModel('donvihanhchinh');
   const [tenTinh, setTenTinh] = useState<string>();
   const [tenQuanHuyen, setTenQuanHuyen] = useState<string>();
   const [tenPhuongXa, setTenXaPhuong] = useState<string>();
@@ -144,12 +156,18 @@ const KhaiBaoThongTinCaNhan = () => {
             </FormItem>
           </Col>
           <Col xs={24} lg={8}>
-            <FormItem label="Facebook" name="facebook">
-              <Input placeholder="Facebook" />
+            <FormItem label="Nơi sinh" name="noiSinh">
+              <AutoComplete placeholder="Nơi sinh">
+                {danhSachTinh?.map((item) => (
+                  <Select.Option key={item.tenDonVi} value={item.tenDonVi}>
+                    {item.tenDonVi}
+                  </Select.Option>
+                ))}
+              </AutoComplete>
             </FormItem>
           </Col>
           <Col xs={24}>
-            <FormItem label="Địa chỉ">
+            <FormItem label="Địa chỉ thường trú">
               <DiaChi
                 form={form}
                 fields={{

@@ -34,6 +34,60 @@ export const MonToHop = {
   'Địa lý': 'tongKetDia',
 };
 
+export enum ELoaiChungChiQuocTe {
+  SAT = 'SAT',
+  ACT = 'ACT',
+}
+
+export enum ELoaiChungChiNgoaiNgu {
+  IELTS = 'IELTS',
+  TOEFL_IBT = 'TOEFL iBT',
+  TOEFL_ITP = 'TOEFL ITP',
+}
+
+export enum EMonThiHSG {
+  TOAN = 'Toán học',
+  VAT_LY = 'Vật lý',
+  HOA = 'Hóa học',
+  TIN = 'Tin học',
+  ENG = 'Tiếng Anh',
+}
+
+export enum EGiaiHSG {
+  // KK_QG = 'Khuyến khích Quốc gia',
+  // TD_QG = 'Tham dự Quốc gia',
+  // BA_T_TP = 'Giải Ba Tỉnh/Thành phố',
+  // NHI = 'Giải Nhì Tỉnh/Thành phố',
+  // NHAT = 'Giải Nhất Tỉnh/Thành phố',
+  BA_TINH_TP = 'Giải Ba cấp Tỉnh/TP trực thuộc TW',
+  NHI_TINH_TP = 'Giải Nhì cấp Tỉnh/TP trực thuộc TW',
+  NHAT_TINH_TP = 'Giải Nhất cấp Tỉnh/TP trực thuộc TW',
+  TD_QG = 'Tham dự thi cấp Quốc gia',
+  KK_QG = 'Khuyến khích cấp Quốc gia',
+  BA_QG = 'Giải Ba cấp Quốc gia',
+  NHI_QG = 'Giải Nhì cấp Quốc gia',
+  NHAT_QG = 'Giải Nhất Quốc gia',
+}
+
+export const DoiTuongXetTuyen = [
+  {
+    value: 0,
+    name: 'Sử dụng Chứng chỉ quốc tế (SAT, ACT)',
+  },
+  {
+    value: 1,
+    name: 'Sử dụng Chứng chỉ tiếng Anh quốc tế (IELTS, TOEFL iBT, TOEFL ITP)',
+  },
+  {
+    value: 2,
+    name: 'Đạt giải học sinh giỏi cấp Tỉnh/quốc gia',
+  },
+  {
+    value: 3,
+    name: 'Học sinh hệ chuyên (Toán, Lý, Hóa, Tin học)',
+  },
+];
+
 export const Setting = {
   navTheme: 'dark',
   primaryColor: '#CC0D00',

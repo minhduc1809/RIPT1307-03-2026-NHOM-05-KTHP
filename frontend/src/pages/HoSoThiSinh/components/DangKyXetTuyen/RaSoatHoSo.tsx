@@ -1,385 +1,535 @@
-import { LockOutlined, PrinterOutlined, RollbackOutlined, UnlockOutlined } from '@ant-design/icons';
-import { Button, Col, Popconfirm, Row, Table, Tag } from 'antd';
-import _ from 'lodash';
+import type { IColumn } from '@/utils/interfaces';
+import { GridContent } from '@ant-design/pro-layout';
+import { Card, Col, Descriptions, Divider, Row, Table, Tag } from 'antd';
 import moment from 'moment';
-import { useModel } from 'umi';
+const { Item } = Descriptions;
 
 const RaSoatHoSo = () => {
-  const { danhSachNguyenVong } = useModel('hosothisinh');
-  const titleCol: any = { fontWeight: 'bold', textAlign: 'left' };
-  const contentCol: any = { textAlign: 'center' };
-  const record: any = {
-    thiSinh: {},
-    trangThai: 'Chưa khóa',
-  };
+  const rc: any = {};
+  let index = 1;
 
-  const columnsNguyenVong: any = [
+  const columnChungChi: IColumn<any>[] = [
     {
-      title: 'Thứ tự nguyện vọng',
-      width: 120,
-      dataIndex: 'soThuTu',
+      title: 'Tên loại chứng chỉ',
+      dataIndex: 'tenChungChi',
       align: 'center',
-      key: 'soThuTu',
+      width: '140px',
+      key: 'tenChungChi',
     },
     {
-      title: 'Mã ngành',
-      width: 200,
+      title: 'Điểm thi chứng chỉ',
+      dataIndex: 'diem',
       align: 'center',
-      dataIndex: 'maNganh',
-      key: 'sss',
+      key: 'diem',
+      width: '100px',
     },
 
     {
-      title: 'Tên ngành',
-      width: 200,
+      title: 'Ngày cấp',
+      dataIndex: 'ngayCap',
       align: 'center',
-      dataIndex: 'tenNganh',
-      key: 'sss',
+      key: 'ngayCap',
+      render: (value) => moment(value).format('DD/MM/YYYY'),
+      width: '140px',
     },
     {
-      title: 'Tổ hợp xét tuyển',
-      width: 100,
-      dataIndex: 'toHopXetTuyen',
+      title: 'Đơn vị cấp',
+      dataIndex: 'donViCap',
       align: 'center',
-      key: 'toHopXT',
+      key: 'donvicap',
+      width: '100px',
+    },
+    {
+      title: 'File minh chứng',
+      dataIndex: 'fileChungChi',
+      align: 'center',
+      key: 'fileChungChi',
+      render: (value) =>
+        Array.isArray(value) &&
+        value.map((item, indexChungChi) => (
+          <>
+            <a href={item} target="_blank" rel="noreferrer">
+              <Tag style={{ marginTop: 8 }} color="#c01718">{`Xem tập tin ${
+                indexChungChi + 1
+              }  `}</Tag>
+            </a>{' '}
+          </>
+        )),
+    },
+  ];
+
+  const columnDiemTB: IColumn<any>[] = [
+    {
+      title: 'STT',
+      dataIndex: 'index',
+      align: 'center',
+      width: 70,
+    },
+    {
+      title: 'Tên môn',
+      dataIndex: 'tenMon',
+      align: 'center',
+    },
+    {
+      title: 'Lớp 10',
+      dataIndex: 'lop10',
+      align: 'center',
+      width: 150,
+    },
+    {
+      title: 'Lớp 11',
+      dataIndex: 'lop11',
+      align: 'center',
+      width: 150,
+    },
+    {
+      title: 'Lớp 12 (hoặc Học kỳ 1)',
+      dataIndex: 'lop12HK1',
+      align: 'center',
+      width: 150,
+    },
+    {
+      title: 'Trung bình',
+      dataIndex: 'trungbinh',
+      align: 'center',
+      width: 150,
+      render: (text, record) => ((record?.lop10 + record?.lop11 + record?.lop12HK1) / 3).toFixed(2),
+    },
+  ];
+
+  const columnGiaiCapTinh: IColumn<any>[] = [
+    {
+      title: 'Loại giải',
+      dataIndex: 'loaiGiai',
+      align: 'center',
+      width: '240px',
+      key: 'loaiGiai',
+    },
+    {
+      title: 'Năm đạt giải',
+      dataIndex: 'namDatGiai',
+      align: 'center',
+      key: 'namDatGiai',
+      width: '140px',
     },
 
     {
-      title: 'Điểm 3 môn của tổ hợp',
-      dataIndex: 'diemQuyDoi',
+      title: 'Nơi cấp',
+      dataIndex: 'noiCap',
       align: 'center',
-      render: (val: any) =>
-        val?.thanhPhan?.map(
-          (item, index) =>
-            index < 3 && (
-              <div>
-                {item?.tenThanhPhan}: {item?.diem}
-              </div>
-            ),
-        ),
-      width: 120,
+      key: 'noiCap',
+      // render: value => moment(value).format('DD/MM/YYYY'),
+      width: '100px',
     },
     {
-      title: 'Điểm ưu tiên',
-      dataIndex: 'diemQuyDoi',
+      title: 'File minh chứng',
+      dataIndex: 'fileChungChi',
       align: 'center',
-      render: (val: any) =>
-        val?.thanhPhan?.map(
-          (item, index) =>
-            index > 2 && (
-              <div>
-                {item?.tenThanhPhan}: {item?.diem}
-              </div>
-            ),
-        ),
-    },
-    {
-      title: 'Điểm xét tuyển',
-      dataIndex: 'diemQuyDoi.tongDiem',
-      align: 'center',
-      key: 'diemQuyDoi.tongDiem',
-      width: 100,
+      key: 'fileChungChi',
+      render: (value) =>
+        Array.isArray(value) &&
+        value.map((item, indexGiai) => (
+          <a key={item} href={item} target="_blank" rel="noreferrer">
+            <Tag style={{ marginTop: 8 }} color="#c01718">{`Xem tập tin ${indexGiai + 1}`}</Tag>
+          </a>
+        )),
     },
   ];
 
   return (
-    <div style={{ maxWidth: 1000, padding: 24, margin: '0px auto' }}>
-      <h3 style={{ textAlign: 'center', fontWeight: 'bold' }}>
-        PHIẾU ĐĂNG KÝ XÉT TUYỂN ĐẠI HỌC CHÍNH QUY NĂM 2021
-      </h3>
-      <div style={{ fontWeight: 'bold', margin: '20px 0px 5px 0px' }}>I. THÔNG TIN CÁ NHÂN</div>
-      <Row>
-        <Col lg={12} xl={12}>
-          <Row>
-            {' '}
-            {/* Họ và tên */}
-            <Col lg={10} xl={8} style={titleCol}>
-              1. Họ và tên:
-            </Col>
-            <Col lg={14} xl={16} style={contentCol}>
-              <div style={{ textTransform: 'uppercase' }}>{record?.thiSinh?.hoTen ?? ''}</div>
-            </Col>
-          </Row>
-          <Row>
-            {' '}
-            {/* Quốc tịch */}
-            <Col lg={10} xl={8} style={titleCol}>
-              4. Quốc tịch:
-            </Col>
-            <Col lg={14} xl={16} style={contentCol}>
-              {record?.thiSinh?.quocTich ?? 'Việt Nam'}
-            </Col>
-          </Row>
-          <Row>
-            {' '}
-            {/* Số cmt */}
-            <Col lg={10} xl={8} style={titleCol}>
-              7. CMT/CCCD:
-            </Col>
-            <Col lg={14} xl={16} style={contentCol}>
-              {record?.thiSinh?.cmtCccd ?? ''}
-            </Col>
-          </Row>
-          <Row>
-            {' '}
-            {/* Email */}
-            <Col lg={10} xl={8} style={titleCol}>
-              9. Email:
-            </Col>
-            <Col lg={14} xl={16} style={contentCol}>
-              {record?.thiSinh?.email ?? ''}
-            </Col>
-          </Row>
-        </Col>
-        <Col lg={12} xl={12}>
-          <Row>
-            <Col span={12}>
-              <Row>
-                <Col lg={12} xl={10} style={titleCol}>
-                  2. Giới tính:
-                </Col>
-                <Col lg={12} xl={14} style={contentCol}>
-                  {record?.thiSinh?.gioiTinh === 0 ? 'Nam' : 'Nữ'}
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={12} xl={10} style={titleCol}>
-                  5. Dân tộc:
-                </Col>
-                <Col lg={12} xl={14} style={contentCol}>
-                  {record?.thiSinh?.danToc ?? ''}
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={12} xl={10} style={titleCol}>
-                  8. Ngày cấp:
-                </Col>
-                <Col lg={12} xl={14} style={contentCol}>
-                  {moment(record?.thiSinh?.ngayCapCmtCccd ?? new Date()).format('DD/MM/YYYY')}
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={12} xl={10} style={titleCol}>
-                  10. ĐTDĐ:
-                </Col>
-                <Col lg={12} xl={14} style={contentCol}>
-                  {record?.thiSinh?.soDienThoai ?? ''}
-                </Col>
-              </Row>
-            </Col>
-            <Col span={12}>
-              <Row>
-                <Col lg={12} xl={10} style={titleCol}>
-                  3. Ngày sinh:
-                </Col>
-                <Col lg={12} xl={14} style={contentCol}>
-                  {/* {moment(_.get(record, 'ngaySinh', new Date())).format()} */}
-                  {moment(record?.thiSinh?.ngaySinh ?? new Date()).format('DD/MM/YYYY')}
-                </Col>
-              </Row>
-              <Row>
-                <Col lg={12} xl={10} style={titleCol}>
-                  6. Tôn giáo:
-                </Col>
-                <Col lg={12} xl={14} style={contentCol}>
-                  {record?.thiSinh?.tonGiao ?? ''}
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+    <>
+      <div className="box">
+        <Card bordered>
+          <div style={{ textAlign: 'center' }}>
+            <b style={{ fontSize: 22 }}>PHIẾU ĐĂNG KÝ XÉT TUYỂN ĐẠI HỌC HỆ CHÍNH QUY NĂM {2022}</b>
+            {localStorage.getItem('loaiDot') !== 'Đặc cách' && (
+              <div style={{ color: 'red' }}>
+                <i>(Diện xét tuyển theo phương thức kết hợp)</i>
+              </div>
+            )}
+            {/* {trangThai === 'Đã khóa' && ( */}
+            <div style={{ color: 'red', fontStyle: 'italic' }}>(Bản chính thức)</div>
+            {/* )} */}
+          </div>
 
-      <Row>
-        <Col lg={5} xl={4} style={titleCol}>
-          11. Hộ khẩu thường trú:
-        </Col>
-        <Col lg={19} xl={20} style={contentCol}>
-          {_.get(record?.thiSinh, 'hoKhauThuongTru.diaChi', '')}
-          {_.get(record?.thiSinh, 'hoKhauThuongTru.diaChi', '') !== '' ? ' - ' : null}
-          {_.get(record?.thiSinh, 'hoKhauThuongTru.tenXaPhuong', '')}
-          {_.get(record?.thiSinh, 'hoKhauThuongTru.tenXaPhuong', '') !== '' ? ' - ' : null}
-          {_.get(record?.thiSinh, 'hoKhauThuongTru.tenQH', '')}
-          {_.get(record?.thiSinh, 'hoKhauThuongTru.tenQH', '') !== '' ? ' - ' : null}
-          {_.get(record?.thiSinh, 'hoKhauThuongTru.tenTP', '')}
-          {/* {_.get(record, 'hoKhauThuongTru.tenTP', '') !== '' ? ' - ' : null} */}
-        </Col>
-      </Row>
-      <Row>
-        <Col span={24} style={titleCol}>
-          12. Địa chỉ gửi giấy báo trúng tuyển:
-        </Col>
-        <Col lg={12} xl={12}>
-          Tên người nhận: {record?.thiSinh?.tenNguoiLienHe ?? ''}
-        </Col>
-        <Col lg={12} xl={12}>
-          Điện thoại: {record?.thiSinh?.soDienThoaiNguoiLienHe ?? ''}
-        </Col>
-        <Row>
-          Địa chỉ: {_.get(record?.thiSinh, 'diaChiLienHe.diaChi', '')}
-          {_.get(record?.thiSinh, 'diaChiLienHe.diaChi', '') !== '' ? ' - ' : null}
-          {_.get(record?.thiSinh, 'diaChiLienHe.tenXaPhuong', '')}
-          {_.get(record?.thiSinh, 'diaChiLienHe.tenXaPhuong', '') !== '' ? ' - ' : null}
-          {_.get(record?.thiSinh, 'diaChiLienHe.tenQH', '')}
-          {_.get(record?.thiSinh, 'diaChiLienHe.tenQH', '') !== '' ? ' - ' : null}
-          {_.get(record?.thiSinh, 'diaChiLienHe.tenTP', '')}
-          {/* {_.get(record, 'hoKhauThuongTru.tenTP', '') !== '' ? ' - ' : null} */}
-        </Row>
-      </Row>
+          <Divider />
+          <GridContent>
+            <Row>
+              <Col span={16}>
+                <h1 style={{ fontWeight: 'bold' }}>A. THÔNG TIN THÍ SINH: </h1>
+              </Col>
+              <Col span={8}>
+                <h1 style={{ fontWeight: 'bold', color: '#262626' }}>Cơ sở đăng ký: BVH</h1>
+              </Col>
+            </Row>
 
-      <div style={{ fontWeight: 'bold', margin: '20px 0px 5px 0px' }}>
-        II. THÔNG TIN ĐĂNG KÝ XÉT TUYỂN
-      </div>
-      <p style={{ margin: '5px 0px', fontWeight: 'bold' }}>
-        1. Thông tin về trường THPT mà thí sinh theo học:
-      </p>
-      <p>
-        <span style={{ fontWeight: 'bold' }}>Nơi học THPT lớp 12:</span>{' '}
-        <Row>
-          <Col span={12}>Mã tỉnh: {record?.truongLop12?.maTinh ?? ''}</Col>
-          <Col span={12}>Mã trường: {record?.truongLop12?.maTruong ?? ''}</Col>
-          <Col span={24}>Tên trường: {record?.truongLop12?.tenTruong ?? ''}</Col>
-        </Row>
-      </p>
-      <Row>
-        <Col xs={24} sm={12}>
-          <p>
-            <span style={{ fontWeight: 'bold' }}>Năm dự thi tốt nghiệp THQG:</span>{' '}
-            {_.get(record, 'namTuyenSinh', '')}
-          </p>
-        </Col>
-        <Col xs={24} sm={12}>
-          <p>
-            <span style={{ fontWeight: 'bold' }}>Thời gian tốt nghiệp:</span>{' '}
-            {_.get(record, 'thoiGianTotNghiep', '')}
-          </p>
-        </Col>
-      </Row>
-
-      <p>
-        <span style={{ fontWeight: 'bold' }}>File phiếu điểm hoặc học bạ:</span>{' '}
-        {record?.urlHoSoHocBa && record?.urlHoSoHocBa?.length !== 0 && (
-          <span>
-            {record.urlHoSoHocBa.map((item, index) => (
-              <a key={item} href={item} target="_blank" rel="noreferrer">
-                <Tag color="#0065ca">{`Xem tập tin ${index + 1}`}</Tag>
-              </a>
-            ))}
-          </span>
-        )}
-      </p>
-
-      <p>
-        <span style={{ fontWeight: 'bold' }}>File giấy tờ đối tượng ưu tiên:</span>{' '}
-        {record?.urlGiayToDoiTuongUuTien && record?.urlGiayToDoiTuongUuTien?.length !== 0 && (
-          <span>
-            {record.urlGiayToDoiTuongUuTien.map((item, index) => (
-              <a key={item} href={item} target="_blank" rel="noreferrer">
-                <Tag color="#0065ca">{`Xem tập tin ${index + 1}`}</Tag>
-              </a>
-            ))}
-          </span>
-        )}
-      </p>
-      <p>
-        <span style={{ fontWeight: 'bold' }}>File quyết định đặc cách:</span>{' '}
-        {record?.urlQuyetDinhDacCach && record?.urlQuyetDinhDacCach?.length !== 0 && (
-          <span>
-            {record.urlQuyetDinhDacCach.map((item, index) => (
-              <a key={item} href={item} target="_blank" rel="noreferrer">
-                <Tag color="#0065ca">{`Xem tập tin ${index + 1}`}</Tag>
-              </a>
-            ))}
-          </span>
-        )}
-      </p>
-
-      <p style={{ margin: '5px 0px' }}>
-        <b>2. Khu vực tuyển sinh:</b> {record?.khuVucUuTien ?? ''}
-      </p>
-
-      <p style={{ margin: '5px 0px' }}>
-        <b>3. Đối tượng ưu tiên tuyển sinh (nếu có):</b> {record?.doiTuongTuyenSinh ?? ''}
-      </p>
-
-      <p style={{ margin: '5px 0px', fontWeight: 'bold' }}>4. Thông tin ngành đăng ký xét tuyển:</p>
-      <i>(Sắp xếp tên chuyên ngành có nguyện vọng đăng ký theo thứ tự mong muốn)</i>
-      <Table
-        bordered
-        pagination={false}
-        columns={columnsNguyenVong}
-        dataSource={danhSachNguyenVong || []}
-        scroll={{ x: 900 }}
-      />
-      <br />
-      {record?.trangThai === 'Không tiếp nhận' && record?.ghiChuTiepNhan && (
-        <div>
-          <b style={{ color: 'red' }}>Ghi chú: </b>
-          {record?.ghiChuTiepNhan ?? 'Không có'}
-        </div>
-      )}
-
-      <Row justify="space-around" style={{ marginTop: 20 }}>
-        <Col>
-          <Button
-            // loading={!!loadingIn}
-            // disabled={trangThai !== 'Đã khóa'}
-            type="default"
-            style={{ marginBottom: 8 }}
-            icon={<PrinterOutlined />}
-            // onClick={this.inHoSo}
-          >
-            Xem phiếu đăng ký
-          </Button>
-        </Col>
-        {record?.trangThai !== 'Đã khóa' && (
-          <>
-            <Col>
-              <Button
-                type="primary"
-                icon={<RollbackOutlined />}
-                // onClick={() => this.backEdit()}
-                disabled={record?.trangThai !== 'Chưa khóa'}
-              >
-                Chỉnh sửa hồ sơ
-              </Button>
-            </Col>
-            <Col>
-              <Button
-                type="primary"
-                disabled={record?.trangThai !== 'Chưa khóa'}
-                // onClick={this.showModal}
-              >
-                <p style={{ margin: 0 }}>
-                  <LockOutlined /> Nộp hồ sơ
-                </p>
-              </Button>
-            </Col>
-          </>
-        )}
-        {record?.trangThai !== 'Chưa khóa' && (
-          <Col>
-            <Popconfirm
-              // onConfirm={() => this.moKhoa(data?._id)}
-              title={
-                <div>
-                  <div>Mỗi hồ sơ được phép chỉnh sửa lại 1 lần sau khi đã khóa.</div>
-                  <div>Bạn có chắc chắn muốn chỉnh sửa lại hồ sơ?</div>
-                </div>
-              }
+            <Descriptions layout="horizontal" bordered={false}>
+              <Item span={1} label={<span style={{ fontWeight: 'bold' }}>1. Họ và tên</span>}>
+                {rc?.hoTen}
+              </Item>
+              <Item span={1} label={<span style={{ fontWeight: 'bold' }}>2. Giới tính</span>}>
+                {rc?.gioiTinh === 1 ? 'Nữ' : 'Nam'}
+              </Item>
+              <Item span={1} label={<span style={{ fontWeight: 'bold' }}>3. Ngày sinh</span>}>
+                {moment(rc?.ngaySinh).format('DD/MM/YYYY')}
+              </Item>
+              <Item span={2} label={<span style={{ fontWeight: 'bold' }}>4. Nơi sinh</span>}>
+                {rc?.noiSinh}
+              </Item>
+              <Item span={1} label={<span style={{ fontWeight: 'bold' }}>5. CMT/CCCD</span>}>
+                {rc?.cmtCccd}
+              </Item>
+              <Item span={3} label={<span style={{ fontWeight: 'bold' }}>6. Địa chỉ liên hệ</span>}>
+                {rc?.diaChiLienHe}
+              </Item>
+              <Item span={1} label={<span style={{ fontWeight: 'bold' }}>7. Số điện thoại</span>}>
+                {rc?.soDienThoai}
+              </Item>
+              <Item span={1} label={<span style={{ fontWeight: 'bold' }}>8. Email</span>}>
+                {rc?.email}
+              </Item>
+              <Item span={1} label={<span style={{ fontWeight: 'bold' }}>9. Dân tộc</span>}>
+                {rc?.danToc}
+              </Item>
+              <Item span={3} label={<span style={{ fontWeight: 'bold' }}>10. Nơi học THPT</span>}>
+                Chưa cập nhật
+              </Item>
+            </Descriptions>
+            <Descriptions
+              layout="horizontal"
+              bordered
+              size="small"
+              column={6}
+              style={{ marginBottom: 10 }}
             >
-              <Button type="primary">
+              <Item label={<div style={{ width: '50%' }}>Lớp 10</div>} span={6}>
+                {rc?.noiHoc?.lop10?.tenTruong}
+              </Item>
+              <Item label={<span>Mã tỉnh</span>} span={3}>
+                {rc?.noiHoc?.lop10?.maTinh}
+              </Item>
+              <Item label={<span>Mã trường</span>} span={3}>
+                {rc?.noiHoc?.lop10?.maTruong}
+              </Item>
+              <Item label={<span>Lớp 11</span>} span={6}>
+                {rc?.noiHoc?.lop11?.tenTruong}
+              </Item>
+              <Item label={<span>Mã tỉnh</span>} span={3}>
+                {rc?.noiHoc?.lop11?.maTinh}
+              </Item>
+              <Item label={<span>Mã trường</span>} span={3}>
+                {rc?.noiHoc?.lop11?.maTruong}
+              </Item>
+              <Item label={<span>Lớp 12</span>} span={6}>
+                {rc?.noiHoc?.lop12?.tenTruong}
+              </Item>
+              <Item label={<span>Mã tỉnh</span>} span={3}>
+                {rc?.noiHoc?.lop12?.maTinh}
+              </Item>
+              <Item label={<span>Mã trường</span>} span={3}>
+                {rc?.noiHoc?.lop12?.maTruong}
+              </Item>
+            </Descriptions>
+            <Descriptions>
+              <Item
+                span={3}
+                label={<span style={{ fontWeight: 'bold' }}>11. Đối tượng ưu tiên tuyển sinh</span>}
+              >
+                {rc?.doiTuongUuTienTuyenSinh}
+              </Item>
+              <Item
+                span={3}
+                label={<span style={{ fontWeight: 'bold' }}> 12. Khu vực ưu tiên</span>}
+              >
+                {rc?.khuVucUuTien}
+              </Item>
+              <Item
+                span={3}
+                label={<span style={{ fontWeight: 'bold' }}> 13. Thí sinh tốt nghiệp</span>}
+              >
+                {rc?.noiHoc?.thoiGianTotNghiep === 'Trước năm hiện tại'
+                  ? 'Trước năm 2021'
+                  : 'Tốt nghiệp năm 2021'}
+              </Item>
+              <Item span={3} label={<span style={{ fontWeight: 'bold' }}> 14. Hạnh kiểm</span>}>
+                Tốt
+              </Item>
+            </Descriptions>
+
+            <Descriptions layout="horizontal">
+              <Item label={<span>Lớp 10</span>}>{rc?.noiHoc?.lop10?.hanhKiem}</Item>
+              <Item label={<span>Lớp 11</span>}>{rc?.noiHoc?.lop11?.hanhKiem}</Item>
+              <Item label={<span>Lớp 12 (hoặc Học kỳ 1)</span>}>{rc?.noiHoc?.lop12?.hanhKiem}</Item>
+            </Descriptions>
+
+            <Descriptions>
+              <Item
+                span={3}
+                label={<span style={{ fontWeight: 'bold' }}> 15. Kết quả điểm TBC học tập</span>}
+              >
+                {' '}
+              </Item>
+            </Descriptions>
+            <Descriptions layout="horizontal">
+              <Item label={<span>Lớp 10</span>}>{rc?.noiHoc?.lop10?.diemTBC}</Item>
+              <Item label={<span>Lớp 11</span>}>{rc?.noiHoc?.lop11?.diemTBC}</Item>
+              <Item label={<span>Lớp 12 (hoặc Học kỳ 1)</span>}>{rc?.noiHoc?.lop12?.diemTBC}</Item>
+            </Descriptions>
+
+            <Descriptions>
+              <Item
+                span={3}
+                label={<span style={{ fontWeight: 'bold' }}> 16. Điểm TBC các môn</span>}
+              >
+                {' '}
+              </Item>
+            </Descriptions>
+
+            <Table
+              columns={[
                 {
-                  <p style={{ margin: 0 }}>
-                    <UnlockOutlined /> Chỉnh sửa lại
-                  </p>
+                  title: 'STT',
+                  dataIndex: 'index',
+                  align: 'center',
+                  width: 70,
+                },
+                {
+                  title: 'Tên môn',
+                  dataIndex: 'tenMon',
+                  align: 'center',
+                },
+                {
+                  title: 'Lớp 10',
+                  dataIndex: 'lop10',
+                  align: 'center',
+                  width: 200,
+                },
+                {
+                  title: 'Lớp 11',
+                  dataIndex: 'lop11',
+                  align: 'center',
+                  width: 200,
+                },
+                {
+                  title: 'Lớp 12 (hoặc Học kỳ 1)',
+                  dataIndex: 'lop12HK1',
+                  align: 'center',
+                  width: 200,
+                },
+              ]}
+              dataSource={[]}
+              size="small"
+              pagination={false}
+            />
+            <br />
+
+            <h1 style={{ fontWeight: 'bold' }}>B. THÔNG TIN ĐĂNG KÝ XÉT TUYỂN:</h1>
+
+            {rc?.dataChungChiQuocTe?.length !== 0 && (
+              <>
+                <Descriptions>
+                  <Item
+                    span={3}
+                    label={
+                      <span style={{ fontWeight: 'bold' }}>
+                        {' '}
+                        {index++}. Thông tin về chứng chỉ quốc tế
+                      </span>
+                    }
+                  >
+                    {' '}
+                  </Item>
+                </Descriptions>
+
+                <Table pagination={false} bordered columns={columnChungChi} dataSource={[]} />
+              </>
+            )}
+
+            {rc?.dataChungChiNgoaiNgu?.length !== 0 && (
+              <>
+                <Descriptions>
+                  <Item
+                    span={3}
+                    label={
+                      <span style={{ fontWeight: 'bold' }}>
+                        {' '}
+                        {index++}.Thông tin về chứng chỉ ngoại ngữ
+                      </span>
+                    }
+                  >
+                    {' '}
+                  </Item>
+                </Descriptions>
+                <Table pagination={false} bordered columns={columnChungChi} dataSource={[]} />
+              </>
+            )}
+
+            {rc?.loaiGiai && (
+              <div>
+                <Descriptions>
+                  <Item
+                    span={3}
+                    label={
+                      <span style={{ fontWeight: 'bold' }}>
+                        {' '}
+                        {index++}. Giải thưởng cấp tỉnh/thành phố trực thuộc TW
+                      </span>
+                    }
+                  >
+                    {rc?.monDoatGiaiHSG}
+                  </Item>
+                </Descriptions>
+
+                <Table pagination={false} bordered columns={columnGiaiCapTinh} dataSource={[]} />
+              </div>
+            )}
+            <br />
+            <Descriptions>
+              <Item
+                span={3}
+                label={<span style={{ fontWeight: 'bold' }}> {index++}. Môn chuyên</span>}
+              >
+                <b>{rc?.heChuyen ?? ''}</b>
+              </Item>
+            </Descriptions>
+            <Descriptions>
+              <Item
+                span={3}
+                label={<span style={{ fontWeight: 'bold' }}> {index++}. Đăng ký xét tuyển</span>}
+              >
+                {' '}
+              </Item>
+            </Descriptions>
+            <Descriptions>
+              <Item
+                span={3}
+                label={<span style={{ fontWeight: 'bold' }}>{index - 1}.1: Nguyện vọng 1</span>}
+              >
+                {' '}
+              </Item>
+            </Descriptions>
+
+            <Descriptions layout="horizontal">
+              <Item span={1} label={<span>Mã ngành</span>}>
+                <b>{rc.mangNguyenVong?.[0]?.maNganh ?? ''}</b>
+              </Item>
+              <Item span={2} label={<span>Tên ngành</span>}>
+                <b>{rc.mangNguyenVong?.[0]?.tenNganh ?? ''}</b>
+              </Item>
+              <Item span={1} label={<span>Tổ hợp</span>}>
+                <b>{rc.mangNguyenVong?.[0]?.toHop ?? ''}</b>
+              </Item>
+              <Item span={2} label={<span>Điểm TBC tổ hợp</span>}>
+                <b>{rc.mangNguyenVong?.[0]?.diemTBCToHop ?? ''}</b>
+              </Item>
+            </Descriptions>
+
+            <Descriptions>
+              <Item
+                span={3}
+                label={
+                  <span style={{ fontWeight: 'bold' }}>
+                    Tên môn và điểm của từng môn theo tổ hợp
+                  </span>
                 }
-              </Button>
-            </Popconfirm>
-          </Col>
-        )}
-      </Row>
-    </div>
+              >
+                {' '}
+              </Item>
+            </Descriptions>
+
+            <Table columns={columnDiemTB} dataSource={[]} size="small" pagination={false} />
+
+            {rc?.nv2?.length > 0 && (
+              <div>
+                <br />
+                <Descriptions>
+                  <Item
+                    span={3}
+                    label={<span style={{ fontWeight: 'bold' }}>{index - 1}.2: Nguyện vọng 2</span>}
+                  >
+                    {' '}
+                  </Item>
+                </Descriptions>
+                <Descriptions layout="horizontal">
+                  <Item span={1} label={<span>Mã ngành</span>}>
+                    <b> {rc.mangNguyenVong?.[1]?.maNganh ?? ''}</b>
+                  </Item>
+                  <Item span={2} label={<span>Tên ngành</span>}>
+                    <b> {rc.mangNguyenVong?.[1]?.tenNganh ?? ''}</b>
+                  </Item>
+                </Descriptions>
+                <Descriptions>
+                  <Item span={1} label={<span>Tổ hợp</span>}>
+                    <b>{rc.mangNguyenVong?.[1]?.toHop ?? ''}</b>
+                  </Item>
+
+                  <Item span={2} label={<span>Điểm TBC tổ hợp</span>}>
+                    <b>{rc.mangNguyenVong?.[1]?.diemTBCToHop ?? ''}</b>
+                  </Item>
+                </Descriptions>
+                <Descriptions>
+                  <Item
+                    span={3}
+                    label={
+                      <span style={{ fontWeight: 'bold' }}>
+                        Tên môn và điểm của từng môn theo tổ hợp
+                      </span>
+                    }
+                  >
+                    {' '}
+                  </Item>
+                </Descriptions>
+
+                <Table columns={columnDiemTB} dataSource={[]} size="small" pagination={false} />
+              </div>
+            )}
+            <br />
+            <Descriptions>
+              <Item
+                span={3}
+                label={
+                  <span style={{ fontWeight: 'bold' }}>
+                    {index++}. Đường dẫn file minh chứng hồ sơ học bạ{' '}
+                  </span>
+                }
+              >
+                {rc?.urlHoSoDinhKem &&
+                  rc?.urlHoSoDinhKem?.length !== 0 &&
+                  rc.urlHoSoDinhKem.map((x: string, indexFile: number) => (
+                    <a key={x} href={x} target="_blank" rel="noreferrer">
+                      <Tag style={{ marginTop: 8 }} color="#c01718">
+                        {' '}
+                        Xem tập tin {indexFile + 1}
+                      </Tag>
+                    </a>
+                  ))}
+              </Item>
+              <Item
+                span={3}
+                label={
+                  <span style={{ fontWeight: 'bold' }}>
+                    {index++}. Đường dẫn file minh chứng đặc cách{' '}
+                  </span>
+                }
+              >
+                {rc?.urlGiayChungNhanDacCach &&
+                  rc?.urlGiayChungNhanDacCach?.length !== 0 &&
+                  rc.urlGiayChungNhanDacCach.map((x: string, indexFile: number) => (
+                    <a key={x} href={x} target="_blank" rel="noreferrer">
+                      <Tag style={{ marginTop: 8 }} color="#c01718">
+                        {' '}
+                        Xem tập tin {indexFile + 1}
+                      </Tag>
+                    </a>
+                  ))}
+              </Item>
+            </Descriptions>
+
+            {/* {children} */}
+          </GridContent>
+        </Card>
+      </div>
+    </>
   );
 };
 

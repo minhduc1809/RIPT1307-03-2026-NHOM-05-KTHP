@@ -32,10 +32,24 @@
   position: relative;
   z-index: 1;
   width: 0;
-  background-image: url('../../../assets/metadata.jpg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  background-image: url('../../../assets/PTIT_Cover2.jpg');
+  // background-repeat: no-repeat;
+  // background-position: center center;
+  background-size: 100% 100%;
+}
+
+.iconhuongdan {
+  font-size: 25px;
+  color: #CC0D00 !important;
+  margin-right: 16px;
+  box-shadow: 0 1px 2px -2px rgb(0, 0, 0, 0.1), 0 3px 6px 0 rgb(0, 0, 0, 0.05),
+  0 5px 12px 4px #ccc !important
+}
+
+.containericonhuongdan {
+  position: absolute;
+  right: 8px;
+  top: 8px;
 }
 
 .main {
@@ -43,10 +57,10 @@
   width: 400px;
   min-height: 100vh;
   padding: 40px 40px 0px 40px;
-
+  position: relative;
   @media screen and (max-width: @screen-sm) {
     width: 95%;
-    max-width: 328px;
+    max-width: 450px;
   }
 
   :global {
@@ -91,9 +105,13 @@
   }
   .image {
     width: calc(100% - 400px);
+    // display: none;
   }
+
+  
+
   .main {
-    padding-top: 80px;
+    padding-top: 70px;
   }
 }
 
@@ -108,9 +126,10 @@
 
   .main {
     width: 450px;
-    padding-top: 80px;
+    padding-top: 70px;
   }
 }
+
 
 .top {
   text-align: center;
@@ -123,6 +142,8 @@
     text-decoration: none;
   }
 }
+
+
 
 .logo {
   height: 44px;
@@ -179,7 +200,7 @@
   // margin-left: 20%;
   justify-content: center;
   width: 100%;
-  height: 40px;
+  height: 38px;
   border: 1px solid #ccc !important;
   border-radius: 6px !important;
   @media screen and(max-width: @screen-xs) {
@@ -223,3 +244,5 @@
   font-size: 33px;
   color: #CC0D00;
 }
+
+

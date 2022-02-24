@@ -41,7 +41,7 @@ const DanhSachPhuongThuc = () => {
           <Button
             type="primary"
             onClick={() => {
-              history.push('/dangkyxettuyen');
+              history.push('/dotxettuyen');
               window.scroll({ top: 0 });
             }}
             icon={<ArrowRightOutlined />}

@@ -10,27 +10,27 @@ const LuaChonPhuongThuc = () => {
     {
       id: 1,
       title: 'Xét tuyển kết hợp theo đề án tuyển sinh của Học viện',
-      time: 'Kết thúc nộp hồ sơ tuyển sinh: Còn 23 ngày 0 giờ 11 phút 44 giây (18:00 09/02/2022)',
-      isCoHoSo: 'Thí sinh có hồ sơ xét tuyển',
+      time: 'Không có đợt nào',
+      isCoHoSo: 'Thí sinh không có hồ sơ xét tuyển',
       trangThai: 'Chưa khóa',
     },
     {
       id: 2,
       title: 'Xét tuyển kết hợp theo đề án tuyển sinh của Học viện',
-      time: 'Bắt đầu đăng ký xét tuyển: Còn 23 ngày 0 giờ 11 phút 44 giây (18:00 09/02/2022)',
+      time: 'Có 2 đợt đang diễn ra',
       isCoHoSo: 'Thí sinh không có hồ sơ xét tuyển',
     },
     {
       id: 3,
       title: 'Xét tuyển kết hợp theo đề án tuyển sinh của Học viện',
-      time: 'Kết thúc nộp hồ sơ tuyển sinh: Còn 23 ngày 0 giờ 11 phút 44 giây (18:00 09/02/2022)',
+      time: 'Có 1 đợt đang diễn ra',
       isCoHoSo: 'Thí sinh có hồ sơ xét tuyển',
       trangThai: 'Chưa khóa',
     },
     {
       id: 4,
       title: 'Xét tuyển kết hợp theo đề án tuyển sinh của Học viện',
-      time: 'Bắt đầu đăng ký xét tuyển: Còn 23 ngày 0 giờ 11 phút 44 giây (18:00 09/02/2022)',
+      time: 'Không có đợt nào',
       isCoHoSo: 'Thí sinh không có hồ sơ xét tuyển',
     },
   ];
@@ -75,7 +75,7 @@ const LuaChonPhuongThuc = () => {
                       onClick={() => {
                         localStorage.setItem('phuongThuc', item.id.toString());
                         localStorage.setItem('dot', item.id.toString());
-                        history.push('/hosothisinh/dottuyensinh/dot');
+                        history.push('/hosothisinh/phuongthucxettuyen/chitiet');
                       }}
                     >
                       <Button type="default" size="large" shape="circle">
@@ -86,8 +86,9 @@ const LuaChonPhuongThuc = () => {
                           <b>
                             Phương thức {index + 1}: {item?.title ?? ''}
                           </b>
-                          <div>{item.time}</div> <div>{item.isCoHoSo}</div>
-                          <div>Trạng thái: {item?.trangThai ?? ''}</div>
+                          <div>{item.time}</div>
+                          <div>{item.isCoHoSo}</div>
+                          {/* <div>Trạng thái: {item?.trangThai ?? ''}</div> */}
                         </div>
                       </div>
                     </div>
@@ -121,7 +122,6 @@ const LuaChonPhuongThuc = () => {
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   );

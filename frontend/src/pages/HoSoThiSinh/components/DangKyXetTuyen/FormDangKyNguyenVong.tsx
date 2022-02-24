@@ -34,33 +34,6 @@ const FormDangKyNguyenVong = () => {
           setVisibleFormNguyenVong(false);
         }}
       >
-        <Form.Item label="Chọn phương thức đăng ký xét tuyển" name="phuongthuc">
-          <Select
-            style={{ width: '100%' }}
-            placeholder="Phương thức xét tuyển"
-            // onChange={this.handleChange}
-            optionLabelProp="label"
-          >
-            {[
-              {
-                maHeThong: 'PT1',
-                _id: 1,
-                tenPhuongThuc:
-                  'Xét tuyển dựa trên kết quả học tập THPT dành cho thí sinh tham gia thi HSG quốc gia',
-              },
-            ]?.map((item, ind) => (
-              <Select.Option
-                key={item?.maHeThong}
-                value={`${item?.maHeThong}||${item?._id}`}
-                label={item?.tenPhuongThuc ?? ''}
-              >
-                <Tooltip placement="left" title={_.get(item, 'tenPhuongThuc', '')}>
-                  Phương thức {ind + 1}: {_.get(item, 'tenPhuongThuc', '')}
-                </Tooltip>
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
         <Form.Item label="Chọn ngành xét tuyển" name="maNganh">
           <Select
             // value={maNganh}
@@ -72,7 +45,7 @@ const FormDangKyNguyenVong = () => {
               {
                 tenNganh: 'Công nghệ thông tin',
                 maNganh: 'CNTT',
-                toHopXetTuyen: ['A00', 'A01', 'C00', 'C01'],
+                toHopXetTuyen: ['A00', 'A01', 'D01'],
               },
             ]?.map((item) => (
               <Select.Option
