@@ -13,6 +13,7 @@ const Stepper = () => {
   }, []);
   const onChangeStep = (step: number) => {
     setCurrent(step);
+    window.scroll({ top: 0 });
   };
   return (
     <Card title="Quy trình đăng ký">

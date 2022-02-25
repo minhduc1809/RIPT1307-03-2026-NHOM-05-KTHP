@@ -17,6 +17,8 @@ import moment from 'moment';
 import { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useModel } from 'umi';
+import mm from 'moment-timezone';
+mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const KhaiBaoThongTinCaNhan = () => {
   const [form] = Form.useForm();

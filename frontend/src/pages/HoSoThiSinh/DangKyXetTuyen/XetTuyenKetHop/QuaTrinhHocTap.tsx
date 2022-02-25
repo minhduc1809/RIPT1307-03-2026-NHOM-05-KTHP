@@ -1,5 +1,4 @@
 import { FormItem } from '@/components/FormItem';
-import TruongTHPT from '@/components/TruongTHPT';
 import Upload from '@/components/Upload/UploadMultiFile';
 import {
   doiTuongUuTienTuyenSinh,
@@ -25,7 +24,6 @@ import {
   InputNumber,
   Modal,
   Popconfirm,
-  Radio,
   Row,
   Select,
   Tooltip,
@@ -34,11 +32,12 @@ import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import InfoDoiTuongKhuVuc from '../components/InfoDoiTuongKhuVuc';
+import InfoTruongTHPT from '../components/InfoTruongTHPT';
 
-const QuaTrinhHocTap = () => {
+const QuaTrinhHocTapXetTuyenKetHop = () => {
   const { setCurrent } = useModel('hosothisinh');
   const [form] = Form.useForm();
-  const [isChuyenTruong, setIsChuyenTruong] = useState<boolean>(false);
+
   const [doiTuongXetTuyen, setDoiTuongXetTuyen] = useState<number>();
   const [toHop, setToHop] = useState<string[]>([]);
   const [arrMonHoc, setArrMonHoc] = useState<string[]>([]);
@@ -69,76 +68,7 @@ const QuaTrinhHocTap = () => {
       <Card bodyStyle={{ paddingTop: 0 }} bordered>
         <Form labelCol={{ span: 24 }} form={form} onFinish={(value) => {}}>
           <Row gutter={[20, 0]}>
-            <Divider plain>
-              <b>Thông tin về trường THPT mà bạn theo học</b>
-            </Divider>
-            <div style={{ width: '100%' }}>
-              <b style={{ marginRight: '12px' }}>
-                Bạn có chuyển trường trong thời gian học tập THPT không ?
-              </b>
-              <Radio.Group
-                onChange={(e) => {
-                  setIsChuyenTruong(e.target.value);
-                }}
-                value={isChuyenTruong}
-              >
-                <Radio value={false}>Không</Radio>
-                <Radio value={true}>Có</Radio>
-              </Radio.Group>
-            </div>
-            {!isChuyenTruong ? (
-              <Col span={24}>
-                <TruongTHPT
-                  form={form}
-                  fields={{
-                    tinh: ['diaChi', 'maTinh'],
-                    quanHuyen: ['diaChi', 'maQuanHuyen'],
-                    xaPhuong: ['diaChi', 'maPhuongXa'],
-                    diaChiCuThe: ['diaChi', 'soNhaTenDuong'],
-                  }}
-                  // setTen={{ setTenTinh, setTenQuanHuyen, setTenXaPhuong }}
-                />
-              </Col>
-            ) : (
-              <>
-                <Col span={24}>
-                  <b style={{ color: 'rgba(0, 0, 0, 0.85)', width: '100%' }}>Lớp 10</b>
-                  <TruongTHPT
-                    form={form}
-                    fields={{
-                      tinh: ['diaChi', 'maTinh'],
-                      quanHuyen: ['diaChi', 'maQuanHuyen'],
-                      xaPhuong: ['diaChi', 'maPhuongXa'],
-                      diaChiCuThe: ['diaChi', 'soNhaTenDuong'],
-                    }}
-                  />
-                </Col>
-                <Col style={{ marginTop: 20 }} span={24}>
-                  <b style={{ color: 'rgba(0, 0, 0, 0.85)', width: '100%' }}>Lớp 11</b>
-                  <TruongTHPT
-                    form={form}
-                    fields={{
-                      tinh: ['diaChi', 'maTinh'],
-                      quanHuyen: ['diaChi', 'maQuanHuyen'],
-                      xaPhuong: ['diaChi', 'maPhuongXa'],
-                      diaChiCuThe: ['diaChi', 'soNhaTenDuong'],
-                    }}
-                  />
-                </Col>
-                <Col style={{ marginTop: 20 }} span={24}>
-                  <b style={{ color: 'rgba(0, 0, 0, 0.85)', width: '100%' }}>Lớp 12</b>
-                  <TruongTHPT
-                    form={form}
-                    fields={{
-                      tinh: ['diaChi', 'maTinh'],
-                      quanHuyen: ['diaChi', 'maQuanHuyen'],
-                      xaPhuong: ['diaChi', 'maPhuongXa'],
-                      diaChiCuThe: ['diaChi', 'soNhaTenDuong'],
-                    }}
-                  />
-                </Col>
-              </>
-            )}
+            <InfoTruongTHPT form={form} />
             <Divider />
             <Col xs={24} lg={8}>
               <FormItem
@@ -299,12 +229,7 @@ const QuaTrinhHocTap = () => {
 
                     {arrMonHoc?.map((mon) => (
                       <Col key={mon} xs={12} sm={12} md={8}>
-                        <FormItem
-                          labelCol={{ span: 24 }}
-                          wrapperCol={{ span: 24 }}
-                          label={mon}
-                          style={{ width: '100%', marginBottom: '0' }}
-                        >
+                        <FormItem label={mon} style={{ width: '100%' }}>
                           <InputNumber
                             placeholder="Số thập phân dạng 0.0"
                             min={0}
@@ -314,6 +239,16 @@ const QuaTrinhHocTap = () => {
                         </FormItem>
                       </Col>
                     ))}
+                    <Col xs={12} sm={12} md={8}>
+                      <FormItem label="Tổng kết" style={{ width: '100%' }}>
+                        <InputNumber
+                          placeholder="Số thập phân dạng 0.0"
+                          min={0}
+                          max={10}
+                          style={{ width: '100%' }}
+                        />
+                      </FormItem>
+                    </Col>
                   </>
                 ))}
               </>
@@ -333,19 +268,8 @@ const QuaTrinhHocTap = () => {
               },
             ].map((item) => (
               <Col key={item.label} xs={12} sm={12} md={8}>
-                <FormItem
-                  labelCol={{ span: 24 }}
-                  wrapperCol={{ span: 24 }}
-                  label={item.label}
-                  name={item.name}
-                  style={{ width: '100%', marginBottom: '0' }}
-                >
-                  <Select
-                    showSearch
-                    placeholder="Chọn loại hạnh kiểm"
-                    allowClear
-                    style={{ width: '100%' }}
-                  >
+                <FormItem label={item.label} name={item.name}>
+                  <Select showSearch placeholder="Chọn loại hạnh kiểm" allowClear>
                     {hanhKiem.map((val) => (
                       <Select.Option key={val} value={val}>
                         {val}
@@ -360,13 +284,7 @@ const QuaTrinhHocTap = () => {
               <b>File minh chứng</b>
             </Divider>
             <Col xs={24} lg={12}>
-              <FormItem
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-                name="fileHoSoHocBa"
-                label={<b>Phiếu điểm hoặc học bạ</b>}
-                style={{ width: '100%', marginBottom: '0' }}
-              >
+              <FormItem name="fileHoSoHocBa" label={<b>Phiếu điểm hoặc học bạ</b>}>
                 <Upload
                   otherProps={{
                     accept: 'application/pdf, image/png, .jpg',
@@ -378,13 +296,7 @@ const QuaTrinhHocTap = () => {
               </FormItem>
             </Col>
             <Col xs={24} lg={12}>
-              <FormItem
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-                label={<b>Giấy tờ đối tượng ưu tiên</b>}
-                style={{ width: '100%', marginBottom: '0' }}
-                name="fileDoiTuongUuTien"
-              >
+              <FormItem label={<b>Giấy tờ đối tượng ưu tiên</b>} name="fileDoiTuongUuTien">
                 <Upload
                   otherProps={{
                     accept: 'application/pdf, image/png, .jpg',
@@ -432,13 +344,7 @@ const QuaTrinhHocTap = () => {
                   </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem
-                    labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}
-                    label={<b>Chứng chỉ đính kèm</b>}
-                    style={{ width: '100%', marginBottom: '0' }}
-                    name="fileChungChiQuocTe"
-                  >
+                  <FormItem label={<b>Chứng chỉ đính kèm</b>} name="fileChungChiQuocTe">
                     <Upload
                       otherProps={{
                         accept: 'application/pdf, image/png, .jpg',
@@ -489,13 +395,7 @@ const QuaTrinhHocTap = () => {
                   </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem
-                    labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}
-                    label={<b>Chứng chỉ đính kèm</b>}
-                    style={{ width: '100%', marginBottom: '0' }}
-                    name="fileChungChiQuocTe"
-                  >
+                  <FormItem label={<b>Chứng chỉ đính kèm</b>} name="fileChungChiQuocTe">
                     <Upload
                       otherProps={{
                         accept: 'application/pdf, image/png, .jpg',
@@ -552,13 +452,7 @@ const QuaTrinhHocTap = () => {
                   </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem
-                    labelCol={{ span: 24 }}
-                    wrapperCol={{ span: 24 }}
-                    label={<b>Bằng khen đính kèm</b>}
-                    style={{ width: '100%', marginBottom: '0' }}
-                    name="fileBangKhen"
-                  >
+                  <FormItem label={<b>Bằng khen đính kèm</b>} name="fileBangKhen">
                     <Upload
                       otherProps={{
                         accept: 'application/pdf, image/png, .jpg',
@@ -637,4 +531,4 @@ const QuaTrinhHocTap = () => {
   );
 };
 
-export default QuaTrinhHocTap;
+export default QuaTrinhHocTapXetTuyenKetHop;

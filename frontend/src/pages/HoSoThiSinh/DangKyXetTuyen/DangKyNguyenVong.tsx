@@ -6,7 +6,7 @@ import { ArrowLeftOutlined, CheckOutlined, SaveOutlined } from '@ant-design/icon
 const DangKyNguyenVong = () => {
   const { danhSachNguyenVong, setCurrent } = useModel('hosothisinh');
   return (
-    <Form onFinish={(values) => {}}>
+    <Form style={{ backgroundColor: '#fff', padding: 24 }} onFinish={(values) => {}}>
       <TableNguyenVong />
       <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 8 }}>
         <Popconfirm

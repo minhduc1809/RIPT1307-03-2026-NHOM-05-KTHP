@@ -1,5 +1,5 @@
 import Timeline from '@/components/Timeline';
-import { Card, Col, Row } from 'antd';
+import { Col, Row } from 'antd';
 import { useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import Sticky from 'react-stickynode';
@@ -18,31 +18,29 @@ const NhapHoc = () => {
     getAllTonGiao();
   }, []);
   return (
-    <Card title="Nhập học">
-      <Row gutter={12}>
-        <Col xs={24} lg={6} xl={5}>
-          {isMdScreen ? (
-            <Sticky top={60} bottomBoundary="#content">
-              <div>
-                <ThongTinCaNhan />
-                <Stepper />
-              </div>
-            </Sticky>
-          ) : (
+    <Row gutter={12}>
+      <Col xs={24} lg={6} xl={5}>
+        {isMdScreen ? (
+          <Sticky top={60} bottomBoundary="#content">
             <div>
               <ThongTinCaNhan />
               <Stepper />
             </div>
-          )}
-        </Col>
-        <Col xs={24} lg={18} xl={19}>
-          <div id="content">
-            <Timeline />
-            <Content />
+          </Sticky>
+        ) : (
+          <div>
+            <ThongTinCaNhan />
+            <Stepper />
           </div>
-        </Col>
-      </Row>{' '}
-    </Card>
+        )}
+      </Col>
+      <Col xs={24} lg={18} xl={19}>
+        <div id="content">
+          <Timeline />
+          <Content />
+        </div>
+      </Col>
+    </Row>
   );
 };
 

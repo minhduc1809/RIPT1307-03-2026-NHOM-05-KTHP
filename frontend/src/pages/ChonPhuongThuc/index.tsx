@@ -1,4 +1,3 @@
-import Footer from '@/components/Footer';
 import GlobalFooter from '@/components/GlobalFooter';
 import Header from '@/components/Header';
 import { Button, Divider, Select } from 'antd';
@@ -76,7 +75,6 @@ const LuaChonPhuongThuc = () => {
                       className={styles.answer}
                       onClick={() => {
                         localStorage.setItem('phuongThuc', item.id.toString());
-                        localStorage.setItem('dot', item.id.toString());
                         history.push('/hosothisinh/phuongthucxettuyen/chitiet');
                       }}
                     >

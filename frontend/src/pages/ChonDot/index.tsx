@@ -45,7 +45,6 @@ const LuaChonDotXetTuyen = () => {
                       key={item.id}
                       className={styles.answer}
                       onClick={() => {
-                        localStorage.setItem('phuongThuc', item.id.toString());
                         localStorage.setItem('dot', item.id.toString());
                         history.push('/dangkyxettuyen');
                       }}
