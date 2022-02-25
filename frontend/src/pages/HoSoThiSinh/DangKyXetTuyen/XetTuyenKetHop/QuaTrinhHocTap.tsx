@@ -33,7 +33,7 @@ import {
 import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
-import InfoDoiTuongKhuVuc from './InfoDoiTuongKhuVuc';
+import InfoDoiTuongKhuVuc from '../components/InfoDoiTuongKhuVuc';
 
 const QuaTrinhHocTap = () => {
   const { setCurrent } = useModel('hosothisinh');
@@ -402,7 +402,7 @@ const QuaTrinhHocTap = () => {
                   <b>Thông tin về chứng chỉ quốc tế</b>
                 </Divider>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <Form.Item label="Loại chứng chỉ quốc tế" name="loaiChungChiQuocTe">
+                  <FormItem label="Loại chứng chỉ quốc tế" name="loaiChungChiQuocTe">
                     <Select style={{ width: '100%' }} placeholder="Chọn loại chứng chỉ quốc tế">
                       {Object.values(ELoaiChungChiQuocTe).map((item) => (
                         <Select.Option key={item} value={item}>
@@ -410,26 +410,26 @@ const QuaTrinhHocTap = () => {
                         </Select.Option>
                       ))}
                     </Select>
-                  </Form.Item>
+                  </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <Form.Item label="Điểm thi" name="diemThiChungChiQuocTe">
+                  <FormItem label="Điểm thi" name="diemThiChungChiQuocTe">
                     <InputNumber placeholder="Nhập điểm thi" style={{ width: '100%' }} />
-                  </Form.Item>
+                  </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <Form.Item label="Ngày cấp chứng chỉ" name="ngayCapChungChiQuocTe">
+                  <FormItem label="Ngày cấp chứng chỉ" name="ngayCapChungChiQuocTe">
                     <DatePicker
                       style={{ width: '100%' }}
                       format="DD/MM/YYYY"
                       disabledDate={(val) => moment(val).isAfter(moment())}
                     />
-                  </Form.Item>
+                  </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <Form.Item label="Đơn vị cấp chứng chỉ" name="donViCapChungChiQuocTe">
+                  <FormItem label="Đơn vị cấp chứng chỉ" name="donViCapChungChiQuocTe">
                     <Input placeholder="Nhập đơn vị cấp chứng chỉ" />
-                  </Form.Item>
+                  </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
                   <FormItem
@@ -458,7 +458,7 @@ const QuaTrinhHocTap = () => {
                   <b>Thông tin về chứng chỉ ngoại ngữ</b>
                 </Divider>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <Form.Item label="Loại chứng chỉ ngoại ngữ" name="loaiChungChiNgoaiNgu">
+                  <FormItem label="Loại chứng chỉ ngoại ngữ" name="loaiChungChiNgoaiNgu">
                     <Select style={{ width: '100%' }} placeholder="Chọn loại chứng chỉ ngoại ngữ">
                       {Object.values(ELoaiChungChiNgoaiNgu).map((item) => (
                         <Select.Option key={item} value={item}>
@@ -466,27 +466,27 @@ const QuaTrinhHocTap = () => {
                         </Select.Option>
                       ))}
                     </Select>
-                  </Form.Item>
+                  </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <Form.Item label="Điểm thi" name="diemThiChungChiNgoaiNgu">
+                  <FormItem label="Điểm thi" name="diemThiChungChiNgoaiNgu">
                     <InputNumber placeholder="Nhập điểm thi" style={{ width: '100%' }} />
-                  </Form.Item>
+                  </FormItem>
                 </Col>
 
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <Form.Item label="Ngày cấp chứng chỉ" name="ngayCapChungChiNgoaiNgu">
+                  <FormItem label="Ngày cấp chứng chỉ" name="ngayCapChungChiNgoaiNgu">
                     <DatePicker
                       style={{ width: '100%' }}
                       format="DD/MM/YYYY"
                       disabledDate={(val) => moment(val).isAfter(moment())}
                     />
-                  </Form.Item>
+                  </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <Form.Item label="Đơn vị cấp chứng chỉ" name="donViCapChungChiNgoaiNgu">
+                  <FormItem label="Đơn vị cấp chứng chỉ" name="donViCapChungChiNgoaiNgu">
                     <Input placeholder="Nhập đơn vị cấp chứng chỉ" />
-                  </Form.Item>
+                  </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
                   <FormItem
@@ -515,7 +515,7 @@ const QuaTrinhHocTap = () => {
                   <b>Thông tin về giải HSG cấp Tỉnh/quốc gia</b>
                 </Divider>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <Form.Item label="Môn đoạt giải" name="monDoatGiaiHSG">
+                  <FormItem label="Môn đoạt giải" name="monDoatGiaiHSG">
                     <Select style={{ width: '100%' }} placeholder="Chọn môn đoạt giải">
                       {Object.values(EMonThiHSG).map((item) => (
                         <Select.Option key={item} value={item}>
@@ -523,10 +523,10 @@ const QuaTrinhHocTap = () => {
                         </Select.Option>
                       ))}
                     </Select>
-                  </Form.Item>
+                  </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <Form.Item label="Loại giải" name="loaiGiai">
+                  <FormItem label="Loại giải" name="loaiGiai">
                     <Select style={{ width: '100%' }} placeholder="Chọn loại giải">
                       {Object.values(EGiaiHSG).map((item) => (
                         <Select.Option key={item} value={item}>
@@ -534,22 +534,22 @@ const QuaTrinhHocTap = () => {
                         </Select.Option>
                       ))}
                     </Select>
-                  </Form.Item>
+                  </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <Form.Item label="Năm đoạt giải" name="namDoatGiai">
+                  <FormItem label="Năm đoạt giải" name="namDoatGiai">
                     <InputNumber
                       placeholder="Nhập năm đoạt giải"
                       max={2100}
                       min={2010}
                       style={{ width: '100%' }}
                     />
-                  </Form.Item>
+                  </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <Form.Item label="Nơi cấp giải" name="noiCapGiai">
+                  <FormItem label="Nơi cấp giải" name="noiCapGiai">
                     <Input placeholder="Nhập nơi cấp giải" style={{ width: '100%' }} />
-                  </Form.Item>
+                  </FormItem>
                 </Col>
                 <Col xs={24} md={8} lg={6} sm={12}>
                   <FormItem

@@ -1,11 +1,12 @@
 import Timeline from '@/components/Timeline';
-import { Row, Col, Affix, Card } from 'antd';
-import Content from './Content';
-import Stepper from './Steps';
-import ThongTinCaNhan from '../DangKyXetTuyen/ThongTinCaNhan';
-import { useModel } from 'umi';
+import { Card, Col, Row } from 'antd';
 import { useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import Sticky from 'react-stickynode';
+import { useModel } from 'umi';
+import ThongTinCaNhan from '../DangKyXetTuyen/components/ThongTinCaNhan';
+import Content from './Content';
+import Stepper from './Steps';
 
 const NhapHoc = () => {
   const isMdScreen = useMediaQuery({
@@ -21,12 +22,12 @@ const NhapHoc = () => {
       <Row gutter={12}>
         <Col xs={24} lg={6} xl={5}>
           {isMdScreen ? (
-            <Affix offsetTop={60}>
+            <Sticky top={60} bottomBoundary="#content">
               <div>
                 <ThongTinCaNhan />
                 <Stepper />
               </div>
-            </Affix>
+            </Sticky>
           ) : (
             <div>
               <ThongTinCaNhan />
@@ -35,8 +36,10 @@ const NhapHoc = () => {
           )}
         </Col>
         <Col xs={24} lg={18} xl={19}>
-          <Timeline />
-          <Content />
+          <div id="content">
+            <Timeline />
+            <Content />
+          </div>
         </Col>
       </Row>{' '}
     </Card>

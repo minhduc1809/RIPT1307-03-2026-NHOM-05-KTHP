@@ -1,8 +1,8 @@
 import { useModel } from 'umi';
 import DangKyNguyenVong from './DangKyNguyenVong';
 import KhaiBaoThongTinCaNhan from './KhaiBaoThongTinCaNhan';
-import QuaTrinhHocTap from './QuaTrinhHocTap';
-import RaSoatHoSo from './RaSoatHoSo';
+import QuaTrinhHocTap from './XetTuyenKetHop/QuaTrinhHocTap';
+import RaSoatHoSo from './XetTuyenKetHop/RaSoatHoSo';
 
 const Content = () => {
   const { current } = useModel('hosothisinh');

@@ -1,4 +1,5 @@
 import Footer from '@/components/Footer';
+import GlobalFooter from '@/components/GlobalFooter';
 import Header from '@/components/Header';
 import { Button, Divider, Select } from 'antd';
 import { history, useModel } from 'umi';
@@ -9,27 +10,28 @@ const LuaChonPhuongThuc = () => {
   const danhSachDotTuyenSinh = [
     {
       id: 1,
-      title: 'Xét tuyển kết hợp theo đề án tuyển sinh của Học viện',
+      title:
+        'Xét tuyển thẳng theo quy chế tuyển sinh của Bộ GD&ĐT và theo Đề án tuyển sinh của Học viện',
       time: 'Không có đợt nào',
       isCoHoSo: 'Thí sinh không có hồ sơ xét tuyển',
       trangThai: 'Chưa khóa',
     },
     {
       id: 2,
-      title: 'Xét tuyển kết hợp theo đề án tuyển sinh của Học viện',
+      title: 'Xét tuyển dựa vào kết quả thi tốt nghiệp THPT năm 2022',
       time: 'Có 2 đợt đang diễn ra',
       isCoHoSo: 'Thí sinh không có hồ sơ xét tuyển',
     },
     {
       id: 3,
-      title: 'Xét tuyển kết hợp theo đề án tuyển sinh của Học viện',
+      title: 'Xét tuyển kết hợp theo Đề án tuyển sinh của Học viện',
       time: 'Có 1 đợt đang diễn ra',
       isCoHoSo: 'Thí sinh có hồ sơ xét tuyển',
       trangThai: 'Chưa khóa',
     },
     {
       id: 4,
-      title: 'Xét tuyển kết hợp theo đề án tuyển sinh của Học viện',
+      title: 'Xét tuyển dựa vào kết quả các kỳ thi đánh giá năng lực',
       time: 'Không có đợt nào',
       isCoHoSo: 'Thí sinh không có hồ sơ xét tuyển',
     },
@@ -122,7 +124,7 @@ const LuaChonPhuongThuc = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      <GlobalFooter />
     </>
   );
 };

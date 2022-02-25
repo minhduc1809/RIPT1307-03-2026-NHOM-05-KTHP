@@ -1,5 +1,5 @@
 import { Popconfirm, Button, Form } from 'antd';
-import TableNguyenVong from './TableNguyenVong';
+import TableNguyenVong from './components/TableNguyenVong';
 import { useModel } from 'umi';
 import { ArrowLeftOutlined, CheckOutlined, SaveOutlined } from '@ant-design/icons';
 

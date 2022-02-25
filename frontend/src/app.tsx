@@ -1,4 +1,3 @@
-import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
@@ -7,6 +6,7 @@ import 'moment/locale/vi';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
+import GlobalFooter from './components/GlobalFooter';
 import NotAccessible from './pages/exception/403';
 import NotFoundContent from './pages/exception/404';
 import { getInfo, getInfoAdmin } from './services/ant-design-pro/api';
@@ -131,8 +131,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     waterMarkProps: {
       content: initialState?.currentUser?.name,
     },
-
-    footerRender: () => <Footer />,
+    // headerRender: (props, dom) => <div style={{ backgroundColor: '#CC0D00' }}>{dom}</div>,
+    isMobile: true,
+    footerRender: () => <GlobalFooter />,
     onPageChange: () => {
       const { location } = history;
       const token = localStorage.getItem('token');
@@ -158,25 +159,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       );
     },
 
-    // childrenRender: (dom) => {
-    //   return (
-    //     <>
-    //       {dom}
-    //       <SettingDrawer
-    //         hideCopyButton
-    //         hideHintAlert
-    //         settings={initialState?.settings}
-    //         disableUrlParams
-    //         onSettingChange={(nextSettings) => {
-    //           return setInitialState({
-    //             ...initialState,
-    //             settings: nextSettings,
-    //           });
-    //         }}
-    //       />
-    //     </>
-    //   );
-    // },
     menuHeaderRender: undefined,
     ...initialState?.settings,
     title: 'Xét tuyển PTIT',

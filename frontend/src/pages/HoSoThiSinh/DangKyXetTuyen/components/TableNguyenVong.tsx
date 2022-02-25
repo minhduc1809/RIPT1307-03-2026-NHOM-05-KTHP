@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import { useModel } from 'umi';
-import FormDangKyNguyenVong from './FormDangKyNguyenVong';
+import FormDangKyNguyenVong from '../FormDangKyNguyenVong';
 
 const TableNguyenVong = () => {
   const {

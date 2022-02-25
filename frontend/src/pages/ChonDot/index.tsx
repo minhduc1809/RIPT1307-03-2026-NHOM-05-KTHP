@@ -1,4 +1,4 @@
-import Footer from '@/components/Footer';
+import GlobalFooter from '@/components/GlobalFooter';
 import Header from '@/components/Header';
 import styles from '@/pages/ChonPhuongThuc/index.css';
 import { Button, Divider } from 'antd';
@@ -88,9 +88,8 @@ const LuaChonDotXetTuyen = () => {
           </div>
         </div>
       </div>
-      <div style={{ width: '100%', position: 'absolute', bottom: 0, left: 0 }}>
-        <Footer />
-      </div>
+
+      <GlobalFooter />
     </>
   );
 };
