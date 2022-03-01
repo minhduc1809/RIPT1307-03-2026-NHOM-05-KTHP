@@ -151,10 +151,12 @@ export default defineConfig({
         {
           name: 'QuanLyNamTuyenSinh',
           path: './quanlynamtuyensinh',
+          component: './NamTuyenSinh',
         },
         {
           name: 'QuanLyPhuongThucXetTuyen',
           path: './quanlyphuongthucxettuyen',
+          component: './PhuongThucTuyenSinh',
         },
         {
           name: 'ToChucTuyenSinh',
@@ -254,28 +256,22 @@ export default defineConfig({
         },
       ],
     },
-    {
-      name: 'BieuMau',
-      icon: 'FileDoneOutlined',
-      path: '/bieumau',
-      access: 'admin',
-      routes: [
-        {
-          name: 'KhaoSat',
-          path: './khaosat',
-          component: './BieuMau/KhaoSat',
-          access: 'admin',
-          maChucNang: 'khao-sat:read',
-        },
-        // {
-        //   name: 'KhaiBaoSucKhoe',
-        //   path: './khaibaosuckhoe',
-        //   component: './BieuMau/KhaiBaoSucKhoe',
-        //   access: 'adminVaQuanTri',
-        //   maChucNang: 'khao-sat:read',
-        // },
-      ],
-    },
+    // {
+    //   name: 'BieuMau',
+    //   icon: 'FileDoneOutlined',
+    //   path: '/bieumau',
+    //   access: 'admin',
+    //   routes: [
+    //     {
+    //       name: 'KhaoSat',
+    //       path: './khaosat',
+    //       component: './BieuMau/KhaoSat',
+    //       access: 'admin',
+    //       maChucNang: 'khao-sat:read',
+    //     },
+
+    //   ],
+    // },
     {
       path: '/',
       redirect: '/user/login',

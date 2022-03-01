@@ -178,6 +178,10 @@ const rules = {
       },
       message: 'Hãy nhập nội dung',
     },
+    {
+      required: true,
+      message: 'Bắt buộc',
+    },
   ],
   fileRequired: [
     {

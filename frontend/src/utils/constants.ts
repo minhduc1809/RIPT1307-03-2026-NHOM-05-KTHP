@@ -88,6 +88,12 @@ export const DoiTuongXetTuyen = [
   },
 ];
 
+export enum ELoaiPhuongThucTuyenSinh {
+  XET_TUYEN_THANG_BGD = 'Xét tuyển thăng BGD',
+  THI_THPT = 'Thi THPT',
+  KET_HOP = 'Kết hợp',
+}
+
 export const Setting = {
   navTheme: 'dark',
   primaryColor: '#CC0D00',

@@ -2,8 +2,10 @@
 import { getPhanNhomUserCurrent } from '@/services/PhanQuyen/phanquyen';
 import { uploadFile } from '@/services/uploadFile';
 import { message } from 'antd';
+import axios from 'axios';
 import moment from 'moment';
 import { useModel } from 'umi';
+import { ip3 } from './ip';
 
 const reg =
   /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -279,3 +281,12 @@ export const checkFileSize = (arrFile: any[]) => {
     });
   return check;
 };
+
+export async function getURLImg(payload: any) {
+  const form = new FormData();
+  // eslint-disable-next-line array-callback-return
+  Object.keys(payload).map((key) => {
+    form.set(key, payload[key]);
+  });
+  return axios.post(`${ip3}/file/image/single`, form);
+}
