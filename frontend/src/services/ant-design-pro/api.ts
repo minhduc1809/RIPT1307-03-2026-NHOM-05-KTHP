@@ -4,7 +4,7 @@ import axios from '@/utils/axios';
 import { ip3 } from '@/utils/ip';
 
 export async function getInfo() {
-  return axios.get(`${ip3}/odoo-user/me/profile`);
+  return axios.get(`${ip3}/user/me`);
 }
 
 export async function getInfoSinhVien() {
@@ -19,8 +19,8 @@ export async function getInfoAdmin() {
   return axios.get(`${ip3}/user/me`);
 }
 
-export async function login(payload: { login?: string; password?: string }) {
-  return axios.post(`${ip3}/odoo-auth/login/web`, payload);
+export async function login(payload: { username?: string; password?: string }) {
+  return axios.post(`${ip3}/auth/login/web`, payload);
 }
 
 export async function adminlogin(payload: { username?: string; password?: string }) {

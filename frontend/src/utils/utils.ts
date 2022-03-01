@@ -1,5 +1,5 @@
 /* eslint-disable no-return-assign */
-// import { getPhanNhomUserCurrent } from '@/services/PhanQuyen/phanquyen';
+import { getPhanNhomUserCurrent } from '@/services/PhanQuyen/phanquyen';
 import { uploadFile } from '@/services/uploadFile';
 import { message } from 'antd';
 import moment from 'moment';
@@ -204,15 +204,15 @@ export function includes(str1: string, str2: string) {
   return Format(str1).includes(Format(str2));
 }
 
-// export async function getPhanNhom() {
-//   const vaiTro = localStorage.getItem('vaiTro');
-//   const token = localStorage.getItem('token');
-//   let response: any = {};
-//   if (token && vaiTro) {
-//     response = await getPhanNhomUserCurrent();
-//   }
-//   return response?.data?.data ?? {};
-// }
+export async function getPhanNhom() {
+  const vaiTro = localStorage.getItem('vaiTro');
+  const token = localStorage.getItem('token');
+  let response: any = {};
+  if (token && vaiTro) {
+    response = await getPhanNhomUserCurrent();
+  }
+  return response?.data?.data ?? {};
+}
 
 export function handlePhanNhom(initialState: any, code: string, idDoiTuong?: string) {
   let flag = false;

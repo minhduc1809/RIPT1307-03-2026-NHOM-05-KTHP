@@ -12,8 +12,6 @@ import NotFoundContent from './pages/exception/404';
 import { getInfo, getInfoAdmin } from './services/ant-design-pro/api';
 import data from './utils/data';
 
-// import { getPhanNhom } from './utils/utils';
-
 const loginPath = '/user/login';
 const pathAuth = ['/admin/login'];
 /**  loading */
@@ -63,13 +61,14 @@ export async function getInitialState(): Promise<{
   };
 
   if (history.location.pathname !== loginPath) {
-    const currentUser = await fetchUserInfo();
+    const currentUser: Login.Profile & Login.ProfileAdmin = await fetchUserInfo();
     // const phanNhom = await getPhanNhom();
     return {
       fetchUserInfo,
       currentUser,
       settings: {
         primaryColor: 'daybreak',
+        layout: currentUser?.systemRole === 'Admin' ? 'side' : 'top',
       },
       authorizedRoles: [],
       // phanNhom,
@@ -129,7 +128,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.ten,
     },
     // headerRender: (props, dom) => <div style={{ backgroundColor: '#CC0D00' }}>{dom}</div>,
     isMobile: true,

@@ -86,4 +86,6 @@ export default {
   'menu.QuanTriChung.QuanLyHoSo': 'Quản lý hồ sơ',
   'menu.QuanTriChung.ToChucTuyenSinh.DotTuyenSinh': 'Đợt tuyển sinh',
   'menu.QuanTriChung.ToChucTuyenSinh.DotNhapHoc': 'Đợt nhập học',
+  'menu.BieuMau': 'Biểu mẫu',
+  'menu.BieuMau.KhaoSat': 'Khảo sát',
 };

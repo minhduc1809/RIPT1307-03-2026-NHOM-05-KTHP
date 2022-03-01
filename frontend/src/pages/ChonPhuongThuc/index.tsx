@@ -55,7 +55,7 @@ const LuaChonPhuongThuc = () => {
             <div style={{ width: 1000 }}>
               <div className={styles.content}>
                 <div className={styles['content-top']}>
-                  <b style={{ fontSize: 18 }}>Xin chào {initialState?.currentUser?.name},</b>
+                  <b style={{ fontSize: 18 }}>Xin chào {initialState?.currentUser?.ten},</b>
                   <div>
                     Bạn đang tham gia xét tuyển vào Học viện Công nghệ Bưu chính viễn thông hệ Đại
                     học Chính quy

@@ -5,10 +5,9 @@ const data: any = {
     { value: 'NOT_OK', text: 'Không duyệt' },
   ],
   path: {
-    sinh_vien: '/phuongthucxettuyen',
-    nhan_vien: '/dashboard',
+    ThiSinh: '/phuongthucxettuyen',
+    ChuyenVien: '/dashboard',
     Admin: '/baivietchung',
-    quan_tri: '/dashboard',
   },
   doiTuong: ['Vai trò', 'Tất cả'],
   vaiTro: [

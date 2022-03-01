@@ -95,7 +95,8 @@
     "styled-components": "^5.3.3",
     "tinymce": "^5.10.0",
     "umi": "^3.5.0",
-    "umi-serve": "^1.9.10"
+    "umi-serve": "^1.9.10",
+    "xlsx": "^0.18.2"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^2.0.2",

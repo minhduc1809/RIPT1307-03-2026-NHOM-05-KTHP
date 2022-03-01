@@ -1,8 +1,9 @@
 import logoGoogle from '@/assets/googleicon.png';
-import { adminlogin, getInfo, getInfoAdmin, login } from '@/services/ant-design-pro/api';
+import logo from '@/assets/logo.png';
+import Footer from '@/components/Footer';
+import { getInfo, login } from '@/services/ant-design-pro/api';
 import { Setting } from '@/utils/constants';
 import data from '@/utils/data';
-// import { getPhanNhom } from '@/utils/utils';
 import {
   FileExcelOutlined,
   FileTextOutlined,
@@ -17,12 +18,10 @@ import viVN from 'antd/lib/locale/vi_VN';
 import React, { useState } from 'react';
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
+import { useMediaQuery } from 'react-responsive';
 import { FormattedMessage, history, Link, useIntl, useModel } from 'umi';
 import Register from '../register';
 import styles from './index.less';
-import logo from '@/assets/logo.png';
-import Footer from '@/components/Footer';
-import { useMediaQuery } from 'react-responsive';
 
 const goto = () => {
   if (!history) return;
@@ -52,44 +51,28 @@ const Login: React.FC = () => {
       defaultMessage: 'success',
     });
     localStorage.setItem('token', role?.accessToken);
-    localStorage.setItem('vaiTro', role?.user?.vai_tro);
+    localStorage.setItem('vaiTro', role?.user?.systemRole);
     const info = await getInfo();
     // const phanNhom = await getPhanNhom();
     setInitialState({
       ...initialState,
       currentUser: info?.data?.data ?? {},
+      settings: {
+        primaryColor: 'daybreak',
+        layout: role?.user?.systemRole === 'Admin' ? 'side' : 'top',
+      },
       // phanNhom,
     });
     message.success(defaultloginSuccessMessage);
-    history.push(data?.path?.[role?.user?.vai_tro] ?? '/');
+    history.push(data?.path?.[role?.user?.systemRole || 'guest'] ?? '/');
   };
 
-  const handleSubmit = async (values: { login: string; password: string }) => {
+  const handleSubmit = async (values: { username: string; password: string }) => {
     setSubmitting(true);
     try {
-      if (type === 'account') {
-        const msg = await login({ ...values });
-        if (msg.status === 201) {
-          handleRole(msg?.data?.data);
-        }
-      } else {
-        const msg = await adminlogin({ ...values, username: values?.login ?? '' });
-        if (msg.status === 201 && msg?.data?.data?.accessToken) {
-          const defaultloginSuccessMessage = intl.formatMessage({
-            id: 'pages.login.success',
-            defaultMessage: 'success',
-          });
-          localStorage.setItem('token', msg?.data?.data?.accessToken);
-          localStorage.setItem('vaiTro', msg?.data?.data.user.systemRole);
-          const info = await getInfoAdmin();
-          setInitialState({
-            ...initialState,
-            currentUser: info?.data?.data,
-          });
-          message.success(defaultloginSuccessMessage);
-          history.push(data?.path?.[msg?.data?.data?.user?.systemRole] ?? '/');
-          return;
-        }
+      const msg = await login({ ...values });
+      if (msg.status === 201) {
+        handleRole(msg?.data?.data);
       }
     } catch (error) {
       const defaultloginFailureMessage = intl.formatMessage({
@@ -246,7 +229,7 @@ const Login: React.FC = () => {
                   },
                 }}
                 onFinish={async (values) => {
-                  handleSubmit(values as { login: string; password: string });
+                  handleSubmit(values as { username: string; password: string });
                 }}
               >
                 <Tabs activeKey={type} onChange={setType}>
@@ -262,7 +245,7 @@ const Login: React.FC = () => {
                 {type === 'account' && (
                   <>
                     <ProFormText
-                      name="login"
+                      name="username"
                       fieldProps={{
                         style: { borderRadius: 5 },
                         size: 'large',
