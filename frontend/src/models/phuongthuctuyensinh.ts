@@ -1,8 +1,11 @@
 import useInitModel from '@/hooks/useInitModel';
 import {
+  deletePhuongThucTuyenSinh,
   getAllPhuongThucTuyenSinh,
+  getPhuongThucTuyenSinhById,
   getPhuongThucTuyenSinhPageable,
   postPhuongThucTuyenSinh,
+  putPhuongThucTuyenSinh,
 } from '@/services/PhuongThucTuyenSinh/phuongthuctuyensinh';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -28,6 +31,13 @@ export default () => {
     setLoading(false);
   };
 
+  const getPhuongThucTuyenSinhByIdModel = async (idPhuongThuc: string) => {
+    setLoading(true);
+    const response = await getPhuongThucTuyenSinhById(idPhuongThuc);
+    setRecord(response?.data?.data);
+    setLoading(false);
+  };
+
   const postPhuongThucTuyenSinhModel = async (payload: PhuongThucTuyenSinh.Record) => {
     try {
       setLoading(true);
@@ -41,7 +51,35 @@ export default () => {
     }
   };
 
+  const putPhuongThucTuyenSinhModel = async (
+    idPhuongThuc: string,
+    data: PhuongThucTuyenSinh.Record,
+  ) => {
+    if (!idPhuongThuc) return;
+    try {
+      setLoading(true);
+      await putPhuongThucTuyenSinh(idPhuongThuc, data);
+      getPhuongThucTuyenSinhPageableModel();
+      message.success('Lưu thành công');
+      setVisibleForm(false);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
+  };
+
+  const deletePhuongThucTuyenSinhModel = async (idPhuongThuc: string) => {
+    setLoading(true);
+    await deletePhuongThucTuyenSinh(idPhuongThuc);
+    message.success('Xóa thành công');
+    getPhuongThucTuyenSinhPageableModel();
+    setLoading(false);
+  };
+
   return {
+    putPhuongThucTuyenSinhModel,
+    deletePhuongThucTuyenSinhModel,
+    getPhuongThucTuyenSinhByIdModel,
     postPhuongThucTuyenSinhModel,
     getPhuongThucTuyenSinhPageableModel,
     getAllPhuongThucTuyenSinhModel,

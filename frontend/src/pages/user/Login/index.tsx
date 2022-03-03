@@ -64,7 +64,9 @@ const Login: React.FC = () => {
       // phanNhom,
     });
     message.success(defaultloginSuccessMessage);
-    history.push(data?.path?.[role?.user?.systemRole || 'guest'] ?? '/');
+    if (role?.user?.emailVerify?.verified === true || role?.user?.systemRole === 'Admin')
+      history.push(data?.path?.[role?.user?.systemRole || 'guest'] ?? '/');
+    else history.push('/kichhoattaikhoan');
   };
 
   const handleSubmit = async (values: { username: string; password: string }) => {

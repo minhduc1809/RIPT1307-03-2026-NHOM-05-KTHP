@@ -1,45 +1,36 @@
 import GlobalFooter from '@/components/GlobalFooter';
 import Header from '@/components/Header';
+import { useEffect } from 'react';
 import { Button, Divider, Select } from 'antd';
 import { history, useModel } from 'umi';
 import styles from './index.css';
 
 const LuaChonPhuongThuc = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
-  const danhSachDotTuyenSinh = [
-    {
-      id: 1,
-      title:
-        'Xét tuyển thẳng theo quy chế tuyển sinh của Bộ GD&ĐT và theo Đề án tuyển sinh của Học viện',
-      time: 'Không có đợt nào',
-      isCoHoSo: 'Thí sinh không có hồ sơ xét tuyển',
-      trangThai: 'Chưa khóa',
-    },
-    {
-      id: 2,
-      title: 'Xét tuyển dựa vào kết quả thi tốt nghiệp THPT năm 2022',
-      time: 'Có 2 đợt đang diễn ra',
-      isCoHoSo: 'Thí sinh không có hồ sơ xét tuyển',
-    },
-    {
-      id: 3,
-      title: 'Xét tuyển kết hợp theo Đề án tuyển sinh của Học viện',
-      time: 'Có 1 đợt đang diễn ra',
-      isCoHoSo: 'Thí sinh có hồ sơ xét tuyển',
-      trangThai: 'Chưa khóa',
-    },
-    {
-      id: 4,
-      title: 'Xét tuyển dựa vào kết quả các kỳ thi đánh giá năng lực',
-      time: 'Không có đợt nào',
-      isCoHoSo: 'Thí sinh không có hồ sơ xét tuyển',
-    },
-  ];
+  const {
+    getAllNamTuyenSinhModel,
+    danhSach,
+    record: recordNamTuyenSinh,
+  } = useModel('namtuyensinh');
+  const {
+    getAllHinhThucDaoTaoModel,
+    danhSach: danhSachHinhThucDaoTao,
+    record,
+  } = useModel('hinhthucdaotao');
+
+  const { setRecord } = useModel('phuongthuctuyensinh');
+
+  useEffect(() => {
+    getAllHinhThucDaoTaoModel();
+  }, []);
+
+  useEffect(() => {
+    if (record?._id) getAllNamTuyenSinhModel(record?._id);
+  }, [record?._id]);
+
   return (
     <>
-      {/* <div style={{ position: 'fixed', zIndex: 1000, width: '100%' }}> */}
       <Header />
-      {/* </div> */}
 
       <div style={{ display: 'flex' }}>
         <div style={{ fontSize: 16 }} className={styles.background}>
@@ -65,16 +56,31 @@ const LuaChonPhuongThuc = () => {
               <div className={styles.form}>
                 <div className={styles.title}>Vui lòng chọn phương thức để tiếp tục:</div>
                 <br />
-                <Select value={2022} style={{ width: 200 }}>
-                  <Select.Option value={2022}>Năm tuyển sinh 2022</Select.Option>
-                </Select>
+                <Select
+                  value={record?._id}
+                  options={danhSachHinhThucDaoTao?.map((item) => ({
+                    value: item._id,
+                    label: item.ten,
+                  }))}
+                  style={{ width: 200, marginRight: 8 }}
+                />
+                <Select
+                  value={recordNamTuyenSinh?.nam}
+                  options={danhSach?.map((item) => ({
+                    value: item.nam,
+                    label: `Năm tuyển sinh ${item.nam}`,
+                  }))}
+                  style={{ width: 200 }}
+                />
+
                 <div>
-                  {danhSachDotTuyenSinh?.map((item, index) => (
+                  {recordNamTuyenSinh?.danhSachPhuongThuc?.map((item, index) => (
                     <div
-                      key={item.id}
+                      key={item.phuongThucTuyenSinh._id}
                       className={styles.answer}
                       onClick={() => {
-                        localStorage.setItem('phuongThuc', item.id.toString());
+                        localStorage.setItem('phuongThuc', item.phuongThucTuyenSinh._id);
+                        setRecord(item.phuongThucTuyenSinh);
                         history.push('/hosothisinh/phuongthucxettuyen/chitiet');
                       }}
                     >
@@ -84,18 +90,18 @@ const LuaChonPhuongThuc = () => {
                       <div style={{ marginLeft: 8 }}>
                         <div>
                           <b>
-                            Phương thức {index + 1}: {item?.title ?? ''}
+                            Phương thức {index + 1}: {item?.phuongThucTuyenSinh.tenPhuongThuc ?? ''}
                           </b>
-                          <div>{item.time}</div>
-                          <div>{item.isCoHoSo}</div>
+                          {/* <div>{item.time}</div>
+                          <div>{item.isCoHoSo}</div> */}
                           {/* <div>Trạng thái: {item?.trangThai ?? ''}</div> */}
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-                {danhSachDotTuyenSinh?.length === 0 && (
-                  <div>Chưa có thông tin về các đợt tuyển sinh ở kỳ tuyển sinh năm nay</div>
+                {recordNamTuyenSinh?.danhSachPhuongThuc?.length === 0 && (
+                  <div>Chưa có thông tin về các phương thức tuyển sinh ở kỳ tuyển sinh năm nay</div>
                 )}
               </div>
               <Divider style={{ marginBottom: 0 }} />

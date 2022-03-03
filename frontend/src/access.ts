@@ -18,10 +18,11 @@ export default function access(initialState: {
   };
 }) {
   const vaiTro = initialState?.currentUser?.systemRole;
+  const verifiedEmail = initialState?.currentUser?.emailVerify?.verified ?? false;
   const token = localStorage.getItem('token');
   return {
     admin: token && vaiTro && vaiTro === 'Admin',
-    thiSinh: token && vaiTro && vaiTro === 'ThiSinh',
+    thiSinh: token && vaiTro && verifiedEmail && vaiTro === 'ThiSinh',
     chuyenVien: token && vaiTro && vaiTro === 'ChuyenVien',
     routeFilter: (route: any) => {
       return handlePhanNhom(initialState, route?.maChucNang);

@@ -3,8 +3,8 @@ import { ip3 } from '@/utils/ip';
 
 const url = 'nam-tuyen-sinh';
 
-export function getAllNamTuyenSinh() {
-  return axios.get(`${ip3}/${url}/all`);
+export function getAllNamTuyenSinh(payload?: { condition?: any }) {
+  return axios.get(`${ip3}/${url}/all`, { params: payload });
 }
 
 export function getNamTuyenSinhPageable(payload: { page: number; limit: number; condition?: any }) {

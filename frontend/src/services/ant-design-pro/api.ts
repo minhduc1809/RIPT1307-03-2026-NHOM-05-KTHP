@@ -7,12 +7,12 @@ export async function getInfo() {
   return axios.get(`${ip3}/user/me`);
 }
 
-export async function getInfoSinhVien() {
-  return axios.get(`${ip3}/odoo-user/sinh-vien/me`);
+export async function putInfo(payload: Login.Profile) {
+  return axios.put(`${ip3}/user/me`, payload);
 }
 
-export async function putInfo(payload: Login.Profile) {
-  return axios.put(`${ip3}/odoo-user/me/profile`, payload);
+export async function register(payload: Login.RegisterPayload) {
+  return axios.post(`${ip3}/user/register`, payload);
 }
 
 export async function getInfoAdmin() {
@@ -29,4 +29,16 @@ export async function adminlogin(payload: { username?: string; password?: string
 
 export async function changePassword(payload: { oldPassword: string; newPassword: string }) {
   return axios.post(`${ip3}/odoo-user/me/change/password`, payload);
+}
+
+export async function resendEmail() {
+  return axios.post(`${ip3}/user/my/resend-active-token`);
+}
+
+export async function updateCCCD(payload: {
+  cmtCccd: string;
+  ngayCapCmtCccd: string;
+  noiCapCmtCccd: string;
+}) {
+  return axios.put(`${ip3}/user/me/cmt-cccd`, payload);
 }

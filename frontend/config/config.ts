@@ -92,6 +92,13 @@ export default defineConfig({
       access: 'thiSinh',
     },
     {
+      layout: false,
+      path: '/kichhoattaikhoan',
+      component: './KichHoatTaiKhoan',
+      hideInMenu: true,
+      access: 'thiSinh',
+    },
+    {
       path: '/hosothisinh/phuongthucxettuyen/chitiet',
       hideInMenu: true,
       layout: false,
@@ -165,6 +172,7 @@ export default defineConfig({
             {
               name: 'DotTuyenSinh',
               path: './dottuyensinh',
+              component: './DotTuyenSinh',
             },
             {
               name: 'DotNhapHoc',

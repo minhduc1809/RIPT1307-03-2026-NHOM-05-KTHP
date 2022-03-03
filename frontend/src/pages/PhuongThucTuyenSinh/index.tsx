@@ -1,12 +1,23 @@
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Tooltip, Button, Divider, Popconfirm } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import Form from './components/Form';
 
 const PhuongThucTuyenSinh = () => {
-  const { getPhuongThucTuyenSinhPageableModel, page, loading, limit, condition } =
-    useModel('phuongthuctuyensinh');
+  const {
+    getPhuongThucTuyenSinhPageableModel,
+    page,
+    loading,
+    limit,
+    condition,
+    deletePhuongThucTuyenSinhModel,
+    setEdit,
+    setVisibleForm,
+    setRecord,
+  } = useModel('phuongthuctuyensinh');
 
   const { getAllHinhThucDaoTaoModel } = useModel('hinhthucdaotao');
 
@@ -45,6 +56,41 @@ const PhuongThucTuyenSinh = () => {
       dataIndex: 'hinhThucDaoTao',
       width: 100,
       align: 'center',
+      render: (val: HinhThucDaoTao.Record) => <div>{val?.ten}</div>,
+    },
+    {
+      title: 'Thao tác',
+      align: 'center',
+      width: 120,
+      fixed: 'right',
+      render: (record: PhuongThucTuyenSinh.Record) => (
+        <>
+          <Tooltip title="Chỉnh sửa">
+            <Button
+              onClick={() => {
+                setEdit(true);
+                setRecord(record);
+                setVisibleForm(true);
+              }}
+              type="default"
+              shape="circle"
+            >
+              <EditOutlined />
+            </Button>
+          </Tooltip>
+          <Divider type="vertical" />
+          <Tooltip title="Xóa">
+            <Popconfirm
+              onConfirm={() => deletePhuongThucTuyenSinhModel(record._id)}
+              title="Bạn có chắc chắn muốn xóa chủ đề này"
+            >
+              <Button type="primary" shape="circle">
+                <DeleteOutlined />
+              </Button>
+            </Popconfirm>
+          </Tooltip>
+        </>
+      ),
     },
   ];
 

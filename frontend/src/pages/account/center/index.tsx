@@ -16,17 +16,18 @@ import type { Dispatch } from 'umi';
 import { connect } from 'umi';
 import styles from './Center.less';
 import Profile from './components/Profile';
-import ChangePassword from './components/Profile/ChangePassword';
+import EditCCCD from './components/Profile/EditCCCD';
+
 import type { ModalState } from './model';
 
 const operationTabList = [
   {
-    key: 'editProfile',
-    tab: 'Thông tin tài khoản',
+    key: 'editCCCD',
+    tab: 'Thông tin CMT/CCCD',
   },
   {
-    key: 'changePassword',
-    tab: <span>Đổi mật khẩu</span>,
+    key: 'editProfile',
+    tab: <span>Thông tin cá nhân</span>,
   },
 ];
 
@@ -36,12 +37,12 @@ interface CenterProps extends RouteChildrenProps {
   currentUserLoading: boolean;
 }
 interface CenterState {
-  tabKey?: 'editProfile' | 'changePassword';
+  tabKey?: 'editProfile' | 'editCCCD';
 }
 
 class Center extends Component<CenterProps, CenterState> {
   state: CenterState = {
-    tabKey: 'editProfile',
+    tabKey: 'editCCCD',
   };
 
   public input: Input | null | undefined = undefined;
@@ -63,21 +64,21 @@ class Center extends Component<CenterProps, CenterState> {
     if (tabKey === 'editProfile') {
       return <Profile />;
     }
-    if (tabKey === 'changePassword') {
-      return <ChangePassword />;
+    if (tabKey === 'editCCCD') {
+      return <EditCCCD />;
     }
 
     return null;
   };
 
   renderUserInfo = (currentUser: Partial<Login.Profile>) => {
-    const role = localStorage.getItem('vaiTro');
+    const role = currentUser?.systemRole;
     let roleText = 'Chưa xác định';
-    let gioiTinhText = 'Chưa xác định';
-    if (currentUser?.gioi_tinh === '0') gioiTinhText = 'Nam';
-    else if (currentUser.gioi_tinh === '1') gioiTinhText = 'Nữ';
-    if (role === 'nhan_vien') roleText = 'Cán bộ, giảng viên';
-    else if (role === 'sinh_vien') roleText = 'Sinh viên';
+    let gioiTinhText = 'Khác';
+    if (currentUser?.gioiTinh === 'NAM') gioiTinhText = 'Nam';
+    else if (currentUser.gioiTinh === 'NU') gioiTinhText = 'Nữ';
+    if (role === 'ThiSinh') roleText = 'Thí sinh';
+    else if (role === 'ChuyenVien') roleText = 'Chuyên viên';
     return (
       <div className={styles.detail}>
         <p>
@@ -94,7 +95,7 @@ class Center extends Component<CenterProps, CenterState> {
               marginRight: 8,
             }}
           />
-          {currentUser?.name || ''}
+          {currentUser?.ten || ''}
         </p>
         <p>
           <CalendarOutlined
@@ -102,7 +103,7 @@ class Center extends Component<CenterProps, CenterState> {
               marginRight: 8,
             }}
           />
-          {currentUser?.ngay_sinh ? moment(currentUser?.ngay_sinh).format('DD/MM/YYYY') : ''}
+          {currentUser?.ngaySinh ? moment(currentUser?.ngaySinh).format('DD/MM/YYYY') : ''}
         </p>
         <p>
           <ManOutlined
@@ -136,8 +137,8 @@ class Center extends Component<CenterProps, CenterState> {
               {!dataLoading && (
                 <div>
                   <div className={styles.avatarHolder}>
-                    <img alt="" src={currentUser?.avatar_path || avatar} />
-                    <div className={styles.name}>{currentUser?.name || 'Chưa cập nhật'}</div>
+                    <img style={{ width: 70 }} alt="" src={currentUser?.anhDaiDien || avatar} />
+                    <div className={styles.name}>{currentUser?.ten || 'Chưa cập nhật'}</div>
                     <div>{currentUser?.email || currentUser?.email || 'Chưa cập nhật'}</div>
                   </div>
                   {this.renderUserInfo(currentUser)}

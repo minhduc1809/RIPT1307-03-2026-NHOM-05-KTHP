@@ -67,16 +67,19 @@ const NamTuyenSinh = () => {
       dataIndex: 'hinhThucDaoTao',
       width: 100,
       align: 'center',
+      render: (val: HinhThucDaoTao.Record) => <div>{val?.ten}</div>,
     },
     {
       title: 'Phương thức tuyển sinh',
       dataIndex: 'danhSachPhuongThuc',
       width: 200,
       align: 'center',
-      render: (val: PhuongThucTuyenSinh.Record[]) => (
+      render: (
+        val: { moTaPhuongThuc: string; phuongThucTuyenSinh: PhuongThucTuyenSinh.Record }[],
+      ) => (
         <div>
           {val?.map((item) => (
-            <Tag key={item._id}>{item.tenPhuongThuc}</Tag>
+            <Tag key={item.phuongThucTuyenSinh._id}>{item.phuongThucTuyenSinh.tenPhuongThuc}</Tag>
           ))}
         </div>
       ),
@@ -121,6 +124,7 @@ const NamTuyenSinh = () => {
     <TableBase
       widthDrawer="700px"
       hascreate
+      formType="Drawer"
       getData={getNamTuyenSinhPageableModel}
       modelName="namtuyensinh"
       title="Quản lý năm tuyển sinh"

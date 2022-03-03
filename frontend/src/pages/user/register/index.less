@@ -1,0 +1,33 @@
+@import '~antd/es/style/themes/default.less';
+
+.main {
+  overflow: auto;
+  display: block;
+  width: 400px;
+  min-height: 100vh;
+  padding: 10px 40px 0px 40px;
+  position: relative;
+  @media screen and (max-width: @screen-sm) {
+    width: 95%;
+    max-width: 450px;
+  }
+
+  :global {
+    .@{ant-prefix}-tabs-nav-list {
+      margin: auto;
+      font-size: 16px;
+    }
+  }
+ 
+}
+
+@media (min-width: @screen-xxl-min) {
+  .main {
+    width: 450px;
+  }
+}
+
+
+
+
+

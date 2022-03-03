@@ -6,6 +6,9 @@ declare module NamTuyenSinh {
     urlAnhMoTa: string;
     noiDung: string;
     moTa: string;
-    danhSachPhuongThuc: PhuongThucTuyenSinh.Record[];
+    danhSachPhuongThuc: {
+      moTaPhuongThuc: string;
+      phuongThucTuyenSinh: PhuongThucTuyenSinh.Record;
+    }[];
   }
 }

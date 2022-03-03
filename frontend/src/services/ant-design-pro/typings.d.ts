@@ -9,7 +9,21 @@ declare module Login {
     vai_tro: string;
   }
 
+  export interface RegisterPayload {
+    email: string;
+    password: string;
+    hoDem: string;
+    ten: string;
+    ngaySinh: string;
+    gioiTinh: string;
+    soDienThoai: string;
+  }
+
   export interface Profile {
+    diaChi: string;
+    cmtCccd: string;
+    ngayCapCmtCccd: string;
+    noiCapCmtCccd: string;
     createdAt: string;
     email: string;
     gioiTinh: string;
@@ -21,6 +35,13 @@ declare module Login {
     username: string;
     __v: 0;
     _id: string;
+    anhDaiDien: string;
+    emailVerify: {
+      verified: boolean;
+      _id: string;
+      availableAfter: number;
+    };
+    soDienThoai: string;
   }
 
   export interface ProfileAdmin {

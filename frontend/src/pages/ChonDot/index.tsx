@@ -1,93 +1,108 @@
 import GlobalFooter from '@/components/GlobalFooter';
 import Header from '@/components/Header';
 import styles from '@/pages/ChonPhuongThuc/index.css';
-import { Button, Divider } from 'antd';
-import { history } from 'umi';
+import { Setting } from '@/utils/constants';
+import { Button, Divider, Spin, Statistic } from 'antd';
+import moment from 'moment';
+import { useEffect } from 'react';
+import { history, useModel } from 'umi';
+import { useMediaQuery } from 'react-responsive';
+
+const { Countdown } = Statistic;
 
 const LuaChonDotXetTuyen = () => {
-  const danhSachDotTuyenSinh = [
-    {
-      id: 1,
-      title: 'Chính thức',
-      time: 'Bắt đầu đăng ký xét tuyển: Còn 23 ngày 0 giờ 11 phút 44 giây (18:00 09/02/2022)',
-      isCoHoSo: 'Thí sinh có hồ sơ xét tuyển',
-      trangThai: 'Chưa khóa',
-    },
-    {
-      id: 2,
-      title: 'Bổ sung',
-      time: 'Bắt đầu đăng ký xét tuyển: Còn 23 ngày 0 giờ 11 phút 44 giây (18:00 09/02/2022)',
-      isCoHoSo: 'Thí sinh không có hồ sơ xét tuyển',
-    },
-  ];
+  const isMediumScreen = useMediaQuery({
+    query: '(min-width: 753px)',
+  });
+
+  const { getAllDotTuyenSinhModel, danhSach, loading } = useModel('dottuyensinh');
+  const idPhuongThuc = localStorage.getItem('phuongThuc');
+  const { getPhuongThucTuyenSinhByIdModel, record } = useModel('phuongthuctuyensinh');
+  useEffect(() => {
+    if (idPhuongThuc) {
+      getPhuongThucTuyenSinhByIdModel(idPhuongThuc);
+      getAllDotTuyenSinhModel(idPhuongThuc);
+    }
+  }, [idPhuongThuc]);
+
   return (
     <>
-      {/* <div style={{ position: 'fixed', zIndex: 1000, width: '100%' }}> */}
       <Header />
-      {/* </div> */}
-
-      <div style={{ display: 'flex' }}>
-        <div style={{ fontSize: 16 }} className={styles.background}>
-          <div className={styles.container}>
-            <div style={{ width: 1000 }}>
-              <div className={styles.content}>
-                <div className={styles['content-top']}>
-                  <b style={{ fontSize: 18 }}>
-                    Phương thức xét tuyển theo đề án tuyển sinh của học viện,
-                  </b>
-                  <div>Vui lòng chọn 1 đợt xét tuyển để thực hiện đăng ký xét tuyển</div>
+      <Spin spinning={loading}>
+        <div style={{ display: 'flex' }}>
+          <div style={{ fontSize: 16 }} className={styles.background}>
+            <div className={styles.container}>
+              <div style={{ width: 1000 }}>
+                <div className={styles.content}>
+                  <div className={styles['content-top']}>
+                    <b style={{ fontSize: 18 }}>{record?.tenPhuongThuc},</b>
+                    <div>Vui lòng chọn 1 đợt xét tuyển để thực hiện đăng ký xét tuyển</div>
+                  </div>
                 </div>
-              </div>
-              <div className={styles.form}>
-                <div>
-                  {danhSachDotTuyenSinh?.map((item, index) => (
-                    <div
-                      key={item.id}
-                      className={styles.answer}
-                      onClick={() => {
-                        localStorage.setItem('dot', item.id.toString());
-                        history.push('/dangkyxettuyen');
-                      }}
-                    >
-                      <Button type="default" size="large" shape="circle">
-                        {index + 1}
-                      </Button>
-                      <div style={{ marginLeft: 8 }}>
-                        <div>
-                          <b>
-                            Đợt {index + 1}: {item?.title ?? ''}
-                          </b>
-                          <div>{item.time}</div>
-                          <div>{item.isCoHoSo}</div>
-                          <div>Trạng thái: {item?.trangThai ?? ''}</div>
+                <div className={styles.form}>
+                  <div>
+                    {danhSach?.map((item, index) => (
+                      <div
+                        key={item._id}
+                        className={styles.answer}
+                        onClick={() => {
+                          localStorage.setItem('dot', item._id);
+                          history.push('/dangkyxettuyen');
+                        }}
+                      >
+                        <Button type="default" size="large" shape="circle">
+                          {index + 1}
+                        </Button>
+                        <div style={{ marginLeft: 8 }}>
+                          <div>
+                            <b>
+                              Đợt {index + 1}: {item?.tenDotTuyenSinh ?? ''}
+                            </b>
+                            <div style={{ display: isMediumScreen ? 'flex' : 'block' }}>
+                              Bắt đầu đăng ký xét tuyển:{' '}
+                              <Countdown
+                                style={{ marginRight: 5 }}
+                                value={item.thoiGianMoDangKy}
+                                format="Còn D ngày H giờ m phút s giây"
+                                valueStyle={{
+                                  color: Setting.primaryColor,
+                                  fontSize: 16,
+                                  marginLeft: isMediumScreen ? 5 : 0,
+                                }}
+                                // onFinish={finishStep}
+                              />{' '}
+                              ({moment(item.thoiGianMoDangKy)?.format('HH:mm DD/MM/YYYY')})
+                            </div>
+                            {/* <div>{item.isCoHoSo}</div>
+                          <div>Trạng thái: {item?.trangThai ?? ''}</div> */}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                  {danhSach?.length === 0 && (
+                    <div>Chưa có thông tin về các đợt tuyển sinh ở kỳ tuyển sinh năm nay</div>
+                  )}
                 </div>
-                {danhSachDotTuyenSinh?.length === 0 && (
-                  <div>Chưa có thông tin về các đợt tuyển sinh ở kỳ tuyển sinh năm nay</div>
-                )}
-              </div>
-              <Divider style={{ marginBottom: 0 }} />
-              <div className={styles.footer}>
-                <Button
-                  className={styles['footer-btn']}
-                  type="link"
-                  onClick={() => {
-                    history.push({
-                      pathname: '/hosothisinh/phuongthucxettuyen/chitiet',
-                    });
-                  }}
-                >
-                  Quay lại
-                </Button>
+                <Divider style={{ marginBottom: 0 }} />
+                <div className={styles.footer}>
+                  <Button
+                    className={styles['footer-btn']}
+                    type="link"
+                    onClick={() => {
+                      history.push({
+                        pathname: '/hosothisinh/phuongthucxettuyen/chitiet',
+                      });
+                    }}
+                  >
+                    Quay lại
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
+      </Spin>
       <GlobalFooter />
     </>
   );

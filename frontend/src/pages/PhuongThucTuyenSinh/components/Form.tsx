@@ -7,31 +7,58 @@ import { useModel } from 'umi';
 const FormPhuongThucTuyenSinh = () => {
   const [form] = Form.useForm();
 
-  const { loading, setVisibleForm, postPhuongThucTuyenSinhModel, edit } =
-    useModel('phuongthuctuyensinh');
+  const {
+    loading,
+    setVisibleForm,
+    postPhuongThucTuyenSinhModel,
+    edit,
+    record,
+    putPhuongThucTuyenSinhModel,
+  } = useModel('phuongthuctuyensinh');
   const { danhSach } = useModel('hinhthucdaotao');
   return (
-    <Card loading={loading} title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} phương thức tuyển sinh`}>
+    <Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} phương thức tuyển sinh`}>
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          postPhuongThucTuyenSinhModel(values);
+          if (edit) putPhuongThucTuyenSinhModel(record?._id ?? '', values);
+          else postPhuongThucTuyenSinhModel(values);
         }}
         form={form}
       >
-        <Form.Item name="hinhThucDaoTao" label="Hình thức đào tạo" rules={[...rules.required]}>
+        <Form.Item
+          initialValue={record?.hinhThucDaoTao?._id}
+          name="hinhThucDaoTao"
+          label="Hình thức đào tạo"
+          rules={[...rules.required]}
+        >
           <Select
             placeholder="Hình thức đào tạo"
             options={danhSach?.map((item) => ({ value: item._id, label: item.ten }))}
           />
         </Form.Item>
-        <Form.Item rules={[...rules.required]} name="maPhuongThuc" label="Mã phương thức">
+        <Form.Item
+          initialValue={record?.maPhuongThuc}
+          rules={[...rules.required]}
+          name="maPhuongThuc"
+          label="Mã phương thức"
+        >
           <Input placeholder="Mã phương thức" />
         </Form.Item>
-        <Form.Item rules={[...rules.required]} name="tenPhuongThuc" label="Tên phương thức">
+        <Form.Item
+          initialValue={record?.tenPhuongThuc}
+          rules={[...rules.required]}
+          name="tenPhuongThuc"
+          label="Tên phương thức"
+        >
           <Input placeholder="Tên phương thức" />
         </Form.Item>
-        <Form.Item rules={[...rules.required]} name="loaiPhuongThuc" label="Loại phương thức">
+        <Form.Item
+          initialValue={record?.loaiPhuongThuc}
+          rules={[...rules.required]}
+          name="loaiPhuongThuc"
+          label="Loại phương thức"
+        >
           <Select
             placeholder="Loại phương thức"
             options={Object.keys(ELoaiPhuongThucTuyenSinh)?.map((item) => ({

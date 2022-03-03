@@ -61,7 +61,7 @@ const KhaiBaoThongTinCaNhan = () => {
             <FormItem
               initialValue={
                 initialState?.currentUser?.ngayCapCmtCccd
-                  ? moment(initialState?.currentUser?.ngayCapCmtCccd).format('DD/MM/YYYY')
+                  ? moment(initialState?.currentUser?.ngayCapCmtCccd)
                   : undefined
               }
               name="ngayCapCmtCccd"

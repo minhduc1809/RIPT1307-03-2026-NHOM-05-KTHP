@@ -36,7 +36,7 @@ const NhapHoc = () => {
       </Col>
       <Col xs={24} lg={18} xl={19}>
         <div id="content">
-          <Timeline />
+          {/* <Timeline /> */}
           <Content />
         </div>
       </Col>

@@ -4,6 +4,6 @@ declare module PhuongThucTuyenSinh {
     tenPhuongThuc: string;
     loaiPhuongThuc: 'Xét tuyển thăng BGD' | 'Thi THPT' | 'Kết hợp';
     maPhuongThuc: string;
-    hinhThucDaoTao: string;
+    hinhThucDaoTao: HinhThucDaoTao.Record;
   }
 }

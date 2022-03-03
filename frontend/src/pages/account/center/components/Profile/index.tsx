@@ -2,12 +2,13 @@ import UploadAvatar from '@/components/Upload/UploadAvatar';
 import { getInfo, putInfo } from '@/services/ant-design-pro/api';
 // import { getURLImg } from '@/services/LopTinChi/loptinchi';
 import rules from '@/utils/rules';
-import { renderFileListUrl } from '@/utils/utils';
-import { Button, Col, Form, Input, message, Row } from 'antd';
+import { renderFileListUrl, toISOString } from '@/utils/utils';
+import { Button, Col, DatePicker, Form, Input, message, Row, Select } from 'antd';
 import { Component } from 'react';
 import type { Dispatch } from 'umi';
 import { connect } from 'umi';
 import mm from 'moment-timezone';
+import moment from 'moment';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
@@ -23,8 +24,8 @@ class BaseView extends Component<BaseViewProps> {
   getAvatarURL() {
     const { currentUser } = this.props;
     if (currentUser) {
-      if (currentUser.avatar_path) {
-        return currentUser.avatar_path;
+      if (currentUser.anhDaiDien) {
+        return currentUser.anhDaiDien;
       }
       const url = 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png';
       return url;
@@ -40,19 +41,19 @@ class BaseView extends Component<BaseViewProps> {
   handleFinish = async (val: any) => {
     const { dispatch } = this.props;
 
-    let avatar_path = '';
-    if (val.avatar_path.fileList?.[0]?.originFileObj) {
-      // const responseUpload = await getURLImg({
-      //   filename: 'url1',
-      //   public: true,
-      //   file: val?.avatar_path.fileList?.[0].originFileObj,
-      // });
-      // avatar_path = responseUpload?.data?.data?.url;
-    } else avatar_path = val.avatar_path.fileList?.[0]?.url;
+    // let avatar_path = '';
+    // if (val.avatar_path.fileList?.[0]?.originFileObj) {
+    //   // const responseUpload = await getURLImg({
+    //   //   filename: 'url1',
+    //   //   public: true,
+    //   //   file: val?.avatar_path.fileList?.[0].originFileObj,
+    //   // });
+    //   // avatar_path = responseUpload?.data?.data?.url;
+    // } else avatar_path = val.avatar_path.fileList?.[0]?.url;
     const response = await putInfo({
       ...val,
-      avatar_path,
-      ngay_sinh: val?.ngay_sinh?.format('YYYY-MM-DD'),
+      // avatar_path,
+      ngaySinh: toISOString(val?.ngaySinh),
     });
     getInfo();
 
@@ -69,29 +70,39 @@ class BaseView extends Component<BaseViewProps> {
   render() {
     const { currentUser } = this.props;
 
-    return currentUser?.id ? (
+    return currentUser ? (
       <div ref={this.getViewDom}>
         <Form layout="vertical" onFinish={this.handleFinish}>
           <Row gutter={[50, 0]}>
             <Col xl={12}>
-              {/* <Form.Item
-                initialValue={currentUser?.TenDayDu}
-                name="TenDayDu"
-                label="Họ và tên"
-                rules={[...rules.required, ...rules.ten]}
-              >
-                <Input placeholder="Họ và tên" />
-              </Form.Item> */}
-
-              {/* <Row gutter={[20, 0]}>
+              <Row gutter={[20, 0]}>
+                <Col xs={24} lg={12}>
+                  {' '}
+                  <Form.Item
+                    initialValue={currentUser?.hoDem}
+                    name="hoDem"
+                    label="Họ đệm"
+                    rules={[...rules.required, ...rules.ten]}
+                  >
+                    <Input placeholder="Họ đệm" />
+                  </Form.Item>
+                </Col>
                 <Col xs={24} lg={12}>
                   <Form.Item
-                    name="ngay_sinh"
+                    initialValue={currentUser?.ten}
+                    name="ten"
+                    label="Tên"
+                    rules={[...rules.required, ...rules.ten]}
+                  >
+                    <Input placeholder="Tên" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} lg={12}>
+                  <Form.Item
+                    name="ngaySinh"
                     label="Ngày sinh"
                     rules={[...rules.required]}
-                    initialValue={
-                      currentUser?.ngay_sinh ? moment(currentUser?.ngay_sinh) : undefined
-                    }
+                    initialValue={currentUser?.ngaySinh ? moment(currentUser?.ngaySinh) : undefined}
                   >
                     <DatePicker
                       style={{ width: '100%' }}
@@ -103,42 +114,36 @@ class BaseView extends Component<BaseViewProps> {
                 </Col>
                 <Col xs={24} lg={12}>
                   <Form.Item
-                    initialValue={currentUser?.gioi_tinh || '0'}
-                    name="gioi_tinh"
+                    style={{ marginBottom: 8 }}
+                    name="gioiTinh"
                     label="Giới tính"
+                    initialValue={currentUser?.gioiTinh}
                     rules={[...rules.required]}
                   >
-                    <Select>
-                      <Select.Option value="0">Nam</Select.Option>
-                      <Select.Option value="1">Nữ</Select.Option>
-                    </Select>
+                    <Select
+                      placeholder="Giới tính"
+                      options={[
+                        { value: 'NAM', label: 'Nam' },
+                        { value: 'NU', label: 'Nữ' },
+                        { value: 'KHAC', label: 'Khác' },
+                      ]}
+                    />
                   </Form.Item>
                 </Col>
-              </Row> */}
+              </Row>
               <Form.Item
-                initialValue={currentUser?.email || ''}
-                name="email"
+                initialValue={currentUser?.soDienThoai}
+                name="soDienThoai"
                 label="Email"
-                rules={[...rules.email]}
-              >
-                <Input placeholder="Email" />
-              </Form.Item>
-              <Form.Item
-                initialValue={currentUser?.so_dien_thoai || ''}
-                name="so_dien_thoai"
-                label="Số điện thoại"
                 rules={[...rules.soDienThoai]}
               >
                 <Input placeholder="Số điện thoại" />
               </Form.Item>
-              <Form.Item
-                initialValue={currentUser?.so_nha_ten_duong_no || ''}
-                name="so_nha_ten_duong_no"
-                label="Địa chỉ hiện nay"
-              >
+
+              <Form.Item initialValue={currentUser?.diaChi} name="diaChi" label="Địa chỉ hiện nay">
                 <Input.TextArea rows={3} placeholder="Địa chỉ hiện nay" />
               </Form.Item>
-              <Form.Item>
+              <Form.Item style={{ textAlign: 'center' }}>
                 <Button htmlType="submit" type="primary">
                   Cập nhật
                 </Button>
@@ -146,9 +151,9 @@ class BaseView extends Component<BaseViewProps> {
             </Col>
             <Col xl={12}>
               <Form.Item
-                name="avatar_path"
+                name="anhDaiDien"
                 label="Ảnh đại diện"
-                initialValue={renderFileListUrl(currentUser?.avatar_path ?? '')}
+                initialValue={renderFileListUrl(currentUser?.anhDaiDien ?? '')}
                 rules={[...rules.fileRequired]}
               >
                 <UploadAvatar

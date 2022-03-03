@@ -15,10 +15,11 @@ export default () => {
   const objInitModel = useInitModel();
   const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
 
-  const getAllNamTuyenSinhModel = async () => {
+  const getAllNamTuyenSinhModel = async (hinhThucDaoTao?: string) => {
     setLoading(true);
-    const response = await getAllNamTuyenSinh();
+    const response = await getAllNamTuyenSinh({ condition: { hinhThucDaoTao } });
     setDanhSach(response?.data?.data ?? []);
+    setRecord(response?.data?.data?.[0]);
     setLoading(false);
   };
 

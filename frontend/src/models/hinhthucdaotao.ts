@@ -17,6 +17,7 @@ export default () => {
     setLoading(true);
     const response = await getAllHinhThucDaoTao();
     setDanhSach(response?.data?.data ?? []);
+    setRecord(response?.data?.data?.[0]);
     setLoading(false);
   };
 

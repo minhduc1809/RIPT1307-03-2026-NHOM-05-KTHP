@@ -3,8 +3,8 @@ import { ip3 } from '@/utils/ip';
 
 const url = 'phuong-thuc-tuyen-sinh';
 
-export function getAllPhuongThucTuyenSinh() {
-  return axios.get(`${ip3}/${url}/all`);
+export function getAllPhuongThucTuyenSinh(payload?: { condition?: any }) {
+  return axios.get(`${ip3}/${url}/all`, { params: payload });
 }
 
 export function getPhuongThucTuyenSinhPageable(payload: {
@@ -13,6 +13,10 @@ export function getPhuongThucTuyenSinhPageable(payload: {
   condition?: any;
 }) {
   return axios.get(`${ip3}/${url}`, { params: payload });
+}
+
+export function getPhuongThucTuyenSinhById(idPhuongThuc: string) {
+  return axios.get(`${ip3}/${url}/${idPhuongThuc}`);
 }
 
 export function postPhuongThucTuyenSinh(payload: PhuongThucTuyenSinh.Record) {
