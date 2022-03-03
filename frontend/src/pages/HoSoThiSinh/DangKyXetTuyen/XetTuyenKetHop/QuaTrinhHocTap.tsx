@@ -35,7 +35,7 @@ import InfoDoiTuongKhuVuc from '../components/InfoDoiTuongKhuVuc';
 import InfoTruongTHPT from '../components/InfoTruongTHPT';
 
 const QuaTrinhHocTapXetTuyenKetHop = () => {
-  const { setCurrent } = useModel('hosothisinh');
+  const { setCurrent } = useModel('hosoxettuyen');
   const [form] = Form.useForm();
 
   const [doiTuongXetTuyen, setDoiTuongXetTuyen] = useState<number>();

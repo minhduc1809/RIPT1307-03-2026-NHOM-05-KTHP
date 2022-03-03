@@ -5,7 +5,7 @@ import QuaTrinhHocTapXetTuyenKetHop from './XetTuyenKetHop/QuaTrinhHocTap';
 import RaSoatHoSoXetTuyenKetHop from './XetTuyenKetHop/RaSoatHoSo';
 
 const Content = () => {
-  const { current } = useModel('hosothisinh');
+  const { current } = useModel('hosoxettuyen');
   let contentComponent = <div />;
   switch (current) {
     case 0:

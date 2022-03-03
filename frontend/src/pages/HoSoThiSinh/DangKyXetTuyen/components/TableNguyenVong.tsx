@@ -22,7 +22,7 @@ const TableNguyenVong = () => {
     setVisibleFormNguyenVong,
     setEdit,
     setRecordNguyenVong,
-  } = useModel('hosothisinh');
+  } = useModel('hosoxettuyen');
 
   const [indexNV, setIndexNV] = useState<number>(-1);
   const PopoverDiv = styled.div`

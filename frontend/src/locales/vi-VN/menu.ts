@@ -78,7 +78,6 @@ export default {
     'Danh sách đủ điều kiện nhập học',
   'menu.QuanTriChung': 'Quản trị chung',
   'menu.QuanTriChung.QuanLyTaiKhoan': 'Quản lý tài khoản',
-  'menu.QuanTriChung.QuanLyNganhHoc': 'Quản lý ngành học',
   'menu.QuanTriChung.QuanLyNamTuyenSinh': 'Quản lý năm tuyển sinh',
   'menu.QuanTriChung.QuanLyPhuongThucXetTuyen': 'Quản lý phương thức xét tuyển',
   'menu.QuanTriChung.ToChucTuyenSinh': 'Tổ chức tuyển sinh',
@@ -88,4 +87,7 @@ export default {
   'menu.QuanTriChung.ToChucTuyenSinh.DotNhapHoc': 'Đợt nhập học',
   'menu.BieuMau': 'Biểu mẫu',
   'menu.BieuMau.KhaoSat': 'Khảo sát',
+  'menu.QuanTriChung.QuanLyCoSoDaoTao': 'Quản lý cơ sở đào tạo',
+  'menu.QuanTriChung.QuanLyNganhChuyenNganh': 'Quản lý ngành/chuyên ngành',
+  'menu.QuanTriChung.QuanLyDoiTuongTuyenSinh': 'Quản lý đối tượng tuyển sinh',
 };

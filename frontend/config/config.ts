@@ -152,10 +152,6 @@ export default defineConfig({
           path: './quanlytaikhoan',
         },
         {
-          name: 'QuanLyNganhHoc',
-          path: './quanlynganhhoc',
-        },
-        {
           name: 'QuanLyNamTuyenSinh',
           path: './quanlynamtuyensinh',
           component: './NamTuyenSinh',
@@ -179,6 +175,21 @@ export default defineConfig({
               path: './dotnhaphoc',
             },
           ],
+        },
+        {
+          name: 'QuanLyCoSoDaoTao',
+          path: './quanlycosodaotao',
+          component: './CoSoDaoTao',
+        },
+        {
+          name: 'QuanLyNganhChuyenNganh',
+          path: './quanlynganhchuyennganh',
+          component: './NganhChuyenNganh',
+        },
+        {
+          name: 'QuanLyDoiTuongTuyenSinh',
+          path: './quanlydoituongtuyensinh',
+          component: './DoiTuongTuyenSinh',
         },
         {
           name: 'QuanLyKinhPhiChung',

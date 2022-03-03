@@ -1,3 +1,5 @@
+import type { IRecordTinh } from '../DonViHanhChinh/typing';
+
 declare module Login {
   export interface User {
     uid: number;
@@ -42,6 +44,18 @@ declare module Login {
       availableAfter: number;
     };
     soDienThoai: string;
+    quocTich: string;
+    soTheBHYT: string;
+    tonGiao: string;
+    danToc: string;
+    anhDaiDien: string;
+    hoKhauThuongTru: IRecordTinh.DonViHanhChinhRecord;
+    loaiNoiSinh: 'TRONG_NUOC' | 'NUOC_NGOAI';
+    noiSinhTrongNuoc: IRecordTinh.DonViHanhChinhRecord;
+    noiSinhNuocNgoai: string;
+    tenNguoiLienHe: string;
+    diaChiLienHe: IRecordTinh.DonViHanhChinhRecord;
+    soDienThoaiNguoiLienHe: string;
   }
 
   export interface ProfileAdmin {

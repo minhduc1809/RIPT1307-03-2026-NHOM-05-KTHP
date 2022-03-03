@@ -1,7 +1,7 @@
 import { useModel } from 'umi';
 
 const ContentNhapHoc = () => {
-  const { current } = useModel('hosothisinh');
+  const { current } = useModel('hosoxettuyen');
   let contentComponent = <div />;
   switch (current) {
     case 0:

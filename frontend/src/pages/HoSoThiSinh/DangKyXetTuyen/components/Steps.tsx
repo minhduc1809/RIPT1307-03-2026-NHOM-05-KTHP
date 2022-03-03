@@ -5,7 +5,7 @@ import { useModel } from 'umi';
 const { Step } = Steps;
 
 const Stepper = () => {
-  const { current, setCurrent } = useModel('hosothisinh');
+  const { current, setCurrent } = useModel('hosoxettuyen');
   useEffect(() => {
     return () => {
       setCurrent(0);

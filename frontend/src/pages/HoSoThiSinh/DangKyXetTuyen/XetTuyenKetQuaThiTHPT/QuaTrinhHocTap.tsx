@@ -27,7 +27,7 @@ import InfoDoiTuongKhuVuc from '../components/InfoDoiTuongKhuVuc';
 import InfoTruongTHPT from '../components/InfoTruongTHPT';
 
 const QuaTrinhHocTapXetTuyenKetQuaThiTHPT = () => {
-  const { setCurrent } = useModel('hosothisinh');
+  const { setCurrent } = useModel('hosoxettuyen');
   const [form] = Form.useForm();
   const [toHop, setToHop] = useState<string[]>([]);
   const [arrMonHoc, setArrMonHoc] = useState<string[]>([]);

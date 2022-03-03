@@ -4,7 +4,7 @@ import { useModel } from 'umi';
 import { ArrowLeftOutlined, CheckOutlined, SaveOutlined } from '@ant-design/icons';
 
 const DangKyNguyenVong = () => {
-  const { danhSachNguyenVong, setCurrent } = useModel('hosothisinh');
+  const { danhSachNguyenVong, setCurrent } = useModel('hosoxettuyen');
   return (
     <Form style={{ backgroundColor: '#fff', padding: 24 }} onFinish={(values) => {}}>
       <TableNguyenVong />

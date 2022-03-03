@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 const { Step } = Steps;
 
 const StepperNhapHoc = () => {
-  const { current, setCurrent } = useModel('hosothisinh');
+  const { current, setCurrent } = useModel('hosoxettuyen');
   useEffect(() => {
     return () => {
       setCurrent(0);

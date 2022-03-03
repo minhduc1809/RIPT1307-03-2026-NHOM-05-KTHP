@@ -47,8 +47,8 @@ const DiaChi = (props: Props) => {
     loading,
   } = useModel('donvihanhchinh');
 
-  const [maQuanHuyen, setMaQuanHuyen] = useState<string>(props?.initialValue?.maQuanHuyen ?? '');
-  const [maTinh, setMaTinh] = useState<string>(props?.initialValue?.maTinh ?? '');
+  const [maQuanHuyen, setMaQuanHuyen] = useState<string>(props?.initialValue?.maQH ?? '');
+  const [maTinh, setMaTinh] = useState<string>(props?.initialValue?.maTP ?? '');
 
   useEffect(() => {
     getDanhSachTinhModel();
@@ -67,7 +67,7 @@ const DiaChi = (props: Props) => {
   }, [maQuanHuyen]);
 
   return (
-    <Row gutter={[20, 0]}>
+    <Row gutter={[10, 0]}>
       {!props.hideTinh && (
         <Col
           xs={24}
@@ -76,7 +76,7 @@ const DiaChi = (props: Props) => {
         >
           <Form.Item
             style={{ marginBottom: props.hideDiaChiCuThe ? 0 : 8 }}
-            initialValue={props?.initialValue?.maTinh}
+            initialValue={props?.initialValue?.maTP}
             name={props?.fields?.tinh ?? []}
             rules={props.notRequiredTinh ? [] : [...rules.required]}
           >
@@ -110,7 +110,7 @@ const DiaChi = (props: Props) => {
         <Col xs={24} md={12} lg={8}>
           <Form.Item
             style={{ marginBottom: props.hideDiaChiCuThe ? 0 : 8 }}
-            initialValue={props?.initialValue?.maQuanHuyen}
+            initialValue={props?.initialValue?.maQH}
             name={props?.fields?.quanHuyen ?? []}
             rules={props.notRequiredQuanHuyen ? [] : [...rules.required]}
           >
@@ -149,7 +149,7 @@ const DiaChi = (props: Props) => {
         <Col xs={24} md={12} lg={8}>
           <Form.Item
             style={{ marginBottom: props.hideDiaChiCuThe ? 0 : 8 }}
-            initialValue={props?.initialValue?.maPhuongXa}
+            initialValue={props?.initialValue?.maXaPhuong}
             name={props?.fields?.xaPhuong ?? []}
             rules={props?.notRequiredXaPhuong ? [] : [...rules.required]}
           >
@@ -185,7 +185,7 @@ const DiaChi = (props: Props) => {
       {!props.hideDiaChiCuThe && (
         <Col span={24}>
           <Form.Item
-            initialValue={props?.initialValue?.soNhaTenDuong}
+            initialValue={props?.initialValue?.diaChi}
             rules={props?.notRequiredDiaChiCuThe ? [] : [...rules.required]}
             name={props?.fields?.diaChiCuThe ?? []}
             style={{ marginBottom: 0 }}

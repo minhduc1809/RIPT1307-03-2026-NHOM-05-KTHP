@@ -6,7 +6,7 @@ import { useModel } from 'umi';
 const FormDangKyNguyenVong = () => {
   const [form] = Form.useForm();
   const { edit, setVisibleFormNguyenVong, danhSachNguyenVong, setDanhSachNguyenVong } =
-    useModel('hosothisinh');
+    useModel('hosoxettuyen');
 
   return (
     <Card title={edit ? 'Chỉnh sửa nguyện vọng' : 'Thêm nguyện vọng'} bordered>

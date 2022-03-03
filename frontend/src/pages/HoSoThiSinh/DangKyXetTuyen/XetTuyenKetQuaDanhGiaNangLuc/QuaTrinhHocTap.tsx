@@ -23,7 +23,7 @@ import InfoDoiTuongKhuVuc from '../components/InfoDoiTuongKhuVuc';
 import InfoTruongTHPT from '../components/InfoTruongTHPT';
 
 const QuaTrinhHocTapXetTuyenDanhGiaNangLuc = () => {
-  const { setCurrent } = useModel('hosothisinh');
+  const { setCurrent } = useModel('hosoxettuyen');
   const [form] = Form.useForm();
 
   const [visibleModalInfo, setVisibleModalInfo] = useState<boolean>(false);

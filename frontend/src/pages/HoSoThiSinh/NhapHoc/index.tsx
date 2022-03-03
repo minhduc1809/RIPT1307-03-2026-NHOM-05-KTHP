@@ -13,6 +13,7 @@ const NhapHoc = () => {
     query: '(min-width: 992px)',
   });
   const { getAllDanToc, getAllTonGiao } = useModel('dantoctongiao');
+
   useEffect(() => {
     getAllDanToc();
     getAllTonGiao();
@@ -36,7 +37,7 @@ const NhapHoc = () => {
       </Col>
       <Col xs={24} lg={18} xl={19}>
         <div id="content">
-          {/* <Timeline /> */}
+          <Timeline />
           <Content />
         </div>
       </Col>

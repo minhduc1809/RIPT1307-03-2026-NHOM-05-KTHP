@@ -7,13 +7,13 @@ export declare module IRecordTinh {
   }
 
   export interface DonViHanhChinhRecord {
-    maPhuongXa?: string;
-    maQuanHuyen?: string;
-    maTinh?: string;
-    soNhaTenDuong?: string;
-    tenPhuongXa?: string;
-    tenQuanHuyen?: string;
-    tenTinh?: string;
+    maTP?: string;
+    tenTP?: string;
+    maQH?: string;
+    tenQH?: string;
+    maXaPhuong?: string;
+    tenXaPhuong?: string;
+    diaChi?: string;
   }
 
   export interface RootObject {
