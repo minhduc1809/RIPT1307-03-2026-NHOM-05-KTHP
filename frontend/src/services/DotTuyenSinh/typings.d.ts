@@ -2,7 +2,7 @@ declare module DotTuyenSinh {
   export interface Record {
     _id: string;
     namTuyenSinh: number;
-    phuongThucTuyenSinh: string;
+    phuongThucTuyenSinh: PhuongThucTuyenSinh.Record;
     dotTuyenSinh: number;
     tenDotTuyenSinh: string;
     danhSachGiayToNop: string[];
@@ -19,5 +19,16 @@ declare module DotTuyenSinh {
     hinhThucDaoTao: HinhThucDaoTao.Record;
     cauHinhPhuongThuc: any;
     soLuongDangKy: number;
+    danhSachDoiTuongTuyenSinh: {
+      _id: string;
+      maDoiTuong: string;
+      thongTinDoiTuong: DoiTuongTuyenSinh.Record;
+    }[];
+    danhSachNganhTuyenSinh: {
+      danhSachCoSoDaoTao: CoSoDaoTao.Record[];
+      danhSachToHop: string[];
+      _id: string;
+      nganh: NganhChuyenNganh.Record;
+    }[];
   }
 }

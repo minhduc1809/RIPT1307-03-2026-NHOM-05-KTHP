@@ -1,7 +1,7 @@
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Divider, Popconfirm, Tooltip } from 'antd';
+import { Button, Divider, Popconfirm, Tag, Tooltip } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
@@ -22,8 +22,14 @@ const DotTuyenSinh = () => {
 
   const { getAllNamTuyenSinhModel } = useModel('namtuyensinh');
   const { getAllHinhThucDaoTaoModel } = useModel('hinhthucdaotao');
+  const { getAllDoiTuongTuyenSinhModel } = useModel('doituongtuyensinh');
+  const { getAllCoSoDaoTaoModel } = useModel('cosodaotao');
+  const { getAllNganhChuyenNganhModel } = useModel('nganhchuyennganh');
 
   useEffect(() => {
+    getAllCoSoDaoTaoModel();
+    getAllNganhChuyenNganhModel();
+    getAllDoiTuongTuyenSinhModel();
     getAllHinhThucDaoTaoModel();
     getAllNamTuyenSinhModel();
   }, []);
@@ -46,6 +52,20 @@ const DotTuyenSinh = () => {
       dataIndex: 'namTuyenSinh',
       align: 'center',
       width: 120,
+    },
+
+    {
+      title: 'Đối tượng tuyển sinh',
+      dataIndex: 'danhSachDoiTuongTuyenSinh',
+      align: 'center',
+      width: 300,
+      render: (val) => (
+        <>
+          {val?.map((item: { thongTinDoiTuong: DoiTuongTuyenSinh.Record }) => (
+            <Tag key={item.thongTinDoiTuong._id}>{item?.thongTinDoiTuong?.tenDoiTuong}</Tag>
+          ))}
+        </>
+      ),
     },
 
     {
@@ -80,7 +100,7 @@ const DotTuyenSinh = () => {
       title: 'Số lượng đăng ký',
       dataIndex: 'soLuongDangKy',
       align: 'center',
-      width: 150,
+      width: 100,
     },
     {
       title: 'Thao tác',
@@ -120,7 +140,8 @@ const DotTuyenSinh = () => {
 
   return (
     <TableBase
-      widthDrawer="650px"
+      widthDrawer="750px"
+      formType="Drawer"
       otherProps={{ scroll: { x: 1000 } }}
       hascreate
       getData={getDotTuyenSinhPageableModel}

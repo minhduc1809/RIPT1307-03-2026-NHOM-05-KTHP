@@ -1,9 +1,12 @@
 import rules from '@/utils/rules';
+import { CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select } from 'antd';
 import moment from 'moment';
 import mm from 'moment-timezone';
 import { useState } from 'react';
 import { useModel } from 'umi';
+import styles from './form.css';
+import BlockNganh from './BlockNganh';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
@@ -13,6 +16,7 @@ const FormDotTuyenSinh = () => {
     useModel('dottuyensinh');
   const { danhSach } = useModel('namtuyensinh');
   const { danhSach: danhSachHinhThucDaoTao } = useModel('hinhthucdaotao');
+  const { danhSach: danhSachDoiTuongTuyenSinh } = useModel('doituongtuyensinh');
   const [recordNamTuyenSinh, setRecordNamTuyenSinh] = useState<NamTuyenSinh.Record | undefined>(
     danhSach?.find((item) => item.nam === record?.namTuyenSinh),
   );
@@ -22,9 +26,14 @@ const FormDotTuyenSinh = () => {
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
+          values.danhSachDoiTuongTuyenSinh = values?.danhSachDoiTuongTuyenSinh?.map(
+            (item: string) => ({ maDoiTuong: item }),
+          );
           if (edit) {
             putDotTuyenSinhModel(record?._id ?? '', {
+              ...record,
               ...values,
+              cauHinhPhuongThuc: {},
             });
           } else {
             postDotTuyenSinhModel({
@@ -120,7 +129,7 @@ const FormDotTuyenSinh = () => {
             <Form.Item
               name="phuongThucTuyenSinh"
               label="Phương thức tuyển sinh"
-              initialValue={record?.phuongThucTuyenSinh}
+              initialValue={record?.phuongThucTuyenSinh?._id}
               rules={[...rules.required]}
             >
               <Select
@@ -132,6 +141,90 @@ const FormDotTuyenSinh = () => {
                 }))}
               />
             </Form.Item>
+          </Col>
+          <Col xs={24}>
+            <Form.Item
+              name="danhSachDoiTuongTuyenSinh"
+              label="Đối tượng tuyển sinh"
+              initialValue={record?.danhSachDoiTuongTuyenSinh?.map((item) => item.maDoiTuong)}
+              rules={[...rules.required]}
+            >
+              <Select
+                mode="multiple"
+                notFoundContent="Bạn chưa chọn hình thức đào tạo hoặc không có đối tượng tuyển sinh nào cho hình thức đào tạo này"
+                placeholder="Đối tượng tuyển sinh"
+                options={danhSachDoiTuongTuyenSinh?.map((item) => ({
+                  value: item.maDoiTuong,
+                  label: item.tenDoiTuong,
+                }))}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24}>
+            <Form.List
+              name="danhSachNganhTuyenSinh"
+              initialValue={
+                record?.danhSachNganhTuyenSinh?.map((item) => ({
+                  ...item,
+                  nganh: item?.nganh?._id,
+                  danhSachCoSoDaoTao: item?.danhSachCoSoDaoTao?.map((coSo) => coSo._id),
+                })) ?? []
+              }
+              rules={[
+                {
+                  validator: async (_, names) => {
+                    if (!names || names.length < 1) {
+                      return Promise.reject(new Error('Ít nhất 1 ngành'));
+                    }
+                    return '';
+                  },
+                },
+              ]}
+            >
+              {(fields, { add, remove }, { errors }) => {
+                return (
+                  <>
+                    {fields.map((field, index) => (
+                      <div key={field.key}>
+                        <Card
+                          size="small"
+                          headStyle={{ padding: '0px 24px' }}
+                          bodyStyle={{ padding: '8px 24px' }}
+                          className={styles.block}
+                          title={
+                            <>
+                              <div style={{ float: 'left' }}>Ngành {index + 1}</div>
+                              <CloseCircleOutlined
+                                style={{ float: 'right', marginLeft: 8 }}
+                                onClick={() => remove(field.name)}
+                              />
+                            </>
+                          }
+                        >
+                          <BlockNganh
+                            fieldName={`danhSachNganhTuyenSinh.[${index}]`}
+                            field={{ ...field }}
+                          />
+                        </Card>
+
+                        <br />
+                      </div>
+                    ))}
+                    <Form.Item>
+                      <Button
+                        type="dashed"
+                        onClick={() => add()}
+                        style={{ width: '100%' }}
+                        icon={<PlusOutlined />}
+                      >
+                        Thêm khối
+                      </Button>
+                      <Form.ErrorList errors={errors} />
+                    </Form.Item>
+                  </>
+                );
+              }}
+            </Form.List>
           </Col>
           <Col xs={24}>
             <Form.Item initialValue={record?.moTa} name="moTa" label="Mô tả">
