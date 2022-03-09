@@ -9,6 +9,7 @@ import type { Dispatch } from 'umi';
 import { connect } from 'umi';
 import mm from 'moment-timezone';
 import moment from 'moment';
+import type { Login } from '@/services/ant-design-pro/typings';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 

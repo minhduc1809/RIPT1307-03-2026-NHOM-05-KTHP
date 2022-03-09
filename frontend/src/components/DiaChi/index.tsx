@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
 type Props = {
+  type: 'HKTT' | 'DCLH';
   disabled?: boolean;
   form: FormInstance<any>;
   hideTinh?: boolean;
@@ -33,36 +34,44 @@ type Props = {
 };
 
 const DiaChi = (props: Props) => {
+  const modelDonViHanhChinh = useModel('donvihanhchinh');
+
   const {
-    danhSachQuanHuyen,
     danhSachTinh,
-    danhSachXaPhuong,
-    setDanhSachXaPhuong,
     getDanhSachQuanHuyenModel,
     getDanhSachTinhModel,
     getDanhSachXaPhuongModel,
-    setTenTinh,
-    setTenXaPhuong,
-    setTenQuanHuyen,
     loading,
-  } = useModel('donvihanhchinh');
-
-  const [maQuanHuyen, setMaQuanHuyen] = useState<string>(props?.initialValue?.maQH ?? '');
-  const [maTinh, setMaTinh] = useState<string>(props?.initialValue?.maTP ?? '');
-
+    setDanhSachXaPhuongDiaChiLienHe,
+    setDanhSachXaPhuongHoKhauThuongTru,
+    danhSachQuanHuyenDiaChiLienHe,
+    danhSachQuanHuyenHoKhauThuongTru,
+    danhSachXaPhuongDiaChiLienHe,
+    danhSachXaPhuongHoKhauThuongTru,
+  } = modelDonViHanhChinh;
+  const setDanhSachXaPhuong =
+    props.type === 'HKTT' ? setDanhSachXaPhuongHoKhauThuongTru : setDanhSachXaPhuongDiaChiLienHe;
+  const danhSachQuanHuyen =
+    props.type === 'HKTT' ? danhSachQuanHuyenHoKhauThuongTru : danhSachQuanHuyenDiaChiLienHe;
+  const danhSachXaPhuong =
+    props.type === 'HKTT' ? danhSachXaPhuongHoKhauThuongTru : danhSachXaPhuongDiaChiLienHe;
+  const [maQuanHuyen, setMaQuanHuyen] = useState<string>('');
+  const [maTinh, setMaTinh] = useState<string>('');
   useEffect(() => {
     getDanhSachTinhModel();
-  }, []);
+    setMaTinh(props?.initialValue?.maTP ?? '');
+    setMaQuanHuyen(props?.initialValue?.maQH ?? '');
+  }, [props?.initialValue?.maTP]);
 
   useEffect(() => {
     if (maTinh) {
-      getDanhSachQuanHuyenModel(maTinh);
+      getDanhSachQuanHuyenModel(maTinh, props.type);
     }
   }, [maTinh]);
 
   useEffect(() => {
     if (maQuanHuyen) {
-      getDanhSachXaPhuongModel(maQuanHuyen);
+      getDanhSachXaPhuongModel(maQuanHuyen, props.type);
     }
   }, [maQuanHuyen]);
 
@@ -85,11 +94,16 @@ const DiaChi = (props: Props) => {
               loading={loading}
               value={maTinh}
               onChange={(val: string) => {
-                setTenTinh(danhSachTinh?.find((item) => item.ma === val)?.tenDonVi);
-                props.setTen?.setTenTinh(danhSachTinh?.find((item) => item.ma === val)?.tenDonVi);
+                if (props?.setTen?.setTenTinh)
+                  props.setTen?.setTenTinh(danhSachTinh?.find((item) => item.ma === val)?.tenDonVi);
                 setMaTinh(val);
                 setDanhSachXaPhuong([]);
-                props.form.resetFields([props.fields.quanHuyen, props.fields.xaPhuong]);
+                const newValue = {};
+                newValue[`${props?.fields?.quanHuyen?.[0]}`] = {
+                  maQH: undefined,
+                  maXaPhuong: undefined,
+                };
+                props.form.setFieldsValue(newValue);
               }}
               allowClear
               showSearch
@@ -119,16 +133,13 @@ const DiaChi = (props: Props) => {
               disabled={props?.disabled}
               loading={loading}
               onChange={(val: string) => {
-                props.setTen?.setTenQuanHuyen(
-                  danhSachQuanHuyen.find((item) => item.ma === val)?.tenDonVi,
-                );
-                setTenQuanHuyen(danhSachQuanHuyen.find((item) => item.ma === val)?.tenDonVi);
+                if (props?.setTen?.setTenQuanHuyen)
+                  props.setTen?.setTenQuanHuyen(
+                    danhSachQuanHuyen.find((item) => item.ma === val)?.tenDonVi,
+                  );
+
                 setMaQuanHuyen(val);
                 props.form.resetFields([props.fields.xaPhuong]);
-              }}
-              onMouseEnter={async () => {
-                const maTinhCurrent = props.form.getFieldValue(props.fields.tinh);
-                if (maTinhCurrent) getDanhSachQuanHuyenModel(maTinhCurrent);
               }}
               showSearch
               allowClear
@@ -156,16 +167,12 @@ const DiaChi = (props: Props) => {
             <Select
               notFoundContent="Bạn chưa chọn Quận huyện"
               disabled={props?.disabled}
-              onMouseEnter={async () => {
-                const maQuanHuyenCurrent = props.form.getFieldValue(props.fields.quanHuyen);
-                if (maQuanHuyenCurrent) getDanhSachXaPhuongModel(maQuanHuyenCurrent);
-              }}
               loading={loading}
               onChange={(val: string) => {
-                props.setTen?.setTenXaPhuong(
-                  danhSachXaPhuong.find((item) => item.ma === val)?.tenDonVi,
-                );
-                setTenXaPhuong(danhSachXaPhuong.find((item) => item.ma === val)?.tenDonVi);
+                if (props?.setTen?.setTenXaPhuong)
+                  props.setTen?.setTenXaPhuong(
+                    danhSachXaPhuong.find((item) => item.ma === val)?.tenDonVi,
+                  );
               }}
               showSearch
               allowClear

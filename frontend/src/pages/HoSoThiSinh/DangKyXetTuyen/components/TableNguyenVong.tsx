@@ -1,4 +1,6 @@
+import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { Setting } from '@/utils/constants';
+import type { IColumn } from '@/utils/interfaces';
 import Icon, {
   CaretDownOutlined,
   CaretUpOutlined,
@@ -7,7 +9,6 @@ import Icon, {
   PlusOutlined,
 } from '@ant-design/icons';
 import { Button, Col, Divider, Modal, Popconfirm, Popover, Row, Table } from 'antd';
-import _ from 'lodash';
 import { useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
@@ -70,16 +71,17 @@ const TableNguyenVong = () => {
     );
   };
 
-  const suaNguyenVong = (recordTemp: any) => {
-    setRecordNguyenVong(recordTemp);
+  const suaNguyenVong = (recordNguyenVong: HoSoXetTuyen.NguyenVong) => {
+    setRecordNguyenVong(recordNguyenVong);
+    setVisibleFormNguyenVong(true);
+    setEdit(true);
   };
 
   const xoaNguyenVong = (index: number) => {
-    danhSachNguyenVong.splice(index - 1, 1);
-
+    danhSachNguyenVong.splice(index, 1);
     setIndexNV(-1);
     setDanhSachNguyenVong(
-      danhSachNguyenVong?.map((item, indexTemp) => ({ ...item, index: indexTemp + 1 })),
+      danhSachNguyenVong?.map((item, indexTemp) => ({ ...item, soThuTu: indexTemp + 1 })),
     );
   };
 
@@ -95,10 +97,14 @@ const TableNguyenVong = () => {
     height: 105,
   };
   const styleRow: any = { textAlign: 'center', padding: '0px 10px 20px 10px' };
-  const renderLast = (recordTemp: any, index: number) => (
+  const renderLast = (recordNguyenVong: HoSoXetTuyen.NguyenVong, index: number) => (
     <div style={{ textAlign: 'center' }}>
       <div style={{ marginBottom: 10 }}>
-        <Button size="small" onClick={() => suaNguyenVong(recordTemp)} style={{ width: '100%' }}>
+        <Button
+          size="small"
+          onClick={() => suaNguyenVong(recordNguyenVong)}
+          style={{ width: '100%' }}
+        >
           <Icon type="form" />
           Chỉnh sửa
         </Button>
@@ -121,7 +127,7 @@ const TableNguyenVong = () => {
           icon={<CaretUpOutlined />}
           size="small"
           onClick={() => upNguyenVong(index)}
-          disabled={recordTemp?.soThuTu === 1}
+          disabled={recordNguyenVong?.soThuTu === 1}
         />
         <Button
           icon={<CaretDownOutlined />}
@@ -132,7 +138,7 @@ const TableNguyenVong = () => {
       </div>
     </div>
   );
-  const columnsNV: any = [
+  const columnsNV: IColumn<HoSoXetTuyen.NguyenVong>[] = [
     {
       title: 'STT',
       dataIndex: 'soThuTu',
@@ -214,6 +220,7 @@ const TableNguyenVong = () => {
         onClick={() => {
           setVisibleFormNguyenVong(true);
           setEdit(false);
+          setRecordNguyenVong(undefined);
         }}
       >
         Thêm nguyện vọng
@@ -289,20 +296,23 @@ const TableNguyenVong = () => {
                                   }}
                                 >
                                   <Col span={3} style={{ ...styleRow }}>
-                                    {_.get(item, 'soThuTu', 1)}
+                                    {item?.soThuTu ?? 1}
                                   </Col>
                                   <Col span={2} style={styleRow}>
-                                    {_.get(item, 'maNganh', '')}
+                                    {item?.maNganhChuyenNganh ?? ''}
                                   </Col>
                                   <Col span={4} style={styleRow}>
-                                    {_.get(item, 'tenNganh', '')}
+                                    {item?.tenNganhChuyenNganh ?? ''}
                                   </Col>
                                   <Col span={3} style={{ ...styleRow }}>
-                                    {_.get(item, 'toHopXetTuyen', '')}
+                                    {item?.toHopXetTuyen ?? ''}
                                   </Col>
                                   <Col span={4} style={styleRow}>
                                     {item?.diemQuyDoi?.thanhPhan?.map(
-                                      (diem: any, indexTemp: number) =>
+                                      (
+                                        diem: { tenThanhPhan: string; diem: number },
+                                        indexTemp: number,
+                                      ) =>
                                         indexTemp < 3 && (
                                           <div>
                                             {diem?.tenThanhPhan}: {diem?.diem}
@@ -312,7 +322,10 @@ const TableNguyenVong = () => {
                                   </Col>
                                   <Col span={6} style={styleRow}>
                                     {item?.diemQuyDoi?.thanhPhan?.map(
-                                      (diem: any, indexTemp: number) =>
+                                      (
+                                        diem: { tenThanhPhan: string; diem: number },
+                                        indexTemp: number,
+                                      ) =>
                                         indexTemp > 2 && (
                                           <div>
                                             {diem?.tenThanhPhan}: {diem?.diem}

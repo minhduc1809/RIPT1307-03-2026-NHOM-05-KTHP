@@ -1,101 +1,180 @@
 import { CloseOutlined, PlusOutlined, RetweetOutlined } from '@ant-design/icons';
-import { Button, Card, Form, Select, Tooltip } from 'antd';
 import _ from 'lodash';
+import { Button, Card, Form, message, Select } from 'antd';
 import { useModel } from 'umi';
+import { useState } from 'react';
+import { ToHopXetTuyen } from '@/utils/constants';
+import rules from '@/utils/rules';
+import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 
 const FormDangKyNguyenVong = () => {
   const [form] = Form.useForm();
-  const { edit, setVisibleFormNguyenVong, danhSachNguyenVong, setDanhSachNguyenVong } =
-    useModel('hosoxettuyen');
-
+  const {
+    edit,
+    setVisibleFormNguyenVong,
+    danhSachNguyenVong,
+    setDanhSachNguyenVong,
+    recordHoSo,
+    recordNguyenVong,
+    putMyTinhQuyDoiNguyenVongModel,
+  } = useModel('hosoxettuyen');
+  const { record } = useModel('dottuyensinh');
+  const arrCoSoDaoTao: CoSoDaoTao.Record[] = [];
+  record?.danhSachNganhTuyenSinh?.map((item) => {
+    item?.danhSachCoSoDaoTao?.map((coSo) => {
+      arrCoSoDaoTao.push(coSo);
+    });
+  });
+  const [coSoDaoTao, setCoSoDaoTao] = useState<any>(
+    recordNguyenVong?.coSoDaoTao?._id
+      ? recordNguyenVong?.coSoDaoTao?._id
+      : recordNguyenVong?.coSoDaoTao,
+  );
+  const [tenCoSoDaoTao, setTenCoSoDaoTao] = useState<string>(recordNguyenVong?.tenCoSoDaoTao ?? '');
+  const [idNganhChuyenNganh, setIdNganhChuyenNganh] = useState<string>(
+    recordNguyenVong?.idNganhChuyenNganh ?? '',
+  );
+  const [maNganhChuyenNganh, setMaNganhChuyenNganh] = useState<string>(
+    recordNguyenVong?.maNganhChuyenNganh ?? '',
+  );
+  const [tenNganhChuyenNganh, setTenNganhChuyenNganh] = useState<string>(
+    recordNguyenVong?.tenNganhChuyenNganh ?? '',
+  );
+  const verifyNguyenVong = (nguyenVong: HoSoXetTuyen.NguyenVong): boolean => {
+    let check = true;
+    danhSachNguyenVong?.map((item) => {
+      if (
+        item.coSoDaoTao === nguyenVong.coSoDaoTao &&
+        item.idNganhChuyenNganh === nguyenVong.idNganhChuyenNganh &&
+        item.toHopXetTuyen === nguyenVong.toHopXetTuyen
+      ) {
+        check = false;
+      }
+    });
+    return check;
+  };
   return (
     <Card title={edit ? 'Chỉnh sửa nguyện vọng' : 'Thêm nguyện vọng'} bordered>
       <Form
         labelCol={{ span: 24 }}
         form={form}
-        onFinish={(values) => {
-          setDanhSachNguyenVong([
-            ...danhSachNguyenVong,
-            {
-              ...values,
-              soThuTu: danhSachNguyenVong.length + 1,
-              tenNganh: 'Công nghệ thông tin',
-              diemQuyDoi: {
-                thanhPhan: [
-                  { tenThanhPhan: 'Toán học', diem: 9 },
-                  { tenThanhPhan: 'Vật lý', diem: 10 },
-                  { tenThanhPhan: 'Hóa học', diem: 8 },
-                  { tenThanhPhan: 'Ưu tiên khu vực', diem: 0.5 },
-                ],
-                tongDiem: 28,
-              },
-            },
-          ]);
-          setVisibleFormNguyenVong(false);
+        onFinish={async (values) => {
+          const valueNguyenVong = {
+            ...values,
+            soThuTu: edit ? recordNguyenVong?.soThuTu : danhSachNguyenVong.length + 1,
+            tenNganhChuyenNganh,
+            coSoDaoTao,
+            maDoiTuong: recordHoSo?.maDoiTuong,
+            tenCoSoDaoTao,
+            tenDoiTuong: record?.danhSachDoiTuongTuyenSinh?.find(
+              (item) => item.maDoiTuong === recordHoSo?.maDoiTuong,
+            )?.thongTinDoiTuong?.tenDoiTuong,
+            idNganhChuyenNganh,
+            maNganhChuyenNganh,
+            nganhXetTuyen: undefined,
+          };
+          if (!verifyNguyenVong(valueNguyenVong)) {
+            message.error('Nguyện vọng đã tồn tại');
+            return;
+          }
+          const responseQuyDoi = await putMyTinhQuyDoiNguyenVongModel({
+            nguyenVong: valueNguyenVong,
+          });
+          if (responseQuyDoi?.data?.statusCode === 200) {
+            if (!edit) setDanhSachNguyenVong([...danhSachNguyenVong, responseQuyDoi?.data?.data]);
+            else {
+              if (recordNguyenVong) {
+                danhSachNguyenVong.splice(
+                  recordNguyenVong?.soThuTu - 1,
+                  1,
+                  responseQuyDoi?.data?.data,
+                );
+                setDanhSachNguyenVong(danhSachNguyenVong);
+              }
+            }
+            setVisibleFormNguyenVong(false);
+          }
         }}
       >
-        <Form.Item label="Chọn ngành xét tuyển" name="maNganh">
+        <Form.Item
+          initialValue={
+            edit
+              ? `${
+                  recordNguyenVong?.coSoDaoTao?._id
+                    ? recordNguyenVong?.coSoDaoTao?._id
+                    : recordNguyenVong?.coSoDaoTao
+                }||${recordNguyenVong?.tenCoSoDaoTao}`
+              : undefined
+          }
+          rules={[...rules.required]}
+          label="Chọn cơ sở đào tạo"
+          name="coSoDaoTao"
+        >
           <Select
-            // value={maNganh}
-            placeholder="Chọn ngành/chương trình đăng ký xét tuyển"
+            onChange={(val) => {
+              const arrValueCoSoDaoTao = val?.split('||');
+              setCoSoDaoTao(arrValueCoSoDaoTao[0]);
+              setTenCoSoDaoTao(arrValueCoSoDaoTao[1]);
+              form.setFieldsValue({
+                nganhXetTuyen: undefined,
+                toHopXetTuyen: undefined,
+              });
+            }}
+            placeholder="Chọn cơ sở đào tạo"
             style={{ width: '100%' }}
-            // onChange={this.onChangeNganh}
-          >
-            {[
-              {
-                tenNganh: 'Công nghệ thông tin',
-                maNganh: 'CNTT',
-                toHopXetTuyen: ['A00', 'A01', 'D01'],
-              },
-            ]?.map((item) => (
-              <Select.Option
-                key={item.maNganh}
-                label={item?.tenNganh}
-                value={item?.maNganh}
-                toHop={item?.toHopXetTuyen}
-              >
-                {item?.maNganh ?? ''} - {item?.tenNganh ?? ''} (
-                {item?.toHopXetTuyen?.map(
-                  (toHop, index) =>
-                    `${toHop}${index < item?.toHopXetTuyen?.length - 1 ? ', ' : ''}`,
-                )}
-                )
-              </Select.Option>
-            ))}
-          </Select>
+            options={_.uniqBy(arrCoSoDaoTao, '_id')?.map((item) => ({
+              value: `${item._id}||${item.ten}`,
+              label: `${item.ten} (${item.tenVietTat})`,
+            }))}
+          />
         </Form.Item>
-        <Form.Item name="toHopXetTuyen" label="Chọn tổ hợp xét tuyển">
+        <Form.Item
+          initialValue={
+            edit
+              ? `${recordNguyenVong?.idNganhChuyenNganh}||${recordNguyenVong?.maNganhChuyenNganh}||${recordNguyenVong?.tenNganhChuyenNganh}`
+              : undefined
+          }
+          rules={[...rules.required]}
+          label="Chọn ngành xét tuyển"
+          name="nganhXetTuyen"
+        >
+          <Select
+            placeholder="Chọn ngành xét tuyển"
+            style={{ width: '100%' }}
+            onChange={(val) => {
+              const arrValueNganhXetTuyen = val?.split('||');
+              setIdNganhChuyenNganh(arrValueNganhXetTuyen[0]);
+              setMaNganhChuyenNganh(arrValueNganhXetTuyen[1]);
+              setTenNganhChuyenNganh(arrValueNganhXetTuyen[2]);
+              form.setFieldsValue({
+                toHopXetTuyen: undefined,
+              });
+            }}
+            options={record?.danhSachNganhTuyenSinh
+              ?.filter((item) => item.danhSachCoSoDaoTao?.find((coSo) => coSo._id === coSoDaoTao))
+              ?.map((item) => ({
+                value: `${item?.nganh?._id}||${item?.nganh?.ma}||${item?.nganh?.ten}`,
+                label: `${item?.nganh?.ma}-${item?.nganh?.ten}`,
+              }))}
+          />
+        </Form.Item>
+        <Form.Item
+          initialValue={recordNguyenVong?.toHopXetTuyen}
+          rules={[...rules.required]}
+          name="toHopXetTuyen"
+          label="Chọn tổ hợp xét tuyển"
+        >
           <Select
             showSearch
             style={{ width: '100%' }}
-            // value={this.state.toHopXetTuyen}
             placeholder="Tổ hợp xét tuyển"
-            optionFilterProp="children"
-            // notFoundContent={
-            //   maNganh ? (
-            //     <div>
-            //       {`Ngành đang chọn không hỗ trợ tổ hợp ${data?.danhSachToHopXetTuyen?.map(
-            //         (toHop, index) =>
-            //           `${toHop}${index < data?.danhSachToHopXetTuyen?.length - 1 ? ', ' : ''}`
-            //       )}.`}
-            //       <br />
-            //       Vui lòng quay lại bước 3 để cập nhật danh sách tổ hợp xét tuyển.
-            //     </div>
-            //   ) : (
-            //     'Bạn chưa chọn ngành xét tuyển'
-            //   )
-            // }
-            // onChange={this.onChangeToHop}
-            filterOption={(input, option) =>
-              option?.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-          >
-            {['A00', 'A01', 'C00', 'C01']?.map((item) => (
-              <Select.Option key={item} value={item}>
-                {item}
-              </Select.Option>
-            ))}
-          </Select>
+            options={record?.danhSachNganhTuyenSinh
+              ?.find((item) => item?.nganh?._id === idNganhChuyenNganh)
+              ?.danhSachToHop?.map((item) => ({
+                value: item,
+                label: `${item} (${ToHopXetTuyen[item]})`,
+              }))}
+          />
         </Form.Item>
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
           <Button

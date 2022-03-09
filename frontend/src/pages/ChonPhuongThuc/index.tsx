@@ -12,6 +12,7 @@ const LuaChonPhuongThuc = () => {
     danhSach,
     record: recordNamTuyenSinh,
     loading,
+    setRecord: setRecordNamTuyenSinh,
   } = useModel('namtuyensinh');
   const {
     getAllHinhThucDaoTaoModel,
@@ -66,6 +67,9 @@ const LuaChonPhuongThuc = () => {
                     style={{ width: 200, marginRight: 8 }}
                   />
                   <Select
+                    onChange={(val) =>
+                      setRecordNamTuyenSinh(danhSach?.find((item) => item.nam === val))
+                    }
                     value={recordNamTuyenSinh?.nam}
                     options={danhSach?.map((item) => ({
                       value: item.nam,
@@ -82,7 +86,7 @@ const LuaChonPhuongThuc = () => {
                         onClick={() => {
                           localStorage.setItem('phuongThuc', item.phuongThucTuyenSinh._id);
                           setRecord(item.phuongThucTuyenSinh);
-                          history.push('/hosothisinh/phuongthucxettuyen/chitiet');
+                          history.push('/dotxettuyen');
                         }}
                       >
                         <Button type="default" size="large" shape="circle">

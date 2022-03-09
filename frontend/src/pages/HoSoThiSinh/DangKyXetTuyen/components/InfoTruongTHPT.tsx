@@ -1,17 +1,19 @@
 import TruongTHPT from '@/components/TruongTHPT';
-import { Divider, Radio, Col } from 'antd';
+import { Col, Divider, Radio } from 'antd';
 import type { FormInstance } from 'antd/es/form/Form';
-import { useState } from 'react';
+import { useModel } from 'umi';
 
 type Props = {
   form: FormInstance<any>;
+  setIsChuyenTruong: any;
+  isChuyenTruong: boolean;
 };
 
 const InfoTruongTHPT = (props: Props) => {
-  const [isChuyenTruong, setIsChuyenTruong] = useState<boolean>(false);
+  const { recordHoSo } = useModel('hosoxettuyen');
+
   return (
     <>
-      {' '}
       <Divider plain>
         <b>Thông tin về trường THPT mà bạn theo học</b>
       </Divider>
@@ -21,25 +23,31 @@ const InfoTruongTHPT = (props: Props) => {
         </b>
         <Radio.Group
           onChange={(e) => {
-            setIsChuyenTruong(e.target.value);
+            props?.setIsChuyenTruong(e.target.value);
           }}
-          value={isChuyenTruong}
+          value={props?.isChuyenTruong}
         >
           <Radio value={false}>Không</Radio>
           <Radio value={true}>Có</Radio>
         </Radio.Group>
       </div>
-      {!isChuyenTruong ? (
+      {!props?.isChuyenTruong ? (
         <Col span={24}>
           <TruongTHPT
+            type="10"
             form={props.form}
             fields={{
-              tinh: ['diaChi', 'maTinh'],
-              quanHuyen: ['diaChi', 'maQuanHuyen'],
-              xaPhuong: ['diaChi', 'maPhuongXa'],
-              diaChiCuThe: ['diaChi', 'soNhaTenDuong'],
+              monChuyen: ['truongLop10', 'monChuyen'],
+              tinh: ['truongLop10', 'maTinh'],
+              quanHuyen: ['truongLop10', 'maQuanHuyen'],
+              truongTHPT: ['truongLop10', 'maTruong'],
             }}
-            // setTen={{ setTenTinh, setTenQuanHuyen, setTenXaPhuong }}
+            initialValue={{
+              maTinh: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.maTinh,
+              maQuanHuyen: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.maQuanHuyen,
+              maTruong: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.maTruong,
+              monChuyen: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.monChuyen,
+            }}
           />
         </Col>
       ) : (
@@ -47,36 +55,57 @@ const InfoTruongTHPT = (props: Props) => {
           <Col span={24}>
             <b style={{ color: 'rgba(0, 0, 0, 0.85)', width: '100%' }}>Lớp 10</b>
             <TruongTHPT
+              type="10"
               form={props.form}
               fields={{
-                tinh: ['diaChi', 'maTinh'],
-                quanHuyen: ['diaChi', 'maQuanHuyen'],
-                xaPhuong: ['diaChi', 'maPhuongXa'],
-                diaChiCuThe: ['diaChi', 'soNhaTenDuong'],
+                monChuyen: ['truongLop10', 'monChuyen'],
+                tinh: ['truongLop10', 'maTinh'],
+                quanHuyen: ['truongLop10', 'maQuanHuyen'],
+                truongTHPT: ['truongLop10', 'maTruong'],
+              }}
+              initialValue={{
+                maTinh: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.maTinh,
+                maQuanHuyen: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.maQuanHuyen,
+                maTruong: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.maTruong,
+                monChuyen: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.monChuyen,
               }}
             />
           </Col>
           <Col style={{ marginTop: 20 }} span={24}>
             <b style={{ color: 'rgba(0, 0, 0, 0.85)', width: '100%' }}>Lớp 11</b>
             <TruongTHPT
+              type="11"
               form={props.form}
               fields={{
-                tinh: ['diaChi', 'maTinh'],
-                quanHuyen: ['diaChi', 'maQuanHuyen'],
-                xaPhuong: ['diaChi', 'maPhuongXa'],
-                diaChiCuThe: ['diaChi', 'soNhaTenDuong'],
+                monChuyen: ['truongLop11', 'monChuyen'],
+                tinh: ['truongLop11', 'maTinh'],
+                quanHuyen: ['truongLop11', 'maQuanHuyen'],
+                truongTHPT: ['truongLop11', 'maTruong'],
+              }}
+              initialValue={{
+                maTinh: recordHoSo?.thongTinHocTapTHPT?.truongLop11?.maTinh,
+                maQuanHuyen: recordHoSo?.thongTinHocTapTHPT?.truongLop11?.maQuanHuyen,
+                maTruong: recordHoSo?.thongTinHocTapTHPT?.truongLop11?.maTruong,
+                monChuyen: recordHoSo?.thongTinHocTapTHPT?.truongLop11?.monChuyen,
               }}
             />
           </Col>
           <Col style={{ marginTop: 20 }} span={24}>
             <b style={{ color: 'rgba(0, 0, 0, 0.85)', width: '100%' }}>Lớp 12</b>
             <TruongTHPT
+              type="12"
               form={props.form}
               fields={{
-                tinh: ['diaChi', 'maTinh'],
-                quanHuyen: ['diaChi', 'maQuanHuyen'],
-                xaPhuong: ['diaChi', 'maPhuongXa'],
-                diaChiCuThe: ['diaChi', 'soNhaTenDuong'],
+                monChuyen: ['truongLop12', 'monChuyen'],
+                tinh: ['truongLop12', 'maTinh'],
+                quanHuyen: ['truongLop12', 'maQuanHuyen'],
+                truongTHPT: ['truongLop12', 'maTruong'],
+              }}
+              initialValue={{
+                maTinh: recordHoSo?.thongTinHocTapTHPT?.truongLop12?.maTinh,
+                maQuanHuyen: recordHoSo?.thongTinHocTapTHPT?.truongLop12?.maQuanHuyen,
+                maTruong: recordHoSo?.thongTinHocTapTHPT?.truongLop12?.maTruong,
+                monChuyen: recordHoSo?.thongTinHocTapTHPT?.truongLop12?.monChuyen,
               }}
             />
           </Col>

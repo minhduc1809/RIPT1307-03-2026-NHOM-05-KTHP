@@ -9,12 +9,14 @@ export const doiTuongUuTienTuyenSinh = [
   '07',
 ];
 
-export const khuVucUuTien = [
-  { value: 'KV1', label: 'KV1' },
-  { value: 'KV2_NT', label: 'KV2-NT' },
-  { value: 'KV2', label: 'KV2' },
-  { value: 'KV3', label: 'KV3' },
-];
+export enum EKhuVucUuTien {
+  KV1 = 'KV1',
+  'KV2-NT' = 'KV2_NT',
+  KV2 = 'KV2',
+  KV3 = 'KV3',
+}
+
+export const arrKhuVucUuTien = ['KV1', 'KV2_NT', 'KV2', 'KV3'];
 
 export const hanhKiem = ['Tốt', 'Khá', 'Trung bình', 'Yếu'];
 
@@ -30,8 +32,8 @@ export const MonToHop = {
   'Hóa học': 'tongKetHoa',
   'Ngữ văn': 'tongKetVan',
   'Tiếng Anh': 'tongKetNgoaiNgu',
-  'Lịch sử': 'tongKetSu',
-  'Địa lý': 'tongKetDia',
+  // 'Lịch sử': 'tongKetSu',
+  // 'Địa lý': 'tongKetDia',
 };
 
 export enum ELoaiChungChiQuocTe {
@@ -44,6 +46,17 @@ export enum ELoaiChungChiNgoaiNgu {
   TOEFL_IBT = 'TOEFL iBT',
   TOEFL_ITP = 'TOEFL ITP',
 }
+
+export const MaxMinDiemChungChiNgoaiNgu = {
+  IELTS: { max: 9, min: 0 },
+  'TOEFL iBT': { max: 120, min: 0 },
+  'TOEFL ITP': { max: 677, min: 310 },
+};
+
+export const MaxMinDiemChungChiQuocTe = {
+  SAT: { max: 1600, min: 400 },
+  ACT: { max: 36, min: 1 },
+};
 
 export enum EMonThiHSG {
   TOAN = 'Toán học',
@@ -69,6 +82,11 @@ export enum EGiaiHSG {
   NHAT_QG = 'Giải Nhất Quốc gia',
 }
 
+export const giaiHSG = {
+  thongTinGiaiQuocGia: ['Giải Nhất', 'Giải Nhì', 'Giải Ba', 'Khuyến khích', 'Tham gia'],
+  thongTinGiaiTinhTP: ['Giải Nhất', 'Giải Nhì', 'Giải Ba'],
+};
+
 export const DoiTuongXetTuyen = [
   {
     value: 0,
@@ -92,6 +110,29 @@ export enum ELoaiPhuongThucTuyenSinh {
   XET_TUYEN_THANG_BGD = 'Xét tuyển thăng BGD',
   THI_THPT = 'Thi THPT',
   KET_HOP = 'Kết hợp',
+}
+
+export enum EMonHoc {
+  TOAN = 'Toán học',
+  VAT_LY = 'Vật lý',
+  DIA_LY = 'Địa lý',
+  DIA_LI = 'Địa lí',
+  HOA = 'Hóa học',
+  TIN = 'Tin học',
+  SINH = 'Sinh học',
+  SU = 'Lịch sử',
+  GDCD = 'Giáo dục công dân',
+  // CN = 'Tiếng Trung Quốc',
+  VAN = 'Ngữ văn',
+  ENG = 'Tiếng Anh',
+  RUS = 'Tiếng Nga',
+  FRA = 'Tiếng Pháp',
+  JPN = 'Tiếng Nhật',
+  CHN = 'Tiếng Trung Quốc',
+  KOR = 'Tiếng Hàn',
+  GER = 'Tiếng Đức',
+  ESP = 'Tiếng Tây Ban Nha',
+  EMPTY = '',
 }
 
 export const Setting = {

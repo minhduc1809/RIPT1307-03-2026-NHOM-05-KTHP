@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import type { IRecordTinh } from '@/services/DonViHanhChinh/typing';
+import { EKhuVucUuTien, EMonHoc } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { includes } from '@/utils/utils';
 import { Col, Form, Input, Row, Select } from 'antd';
@@ -8,74 +8,73 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
 type Props = {
+  type: '10' | '11' | '12';
   disabled?: boolean;
   form: FormInstance<any>;
   hideTinh?: boolean;
   hideQuanHuyen?: boolean;
-  hideXaPhuong?: boolean;
-  hideDiaChiCuThe?: boolean;
+  hideTruongTHPT?: boolean;
   notRequiredTinh?: boolean;
   notRequiredQuanHuyen?: boolean;
-  notRequiredXaPhuong?: boolean;
-  notRequiredDiaChiCuThe?: boolean;
+  notRequiredTruongTHPT?: boolean;
+
   fields: {
     tinh: string[];
     quanHuyen: string[];
-    xaPhuong: string[];
-    diaChiCuThe: string[];
+    truongTHPT: string[];
+    // tenLop: string[];
+    monChuyen: string[];
   };
-  initialValue?: IRecordTinh.DonViHanhChinhRecord;
+  initialValue?: {
+    maTinh?: string;
+    maQuanHuyen?: string;
+    maTruong?: string;
+    // tenLop?: string;
+    monChuyen?: string;
+  };
   setTen?: {
     setTenTinh?: any;
     setTenQuanHuyen?: any;
-    setTenXaPhuong?: any;
   };
 };
 
 const TruongTHPT = (props: Props) => {
-  const {
-    danhSachQuanHuyen,
-    danhSachTinh,
-    danhSachXaPhuong,
-    setDanhSachXaPhuong,
-    getDanhSachQuanHuyenModel,
-    getDanhSachTinhModel,
-    getDanhSachXaPhuongModel,
-    setTenTinh,
-    setTenXaPhuong,
-    setTenQuanHuyen,
-    loading,
-  } = useModel('donvihanhchinh');
+  const modelTruongTHPT = useModel('truongthpt');
+  const modelHoSoXetTuyen = useModel('hosoxettuyen');
+
+  const { danhSachTinh, loading, getTinhTPModel, getQuanHuyenModel, getTruongTHPTModel } =
+    modelTruongTHPT;
 
   const [maQuanHuyen, setMaQuanHuyen] = useState<string>(props?.initialValue?.maQuanHuyen ?? '');
   const [maTinh, setMaTinh] = useState<string>(props?.initialValue?.maTinh ?? '');
+  const [maTruong, setMaTruong] = useState<string>(props?.initialValue?.maTruong ?? '');
 
   useEffect(() => {
-    getDanhSachTinhModel();
+    getTinhTPModel();
   }, []);
 
   useEffect(() => {
     if (maTinh) {
-      getDanhSachQuanHuyenModel(maTinh);
+      getQuanHuyenModel(maTinh, props.type);
     }
   }, [maTinh]);
 
   useEffect(() => {
     if (maQuanHuyen) {
-      getDanhSachXaPhuongModel(maQuanHuyen);
+      getTruongTHPTModel(maTinh, maQuanHuyen, props.type);
     }
-  }, [maQuanHuyen]);
+  }, [maTinh, maQuanHuyen]);
 
   return (
     <Row gutter={[20, 0]}>
       {!props.hideTinh && (
         <Col
           xs={24}
-          md={props.hideQuanHuyen && props.hideXaPhuong ? 12 : 24}
-          lg={props.hideQuanHuyen && props.hideXaPhuong ? 24 : 8}
+          md={props.hideQuanHuyen && props.hideTruongTHPT ? 12 : 24}
+          lg={props.hideQuanHuyen && props.hideTruongTHPT ? 24 : 8}
         >
           <Form.Item
-            style={{ marginBottom: props.hideDiaChiCuThe ? 0 : 8 }}
+            style={{ marginBottom: 8 }}
             initialValue={props?.initialValue?.maTinh}
             name={props?.fields?.tinh ?? []}
             rules={props.notRequiredTinh ? [] : [...rules.required]}
@@ -86,11 +85,17 @@ const TruongTHPT = (props: Props) => {
               loading={loading}
               value={maTinh}
               onChange={(val: string) => {
-                setTenTinh(danhSachTinh?.find((item) => item.ma === val)?.tenDonVi);
-                props.setTen?.setTenTinh(danhSachTinh?.find((item) => item.ma === val)?.tenDonVi);
+                props.setTen?.setTenTinh(
+                  danhSachTinh?.find((item) => item.maTinh === val)?.tenTinhTP,
+                );
                 setMaTinh(val);
-                setDanhSachXaPhuong([]);
-                props.form.resetFields([props.fields.quanHuyen, props.fields.xaPhuong]);
+                modelTruongTHPT?.[`setDanhSachTruongTHPT${props.type}`]([]);
+                const newValue = {};
+                newValue[`${props?.fields?.quanHuyen?.[0]}`] = {
+                  maQuanHuyen: undefined,
+                  maTruong: undefined,
+                };
+                props.form.setFieldsValue(newValue);
               }}
               allowClear
               showSearch
@@ -99,8 +104,8 @@ const TruongTHPT = (props: Props) => {
               filterOption={(value, option) => includes(option?.props.children, value)}
             >
               {danhSachTinh?.map((item) => (
-                <Select.Option value={item.ma} key={item.ma}>
-                  {item.tenDonVi}
+                <Select.Option value={item.maTinh} key={item.maTinh}>
+                  {item.tenTinhTP}
                 </Select.Option>
               ))}
             </Select>
@@ -110,27 +115,27 @@ const TruongTHPT = (props: Props) => {
       {!props.hideQuanHuyen && (
         <Col xs={24} md={12} lg={8}>
           <Form.Item
-            style={{ marginBottom: props.hideDiaChiCuThe ? 0 : 8 }}
+            style={{ marginBottom: 8 }}
             initialValue={props?.initialValue?.maQuanHuyen}
             name={props?.fields?.quanHuyen ?? []}
             rules={props.notRequiredQuanHuyen ? [] : [...rules.required]}
             label="Chọn quận/huyện"
           >
             <Select
-              notFoundContent="Bạn chưa chọn Tỉnh"
               disabled={props?.disabled}
               loading={loading}
               onChange={(val: string) => {
                 props.setTen?.setTenQuanHuyen(
-                  danhSachQuanHuyen.find((item) => item.ma === val)?.tenDonVi,
+                  modelTruongTHPT?.[`danhSachQuanHuyen${props.type}`].find(
+                    (item) => item.maQH === val,
+                  )?.tenQH,
                 );
-                setTenQuanHuyen(danhSachQuanHuyen.find((item) => item.ma === val)?.tenDonVi);
                 setMaQuanHuyen(val);
-                props.form.resetFields([props.fields.xaPhuong]);
-              }}
-              onMouseEnter={async () => {
-                const maTinhCurrent = props.form.getFieldValue(props.fields.tinh);
-                if (maTinhCurrent) getDanhSachQuanHuyenModel(maTinhCurrent);
+                const newValue = {};
+                newValue[`${props?.fields?.quanHuyen?.[0]}`] = {
+                  maTruong: undefined,
+                };
+                props.form.setFieldsValue(newValue);
               }}
               showSearch
               allowClear
@@ -138,37 +143,38 @@ const TruongTHPT = (props: Props) => {
               optionFilterProp="children"
               filterOption={(value, option) => includes(option?.props.children, value)}
             >
-              {danhSachQuanHuyen?.map((item) => (
-                <Select.Option value={item.ma} key={item.ma}>
-                  {item.tenDonVi}
+              {modelTruongTHPT?.[`danhSachQuanHuyen${props.type}`]?.map((item) => (
+                <Select.Option value={item.maQH} key={item.maQH}>
+                  {item.tenQH}
                 </Select.Option>
               ))}
             </Select>
           </Form.Item>
         </Col>
       )}
-      {!props.hideXaPhuong && (
+      {!props.hideTruongTHPT && (
         <Col xs={24} md={12} lg={8}>
           <Form.Item
-            style={{ marginBottom: props.hideDiaChiCuThe ? 0 : 8 }}
-            initialValue={props?.initialValue?.maPhuongXa}
-            name={props?.fields?.xaPhuong ?? []}
-            rules={props?.notRequiredXaPhuong ? [] : [...rules.required]}
+            style={{ marginBottom: 8 }}
+            initialValue={props?.initialValue?.maTruong}
+            name={props?.fields?.truongTHPT ?? []}
+            rules={props?.notRequiredTruongTHPT ? [] : [...rules.required]}
             label="Tên trường"
           >
             <Select
-              notFoundContent="Bạn chưa chọn Quận huyện"
               disabled={props?.disabled}
-              onMouseEnter={async () => {
-                const maQuanHuyenCurrent = props.form.getFieldValue(props.fields.quanHuyen);
-                if (maQuanHuyenCurrent) getDanhSachXaPhuongModel(maQuanHuyenCurrent);
-              }}
               loading={loading}
-              onChange={(val: string) => {
-                props.setTen?.setTenXaPhuong(
-                  danhSachXaPhuong.find((item) => item.ma === val)?.tenDonVi,
+              onChange={(val: string, options: any) => {
+                const khuVuc = EKhuVucUuTien[options?.key?.split('||')?.[1]];
+                const isTruongChuyen = options?.key?.split('||')?.[2] === 'true';
+                modelHoSoXetTuyen?.[`setKhuVucUuTienLop${props.type}`](khuVuc);
+                modelHoSoXetTuyen?.[`setIsTruongChuyenLop${props.type}`](isTruongChuyen);
+                modelTruongTHPT?.[`setTenTruong${props.type}`](
+                  modelTruongTHPT?.[`danhSachTruongTHPT${props.type}`].find(
+                    (item) => item.maTruong === val,
+                  )?.tenTruong,
                 );
-                setTenXaPhuong(danhSachXaPhuong.find((item) => item.ma === val)?.tenDonVi);
+                setMaTruong(val);
               }}
               showSearch
               allowClear
@@ -176,27 +182,33 @@ const TruongTHPT = (props: Props) => {
               optionFilterProp="children"
               filterOption={(value, option) => includes(option?.props.children, value)}
             >
-              {danhSachXaPhuong?.map((item) => (
-                <Select.Option value={item.ma} key={item.ma}>
-                  {item.tenDonVi}
+              {modelTruongTHPT?.[`danhSachTruongTHPT${props.type}`]?.map((item) => (
+                <Select.Option
+                  value={item.maTruong}
+                  key={`${item.maTruong}||${item.khuVuc}||${item?.truongChuyen ?? false}`}
+                >
+                  {item.tenTruong}
                 </Select.Option>
               ))}
             </Select>
           </Form.Item>
         </Col>
       )}
-      <Col xs={24} lg={12}>
+
+      <Col xs={24} lg={8}>
         <Form.Item
           labelCol={{ span: 24 }}
           wrapperCol={{ span: 24 }}
           label="Mã tỉnh"
+          initialValue={props?.initialValue?.maTinh}
           style={{ width: '100%', marginBottom: '0' }}
         >
-          <Input placeholder="Chưa chọn tỉnh" disabled style={{ width: '100%' }} />
+          <Input value={maTinh} placeholder="Chưa chọn tỉnh" disabled style={{ width: '100%' }} />
         </Form.Item>
       </Col>
-      <Col xs={24} lg={12}>
+      <Col xs={24} lg={8}>
         <Form.Item
+          initialValue={props?.initialValue?.maTruong}
           labelCol={{ span: 24 }}
           wrapperCol={{ span: 24 }}
           label="Mã trường"
@@ -205,26 +217,46 @@ const TruongTHPT = (props: Props) => {
             marginBottom: '0',
           }}
         >
-          <Input placeholder="Chưa chọn trường" style={{ width: '100%' }} disabled />
+          <Input
+            value={maTruong}
+            placeholder="Chưa chọn trường"
+            style={{ width: '100%' }}
+            disabled
+          />
         </Form.Item>
       </Col>
-      {/* {!props.hideDiaChiCuThe && (
-        <Col span={24}>
+      {/* <Col xs={24} lg={8}>
+        <Form.Item
+          rules={[...rules.required]}
+          labelCol={{ span: 24 }}
+          wrapperCol={{ span: 24 }}
+          label="Tên lớp"
+          initialValue={props?.initialValue?.tenLop}
+          name={props?.fields?.tenLop ?? []}
+          style={{ width: '100%', marginBottom: '0' }}
+        >
+          <Input placeholder="Tên lớp" style={{ width: '100%' }} />
+        </Form.Item>
+      </Col> */}
+      {modelHoSoXetTuyen?.[`isTruongChuyenLop${props.type}`] && (
+        <Col xs={24} lg={8}>
           <Form.Item
-            initialValue={props?.initialValue?.soNhaTenDuong}
-            rules={props?.notRequiredDiaChiCuThe ? [] : [...rules.required]}
-            name={props?.fields?.diaChiCuThe ?? []}
-            style={{ marginBottom: 0 }}
+            rules={[...rules.required]}
+            initialValue={props?.initialValue?.monChuyen}
+            label="Môn chuyên"
+            name={props.fields.monChuyen}
           >
-            <Input.TextArea
-              disabled={props?.disabled}
-              maxLength={400}
-              placeholder="Địa chỉ cụ thể"
-              style={{ marginTop: 0 }}
+            <Select
+              showSearch
+              allowClear
+              placeholder="Chọn môn chuyên"
+              options={Object.values(EMonHoc)
+                .filter((mon) => mon !== '')
+                .map((mon) => ({ value: mon, label: mon }))}
             />
           </Form.Item>
         </Col>
-      )} */}
+      )}
     </Row>
   );
 };

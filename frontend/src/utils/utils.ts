@@ -1,10 +1,13 @@
 /* eslint-disable no-return-assign */
+import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { getPhanNhomUserCurrent } from '@/services/PhanQuyen/phanquyen';
 import { uploadFile } from '@/services/uploadFile';
 import { message } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
+import { parse } from 'path';
 import { useModel } from 'umi';
+import { arrKhuVucUuTien, EKhuVucUuTien, EMonHoc } from './constants';
 import { ip3 } from './ip';
 
 const reg =
@@ -190,9 +193,9 @@ export function renderFileListUrlWithName(url: string, fileName?: string) {
 export function renderFileList(arr: string[]) {
   if (!arr) return { fileList: [] };
   return {
-    fileList: arr.map((url) => ({
+    fileList: arr.map((url, index) => ({
       remote: true, // file đã có trên server, ko phải là upload file mới
-      name: getNameFile(url),
+      name: `File đính kèm ${index + 1}`,
       url,
       status: 'done',
       size: 0,
@@ -257,10 +260,10 @@ export const uploadMultiFile = async (arrFile: any[]) => {
   let arrUrl: string[] = [];
   const arrUpload = arrFile
     ?.filter((item) => item?.remote !== true)
-    ?.map(async (file: { originFileObj: any; type: string }) => {
+    ?.map(async (file: { originFileObj: any; type: string; name: string }) => {
       const response = await uploadFile({
         file: file?.originFileObj,
-        filename: 'fileName',
+        filename: parse(file?.name).name,
         public: true,
       });
       return response?.data?.data?.url;
@@ -289,4 +292,67 @@ export async function getURLImg(payload: any) {
     form.set(key, payload[key]);
   });
   return axios.post(`${ip3}/file/image/single`, form);
+}
+
+export function calculateChuyen(thongTinHocTapTHPT: HoSoXetTuyen.ThongTinHocTapTHPT): {
+  truongChuyen: boolean;
+  monChuyen: EMonHoc;
+} {
+  let truongChuyen = false;
+  let monChuyen = EMonHoc.EMPTY;
+
+  const dicTruongChuyen: Record<string, number> = {
+    'Không chuyên': 0,
+    Chuyên: 0,
+  };
+
+  const dicMonChuyen: Record<string, number> = {};
+
+  if (!thongTinHocTapTHPT.truongLop10.truongChuyen) {
+    dicTruongChuyen['Không chuyên'] += 1;
+  } else {
+    dicTruongChuyen['Chuyên'] += 1;
+    dicMonChuyen[thongTinHocTapTHPT.truongLop10.monChuyen ?? EMonHoc.EMPTY] =
+      (dicMonChuyen[thongTinHocTapTHPT.truongLop10.monChuyen ?? EMonHoc.EMPTY] ?? 0) + 1;
+  }
+
+  if (!thongTinHocTapTHPT.truongLop11.truongChuyen) {
+    dicTruongChuyen['Không chuyên'] += 1;
+  } else {
+    dicTruongChuyen['Chuyên'] += 1;
+    dicMonChuyen[thongTinHocTapTHPT.truongLop11.monChuyen ?? EMonHoc.EMPTY] =
+      (dicMonChuyen[thongTinHocTapTHPT.truongLop11.monChuyen ?? EMonHoc.EMPTY] ?? 0) + 1;
+  }
+
+  if (!thongTinHocTapTHPT.truongLop12.truongChuyen) {
+    dicTruongChuyen['Không chuyên'] += 1;
+  } else {
+    dicTruongChuyen['Chuyên'] += 1;
+    dicMonChuyen[thongTinHocTapTHPT.truongLop12.monChuyen ?? EMonHoc.EMPTY] =
+      (dicMonChuyen[thongTinHocTapTHPT.truongLop12.monChuyen ?? EMonHoc.EMPTY] ?? 0) + 1;
+  }
+  if (dicTruongChuyen['Chuyên'] > dicTruongChuyen['Không chuyên']) {
+    truongChuyen = true;
+    monChuyen = Object.keys(dicMonChuyen).reduce((mon1, mon2) =>
+      dicMonChuyen[mon1] >= dicMonChuyen[mon2] ? mon1 : mon2,
+    ) as EMonHoc;
+  }
+  return {
+    truongChuyen,
+    monChuyen,
+  };
+}
+
+export function calculateKhuVuc(arrKhuVuc: [string, string, string]) {
+  const countKhuVuc = {
+    KV1: 0,
+    KV2_NT: 0,
+    KV2: 0,
+    KV3: 0,
+  };
+  for (let i = 0; i < arrKhuVuc.length; i = i + 1) {
+    if (arrKhuVucUuTien?.includes(arrKhuVuc[i])) countKhuVuc[EKhuVucUuTien[arrKhuVuc[i]]] += 1;
+  }
+  const arrCountKhuVuc = Object.values(countKhuVuc);
+  return arrCountKhuVuc.indexOf(Math.max(...arrCountKhuVuc));
 }

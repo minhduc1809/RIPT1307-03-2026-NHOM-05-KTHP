@@ -1,4 +1,5 @@
 import avatar from '@/assets/logo.png';
+import type { Login } from '@/services/ant-design-pro/typings';
 import {
   CalendarOutlined,
   ClusterOutlined,

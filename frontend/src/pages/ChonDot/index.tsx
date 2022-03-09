@@ -15,7 +15,8 @@ const LuaChonDotXetTuyen = () => {
     query: '(min-width: 753px)',
   });
 
-  const { getAllDotTuyenSinhModel, danhSach, loading } = useModel('dottuyensinh');
+  const { getAllDotTuyenSinhModel, danhSach, loading, setDanhSach, setRecord } =
+    useModel('dottuyensinh');
   const idPhuongThuc = localStorage.getItem('phuongThuc');
   const { getPhuongThucTuyenSinhByIdModel, record } = useModel('phuongthuctuyensinh');
   useEffect(() => {
@@ -24,6 +25,12 @@ const LuaChonDotXetTuyen = () => {
       getAllDotTuyenSinhModel(idPhuongThuc);
     }
   }, [idPhuongThuc]);
+
+  useEffect(() => {
+    return () => {
+      setDanhSach([]);
+    };
+  }, []);
 
   return (
     <>
@@ -46,8 +53,9 @@ const LuaChonDotXetTuyen = () => {
                         key={item._id}
                         className={styles.answer}
                         onClick={() => {
+                          setRecord(item);
                           localStorage.setItem('dot', item._id);
-                          history.push('/dangkyxettuyen');
+                          history.push('/hosothisinh/phuongthucxettuyen/chitiet');
                         }}
                       >
                         <Button type="default" size="large" shape="circle">
@@ -91,7 +99,7 @@ const LuaChonDotXetTuyen = () => {
                     type="link"
                     onClick={() => {
                       history.push({
-                        pathname: '/hosothisinh/phuongthucxettuyen/chitiet',
+                        pathname: '/phuongthucxettuyen',
                       });
                     }}
                   >

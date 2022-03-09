@@ -78,6 +78,7 @@
     "numeral": "^2.0.6",
     "nzh": "^1.0.3",
     "omit.js": "^2.0.2",
+    "path": "^0.12.7",
     "react": "^17.0.0",
     "react-beautiful-dnd": "^13.1.0",
     "react-big-calendar": "^0.35.0",

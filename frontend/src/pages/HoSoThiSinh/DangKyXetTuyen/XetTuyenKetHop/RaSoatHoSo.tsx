@@ -8,7 +8,6 @@ const { Item } = Descriptions;
 const RaSoatHoSoXetTuyenKetHop = () => {
   const rc: any = {};
   let index = 1;
-
   const columnChungChi: IColumn<any>[] = [
     {
       title: 'Tên loại chứng chỉ',

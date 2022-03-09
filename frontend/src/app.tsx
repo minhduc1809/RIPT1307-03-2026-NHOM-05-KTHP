@@ -10,10 +10,11 @@ import GlobalFooter from './components/GlobalFooter';
 import NotAccessible from './pages/exception/403';
 import NotFoundContent from './pages/exception/404';
 import { getInfo, getInfoAdmin } from './services/ant-design-pro/api';
+import type { Login } from './services/ant-design-pro/typings';
 import data from './utils/data';
 
 const loginPath = '/user/login';
-const pathAuth = ['/admin/login'];
+const pathAuth = ['/admin/login', '/user/quenMatKhau'];
 /**  loading */
 export const initialStateConfig = {
   loading: <PageLoading />,

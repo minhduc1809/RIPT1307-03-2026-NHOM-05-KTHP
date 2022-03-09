@@ -4,9 +4,15 @@ import { useModel } from 'umi';
 import { ArrowLeftOutlined, CheckOutlined, SaveOutlined } from '@ant-design/icons';
 
 const DangKyNguyenVong = () => {
-  const { danhSachNguyenVong, setCurrent } = useModel('hosoxettuyen');
+  const { danhSachNguyenVong, setCurrent, putMyDanhSachNguyenVongModel, recordHoSo } =
+    useModel('hosoxettuyen');
   return (
-    <Form style={{ backgroundColor: '#fff', padding: 24 }} onFinish={(values) => {}}>
+    <Form
+      style={{ backgroundColor: '#fff', padding: 24 }}
+      onFinish={() => {
+        putMyDanhSachNguyenVongModel(recordHoSo?._id ?? '', { danhSachNguyenVong });
+      }}
+    >
       <TableNguyenVong />
       <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 8 }}>
         <Popconfirm

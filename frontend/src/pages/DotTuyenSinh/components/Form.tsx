@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useModel } from 'umi';
 import styles from './form.css';
 import BlockNganh from './BlockNganh';
+import TinyEditor from '@/components/TinyEditor/Tiny';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
@@ -33,11 +34,13 @@ const FormDotTuyenSinh = () => {
             putDotTuyenSinhModel(record?._id ?? '', {
               ...record,
               ...values,
+              moTa: values?.moTa?.text,
               cauHinhPhuongThuc: {},
             });
           } else {
             postDotTuyenSinhModel({
               ...values,
+              moTa: values?.moTa?.text,
               cauHinhPhuongThuc: {},
             });
           }
@@ -227,8 +230,13 @@ const FormDotTuyenSinh = () => {
             </Form.List>
           </Col>
           <Col xs={24}>
-            <Form.Item initialValue={record?.moTa} name="moTa" label="Mô tả">
-              <Input.TextArea placeholder="Mô tả" rows={2} />
+            <Form.Item
+              name={'moTa'}
+              label={`Mô tả`}
+              initialValue={{ text: record?.moTa || '' }}
+              rules={[...rules.textEditor]}
+            >
+              <TinyEditor height={350} />
             </Form.Item>
           </Col>
           {[

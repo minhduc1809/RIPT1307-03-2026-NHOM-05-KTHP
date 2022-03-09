@@ -14,9 +14,9 @@ const FormNamTuyenSinh = () => {
   const [hinhThucDaoTao, setHinhThucDaoTao] = useState<string>(record?.hinhThucDaoTao?._id ?? '');
   const { danhSach } = useModel('hinhthucdaotao');
   const { danhSach: danhSachPhuongThuc } = useModel('phuongthuctuyensinh');
-  const [danhSachIdPhuongThuc, setDanhSachIdPhuongThuc] = useState<string[]>(
-    record?.danhSachPhuongThuc?.map((item) => item.phuongThucTuyenSinh._id) ?? [],
-  );
+  // const [danhSachIdPhuongThuc, setDanhSachIdPhuongThuc] = useState<string[]>(
+  //   record?.danhSachPhuongThuc?.map((item) => item.phuongThucTuyenSinh._id) ?? [],
+  // );
   return (
     <Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} năm tuyển sinh`}>
       <Form
@@ -99,7 +99,7 @@ const FormNamTuyenSinh = () => {
           rules={[...rules.required]}
         >
           <Select
-            onChange={(val) => setDanhSachIdPhuongThuc(val)}
+            // onChange={(val) => setDanhSachIdPhuongThuc(val)}
             notFoundContent="Bạn chưa chọn hình thức đào tạo hoặc không có phương thức tuyển sinh nào cho hình thức đào tạo này"
             placeholder="Phương thức tuyển sinh"
             mode="multiple"
@@ -111,7 +111,7 @@ const FormNamTuyenSinh = () => {
               }))}
           />
         </Form.Item>
-        {danhSachIdPhuongThuc?.map((item, index) => {
+        {/* {danhSachIdPhuongThuc?.map((item, index) => {
           const recordPhuongThuc = danhSachPhuongThuc?.find((pt) => pt._id === item);
           return (
             <Form.Item
@@ -124,7 +124,7 @@ const FormNamTuyenSinh = () => {
               <TinyEditor height={350} />
             </Form.Item>
           );
-        })}
+        })} */}
         <Form.Item
           name="urlAnhMoTa"
           label="Ảnh mô tả"

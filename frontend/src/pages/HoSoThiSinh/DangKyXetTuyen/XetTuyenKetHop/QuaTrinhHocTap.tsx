@@ -1,26 +1,28 @@
 import { FormItem } from '@/components/FormItem';
 import Upload from '@/components/Upload/UploadMultiFile';
 import {
+  arrKhuVucUuTien,
   doiTuongUuTienTuyenSinh,
-  DoiTuongXetTuyen,
-  EGiaiHSG,
-  ELoaiChungChiNgoaiNgu,
-  ELoaiChungChiQuocTe,
-  EMonThiHSG,
+  EKhuVucUuTien,
   hanhKiem,
-  khuVucUuTien,
+  MonToHop,
   Setting,
-  ToHopXetTuyen,
 } from '@/utils/constants';
+import rules from '@/utils/rules';
+import {
+  calculateChuyen,
+  calculateKhuVuc,
+  checkFileSize,
+  renderFileList,
+  uploadMultiFile,
+} from '@/utils/utils';
 import { ArrowLeftOutlined, ArrowRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import {
   Button,
   Card,
   Col,
-  DatePicker,
   Divider,
   Form,
-  Input,
   InputNumber,
   Modal,
   Popconfirm,
@@ -28,36 +30,108 @@ import {
   Select,
   Tooltip,
 } from 'antd';
-import moment from 'moment';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import InfoDoiTuongKhuVuc from '../components/InfoDoiTuongKhuVuc';
 import InfoTruongTHPT from '../components/InfoTruongTHPT';
+import BlockChungChiNgoaiNgu from './BlockChungChiNgoaiNgu';
+import BlockChungChiQuocTe from './BlockChungChiQuocTe';
+import BlockGiaiHSG from './BlockGiaiHSG';
 
 const QuaTrinhHocTapXetTuyenKetHop = () => {
-  const { setCurrent } = useModel('hosoxettuyen');
+  const {
+    setCurrent,
+    recordHoSo,
+    khuVucUuTienLop10,
+    khuVucUuTienLop11,
+    khuVucUuTienLop12,
+    isTruongChuyenLop10,
+    isTruongChuyenLop11,
+    isTruongChuyenLop12,
+    setKhuVucUuTienLop10,
+    setKhuVucUuTienLop11,
+    setKhuVucUuTienLop12,
+    setIsTruongChuyenLop10,
+    setIsTruongChuyenLop11,
+    setIsTruongChuyenLop12,
+    putMyThongTinXetTuyenModel,
+  } = useModel('hosoxettuyen');
+  const { record } = useModel('dottuyensinh');
   const [form] = Form.useForm();
+  const { tenTruong10, tenTruong11, tenTruong12, setTenTruong10, setTenTruong11, setTenTruong12 } =
+    useModel('truongthpt');
 
-  const [doiTuongXetTuyen, setDoiTuongXetTuyen] = useState<number>();
-  const [toHop, setToHop] = useState<string[]>([]);
-  const [arrMonHoc, setArrMonHoc] = useState<string[]>([]);
+  const [doiTuongXetTuyen, setDoiTuongXetTuyen] = useState<string>(recordHoSo?.maDoiTuong ?? '');
+  // const [toHop, setToHop] = useState<string[]>([]);
+  // const [arrMonHoc, setArrMonHoc] = useState<string[]>([]);
   const [visibleModalInfo, setVisibleModalInfo] = useState<boolean>(false);
   const [typeInfo, setTypeInfo] = useState<'doituonguutien' | 'khuvucuutien' | 'doituongxettuyen'>(
     'doituonguutien',
   );
+  const [isChuyenTruong, setIsChuyenTruong] = useState<boolean>(false);
+  const [typeHSG, setTypeHSG] = useState<string>();
 
-  const onChangeToHop = (value: string[]) => {
-    const arrMonHocTemp: string[] = [];
-    value?.map((toHopItem: string) => {
-      ToHopXetTuyen[toHopItem]?.map((mon: string) => {
-        if (arrMonHocTemp.indexOf(mon) < 0) {
-          arrMonHocTemp.push(mon);
-        }
+  useEffect(() => {
+    setKhuVucUuTienLop10(recordHoSo?.thongTinHocTapTHPT?.truongLop10?.khuVucUuTienTuyenSinh);
+    setKhuVucUuTienLop11(recordHoSo?.thongTinHocTapTHPT?.truongLop11?.khuVucUuTienTuyenSinh);
+    setKhuVucUuTienLop12(recordHoSo?.thongTinHocTapTHPT?.truongLop12?.khuVucUuTienTuyenSinh);
+    setIsTruongChuyenLop10(recordHoSo?.thongTinHocTapTHPT?.truongLop10?.truongChuyen ?? false);
+    setIsTruongChuyenLop11(recordHoSo?.thongTinHocTapTHPT?.truongLop11?.truongChuyen ?? false);
+    setIsTruongChuyenLop12(recordHoSo?.thongTinHocTapTHPT?.truongLop12?.truongChuyen ?? false);
+    setTenTruong10(recordHoSo?.thongTinHocTapTHPT?.truongLop10?.tenTruong);
+    setTenTruong11(recordHoSo?.thongTinHocTapTHPT?.truongLop11?.tenTruong);
+    setTenTruong12(recordHoSo?.thongTinHocTapTHPT?.truongLop12?.tenTruong);
+    let loaiGiaiHSG;
+    if (recordHoSo?.thongTinGiaiQuocGia?.suDungGiaiHGSQG === true) {
+      setTypeHSG('thongTinGiaiQuocGia||QG');
+      loaiGiaiHSG = 'thongTinGiaiQuocGia||QG';
+    } else if (recordHoSo?.thongTinGiaiTinhTP?.suDungGiaiHGSTinhTP === true) {
+      setTypeHSG('thongTinGiaiTinhTP||TinhTP');
+      loaiGiaiHSG = 'thongTinGiaiTinhTP||TinhTP';
+    }
+    form.setFieldsValue({ loaiGiaiHSG });
+  }, [recordHoSo?._id]);
+
+  useEffect(() => {
+    setIsChuyenTruong(
+      !(
+        recordHoSo?.thongTinHocTapTHPT?.truongLop10?.maTruong ===
+          recordHoSo?.thongTinHocTapTHPT?.truongLop11?.maTruong &&
+        recordHoSo?.thongTinHocTapTHPT?.truongLop11?.maTruong ===
+          recordHoSo?.thongTinHocTapTHPT?.truongLop12?.maTruong
+      ),
+    );
+  }, [recordHoSo?._id]);
+
+  useEffect(() => {
+    if (!isChuyenTruong) {
+      form.setFieldsValue({
+        khuVucUuTienTuyenSinh: khuVucUuTienLop10,
       });
-    });
-    setToHop(value);
-    setArrMonHoc(arrMonHocTemp);
-  };
+    } else {
+      const calKhuVuc = calculateKhuVuc([
+        khuVucUuTienLop10 || '',
+        khuVucUuTienLop11 || '',
+        khuVucUuTienLop12 || '',
+      ]);
+      form.setFieldsValue({
+        khuVucUuTienTuyenSinh: arrKhuVucUuTien?.[calKhuVuc],
+      });
+    }
+  }, [isChuyenTruong, khuVucUuTienLop10, khuVucUuTienLop11, khuVucUuTienLop12]);
+
+  // const onChangeToHop = (value: string[]) => {
+  //   const arrMonHocTemp: string[] = [];
+  //   value?.map((toHopItem: string) => {
+  //     ToHopXetTuyen[toHopItem]?.map((mon: string) => {
+  //       if (arrMonHocTemp.indexOf(mon) < 0) {
+  //         arrMonHocTemp.push(mon);
+  //       }
+  //     });
+  //   });
+  //   setToHop(value);
+  //   setArrMonHoc(arrMonHocTemp);
+  // };
 
   const onCancelModalInfo = () => {
     setVisibleModalInfo(false);
@@ -66,50 +140,114 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
   return (
     <>
       <Card bodyStyle={{ paddingTop: 0 }} bordered>
-        <Form labelCol={{ span: 24 }} form={form} onFinish={(value) => {}}>
-          <Row gutter={[20, 0]}>
-            <InfoTruongTHPT form={form} />
-            <Divider />
+        <Form
+          scrollToFirstError
+          labelCol={{ span: 24 }}
+          form={form}
+          onFinish={async (values) => {
+            const isSuDungGiaiQuocGia = typeHSG === 'thongTinGiaiQuocGia||QG';
+            const isSuDungGiaiTinhTP = typeHSG === 'thongTinGiaiTinhTP||TinhTP';
+            const arrFieldNameUpload = [
+              'urlChungNhanDoiTuongUuTien',
+              'urlHocBa',
+              'urlBangKhenHSGQG',
+              'urlBangKhenHSGTinhTP',
+              'urlChungChiNgoaiNgu',
+              'urlChungChiQuocTe',
+            ];
+            for (const item of arrFieldNameUpload) {
+              if (values[item]?.fileList) {
+                const checkSize = checkFileSize(values[item]?.fileList ?? []);
+                if (!checkSize) return;
+                values[item] = await uploadMultiFile(values[item]?.fileList ?? []);
+              }
+            }
+            values.truongLop10 = {
+              ...values?.truongLop10,
+              tenTruong: tenTruong10,
+              truongChuyen: isTruongChuyenLop10,
+              khuVucUuTienTuyenSinh: khuVucUuTienLop10,
+            };
+            values.truongLop11 = {
+              ...values?.truongLop11,
+              tenTruong: tenTruong11,
+              truongChuyen: isTruongChuyenLop11,
+              khuVucUuTienTuyenSinh: khuVucUuTienLop11,
+            };
+            values.truongLop12 = {
+              ...values?.truongLop12,
+              tenTruong: tenTruong12,
+              truongChuyen: isTruongChuyenLop12,
+              khuVucUuTienTuyenSinh: khuVucUuTienLop12,
+            };
+            if (!values?.truongLop11?.maTinh) {
+              //ko chuyen truong cap 3
+              values.truongLop11 = {
+                ...values?.truongLop10,
+                ...values?.truongLop11,
+                tenTruong: tenTruong10,
+              };
+              values.truongLop12 = {
+                ...values?.truongLop10,
+                ...values?.truongLop12,
+                tenTruong: tenTruong10,
+              };
+            }
+
+            const thongTinHocTapTHPT = {
+              ...values,
+              thongTinGiaiQuocGia: undefined,
+              maDoiTuong: undefined,
+            };
+
+            const { truongChuyen, monChuyen } = calculateChuyen(thongTinHocTapTHPT);
+            const valueFinal: any = {
+              thongTinHocTapTHPT: {
+                ...thongTinHocTapTHPT,
+                truongChuyen,
+                monChuyen,
+              },
+              thongTinGiaiQuocGia: {
+                ...values?.thongTinGiaiQuocGia,
+                urlBangKhenHSGQG: values?.urlBangKhenHSGQG ?? [],
+                suDungGiaiHGSQG: isSuDungGiaiQuocGia,
+              },
+              thongTinGiaiTinhTP: {
+                ...values?.thongTinGiaiTinhTP,
+                urlBangKhenHSGTinhTP: values?.urlBangKhenHSGTinhTP ?? [],
+                suDungGiaiHGSTinhTP: isSuDungGiaiTinhTP,
+              },
+              thongTinChungChiNgoaiNgu: {
+                ...values?.thongTinChungChiNgoaiNgu,
+                urlChungChiNgoaiNgu: values?.urlChungChiNgoaiNgu ?? [],
+              },
+              thongTinChungChiQuocTe: {
+                ...values?.thongTinChungChiQuocTe,
+                urlChungChiQuocTe: values?.urlChungChiQuocTe ?? [],
+              },
+              maDoiTuong: values?.maDoiTuong,
+              urlBangKhenHSGQG: undefined,
+            };
+            if (values?.thongTinChungChiQuocTe?.loaiChungChiQuocTe) {
+              valueFinal.thongTinChungChiQuocTe.suDungChungChiQuocTe = true;
+            }
+
+            putMyThongTinXetTuyenModel(recordHoSo?._id ?? '', valueFinal);
+          }}
+        >
+          <Row gutter={[10, 0]}>
+            <InfoTruongTHPT
+              setIsChuyenTruong={setIsChuyenTruong}
+              isChuyenTruong={isChuyenTruong}
+              form={form}
+            />
             <Col xs={24} lg={8}>
               <FormItem
+                rules={[...rules.required]}
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
-                name="doiTuongDauVao"
-                label={
-                  <b>
-                    Đối tượng xét tuyển
-                    <Tooltip placement="bottom" title="Chi tiết">
-                      <QuestionCircleOutlined
-                        style={{ marginLeft: '5px' }}
-                        onClick={() => {
-                          setTypeInfo('doituongxettuyen');
-                          setVisibleModalInfo(true);
-                        }}
-                      />
-                    </Tooltip>
-                  </b>
-                }
-                style={{ width: '100%', marginBottom: '0' }}
-              >
-                <Select
-                  onChange={(val) => setDoiTuongXetTuyen(val)}
-                  showSearch
-                  placeholder="Chọn đối tượng"
-                  allowClear
-                >
-                  {DoiTuongXetTuyen.map((item) => (
-                    <Select.Option key={item.value} value={item.value}>
-                      {item.name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </FormItem>
-            </Col>
-            <Col xs={24} lg={8}>
-              <FormItem
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-                name="doiTuongTuyenSinh"
+                name="doiTuongUuTienTuyenSinh"
+                initialValue={recordHoSo?.thongTinHocTapTHPT?.doiTuongUuTienTuyenSinh}
                 label={
                   <b>
                     Đối tượng ưu tiên
@@ -126,12 +264,7 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
                 }
                 style={{ width: '100%', marginBottom: '0' }}
               >
-                <Select
-                  // onChange={this.onChangeTinh}
-                  showSearch
-                  placeholder="Chọn đối tượng"
-                  allowClear
-                >
+                <Select showSearch placeholder="Chọn đối tượng" allowClear>
                   {doiTuongUuTienTuyenSinh.map((val) => (
                     <Select.Option key={val} value={val}>
                       {val}
@@ -142,9 +275,10 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
             </Col>
             <Col xs={24} lg={8}>
               <FormItem
-                name="khuVucUuTien"
+                name="khuVucUuTienTuyenSinh"
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
+                initialValue={recordHoSo?.thongTinHocTapTHPT?.khuVucUuTienTuyenSinh}
                 label={
                   <b>
                     Khu vực ưu tiên
@@ -162,17 +296,38 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
                 style={{ width: '100%', marginBottom: '0' }}
               >
                 <Select disabled showSearch placeholder="Chưa chọn trường" allowClear>
-                  {khuVucUuTien.map((item) => (
-                    <Select.Option key={item.value} value={item.value}>
-                      {item.label}
+                  {Object.keys(EKhuVucUuTien).map((item) => (
+                    <Select.Option key={item} value={EKhuVucUuTien[item]}>
+                      {item}
                     </Select.Option>
                   ))}
                 </Select>
               </FormItem>
             </Col>
-            <Divider />
-            <Col xs={24} lg={12}>
+            <Col xs={24} lg={8}>
               <FormItem
+                rules={[...rules.required]}
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                label="Năm tốt nghiệp"
+                initialValue={recordHoSo?.thongTinHocTapTHPT?.namTotNghiep || record?.namTuyenSinh}
+                name="namTotNghiep"
+                style={{ width: '100%', marginBottom: '0' }}
+              >
+                <InputNumber
+                  style={{ width: '100%' }}
+                  placeholder="Năm tốt nghiệp"
+                  max={new Date().getFullYear()}
+                  min={2010}
+                />
+              </FormItem>
+            </Col>
+            <Divider />
+
+            {/* <Divider /> */}
+            {/* <Col xs={24} lg={16}>
+              <FormItem
+                rules={[...rules.required]}
                 name="toHopXetTuyen"
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
@@ -196,79 +351,120 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
                   ))}
                 </Select>
               </FormItem>
-            </Col>
+            </Col> */}
 
-            <Col lg={12} xs={24}>
+            <Col xs={24} lg={8}>
               <FormItem
+                rules={[...rules.required]}
+                initialValue={recordHoSo?.maDoiTuong}
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
-                label="Năm tốt nghiệp"
-                name="thoiGianTotNghiep"
+                name="maDoiTuong"
+                label={
+                  <b>
+                    Đối tượng xét tuyển
+                    <Tooltip placement="bottom" title="Chi tiết">
+                      <QuestionCircleOutlined
+                        style={{ marginLeft: '5px' }}
+                        onClick={() => {
+                          setTypeInfo('doituongxettuyen');
+                          setVisibleModalInfo(true);
+                        }}
+                      />
+                    </Tooltip>
+                  </b>
+                }
                 style={{ width: '100%', marginBottom: '0' }}
               >
-                <Select style={{ width: '100%' }} placeholder="Thời gian tốt nghiệp">
-                  {['Năm hiện tại', 'Trước năm hiện tại'].map((item) => (
-                    <Select.Option key={item} value={item}>
-                      {item}
+                <Select
+                  onChange={(val) => setDoiTuongXetTuyen(val)}
+                  showSearch
+                  placeholder="Chọn đối tượng"
+                  allowClear
+                >
+                  {record?.danhSachDoiTuongTuyenSinh.map((item) => (
+                    <Select.Option key={item.maDoiTuong} value={item.maDoiTuong}>
+                      {item.thongTinDoiTuong.tenDoiTuong}
                     </Select.Option>
                   ))}
                 </Select>
               </FormItem>
             </Col>
-            {toHop?.length > 0 && (
-              <>
-                {[
-                  { label: 'lớp 10', name: 'lop10' },
-                  { label: 'lớp 11', name: 'lop11' },
-                  { label: 'học kỳ I lớp 12', name: 'lop12' },
-                ].map((item) => (
-                  <>
-                    <Divider plain>
-                      <b>Điểm TBC {item.label}</b>
-                    </Divider>
+            {/* {toHop?.length > 0 && (
+              <> */}
+            {[
+              { label: 'lớp 10', name: ['truongLop10', 'kqhtCaNam'] },
+              { label: 'lớp 11', name: ['truongLop11', 'kqhtCaNam'] },
+              { label: 'học kỳ I lớp 12', name: ['truongLop12', 'kqhtCaNam'] },
+            ].map((item) => (
+              <Row gutter={[10, 0]} key={item.label}>
+                <Divider plain>
+                  <b>Điểm TBC {item.label}</b>
+                </Divider>
 
-                    {arrMonHoc?.map((mon) => (
-                      <Col key={mon} xs={12} sm={12} md={8}>
-                        <FormItem label={mon} style={{ width: '100%' }}>
-                          <InputNumber
-                            placeholder="Số thập phân dạng 0.0"
-                            min={0}
-                            max={10}
-                            style={{ width: '100%' }}
-                          />
-                        </FormItem>
-                      </Col>
-                    ))}
-                    <Col xs={12} sm={12} md={8}>
-                      <FormItem label="Tổng kết" style={{ width: '100%' }}>
-                        <InputNumber
-                          placeholder="Số thập phân dạng 0.0"
-                          min={0}
-                          max={10}
-                          style={{ width: '100%' }}
-                        />
-                      </FormItem>
-                    </Col>
-                  </>
+                {Object.keys(MonToHop)?.map((mon) => (
+                  <Col key={mon} xs={12} sm={12} md={8}>
+                    <FormItem
+                      initialValue={
+                        recordHoSo?.thongTinHocTapTHPT?.[item.name[0]]?.kqhtCaNam?.[MonToHop[mon]]
+                      }
+                      rules={[...rules.required]}
+                      name={[...item.name, MonToHop?.[mon]]}
+                      label={mon}
+                      style={{ width: '100%' }}
+                    >
+                      <InputNumber
+                        placeholder="Số thập phân dạng 0.0"
+                        min={0}
+                        max={10}
+                        style={{ width: '100%' }}
+                      />
+                    </FormItem>
+                  </Col>
                 ))}
-              </>
-            )}
+                <Col xs={12} sm={12} md={8}>
+                  <FormItem
+                    rules={[...rules.required]}
+                    initialValue={
+                      recordHoSo?.thongTinHocTapTHPT?.[item.name[0]]?.kqhtCaNam?.diemTBC
+                    }
+                    name={[...item.name, 'diemTBC']}
+                    label="Tổng kết"
+                    style={{ width: '100%' }}
+                  >
+                    <InputNumber
+                      placeholder="Số thập phân dạng 0.0"
+                      min={0}
+                      max={10}
+                      style={{ width: '100%' }}
+                    />
+                  </FormItem>
+                </Col>
+              </Row>
+            ))}
+            {/* </>
+            )} */}
             <Divider plain>
               <b>Hạnh kiểm</b>
             </Divider>
             {[
-              { label: 'Lớp 10', name: 'lop10.hanhKiem' },
+              { label: 'Lớp 10', name: ['truongLop10', 'hanhKiem'] },
               {
                 label: 'Lớp 11',
-                name: 'lop11.hanhKiem',
+                name: ['truongLop11', 'hanhKiem'],
               },
               {
                 label: 'Học kỳ I lớp 12',
-                name: 'lop12.hanhKiem',
+                name: ['truongLop12', 'hanhKiem'],
               },
             ].map((item) => (
               <Col key={item.label} xs={12} sm={12} md={8}>
-                <FormItem label={item.label} name={item.name}>
+                <FormItem
+                  initialValue={recordHoSo?.thongTinHocTapTHPT?.[item.name[0]]?.hanhKiem}
+                  rules={[...rules.required]}
+                  label={item.label}
+                  name={item.name}
+                >
                   <Select showSearch placeholder="Chọn loại hạnh kiểm" allowClear>
                     {hanhKiem.map((val) => (
                       <Select.Option key={val} value={val}>
@@ -284,7 +480,12 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
               <b>File minh chứng</b>
             </Divider>
             <Col xs={24} lg={12}>
-              <FormItem name="fileHoSoHocBa" label={<b>Phiếu điểm hoặc học bạ</b>}>
+              <FormItem
+                initialValue={renderFileList(recordHoSo?.thongTinHocTapTHPT?.urlHocBa ?? [])}
+                rules={[...rules.fileRequired]}
+                name="urlHocBa"
+                label={<b>Phiếu điểm hoặc học bạ</b>}
+              >
                 <Upload
                   otherProps={{
                     accept: 'application/pdf, image/png, .jpg',
@@ -296,7 +497,13 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
               </FormItem>
             </Col>
             <Col xs={24} lg={12}>
-              <FormItem label={<b>Giấy tờ đối tượng ưu tiên</b>} name="fileDoiTuongUuTien">
+              <FormItem
+                initialValue={renderFileList(
+                  recordHoSo?.thongTinHocTapTHPT?.urlChungNhanDoiTuongUuTien ?? [],
+                )}
+                label={<b>Giấy tờ đối tượng ưu tiên</b>}
+                name="urlChungNhanDoiTuongUuTien"
+              >
                 <Upload
                   otherProps={{
                     accept: 'application/pdf, image/png, .jpg',
@@ -308,161 +515,51 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
               </FormItem>
             </Col>
 
-            {doiTuongXetTuyen === 0 && (
+            {doiTuongXetTuyen === 'CQ_PTIT_KH1' && (
               <>
                 <Divider plain>
                   <b>Thông tin về chứng chỉ quốc tế</b>
                 </Divider>
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label="Loại chứng chỉ quốc tế" name="loaiChungChiQuocTe">
-                    <Select style={{ width: '100%' }} placeholder="Chọn loại chứng chỉ quốc tế">
-                      {Object.values(ELoaiChungChiQuocTe).map((item) => (
-                        <Select.Option key={item} value={item}>
-                          {item}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </FormItem>
-                </Col>
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label="Điểm thi" name="diemThiChungChiQuocTe">
-                    <InputNumber placeholder="Nhập điểm thi" style={{ width: '100%' }} />
-                  </FormItem>
-                </Col>
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label="Ngày cấp chứng chỉ" name="ngayCapChungChiQuocTe">
-                    <DatePicker
-                      style={{ width: '100%' }}
-                      format="DD/MM/YYYY"
-                      disabledDate={(val) => moment(val).isAfter(moment())}
-                    />
-                  </FormItem>
-                </Col>
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label="Đơn vị cấp chứng chỉ" name="donViCapChungChiQuocTe">
-                    <Input placeholder="Nhập đơn vị cấp chứng chỉ" />
-                  </FormItem>
-                </Col>
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label={<b>Chứng chỉ đính kèm</b>} name="fileChungChiQuocTe">
-                    <Upload
-                      otherProps={{
-                        accept: 'application/pdf, image/png, .jpg',
-                        multiple: true,
-                        showUploadList: { showDownloadIcon: false },
-                      }}
-                      limit={5}
-                    />
-                  </FormItem>
-                </Col>
+                <BlockChungChiQuocTe form={form} />
               </>
             )}
 
-            {doiTuongXetTuyen === 1 && (
+            {doiTuongXetTuyen === 'CQ_PTIT_KH2' && (
               <>
                 <Divider plain>
                   <b>Thông tin về chứng chỉ ngoại ngữ</b>
                 </Divider>
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label="Loại chứng chỉ ngoại ngữ" name="loaiChungChiNgoaiNgu">
-                    <Select style={{ width: '100%' }} placeholder="Chọn loại chứng chỉ ngoại ngữ">
-                      {Object.values(ELoaiChungChiNgoaiNgu).map((item) => (
-                        <Select.Option key={item} value={item}>
-                          {item}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </FormItem>
-                </Col>
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label="Điểm thi" name="diemThiChungChiNgoaiNgu">
-                    <InputNumber placeholder="Nhập điểm thi" style={{ width: '100%' }} />
-                  </FormItem>
-                </Col>
-
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label="Ngày cấp chứng chỉ" name="ngayCapChungChiNgoaiNgu">
-                    <DatePicker
-                      style={{ width: '100%' }}
-                      format="DD/MM/YYYY"
-                      disabledDate={(val) => moment(val).isAfter(moment())}
-                    />
-                  </FormItem>
-                </Col>
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label="Đơn vị cấp chứng chỉ" name="donViCapChungChiNgoaiNgu">
-                    <Input placeholder="Nhập đơn vị cấp chứng chỉ" />
-                  </FormItem>
-                </Col>
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label={<b>Chứng chỉ đính kèm</b>} name="fileChungChiQuocTe">
-                    <Upload
-                      otherProps={{
-                        accept: 'application/pdf, image/png, .jpg',
-                        multiple: true,
-                        showUploadList: { showDownloadIcon: false },
-                      }}
-                      limit={5}
-                    />
-                  </FormItem>
-                </Col>
+                <BlockChungChiNgoaiNgu form={form} />
               </>
             )}
 
-            {doiTuongXetTuyen === 2 && (
+            {doiTuongXetTuyen === 'CQ_PTIT_KH3' && (
               <>
                 <Divider plain>
                   <b>Thông tin về giải HSG cấp Tỉnh/quốc gia</b>
                 </Divider>
                 <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label="Môn đoạt giải" name="monDoatGiaiHSG">
-                    <Select style={{ width: '100%' }} placeholder="Chọn môn đoạt giải">
-                      {Object.values(EMonThiHSG).map((item) => (
-                        <Select.Option key={item} value={item}>
-                          {item}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </FormItem>
-                </Col>
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label="Loại giải" name="loaiGiai">
-                    <Select style={{ width: '100%' }} placeholder="Chọn loại giải">
-                      {Object.values(EGiaiHSG).map((item) => (
-                        <Select.Option key={item} value={item}>
-                          {item}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </FormItem>
-                </Col>
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label="Năm đoạt giải" name="namDoatGiai">
-                    <InputNumber
-                      placeholder="Nhập năm đoạt giải"
-                      max={2100}
-                      min={2010}
+                  <FormItem
+                    initialValue={typeHSG}
+                    rules={[...rules.required]}
+                    label="Giải HSG cấp"
+                    name={'loaiGiaiHSG'}
+                  >
+                    <Select
+                      onChange={(val) => setTypeHSG(val)}
                       style={{ width: '100%' }}
+                      placeholder="Chọn cấp"
+                      options={[
+                        { value: 'thongTinGiaiQuocGia||QG', label: 'Quốc gia' },
+                        { value: 'thongTinGiaiTinhTP||TinhTP', label: 'Tỉnh/thành phố' },
+                      ]}
                     />
                   </FormItem>
                 </Col>
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label="Nơi cấp giải" name="noiCapGiai">
-                    <Input placeholder="Nhập nơi cấp giải" style={{ width: '100%' }} />
-                  </FormItem>
-                </Col>
-                <Col xs={24} md={8} lg={6} sm={12}>
-                  <FormItem label={<b>Bằng khen đính kèm</b>} name="fileBangKhen">
-                    <Upload
-                      otherProps={{
-                        accept: 'application/pdf, image/png, .jpg',
-                        multiple: true,
-                        showUploadList: { showDownloadIcon: false },
-                      }}
-                      limit={5}
-                    />
-                  </FormItem>
-                </Col>
+                <BlockGiaiHSG
+                  fieldName={typeHSG?.split('||')?.[0] ?? ''}
+                  type={typeHSG?.split('||')?.[1] ?? ''}
+                />
               </>
             )}
             <Col />

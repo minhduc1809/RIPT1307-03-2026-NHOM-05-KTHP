@@ -87,7 +87,7 @@ const NamTuyenSinh = () => {
     {
       title: 'Thao tác',
       align: 'center',
-      width: 120,
+      width: 150,
       fixed: 'right',
       render: (record: NamTuyenSinh.Record) => (
         <>

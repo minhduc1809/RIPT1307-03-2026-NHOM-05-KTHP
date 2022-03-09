@@ -19,8 +19,7 @@ const Content = () => {
       contentComponent = <DangKyNguyenVong />;
       break;
     case 3:
-      <RaSoatHoSoXetTuyenKetHop />;
-
+      contentComponent = <RaSoatHoSoXetTuyenKetHop />;
       break;
   }
 
