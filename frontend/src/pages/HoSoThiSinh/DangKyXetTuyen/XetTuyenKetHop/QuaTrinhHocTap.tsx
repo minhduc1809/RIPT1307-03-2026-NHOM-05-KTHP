@@ -34,9 +34,9 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import InfoDoiTuongKhuVuc from '../components/InfoDoiTuongKhuVuc';
 import InfoTruongTHPT from '../components/InfoTruongTHPT';
-import BlockChungChiNgoaiNgu from './BlockChungChiNgoaiNgu';
-import BlockChungChiQuocTe from './BlockChungChiQuocTe';
-import BlockGiaiHSG from './BlockGiaiHSG';
+import BlockChungChiNgoaiNgu from '../components/BlockChungChiNgoaiNgu';
+import BlockChungChiQuocTe from '../components/BlockChungChiQuocTe';
+import BlockGiaiHSG from '../components/BlockGiaiHSG';
 
 const QuaTrinhHocTapXetTuyenKetHop = () => {
   const {
@@ -148,6 +148,8 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
             const isSuDungGiaiQuocGia = typeHSG === 'thongTinGiaiQuocGia||QG';
             const isSuDungGiaiTinhTP = typeHSG === 'thongTinGiaiTinhTP||TinhTP';
             const suDungDanhGiaNangLuc = values?.maDoiTuong === 'CQ_PTIT_DGNL1';
+            const suDungChungChiQuocTe = values?.thongTinChungChiQuocTe?.loaiChungChiQuocTe;
+            const suDungChungChiNgoaiNgu = values?.thongTinChungChiNgoaiNgu?.loaiChungChiNgoaiNgu;
             const arrFieldNameUpload = [
               'urlChungNhanDoiTuongUuTien',
               'urlHocBa',
@@ -228,10 +230,12 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
               thongTinChungChiNgoaiNgu: {
                 ...values?.thongTinChungChiNgoaiNgu,
                 urlChungChiNgoaiNgu: values?.urlChungChiNgoaiNgu ?? [],
+                suDungChungChiNgoaiNgu,
               },
               thongTinChungChiQuocTe: {
                 ...values?.thongTinChungChiQuocTe,
                 urlChungChiQuocTe: values?.urlChungChiQuocTe ?? [],
+                suDungChungChiQuocTe,
               },
               thongTinKetQuaDanhGiaNangLuc: {
                 ...values?.thongTinKetQuaDanhGiaNangLuc,
