@@ -96,7 +96,7 @@ export default defineConfig({
       path: '/kichhoattaikhoan',
       component: './KichHoatTaiKhoan',
       hideInMenu: true,
-      access: 'thiSinh',
+      access: 'thiSinhChuaKichHoatEmail',
     },
     {
       path: '/hosothisinh/phuongthucxettuyen/chitiet',

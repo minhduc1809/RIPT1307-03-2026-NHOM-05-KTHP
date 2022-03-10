@@ -33,7 +33,7 @@ const XacNhanNhapHoc = () => {
           Thí sinh: <b>{initialState?.currentUser?.name ?? ''}</b>
         </Col>
         <Col xl={8} sm={12} xs={24}>
-          Ngày sinh: <b>{initialState?.currentUser?.ngay_sinh?.split('-')?.reverse()?.join('-')}</b>
+          {/* Ngày sinh: <b>{initialState?.currentUser?.ngay_sinh?.split('-')?.reverse()?.join('-')}</b> */}
         </Col>
         {thongTinDotAll?.maHeThongDot?.startsWith('THPT') && (
           <Col xl={8} sm={12} xs={24}>

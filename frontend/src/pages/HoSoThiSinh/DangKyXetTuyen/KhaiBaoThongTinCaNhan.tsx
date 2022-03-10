@@ -62,8 +62,7 @@ const KhaiBaoThongTinCaNhan = () => {
             tenQH: tenQuanHuyenDiaChiLienHe,
             tenXaPhuong: tenPhuongXaDiaChiLienHe,
           };
-          await putMyThongTinThiSinhModel(recordHoSo?._id ?? '', { thongTinThiSinh: values });
-          setCurrent(1);
+          putMyThongTinThiSinhModel(recordHoSo?._id ?? '', { thongTinThiSinh: values });
         }}
       >
         <Divider plain>

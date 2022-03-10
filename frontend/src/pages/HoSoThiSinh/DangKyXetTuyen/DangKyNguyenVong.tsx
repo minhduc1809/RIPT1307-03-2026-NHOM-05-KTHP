@@ -41,7 +41,6 @@ const DangKyNguyenVong = () => {
           type="primary"
           icon={<SaveOutlined />}
           htmlType="submit"
-          // onClick={e => this.handleSubmit(e, true)}
         >
           Lưu
         </Button>
@@ -49,7 +48,14 @@ const DangKyNguyenVong = () => {
           disabled={danhSachNguyenVong.length === 0}
           type="primary"
           icon={<CheckOutlined />}
-          htmlType="submit"
+          onClick={async () => {
+            await putMyDanhSachNguyenVongModel(recordHoSo?._id ?? '', { danhSachNguyenVong });
+            setCurrent(3);
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth',
+            });
+          }}
         >
           Bước 4/4
         </Button>

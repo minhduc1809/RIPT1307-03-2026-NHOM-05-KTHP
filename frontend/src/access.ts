@@ -1,3 +1,4 @@
+import type { Login } from './services/ant-design-pro/typings';
 import { handlePhanNhom } from './utils/utils';
 
 /**
@@ -23,6 +24,7 @@ export default function access(initialState: {
   return {
     admin: token && vaiTro && vaiTro === 'Admin',
     thiSinh: token && vaiTro && verifiedEmail && vaiTro === 'ThiSinh',
+    thiSinhChuaKichHoatEmail: token && vaiTro && vaiTro === 'ThiSinh',
     chuyenVien: token && vaiTro && vaiTro === 'ChuyenVien',
     routeFilter: (route: any) => {
       return handlePhanNhom(initialState, route?.maChucNang);

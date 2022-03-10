@@ -147,6 +147,7 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
           onFinish={async (values) => {
             const isSuDungGiaiQuocGia = typeHSG === 'thongTinGiaiQuocGia||QG';
             const isSuDungGiaiTinhTP = typeHSG === 'thongTinGiaiTinhTP||TinhTP';
+            const suDungDanhGiaNangLuc = values?.maDoiTuong === 'CQ_PTIT_DGNL1';
             const arrFieldNameUpload = [
               'urlChungNhanDoiTuongUuTien',
               'urlHocBa',
@@ -154,6 +155,7 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
               'urlBangKhenHSGTinhTP',
               'urlChungChiNgoaiNgu',
               'urlChungChiQuocTe',
+              'urlGiayXacNhanDanhGiaNangLuc',
             ];
             for (const item of arrFieldNameUpload) {
               if (values[item]?.fileList) {
@@ -180,23 +182,29 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
               truongChuyen: isTruongChuyenLop12,
               khuVucUuTienTuyenSinh: khuVucUuTienLop12,
             };
-            if (!values?.truongLop11?.maTinh) {
+            if (!isChuyenTruong) {
               //ko chuyen truong cap 3
               values.truongLop11 = {
                 ...values?.truongLop10,
                 ...values?.truongLop11,
                 tenTruong: tenTruong10,
+                truongChuyen: isTruongChuyenLop10,
+                khuVucUuTienTuyenSinh: khuVucUuTienLop10,
               };
               values.truongLop12 = {
                 ...values?.truongLop10,
                 ...values?.truongLop12,
                 tenTruong: tenTruong10,
+                truongChuyen: isTruongChuyenLop10,
+                khuVucUuTienTuyenSinh: khuVucUuTienLop10,
               };
             }
 
             const thongTinHocTapTHPT = {
               ...values,
               thongTinGiaiQuocGia: undefined,
+              thongTinGiaiTinhTP: undefined,
+              thongTinKetQuaDanhGiaNangLuc: undefined,
               maDoiTuong: undefined,
             };
 
@@ -225,6 +233,12 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
                 ...values?.thongTinChungChiQuocTe,
                 urlChungChiQuocTe: values?.urlChungChiQuocTe ?? [],
               },
+              thongTinKetQuaDanhGiaNangLuc: {
+                ...values?.thongTinKetQuaDanhGiaNangLuc,
+                suDungDanhGiaNangLuc,
+                urlGiayXacNhanDanhGiaNangLuc: values?.urlGiayXacNhanDanhGiaNangLuc ?? [],
+              },
+
               maDoiTuong: values?.maDoiTuong,
               urlBangKhenHSGQG: undefined,
             };

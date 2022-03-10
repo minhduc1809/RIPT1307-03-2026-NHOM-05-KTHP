@@ -13,10 +13,11 @@ const BlockDanhGiaNangLuc = () => {
   const { recordHoSo } = useModel('hosoxettuyen');
   return (
     <>
-      <Col xs={12} sm={12} md={8} lg={6}>
+      <Col xs={12} sm={12} md={8} lg={8}>
         <FormItem
           initialValue={recordHoSo?.thongTinKetQuaDanhGiaNangLuc?.truongDanhGiaNangLuc}
           labelCol={{ span: 24 }}
+          rules={[...rules.required]}
           wrapperCol={{ span: 24 }}
           label={'Đơn vị tổ chức'}
           name={['thongTinKetQuaDanhGiaNangLuc', 'truongDanhGiaNangLuc']}
@@ -31,8 +32,9 @@ const BlockDanhGiaNangLuc = () => {
           </Select>
         </FormItem>
       </Col>
-      <Col xs={12} sm={12} md={8} lg={6}>
+      <Col xs={12} sm={12} md={8} lg={8}>
         <FormItem
+          rules={[...rules.required]}
           labelCol={{ span: 24 }}
           wrapperCol={{ span: 24 }}
           label="Điểm đánh giá năng lực"
@@ -43,8 +45,9 @@ const BlockDanhGiaNangLuc = () => {
           <InputNumber min={0} max={1000000} style={{ width: '100%' }} placeholder="Nhập điểm" />
         </FormItem>
       </Col>
-      <Col xs={12} sm={12} md={8} lg={6}>
+      <Col xs={12} sm={12} md={8} lg={8}>
         <FormItem
+          rules={[...rules.required]}
           initialValue={
             recordHoSo?.thongTinKetQuaDanhGiaNangLuc?.ngayDuThiDanhGiaNangLuc
               ? moment(recordHoSo?.thongTinKetQuaDanhGiaNangLuc?.ngayDuThiDanhGiaNangLuc)
@@ -62,7 +65,7 @@ const BlockDanhGiaNangLuc = () => {
           />
         </FormItem>
       </Col>
-      <Col xs={24} md={8} lg={6} sm={12}>
+      <Col xs={24} md={8} lg={8} sm={12}>
         <FormItem
           rules={[...rules.fileRequired]}
           initialValue={renderFileList(

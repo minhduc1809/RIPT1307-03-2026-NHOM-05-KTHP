@@ -57,6 +57,11 @@ export default () => {
     setRecordHoSo(response?.data?.data);
     message.success('Lưu thành công');
     setLoading(false);
+    setCurrent(1);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
   const putMyThongTinXetTuyenModel = async (idHoSo: string, payload: HoSoXetTuyen.Record) => {
@@ -68,6 +73,11 @@ export default () => {
     } else {
       message.success('Lưu thành công');
       setRecordHoSo(response?.data?.data?.result);
+      setCurrent(2);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     }
     setLoading(false);
   };

@@ -163,9 +163,9 @@ const Register = (props: { back: any }) => {
                 <Select
                   placeholder="Giới tính"
                   options={[
-                    { value: 'NAM', label: 'Nam' },
-                    { value: 'NU', label: 'Nữ' },
-                    { value: 'KHAC', label: 'Khác' },
+                    { value: 'Nam', label: 'Nam' },
+                    { value: 'Nữ', label: 'Nữ' },
+                    { value: 'Khác', label: 'Khác' },
                   ]}
                 />
               </Form.Item>
