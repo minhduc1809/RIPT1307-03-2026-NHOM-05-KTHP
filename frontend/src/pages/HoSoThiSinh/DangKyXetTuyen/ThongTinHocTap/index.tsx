@@ -39,7 +39,7 @@ import BlockKetQuaHocTapTHPT from './components/BlockKetQuaHocTapTHPT';
 import InfoDoiTuongKhuVuc from './components/InfoDoiTuongKhuVuc';
 import InfoTruongTHPT from './components/InfoTruongTHPT';
 
-const QuaTrinhHocTapXetTuyenKetHop = () => {
+const QuaTrinhHocTap = () => {
   const {
     setCurrent,
     recordHoSo,
@@ -532,4 +532,4 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
   );
 };
 
-export default QuaTrinhHocTapXetTuyenKetHop;
+export default QuaTrinhHocTap;

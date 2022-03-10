@@ -2,10 +2,10 @@ import type { IColumn } from '@/utils/interfaces';
 import { GridContent } from '@ant-design/pro-layout';
 import { Card, Col, Descriptions, Divider, Row, Table, Tag } from 'antd';
 import moment from 'moment';
-import BlockRaSoatThongTinCaNhan from '../components/BlockRaSoatThongTinCaNhan';
+import BlockRaSoatThongTinCaNhan from './components/BlockRaSoatThongTinCaNhan';
 const { Item } = Descriptions;
 
-const RaSoatHoSoXetTuyenKetHop = () => {
+const RaSoatHoSo = () => {
   const rc: any = {};
   let index = 1;
   const columnChungChi: IColumn<any>[] = [
@@ -436,4 +436,4 @@ const RaSoatHoSoXetTuyenKetHop = () => {
   );
 };
 
-export default RaSoatHoSoXetTuyenKetHop;
+export default RaSoatHoSo;
