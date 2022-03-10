@@ -20,11 +20,12 @@ export default function access(initialState: {
 }) {
   const vaiTro = initialState?.currentUser?.systemRole;
   const verifiedEmail = initialState?.currentUser?.emailVerify?.verified ?? false;
+  const verifiedCCCD = initialState?.currentUser?.cmtCccd !== undefined;
   const token = localStorage.getItem('token');
   return {
     admin: token && vaiTro && vaiTro === 'Admin',
-    thiSinh: token && vaiTro && verifiedEmail && vaiTro === 'ThiSinh',
-    thiSinhChuaKichHoatEmail: token && vaiTro && vaiTro === 'ThiSinh',
+    thiSinh: token && vaiTro && verifiedEmail && verifiedCCCD && vaiTro === 'ThiSinh',
+    thiSinhChuaKichHoat: token && vaiTro === 'ThiSinh',
     chuyenVien: token && vaiTro && vaiTro === 'ChuyenVien',
     routeFilter: (route: any) => {
       return handlePhanNhom(initialState, route?.maChucNang);

@@ -2,6 +2,7 @@ import logoGoogle from '@/assets/googleicon.png';
 import logo from '@/assets/logo.png';
 import Footer from '@/components/Footer';
 import { getInfo, login } from '@/services/ant-design-pro/api';
+import type { Login } from '@/services/ant-design-pro/typings';
 import { Setting } from '@/utils/constants';
 import data from '@/utils/data';
 import {
@@ -32,7 +33,7 @@ const goto = () => {
   }, 2000);
 };
 
-const Login: React.FC = () => {
+const LoginGlobal: React.FC = () => {
   const isMediumScreen = useMediaQuery({
     query: '(min-width: 768px)',
   });
@@ -64,9 +65,7 @@ const Login: React.FC = () => {
       // phanNhom,
     });
     message.success(defaultloginSuccessMessage);
-    if (role?.user?.emailVerify?.verified === true || role?.user?.systemRole === 'Admin')
-      history.push(data?.path?.[role?.user?.systemRole || 'guest'] ?? '/');
-    else history.push('/kichhoattaikhoan');
+    history.push(data?.path?.[role?.user?.systemRole || 'guest'] ?? '/');
   };
 
   const handleSubmit = async (values: { username: string; password: string }) => {
@@ -363,6 +362,6 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default LoginGlobal;
 
 export { goto };

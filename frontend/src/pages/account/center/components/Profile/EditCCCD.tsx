@@ -11,13 +11,20 @@ const EditCCCD = () => {
   const { updateCCCDModel } = useModel('user');
   const { initialState } = useModel('@@initialState');
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div
+      style={{
+        textAlign: 'center',
+      }}
+    >
       <Form
         onFinish={(values) => {
           updateCCCDModel(values);
         }}
         labelCol={{ span: 24 }}
-        style={{ width: '50%', textAlign: 'center' }}
+        style={{
+          width: 350,
+          textAlign: 'center',
+        }}
         form={form}
       >
         <Form.Item

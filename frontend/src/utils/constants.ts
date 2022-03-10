@@ -16,6 +16,14 @@ export enum EKhuVucUuTien {
   KV3 = 'KV3',
 }
 
+export enum ESystemRole {
+  Admin = 'Admin',
+  ChuyenVien = 'ChuyenVien',
+  ThiSinh = 'ThiSinh',
+  PhuHuynh = 'PhuHuynh',
+  Guest = 'Guest',
+}
+
 export const arrKhuVucUuTien = ['KV1', 'KV2_NT', 'KV2', 'KV3'];
 
 export const hanhKiem = ['Tốt', 'Khá', 'Trung bình', 'Yếu'];

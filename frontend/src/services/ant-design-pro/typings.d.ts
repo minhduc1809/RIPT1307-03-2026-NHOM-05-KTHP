@@ -1,3 +1,4 @@
+import type { ESystemRole } from '@/utils/constants';
 import type { IRecordTinh } from '../DonViHanhChinh/typing';
 
 declare module Login {
@@ -31,7 +32,7 @@ declare module Login {
     gioiTinh: string;
     hoDem: string;
     ngaySinh: string;
-    systemRole: string;
+    systemRole: ESystemRole;
     ten: string;
     updatedAt: string;
     username: string;

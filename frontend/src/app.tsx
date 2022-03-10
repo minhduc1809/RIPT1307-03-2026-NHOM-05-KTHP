@@ -11,6 +11,7 @@ import NotAccessible from './pages/exception/403';
 import NotFoundContent from './pages/exception/404';
 import { getInfo, getInfoAdmin } from './services/ant-design-pro/api';
 import type { Login } from './services/ant-design-pro/typings';
+import { ESystemRole } from './utils/constants';
 import data from './utils/data';
 
 const loginPath = '/user/login';
@@ -137,11 +138,23 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     onPageChange: () => {
       const { location } = history;
       const token = localStorage.getItem('token');
-      const vaiTro = localStorage.getItem('vaiTro');
+      const vaiTro = initialState?.currentUser?.systemRole;
+      const verifiedEmail = initialState?.currentUser?.emailVerify?.verified === true;
+      const verifiedCCCD = initialState?.currentUser?.cmtCccd !== undefined;
       if (!token && location.pathname !== loginPath && !pathAuth.includes(location.pathname)) {
         history.push(loginPath);
-      } else if (initialState?.currentUser && token && location.pathname === loginPath) {
-        history.push(data.path[`${vaiTro || initialState?.currentUser?.systemRole}`]);
+      } else if (initialState?.currentUser && token) {
+        if (
+          vaiTro !== ESystemRole.ThiSinh ||
+          (vaiTro === ESystemRole.ThiSinh && verifiedCCCD && verifiedEmail)
+        ) {
+          history.push(
+            location.pathname === loginPath
+              ? data.path[`${vaiTro || initialState?.currentUser?.systemRole}`]
+              : location.pathname,
+          );
+        } else if (!verifiedEmail) history.push('/kichhoattaikhoan');
+        else history.push('/verifycccd');
       }
     },
     menuItemRender: (item, dom) => {

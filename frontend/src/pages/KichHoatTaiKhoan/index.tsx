@@ -28,8 +28,12 @@ const KichHoatTaiKhoan: React.FC = () => {
     }
   };
   useEffect(() => {
-    if (initialState?.currentUser?.emailVerify?.verified === true) {
+    const verifiedCCCD = initialState?.currentUser?.cmtCccd !== undefined;
+    const verifiedEmail = initialState?.currentUser?.emailVerify?.verified;
+    if (initialState?.currentUser?.emailVerify?.verified === true && verifiedCCCD) {
       history.push(data?.path?.[initialState?.currentUser?.systemRole || 'guest'] ?? '/');
+    } else if (verifiedEmail && !verifiedCCCD) {
+      history.push('/verifycccd');
     }
     if (availableAfter) {
       const now = new Date();
@@ -43,6 +47,7 @@ const KichHoatTaiKhoan: React.FC = () => {
     availableAfter,
     initialState?.currentUser?.emailVerify?.verified,
     initialState?.currentUser?.systemRole,
+    initialState?.currentUser?.cmtCccd,
   ]);
   return (
     <Spin spinning={false}>
