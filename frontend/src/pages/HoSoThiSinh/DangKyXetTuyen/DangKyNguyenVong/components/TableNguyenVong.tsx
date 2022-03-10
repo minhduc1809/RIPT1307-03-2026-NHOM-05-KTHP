@@ -13,7 +13,7 @@ import { useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 import { useModel } from 'umi';
-import FormDangKyNguyenVong from '../FormDangKyNguyenVong';
+import FormDangKyNguyenVong from './FormDangKyNguyenVong';
 
 const TableNguyenVong = () => {
   const {
@@ -158,24 +158,16 @@ const TableNguyenVong = () => {
       width: '200px',
     },
     {
-      title: 'Điểm 3 môn của tổ hợp',
-      render: (recordTemp: any) => {
-        return recordTemp?.diemQuyDoi?.thanhPhan?.map(
-          (item: any, index: number) =>
-            index < 3 && (
-              <div>
-                {item?.tenThanhPhan}: {item?.diem}
-              </div>
-            ),
-        );
-      },
+      title: 'Điểm quy đổi',
+      dataIndex: 'diemQuyDoi.tongDiem',
       align: 'center',
-      width: '200px',
+      width: '120px',
     },
     {
-      title: 'Điểm ưu tiên',
-      render: (recordTemp: any) => {
-        return recordTemp?.diemQuyDoi?.thanhPhan?.map(
+      title: 'Chi tiết thành phần',
+      dataIndex: 'diemQuyDoi.thanhPhan',
+      render: (val: HoSoXetTuyen.ThanhPhanDiemQuyDoi[]) => {
+        return val?.map(
           (item: any, index: number) =>
             index > 2 && (
               <div>
@@ -184,12 +176,6 @@ const TableNguyenVong = () => {
             ),
         );
       },
-      align: 'center',
-      width: '120px',
-    },
-    {
-      title: 'Điểm xét tuyển',
-      dataIndex: 'diemQuyDoi.tongDiem',
       align: 'center',
       width: '120px',
     },
@@ -245,14 +231,11 @@ const TableNguyenVong = () => {
             <Col span={3} style={styleHeader}>
               Tổ hợp
             </Col>
-            <Col span={4} style={styleHeader}>
-              Điểm 3 môn của tổ hợp
-            </Col>
-            <Col span={6} style={styleHeader}>
+            <Col span={2} style={styleHeader}>
               Điểm ưu tiên
             </Col>
-            <Col span={2} style={styleHeader}>
-              Điểm xét tuyển
+            <Col span={10} style={styleHeader}>
+              Chi tiết thành phần
             </Col>
           </Row>
           <DragDropContext onDragEnd={onDragEnd}>
@@ -307,34 +290,17 @@ const TableNguyenVong = () => {
                                   <Col span={3} style={{ ...styleRow }}>
                                     {item?.toHopXetTuyen ?? ''}
                                   </Col>
-                                  <Col span={4} style={styleRow}>
-                                    {item?.diemQuyDoi?.thanhPhan?.map(
-                                      (
-                                        diem: { tenThanhPhan: string; diem: number },
-                                        indexTemp: number,
-                                      ) =>
-                                        indexTemp < 3 && (
-                                          <div>
-                                            {diem?.tenThanhPhan}: {diem?.diem}
-                                          </div>
-                                        ),
-                                    )}
-                                  </Col>
-                                  <Col span={6} style={styleRow}>
-                                    {item?.diemQuyDoi?.thanhPhan?.map(
-                                      (
-                                        diem: { tenThanhPhan: string; diem: number },
-                                        indexTemp: number,
-                                      ) =>
-                                        indexTemp > 2 && (
-                                          <div>
-                                            {diem?.tenThanhPhan}: {diem?.diem}
-                                          </div>
-                                        ),
-                                    )}
-                                  </Col>
                                   <Col span={2} style={styleRow}>
                                     {item?.diemQuyDoi?.tongDiem ?? ''}
+                                  </Col>
+                                  <Col span={10} style={styleRow}>
+                                    {item?.diemQuyDoi?.thanhPhan?.map(
+                                      (diem: { tenThanhPhan: string; diem: number }) => (
+                                        <div key={diem.tenThanhPhan}>
+                                          {diem?.tenThanhPhan}: {diem?.diem}
+                                        </div>
+                                      ),
+                                    )}
                                   </Col>
                                 </Row>
                               </Popover>

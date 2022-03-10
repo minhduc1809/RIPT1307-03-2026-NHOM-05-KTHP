@@ -37,10 +37,10 @@ const InfoTruongTHPT = (props: Props) => {
             type="10"
             form={props.form}
             fields={{
-              monChuyen: ['truongLop10', 'monChuyen'],
-              tinh: ['truongLop10', 'maTinh'],
-              quanHuyen: ['truongLop10', 'maQuanHuyen'],
-              truongTHPT: ['truongLop10', 'maTruong'],
+              monChuyen: ['thongTinHocTapTHPT', 'truongLop10', 'monChuyen'],
+              tinh: ['thongTinHocTapTHPT', 'truongLop10', 'maTinh'],
+              quanHuyen: ['thongTinHocTapTHPT', 'truongLop10', 'maQuanHuyen'],
+              truongTHPT: ['thongTinHocTapTHPT', 'truongLop10', 'maTruong'],
             }}
             initialValue={{
               maTinh: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.maTinh,
@@ -58,10 +58,10 @@ const InfoTruongTHPT = (props: Props) => {
               type="10"
               form={props.form}
               fields={{
-                monChuyen: ['truongLop10', 'monChuyen'],
-                tinh: ['truongLop10', 'maTinh'],
-                quanHuyen: ['truongLop10', 'maQuanHuyen'],
-                truongTHPT: ['truongLop10', 'maTruong'],
+                monChuyen: ['thongTinHocTapTHPT', 'truongLop10', 'monChuyen'],
+                tinh: ['thongTinHocTapTHPT', 'truongLop10', 'maTinh'],
+                quanHuyen: ['thongTinHocTapTHPT', 'truongLop10', 'maQuanHuyen'],
+                truongTHPT: ['thongTinHocTapTHPT', 'truongLop10', 'maTruong'],
               }}
               initialValue={{
                 maTinh: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.maTinh,
@@ -77,10 +77,10 @@ const InfoTruongTHPT = (props: Props) => {
               type="11"
               form={props.form}
               fields={{
-                monChuyen: ['truongLop11', 'monChuyen'],
-                tinh: ['truongLop11', 'maTinh'],
-                quanHuyen: ['truongLop11', 'maQuanHuyen'],
-                truongTHPT: ['truongLop11', 'maTruong'],
+                monChuyen: ['thongTinHocTapTHPT', 'truongLop11', 'monChuyen'],
+                tinh: ['thongTinHocTapTHPT', 'truongLop11', 'maTinh'],
+                quanHuyen: ['thongTinHocTapTHPT', 'truongLop11', 'maQuanHuyen'],
+                truongTHPT: ['thongTinHocTapTHPT', 'truongLop11', 'maTruong'],
               }}
               initialValue={{
                 maTinh: recordHoSo?.thongTinHocTapTHPT?.truongLop11?.maTinh,
@@ -96,10 +96,10 @@ const InfoTruongTHPT = (props: Props) => {
               type="12"
               form={props.form}
               fields={{
-                monChuyen: ['truongLop12', 'monChuyen'],
-                tinh: ['truongLop12', 'maTinh'],
-                quanHuyen: ['truongLop12', 'maQuanHuyen'],
-                truongTHPT: ['truongLop12', 'maTruong'],
+                monChuyen: ['thongTinHocTapTHPT', 'truongLop12', 'monChuyen'],
+                tinh: ['thongTinHocTapTHPT', 'truongLop12', 'maTinh'],
+                quanHuyen: ['thongTinHocTapTHPT', 'truongLop12', 'maQuanHuyen'],
+                truongTHPT: ['thongTinHocTapTHPT', 'truongLop12', 'maTruong'],
               }}
               initialValue={{
                 maTinh: recordHoSo?.thongTinHocTapTHPT?.truongLop12?.maTinh,

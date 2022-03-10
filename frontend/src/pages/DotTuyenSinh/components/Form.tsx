@@ -25,6 +25,7 @@ const FormDotTuyenSinh = () => {
   return (
     <Card loading={loading} title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} đợt tuyển sinh`}>
       <Form
+        scrollToFirstError
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
           values.danhSachDoiTuongTuyenSinh = values?.danhSachDoiTuongTuyenSinh?.map(

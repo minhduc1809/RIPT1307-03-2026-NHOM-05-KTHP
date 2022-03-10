@@ -11,7 +11,7 @@ mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const KhaiBaoThongTinCaNhan = () => {
   const [form] = Form.useForm();
-  const { recordHoSo, putMyThongTinThiSinhModel, setCurrent } = useModel('hosoxettuyen');
+  const { recordHoSo, putMyThongTinThiSinhModel } = useModel('hosoxettuyen');
   const { danhSachDanToc, danhSachTonGiao } = useModel('dantoctongiao');
   const { danhSachTinh } = useModel('donvihanhchinh');
   const [loaiNoiSinh, setLoaiNoiSinh] = useState<'TRONG_NUOC' | 'NUOC_NGOAI'>('TRONG_NUOC');

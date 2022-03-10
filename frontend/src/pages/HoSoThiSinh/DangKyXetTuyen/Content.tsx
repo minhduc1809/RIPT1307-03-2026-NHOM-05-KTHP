@@ -1,7 +1,7 @@
 import { useModel } from 'umi';
 import DangKyNguyenVong from './DangKyNguyenVong';
 import KhaiBaoThongTinCaNhan from './KhaiBaoThongTinCaNhan';
-import QuaTrinhHocTapXetTuyenKetHop from './XetTuyenKetHop/QuaTrinhHocTap';
+import QuaTrinhHocTapXetTuyenKetHop from './ThongTinHocTap';
 import RaSoatHoSoXetTuyenKetHop from './XetTuyenKetHop/RaSoatHoSo';
 
 const Content = () => {

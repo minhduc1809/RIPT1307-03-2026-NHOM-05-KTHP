@@ -4,8 +4,6 @@ import {
   arrKhuVucUuTien,
   doiTuongUuTienTuyenSinh,
   EKhuVucUuTien,
-  hanhKiem,
-  MonToHop,
   Setting,
 } from '@/utils/constants';
 import rules from '@/utils/rules';
@@ -32,11 +30,14 @@ import {
 } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import InfoDoiTuongKhuVuc from '../components/InfoDoiTuongKhuVuc';
-import InfoTruongTHPT from '../components/InfoTruongTHPT';
-import BlockChungChiNgoaiNgu from '../components/BlockChungChiNgoaiNgu';
-import BlockChungChiQuocTe from '../components/BlockChungChiQuocTe';
-import BlockGiaiHSG from '../components/BlockGiaiHSG';
+import BlockChungChiNgoaiNgu from './components/BlockChungChiNgoaiNgu';
+import BlockChungChiQuocTe from './components/BlockChungChiQuocTe';
+import BlockDanhGiaNangLuc from './components/BlockDanhGiaNangLuc';
+import BlockGiaiHSG from './components/BlockGiaiHSG';
+import BlockHanhKiem from './components/BlockHanhKiem';
+import BlockKetQuaHocTapTHPT from './components/BlockKetQuaHocTapTHPT';
+import InfoDoiTuongKhuVuc from './components/InfoDoiTuongKhuVuc';
+import InfoTruongTHPT from './components/InfoTruongTHPT';
 
 const QuaTrinhHocTapXetTuyenKetHop = () => {
   const {
@@ -62,8 +63,7 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
     useModel('truongthpt');
 
   const [doiTuongXetTuyen, setDoiTuongXetTuyen] = useState<string>(recordHoSo?.maDoiTuong ?? '');
-  // const [toHop, setToHop] = useState<string[]>([]);
-  // const [arrMonHoc, setArrMonHoc] = useState<string[]>([]);
+
   const [visibleModalInfo, setVisibleModalInfo] = useState<boolean>(false);
   const [typeInfo, setTypeInfo] = useState<'doituonguutien' | 'khuvucuutien' | 'doituongxettuyen'>(
     'doituonguutien',
@@ -81,6 +81,14 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
     setTenTruong10(recordHoSo?.thongTinHocTapTHPT?.truongLop10?.tenTruong);
     setTenTruong11(recordHoSo?.thongTinHocTapTHPT?.truongLop11?.tenTruong);
     setTenTruong12(recordHoSo?.thongTinHocTapTHPT?.truongLop12?.tenTruong);
+    setIsChuyenTruong(
+      !(
+        recordHoSo?.thongTinHocTapTHPT?.truongLop10?.maTruong ===
+          recordHoSo?.thongTinHocTapTHPT?.truongLop11?.maTruong &&
+        recordHoSo?.thongTinHocTapTHPT?.truongLop11?.maTruong ===
+          recordHoSo?.thongTinHocTapTHPT?.truongLop12?.maTruong
+      ),
+    );
     let loaiGiaiHSG;
     if (recordHoSo?.thongTinGiaiQuocGia?.suDungGiaiHGSQG === true) {
       setTypeHSG('thongTinGiaiQuocGia||QG');
@@ -90,17 +98,6 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
       loaiGiaiHSG = 'thongTinGiaiTinhTP||TinhTP';
     }
     form.setFieldsValue({ loaiGiaiHSG });
-  }, [recordHoSo?._id]);
-
-  useEffect(() => {
-    setIsChuyenTruong(
-      !(
-        recordHoSo?.thongTinHocTapTHPT?.truongLop10?.maTruong ===
-          recordHoSo?.thongTinHocTapTHPT?.truongLop11?.maTruong &&
-        recordHoSo?.thongTinHocTapTHPT?.truongLop11?.maTruong ===
-          recordHoSo?.thongTinHocTapTHPT?.truongLop12?.maTruong
-      ),
-    );
   }, [recordHoSo?._id]);
 
   useEffect(() => {
@@ -120,19 +117,6 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
     }
   }, [isChuyenTruong, khuVucUuTienLop10, khuVucUuTienLop11, khuVucUuTienLop12]);
 
-  // const onChangeToHop = (value: string[]) => {
-  //   const arrMonHocTemp: string[] = [];
-  //   value?.map((toHopItem: string) => {
-  //     ToHopXetTuyen[toHopItem]?.map((mon: string) => {
-  //       if (arrMonHocTemp.indexOf(mon) < 0) {
-  //         arrMonHocTemp.push(mon);
-  //       }
-  //     });
-  //   });
-  //   setToHop(value);
-  //   setArrMonHoc(arrMonHocTemp);
-  // };
-
   const onCancelModalInfo = () => {
     setVisibleModalInfo(false);
   };
@@ -148,8 +132,8 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
             const isSuDungGiaiQuocGia = typeHSG === 'thongTinGiaiQuocGia||QG';
             const isSuDungGiaiTinhTP = typeHSG === 'thongTinGiaiTinhTP||TinhTP';
             const suDungDanhGiaNangLuc = values?.maDoiTuong === 'CQ_PTIT_DGNL1';
-            const suDungChungChiQuocTe = values?.thongTinChungChiQuocTe?.loaiChungChiQuocTe;
-            const suDungChungChiNgoaiNgu = values?.thongTinChungChiNgoaiNgu?.loaiChungChiNgoaiNgu;
+            const suDungChungChiQuocTe = values?.maDoiTuong === 'CQ_PTIT_KH1';
+            const suDungChungChiNgoaiNgu = values?.maDoiTuong === 'CQ_PTIT_KH2';
             const arrFieldNameUpload = [
               'urlChungNhanDoiTuongUuTien',
               'urlHocBa',
@@ -166,54 +150,46 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
                 values[item] = await uploadMultiFile(values[item]?.fileList ?? []);
               }
             }
-            values.truongLop10 = {
-              ...values?.truongLop10,
+            values.thongTinHocTapTHPT.truongLop10 = {
+              ...values?.thongTinHocTapTHPT?.truongLop10,
               tenTruong: tenTruong10,
               truongChuyen: isTruongChuyenLop10,
               khuVucUuTienTuyenSinh: khuVucUuTienLop10,
             };
-            values.truongLop11 = {
-              ...values?.truongLop11,
+            values.thongTinHocTapTHPT.truongLop11 = {
+              ...values?.thongTinHocTapTHPT?.truongLop11,
               tenTruong: tenTruong11,
               truongChuyen: isTruongChuyenLop11,
               khuVucUuTienTuyenSinh: khuVucUuTienLop11,
             };
-            values.truongLop12 = {
-              ...values?.truongLop12,
+            values.thongTinHocTapTHPT.truongLop12 = {
+              ...values?.thongTinHocTapTHPT?.truongLop12,
               tenTruong: tenTruong12,
               truongChuyen: isTruongChuyenLop12,
               khuVucUuTienTuyenSinh: khuVucUuTienLop12,
             };
             if (!isChuyenTruong) {
               //ko chuyen truong cap 3
-              values.truongLop11 = {
-                ...values?.truongLop10,
-                ...values?.truongLop11,
+              values.thongTinHocTapTHPT.truongLop11 = {
+                ...values?.thongTinHocTapTHPT?.truongLop10,
+                ...values?.thongTinHocTapTHPT?.truongLop11,
                 tenTruong: tenTruong10,
                 truongChuyen: isTruongChuyenLop10,
                 khuVucUuTienTuyenSinh: khuVucUuTienLop10,
               };
-              values.truongLop12 = {
-                ...values?.truongLop10,
-                ...values?.truongLop12,
+              values.thongTinHocTapTHPT.truongLop12 = {
+                ...values?.thongTinHocTapTHPT?.truongLop10,
+                ...values?.thongTinHocTapTHPT?.truongLop12,
                 tenTruong: tenTruong10,
                 truongChuyen: isTruongChuyenLop10,
                 khuVucUuTienTuyenSinh: khuVucUuTienLop10,
               };
             }
 
-            const thongTinHocTapTHPT = {
-              ...values,
-              thongTinGiaiQuocGia: undefined,
-              thongTinGiaiTinhTP: undefined,
-              thongTinKetQuaDanhGiaNangLuc: undefined,
-              maDoiTuong: undefined,
-            };
-
-            const { truongChuyen, monChuyen } = calculateChuyen(thongTinHocTapTHPT);
+            const { truongChuyen, monChuyen } = calculateChuyen(values?.thongTinHocTapTHPT);
             const valueFinal: any = {
               thongTinHocTapTHPT: {
-                ...thongTinHocTapTHPT,
+                ...values?.thongTinHocTapTHPT,
                 truongChuyen,
                 monChuyen,
               },
@@ -264,7 +240,7 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
                 rules={[...rules.required]}
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
-                name="doiTuongUuTienTuyenSinh"
+                name={['thongTinHocTapTHPT', 'doiTuongUuTienTuyenSinh']}
                 initialValue={recordHoSo?.thongTinHocTapTHPT?.doiTuongUuTienTuyenSinh}
                 label={
                   <b>
@@ -293,7 +269,7 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
             </Col>
             <Col xs={24} lg={8}>
               <FormItem
-                name="khuVucUuTienTuyenSinh"
+                name={['thongTinHocTapTHPT', 'khuVucUuTienTuyenSinh']}
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
                 initialValue={recordHoSo?.thongTinHocTapTHPT?.khuVucUuTienTuyenSinh}
@@ -329,7 +305,7 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
                 wrapperCol={{ span: 24 }}
                 label="Năm tốt nghiệp"
                 initialValue={recordHoSo?.thongTinHocTapTHPT?.namTotNghiep || record?.namTuyenSinh}
-                name="namTotNghiep"
+                name={['thongTinHocTapTHPT', 'namTotNghiep']}
                 style={{ width: '100%', marginBottom: '0' }}
               >
                 <InputNumber
@@ -341,37 +317,7 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
               </FormItem>
             </Col>
             <Divider />
-
-            {/* <Divider /> */}
-            {/* <Col xs={24} lg={16}>
-              <FormItem
-                rules={[...rules.required]}
-                name="toHopXetTuyen"
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-                label="Tổ hợp xét tuyển mong muốn"
-                style={{ width: '100%', marginBottom: '0' }}
-              >
-                <Select
-                  mode="multiple"
-                  onChange={onChangeToHop}
-                  value={toHop}
-                  placeholder="Chọn tổ hợp"
-                >
-                  {Object.keys(ToHopXetTuyen)?.map((item) => (
-                    <Select.Option key={item} value={item}>
-                      {item} (
-                      {ToHopXetTuyen[item]?.map(
-                        (mon: string, index: number) => `${mon}${index < 2 ? ', ' : ''}`,
-                      )}
-                      )
-                    </Select.Option>
-                  ))}
-                </Select>
-              </FormItem>
-            </Col> */}
-
-            <Col xs={24} lg={8}>
+            <Col xs={24} lg={24}>
               <FormItem
                 rules={[...rules.required]}
                 initialValue={recordHoSo?.maDoiTuong}
@@ -408,91 +354,23 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
                 </Select>
               </FormItem>
             </Col>
-            {/* {toHop?.length > 0 && (
-              <> */}
-            {[
-              { label: 'lớp 10', name: ['truongLop10', 'kqhtCaNam'] },
-              { label: 'lớp 11', name: ['truongLop11', 'kqhtCaNam'] },
-              { label: 'học kỳ I lớp 12', name: ['truongLop12', 'kqhtCaNam'] },
-            ].map((item) => (
-              <Row gutter={[10, 0]} key={item.label}>
-                <Divider plain>
-                  <b>Điểm TBC {item.label}</b>
-                </Divider>
 
-                {Object.keys(MonToHop)?.map((mon) => (
-                  <Col key={mon} xs={12} sm={12} md={8}>
-                    <FormItem
-                      initialValue={
-                        recordHoSo?.thongTinHocTapTHPT?.[item.name[0]]?.kqhtCaNam?.[MonToHop[mon]]
-                      }
-                      rules={[...rules.required]}
-                      name={[...item.name, MonToHop?.[mon]]}
-                      label={mon}
-                      style={{ width: '100%' }}
-                    >
-                      <InputNumber
-                        placeholder="Số thập phân dạng 0.0"
-                        min={0}
-                        max={10}
-                        style={{ width: '100%' }}
-                      />
-                    </FormItem>
-                  </Col>
-                ))}
-                <Col xs={12} sm={12} md={8}>
-                  <FormItem
-                    rules={[...rules.required]}
-                    initialValue={
-                      recordHoSo?.thongTinHocTapTHPT?.[item.name[0]]?.kqhtCaNam?.diemTBC
-                    }
-                    name={[...item.name, 'diemTBC']}
-                    label="Tổng kết"
-                    style={{ width: '100%' }}
-                  >
-                    <InputNumber
-                      placeholder="Số thập phân dạng 0.0"
-                      min={0}
-                      max={10}
-                      style={{ width: '100%' }}
-                    />
-                  </FormItem>
-                </Col>
-              </Row>
-            ))}
-            {/* </>
-            )} */}
-            <Divider plain>
-              <b>Hạnh kiểm</b>
-            </Divider>
-            {[
-              { label: 'Lớp 10', name: ['truongLop10', 'hanhKiem'] },
-              {
-                label: 'Lớp 11',
-                name: ['truongLop11', 'hanhKiem'],
-              },
-              {
-                label: 'Học kỳ I lớp 12',
-                name: ['truongLop12', 'hanhKiem'],
-              },
-            ].map((item) => (
-              <Col key={item.label} xs={12} sm={12} md={8}>
-                <FormItem
-                  initialValue={recordHoSo?.thongTinHocTapTHPT?.[item.name[0]]?.hanhKiem}
-                  rules={[...rules.required]}
-                  label={item.label}
-                  name={item.name}
-                >
-                  <Select showSearch placeholder="Chọn loại hạnh kiểm" allowClear>
-                    {hanhKiem.map((val) => (
-                      <Select.Option key={val} value={val}>
-                        {val}
-                      </Select.Option>
-                    ))}
-                  </Select>
-                </FormItem>
-              </Col>
-            ))}
+            {doiTuongXetTuyen !== 'CQ_PTIT_DGNL1' && (
+              <BlockKetQuaHocTapTHPT
+                arrLopHoc={[
+                  { label: 'lớp 10', name: ['thongTinHocTapTHPT', 'truongLop10', 'kqhtCaNam'] },
+                  { label: 'lớp 11', name: ['thongTinHocTapTHPT', 'truongLop11', 'kqhtCaNam'] },
+                  {
+                    label: 'học kỳ I lớp 12',
+                    name: ['thongTinHocTapTHPT', 'truongLop12', 'kqhtCaNam'],
+                  },
+                ]}
+                haveSelectToHop={false}
+                toHop={['A00', 'A01', 'D01']}
+              />
+            )}
+
+            {doiTuongXetTuyen !== 'CQ_PTIT_DGNL1' && <BlockHanhKiem />}
 
             <Divider plain>
               <b>File minh chứng</b>
@@ -578,6 +456,14 @@ const QuaTrinhHocTapXetTuyenKetHop = () => {
                   fieldName={typeHSG?.split('||')?.[0] ?? ''}
                   type={typeHSG?.split('||')?.[1] ?? ''}
                 />
+              </>
+            )}
+            {doiTuongXetTuyen === 'CQ_PTIT_DGNL1' && (
+              <>
+                <Divider plain>
+                  <b>Thông tin thi đánh giá năng lực</b>
+                </Divider>
+                <BlockDanhGiaNangLuc />
               </>
             )}
             <Col />

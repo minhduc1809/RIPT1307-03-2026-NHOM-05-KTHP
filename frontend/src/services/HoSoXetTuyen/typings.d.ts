@@ -159,8 +159,14 @@ declare module HoSoXetTuyen {
 
   export interface DiemQuyDoi {
     _id: string;
-    thanhPhan: { _id: string; tenThanhPhan: string; diem: number }[];
+    thanhPhan: ThanhPhanDiemQuyDoi[];
     tongDiem: number;
+  }
+
+  export interface ThanhPhanDiemQuyDoi {
+    _id: string;
+    tenThanhPhan: string;
+    diem: number;
   }
 
   export interface NguyenVong {
