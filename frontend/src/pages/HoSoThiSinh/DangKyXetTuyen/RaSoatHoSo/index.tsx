@@ -159,14 +159,17 @@ const RaSoatHoSo = () => {
                   </span>
                 }
               >
-                {recordHoSo?.thongTinHocTapTHPT?.urlChungNhanDoiTuongUuTien?.length &&
+                {recordHoSo?.thongTinHocTapTHPT?.urlChungNhanDoiTuongUuTien?.length ? (
                   recordHoSo?.thongTinHocTapTHPT?.urlChungNhanDoiTuongUuTien.map(
                     (x: string, indexFile: number) => (
                       <a key={x} href={x} target="_blank" rel="noreferrer">
                         <Tag color="#c01718"> Xem tập tin {indexFile + 1}</Tag>
                       </a>
                     ),
-                  )}
+                  )
+                ) : (
+                  <div />
+                )}
               </Item>
             </Descriptions>
           </GridContent>
