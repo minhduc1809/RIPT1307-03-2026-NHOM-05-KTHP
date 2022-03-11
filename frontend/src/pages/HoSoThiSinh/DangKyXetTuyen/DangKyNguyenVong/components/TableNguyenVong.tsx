@@ -146,8 +146,14 @@ const TableNguyenVong = () => {
       width: '80px',
     },
     {
+      title: 'Mã ngành',
+      dataIndex: 'maNganhChuyenNganh',
+      align: 'center',
+      width: '100px',
+    },
+    {
       title: 'Tên ngành',
-      dataIndex: 'tenNganh',
+      dataIndex: 'tenNganhChuyenNganh',
       align: 'center',
       width: '200px',
     },
@@ -159,13 +165,13 @@ const TableNguyenVong = () => {
     },
     {
       title: 'Điểm quy đổi',
-      dataIndex: 'diemQuyDoi.tongDiem',
+      dataIndex: ['diemQuyDoi', 'tongDiem'],
       align: 'center',
       width: '120px',
     },
     {
       title: 'Chi tiết thành phần',
-      dataIndex: 'diemQuyDoi.thanhPhan',
+      dataIndex: ['diemQuyDoi', 'thanhPhan'],
       render: (val: HoSoXetTuyen.ThanhPhanDiemQuyDoi[]) => {
         return val?.map(
           (item: any, index: number) =>
@@ -177,14 +183,15 @@ const TableNguyenVong = () => {
         );
       },
       align: 'center',
-      width: '120px',
+      // width: '120px',
     },
     {
       title: 'Thao tác',
       align: 'center',
       fixed: 'right',
       width: 120,
-      render: (recordTemp: any) => renderLast(recordTemp, recordTemp?.index),
+      render: (recordTemp: HoSoXetTuyen.NguyenVong) =>
+        renderLast(recordTemp, recordTemp?.soThuTu - 1),
     },
   ];
 

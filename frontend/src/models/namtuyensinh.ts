@@ -19,7 +19,7 @@ export default () => {
     setLoading(true);
     const response = await getAllNamTuyenSinh({ condition: { hinhThucDaoTao } });
     setDanhSach(response?.data?.data ?? []);
-    if (!record?._id) setRecord(response?.data?.data?.[0]);
+    if (!record?._id) setRecord(response?.data?.data?.[response?.data?.data?.length - 1 ?? 0]);
     setLoading(false);
   };
 

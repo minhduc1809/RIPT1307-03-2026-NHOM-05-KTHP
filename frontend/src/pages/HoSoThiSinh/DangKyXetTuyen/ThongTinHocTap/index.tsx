@@ -103,7 +103,7 @@ const QuaTrinhHocTap = () => {
   useEffect(() => {
     if (!isChuyenTruong) {
       form.setFieldsValue({
-        khuVucUuTienTuyenSinh: khuVucUuTienLop10,
+        thongTinHocTapTHPT: { khuVucUuTienTuyenSinh: khuVucUuTienLop10 },
       });
     } else {
       const calKhuVuc = calculateKhuVuc([
@@ -112,7 +112,7 @@ const QuaTrinhHocTap = () => {
         khuVucUuTienLop12 || '',
       ]);
       form.setFieldsValue({
-        khuVucUuTienTuyenSinh: arrKhuVucUuTien?.[calKhuVuc],
+        thongTinHocTapTHPT: { khuVucUuTienTuyenSinh: arrKhuVucUuTien?.[calKhuVuc] },
       });
     }
   }, [isChuyenTruong, khuVucUuTienLop10, khuVucUuTienLop11, khuVucUuTienLop12]);
@@ -192,6 +192,8 @@ const QuaTrinhHocTap = () => {
                 ...values?.thongTinHocTapTHPT,
                 truongChuyen,
                 monChuyen,
+                urlHocBa: values?.urlHocBa ?? [],
+                urlChungNhanDoiTuongUuTien: values?.urlChungNhanDoiTuongUuTien ?? [],
               },
               thongTinGiaiQuocGia: {
                 ...values?.thongTinGiaiQuocGia,
@@ -218,7 +220,6 @@ const QuaTrinhHocTap = () => {
                 suDungDanhGiaNangLuc,
                 urlGiayXacNhanDanhGiaNangLuc: values?.urlGiayXacNhanDanhGiaNangLuc ?? [],
               },
-
               maDoiTuong: values?.maDoiTuong,
               urlBangKhenHSGQG: undefined,
             };

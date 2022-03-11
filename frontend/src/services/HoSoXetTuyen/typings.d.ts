@@ -58,8 +58,9 @@ declare module HoSoXetTuyen {
     truongLop10: ThongTinLop;
     truongLop11: ThongTinLop;
     truongLop12: ThongTinLop;
-    isTruongChuyen: boolean;
+    truongChuyen: boolean;
     heChuyen: string;
+    monChuyen: EMonHoc;
     thoiGianTotNghiep: string;
     namTotNghiep: number;
     khuVucUuTienTuyenSinh: string;
@@ -155,6 +156,7 @@ declare module HoSoXetTuyen {
     donViCapChungChiNgoaiNgu: string;
     urlChungChiNgoaiNgu: string[];
     chiTietDiemChungChiTiengTrung: any;
+    suDungChungChiNgoaiNgu: boolean;
   }
 
   export interface DiemQuyDoi {

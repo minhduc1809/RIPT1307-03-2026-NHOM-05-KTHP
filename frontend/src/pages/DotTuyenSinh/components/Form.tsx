@@ -1,6 +1,17 @@
 import rules from '@/utils/rules';
 import { CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Row, Select } from 'antd';
+import {
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Select,
+} from 'antd';
 import moment from 'moment';
 import mm from 'moment-timezone';
 import { useState } from 'react';
@@ -22,6 +33,7 @@ const FormDotTuyenSinh = () => {
     danhSach?.find((item) => item.nam === record?.namTuyenSinh),
   );
   const [hinhThucDaoTao, setHinhThucDaoTao] = useState<string>(record?.hinhThucDaoTao?._id ?? '');
+  const [choPhepThanhToan, setChoPhepThanhToan] = useState<boolean>(true);
   return (
     <Card loading={loading} title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} đợt tuyển sinh`}>
       <Form
@@ -274,6 +286,52 @@ const FormDotTuyenSinh = () => {
               </Form.Item>
             </Col>
           ))}
+        </Row>
+        <Row gutter={[10, 0]}>
+          <Col span={24}>
+            <Form.Item name={'choPhepThanhToan'} initialValue={true}>
+              <Checkbox
+                checked={choPhepThanhToan}
+                onChange={(e) => {
+                  setChoPhepThanhToan(e.target.checked);
+                }}
+              />{' '}
+              Cho phép thanh toán
+            </Form.Item>
+          </Col>
+          {choPhepThanhToan && (
+            <>
+              <Col style={{ marginTop: '-12px' }} md={12}>
+                <Form.Item
+                  name="mucLePhi"
+                  label="Mức lệ phí"
+                  rules={[...rules.required]}
+                  // initialValue={record?.currentPrice?.unitAmount}
+                >
+                  <InputNumber
+                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    style={{ width: '100%' }}
+                    placeholder="Mức lệ phí"
+                    max={10000000}
+                    min={0}
+                  />
+                </Form.Item>
+              </Col>
+              <Col style={{ marginTop: '-12px' }} md={12}>
+                <Form.Item
+                  name="donViTinh"
+                  label="Đơn vị tính"
+                  // initialValue={record?.unitLabel}
+                  rules={[...rules.required]}
+                >
+                  <Select
+                    options={['Hồ sơ', 'Nguyện vọng'].map((item) => ({ value: item, label: item }))}
+                    placeholder="Đơn vị tính"
+                  />
+                </Form.Item>
+              </Col>
+            </>
+          )}
         </Row>
 
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
