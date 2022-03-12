@@ -7,6 +7,7 @@ import {
   postDotTuyenSinh,
   putDotTuyenSinh,
 } from '@/services/DotTuyenSinh/dottuyensinh';
+import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import { message } from 'antd';
 import { useState } from 'react';
 

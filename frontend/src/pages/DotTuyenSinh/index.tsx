@@ -1,4 +1,5 @@
 import TableBase from '@/components/Table';
+import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Divider, Popconfirm, Tag, Tooltip } from 'antd';
@@ -7,7 +8,7 @@ import { useEffect } from 'react';
 import { useModel } from 'umi';
 import Form from './components/Form';
 
-const DotTuyenSinh = () => {
+const DotTuyenSinhComponent = () => {
   const {
     getDotTuyenSinhPageableModel,
     page,
@@ -19,6 +20,8 @@ const DotTuyenSinh = () => {
     setRecord,
     deleteDotTuyenSinhModel,
   } = useModel('dottuyensinh');
+
+  const { getProductByCodeModel } = useModel('thanhtoan');
 
   const { getAllNamTuyenSinhModel } = useModel('namtuyensinh');
   const { getAllHinhThucDaoTaoModel } = useModel('hinhthucdaotao');
@@ -112,6 +115,7 @@ const DotTuyenSinh = () => {
           <Tooltip title="Chỉnh sửa">
             <Button
               onClick={() => {
+                getProductByCodeModel(record?.maLePhi);
                 setEdit(true);
                 setRecord(record);
                 setVisibleForm(true);
@@ -155,4 +159,4 @@ const DotTuyenSinh = () => {
   );
 };
 
-export default DotTuyenSinh;
+export default DotTuyenSinhComponent;

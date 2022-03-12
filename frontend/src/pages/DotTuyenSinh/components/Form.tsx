@@ -14,11 +14,12 @@ import {
 } from 'antd';
 import moment from 'moment';
 import mm from 'moment-timezone';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import styles from './form.css';
 import BlockNganh from './BlockNganh';
 import TinyEditor from '@/components/TinyEditor/Tiny';
+import { EDonViTinh } from '@/utils/constants';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
@@ -27,13 +28,17 @@ const FormDotTuyenSinh = () => {
   const { loading, setVisibleForm, postDotTuyenSinhModel, edit, record, putDotTuyenSinhModel } =
     useModel('dottuyensinh');
   const { danhSach } = useModel('namtuyensinh');
+  const { record: recordProduct } = useModel('thanhtoan');
   const { danhSach: danhSachHinhThucDaoTao } = useModel('hinhthucdaotao');
   const { danhSach: danhSachDoiTuongTuyenSinh } = useModel('doituongtuyensinh');
   const [recordNamTuyenSinh, setRecordNamTuyenSinh] = useState<NamTuyenSinh.Record | undefined>(
     danhSach?.find((item) => item.nam === record?.namTuyenSinh),
   );
   const [hinhThucDaoTao, setHinhThucDaoTao] = useState<string>(record?.hinhThucDaoTao?._id ?? '');
-  const [choPhepThanhToan, setChoPhepThanhToan] = useState<boolean>(true);
+  const [yeuCauTraPhi, setYeuCauTraPhi] = useState<boolean>(record?.yeuCauTraPhi ?? false);
+  useEffect(() => {
+    form.resetFields();
+  }, [recordProduct]);
   return (
     <Card loading={loading} title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} đợt tuyển sinh`}>
       <Form
@@ -49,12 +54,14 @@ const FormDotTuyenSinh = () => {
               ...values,
               moTa: values?.moTa?.text,
               cauHinhPhuongThuc: {},
+              yeuCauTraPhi,
             });
           } else {
             postDotTuyenSinhModel({
               ...values,
               moTa: values?.moTa?.text,
               cauHinhPhuongThuc: {},
+              yeuCauTraPhi,
             });
           }
         }}
@@ -71,7 +78,7 @@ const FormDotTuyenSinh = () => {
               <Input placeholder="Tên đợt tuyển sinh" />
             </Form.Item>
           </Col>
-          <Col xs={24}>
+          <Col xs={8}>
             <Form.Item
               initialValue={record?.hinhThucDaoTao?._id}
               name="hinhThucDaoTao"
@@ -109,7 +116,7 @@ const FormDotTuyenSinh = () => {
               />
             </Form.Item>
           </Col>
-          <Col xs={24} md={8}>
+          {/* <Col xs={24} md={8}>
             <Form.Item
               initialValue={record?.maThanhToanDot}
               name="maThanhToanDot"
@@ -118,7 +125,7 @@ const FormDotTuyenSinh = () => {
             >
               <Input placeholder="Mã thanh toán đợt" />
             </Form.Item>
-          </Col>
+          </Col> */}
           <Col xs={24} md={8}>
             <Form.Item
               initialValue={record?.namTuyenSinh}
@@ -289,24 +296,24 @@ const FormDotTuyenSinh = () => {
         </Row>
         <Row gutter={[10, 0]}>
           <Col span={24}>
-            <Form.Item name={'choPhepThanhToan'} initialValue={true}>
+            <Form.Item name={'yeuCauTraPhi'} initialValue={record?.yeuCauTraPhi ?? false}>
               <Checkbox
-                checked={choPhepThanhToan}
+                checked={yeuCauTraPhi}
                 onChange={(e) => {
-                  setChoPhepThanhToan(e.target.checked);
+                  setYeuCauTraPhi(e.target.checked);
                 }}
               />{' '}
               Cho phép thanh toán
             </Form.Item>
           </Col>
-          {choPhepThanhToan && (
+          {yeuCauTraPhi && (
             <>
-              <Col style={{ marginTop: '-12px' }} md={12}>
+              <Col md={12}>
                 <Form.Item
                   name="mucLePhi"
                   label="Mức lệ phí"
                   rules={[...rules.required]}
-                  // initialValue={record?.currentPrice?.unitAmount}
+                  initialValue={recordProduct?.currentPrice?.unitAmount}
                 >
                   <InputNumber
                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -317,15 +324,18 @@ const FormDotTuyenSinh = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col style={{ marginTop: '-12px' }} md={12}>
+              <Col md={12}>
                 <Form.Item
                   name="donViTinh"
                   label="Đơn vị tính"
-                  // initialValue={record?.unitLabel}
+                  initialValue={recordProduct?.unitLabel}
                   rules={[...rules.required]}
                 >
                   <Select
-                    options={['Hồ sơ', 'Nguyện vọng'].map((item) => ({ value: item, label: item }))}
+                    options={Object.values(EDonViTinh).map((item) => ({
+                      value: item,
+                      label: item,
+                    }))}
                     placeholder="Đơn vị tính"
                   />
                 </Form.Item>

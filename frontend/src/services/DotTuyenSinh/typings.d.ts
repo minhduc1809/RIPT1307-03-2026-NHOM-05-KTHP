@@ -1,5 +1,11 @@
+import type { EDonViTinh } from '@/utils/constants';
+
 declare module DotTuyenSinh {
   export interface Record {
+    mucLePhi: number;
+    donViTinh: EDonViTinh;
+    yeuCauTraPhi: boolean;
+    maLePhi: string;
     _id: string;
     namTuyenSinh: number;
     phuongThucTuyenSinh: PhuongThucTuyenSinh.Record;

@@ -143,6 +143,11 @@ export enum EMonHoc {
   EMPTY = '',
 }
 
+export enum EDonViTinh {
+  NGUYEN_VONG = 'Nguyện vọng',
+  HO_SO = 'Hồ sơ',
+}
+
 export const Setting = {
   navTheme: 'dark',
   primaryColor: '#CC0D00',
