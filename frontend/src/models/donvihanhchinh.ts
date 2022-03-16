@@ -1,20 +1,19 @@
 import { getQuanHuyenS, getTinhS, getXaPhuongS } from '@/services/DonViHanhChinh/donvihanhchinh';
-import type { IRecordTinh } from '@/services/DonViHanhChinh/typing';
 import { useState } from 'react';
 
 export default () => {
-  const [danhSachTinh, setDanhSachTinh] = useState<IRecordTinh.Datum[]>([]);
+  const [danhSachTinh, setDanhSachTinh] = useState<DonViHanhChinh.Datum[]>([]);
   const [danhSachQuanHuyenHoKhauThuongTru, setDanhSachQuanHuyenHoKhauThuongTru] = useState<
-    IRecordTinh.Datum[]
+    DonViHanhChinh.Datum[]
   >([]);
   const [danhSachXaPhuongHoKhauThuongTru, setDanhSachXaPhuongHoKhauThuongTru] = useState<
-    IRecordTinh.Datum[]
+    DonViHanhChinh.Datum[]
   >([]);
   const [danhSachQuanHuyenDiaChiLienHe, setDanhSachQuanHuyenDiaChiLienHe] = useState<
-    IRecordTinh.Datum[]
+    DonViHanhChinh.Datum[]
   >([]);
   const [danhSachXaPhuongDiaChiLienHe, setDanhSachXaPhuongDiaChiLienHe] = useState<
-    IRecordTinh.Datum[]
+    DonViHanhChinh.Datum[]
   >([]);
   const [tenTinh, setTenTinh] = useState<string>();
   const [tenQuanHuyen, setTenQuanHuyen] = useState<string>();

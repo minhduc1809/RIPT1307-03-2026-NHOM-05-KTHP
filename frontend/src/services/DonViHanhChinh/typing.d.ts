@@ -1,4 +1,4 @@
-export declare module IRecordTinh {
+declare module DonViHanhChinh {
   export interface Datum {
     _id: string;
     tenDonVi: string;
@@ -6,7 +6,7 @@ export declare module IRecordTinh {
     ma: string;
   }
 
-  export interface DonViHanhChinhRecord {
+  export interface Record {
     maTP?: string;
     tenTP?: string;
     maQH?: string;

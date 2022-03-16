@@ -22,7 +22,7 @@ const LuaChonDotXetTuyen = () => {
   useEffect(() => {
     if (idPhuongThuc) {
       getPhuongThucTuyenSinhByIdModel(idPhuongThuc);
-      getAllDotTuyenSinhModel(idPhuongThuc);
+      getAllDotTuyenSinhModel({ phuongThucTuyenSinh: idPhuongThuc });
     }
   }, [idPhuongThuc]);
 

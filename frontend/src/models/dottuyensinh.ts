@@ -16,11 +16,30 @@ export default () => {
   const [danhSach, setDanhSach] = useState<DotTuyenSinh.Record[]>([]);
   const objInitModel = useInitModel();
   const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
-
-  const getAllDotTuyenSinhModel = async (phuongThucTuyenSinh?: string) => {
+  const [danhSachGiayToNopHoSo, setdanhSachGiayToNopHoSo] = useState<DotTuyenSinh.GiayTo[]>([]);
+  const [danhSachGiayToNopOnline, setdanhSachGiayToNopOnline] = useState<DotTuyenSinh.GiayTo[]>([]);
+  const [danhSachNganh, setDanhSachNganh] = useState<DotTuyenSinh.NganhTuyenSinh[]>([]);
+  const [editGiayTo, setEditGiayTo] = useState<boolean>(false);
+  const [visibleFormGiayTo, setVisibleFormGiayTo] = useState<boolean>(false);
+  const [visibleFormNganh, setVisibleFormNganh] = useState<boolean>(false);
+  const [recordGiayTo, setRecordGiayTo] = useState<DotTuyenSinh.GiayTo>();
+  const [recordNganh, setRecordNganh] = useState<DotTuyenSinh.NganhTuyenSinh>();
+  const getAllDotTuyenSinhModel = async (
+    payload: {
+      phuongThucTuyenSinh?: string;
+      namTuyenSinh?: number;
+    },
+    isSetRecord?: boolean,
+  ) => {
     setLoading(true);
-    const response = await getAllDotTuyenSinh({ condition: { phuongThucTuyenSinh } });
+    const response = await getAllDotTuyenSinh({
+      condition: {
+        phuongThucTuyenSinh: payload?.phuongThucTuyenSinh,
+        namTuyenSinh: payload?.namTuyenSinh,
+      },
+    });
     setDanhSach(response?.data?.data ?? []);
+    if (isSetRecord) setRecord(response?.data?.data?.[0]);
     setLoading(false);
   };
 
@@ -75,6 +94,22 @@ export default () => {
   };
 
   return {
+    visibleFormNganh,
+    setVisibleFormNganh,
+    recordNganh,
+    setRecordNganh,
+    danhSachNganh,
+    setDanhSachNganh,
+    recordGiayTo,
+    setRecordGiayTo,
+    visibleFormGiayTo,
+    setVisibleFormGiayTo,
+    editGiayTo,
+    setEditGiayTo,
+    danhSachGiayToNopHoSo,
+    danhSachGiayToNopOnline,
+    setdanhSachGiayToNopHoSo,
+    setdanhSachGiayToNopOnline,
     getDotTuyenSinhByIdModel,
     deleteDotTuyenSinhModel,
     putDotTuyenSinhModel,

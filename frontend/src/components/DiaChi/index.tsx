@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import type { IRecordTinh } from '@/services/DonViHanhChinh/typing';
 import rules from '@/utils/rules';
 import { includes } from '@/utils/utils';
 import { Col, Form, Input, Row, Select } from 'antd';
@@ -25,7 +24,7 @@ type Props = {
     xaPhuong: string[];
     diaChiCuThe: string[];
   };
-  initialValue?: IRecordTinh.DonViHanhChinhRecord;
+  initialValue?: DonViHanhChinh.Record;
   setTen?: {
     setTenTinh?: any;
     setTenQuanHuyen?: any;

@@ -225,18 +225,22 @@ export default defineConfig({
             {
               name: 'HoSoChuaKhoa',
               path: './hosochuakhoa',
+              component: './TiepNhanHoSo/ChuaKhoa.tsx',
             },
             {
               name: 'HoSoDaKhoa',
               path: './hosodakhoa',
+              component: './TiepNhanHoSo/DaKhoa.tsx',
             },
             {
               name: 'HoSoDaTiepNhan',
               path: './hosodatiepnhan',
+              component: './TiepNhanHoSo/DaTiepNhan.tsx',
             },
             {
               name: 'HoSoKhongTiepNhan',
               path: './hosokhongtiepnhan',
+              component: './TiepNhanHoSo/KhongTiepNhan.tsx',
             },
           ],
         },

@@ -19,6 +19,9 @@ const DotTuyenSinhComponent = () => {
     setVisibleForm,
     setRecord,
     deleteDotTuyenSinhModel,
+    setdanhSachGiayToNopHoSo,
+    setdanhSachGiayToNopOnline,
+    setDanhSachNganh,
   } = useModel('dottuyensinh');
 
   const { getProductByCodeModel } = useModel('thanhtoan');
@@ -116,6 +119,9 @@ const DotTuyenSinhComponent = () => {
             <Button
               onClick={() => {
                 getProductByCodeModel(record?.maLePhi);
+                setdanhSachGiayToNopHoSo(record?.thongTinGiayToNopHoSo ?? []);
+                setdanhSachGiayToNopOnline(record?.thongTinGiayToNopOnline ?? []);
+                setDanhSachNganh(record?.danhSachNganhTuyenSinh ?? []);
                 setEdit(true);
                 setRecord(record);
                 setVisibleForm(true);
@@ -144,7 +150,7 @@ const DotTuyenSinhComponent = () => {
 
   return (
     <TableBase
-      widthDrawer="750px"
+      widthDrawer="1000px"
       formType="Drawer"
       otherProps={{ scroll: { x: 1000 } }}
       hascreate

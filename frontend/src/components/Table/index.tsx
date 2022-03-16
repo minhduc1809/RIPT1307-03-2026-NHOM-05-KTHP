@@ -27,6 +27,7 @@ type Props = {
   hascreate?: boolean;
   dataState?: string;
   otherProps?: TableProps<any>;
+  maskCloseableForm?: boolean;
 };
 
 const TableBase = (props: Props) => {
@@ -45,6 +46,7 @@ const TableBase = (props: Props) => {
     widthDrawer,
     dataState,
     otherProps,
+    maskCloseableForm,
   } = props;
   let { columns } = props;
   const {
@@ -350,7 +352,7 @@ const TableBase = (props: Props) => {
           {formType === 'Drawer' ? (
             <Drawer
               closeIcon={false}
-              maskClosable={false}
+              maskClosable={maskCloseableForm || false}
               width={widthDrawer}
               destroyOnClose
               footer={false}
@@ -367,7 +369,7 @@ const TableBase = (props: Props) => {
             </Drawer>
           ) : (
             <Modal
-              maskClosable={false}
+              maskClosable={maskCloseableForm || false}
               width={widthDrawer}
               onCancel={() => {
                 setVisibleForm(false);

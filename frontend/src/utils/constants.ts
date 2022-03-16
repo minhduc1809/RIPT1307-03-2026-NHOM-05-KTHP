@@ -148,6 +148,14 @@ export enum EDonViTinh {
   HO_SO = 'Hồ sơ',
 }
 
+export enum ETrangThaiHoSo {
+  chuakhoa = 'Chưa khóa',
+  dakhoa = 'Đã khóa',
+  khongtiepnhan = 'Không tiếp nhận',
+  datiepnhan = 'Đã tiếp nhận',
+  darasoat = 'Đã rà soát',
+}
+
 export const Setting = {
   navTheme: 'dark',
   primaryColor: '#CC0D00',

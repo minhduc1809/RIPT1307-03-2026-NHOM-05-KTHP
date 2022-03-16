@@ -1,5 +1,4 @@
 import type { ESystemRole } from '@/utils/constants';
-import type { IRecordTinh } from '../DonViHanhChinh/typing';
 
 declare module Login {
   export interface User {
@@ -50,12 +49,12 @@ declare module Login {
     tonGiao: string;
     danToc: string;
     anhDaiDien: string;
-    hoKhauThuongTru: IRecordTinh.DonViHanhChinhRecord;
+    hoKhauThuongTru: DonViHanhChinh.DonViHanhChinhRecord;
     loaiNoiSinh: 'TRONG_NUOC' | 'NUOC_NGOAI';
-    noiSinhTrongNuoc: IRecordTinh.DonViHanhChinhRecord;
+    noiSinhTrongNuoc: DonViHanhChinh.DonViHanhChinhRecord;
     noiSinhNuocNgoai: string;
     tenNguoiLienHe: string;
-    diaChiLienHe: IRecordTinh.DonViHanhChinhRecord;
+    diaChiLienHe: DonViHanhChinh.DonViHanhChinhRecord;
     soDienThoaiNguoiLienHe: string;
   }
 

@@ -1,5 +1,9 @@
+import useInitModel from '@/hooks/useInitModel';
 import type { Login } from '@/services/ant-design-pro/typings';
 import {
+  adminGetHoSoByIdDot,
+  adminKhoaHoSoByIdHoSo,
+  adminMoKhoaHoSoByIdHoSo,
   getMyHoSoXetTuyen,
   khoiTaoHoSoXetTuyen,
   putMyDanhSachNguyenVong,
@@ -8,24 +12,28 @@ import {
   putMyTinhQuyDoiNguyenVong,
 } from '@/services/HoSoXetTuyen/hosoxettuyen';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
+import type { ETrangThaiHoSo } from '@/utils/constants';
 import { message } from 'antd';
 import { useState } from 'react';
+import { useModel } from 'umi';
 
 export default () => {
+  const [danhSach, setDanhSach] = useState<HoSoXetTuyen.Record[]>([]);
+  const objInitModel = useInitModel();
+  const { page, limit, setLoading, condition, setTotal } = objInitModel;
   const [current, setCurrent] = useState<number>(0);
   const [danhSachNguyenVong, setDanhSachNguyenVong] = useState<HoSoXetTuyen.NguyenVong[]>([]);
   const [recordNguyenVong, setRecordNguyenVong] = useState<HoSoXetTuyen.NguyenVong>();
   const [visibleFormNguyenVong, setVisibleFormNguyenVong] = useState<boolean>(false);
-  const [edit, setEdit] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const [recordHoSo, setRecordHoSo] = useState<HoSoXetTuyen.Record>();
   const [khuVucUuTienLop10, setKhuVucUuTienLop10] = useState<string>();
   const [khuVucUuTienLop11, setKhuVucUuTienLop11] = useState<string>();
   const [khuVucUuTienLop12, setKhuVucUuTienLop12] = useState<string>();
-
   const [isTruongChuyenLop10, setIsTruongChuyenLop10] = useState<boolean>(false);
   const [isTruongChuyenLop11, setIsTruongChuyenLop11] = useState<boolean>(false);
   const [isTruongChuyenLop12, setIsTruongChuyenLop12] = useState<boolean>(false);
+  const { record: recordHinhThuc } = useModel('hinhthucdaotao');
+  const { record: recordNam } = useModel('namtuyensinh');
 
   const khoiTaoHoSoXetTuyenModel = async (idDotXetTuyen: string) => {
     const response = await khoiTaoHoSoXetTuyen(idDotXetTuyen);
@@ -110,7 +118,48 @@ export default () => {
     return response;
   };
 
+  const adminGetHoSoByIdDotModel = async (idDotTuyenSinh: string, trangThai: ETrangThaiHoSo) => {
+    if (!idDotTuyenSinh || !recordHinhThuc?._id || !recordNam?._id) return;
+    setLoading(true);
+    const response = await adminGetHoSoByIdDot(idDotTuyenSinh, {
+      page,
+      limit,
+      condition: { ...condition, trangThai },
+    });
+    setDanhSach(response?.data?.data?.result ?? []);
+    setTotal(response?.data?.data?.total ?? 0);
+    setLoading(false);
+  };
+
+  const adminKhoaHoSoByIdHoSoModel = async (
+    idHoSo: string,
+    idDotTuyenSinh: string,
+    trangThai: ETrangThaiHoSo,
+  ) => {
+    setLoading(true);
+    await adminKhoaHoSoByIdHoSo(idHoSo);
+    message.success('Khóa hồ sơ thành công');
+    adminGetHoSoByIdDotModel(idDotTuyenSinh, trangThai);
+  };
+
+  const adminMoKhoaHoSoByIdHoSoModel = async (
+    idHoSo: string,
+    idDotTuyenSinh: string,
+    trangThai: ETrangThaiHoSo,
+  ) => {
+    setLoading(true);
+    await adminMoKhoaHoSoByIdHoSo(idHoSo);
+    message.success('Mở khóa hồ sơ thành công');
+    adminGetHoSoByIdDotModel(idDotTuyenSinh, trangThai);
+  };
+
   return {
+    setRecordHoSo,
+    setDanhSach,
+    adminMoKhoaHoSoByIdHoSoModel,
+    adminKhoaHoSoByIdHoSoModel,
+    danhSach,
+    adminGetHoSoByIdDotModel,
     putMyTinhQuyDoiNguyenVongModel,
     putMyDanhSachNguyenVongModel,
     putMyThongTinXetTuyenModel,
@@ -127,19 +176,17 @@ export default () => {
     khuVucUuTienLop12,
     setKhuVucUuTienLop12,
     putMyThongTinThiSinhModel,
-    loading,
     recordHoSo,
     getMyHoSoXetTuyenModel,
     khoiTaoHoSoXetTuyenModel,
     recordNguyenVong,
     setRecordNguyenVong,
-    edit,
-    setEdit,
     visibleFormNguyenVong,
     setVisibleFormNguyenVong,
     danhSachNguyenVong,
     setDanhSachNguyenVong,
     current,
     setCurrent,
+    ...objInitModel,
   };
 };

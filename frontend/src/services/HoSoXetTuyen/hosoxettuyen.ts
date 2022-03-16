@@ -41,3 +41,26 @@ export function putMyTinhQuyDoiNguyenVong(
 ) {
   return axios.put(`${ip3}/${url}/thi-sinh/my/${url}/${idHoSo}/tinh-quy-doi-nguyen-vong`, payload);
 }
+
+export function adminGetHoSoByIdDot(
+  idDotTuyenSinh: string,
+  payload: {
+    page: number;
+    limit: number;
+    condition?: any;
+  },
+) {
+  return axios.get(`${ip3}/${url}/admin/${idDotTuyenSinh}`, { params: payload });
+}
+
+export function adminMoKhoaHoSoByIdHoSo(idHoSoXetTuyen: string) {
+  return axios.put(`${ip3}/${url}/admin/mo-khoa/${idHoSoXetTuyen}`);
+}
+
+export function adminKhoaHoSoByIdHoSo(idHoSoXetTuyen: string) {
+  return axios.put(`${ip3}/${url}/admin/khoa/${idHoSoXetTuyen}`);
+}
+
+export function adminTiepNhanHoSoByIdHoSo(idHoSoXetTuyen: string) {
+  return axios.put(`${ip3}/${url}/admin/tiep-nhan/${idHoSoXetTuyen}`);
+}
