@@ -12,6 +12,7 @@ import {
   putMyThongTinXetTuyen,
   putMyTinhQuyDoiNguyenVong,
   adminTiepNhanHoSoByIdHoSo,
+  khoaMyHoSo,
 } from '@/services/HoSoXetTuyen/hosoxettuyen';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { ETrangThaiHoSo } from '@/utils/constants';
@@ -139,10 +140,14 @@ export default () => {
     idDotTuyenSinh: string,
     trangThai: ETrangThaiHoSo,
   ) => {
-    setLoading(true);
-    await adminKhoaHoSoByIdHoSo(idHoSo);
-    message.success('Khóa hồ sơ thành công');
-    adminGetHoSoByIdDotModel(idDotTuyenSinh, trangThai);
+    try {
+      setLoading(true);
+      await adminKhoaHoSoByIdHoSo(idHoSo);
+      message.success('Khóa hồ sơ thành công');
+      adminGetHoSoByIdDotModel(idDotTuyenSinh, trangThai);
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   const adminMoKhoaHoSoByIdHoSoModel = async (
@@ -173,7 +178,20 @@ export default () => {
     adminGetHoSoByIdDotModel(idDotTuyenSinh, ETrangThaiHoSo.dakhoa);
   };
 
+  const khoaMyHoSoModel = async (idHoSo: string) => {
+    try {
+      setLoading(true);
+      const response = await khoaMyHoSo(idHoSo);
+      setRecordHoSo(response?.data?.data);
+      message.success('Khóa hồ sơ thành công');
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
+  };
+
   return {
+    khoaMyHoSoModel,
     adminTiepNhanHoSoByIdHoSoModel,
     setRecordHoSo,
     setDanhSach,

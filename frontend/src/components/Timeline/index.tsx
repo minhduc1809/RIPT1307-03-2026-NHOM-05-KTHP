@@ -19,7 +19,6 @@ const Timeline = () => {
   });
 
   const { data, dayFinal, checkDay, setupTimeline, finishStep } = useInitTimeline();
-
   const customDot = (
     dot: any,
     info: {
@@ -73,7 +72,7 @@ const Timeline = () => {
                 }}
               >
                 {data[checkDay + 1].description ?? ''}:
-                {data[checkDay + 1]?.title ? (
+                {data[checkDay + 1]?.title && data[checkDay + 1]?.title !== 'Chưa xác định' ? (
                   <>
                     <Countdown
                       style={{ marginRight: 5 }}

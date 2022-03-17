@@ -44,6 +44,10 @@ export function putMyTinhQuyDoiNguyenVong(
   return axios.put(`${ip3}/${url}/thi-sinh/my/${url}/${idHoSo}/tinh-quy-doi-nguyen-vong`, payload);
 }
 
+export function khoaMyHoSo(idHoSo: string) {
+  return axios.put(`${ip3}/${url}/thi-sinh/my/${url}/${idHoSo}/khoa`);
+}
+
 export function adminGetHoSoByIdDot(
   idDotTuyenSinh: string,
   payload: {

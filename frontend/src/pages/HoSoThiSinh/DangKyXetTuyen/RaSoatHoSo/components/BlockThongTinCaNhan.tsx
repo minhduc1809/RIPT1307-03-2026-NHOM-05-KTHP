@@ -36,7 +36,7 @@ const BlockRaSoatThongTinCaNhan = () => {
             ?.filter((item) => item !== undefined && item !== '')
             ?.join(', ')}
         </Item>
-        <Item span={3} label={<span style={{ fontWeight: 'bold' }}>6. Địa chỉ liên hệ</span>}>
+        <Item span={3} label={<span style={{ fontWeight: 'bold' }}>7. Địa chỉ liên hệ</span>}>
           {[
             diaChiLienHe?.diaChi,
             diaChiLienHe?.tenXaPhuong,
@@ -46,13 +46,13 @@ const BlockRaSoatThongTinCaNhan = () => {
             ?.filter((item) => item !== undefined && item !== '')
             ?.join(', ')}
         </Item>
-        <Item span={1} label={<span style={{ fontWeight: 'bold' }}>7. Số điện thoại</span>}>
+        <Item span={1} label={<span style={{ fontWeight: 'bold' }}>8. Số điện thoại</span>}>
           {recordHoSo?.thongTinThiSinh?.soDienThoai}
         </Item>
-        <Item span={1} label={<span style={{ fontWeight: 'bold' }}>8. Email</span>}>
+        <Item span={1} label={<span style={{ fontWeight: 'bold' }}>9. Email</span>}>
           {recordHoSo?.thongTinThiSinh?.email}
         </Item>
-        <Item span={1} label={<span style={{ fontWeight: 'bold' }}>9. Dân tộc</span>}>
+        <Item span={1} label={<span style={{ fontWeight: 'bold' }}>10. Dân tộc</span>}>
           {recordHoSo?.thongTinThiSinh?.danToc}
         </Item>
       </Descriptions>

@@ -2,9 +2,15 @@ import FormTiepNhanHoSo from '@/pages/TiepNhanHoSo/components/FormTiepNhanHoSo';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { ETrangThaiHoSo } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import { CheckOutlined, CloseOutlined, StopOutlined } from '@ant-design/icons';
+import {
+  CheckOutlined,
+  CloseOutlined,
+  EditOutlined,
+  LockOutlined,
+  StopOutlined,
+} from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
-import { Button, Card, Col, Descriptions, Divider, Modal, Row, Tag } from 'antd';
+import { Button, Card, Col, Descriptions, Divider, Modal, Popconfirm, Row, Tag } from 'antd';
 import { useState } from 'react';
 import { useAccess, useModel } from 'umi';
 import BlockChungChiNgoaiNgu from './components/BlockChungChiNgoaiNgu';
@@ -22,7 +28,7 @@ import BlockRaSoatThongTinCaNhan from './components/BlockThongTinCaNhan';
 const { Item } = Descriptions;
 
 const RaSoatHoSo = () => {
-  const { recordHoSo, setVisibleForm } = useModel('hosoxettuyen');
+  const { recordHoSo, setVisibleForm, setCurrent, khoaMyHoSoModel } = useModel('hosoxettuyen');
   const { record, visibleFormGiayTo, setVisibleFormGiayTo } = useModel('dottuyensinh');
   let index = 1;
   let indexThongTinTiepNhanHoSo = 1;
@@ -91,8 +97,13 @@ const RaSoatHoSo = () => {
           <Divider />
           <GridContent>
             <Row>
-              <Col span={16}>
+              <Col lg={16} xs={24}>
                 <h1 style={{ fontWeight: 'bold' }}>A. THÔNG TIN THÍ SINH: </h1>
+              </Col>
+              <Col lg={8} xs={24}>
+                <h1 style={{ fontWeight: 'bold' }}>
+                  TRẠNG THÁI: {recordHoSo?.trangThai?.toUpperCase()}{' '}
+                </h1>
               </Col>
             </Row>
 
@@ -206,7 +217,7 @@ const RaSoatHoSo = () => {
               </>
             )}
 
-            {!access.thiSinh && (
+            {!access.thiSinh ? (
               <>
                 <div style={{ textAlign: 'center', marginTop: 10 }}>
                   {recordHoSo?.trangThai === ETrangThaiHoSo.dakhoa && (
@@ -254,6 +265,45 @@ const RaSoatHoSo = () => {
                   <FormTiepNhanHoSo type={typeXuLy} />
                 </Modal>
               </>
+            ) : (
+              <div
+                style={{
+                  display: 'flex',
+                  textAlign: 'center',
+                  marginTop: 10,
+                  justifyContent: 'space-around',
+                }}
+              >
+                {recordHoSo?.trangThai === ETrangThaiHoSo.chuakhoa && (
+                  <>
+                    <Button
+                      onClick={() => {
+                        setCurrent(0);
+                        window.scrollTo({
+                          top: 0,
+                          behavior: 'smooth',
+                        });
+                      }}
+                      icon={<EditOutlined />}
+                    >
+                      Chỉnh sửa hồ sơ
+                    </Button>
+                    <Popconfirm
+                      onConfirm={() => khoaMyHoSoModel(recordHoSo?._id)}
+                      title={
+                        <div>
+                          Bạn sẽ không thể chỉnh sửa lại hồ sơ sau khi khóa, bạn có chắc chắn muốn
+                          khóa hồ sơ?
+                        </div>
+                      }
+                    >
+                      <Button type="primary" icon={<LockOutlined />}>
+                        Khóa hồ sơ
+                      </Button>
+                    </Popconfirm>
+                  </>
+                )}
+              </div>
             )}
           </GridContent>
         </Card>
