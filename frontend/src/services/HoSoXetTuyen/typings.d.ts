@@ -1,4 +1,4 @@
-import type { EMonHoc } from '@/utils/constants';
+import type { EMonHoc, ETrangThaiHoSo } from '@/utils/constants';
 import type { Login } from '../ant-design-pro/typings';
 
 declare module HoSoXetTuyen {
@@ -19,13 +19,14 @@ declare module HoSoXetTuyen {
     namTuyenSinh: number;
     idDotTuyenSinh: string;
     maHoSo: string;
-    trangThai: string;
+    trangThai: ETrangThaiHoSo;
     danhSachNguyenVong: any[];
     trangThaiThanhToan: string;
     thongTinGiayToNopHoSo: any[];
     thongTinGiaDinh: any[];
     createdAt: string;
     updatedAt: string;
+    ghiChuTiepNhan: string;
   }
 
   export interface KetQuaHocTapTHPT {

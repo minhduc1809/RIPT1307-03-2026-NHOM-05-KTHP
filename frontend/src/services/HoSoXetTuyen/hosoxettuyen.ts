@@ -1,6 +1,8 @@
 import axios from '@/utils/axios';
+import type { ETrangThaiHoSo } from '@/utils/constants';
 import { ip3 } from '@/utils/ip';
 import type { Login } from '../ant-design-pro/typings';
+import type { DotTuyenSinh } from '../DotTuyenSinh/typings';
 import type { HoSoXetTuyen } from './typings';
 
 const url = 'ho-so-xet-tuyen';
@@ -61,6 +63,13 @@ export function adminKhoaHoSoByIdHoSo(idHoSoXetTuyen: string) {
   return axios.put(`${ip3}/${url}/admin/khoa/${idHoSoXetTuyen}`);
 }
 
-export function adminTiepNhanHoSoByIdHoSo(idHoSoXetTuyen: string) {
-  return axios.put(`${ip3}/${url}/admin/tiep-nhan/${idHoSoXetTuyen}`);
+export function adminTiepNhanHoSoByIdHoSo(
+  idHoSoXetTuyen: string,
+  payload: {
+    trangThai: ETrangThaiHoSo;
+    thongTinGiayToNopHoSo: DotTuyenSinh.GiayTo[];
+    ghiChuTiepNhan: string;
+  },
+) {
+  return axios.put(`${ip3}/${url}/admin/tiep-nhan/${idHoSoXetTuyen}`, payload);
 }

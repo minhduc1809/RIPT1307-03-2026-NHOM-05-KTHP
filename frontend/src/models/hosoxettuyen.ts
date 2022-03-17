@@ -1,5 +1,6 @@
 import useInitModel from '@/hooks/useInitModel';
 import type { Login } from '@/services/ant-design-pro/typings';
+import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import {
   adminGetHoSoByIdDot,
   adminKhoaHoSoByIdHoSo,
@@ -10,9 +11,10 @@ import {
   putMyThongTinThiSinh,
   putMyThongTinXetTuyen,
   putMyTinhQuyDoiNguyenVong,
+  adminTiepNhanHoSoByIdHoSo,
 } from '@/services/HoSoXetTuyen/hosoxettuyen';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
-import type { ETrangThaiHoSo } from '@/utils/constants';
+import { ETrangThaiHoSo } from '@/utils/constants';
 import { message } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
@@ -20,7 +22,7 @@ import { useModel } from 'umi';
 export default () => {
   const [danhSach, setDanhSach] = useState<HoSoXetTuyen.Record[]>([]);
   const objInitModel = useInitModel();
-  const { page, limit, setLoading, condition, setTotal } = objInitModel;
+  const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
   const [current, setCurrent] = useState<number>(0);
   const [danhSachNguyenVong, setDanhSachNguyenVong] = useState<HoSoXetTuyen.NguyenVong[]>([]);
   const [recordNguyenVong, setRecordNguyenVong] = useState<HoSoXetTuyen.NguyenVong>();
@@ -34,6 +36,7 @@ export default () => {
   const [isTruongChuyenLop12, setIsTruongChuyenLop12] = useState<boolean>(false);
   const { record: recordHinhThuc } = useModel('hinhthucdaotao');
   const { record: recordNam } = useModel('namtuyensinh');
+  const { setVisibleFormGiayTo } = useModel('dottuyensinh');
 
   const khoiTaoHoSoXetTuyenModel = async (idDotXetTuyen: string) => {
     const response = await khoiTaoHoSoXetTuyen(idDotXetTuyen);
@@ -153,7 +156,25 @@ export default () => {
     adminGetHoSoByIdDotModel(idDotTuyenSinh, trangThai);
   };
 
+  const adminTiepNhanHoSoByIdHoSoModel = async (
+    idHoSo: string,
+    idDotTuyenSinh: string,
+    payload: {
+      trangThai: ETrangThaiHoSo;
+      thongTinGiayToNopHoSo: DotTuyenSinh.GiayTo[];
+      ghiChuTiepNhan: string;
+    },
+  ) => {
+    setLoading(true);
+    await adminTiepNhanHoSoByIdHoSo(idHoSo, payload);
+    message.success('Xử lý thành công');
+    setVisibleForm(false);
+    setVisibleFormGiayTo(false);
+    adminGetHoSoByIdDotModel(idDotTuyenSinh, ETrangThaiHoSo.dakhoa);
+  };
+
   return {
+    adminTiepNhanHoSoByIdHoSoModel,
     setRecordHoSo,
     setDanhSach,
     adminMoKhoaHoSoByIdHoSoModel,

@@ -1,8 +1,12 @@
+import FormTiepNhanHoSo from '@/pages/TiepNhanHoSo/components/FormTiepNhanHoSo';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
+import { ETrangThaiHoSo } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
+import { CheckOutlined, CloseOutlined, StopOutlined } from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
-import { Card, Col, Descriptions, Divider, Row, Tag } from 'antd';
-import { useModel } from 'umi';
+import { Button, Card, Col, Descriptions, Divider, Modal, Row, Tag } from 'antd';
+import { useState } from 'react';
+import { useAccess, useModel } from 'umi';
 import BlockChungChiNgoaiNgu from './components/BlockChungChiNgoaiNgu';
 import BlockChungChiQuocTe from './components/BlockChungChiQuocTe';
 import BlockDanhGiaNangLuc from './components/BlockDanhGiaNangLuc';
@@ -10,6 +14,7 @@ import BlockDiemTBC from './components/BlockDiemTBC';
 import BlockDiemTBCCacMon from './components/BlockDiemTBCCacMon';
 import BlockDoiTuongKhuVucUuTien from './components/BlockDoiTuongKhuVucUuTien';
 import BlockGiaiHSG from './components/BlockGiaiHSG';
+import BlockGiayTo from './components/BlockGiayTo';
 import BlockHanhKiem from './components/BlockHanhKiem';
 import BlockNguyenVong from './components/BlockNguyenVong';
 import BlockNoiHocTHPT from './components/BlockNoiHocTHPT';
@@ -17,9 +22,12 @@ import BlockRaSoatThongTinCaNhan from './components/BlockThongTinCaNhan';
 const { Item } = Descriptions;
 
 const RaSoatHoSo = () => {
-  const { recordHoSo } = useModel('hosoxettuyen');
-  const { record } = useModel('dottuyensinh');
+  const { recordHoSo, setVisibleForm } = useModel('hosoxettuyen');
+  const { record, visibleFormGiayTo, setVisibleFormGiayTo } = useModel('dottuyensinh');
   let index = 1;
+  let indexThongTinTiepNhanHoSo = 1;
+  const access = useAccess();
+  const [typeXuLy, setTypeXuLy] = useState<ETrangThaiHoSo>();
 
   const columnGiaiHSG: IColumn<
     HoSoXetTuyen.ThongTinGiaiTinhTP | HoSoXetTuyen.ThongTinGiaiQuocGia
@@ -172,6 +180,81 @@ const RaSoatHoSo = () => {
                 )}
               </Item>
             </Descriptions>
+            {[ETrangThaiHoSo.datiepnhan, ETrangThaiHoSo.khongtiepnhan]?.includes(
+              recordHoSo?.trangThai ?? ETrangThaiHoSo.chuakhoa,
+            ) && (
+              <>
+                <h1 style={{ fontWeight: 'bold' }}>C. THÔNG TIN TIẾP NHẬN HỒ SƠ:</h1>
+                {recordHoSo?.thongTinGiayToNopHoSo?.length && (
+                  <>
+                    <BlockGiayTo index={indexThongTinTiepNhanHoSo++} />
+                    <br />
+                  </>
+                )}
+                <Descriptions>
+                  <Item
+                    span={3}
+                    label={
+                      <span style={{ fontWeight: 'bold' }}>
+                        {indexThongTinTiepNhanHoSo}. Ghi chú xử lý
+                      </span>
+                    }
+                  >
+                    {recordHoSo?.ghiChuTiepNhan ?? ''}
+                  </Item>
+                </Descriptions>
+              </>
+            )}
+
+            {!access.thiSinh && (
+              <>
+                <div style={{ textAlign: 'center', marginTop: 10 }}>
+                  {recordHoSo?.trangThai === ETrangThaiHoSo.dakhoa && (
+                    <>
+                      <Button
+                        onClick={() => {
+                          setVisibleFormGiayTo(true);
+                          setTypeXuLy(ETrangThaiHoSo.datiepnhan);
+                        }}
+                        style={{ marginRight: 8 }}
+                        icon={<CheckOutlined />}
+                        type="primary"
+                      >
+                        Tiếp nhận
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setVisibleFormGiayTo(true);
+                          setTypeXuLy(ETrangThaiHoSo.khongtiepnhan);
+                        }}
+                        style={{ marginRight: 8 }}
+                        icon={<StopOutlined />}
+                        type="primary"
+                      >
+                        Không tiếp nhận
+                      </Button>
+                    </>
+                  )}
+                  <Button onClick={() => setVisibleForm(false)} icon={<CloseOutlined />}>
+                    Đóng
+                  </Button>
+                </div>
+                <Modal
+                  destroyOnClose
+                  footer={false}
+                  width="1000px"
+                  title={
+                    typeXuLy === ETrangThaiHoSo.datiepnhan
+                      ? 'Tiếp nhận hồ sơ'
+                      : 'Không tiếp nhận hồ sơ'
+                  }
+                  visible={visibleFormGiayTo}
+                  onCancel={() => setVisibleFormGiayTo(false)}
+                >
+                  <FormTiepNhanHoSo type={typeXuLy} />
+                </Modal>
+              </>
+            )}
           </GridContent>
         </Card>
       </div>

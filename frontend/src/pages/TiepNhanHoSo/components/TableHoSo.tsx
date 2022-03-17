@@ -54,11 +54,11 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
   }, []);
 
   useEffect(() => {
-    if (record?._id) getAllNamTuyenSinhModel(record?._id);
+    if (record?._id && !recordNamTuyenSinh?._id) getAllNamTuyenSinhModel(record?._id);
   }, [record?._id]);
 
   useEffect(() => {
-    if (recordNamTuyenSinh?._id) {
+    if (recordNamTuyenSinh?._id && !recordDotTuyenSinh?._id) {
       getAllDotTuyenSinhModel({ namTuyenSinh: recordNamTuyenSinh?.nam }, true);
     }
   }, [recordNamTuyenSinh?._id]);
@@ -151,7 +151,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
         );
       },
       onCell,
-      // width: 300,
+      width: 220,
     },
     {
       title: 'Ngày tạo',
