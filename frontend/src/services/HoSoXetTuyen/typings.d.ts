@@ -27,6 +27,7 @@ declare module HoSoXetTuyen {
     createdAt: string;
     updatedAt: string;
     ghiChuTiepNhan: string;
+    identityCode;
   }
 
   export interface KetQuaHocTapTHPT {

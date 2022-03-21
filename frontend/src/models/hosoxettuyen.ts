@@ -184,6 +184,10 @@ export default () => {
       const response = await khoaMyHoSo(idHoSo);
       setRecordHoSo(response?.data?.data);
       message.success('Khóa hồ sơ thành công');
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
       setLoading(false);
     } catch (err) {
       setLoading(false);

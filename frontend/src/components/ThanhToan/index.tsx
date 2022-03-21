@@ -125,7 +125,7 @@ const ThanhToan = (props: { record?: { identityCode: string; trangThaiThanhToan:
           />
         </Tabs.TabPane>
       </Tabs>
-      {access.sinhVien && (
+      {access.thiSinh && (
         <>
           <br />
           <b>

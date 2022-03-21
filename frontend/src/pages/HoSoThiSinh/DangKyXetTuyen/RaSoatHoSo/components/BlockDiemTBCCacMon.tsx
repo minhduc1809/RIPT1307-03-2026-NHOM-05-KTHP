@@ -33,6 +33,7 @@ const BlockDiemTBCCacMon = (props: { danhSachMon: string[]; index?: number }) =>
             title: 'Tên môn',
             dataIndex: 'tenMon',
             align: 'center',
+            width: 100,
           },
           {
             title: 'Lớp 10',

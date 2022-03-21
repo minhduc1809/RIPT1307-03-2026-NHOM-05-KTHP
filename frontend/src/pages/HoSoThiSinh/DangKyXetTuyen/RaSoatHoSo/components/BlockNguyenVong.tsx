@@ -69,6 +69,7 @@ const BlockNguyenVong = (props: { index?: number }) => {
       </Descriptions>
 
       <Table
+        scroll={{ x: 1000 }}
         columns={columnsNV}
         dataSource={recordHoSo?.danhSachNguyenVong ?? []}
         size="small"
