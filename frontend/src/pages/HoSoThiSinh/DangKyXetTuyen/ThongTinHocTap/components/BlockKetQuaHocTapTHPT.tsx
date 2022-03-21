@@ -1,11 +1,10 @@
 import { FormItem } from '@/components/FormItem';
 import { MonToHop, ToHopXetTuyen } from '@/utils/constants';
 import rules from '@/utils/rules';
-import { useEffect } from 'react';
 import { Col, Divider, InputNumber, Row, Select } from 'antd';
-import { useState } from 'react';
-import { useModel } from 'umi';
 import _ from 'lodash';
+import { useEffect, useState } from 'react';
+import { useModel } from 'umi';
 
 const BlockKetQuaHocTapTHPT = (props: {
   haveSelectToHop: boolean;
@@ -35,7 +34,6 @@ const BlockKetQuaHocTapTHPT = (props: {
   useEffect(() => {
     onChangeToHop(props?.toHop ?? []);
   }, []);
-
   return (
     <>
       {props?.haveSelectToHop && (
@@ -71,9 +69,11 @@ const BlockKetQuaHocTapTHPT = (props: {
       {toHop?.length > 0 && (
         <>
           {props?.arrLopHoc.map((item) => (
+            //recordHoSo?.thongTinHocTapTHPT?.namTotNghiep || record?.namTuyenSinh
+
             <Row gutter={[10, 0]} key={item.label}>
               <Divider plain>
-                <b>Điểm TBC {item.label}</b>
+                <b>{item.label}</b>
               </Divider>
 
               {arrMonHoc?.map((mon) => (

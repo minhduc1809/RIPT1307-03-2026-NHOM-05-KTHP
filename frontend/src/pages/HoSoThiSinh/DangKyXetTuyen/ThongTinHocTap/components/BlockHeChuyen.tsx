@@ -1,6 +1,5 @@
 import { FormItem } from '@/components/FormItem';
 import { EMonHoc } from '@/utils/constants';
-import rules from '@/utils/rules';
 import { Col, Select } from 'antd';
 import { useModel } from 'umi';
 
@@ -31,7 +30,7 @@ const BlockHeChuyen = (props: { isChuyenTruong: boolean }) => {
       ].map((item) => (
         <Col key={item.name[0]} xs={24} sm={12} md={12} lg={8}>
           <FormItem
-            rules={item.isChuyen ? [...rules.required] : []}
+            // rules={item.isChuyen ? [...rules.required] : []}
             initialValue={item.initialValue}
             label={item.label}
             name={item.name}

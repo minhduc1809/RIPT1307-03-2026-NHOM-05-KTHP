@@ -50,8 +50,8 @@ const LuaChonPhuongThuc = () => {
                   <div className={styles['content-top']}>
                     <b style={{ fontSize: 18 }}>Xin chào {initialState?.currentUser?.ten},</b>
                     <div>
-                      Bạn đang tham gia xét tuyển vào Học viện Công nghệ Bưu chính viễn thông hệ Đại
-                      học Chính quy
+                      Bạn đang tham gia hệ thống xét tuyển trực tuyến đại học chính quy của Học viện
+                      Công nghệ Bưu chính Viễn Thông
                     </div>
                   </div>
                 </div>
@@ -89,7 +89,12 @@ const LuaChonPhuongThuc = () => {
                           history.push('/dotxettuyen');
                         }}
                       >
-                        <Button type="default" size="large" shape="circle">
+                        <Button
+                          type="primary"
+                          style={{ fontWeight: 'bold' }}
+                          size="large"
+                          shape="circle"
+                        >
                           {index + 1}
                         </Button>
                         <div style={{ marginLeft: 8 }}>

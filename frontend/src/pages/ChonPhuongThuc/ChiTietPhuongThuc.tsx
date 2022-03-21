@@ -28,7 +28,7 @@ const DanhSachPhuongThuc = () => {
           }
         >
           <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
-            <h2>Xét tuyển kết hợp theo Đề án tuyển sinh của Học viện</h2>
+            <h2>{record?.phuongThucTuyenSinh?.tenPhuongThuc?.toUpperCase()}</h2>
           </div>
           <div
             dangerouslySetInnerHTML={{
