@@ -24,8 +24,8 @@ const XacNhanNhapHoc = () => {
   };
 
   return (
-    <Card title="Kết quả xét tuyển">
-      <p>
+    <Card title="Kết quả xét tuyển" headStyle={{backgroundColor: '#CC0D00', color: 'white' , fontWeight: '700'}} style={{fontSize: '17px'}} >
+      < p>
         <b>Hội đồng tuyển sinh - Học viện Công nghệ Bưu chính Viễn thông thông báo và chúc mừng:</b>
       </p>
       <Row>
@@ -50,7 +50,7 @@ const XacNhanNhapHoc = () => {
       </Row>
       <br />
       <div>
-        Thí sinh đã đạt ngưỡng điểm trúng tuyển vào đại học hệ chính quy theo phương thức 1 năm{' '}
+        Thí sinh đã đạt ngưỡng điểm trúng tuyển vào đại học hệ chính quy theo phương thức xét tuyển kết hợp năm{' '}
         {new Date().getFullYear()}, cụ thể như sau:
       </div>
 
@@ -162,7 +162,7 @@ const XacNhanNhapHoc = () => {
       {!ketQua?.trangThaiXacNhan && (
         <>
           {
-            <div style={{ textAlign: 'center' }}>
+            <div style={{ textAlign: 'center', fontSize: '17px' }}>
               <Popconfirm
                 disabled={ketQua?.trangThaiXacNhan}
                 title={
@@ -175,7 +175,7 @@ const XacNhanNhapHoc = () => {
                 // onConfirm={() => this.xacNhanNhapHoc(ketQua?._id, 'Xác nhận')}
               >
                 <Button
-                  style={{ marginRight: 8 }}
+                  style={{ marginRight: 8 ,fontSize: '16px'}}
                   disabled={ketQua?.trangThaiXacNhan}
                   type="primary"
                 >
@@ -194,7 +194,7 @@ const XacNhanNhapHoc = () => {
                   </div>
                 }
               >
-                <Button disabled={ketQua?.trangThaiXacNhan}>Không xác nhận nhập học</Button>
+                <Button disabled={ketQua?.trangThaiXacNhan} style={{ marginRight: 8 ,fontSize: '16px'}}>Không xác nhận nhập học</Button>
               </Popconfirm>
             </div>
           }

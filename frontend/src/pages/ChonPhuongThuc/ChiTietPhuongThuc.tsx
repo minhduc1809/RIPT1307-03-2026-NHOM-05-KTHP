@@ -28,7 +28,7 @@ const DanhSachPhuongThuc = () => {
           }
         >
           <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
-            <h2>Xét tuyển kết hợp theo Đề án tuyển sinh của Học viện</h2>
+            <h2>XÉT TUYỂN KẾT HỢP THEO ĐỀ ÁN TUYỂN SINH CỦA HỌC VIỆN</h2>
           </div>
           <div
             dangerouslySetInnerHTML={{

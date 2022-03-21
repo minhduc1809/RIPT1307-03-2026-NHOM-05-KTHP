@@ -6,6 +6,7 @@ import { Col, Divider, InputNumber, Row, Select } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import _ from 'lodash';
+import moment from 'moment';
 
 const BlockKetQuaHocTapTHPT = (props: {
   haveSelectToHop: boolean;
@@ -35,7 +36,11 @@ const BlockKetQuaHocTapTHPT = (props: {
   useEffect(() => {
     onChangeToHop(props?.toHop ?? []);
   }, []);
-
+  console.log(toHop, arrMonHoc, )
+  console.log("props", props)
+  console.log("hso", recordHoSo)
+  console.log("nam", moment((recordHoSo?.thongTinHocTapTHPT?.namTotNghiep || record?.namTuyenSinh)) )
+  console.log("namhientai", moment( Date.now()))
   return (
     <>
       {props?.haveSelectToHop && (
@@ -71,9 +76,12 @@ const BlockKetQuaHocTapTHPT = (props: {
       {toHop?.length > 0 && (
         <>
           {props?.arrLopHoc.map((item) => (
+//recordHoSo?.thongTinHocTapTHPT?.namTotNghiep || record?.namTuyenSinh
+            
+             
             <Row gutter={[10, 0]} key={item.label}>
               <Divider plain>
-                <b>Điểm TBC {item.label}</b>
+                <b>{item.label}</b>
               </Divider>
 
               {arrMonHoc?.map((mon) => (
@@ -115,6 +123,7 @@ const BlockKetQuaHocTapTHPT = (props: {
                 </FormItem>
               </Col>
             </Row>
+          
           ))}
         </>
       )}

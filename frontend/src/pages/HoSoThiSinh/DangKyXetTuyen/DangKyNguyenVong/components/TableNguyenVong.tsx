@@ -23,6 +23,7 @@ const TableNguyenVong = () => {
     setVisibleFormNguyenVong,
     setEdit,
     setRecordNguyenVong,
+    recordNguyenVong
   } = useModel('hosoxettuyen');
 
   const [indexNV, setIndexNV] = useState<number>(-1);
@@ -96,7 +97,7 @@ const TableNguyenVong = () => {
     fontWeight: 'bold',
     height: 105,
   };
-  const styleRow: any = { textAlign: 'center', padding: '0px 10px 20px 10px' };
+  const styleRow: any = { textAlign: 'center', margin: 'auto auto', padding: '10px 10px 10px 10px' };
   const renderLast = (recordNguyenVong: HoSoXetTuyen.NguyenVong, index: number) => (
     <div style={{ textAlign: 'center' }}>
       <div style={{ marginBottom: 10 }}>
@@ -194,7 +195,7 @@ const TableNguyenVong = () => {
         renderLast(recordTemp, recordTemp?.soThuTu - 1),
     },
   ];
-
+  console.log("diem>>", recordNguyenVong?.diemQuyDoi?.thanhPhan)
   return (
     <div style={{ marginBottom: 30 }}>
       <Divider plain>
@@ -215,6 +216,7 @@ const TableNguyenVong = () => {
           setEdit(false);
           setRecordNguyenVong(undefined);
         }}
+        style={{ marginBottom: '20px' }}
       >
         Thêm nguyện vọng
       </Button>
@@ -232,17 +234,23 @@ const TableNguyenVong = () => {
             <Col span={2} style={styleHeader}>
               Mã ngành
             </Col>
-            <Col span={4} style={styleHeader}>
+            <Col span={3} style={styleHeader}>
               Tên ngành
             </Col>
-            <Col span={3} style={styleHeader}>
+            <Col span={2} style={styleHeader}>
               Tổ hợp
             </Col>
-            <Col span={2} style={styleHeader}>
-              Điểm ưu tiên
+            <Col span={3} style={styleHeader}>
+              Điểm xét tuyển chưa có ưu tiên
             </Col>
-            <Col span={10} style={styleHeader}>
+            <Col span={3} style={styleHeader}>
+              Điểm xét tuyển có ưu tiên
+            </Col>
+            <Col span={6} style={styleHeader}>
               Chi tiết thành phần
+            </Col>
+            <Col span={2} style={styleHeader}>
+              {' '}
             </Col>
           </Row>
           <DragDropContext onDragEnd={onDragEnd}>
@@ -251,38 +259,30 @@ const TableNguyenVong = () => {
                 <div ref={provided.innerRef} {...provided.droppableProps}>
                   {danhSachNguyenVong.map((item, index: number) => {
                     return (
-                      <Draggable draggableId={index.toString()} index={index} key={index}>
+                      <Draggable draggableId={index.toString()} index={index} key={index} >
                         {(providedTemp: any) => (
-                          <div {...providedTemp.draggableProps} ref={providedTemp.innerRef}>
+                          <div {...providedTemp.draggableProps} ref={providedTemp.innerRef} >
                             <PopoverDiv
                               style={{
                                 borderLeft:
                                   index === indexNV ? '4px solid #D50000' : '4px solid transparent',
                               }}
                             >
-                              <div
-                                {...providedTemp.dragHandleProps}
-                                style={{
-                                  // width: '100%',
-                                  textAlign: 'center',
-                                  // position: 'absolute',
-                                  // top: 3,
-                                }}
-                              >
-                                <EllipsisOutlined />
-                              </div>
+
                               <Popover
                                 content={renderLast(item, indexNV)}
                                 placement="right"
                                 trigger="hover"
                                 visible={index === indexNV}
                                 onVisibleChange={() => handleVisibleChange(index)}
+
                               >
                                 <Row
                                   style={{
                                     borderBottom: '1px solid black',
                                     color: item?.wrong ? '#D50000' : undefined,
                                     fontWeight: item?.wrong ? 'bold' : undefined,
+
                                   }}
                                 >
                                   <Col span={3} style={{ ...styleRow }}>
@@ -291,16 +291,19 @@ const TableNguyenVong = () => {
                                   <Col span={2} style={styleRow}>
                                     {item?.maNganhChuyenNganh ?? ''}
                                   </Col>
-                                  <Col span={4} style={styleRow}>
+                                  <Col span={3} style={styleRow}>
                                     {item?.tenNganhChuyenNganh ?? ''}
                                   </Col>
-                                  <Col span={3} style={{ ...styleRow }}>
+                                  <Col span={2} style={{ ...styleRow }}>
                                     {item?.toHopXetTuyen ?? ''}
                                   </Col>
-                                  <Col span={2} style={styleRow}>
+                                  <Col span={3} style={styleRow}>
+                                    {item?.diemQuyDoi?.thanhPhan[0]?.diem ?? ''}
+                                  </Col>
+                                  <Col span={3} style={styleRow}>
                                     {item?.diemQuyDoi?.tongDiem ?? ''}
                                   </Col>
-                                  <Col span={10} style={styleRow}>
+                                  <Col span={6} style={styleRow}>
                                     {item?.diemQuyDoi?.thanhPhan?.map(
                                       (diem: { tenThanhPhan: string; diem: number }) => (
                                         <div key={diem.tenThanhPhan}>
@@ -308,6 +311,13 @@ const TableNguyenVong = () => {
                                         </div>
                                       ),
                                     )}
+                                  </Col>
+                                  <Col span={2}  {...providedTemp.dragHandleProps}
+                                    style={{
+                                      ...styleRow,
+                                      fontSize: '20px',
+                                    }}>
+                                    <EllipsisOutlined />
                                   </Col>
                                 </Row>
                               </Popover>

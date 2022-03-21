@@ -81,40 +81,40 @@ const GlobalFooter = () => (
           </Col>
         </Row>
         <Row style={{ marginTop: 30 }}>
-          <Col xs={24} lg={12}>
+          <Col xs={24} lg={11}>
             <Row>
-              <div className={styles.text2}>Trụ sở chính:</div>
+              <div className={styles.text1} style={{color: '#202124'}}>Trụ sở chính:</div>
             </Row>
             <Row>
-              <div className={styles.text3}>122 Hoàng Quốc Việt, Q.Cầu Giấy, Hà Nội.</div>
+              <div className={styles.text1} style={{color: '#202124'}}>122 Hoàng Quốc Việt, Q.Cầu Giấy, Hà Nội.</div>
             </Row>
           </Col>
           <Col xs={24} lg={12}>
             <Row>
-              <div className={styles.text2}>Học viện cơ sở tại TP. Hồ Chí Minh:</div>
+              <div className={styles.text1} style={{color: '#202124'}}>Học viện cơ sở tại TP. Hồ Chí Minh:</div>
             </Row>
             <Row>
-              <div className={styles.text3}>
+              <div className={styles.text1} style={{color: '#202124'}}>
                 11 Nguyễn Đình Chiểu, P. Đa Kao, Q.1 TP Hồ Chí Minh
               </div>
             </Row>
           </Col>
         </Row>
         <Row style={{ marginTop: 20 }}>
-          <Col xs={24} lg={12}>
+          <Col xs={24} lg={11}>
             <Row>
-              <div className={styles.text2}>Cơ sở đào tạo tại Hà Nội:</div>
+              <div className={styles.text1} style={{color: '#202124'}}>Cơ sở đào tạo tại Hà Nội:</div>
             </Row>
             <Row>
-              <div className={styles.text3}>Km10, Đường Nguyễn Trãi, Q.Hà Đông, Hà Nội</div>
+              <div className={styles.text1} style={{color: '#202124'}}>Km10, Đường Nguyễn Trãi, Q.Hà Đông, Hà Nội</div>
             </Row>
           </Col>
           <Col xs={24} lg={12}>
             <Row>
-              <div className={styles.text2}>Cơ sở đào tạo tại TP Hồ Chí Minh:</div>
+              <div className={styles.text1} style={{color: '#202124'}}>Cơ sở đào tạo tại TP Hồ Chí Minh:</div>
             </Row>
             <Row>
-              <div className={styles.text3}>Đường Man Thiện, P. Hiệp Phú, Q.9 TP Hồ Chí Minh</div>
+              <div className={styles.text1} style={{color: '#202124'}}>Đường Man Thiện, P. Hiệp Phú, Q.9 TP Hồ Chí Minh</div>
             </Row>
           </Col>
         </Row>
@@ -122,7 +122,12 @@ const GlobalFooter = () => (
       <Col xs={24} lg={7} style={{ marginTop: 20 }}>
         <div style={{ marginBottom: '10px' }}>
           <a href="https://portal.ptit.edu.vn/" className={styles.FooterTagA}>
-            <Badge color="black" dot={true} /> <span>Cổng thông tin Học viện</span>
+            <Badge color="black" dot={true} /> <span>Cổng thông tin đào tạo</span>
+          </a>
+        </div>
+        <div style={{ marginBottom: '10px' }}>
+          <a href="https://www.facebook.com/ptittuyensinh/" className={styles.FooterTagA}>
+            <Badge color="black" dot={true} /> <span>Facebook tuyển sinh Học viện</span>
           </a>
         </div>
         <div style={{ marginBottom: '10px' }}>
@@ -130,13 +135,6 @@ const GlobalFooter = () => (
             <Badge color="black" dot={true} /> <span>Ba công khai</span>
           </a>
         </div>
-
-        <div style={{ marginBottom: '10px' }}>
-          <a href="https://www.facebook.com/ptittuyensinh/" className={styles.FooterTagA}>
-            <Badge color="black" dot={true} /> <span>Facebook tuyển sinh Học viện</span>
-          </a>
-        </div>
-
         <div
           style={{ marginTop: 10 }}
           dangerouslySetInnerHTML={{
