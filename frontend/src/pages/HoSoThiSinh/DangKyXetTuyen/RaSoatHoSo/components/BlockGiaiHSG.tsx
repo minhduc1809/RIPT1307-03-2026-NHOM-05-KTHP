@@ -1,4 +1,3 @@
-import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import type { IColumn } from '@/utils/interfaces';
 import { Descriptions, Table } from 'antd';
 import { useModel } from 'umi';
@@ -7,7 +6,7 @@ const { Item } = Descriptions;
 
 const BlockGiaiHSG = (props: {
   index?: number;
-  columnGiaiHSG: IColumn<HoSoXetTuyen.ThongTinGiaiQuocGia | HoSoXetTuyen.ThongTinGiaiTinhTP>[];
+  columnGiaiHSG: IColumn<any>[];
   type: 'QG' | 'TinhTP';
 }) => {
   const { recordHoSo } = useModel('hosoxettuyen');
@@ -29,7 +28,19 @@ const BlockGiaiHSG = (props: {
         </Item>
       </Descriptions>
 
-      <Table pagination={false} bordered columns={props.columnGiaiHSG} dataSource={[]} />
+      <Table
+        pagination={false}
+        bordered
+        columns={props.columnGiaiHSG}
+        dataSource={[
+          {
+            loaiGiai: recordHoSo?.[field]?.[`giaiHSG${props.type}`],
+            namDatGiai: recordHoSo?.[field]?.[`namDatGiaiHSG${props.type}`],
+            noiCap: recordHoSo?.[field]?.[`noiCapGiaiHSG${props.type}`],
+            fileChungChi: recordHoSo?.[field]?.[`urlBangKhenHSG${props.type}`],
+          },
+        ]}
+      />
     </>
   );
 };

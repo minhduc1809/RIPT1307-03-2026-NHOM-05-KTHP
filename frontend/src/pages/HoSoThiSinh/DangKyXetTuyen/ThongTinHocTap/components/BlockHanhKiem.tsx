@@ -4,7 +4,7 @@ import { hanhKiem } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { Col, Divider, Select } from 'antd';
 
-const BlockHanhKiem = () => {
+const BlockHanhKiem = (props: { arrHanhKiem: { label: string; name: string[] }[] }) => {
   const { recordHoSo } = useModel('hosoxettuyen');
 
   return (
@@ -12,17 +12,7 @@ const BlockHanhKiem = () => {
       <Divider plain>
         <b>Hạnh kiểm</b>
       </Divider>
-      {[
-        { label: 'Lớp 10', name: ['thongTinHocTapTHPT', 'truongLop10', 'hanhKiem'] },
-        {
-          label: 'Lớp 11',
-          name: ['thongTinHocTapTHPT', 'truongLop11', 'hanhKiem'],
-        },
-        {
-          label: 'Học kỳ I lớp 12',
-          name: ['thongTinHocTapTHPT', 'truongLop12', 'hanhKiem'],
-        },
-      ].map((item) => (
+      {props?.arrHanhKiem?.map((item) => (
         <Col key={item.label} xs={12} sm={12} md={8}>
           <FormItem
             initialValue={recordHoSo?.thongTinHocTapTHPT?.[item.name[1]]?.hanhKiem}

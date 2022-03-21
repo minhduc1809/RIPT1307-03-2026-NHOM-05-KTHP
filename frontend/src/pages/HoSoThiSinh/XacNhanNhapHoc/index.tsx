@@ -1,3 +1,4 @@
+import Timeline from '@/components/Timeline';
 import { Button, Card, Col, Popconfirm, Row } from 'antd';
 import { useModel } from 'umi';
 
@@ -24,57 +25,61 @@ const XacNhanNhapHoc = () => {
   };
 
   return (
-    <Card title="Kết quả xét tuyển">
-      <p>
-        <b>Hội đồng tuyển sinh - Học viện Công nghệ Bưu chính Viễn thông thông báo và chúc mừng:</b>
-      </p>
-      <Row>
-        <Col xl={8} sm={12} xs={24}>
-          Thí sinh: <b>{initialState?.currentUser?.name ?? ''}</b>
-        </Col>
-        <Col xl={8} sm={12} xs={24}>
-          {/* Ngày sinh: <b>{initialState?.currentUser?.ngay_sinh?.split('-')?.reverse()?.join('-')}</b> */}
-        </Col>
-        {thongTinDotAll?.maHeThongDot?.startsWith('THPT') && (
+    <>
+      <Timeline />
+      <Card title="Kết quả xét tuyển">
+        <p>
+          <b>
+            Hội đồng tuyển sinh - Học viện Công nghệ Bưu chính Viễn thông thông báo và chúc mừng:
+          </b>
+        </p>
+        <Row>
           <Col xl={8} sm={12} xs={24}>
-            Số báo danh: <b>{ketQua?.soBaoDanh ?? ''}</b>
+            Thí sinh: <b>{initialState?.currentUser?.name ?? ''}</b>
           </Col>
-        )}
-        <Col xl={8} sm={12} xs={24}>
-          Mã hồ sơ: <b>{ketQua?.maHoSo ?? ''}</b>
-        </Col>
+          <Col xl={8} sm={12} xs={24}>
+            {/* Ngày sinh: <b>{initialState?.currentUser?.ngay_sinh?.split('-')?.reverse()?.join('-')}</b> */}
+          </Col>
+          {thongTinDotAll?.maHeThongDot?.startsWith('THPT') && (
+            <Col xl={8} sm={12} xs={24}>
+              Số báo danh: <b>{ketQua?.soBaoDanh ?? ''}</b>
+            </Col>
+          )}
+          <Col xl={8} sm={12} xs={24}>
+            Mã hồ sơ: <b>{ketQua?.maHoSo ?? ''}</b>
+          </Col>
 
-        <Col xl={8} sm={12} xs={24}>
-          Số CCCD/CMND: <b>{ketQua?.thiSinh?.cmtCccd ?? ''}</b>
-        </Col>
-      </Row>
-      <br />
-      <div>
-        Thí sinh đã đạt ngưỡng điểm trúng tuyển vào đại học hệ chính quy theo phương thức 1 năm{' '}
-        {new Date().getFullYear()}, cụ thể như sau:
-      </div>
-
-      <div>
+          <Col xl={8} sm={12} xs={24}>
+            Số CCCD/CMND: <b>{ketQua?.thiSinh?.cmtCccd ?? ''}</b>
+          </Col>
+        </Row>
+        <br />
         <div>
-          - Ngành: <b>{ketQua?.nguyenVong?.tenNganh}-CNTT</b>{' '}
+          Thí sinh đã đạt ngưỡng điểm trúng tuyển vào đại học hệ chính quy theo phương thức 1 năm{' '}
+          {new Date().getFullYear()}, cụ thể như sau:
+        </div>
+
+        <div>
+          <div>
+            - Ngành: <b>{ketQua?.nguyenVong?.tenNganh}-CNTT</b>{' '}
+          </div>
+          <div>
+            - Thứ tự nguyện vọng trúng tuyển: <b>{ketQua?.nguyenVong?.soThuTu}</b>{' '}
+          </div>
         </div>
         <div>
-          - Thứ tự nguyện vọng trúng tuyển: <b>{ketQua?.nguyenVong?.soThuTu}</b>{' '}
+          Thí sinh phải thực hiện xác nhận nhập học để được công nhận trúng tuyển chính thức trong
+          thời gian từ ... đến ...
         </div>
-      </div>
-      <div>
-        Thí sinh phải thực hiện xác nhận nhập học để được công nhận trúng tuyển chính thức trong
-        thời gian từ ... đến ...
-      </div>
-      <br />
-      {ketQua?.trangThaiXacNhan && (
-        <div>
-          {/* <div style={{ color: 'red' }}>
+        <br />
+        {ketQua?.trangThaiXacNhan && (
+          <div>
+            {/* <div style={{ color: 'red' }}>
             {ketQua?.trangThaiXacNhan === 'Xác nhận'
               ? 'Thí sinh cần làm thủ tục cam kết xác nhận nhập học như sau:'
               : 'Thí sinh đã không xác nhận nhập học. Chúng tôi hy vọng sẽ được gặp lại Bạn vào một ngày gần đây tại Học viện Chính sách và Phát triển.'}
           </div> */}
-          {/* {ketQua?.trangThaiXacNhan === 'Xác nhận' && (
+            {/* {ketQua?.trangThaiXacNhan === 'Xác nhận' && (
             <div>
               <div>
                 {ketQua?.trangThaiNopHoSo ? (
@@ -157,50 +162,51 @@ const XacNhanNhapHoc = () => {
               </div>
             </div>
           )} */}
-        </div>
-      )}
-      {!ketQua?.trangThaiXacNhan && (
-        <>
-          {
-            <div style={{ textAlign: 'center' }}>
-              <Popconfirm
-                disabled={ketQua?.trangThaiXacNhan}
-                title={
-                  <div>
-                    Bạn có chắc chắn xác nhận nhập học không?
-                    <br />
-                    Sau khi Đồng ý sẽ không thể thay đổi kết quả xác nhận!
-                  </div>
-                }
-                // onConfirm={() => this.xacNhanNhapHoc(ketQua?._id, 'Xác nhận')}
-              >
-                <Button
-                  style={{ marginRight: 8 }}
+          </div>
+        )}
+        {!ketQua?.trangThaiXacNhan && (
+          <>
+            {
+              <div style={{ textAlign: 'center' }}>
+                <Popconfirm
                   disabled={ketQua?.trangThaiXacNhan}
-                  type="primary"
+                  title={
+                    <div>
+                      Bạn có chắc chắn xác nhận nhập học không?
+                      <br />
+                      Sau khi Đồng ý sẽ không thể thay đổi kết quả xác nhận!
+                    </div>
+                  }
+                  // onConfirm={() => this.xacNhanNhapHoc(ketQua?._id, 'Xác nhận')}
                 >
-                  Xác nhận nhập học
-                </Button>
-              </Popconfirm>
+                  <Button
+                    style={{ marginRight: 8 }}
+                    disabled={ketQua?.trangThaiXacNhan}
+                    type="primary"
+                  >
+                    Xác nhận nhập học
+                  </Button>
+                </Popconfirm>
 
-              <Popconfirm
-                disabled={ketQua?.trangThaiXacNhan}
-                // onConfirm={() => this.xacNhanNhapHoc(ketQua?._id, 'Không xác nhận')}
-                title={
-                  <div>
-                    Bạn có chắc chắn xác nhận không nhập học không?
-                    <br />
-                    Sau khi Đồng ý sẽ không thể thay đổi kết quả xác nhận!
-                  </div>
-                }
-              >
-                <Button disabled={ketQua?.trangThaiXacNhan}>Không xác nhận nhập học</Button>
-              </Popconfirm>
-            </div>
-          }
-        </>
-      )}
-    </Card>
+                <Popconfirm
+                  disabled={ketQua?.trangThaiXacNhan}
+                  // onConfirm={() => this.xacNhanNhapHoc(ketQua?._id, 'Không xác nhận')}
+                  title={
+                    <div>
+                      Bạn có chắc chắn xác nhận không nhập học không?
+                      <br />
+                      Sau khi Đồng ý sẽ không thể thay đổi kết quả xác nhận!
+                    </div>
+                  }
+                >
+                  <Button disabled={ketQua?.trangThaiXacNhan}>Không xác nhận nhập học</Button>
+                </Popconfirm>
+              </div>
+            }
+          </>
+        )}
+      </Card>
+    </>
   );
 };
 

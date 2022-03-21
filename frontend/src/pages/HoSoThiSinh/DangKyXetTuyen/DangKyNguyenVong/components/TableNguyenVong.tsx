@@ -25,6 +25,8 @@ const TableNguyenVong = () => {
     setRecordNguyenVong,
   } = useModel('hosoxettuyen');
 
+  const { record: recordDot } = useModel('dottuyensinh');
+
   const [indexNV, setIndexNV] = useState<number>(-1);
   const PopoverDiv = styled.div`
     &:hover {
@@ -207,7 +209,11 @@ const TableNguyenVong = () => {
           : ' nút mũi tên lên hoặc xuống ở cột thao tác đối với mỗi nguyện vọng'}
       </p>
       <Button
-        disabled={danhSachNguyenVong?.length > 1}
+        disabled={
+          recordDot?.soLuongNguyenVongToiDa
+            ? danhSachNguyenVong?.length >= recordDot.soLuongNguyenVongToiDa
+            : false
+        }
         type="primary"
         icon={<PlusOutlined />}
         onClick={() => {

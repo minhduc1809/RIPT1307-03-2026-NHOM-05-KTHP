@@ -1,3 +1,4 @@
+import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import moment from 'moment';
 import { useState } from 'react';
 
@@ -9,47 +10,31 @@ const useInitTimeline = () => {
   const [now, setNow] = useState<number>(Date.now());
 
   const setupTimeline = (recordDot?: DotTuyenSinh.Record) => {
-    const dataTemp = !window.location.pathname?.includes('nhaphoc')
-      ? [
-          {
-            title: recordDot?.thoiGianMoDangKy ?? 'Chưa xác định',
-            description: 'Mở đăng ký trực tuyến',
-          },
-          {
-            title: recordDot?.thoiGianKetThucNopHoSo ?? 'Chưa xác định',
-            description: 'Kết thúc nộp hồ sơ tuyển sinh',
-          },
-          {
-            title: 'Chưa xác định',
-            description: 'Công bố kết quả tuyển sinh',
-          },
-          {
-            title: 'Chưa xác định',
-            description: 'Bắt đầu nộp giấy tờ nhập học',
-          },
-          {
-            title: 'Chưa xác định',
-            description: 'Kết thúc nộp giấy tờ nhập học',
-          },
-        ]
-      : [
-          {
-            title: 'Chưa xác định',
-            description: 'Bắt đầu nộp minh chứng KQ thi THPT',
-          },
-          {
-            title: 'Chưa xác định',
-            description: 'Kết thúc nộp minh chứng KQ thi THPT',
-          },
-          {
-            title: 'Chưa xác định',
-            description: 'Bắt đầu nộp giấy tờ nhập học',
-          },
-          {
-            title: 'Chưa xác định',
-            description: 'Kết thúc nộp giấy tờ nhập học',
-          },
-        ];
+    const type = window.location.pathname;
+    const dataTemp = [
+      {
+        title: recordDot?.thoiGianMoDangKy ?? 'Chưa xác định',
+        description: 'Mở đăng ký trực tuyến',
+      },
+      {
+        title: recordDot?.thoiGianKetThucNopHoSo ?? 'Chưa xác định',
+        description: 'Kết thúc nộp hồ sơ tuyển sinh',
+      },
+      {
+        title: recordDot?.thoiGianCongBoKetQua ?? 'Chưa xác định',
+        description: 'Công bố kết quả tuyển sinh',
+      },
+      {
+        title: recordDot?.thoiGianBatDauXacNhanNhapHoc ?? 'Chưa xác định',
+        description: 'Bắt đầu xác nhận nhập học',
+        hide: type?.includes('dangkyxettuyen'),
+      },
+      {
+        title: recordDot?.thoiGianKetThucXacNhanNhapHoc ?? 'Chưa xác định',
+        description: 'Kết thúc xác nhận nhập học',
+        hide: type?.includes('dangkyxettuyen'),
+      },
+    ]?.filter((item) => item?.hide !== true);
 
     const dayFinalTemp = dataTemp.map((item) => {
       const currentDate = moment(new Date(item?.title));

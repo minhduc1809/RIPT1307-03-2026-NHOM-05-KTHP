@@ -42,7 +42,7 @@ const BlockKetQuaHocTapTHPT = (props: {
         <Col xs={24}>
           <FormItem
             rules={[...rules.required]}
-            name="toHopXetTuyen"
+            name="toHopMongMuon"
             labelCol={{ span: 24 }}
             wrapperCol={{ span: 24 }}
             label="Tổ hợp xét tuyển mong muốn"

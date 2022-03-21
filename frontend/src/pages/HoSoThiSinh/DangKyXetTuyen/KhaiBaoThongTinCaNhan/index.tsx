@@ -1,6 +1,7 @@
 import DiaChi from '@/components/DiaChi';
 import { FormItem } from '@/components/FormItem';
 import rules from '@/utils/rules';
+import { includes } from '@/utils/utils';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select } from 'antd';
 import moment from 'moment';
@@ -271,6 +272,8 @@ const KhaiBaoThongTinCaNhan = () => {
                     initialValue={recordHoSo?.thongTinThiSinh?.noiSinhTrongNuoc?.maTP}
                   >
                     <Select
+                      showSearch
+                      filterOption={(value, option) => includes(option?.props.children, value)}
                       onChange={(val) =>
                         setTenTinhNoiSinh(
                           danhSachTinh?.find((item) => item.ma === val)?.tenDonVi ?? '',

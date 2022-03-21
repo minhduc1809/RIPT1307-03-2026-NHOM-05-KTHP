@@ -47,6 +47,9 @@ const FormDotTuyenSinh = () => {
   );
   const [hinhThucDaoTao, setHinhThucDaoTao] = useState<string>(record?.hinhThucDaoTao?._id ?? '');
   const [yeuCauTraPhi, setYeuCauTraPhi] = useState<boolean>(record?.yeuCauTraPhi ?? false);
+  const [choPhepDangKyKhacCoSo, setChoPhepDangKyKhacCoSo] = useState<boolean>(
+    record?.choPhepDangKyKhacCoSo ?? false,
+  );
   useEffect(() => {
     form.resetFields();
   }, [recordProduct]);
@@ -74,12 +77,13 @@ const FormDotTuyenSinh = () => {
               moTa: values?.moTa?.text,
               cauHinhPhuongThuc: {},
               yeuCauTraPhi,
+              choPhepDangKyKhacCoSo,
               thongTinGiayToNopOnline: danhSachGiayToNopOnline,
               thongTinGiayToNopHoSo: danhSachGiayToNopHoSo,
               danhSachNganhTuyenSinh: danhSachNganh?.map((item) => ({
                 ...item,
-                nganh: item.nganh._id,
-                danhSachCoSoDaoTao: item.danhSachCoSoDaoTao.map((coSo) => coSo._id),
+                nganh: item?.nganh?._id,
+                danhSachCoSoDaoTao: item?.danhSachCoSoDaoTao?.map((coSo) => coSo?._id),
               })),
             });
           } else {
@@ -88,6 +92,7 @@ const FormDotTuyenSinh = () => {
               moTa: values?.moTa?.text,
               cauHinhPhuongThuc: {},
               yeuCauTraPhi,
+              choPhepDangKyKhacCoSo,
               thongTinGiayToNopOnline: danhSachGiayToNopOnline,
               thongTinGiayToNopHoSo: danhSachGiayToNopHoSo,
               danhSachNganhTuyenSinh: danhSachNganh?.map((item) => ({
@@ -239,14 +244,14 @@ const FormDotTuyenSinh = () => {
           {[
             { name: 'thoiGianMoDangKy', label: 'Thời gian mở đăng ký' },
             { name: 'thoiGianKetThucNopHoSo', label: 'Thời gian kết thúc nộp hồ sơ' },
-            {
-              name: 'thoiGianBatDauKhaiBaoKetQuaThiTHPT',
-              label: 'Thời gian bắt đầu khai báo KQ thi THPT',
-            },
-            {
-              name: 'thoiGianKetThucKhaiBaoKetQuaThiTHPT',
-              label: 'Thời gian kết thúc khai báo KQ thi THPT',
-            },
+            // {
+            //   name: 'thoiGianBatDauKhaiBaoKetQuaThiTHPT',
+            //   label: 'Thời gian bắt đầu khai báo KQ thi THPT',
+            // },
+            // {
+            //   name: 'thoiGianKetThucKhaiBaoKetQuaThiTHPT',
+            //   label: 'Thời gian kết thúc khai báo KQ thi THPT',
+            // },
             { name: 'thoiGianCongBoKetQua', label: 'Thời gian công bố kết quả' },
             { name: 'thoiGianBatDauXacNhanNhapHoc', label: 'Thời gian bắt đầu xác nhận nhập học' },
             {
@@ -272,7 +277,7 @@ const FormDotTuyenSinh = () => {
           ))}
         </Row>
         <Row gutter={[10, 0]}>
-          <Col span={24}>
+          <Col lg={12}>
             <Form.Item name={'yeuCauTraPhi'} initialValue={record?.yeuCauTraPhi ?? false}>
               <Checkbox
                 checked={yeuCauTraPhi}
@@ -281,6 +286,20 @@ const FormDotTuyenSinh = () => {
                 }}
               />{' '}
               Cho phép thanh toán
+            </Form.Item>
+          </Col>
+          <Col lg={12}>
+            <Form.Item
+              name={'choPhepDangKyKhacCoSo'}
+              initialValue={record?.choPhepDangKyKhacCoSo ?? false}
+            >
+              <Checkbox
+                checked={choPhepDangKyKhacCoSo}
+                onChange={(e) => {
+                  setChoPhepDangKyKhacCoSo(e.target.checked);
+                }}
+              />{' '}
+              Cho phép đăng ký khác cơ sở
             </Form.Item>
           </Col>
           {yeuCauTraPhi && (
@@ -319,6 +338,20 @@ const FormDotTuyenSinh = () => {
               </Col>
             </>
           )}
+          <Col lg={12}>
+            <Form.Item
+              label="Số lượng nguyện vọng tối đa"
+              name={'soLuongNguyenVongToiDa'}
+              initialValue={record?.soLuongNguyenVongToiDa}
+            >
+              <InputNumber
+                min={1}
+                max={1000}
+                style={{ width: '100%' }}
+                placeholder="Nhập số lượng"
+              />
+            </Form.Item>
+          </Col>
         </Row>
 
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>

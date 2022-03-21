@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { ToHopXetTuyen } from '@/utils/constants';
 import rules from '@/utils/rules';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
+import { useEffect } from 'react';
 
 const FormDangKyNguyenVong = () => {
   const [form] = Form.useForm();
@@ -25,6 +26,7 @@ const FormDangKyNguyenVong = () => {
       arrCoSoDaoTao.push(coSo);
     });
   });
+
   const [coSoDaoTao, setCoSoDaoTao] = useState<any>(
     recordNguyenVong?.coSoDaoTao?._id
       ? recordNguyenVong?.coSoDaoTao?._id
@@ -53,6 +55,27 @@ const FormDangKyNguyenVong = () => {
     });
     return check;
   };
+
+  const onChangeCoSoDaoTao = (val: string) => {
+    const arrValueCoSoDaoTao = val?.split('||');
+    setCoSoDaoTao(arrValueCoSoDaoTao[0]);
+    setTenCoSoDaoTao(arrValueCoSoDaoTao[1]);
+    form.setFieldsValue({
+      nganhXetTuyen: undefined,
+      toHopXetTuyen: undefined,
+    });
+  };
+
+  useEffect(() => {
+    const listCoSoDaoTao = _.uniqBy(arrCoSoDaoTao, '_id');
+    if (!edit && listCoSoDaoTao?.length === 1) {
+      onChangeCoSoDaoTao(`${listCoSoDaoTao[0]._id}||${listCoSoDaoTao[0].ten}`);
+      form.setFieldsValue({
+        coSoDaoTao: `${listCoSoDaoTao[0]._id}||${listCoSoDaoTao[0].ten}`,
+      });
+    }
+  }, []);
+
   return (
     <Card title={edit ? 'Chỉnh sửa nguyện vọng' : 'Thêm nguyện vọng'} bordered>
       <Form
@@ -112,13 +135,7 @@ const FormDangKyNguyenVong = () => {
         >
           <Select
             onChange={(val) => {
-              const arrValueCoSoDaoTao = val?.split('||');
-              setCoSoDaoTao(arrValueCoSoDaoTao[0]);
-              setTenCoSoDaoTao(arrValueCoSoDaoTao[1]);
-              form.setFieldsValue({
-                nganhXetTuyen: undefined,
-                toHopXetTuyen: undefined,
-              });
+              onChangeCoSoDaoTao(val);
             }}
             placeholder="Chọn cơ sở đào tạo"
             style={{ width: '100%' }}

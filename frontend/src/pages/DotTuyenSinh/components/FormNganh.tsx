@@ -17,7 +17,7 @@ const FormNganh = () => {
   const { danhSach: danhSachCoSoDaoTao } = useModel('cosodaotao');
   const { danhSach: danhSachChuyenNganh } = useModel('nganhchuyennganh');
   return (
-    <Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} giấy tờ`}>
+    <Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ngành`}>
       <Form
         scrollToFirstError
         labelCol={{ span: 24 }}

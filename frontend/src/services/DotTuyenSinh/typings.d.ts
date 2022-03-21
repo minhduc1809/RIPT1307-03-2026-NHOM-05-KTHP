@@ -28,6 +28,8 @@ declare module DotTuyenSinh {
     donViTinh: EDonViTinh;
     yeuCauTraPhi: boolean;
     maLePhi: string;
+    soLuongNguyenVongToiDa: number;
+    choPhepDangKyKhacCoSo: boolean;
     _id: string;
     namTuyenSinh: number;
     phuongThucTuyenSinh: PhuongThucTuyenSinh.Record;
@@ -49,6 +51,7 @@ declare module DotTuyenSinh {
     cauHinhPhuongThuc: any;
     soLuongDangKy: number;
     danhSachDoiTuongTuyenSinh: {
+      cauHinhDoiTuong: Record<string, any>;
       _id: string;
       maDoiTuong: string;
       thongTinDoiTuong: DoiTuongTuyenSinh.Record;

@@ -2,7 +2,7 @@ import TableBase from '@/components/Table';
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Divider, Popconfirm, Tag, Tooltip } from 'antd';
+import { Button, Divider, Popconfirm, Tooltip } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
@@ -66,11 +66,11 @@ const DotTuyenSinhComponent = () => {
       align: 'center',
       width: 300,
       render: (val) => (
-        <>
+        <div style={{ textAlign: 'left' }}>
           {val?.map((item: { thongTinDoiTuong: DoiTuongTuyenSinh.Record }) => (
-            <Tag key={item.thongTinDoiTuong._id}>{item?.thongTinDoiTuong?.tenDoiTuong}</Tag>
+            <div key={item?.thongTinDoiTuong?._id}>- {item?.thongTinDoiTuong?.tenDoiTuong}</div>
           ))}
-        </>
+        </div>
       ),
     },
 

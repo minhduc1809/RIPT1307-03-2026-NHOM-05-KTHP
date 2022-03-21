@@ -70,6 +70,11 @@ const QuaTrinhHocTap = () => {
   );
   const [isChuyenTruong, setIsChuyenTruong] = useState<boolean>(false);
   const [typeHSG, setTypeHSG] = useState<string>();
+  const [namTotNghiep, setNamTotNghiep] = useState<number>(
+    recordHoSo?.thongTinHocTapTHPT?.namTotNghiep ||
+      record?.namTuyenSinh ||
+      new Date().getFullYear(),
+  );
 
   useEffect(() => {
     setKhuVucUuTienLop10(recordHoSo?.thongTinHocTapTHPT?.truongLop10?.khuVucUuTienTuyenSinh);
@@ -129,8 +134,10 @@ const QuaTrinhHocTap = () => {
           labelCol={{ span: 24 }}
           form={form}
           onFinish={async (values) => {
-            const isSuDungGiaiQuocGia = typeHSG === 'thongTinGiaiQuocGia||QG';
-            const isSuDungGiaiTinhTP = typeHSG === 'thongTinGiaiTinhTP||TinhTP';
+            const isSuDungGiaiQuocGia =
+              typeHSG === 'thongTinGiaiQuocGia||QG' && values?.maDoiTuong === 'CQ_PTIT_KH3';
+            const isSuDungGiaiTinhTP =
+              typeHSG === 'thongTinGiaiTinhTP||TinhTP' && values?.maDoiTuong === 'CQ_PTIT_KH3';
             const suDungDanhGiaNangLuc = values?.maDoiTuong === 'CQ_PTIT_DGNL1';
             const suDungChungChiQuocTe = values?.maDoiTuong === 'CQ_PTIT_KH1';
             const suDungChungChiNgoaiNgu = values?.maDoiTuong === 'CQ_PTIT_KH2';
@@ -188,6 +195,7 @@ const QuaTrinhHocTap = () => {
 
             const { truongChuyen, monChuyen } = calculateChuyen(values?.thongTinHocTapTHPT);
             const valueFinal: any = {
+              toHopMongMuon: values?.toHopMongMuon ?? [],
               thongTinHocTapTHPT: {
                 ...values?.thongTinHocTapTHPT,
                 truongChuyen,
@@ -310,6 +318,9 @@ const QuaTrinhHocTap = () => {
                 style={{ width: '100%', marginBottom: '0' }}
               >
                 <InputNumber
+                  onChange={(val) => {
+                    setNamTotNghiep(val);
+                  }}
                   style={{ width: '100%' }}
                   placeholder="Năm tốt nghiệp"
                   max={new Date().getFullYear()}
@@ -348,8 +359,8 @@ const QuaTrinhHocTap = () => {
                   allowClear
                 >
                   {record?.danhSachDoiTuongTuyenSinh.map((item) => (
-                    <Select.Option key={item.maDoiTuong} value={item.maDoiTuong}>
-                      {item.thongTinDoiTuong.tenDoiTuong}
+                    <Select.Option key={item?.maDoiTuong} value={item?.maDoiTuong}>
+                      {item?.thongTinDoiTuong?.tenDoiTuong}
                     </Select.Option>
                   ))}
                 </Select>
@@ -362,7 +373,7 @@ const QuaTrinhHocTap = () => {
                   { label: 'lớp 10', name: ['thongTinHocTapTHPT', 'truongLop10', 'kqhtCaNam'] },
                   { label: 'lớp 11', name: ['thongTinHocTapTHPT', 'truongLop11', 'kqhtCaNam'] },
                   {
-                    label: 'học kỳ I lớp 12',
+                    label: namTotNghiep === new Date().getFullYear() ? 'học kỳ I lớp 12' : 'lớp 12',
                     name: ['thongTinHocTapTHPT', 'truongLop12', 'kqhtCaNam'],
                   },
                 ]}
@@ -371,7 +382,21 @@ const QuaTrinhHocTap = () => {
               />
             )}
 
-            {doiTuongXetTuyen !== 'CQ_PTIT_DGNL1' && <BlockHanhKiem />}
+            {doiTuongXetTuyen !== 'CQ_PTIT_DGNL1' && (
+              <BlockHanhKiem
+                arrHanhKiem={[
+                  { label: 'Lớp 10', name: ['thongTinHocTapTHPT', 'truongLop10', 'hanhKiem'] },
+                  {
+                    label: 'Lớp 11',
+                    name: ['thongTinHocTapTHPT', 'truongLop11', 'hanhKiem'],
+                  },
+                  {
+                    label: namTotNghiep === new Date().getFullYear() ? 'Học kỳ I lớp 12' : 'Lớp 12',
+                    name: ['thongTinHocTapTHPT', 'truongLop12', 'hanhKiem'],
+                  },
+                ]}
+              />
+            )}
 
             <Divider plain>
               <b>File minh chứng</b>

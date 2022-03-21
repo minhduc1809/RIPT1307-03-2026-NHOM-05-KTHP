@@ -110,13 +110,16 @@ const RaSoatHoSo = () => {
             <BlockRaSoatThongTinCaNhan />
             <BlockNoiHocTHPT index={10} />
             <BlockDoiTuongKhuVucUuTien indexDoiTuong={11} indexKhuVuc={12} indexNamTotNghiep={13} />
-            <BlockHanhKiem index={14} />
-
-            <BlockDiemTBC index={15} />
-            <BlockDiemTBCCacMon
-              index={16}
-              danhSachMon={['Toán học', 'Vật lý', 'Hóa học', 'Ngữ văn', 'Tiếng Anh']}
-            />
+            {recordHoSo?.maDoiTuong !== 'CQ_PTIT_DGNL1' && <BlockHanhKiem index={14} />}
+            {recordHoSo?.maDoiTuong !== 'CQ_PTIT_DGNL1' && (
+              <>
+                <BlockDiemTBC index={15} />
+                <BlockDiemTBCCacMon
+                  index={16}
+                  danhSachMon={['Toán học', 'Vật lý', 'Hóa học', 'Ngữ văn', 'Tiếng Anh']}
+                />
+              </>
+            )}
             <br />
 
             <h1 style={{ fontWeight: 'bold' }}>B. THÔNG TIN ĐĂNG KÝ XÉT TUYỂN:</h1>
