@@ -85,6 +85,7 @@ const LuaChonPhuongThuc = () => {
                         className={styles.answer}
                         onClick={() => {
                           localStorage.setItem('phuongThuc', item.phuongThucTuyenSinh._id);
+                          localStorage.setItem('nam', recordNamTuyenSinh.nam.toString());
                           setRecord(item.phuongThucTuyenSinh);
                           history.push('/dotxettuyen');
                         }}
@@ -129,6 +130,7 @@ const LuaChonPhuongThuc = () => {
                       localStorage.removeItem('accessTokens');
                       localStorage.removeItem('phuongThuc');
                       localStorage.removeItem('dot');
+                      localStorage.removeItem('nam');
                       history.push({
                         pathname: '/user/login',
                       });

@@ -5,7 +5,7 @@ import moment from 'moment';
 import mm from 'moment-timezone';
 import { useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { useModel } from 'umi';
+import { useModel, history } from 'umi';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
@@ -49,6 +49,7 @@ const Timeline = () => {
 
   useEffect(() => {
     if (idDot) getDotTuyenSinhByIdModel(idDot);
+    else history.push('/phuongthucxettuyen');
   }, []);
 
   useEffect(() => {

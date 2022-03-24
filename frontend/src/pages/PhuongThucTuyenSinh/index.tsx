@@ -82,7 +82,7 @@ const PhuongThucTuyenSinh = () => {
           <Tooltip title="Xóa">
             <Popconfirm
               onConfirm={() => deletePhuongThucTuyenSinhModel(record._id)}
-              title="Bạn có chắc chắn muốn xóa chủ đề này"
+              title="Bạn có chắc chắn muốn xóa?"
             >
               <Button type="primary" shape="circle">
                 <DeleteOutlined />

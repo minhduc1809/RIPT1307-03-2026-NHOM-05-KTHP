@@ -12,7 +12,6 @@ mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const Register = (props: { back: any }) => {
   const [form] = Form.useForm();
-  // const [thongTinUser, setThongTinUser] = useState<any>({});
   const { registerModel } = useModel('user');
   useEffect(() => {
     form.setFieldsValue({

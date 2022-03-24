@@ -112,7 +112,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
       title: 'Email',
       dataIndex: ['thongTinThiSinh', 'email'],
       align: 'center',
-      width: 120,
+      width: 150,
       search: 'search',
       onCell,
     },

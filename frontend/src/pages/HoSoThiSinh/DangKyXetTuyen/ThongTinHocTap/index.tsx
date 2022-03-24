@@ -4,6 +4,10 @@ import {
   arrKhuVucUuTien,
   doiTuongUuTienTuyenSinh,
   EKhuVucUuTien,
+  ELoaiGiaiHSG,
+  ELoaiNgoaiNgu,
+  MapKeyGiaiHSG,
+  MapKeyNgonNgu,
   Setting,
 } from '@/utils/constants';
 import rules from '@/utils/rules';
@@ -30,8 +34,9 @@ import {
 } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import BlockChungChiNgoaiNgu from './components/BlockChungChiNgoaiNgu';
 import BlockChungChiQuocTe from './components/BlockChungChiQuocTe';
+import BlockChungChiTiengAnh from './components/BlockChungChiTiengAnh';
+import BlockChungChiTiengPhap from './components/BlockChungChiTiengPhap';
 import BlockDanhGiaNangLuc from './components/BlockDanhGiaNangLuc';
 import BlockGiaiHSG from './components/BlockGiaiHSG';
 import BlockHanhKiem from './components/BlockHanhKiem';
@@ -63,18 +68,24 @@ const QuaTrinhHocTap = () => {
     useModel('truongthpt');
 
   const [doiTuongXetTuyen, setDoiTuongXetTuyen] = useState<string>(recordHoSo?.maDoiTuong ?? '');
+  const [cauHinhDoiTuong, setCauHinhDoiTuong] = useState<any>(
+    record?.danhSachDoiTuongTuyenSinh?.find((item) => item?.maDoiTuong === recordHoSo?.maDoiTuong)
+      ?.cauHinhDoiTuong ?? {},
+  );
 
   const [visibleModalInfo, setVisibleModalInfo] = useState<boolean>(false);
   const [typeInfo, setTypeInfo] = useState<'doituonguutien' | 'khuvucuutien' | 'doituongxettuyen'>(
     'doituonguutien',
   );
   const [isChuyenTruong, setIsChuyenTruong] = useState<boolean>(false);
-  const [typeHSG, setTypeHSG] = useState<string>();
+  const [typeHSG, setTypeHSG] = useState<string | string[] | undefined>(recordHoSo?.giaiHSG);
   const [namTotNghiep, setNamTotNghiep] = useState<number>(
     recordHoSo?.thongTinHocTapTHPT?.namTotNghiep ||
       record?.namTuyenSinh ||
       new Date().getFullYear(),
   );
+
+  const [ngonNgu, setNgonNgu] = useState<string | string[] | undefined>(recordHoSo?.ngonNgu);
 
   useEffect(() => {
     setKhuVucUuTienLop10(recordHoSo?.thongTinHocTapTHPT?.truongLop10?.khuVucUuTienTuyenSinh);
@@ -94,15 +105,6 @@ const QuaTrinhHocTap = () => {
           recordHoSo?.thongTinHocTapTHPT?.truongLop12?.maTruong
       ),
     );
-    let loaiGiaiHSG;
-    if (recordHoSo?.thongTinGiaiQuocGia?.suDungGiaiHGSQG === true) {
-      setTypeHSG('thongTinGiaiQuocGia||QG');
-      loaiGiaiHSG = 'thongTinGiaiQuocGia||QG';
-    } else if (recordHoSo?.thongTinGiaiTinhTP?.suDungGiaiHGSTinhTP === true) {
-      setTypeHSG('thongTinGiaiTinhTP||TinhTP');
-      loaiGiaiHSG = 'thongTinGiaiTinhTP||TinhTP';
-    }
-    form.setFieldsValue({ loaiGiaiHSG });
   }, [recordHoSo?._id]);
 
   useEffect(() => {
@@ -134,19 +136,13 @@ const QuaTrinhHocTap = () => {
           labelCol={{ span: 24 }}
           form={form}
           onFinish={async (values) => {
-            const isSuDungGiaiQuocGia =
-              typeHSG === 'thongTinGiaiQuocGia||QG' && values?.maDoiTuong === 'CQ_PTIT_KH3';
-            const isSuDungGiaiTinhTP =
-              typeHSG === 'thongTinGiaiTinhTP||TinhTP' && values?.maDoiTuong === 'CQ_PTIT_KH3';
-            const suDungDanhGiaNangLuc = values?.maDoiTuong === 'CQ_PTIT_DGNL1';
-            const suDungChungChiQuocTe = values?.maDoiTuong === 'CQ_PTIT_KH1';
-            const suDungChungChiNgoaiNgu = values?.maDoiTuong === 'CQ_PTIT_KH2';
             const arrFieldNameUpload = [
               'urlChungNhanDoiTuongUuTien',
               'urlHocBa',
               'urlBangKhenHSGQG',
               'urlBangKhenHSGTinhTP',
-              'urlChungChiNgoaiNgu',
+              'urlChungChiTiengAnh',
+              'urlChungChiTiengPhap',
               'urlChungChiQuocTe',
               'urlGiayXacNhanDanhGiaNangLuc',
             ];
@@ -195,6 +191,8 @@ const QuaTrinhHocTap = () => {
 
             const { truongChuyen, monChuyen } = calculateChuyen(values?.thongTinHocTapTHPT);
             const valueFinal: any = {
+              ngonNgu: values?.ngonNgu,
+              giaiHSG: values?.giaiHSG,
               toHopMongMuon: values?.toHopMongMuon ?? [],
               thongTinHocTapTHPT: {
                 ...values?.thongTinHocTapTHPT,
@@ -206,34 +204,40 @@ const QuaTrinhHocTap = () => {
               thongTinGiaiQuocGia: {
                 ...values?.thongTinGiaiQuocGia,
                 urlBangKhenHSGQG: values?.urlBangKhenHSGQG ?? [],
-                suDungGiaiHGSQG: isSuDungGiaiQuocGia,
+                suDungGiaiHGSQG: values?.thongTinGiaiQuocGia ? true : false,
               },
+
               thongTinGiaiTinhTP: {
                 ...values?.thongTinGiaiTinhTP,
                 urlBangKhenHSGTinhTP: values?.urlBangKhenHSGTinhTP ?? [],
-                suDungGiaiHGSTinhTP: isSuDungGiaiTinhTP,
+                suDungGiaiHGSTinhTP: values?.thongTinGiaiTinhTP ? true : false,
               },
-              thongTinChungChiNgoaiNgu: {
-                ...values?.thongTinChungChiNgoaiNgu,
-                urlChungChiNgoaiNgu: values?.urlChungChiNgoaiNgu ?? [],
-                suDungChungChiNgoaiNgu,
-              },
+
+              thongTinChungChiTiengAnh: values?.thongTinChungChiTiengAnh?.loai
+                ? {
+                    ...values?.thongTinChungChiTiengAnh,
+                    urlChungChi: values?.urlChungChiTiengAnh ?? [],
+                  }
+                : undefined,
+              thongTinChungChiTiengPhap: values?.thongTinChungChiTiengPhap?.loai
+                ? {
+                    ...values?.thongTinChungChiTiengPhap,
+                    urlChungChi: values?.urlChungChiTiengPhap ?? [],
+                  }
+                : undefined,
               thongTinChungChiQuocTe: {
                 ...values?.thongTinChungChiQuocTe,
                 urlChungChiQuocTe: values?.urlChungChiQuocTe ?? [],
-                suDungChungChiQuocTe,
+                suDungChungChiQuocTe: values?.thongTinChungChiQuocTe ? true : false,
               },
               thongTinKetQuaDanhGiaNangLuc: {
                 ...values?.thongTinKetQuaDanhGiaNangLuc,
-                suDungDanhGiaNangLuc,
+                suDungDanhGiaNangLuc: values?.thongTinKetQuaDanhGiaNangLuc ? true : false,
                 urlGiayXacNhanDanhGiaNangLuc: values?.urlGiayXacNhanDanhGiaNangLuc ?? [],
               },
               maDoiTuong: values?.maDoiTuong,
               urlBangKhenHSGQG: undefined,
             };
-            if (values?.thongTinChungChiQuocTe?.loaiChungChiQuocTe) {
-              valueFinal.thongTinChungChiQuocTe.suDungChungChiQuocTe = true;
-            }
 
             putMyThongTinXetTuyenModel(recordHoSo?._id ?? '', valueFinal);
           }}
@@ -353,7 +357,13 @@ const QuaTrinhHocTap = () => {
                 style={{ width: '100%', marginBottom: '0' }}
               >
                 <Select
-                  onChange={(val) => setDoiTuongXetTuyen(val)}
+                  onChange={(val) => {
+                    setCauHinhDoiTuong(
+                      record?.danhSachDoiTuongTuyenSinh?.find((item) => item?.maDoiTuong === val)
+                        ?.cauHinhDoiTuong,
+                    );
+                    setDoiTuongXetTuyen(val);
+                  }}
                   showSearch
                   placeholder="Chọn đối tượng"
                   allowClear
@@ -367,19 +377,47 @@ const QuaTrinhHocTap = () => {
               </FormItem>
             </Col>
 
-            {doiTuongXetTuyen !== 'CQ_PTIT_DGNL1' && (
-              <BlockKetQuaHocTapTHPT
-                arrLopHoc={[
-                  { label: 'lớp 10', name: ['thongTinHocTapTHPT', 'truongLop10', 'kqhtCaNam'] },
-                  { label: 'lớp 11', name: ['thongTinHocTapTHPT', 'truongLop11', 'kqhtCaNam'] },
-                  {
-                    label: namTotNghiep === new Date().getFullYear() ? 'học kỳ I lớp 12' : 'lớp 12',
-                    name: ['thongTinHocTapTHPT', 'truongLop12', 'kqhtCaNam'],
-                  },
-                ]}
-                haveSelectToHop={false}
-                toHop={['A00', 'A01', 'D01']}
-              />
+            {cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT && (
+              <>
+                <BlockKetQuaHocTapTHPT
+                  cauHinh={cauHinhDoiTuong}
+                  arrLopHoc={[
+                    {
+                      label: 'lớp 10',
+                      name: ['thongTinHocTapTHPT', 'truongLop10'],
+                      field: 'truongLop10',
+                      show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10,
+                    },
+                    {
+                      label: 'lớp 11',
+                      name: ['thongTinHocTapTHPT', 'truongLop11'],
+                      field: 'truongLop11',
+                      show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop11,
+                    },
+                    {
+                      label: 'lớp 12',
+                      // namTotNghiep === new Date().getFullYear() ? 'học kỳ I lớp 12' : 'lớp 12',
+                      name: ['thongTinHocTapTHPT', 'truongLop12'],
+                      field: 'truongLop12',
+                      show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop12,
+                    },
+                  ]}
+                  arrKyHoc={[
+                    { label: 'Học kỳ 1', name: 'kqhtHK1' },
+                    { label: 'Học kỳ 2', name: 'kqhtHK2' },
+                    {
+                      label: 'Cả năm',
+                      name: 'kqhtCaNam',
+                    },
+                  ]}
+                  haveSelectToHop={record?.suDungToHopMongMuon ?? false}
+                  toHop={
+                    record?.suDungToHopMongMuon
+                      ? recordHoSo?.toHopMongMuon ?? []
+                      : record?.danhSachToHopLuaChon ?? []
+                  }
+                />
+              </>
             )}
 
             {doiTuongXetTuyen !== 'CQ_PTIT_DGNL1' && (
@@ -437,59 +475,146 @@ const QuaTrinhHocTap = () => {
               </FormItem>
             </Col>
 
-            {doiTuongXetTuyen === 'CQ_PTIT_KH1' && (
+            {cauHinhDoiTuong?.danhSach?.thongTinChungChiQuocTe && (
               <>
                 <Divider plain>
                   <b>Thông tin về chứng chỉ quốc tế</b>
                 </Divider>
-                <BlockChungChiQuocTe form={form} />
+                <BlockChungChiQuocTe
+                  cauHinh={cauHinhDoiTuong?.danhSach?.thongTinChungChiQuocTe}
+                  form={form}
+                />
               </>
             )}
 
-            {doiTuongXetTuyen === 'CQ_PTIT_KH2' && (
+            {cauHinhDoiTuong?.danhSach?.thongTinChungChiNgoaiNgu && (
               <>
                 <Divider plain>
                   <b>Thông tin về chứng chỉ ngoại ngữ</b>
                 </Divider>
-                <BlockChungChiNgoaiNgu form={form} />
+
+                <Col xs={24} md={8} lg={6} sm={12}>
+                  <Form.Item
+                    initialValue={recordHoSo?.ngonNgu}
+                    label="Ngôn ngữ"
+                    name="ngonNgu"
+                    rules={[...rules.required]}
+                  >
+                    <Select
+                      onChange={(val) => setNgonNgu(val)}
+                      mode={
+                        cauHinhDoiTuong?.cauHinh?.selectModeChungChiNgoaiNgu === 'MULTIPLE'
+                          ? 'multiple'
+                          : undefined
+                      }
+                      placeholder="Chọn ngôn ngữ"
+                      options={Object.keys(
+                        cauHinhDoiTuong?.danhSach?.thongTinChungChiNgoaiNgu,
+                      )?.map((item) => ({
+                        label: MapKeyNgonNgu[item],
+                        value: MapKeyNgonNgu[item],
+                      }))}
+                    />
+                  </Form.Item>
+                </Col>
+
+                {String(ngonNgu)?.includes(ELoaiNgoaiNgu.ANH) && (
+                  <>
+                    <Divider plain>
+                      <b>Chứng chỉ tiếng Anh</b>
+                    </Divider>
+                    <Col span={24}>
+                      <Row gutter={[10, 0]}>
+                        <BlockChungChiTiengAnh cauHinh={cauHinhDoiTuong} form={form} />
+                      </Row>
+                    </Col>
+                  </>
+                )}
+                {String(ngonNgu)?.includes(ELoaiNgoaiNgu.PHAP) && (
+                  <>
+                    <Divider plain>
+                      <b>Chứng chỉ tiếng Pháp</b>
+                    </Divider>
+                    <Col span={24}>
+                      <Row gutter={[10, 0]}>
+                        <BlockChungChiTiengPhap cauHinh={cauHinhDoiTuong} form={form} />{' '}
+                      </Row>
+                    </Col>
+                  </>
+                )}
               </>
             )}
 
-            {doiTuongXetTuyen === 'CQ_PTIT_KH3' && (
+            {cauHinhDoiTuong?.danhSach?.thongTinGiaiHSG && (
               <>
                 <Divider plain>
-                  <b>Thông tin về giải HSG cấp Tỉnh/quốc gia</b>
+                  <b>Thông tin về giải HSG</b>
                 </Divider>
                 <Col xs={24} md={8} lg={6} sm={12}>
                   <FormItem
-                    initialValue={typeHSG}
+                    initialValue={recordHoSo?.giaiHSG}
                     rules={[...rules.required]}
                     label="Giải HSG cấp"
-                    name={'loaiGiaiHSG'}
+                    name={'giaiHSG'}
                   >
                     <Select
                       onChange={(val) => setTypeHSG(val)}
+                      mode={
+                        cauHinhDoiTuong?.cauHinh?.selectModeGiaiHSG === 'MULTIPLE'
+                          ? 'multiple'
+                          : undefined
+                      }
                       style={{ width: '100%' }}
                       placeholder="Chọn cấp"
-                      options={[
-                        { value: 'thongTinGiaiQuocGia||QG', label: 'Quốc gia' },
-                        { value: 'thongTinGiaiTinhTP||TinhTP', label: 'Tỉnh/thành phố' },
-                      ]}
+                      options={Object.keys(cauHinhDoiTuong?.danhSach?.thongTinGiaiHSG)?.map(
+                        (item) => ({
+                          label: MapKeyGiaiHSG[item],
+                          value: MapKeyGiaiHSG[item],
+                        }),
+                      )}
                     />
                   </FormItem>
                 </Col>
-                <BlockGiaiHSG
-                  fieldName={typeHSG?.split('||')?.[0] ?? ''}
-                  type={typeHSG?.split('||')?.[1] ?? ''}
-                />
+                {String(typeHSG)?.includes(ELoaiGiaiHSG.QUOC_GIA) && (
+                  <>
+                    <Divider plain>
+                      <b>Giải HSG Quốc gia</b>
+                    </Divider>
+                    <Col span={24}>
+                      <Row gutter={[10, 0]}>
+                        <BlockGiaiHSG
+                          cauHinh={cauHinhDoiTuong}
+                          fieldName={'thongTinGiaiQuocGia'}
+                          type={'QG'}
+                        />
+                      </Row>
+                    </Col>
+                  </>
+                )}
+                {String(typeHSG)?.includes(ELoaiGiaiHSG.TINH_TP) && (
+                  <>
+                    <Divider plain>
+                      <b>Giải HSG Tỉnh/TP</b>
+                    </Divider>
+                    <Col span={24}>
+                      <Row gutter={[10, 0]}>
+                        <BlockGiaiHSG
+                          cauHinh={cauHinhDoiTuong}
+                          fieldName={'thongTinGiaiTinhTP'}
+                          type={'TinhTP'}
+                        />
+                      </Row>
+                    </Col>
+                  </>
+                )}
               </>
             )}
-            {doiTuongXetTuyen === 'CQ_PTIT_DGNL1' && (
+            {cauHinhDoiTuong?.danhSach?.thongTinKetQuaDanhGiaNangLuc && (
               <>
                 <Divider plain>
                   <b>Thông tin thi đánh giá năng lực</b>
                 </Divider>
-                <BlockDanhGiaNangLuc />
+                <BlockDanhGiaNangLuc cauHinh={cauHinhDoiTuong} />
               </>
             )}
             <Col />

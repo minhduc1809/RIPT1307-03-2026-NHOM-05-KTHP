@@ -31,8 +31,32 @@ export const hanhKiem = ['Tốt', 'Khá', 'Trung bình', 'Yếu'];
 export const ToHopXetTuyen = {
   A00: ['Toán học', 'Vật lý', 'Hóa học'],
   A01: ['Toán học', 'Vật lý', 'Tiếng Anh'],
+  C00: ['Ngữ văn', 'Lịch sử', 'Địa lý'],
+  C01: ['Ngữ văn', 'Toán học', 'Vật lý'],
+  C02: ['Ngữ văn', 'Toán học', 'Hóa học'],
   D01: ['Ngữ văn', 'Toán học', 'Tiếng Anh'],
+  D02: ['Ngữ văn', 'Toán học', 'Tiếng Nga'],
+  D03: ['Ngữ văn', 'Toán học', 'Tiếng Pháp'],
+  D04: ['Ngữ văn', 'Toán học', 'Tiếng Trung'],
+  D06: ['Ngữ văn', 'Toán học', 'Tiếng Nhật'],
+  D07: ['Toán học', 'Hóa học', 'Tiếng Anh'],
+  D09: ['Toán học', 'Lịch sử', 'Tiếng Anh'],
 };
+
+export enum EToHopXetTuyen {
+  A00 = 'A00',
+  A01 = 'A01',
+  C00 = 'C00',
+  C01 = 'C01',
+  C02 = 'C02',
+  D01 = 'D01',
+  D02 = 'D02',
+  D03 = 'D03',
+  D04 = 'D04',
+  D06 = 'D06',
+  D07 = 'D07',
+  D09 = 'D09',
+}
 
 export const MonToHop = {
   'Toán học': 'tongKetToan',
@@ -40,8 +64,8 @@ export const MonToHop = {
   'Hóa học': 'tongKetHoa',
   'Ngữ văn': 'tongKetVan',
   'Tiếng Anh': 'tongKetNgoaiNgu',
-  // 'Lịch sử': 'tongKetSu',
-  // 'Địa lý': 'tongKetDia',
+  'Lịch sử': 'tongKetSu',
+  'Địa lý': 'tongKetDia',
 };
 
 export enum ELoaiChungChiQuocTe {
@@ -54,6 +78,49 @@ export enum ELoaiChungChiNgoaiNgu {
   TOEFL_IBT = 'TOEFL iBT',
   TOEFL_ITP = 'TOEFL ITP',
 }
+
+export enum ELoaiChungChiTiengAnh {
+  IELTS = 'IELTS',
+  TOEFL_IBT = 'TOEFL iBT',
+  TOEFL_ITP = 'TOEFL ITP',
+  TOEIC = 'TOEIC',
+  TOEFL_CBT = 'TOEFL_CBT',
+}
+
+export enum ELoaiChungChiTiengPhap {
+  DELF = 'DELF',
+  DALF = 'DALF',
+}
+
+export enum EBacChungChiTiengPhap {
+  B1 = 'B1',
+  B2 = 'B2',
+  C1 = 'C1',
+  C2 = 'C2',
+}
+
+export enum ELoaiNgoaiNgu {
+  ANH = 'Tiếng Anh',
+  PHAP = 'Tiếng Pháp',
+  TRUNG = 'Tiếng Trung Quốc',
+  NGA = 'Tiếng Nga',
+  NHAT = 'Tiếng Nhật',
+}
+
+export enum ELoaiGiaiHSG {
+  QUOC_GIA = 'Quốc gia',
+  TINH_TP = 'Tỉnh TP',
+}
+
+export const MapKeyNgonNgu = {
+  thongTinChungChiTiengAnh: ELoaiNgoaiNgu.ANH,
+  thongTinChungChiTiengPhap: ELoaiNgoaiNgu.PHAP,
+};
+
+export const MapKeyGiaiHSG = {
+  thongTinGiaiQuocGia: ELoaiGiaiHSG.QUOC_GIA,
+  thongTinGiaiTinhTP: ELoaiGiaiHSG.TINH_TP,
+};
 
 export const MaxMinDiemChungChiNgoaiNgu = {
   IELTS: { max: 9, min: 0 },
@@ -72,6 +139,33 @@ export enum EMonThiHSG {
   HOA = 'Hóa học',
   TIN = 'Tin học',
   ENG = 'Tiếng Anh',
+}
+
+export enum ETrangThaiTrungTuyen {
+  TRUNG_TUYEN = 'Trúng tuyển',
+  KHONG_TRUNG_TUYEN = 'Không trúng tuyển',
+}
+
+export enum ETrangThaiXacNhanNhapHoc {
+  XAC_NHAN = 'Xác nhận',
+  KHONG_XAC_NHAN = 'Không xác nhận',
+  CHUA_XAC_NHAN = 'Chưa xác nhận',
+}
+
+export enum ETenTruongThongTin {
+  THONG_TIN_HOC_TAP_THPT = 'thongTinHocTapTHPT',
+  THONG_TIN_CHUNG_CHI_QUOC_TE = 'thongTinChungChiQuocTe',
+  THONG_TIN_CHUNG_CHI_NGOAI_NGU = 'thongTinChungChiNgoaiNgu',
+  THONG_TIN_CHUNG_CHI_TIENG_ANH = 'thongTinChungChiTiengAnh',
+  THONG_TIN_CHUNG_CHI_TIENG_PHAP = 'thongTinChungChiTiengPhap',
+  THONG_TIN_CHUNG_CHI_TIENG_TRUNG = 'thongTinChungChiTiengTrung',
+  THONG_TIN_CHUNG_CHI_TIENG_NHAT = 'thongTinChungChiTiengNhat',
+  THONG_TIN_GIAI_QUOC_GIA = 'thongTinGiaiQuocGia',
+  THONG_TIN_GIAI_TINH_TP = 'thongTinGiaiTinhTP',
+  THONG_TIN_GIAI_KHKT = 'thongTinGiaiKHKT',
+  THONG_TIN_KET_QUA_DANH_GIA_NANG_LUC = 'thongTinKetQuaDanhGiaNangLuc',
+  THONG_TIN_KET_QUA_THI_THPT = 'thongTinKetQuaThiTHPT',
+  THONG_TIN_GIAY_TO_NOP_ONLINE = 'thongTinGiayToNopOnline',
 }
 
 export enum EGiaiHSG {

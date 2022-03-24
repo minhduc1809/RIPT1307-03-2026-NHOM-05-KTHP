@@ -94,6 +94,7 @@ const KichHoatTaiKhoan: React.FC = () => {
             localStorage.removeItem('accessTokens');
             localStorage.removeItem('phuongThuc');
             localStorage.removeItem('dot');
+            localStorage.removeItem('nam');
             history.push({
               pathname: '/user/login',
             });

@@ -1,4 +1,9 @@
-import type { EMonHoc, ETrangThaiHoSo } from '@/utils/constants';
+import type {
+  ELoaiChungChiTiengAnh,
+  EMonHoc,
+  EToHopXetTuyen,
+  ETrangThaiHoSo,
+} from '@/utils/constants';
 import type { Login } from '../ant-design-pro/typings';
 
 declare module HoSoXetTuyen {
@@ -13,6 +18,8 @@ declare module HoSoXetTuyen {
     thongTinKetQuaDanhGiaNangLuc: ThongTinKetQuaDanhGiaNangLuc;
     thongTinKetQuaThiTHPT: ThongTinKetQuaThiTHPT;
     thongTinChungChiNgoaiNgu: ThongTinChungChiNgoaiNgu;
+    thongTinChungChiTiengAnh: ThongTinChungChiTiengAnh;
+    thongTinChungChiTiengPhap: ThongTinChungChiTiengPhap;
     thongTinKhac: any;
     maDoiTuong: string;
     _id: string;
@@ -28,6 +35,9 @@ declare module HoSoXetTuyen {
     updatedAt: string;
     ghiChuTiepNhan: string;
     identityCode;
+    ngonNgu: string | string[];
+    giaiHSG: string | string[];
+    toHopMongMuon: EToHopXetTuyen[];
   }
 
   export interface KetQuaHocTapTHPT {
@@ -54,6 +64,22 @@ declare module HoSoXetTuyen {
     truongChuyen: boolean;
     monChuyen: EMonHoc;
     khuVucUuTienTuyenSinh: string;
+  }
+
+  export interface ThongTinChungChiTiengAnh {
+    loai: ELoaiChungChiTiengAnh;
+    diem?: number;
+    urlChungChi?: string[];
+    ngayCap?: Date;
+    noiCap?: string;
+  }
+
+  export interface ThongTinChungChiTiengPhap {
+    loai: ELoaiChungChiTiengPhap;
+    bac?: EBacChungChiTiengPhap;
+    urlChungChi?: string[];
+    ngayCap?: Date;
+    noiCap?: string;
   }
 
   export interface ThongTinHocTapTHPT {

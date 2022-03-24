@@ -1,9 +1,12 @@
 import { register, updateCCCD } from '@/services/ant-design-pro/api';
+import type { Login } from '@/services/ant-design-pro/typings';
 import { message, Modal } from 'antd';
+import { useState } from 'react';
 import { useModel } from 'umi';
 
 export default () => {
   const { initialState, setInitialState } = useModel('@@initialState');
+  const [isLogin, setIsLogin] = useState<boolean>(true);
   const registerModel = async (payload: Login.RegisterPayload) => {
     const response = await register(payload);
     if (response?.data?.success === false) {
@@ -12,6 +15,7 @@ export default () => {
       });
     } else {
       Modal.success({
+        onOk: () => setIsLogin(true),
         title:
           'Đăng ký tài khoản thành công, vui lòng kiểm tra email kích hoạt tài khoản trong hòm thư điện tử của bạn.',
       });
@@ -29,6 +33,8 @@ export default () => {
   };
 
   return {
+    isLogin,
+    setIsLogin,
     updateCCCDModel,
     registerModel,
   };

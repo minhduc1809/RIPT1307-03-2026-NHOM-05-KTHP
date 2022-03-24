@@ -1,4 +1,5 @@
 import { FormItem } from '@/components/FormItem';
+import type { EToHopXetTuyen } from '@/utils/constants';
 import { MonToHop, ToHopXetTuyen } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { Col, Divider, InputNumber, Row, Select } from 'antd';
@@ -7,14 +8,22 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
 const BlockKetQuaHocTapTHPT = (props: {
+  cauHinh: any;
   haveSelectToHop: boolean;
-  toHop: string[];
+  toHop: EToHopXetTuyen[];
   arrLopHoc: {
     label: string;
     name: string[];
+    show: boolean;
+    field: string;
+  }[];
+  arrKyHoc: {
+    label: string;
+    name: string;
   }[];
 }) => {
   const { recordHoSo } = useModel('hosoxettuyen');
+  const { record } = useModel('dottuyensinh');
   const [toHop, setToHop] = useState<string[]>(props?.toHop ?? []);
   const [arrMonHoc, setArrMonHoc] = useState<string[]>([]);
 
@@ -52,70 +61,86 @@ const BlockKetQuaHocTapTHPT = (props: {
               onChange={onChangeToHop}
               value={toHop}
               placeholder="Chọn tổ hợp"
-            >
-              {Object.keys(ToHopXetTuyen)?.map((item) => (
-                <Select.Option key={item} value={item}>
-                  {item} (
-                  {ToHopXetTuyen[item]?.map(
-                    (mon: string, index: number) => `${mon}${index < 2 ? ', ' : ''}`,
-                  )}
-                  )
-                </Select.Option>
-              ))}
-            </Select>
+              options={record?.danhSachToHopLuaChon?.map((item) => ({
+                value: item,
+                label: `${item} (${ToHopXetTuyen[item]})`,
+              }))}
+            />
           </FormItem>
         </Col>
       )}
       {toHop?.length > 0 && (
         <>
-          {props?.arrLopHoc.map((item) => (
-            //recordHoSo?.thongTinHocTapTHPT?.namTotNghiep || record?.namTuyenSinh
+          {props?.arrLopHoc
+            ?.filter((item) => item.show)
+            .map((item) => {
+              const arrKyHocFinal = props?.arrKyHoc?.filter(
+                (kyHoc) => props?.cauHinh?.danhSach?.thongTinHocTapTHPT?.[item.field]?.[kyHoc.name],
+              );
+              return (
+                <Row gutter={[10, 0]} key={item.label}>
+                  <Divider plain>
+                    <b>
+                      Điểm TBC {arrKyHocFinal?.length > 1 ? '' : arrKyHocFinal[0]?.label}{' '}
+                      {item.label}
+                    </b>
+                  </Divider>
 
-            <Row gutter={[10, 0]} key={item.label}>
-              <Divider plain>
-                <b>{item.label}</b>
-              </Divider>
-
-              {arrMonHoc?.map((mon) => (
-                <Col key={mon} xs={12} sm={12} md={8}>
-                  <FormItem
-                    initialValue={_.get(
-                      recordHoSo,
-                      `${item.name.join('.')}.${MonToHop?.[mon]}`,
-                      undefined,
-                    )}
-                    rules={[...rules.required]}
-                    name={[...item.name, MonToHop?.[mon]]}
-                    label={mon}
-                    style={{ width: '100%' }}
-                  >
-                    <InputNumber
-                      placeholder="Số thập phân dạng 0.0"
-                      min={0}
-                      max={10}
-                      style={{ width: '100%' }}
-                    />
-                  </FormItem>
-                </Col>
-              ))}
-              <Col xs={12} sm={12} md={8}>
-                <FormItem
-                  rules={[...rules.required]}
-                  initialValue={_.get(recordHoSo, `${item.name.join('.')}.diemTBC`, undefined)}
-                  name={[...item.name, 'diemTBC']}
-                  label="Tổng kết"
-                  style={{ width: '100%' }}
-                >
-                  <InputNumber
-                    placeholder="Số thập phân dạng 0.0"
-                    min={0}
-                    max={10}
-                    style={{ width: '100%' }}
-                  />
-                </FormItem>
-              </Col>
-            </Row>
-          ))}
+                  {arrKyHocFinal?.map((kyHoc) => (
+                    <>
+                      {arrKyHocFinal?.length > 1 && <b>{kyHoc?.label}</b>}
+                      <Col span={24}>
+                        <Row gutter={[10, 0]}>
+                          {arrMonHoc?.map((mon) => (
+                            <Col key={mon} xs={12} sm={12} md={6} lg={6}>
+                              <FormItem
+                                initialValue={_.get(
+                                  recordHoSo,
+                                  `${item.name.join('.')}.${kyHoc.name}.${MonToHop?.[mon]}`,
+                                  undefined,
+                                )}
+                                rules={[...rules.required]}
+                                name={[...item.name, kyHoc.name, MonToHop?.[mon]]}
+                                label={mon}
+                                style={{ width: '100%' }}
+                              >
+                                <InputNumber
+                                  step={0.1}
+                                  placeholder="Số thập phân dạng 0.0"
+                                  min={0}
+                                  max={10}
+                                  style={{ width: '100%' }}
+                                />
+                              </FormItem>
+                            </Col>
+                          ))}
+                          <Col xs={12} sm={12} md={6} lg={6}>
+                            <FormItem
+                              rules={[...rules.required]}
+                              initialValue={_.get(
+                                recordHoSo,
+                                `${item.name.join('.')}.${kyHoc.name}.diemTBC`,
+                                undefined,
+                              )}
+                              name={[...item.name, kyHoc.name, 'diemTBC']}
+                              label="Tổng kết"
+                              style={{ width: '100%' }}
+                            >
+                              <InputNumber
+                                placeholder="Số thập phân dạng 0.0"
+                                min={0}
+                                max={10}
+                                style={{ width: '100%' }}
+                              />
+                            </FormItem>
+                          </Col>
+                        </Row>
+                      </Col>
+                    </>
+                  ))}
+                </Row>
+              );
+            })}
         </>
       )}
     </>

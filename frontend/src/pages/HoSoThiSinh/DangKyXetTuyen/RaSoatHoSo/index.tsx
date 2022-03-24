@@ -1,6 +1,6 @@
 import FormTiepNhanHoSo from '@/pages/TiepNhanHoSo/components/FormTiepNhanHoSo';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
-import { ETrangThaiHoSo } from '@/utils/constants';
+import { ELoaiNgoaiNgu, ETrangThaiHoSo } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import {
   CheckOutlined,
@@ -13,8 +13,9 @@ import { GridContent } from '@ant-design/pro-layout';
 import { Button, Card, Col, Descriptions, Divider, Modal, Popconfirm, Row, Tag } from 'antd';
 import { useState } from 'react';
 import { useAccess, useModel } from 'umi';
-import BlockChungChiNgoaiNgu from './components/BlockChungChiNgoaiNgu';
 import BlockChungChiQuocTe from './components/BlockChungChiQuocTe';
+import BlockChungChiTiengAnh from './components/BlockChungChiTiengAnh';
+import BlockChungChiTiengPhap from './components/BlockChungChiTiengPhap';
 import BlockDanhGiaNangLuc from './components/BlockDanhGiaNangLuc';
 import BlockDiemTBC from './components/BlockDiemTBC';
 import BlockDiemTBCCacMon from './components/BlockDiemTBCCacMon';
@@ -128,9 +129,15 @@ const RaSoatHoSo = () => {
               <BlockChungChiQuocTe index={index++} />
             )}
 
-            {recordHoSo?.thongTinChungChiNgoaiNgu?.suDungChungChiNgoaiNgu && (
-              <BlockChungChiNgoaiNgu index={index++} />
-            )}
+            {recordHoSo?.thongTinChungChiTiengAnh &&
+              String(recordHoSo?.ngonNgu)?.includes(ELoaiNgoaiNgu.ANH) && (
+                <BlockChungChiTiengAnh index={index++} />
+              )}
+
+            {recordHoSo?.thongTinChungChiTiengPhap &&
+              String(recordHoSo?.ngonNgu)?.includes(ELoaiNgoaiNgu.PHAP) && (
+                <BlockChungChiTiengPhap index={index++} />
+              )}
 
             {recordHoSo?.thongTinGiaiQuocGia?.suDungGiaiHGSQG && (
               <BlockGiaiHSG index={index++} type="QG" columnGiaiHSG={columnGiaiHSG} />

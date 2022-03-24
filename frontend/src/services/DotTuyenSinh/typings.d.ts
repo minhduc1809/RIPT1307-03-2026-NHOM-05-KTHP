@@ -1,4 +1,4 @@
-import type { EDonViTinh } from '@/utils/constants';
+import type { EDonViTinh, EToHopXetTuyen } from '@/utils/constants';
 
 declare module DotTuyenSinh {
   export interface GiayTo {
@@ -23,12 +23,20 @@ declare module DotTuyenSinh {
     nganh: NganhChuyenNganh.Record;
   }
 
+  export interface CauHinhDoiTuong {
+    cauHinh: any;
+    danhSach: any;
+  }
+
   export interface Record {
     mucLePhi: number;
     donViTinh: EDonViTinh;
     yeuCauTraPhi: boolean;
     maLePhi: string;
     soLuongNguyenVongToiDa: number;
+    gioiHanDoiTuong: boolean;
+    suDungToHopMongMuon: boolean;
+    danhSachToHopLuaChon: EToHopXetTuyen[];
     choPhepDangKyKhacCoSo: boolean;
     _id: string;
     namTuyenSinh: number;
@@ -51,7 +59,7 @@ declare module DotTuyenSinh {
     cauHinhPhuongThuc: any;
     soLuongDangKy: number;
     danhSachDoiTuongTuyenSinh: {
-      cauHinhDoiTuong: Record<string, any>;
+      cauHinhDoiTuong?: CauHinhDoiTuong;
       _id: string;
       maDoiTuong: string;
       thongTinDoiTuong: DoiTuongTuyenSinh.Record;

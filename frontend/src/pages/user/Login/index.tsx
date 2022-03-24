@@ -43,7 +43,7 @@ const LoginGlobal: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
-  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const { isLogin, setIsLogin } = useModel('user');
   const intl = useIntl();
 
   const handleRole = async (role: { accessToken: string; user: Login.Profile }) => {

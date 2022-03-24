@@ -11,34 +11,36 @@ import { useModel } from 'umi';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
-const BlockChungChiQuocTe = (props: { form: FormInstance; cauHinh: any }) => {
+const BlockChungChiTiengAnh = (props: { form: FormInstance; cauHinh: any }) => {
   const { recordHoSo } = useModel('hosoxettuyen');
   const [loaiChungChi, setLoaiChungChi] = useState<string>(
-    recordHoSo?.thongTinChungChiQuocTe?.loaiChungChiQuocTe ?? '',
+    recordHoSo?.thongTinChungChiTiengAnh?.loai ?? '',
   );
-
   return (
     <>
       <Col xs={24} md={8} lg={6} sm={12}>
         <FormItem
           rules={[...rules.required]}
-          initialValue={recordHoSo?.thongTinChungChiQuocTe?.loaiChungChiQuocTe}
-          label="Loại chứng chỉ quốc tế"
-          name={['thongTinChungChiQuocTe', 'loaiChungChiQuocTe']}
+          initialValue={recordHoSo?.thongTinChungChiTiengAnh?.loai}
+          label="Loại chứng chỉ"
+          name={['thongTinChungChiTiengAnh', 'loai']}
         >
           <Select
             onChange={(val) => {
               setLoaiChungChi(val);
               props.form.setFieldsValue({
-                thongTinChungChiQuocTe: {
-                  diemChungChiQuocTe: undefined,
+                thongTinChungChiTiengAnh: {
+                  diem: undefined,
                 },
               });
             }}
             style={{ width: '100%' }}
-            placeholder="Chọn loại chứng chỉ quốc tế"
+            placeholder="Chọn loại chứng chỉ"
           >
-            {Object.keys(props?.cauHinh?.danhSach).map((item) => (
+            {Object.keys(
+              props?.cauHinh?.danhSach?.thongTinChungChiNgoaiNgu?.thongTinChungChiTiengAnh
+                ?.danhSach,
+            ).map((item) => (
               <Select.Option key={item} value={item}>
                 {item}
               </Select.Option>
@@ -46,50 +48,53 @@ const BlockChungChiQuocTe = (props: { form: FormInstance; cauHinh: any }) => {
           </Select>
         </FormItem>
       </Col>
-      {((loaiChungChi && props?.cauHinh?.danhSach?.[loaiChungChi]?.maDuThiChungChiQuocTe) ||
+      {((loaiChungChi &&
+        props?.cauHinh?.danhSach?.thongTinChungChiNgoaiNgu?.thongTinChungChiTiengAnh?.danhSach?.[
+          loaiChungChi
+        ]?.diem) ||
         !loaiChungChi) && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
             rules={[...rules.required]}
-            initialValue={recordHoSo?.thongTinChungChiQuocTe?.maDuThiChungChiQuocTe}
-            label="Mã dự thi"
-            name={['thongTinChungChiQuocTe', 'maDuThiChungChiQuocTe']}
-          >
-            <Input placeholder="Nhập mã dự thi" />
-          </FormItem>
-        </Col>
-      )}
-      {((loaiChungChi && props?.cauHinh?.danhSach?.[loaiChungChi]?.diemChungChiQuocTe) ||
-        !loaiChungChi) && (
-        <Col xs={24} md={8} lg={6} sm={12}>
-          <FormItem
-            rules={[...rules.required]}
-            initialValue={recordHoSo?.thongTinChungChiQuocTe?.diemChungChiQuocTe}
+            initialValue={recordHoSo?.thongTinChungChiTiengAnh?.diem}
             label="Điểm thi"
-            name={['thongTinChungChiQuocTe', 'diemChungChiQuocTe']}
+            name={['thongTinChungChiTiengAnh', 'diem']}
           >
             <InputNumber
-              step={props?.cauHinh?.danhSach?.[loaiChungChi]?.diemChungChiQuocTe?.step}
-              min={props?.cauHinh?.danhSach?.[loaiChungChi]?.diemChungChiQuocTe?.min}
-              max={props?.cauHinh?.danhSach?.[loaiChungChi]?.diemChungChiQuocTe?.max}
+              step={
+                props?.cauHinh?.danhSach?.thongTinChungChiNgoaiNgu?.thongTinChungChiTiengAnh
+                  ?.danhSach?.[loaiChungChi]?.diem?.step
+              }
+              min={
+                props?.cauHinh?.danhSach?.thongTinChungChiNgoaiNgu?.thongTinChungChiTiengAnh
+                  ?.danhSach?.[loaiChungChi]?.diem?.min
+              }
+              max={
+                props?.cauHinh?.danhSach?.thongTinChungChiNgoaiNgu?.thongTinChungChiTiengAnh
+                  ?.danhSach?.[loaiChungChi]?.diem?.max
+              }
               placeholder="Nhập điểm thi"
               style={{ width: '100%' }}
             />
           </FormItem>
         </Col>
       )}
-      {((loaiChungChi && props?.cauHinh?.danhSach?.[loaiChungChi]?.ngayCapChungChiQuocTe) ||
+
+      {((loaiChungChi &&
+        props?.cauHinh?.danhSach?.thongTinChungChiNgoaiNgu?.thongTinChungChiTiengAnh?.danhSach?.[
+          loaiChungChi
+        ]?.ngayCap) ||
         !loaiChungChi) && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
             rules={[...rules.required]}
             initialValue={
-              recordHoSo?.thongTinChungChiQuocTe?.ngayCapChungChiQuocTe
-                ? moment(recordHoSo?.thongTinChungChiQuocTe?.ngayCapChungChiQuocTe)
+              recordHoSo?.thongTinChungChiTiengAnh?.ngayCap
+                ? moment(recordHoSo?.thongTinChungChiTiengAnh?.ngayCap)
                 : undefined
             }
             label="Ngày cấp chứng chỉ"
-            name={['thongTinChungChiQuocTe', 'ngayCapChungChiQuocTe']}
+            name={['thongTinChungChiTiengAnh', 'ngayCap']}
           >
             <DatePicker
               style={{ width: '100%' }}
@@ -99,29 +104,33 @@ const BlockChungChiQuocTe = (props: { form: FormInstance; cauHinh: any }) => {
           </FormItem>
         </Col>
       )}
-      {((loaiChungChi && props?.cauHinh?.danhSach?.[loaiChungChi]?.donViCapChungChiQuocTe) ||
+      {((loaiChungChi &&
+        props?.cauHinh?.danhSach?.thongTinChungChiNgoaiNgu?.thongTinChungChiTiengAnh?.danhSach?.[
+          loaiChungChi
+        ]?.noiCap) ||
         !loaiChungChi) && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
             rules={[...rules.required]}
-            initialValue={recordHoSo?.thongTinChungChiQuocTe?.donViCapChungChiQuocTe}
+            initialValue={recordHoSo?.thongTinChungChiTiengAnh?.noiCap}
             label="Đơn vị cấp chứng chỉ"
-            name={['thongTinChungChiQuocTe', 'donViCapChungChiQuocTe']}
+            name={['thongTinChungChiTiengAnh', 'noiCap']}
           >
             <Input placeholder="Nhập đơn vị cấp chứng chỉ" />
           </FormItem>
         </Col>
       )}
-      {((loaiChungChi && props?.cauHinh?.danhSach?.[loaiChungChi]?.urlChungChiQuocTe) ||
+      {((loaiChungChi &&
+        props?.cauHinh?.danhSach?.thongTinChungChiNgoaiNgu?.thongTinChungChiTiengAnh?.danhSach?.[
+          loaiChungChi
+        ]?.urlChungChi) ||
         !loaiChungChi) && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
             rules={[...rules.fileRequired]}
-            initialValue={renderFileList(
-              recordHoSo?.thongTinChungChiQuocTe?.urlChungChiQuocTe ?? [],
-            )}
+            initialValue={renderFileList(recordHoSo?.thongTinChungChiTiengAnh?.urlChungChi ?? [])}
             label={'Chứng chỉ đính kèm'}
-            name="urlChungChiQuocTe"
+            name="urlChungChiTiengAnh"
           >
             <Upload
               otherProps={{
@@ -129,7 +138,7 @@ const BlockChungChiQuocTe = (props: { form: FormInstance; cauHinh: any }) => {
                 multiple: true,
                 showUploadList: { showDownloadIcon: false },
               }}
-              limit={props?.cauHinh?.danhSach?.[loaiChungChi]?.urlChungChiQuocTe?.maxLength ?? 5}
+              limit={props?.cauHinh?.[loaiChungChi]?.urlChungChi?.maxLength ?? 5}
             />
           </FormItem>
         </Col>
@@ -138,4 +147,4 @@ const BlockChungChiQuocTe = (props: { form: FormInstance; cauHinh: any }) => {
   );
 };
 
-export default BlockChungChiQuocTe;
+export default BlockChungChiTiengAnh;

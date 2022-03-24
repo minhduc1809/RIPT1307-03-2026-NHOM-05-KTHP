@@ -47,6 +47,10 @@ const FormDotTuyenSinh = () => {
   );
   const [hinhThucDaoTao, setHinhThucDaoTao] = useState<string>(record?.hinhThucDaoTao?._id ?? '');
   const [yeuCauTraPhi, setYeuCauTraPhi] = useState<boolean>(record?.yeuCauTraPhi ?? false);
+  const [gioiHanDoiTuong, setGioiHanDoiTuong] = useState<boolean>(record?.gioiHanDoiTuong ?? false);
+  const [suDungToHopMongMuon, setSuDungToHopMongMuon] = useState<boolean>(
+    record?.suDungToHopMongMuon ?? false,
+  );
   const [choPhepDangKyKhacCoSo, setChoPhepDangKyKhacCoSo] = useState<boolean>(
     record?.choPhepDangKyKhacCoSo ?? false,
   );
@@ -68,8 +72,14 @@ const FormDotTuyenSinh = () => {
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
           values.danhSachDoiTuongTuyenSinh = values?.danhSachDoiTuongTuyenSinh?.map(
-            (item: string) => ({ maDoiTuong: item }),
+            (item: string) => ({
+              maDoiTuong: item,
+              cauHinhDoiTuong:
+                record?.danhSachDoiTuongTuyenSinh?.find((doiTuong) => doiTuong.maDoiTuong === item)
+                  ?.cauHinhDoiTuong ?? {},
+            }),
           );
+
           if (edit) {
             putDotTuyenSinhModel(record?._id ?? '', {
               ...record,
@@ -78,6 +88,8 @@ const FormDotTuyenSinh = () => {
               cauHinhPhuongThuc: {},
               yeuCauTraPhi,
               choPhepDangKyKhacCoSo,
+              gioiHanDoiTuong,
+              suDungToHopMongMuon,
               thongTinGiayToNopOnline: danhSachGiayToNopOnline,
               thongTinGiayToNopHoSo: danhSachGiayToNopHoSo,
               danhSachNganhTuyenSinh: danhSachNganh?.map((item) => ({
@@ -275,6 +287,20 @@ const FormDotTuyenSinh = () => {
               </Form.Item>
             </Col>
           ))}
+          <Col lg={12}>
+            <Form.Item
+              label="Số lượng nguyện vọng tối đa"
+              name={'soLuongNguyenVongToiDa'}
+              initialValue={record?.soLuongNguyenVongToiDa}
+            >
+              <InputNumber
+                min={1}
+                max={1000}
+                style={{ width: '100%' }}
+                placeholder="Nhập số lượng"
+              />
+            </Form.Item>
+          </Col>
         </Row>
         <Row gutter={[10, 0]}>
           <Col lg={12}>
@@ -339,17 +365,28 @@ const FormDotTuyenSinh = () => {
             </>
           )}
           <Col lg={12}>
+            <Form.Item name={'gioiHanDoiTuong'} initialValue={record?.gioiHanDoiTuong ?? false}>
+              <Checkbox
+                checked={gioiHanDoiTuong}
+                onChange={(e) => {
+                  setGioiHanDoiTuong(e.target.checked);
+                }}
+              />{' '}
+              Giới hạn đối tượng
+            </Form.Item>
+          </Col>
+          <Col lg={12}>
             <Form.Item
-              label="Số lượng nguyện vọng tối đa"
-              name={'soLuongNguyenVongToiDa'}
-              initialValue={record?.soLuongNguyenVongToiDa}
+              name={'suDungToHopMongMuon'}
+              initialValue={record?.suDungToHopMongMuon ?? false}
             >
-              <InputNumber
-                min={1}
-                max={1000}
-                style={{ width: '100%' }}
-                placeholder="Nhập số lượng"
-              />
+              <Checkbox
+                checked={suDungToHopMongMuon}
+                onChange={(e) => {
+                  setSuDungToHopMongMuon(e.target.checked);
+                }}
+              />{' '}
+              Sử dụng tổ hợp mong muốn
             </Form.Item>
           </Col>
         </Row>

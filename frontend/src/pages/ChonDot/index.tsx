@@ -1,30 +1,30 @@
 import GlobalFooter from '@/components/GlobalFooter';
 import Header from '@/components/Header';
+import ResultWithLogo from '@/components/ResultWithLogo';
 import styles from '@/pages/ChonPhuongThuc/index.css';
-import { Setting } from '@/utils/constants';
-import { Button, Divider, Spin, Statistic } from 'antd';
-import moment from 'moment';
+import { Button, Divider, Spin } from 'antd';
 import { useEffect } from 'react';
 import { history, useModel } from 'umi';
-import { useMediaQuery } from 'react-responsive';
-
-const { Countdown } = Statistic;
+import TimeLineChonDot from './components/Timeline';
+import logo from '@/assets/logo.png';
 
 const LuaChonDotXetTuyen = () => {
-  const isMediumScreen = useMediaQuery({
-    query: '(min-width: 753px)',
-  });
-
   const { getAllDotTuyenSinhModel, danhSach, loading, setDanhSach, setRecord } =
     useModel('dottuyensinh');
   const idPhuongThuc = localStorage.getItem('phuongThuc');
+  const nam = localStorage.getItem('nam');
   const { getPhuongThucTuyenSinhByIdModel, record } = useModel('phuongthuctuyensinh');
+
   useEffect(() => {
-    if (idPhuongThuc) {
+    if (idPhuongThuc && !record?._id) {
       getPhuongThucTuyenSinhByIdModel(idPhuongThuc);
-      getAllDotTuyenSinhModel({ phuongThucTuyenSinh: idPhuongThuc });
     }
   }, [idPhuongThuc]);
+
+  useEffect(() => {
+    if (record?._id && nam)
+      getAllDotTuyenSinhModel({ phuongThucTuyenSinh: record._id, namTuyenSinh: +nam });
+  }, [record?._id, nam]);
 
   useEffect(() => {
     return () => {
@@ -40,12 +40,16 @@ const LuaChonDotXetTuyen = () => {
           <div style={{ fontSize: 16 }} className={styles.background}>
             <div className={styles.container}>
               <div style={{ width: 1000 }}>
-                <div className={styles.content}>
-                  <div className={styles['content-top']}>
-                    <b style={{ fontSize: 18 }}>{record?.tenPhuongThuc},</b>
-                    <div>Vui lòng chọn 1 đợt xét tuyển để thực hiện đăng ký xét tuyển</div>
+                {danhSach.length ? (
+                  <div className={styles.content}>
+                    <div className={styles['content-top']}>
+                      <b style={{ fontSize: 18 }}>{record?.tenPhuongThuc},</b>
+                      <div>Vui lòng chọn 1 đợt xét tuyển để thực hiện đăng ký xét tuyển</div>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div />
+                )}
                 <div className={styles.form}>
                   <div>
                     {danhSach?.map((item, index) => (
@@ -66,21 +70,7 @@ const LuaChonDotXetTuyen = () => {
                             <b>
                               Đợt {index + 1}: {item?.tenDotTuyenSinh ?? ''}
                             </b>
-                            <div style={{ display: isMediumScreen ? 'flex' : 'block' }}>
-                              Bắt đầu đăng ký xét tuyển:{' '}
-                              <Countdown
-                                style={{ marginRight: 5 }}
-                                value={item.thoiGianMoDangKy}
-                                format="Còn D ngày H giờ m phút s giây"
-                                valueStyle={{
-                                  color: Setting.primaryColor,
-                                  fontSize: 16,
-                                  marginLeft: isMediumScreen ? 5 : 0,
-                                }}
-                                // onFinish={finishStep}
-                              />{' '}
-                              ({moment(item.thoiGianMoDangKy)?.format('HH:mm DD/MM/YYYY')})
-                            </div>
+                            <TimeLineChonDot record={item} />
                             {/* <div>{item.isCoHoSo}</div>
                           <div>Trạng thái: {item?.trangThai ?? ''}</div> */}
                           </div>
@@ -88,8 +78,12 @@ const LuaChonDotXetTuyen = () => {
                       </div>
                     ))}
                   </div>
-                  {danhSach?.length === 0 && (
-                    <div>Chưa có thông tin về các đợt tuyển sinh ở kỳ tuyển sinh năm nay</div>
+                  {danhSach?.length === 0 && record?._id && (
+                    <ResultWithLogo
+                      logo={logo}
+                      title={record?.tenPhuongThuc}
+                      subTitle={`Chưa có thông tin về các đợt tuyển sinh ở kỳ tuyển sinh năm ${nam}`}
+                    />
                   )}
                 </div>
                 <Divider style={{ marginBottom: 0 }} />

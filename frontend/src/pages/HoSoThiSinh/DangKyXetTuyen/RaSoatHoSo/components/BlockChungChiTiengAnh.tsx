@@ -5,20 +5,20 @@ import moment from 'moment';
 const { Item } = Descriptions;
 import { useModel } from 'umi';
 
-const BlockChungChiNgoaiNgu = (props: { index?: number }) => {
+const BlockChungChiTiengAnh = (props: { index?: number }) => {
   const { recordHoSo } = useModel('hosoxettuyen');
 
-  const columnChungChi: IColumn<HoSoXetTuyen.ThongTinChungChiNgoaiNgu>[] = [
+  const columnChungChi: IColumn<HoSoXetTuyen.ThongTinChungChiTiengAnh>[] = [
     {
       title: 'Tên loại chứng chỉ',
-      dataIndex: 'loaiChungChiNgoaiNgu',
+      dataIndex: 'loai',
       align: 'center',
       width: '140px',
       key: 'tenChungChi',
     },
     {
       title: 'Điểm thi chứng chỉ',
-      dataIndex: 'diemChungChiNgoaiNgu',
+      dataIndex: 'diem',
       align: 'center',
       key: 'diem',
       width: '100px',
@@ -26,7 +26,7 @@ const BlockChungChiNgoaiNgu = (props: { index?: number }) => {
 
     {
       title: 'Ngày cấp',
-      dataIndex: 'ngayCapChungChiNgoaiNgu',
+      dataIndex: 'ngayCap',
       align: 'center',
       key: 'ngayCap',
       render: (value) => moment(value).format('DD/MM/YYYY'),
@@ -34,14 +34,14 @@ const BlockChungChiNgoaiNgu = (props: { index?: number }) => {
     },
     {
       title: 'Đơn vị cấp',
-      dataIndex: 'donViCapChungChiNgoaiNgu',
+      dataIndex: 'noiCap',
       align: 'center',
       key: 'donvicap',
       width: '100px',
     },
     {
       title: 'File minh chứng',
-      dataIndex: 'urlChungChiNgoaiNgu',
+      dataIndex: 'urlChungChi',
       align: 'center',
       key: 'fileChungChi',
       render: (value) =>
@@ -64,7 +64,7 @@ const BlockChungChiNgoaiNgu = (props: { index?: number }) => {
           span={3}
           label={
             <span style={{ fontWeight: 'bold' }}>
-              {props?.index ? `${props?.index}.` : ''}Thông tin về chứng chỉ ngoại ngữ
+              {props?.index ? `${props?.index}.` : ''}Thông tin về chứng chỉ tiếng Anh
             </span>
           }
         >
@@ -76,11 +76,11 @@ const BlockChungChiNgoaiNgu = (props: { index?: number }) => {
         bordered
         columns={columnChungChi}
         dataSource={
-          recordHoSo?.thongTinChungChiNgoaiNgu ? [recordHoSo?.thongTinChungChiNgoaiNgu] : []
+          recordHoSo?.thongTinChungChiTiengAnh ? [recordHoSo?.thongTinChungChiTiengAnh] : []
         }
       />
     </>
   );
 };
 
-export default BlockChungChiNgoaiNgu;
+export default BlockChungChiTiengAnh;

@@ -56,7 +56,7 @@ export function adminGetHoSoByIdDot(
     condition?: any;
   },
 ) {
-  return axios.get(`${ip3}/${url}/admin/${idDotTuyenSinh}`, { params: payload });
+  return axios.get(`${ip3}/${url}/admin/dot/${idDotTuyenSinh}`, { params: payload });
 }
 
 export function adminMoKhoaHoSoByIdHoSo(idHoSoXetTuyen: string) {

@@ -51,6 +51,10 @@ axios.interceptors.response.use(
         });
         localStorage.removeItem('vaiTro');
         localStorage.removeItem('token');
+        localStorage.removeItem('accessTokens');
+        localStorage.removeItem('phuongThuc');
+        localStorage.removeItem('dot');
+        localStorage.removeItem('nam');
         history.replace({
           pathname: '/user/login',
         });
