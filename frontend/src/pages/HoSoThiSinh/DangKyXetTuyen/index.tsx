@@ -43,6 +43,8 @@ const DangKyXetTuyen = () => {
           </div>
         )}
       </Col>
+
+      {/* noi dung chinh */}
       <Col xs={24} lg={18} xl={19}>
         <div id="content">
           <Timeline />

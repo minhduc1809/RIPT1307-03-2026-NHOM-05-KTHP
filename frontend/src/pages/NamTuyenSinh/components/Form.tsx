@@ -140,6 +140,7 @@ const FormNamTuyenSinh = () => {
             }}
           />
         </Form.Item>
+
         <Form.Item initialValue={record?.moTa} name="moTa" label="Mô tả">
           <Input.TextArea placeholder="Mô tả" rows={2} />
         </Form.Item>

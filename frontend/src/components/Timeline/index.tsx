@@ -19,6 +19,7 @@ const Timeline = () => {
   });
 
   const { data, dayFinal, checkDay, setupTimeline, finishStep } = useInitTimeline();
+  // console.log('data', data)
   const customDot = (
     dot: any,
     info: {

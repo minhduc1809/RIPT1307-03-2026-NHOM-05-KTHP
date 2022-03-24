@@ -157,6 +157,7 @@ export default defineConfig({
         {
           name: 'QuanLyTaiKhoan',
           path: './quanlytaikhoan',
+          component: './QuanLyTaiKhoan',
         },
         {
           name: 'QuanLyNamTuyenSinh',
