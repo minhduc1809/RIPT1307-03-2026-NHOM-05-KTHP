@@ -9,7 +9,7 @@ import ViewEmail from './components/ViewEmail';
 const Index = () => {
   const [form] = Form.useForm();
   const {TextArea} = Input
-  const {record, loading, SendEmailModel, SendEmailPreviewModel, setVisibleForm, visible, setVisible} = useModel('sendemail');
+  const {record, loading, SendEmailPreviewModel, setVisibleForm, visible, setVisible} = useModel('sendemail');
   return (
     <>
       <Card title="Gửi Email">
