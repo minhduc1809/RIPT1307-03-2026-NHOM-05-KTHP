@@ -54,6 +54,10 @@ const FormDotTuyenSinh = () => {
   const [choPhepDangKyKhacCoSo, setChoPhepDangKyKhacCoSo] = useState<boolean>(
     record?.choPhepDangKyKhacCoSo ?? false,
   );
+
+  const [choPhepHK1HoacCaNamLop12, setChoPhepHK1HoacCaNamLop12] = useState<boolean>(
+    record?.choPhepHK1HoacCaNamLop12 ?? false,
+  );
   useEffect(() => {
     form.resetFields();
   }, [recordProduct]);
@@ -90,6 +94,7 @@ const FormDotTuyenSinh = () => {
               choPhepDangKyKhacCoSo,
               gioiHanDoiTuong,
               suDungToHopMongMuon,
+              choPhepHK1HoacCaNamLop12,
               thongTinGiayToNopOnline: danhSachGiayToNopOnline,
               thongTinGiayToNopHoSo: danhSachGiayToNopHoSo,
               danhSachNganhTuyenSinh: danhSachNganh?.map((item) => ({
@@ -243,6 +248,11 @@ const FormDotTuyenSinh = () => {
               <TableGiayTo fieldName="danhSachGiayToNopHoSo" />
             </Form.Item>
           </Col>
+          <Col span={24}>
+            <Form.Item label="Danh sách giấy tờ nộp onlline">
+              <TableGiayTo fieldName="danhSachGiayToNopOnline" />
+            </Form.Item>
+          </Col>
           <Col xs={24}>
             <Form.Item
               name={'moTa'}
@@ -387,6 +397,20 @@ const FormDotTuyenSinh = () => {
                 }}
               />{' '}
               Sử dụng tổ hợp mong muốn
+            </Form.Item>
+          </Col>
+          <Col lg={12}>
+            <Form.Item
+              name={'choPhepHK1HoacCaNamLop12'}
+              initialValue={record?.choPhepHK1HoacCaNamLop12 ?? false}
+            >
+              <Checkbox
+                checked={choPhepHK1HoacCaNamLop12}
+                onChange={(e) => {
+                  setChoPhepHK1HoacCaNamLop12(e.target.checked);
+                }}
+              />{' '}
+              Cho phép HK1 hoặc cả năm Lớp 12
             </Form.Item>
           </Col>
         </Row>

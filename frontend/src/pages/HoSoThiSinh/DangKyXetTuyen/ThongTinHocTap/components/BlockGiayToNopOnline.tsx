@@ -1,10 +1,11 @@
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import type { IColumn } from '@/utils/interfaces';
-import { Descriptions, Table } from 'antd';
+import { Tag, Table, Descriptions } from 'antd';
+
 import { useModel } from 'umi';
 const { Item } = Descriptions;
 
-const BlockGiayTo = (props: { index?: number }) => {
+const BlockGiayToNopOnline = (props: { index?: number }) => {
   const { recordHoSo } = useModel('hosoxettuyen');
   const columns: IColumn<DotTuyenSinh.GiayTo>[] = [
     {
@@ -14,35 +15,26 @@ const BlockGiayTo = (props: { index?: number }) => {
       align: 'center',
     },
     {
-      title: 'Tên',
+      title: 'Tên giấy tờ',
       dataIndex: 'ten',
       width: 200,
       align: 'center',
       search: 'search',
     },
     {
-      title: 'Số lượng',
-      dataIndex: 'soLuong',
-      width: 80,
-      align: 'center',
-    },
-    {
-      title: 'Ghi chú',
-      dataIndex: 'ghiChu',
-      align: 'center',
+      title: 'File đính kèm',
+      dataIndex: 'urlGiayToNop',
       width: 200,
-    },
-    {
-      title: 'Số lượng tiếp nhận',
-      dataIndex: 'soLuongTiepNhan',
       align: 'center',
-      width: 100,
-    },
-    {
-      title: 'Ghi chú tiếp nhận',
-      dataIndex: 'ghiChuTiepNhan',
-      align: 'center',
-      width: 150,
+      render: (val) => (
+        <div>
+          {val.map((x: string, indexFile: number) => (
+            <a key={x} href={x} target="_blank" rel="noreferrer">
+              <Tag color="#c01718"> Xem tập tin {indexFile + 1}</Tag>
+            </a>
+          ))}
+        </div>
+      ),
     },
   ];
   return (
@@ -52,7 +44,7 @@ const BlockGiayTo = (props: { index?: number }) => {
           span={3}
           label={
             <span style={{ fontWeight: 'bold' }}>
-              {props?.index ? `${props?.index}.` : ''}Thông tin giấy tờ nộp
+              {props?.index ? `${props?.index}.` : ''} Danh sách giấy tờ nộp
             </span>
           }
         >
@@ -62,9 +54,8 @@ const BlockGiayTo = (props: { index?: number }) => {
       <Table
         size="small"
         pagination={false}
-        bordered
         columns={columns}
-        dataSource={recordHoSo?.thongTinGiayToNopHoSo?.map((item, index) => ({
+        dataSource={recordHoSo?.thongTinGiayToNopOnline?.map((item, index) => ({
           ...item,
           index: index + 1,
         }))}
@@ -73,4 +64,4 @@ const BlockGiayTo = (props: { index?: number }) => {
   );
 };
 
-export default BlockGiayTo;
+export default BlockGiayToNopOnline;

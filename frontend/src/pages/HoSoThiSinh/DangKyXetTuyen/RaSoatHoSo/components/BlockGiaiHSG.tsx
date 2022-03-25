@@ -29,6 +29,7 @@ const BlockGiaiHSG = (props: {
       </Descriptions>
 
       <Table
+        size="small"
         pagination={false}
         bordered
         columns={props.columnGiaiHSG}

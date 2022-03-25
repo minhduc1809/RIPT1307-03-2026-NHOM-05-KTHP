@@ -13,6 +13,7 @@ import { GridContent } from '@ant-design/pro-layout';
 import { Button, Card, Col, Descriptions, Divider, Modal, Popconfirm, Row, Tag } from 'antd';
 import { useState } from 'react';
 import { useAccess, useModel } from 'umi';
+import BlockGiayToNopOnline from '../ThongTinHocTap/components/BlockGiayToNopOnline';
 import BlockChungChiQuocTe from './components/BlockChungChiQuocTe';
 import BlockChungChiTiengAnh from './components/BlockChungChiTiengAnh';
 import BlockChungChiTiengPhap from './components/BlockChungChiTiengPhap';
@@ -30,7 +31,11 @@ const { Item } = Descriptions;
 
 const RaSoatHoSo = () => {
   const { recordHoSo, setVisibleForm, setCurrent, khoaMyHoSoModel } = useModel('hosoxettuyen');
+  const { setVisibleForm: setVisibleFormKetQua } = useModel('ketquaxettuyen');
   const { record, visibleFormGiayTo, setVisibleFormGiayTo } = useModel('dottuyensinh');
+  const cauHinhDoiTuong = record?.danhSachDoiTuongTuyenSinh?.find(
+    (item) => item.maDoiTuong === recordHoSo?.maDoiTuong,
+  )?.cauHinhDoiTuong;
   let index = 1;
   let indexThongTinTiepNhanHoSo = 1;
   const access = useAccess();
@@ -90,40 +95,77 @@ const RaSoatHoSo = () => {
                 <i>({record?.phuongThucTuyenSinh?.tenPhuongThuc ?? ''})</i>
               </div>
             )}
-            {/* {trangThai === 'Đã khóa' && ( */}
-            <div style={{ color: 'red', fontStyle: 'italic' }}>(Bản chính thức)</div>
-            {/* )} */}
+            {recordHoSo?.trangThai === ETrangThaiHoSo.dakhoa && (
+              <div style={{ color: 'red', fontStyle: 'italic' }}>(Bản chính thức)</div>
+            )}
           </div>
 
           <Divider />
           <GridContent>
             <Row>
               <Col lg={16} xs={24}>
-                <h1 style={{ fontWeight: 'bold' }}>A. THÔNG TIN THÍ SINH: </h1>
+                <h2 style={{ fontWeight: 'bold' }}>A. THÔNG TIN THÍ SINH: </h2>
               </Col>
               <Col lg={8} xs={24}>
-                <h1 style={{ fontWeight: 'bold' }}>
+                <h2 style={{ fontWeight: 'bold' }}>
                   TRẠNG THÁI: {recordHoSo?.trangThai?.toUpperCase()}{' '}
-                </h1>
+                </h2>
               </Col>
             </Row>
 
             <BlockRaSoatThongTinCaNhan />
             <BlockNoiHocTHPT index={10} />
             <BlockDoiTuongKhuVucUuTien indexDoiTuong={11} indexKhuVuc={12} indexNamTotNghiep={13} />
-            {recordHoSo?.maDoiTuong !== 'CQ_PTIT_DGNL1' && <BlockHanhKiem index={14} />}
-            {recordHoSo?.maDoiTuong !== 'CQ_PTIT_DGNL1' && (
-              <>
-                <BlockDiemTBC index={15} />
-                <BlockDiemTBCCacMon
-                  index={16}
-                  danhSachMon={['Toán học', 'Vật lý', 'Hóa học', 'Ngữ văn', 'Tiếng Anh']}
-                />
-              </>
+            {(cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10?.hanhKiem ||
+              cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop11?.hanhKiem ||
+              cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop12?.hanhKiem) && (
+              <BlockHanhKiem index={14} />
             )}
+
+            <BlockDiemTBC index={15} />
+            {
+              <BlockDiemTBCCacMon
+                cauHinh={cauHinhDoiTuong}
+                index={16}
+                toHop={
+                  record?.suDungToHopMongMuon
+                    ? recordHoSo?.toHopMongMuon ?? []
+                    : record?.danhSachToHopLuaChon ?? []
+                }
+                arrLopHoc={[
+                  {
+                    label: 'lớp 10',
+                    name: ['thongTinHocTapTHPT', 'truongLop10'],
+                    field: 'truongLop10',
+                    show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10,
+                  },
+                  {
+                    label: 'lớp 11',
+                    name: ['thongTinHocTapTHPT', 'truongLop11'],
+                    field: 'truongLop11',
+                    show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop11,
+                  },
+                  {
+                    label: 'lớp 12',
+                    name: ['thongTinHocTapTHPT', 'truongLop12'],
+                    field: 'truongLop12',
+                    show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop12,
+                  },
+                ]}
+                arrKyHoc={[
+                  { label: 'Học kỳ 1', name: 'kqhtHK1' },
+                  { label: 'Học kỳ 2', name: 'kqhtHK2' },
+                  {
+                    label: 'Cả năm',
+                    name: 'kqhtCaNam',
+                  },
+                ]}
+              />
+            }
+
             <br />
 
-            <h1 style={{ fontWeight: 'bold' }}>B. THÔNG TIN ĐĂNG KÝ XÉT TUYỂN:</h1>
+            <h2 style={{ fontWeight: 'bold' }}>B. THÔNG TIN ĐĂNG KÝ XÉT TUYỂN:</h2>
 
             {recordHoSo?.thongTinChungChiQuocTe?.suDungChungChiQuocTe && (
               <BlockChungChiQuocTe index={index++} />
@@ -164,48 +206,14 @@ const RaSoatHoSo = () => {
             <BlockNguyenVong index={index++} />
 
             <br />
-            <Descriptions>
-              <Item
-                span={3}
-                label={
-                  <span style={{ fontWeight: 'bold' }}>
-                    {index++}. Đường dẫn file minh chứng hồ sơ học bạ{' '}
-                  </span>
-                }
-              >
-                {recordHoSo?.thongTinHocTapTHPT?.urlHocBa?.length &&
-                  recordHoSo.thongTinHocTapTHPT?.urlHocBa.map((x: string, indexFile: number) => (
-                    <a key={x} href={x} target="_blank" rel="noreferrer">
-                      <Tag color="#c01718"> Xem tập tin {indexFile + 1}</Tag>
-                    </a>
-                  ))}
-              </Item>
-              <Item
-                span={3}
-                label={
-                  <span style={{ fontWeight: 'bold' }}>
-                    {index++}. Đường dẫn file minh chứng đối tượng ưu tiên{' '}
-                  </span>
-                }
-              >
-                {recordHoSo?.thongTinHocTapTHPT?.urlChungNhanDoiTuongUuTien?.length ? (
-                  recordHoSo?.thongTinHocTapTHPT?.urlChungNhanDoiTuongUuTien.map(
-                    (x: string, indexFile: number) => (
-                      <a key={x} href={x} target="_blank" rel="noreferrer">
-                        <Tag color="#c01718"> Xem tập tin {indexFile + 1}</Tag>
-                      </a>
-                    ),
-                  )
-                ) : (
-                  <div />
-                )}
-              </Item>
-            </Descriptions>
+            <BlockGiayToNopOnline index={index++} />
+            <br />
+
             {[ETrangThaiHoSo.datiepnhan, ETrangThaiHoSo.khongtiepnhan]?.includes(
               recordHoSo?.trangThai ?? ETrangThaiHoSo.chuakhoa,
             ) && (
               <>
-                <h1 style={{ fontWeight: 'bold' }}>C. THÔNG TIN TIẾP NHẬN HỒ SƠ:</h1>
+                <h2 style={{ fontWeight: 'bold' }}>C. THÔNG TIN TIẾP NHẬN HỒ SƠ:</h2>
                 {recordHoSo?.thongTinGiayToNopHoSo?.length && (
                   <>
                     <BlockGiayTo index={indexThongTinTiepNhanHoSo++} />
@@ -256,7 +264,13 @@ const RaSoatHoSo = () => {
                       </Button>
                     </>
                   )}
-                  <Button onClick={() => setVisibleForm(false)} icon={<CloseOutlined />}>
+                  <Button
+                    onClick={() => {
+                      setVisibleForm(false);
+                      setVisibleFormKetQua(false);
+                    }}
+                    icon={<CloseOutlined />}
+                  >
                     Đóng
                   </Button>
                 </div>

@@ -62,6 +62,7 @@ const BlockDanhGiaNangLuc = (props: { index?: number }) => {
       </Descriptions>
 
       <Table
+        size="small"
         pagination={false}
         bordered
         columns={columnChungChi}

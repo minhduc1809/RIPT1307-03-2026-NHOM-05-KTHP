@@ -7,22 +7,21 @@ import { useModel } from 'umi';
 
 const BlockGiaiHSG = (props: { fieldName: string; type: string; cauHinh: any }) => {
   const { recordHoSo } = useModel('hosoxettuyen');
+
+  const cauHinhGiai = props?.cauHinh?.danhSach?.thongTinGiaiHSG?.[props?.fieldName];
+
   return (
     <>
-      {props?.cauHinh?.danhSach?.thongTinGiaiHSG?.[props?.fieldName]?.[
-        `monThiHSG${props.type}`
-      ] && (
+      {cauHinhGiai?.[`monThiHSG${props.type}`] && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
             initialValue={recordHoSo?.[props.fieldName]?.[`monThiHSG${props.type}`]}
-            rules={[...rules.required]}
+            rules={cauHinhGiai?.[`monThiHSG${props.type}`]?.required ? [...rules.required] : []}
             label="Môn đoạt giải"
             name={[props.fieldName, `monThiHSG${props.type}`]}
           >
             <Select style={{ width: '100%' }} placeholder="Chọn môn đoạt giải">
-              {props?.cauHinh?.danhSach?.thongTinGiaiHSG?.[props?.fieldName]?.[
-                `monThiHSG${props.type}`
-              ]?.enum?.map((item: string) => (
+              {cauHinhGiai?.[`monThiHSG${props.type}`]?.enum?.map((item: string) => (
                 <Select.Option key={item} value={item}>
                   {item}
                 </Select.Option>
@@ -31,18 +30,16 @@ const BlockGiaiHSG = (props: { fieldName: string; type: string; cauHinh: any }) 
           </FormItem>
         </Col>
       )}
-      {props?.cauHinh?.danhSach?.thongTinGiaiHSG?.[props?.fieldName]?.[`giaiHSG${props.type}`] && (
+      {cauHinhGiai?.[`giaiHSG${props.type}`] && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
             initialValue={recordHoSo?.[props.fieldName]?.[`giaiHSG${props.type}`]}
-            rules={[...rules.required]}
+            rules={cauHinhGiai?.[`giaiHSG${props.type}`]?.required ? [...rules.required] : []}
             label="Loại giải"
             name={[props.fieldName, `giaiHSG${props.type}`]}
           >
             <Select style={{ width: '100%' }} placeholder="Chọn loại giải">
-              {props?.cauHinh?.danhSach?.thongTinGiaiHSG?.[props?.fieldName]?.[
-                `giaiHSG${props.type}`
-              ]?.enum?.map((item: string) => (
+              {cauHinhGiai?.[`giaiHSG${props.type}`]?.enum?.map((item: string) => (
                 <Select.Option key={item} value={item}>
                   {item}
                 </Select.Option>
@@ -51,13 +48,11 @@ const BlockGiaiHSG = (props: { fieldName: string; type: string; cauHinh: any }) 
           </FormItem>
         </Col>
       )}
-      {props?.cauHinh?.danhSach?.thongTinGiaiHSG?.[props?.fieldName]?.[
-        `namDatGiaiHSG${props.type}`
-      ] && (
+      {cauHinhGiai?.[`namDatGiaiHSG${props.type}`] && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
             initialValue={recordHoSo?.[props.fieldName]?.[`namDatGiaiHSG${props.type}`]}
-            rules={[...rules.required]}
+            rules={cauHinhGiai?.[`namDatGiaiHSG${props.type}`]?.required ? [...rules.required] : []}
             label="Năm đoạt giải"
             name={[props.fieldName, `namDatGiaiHSG${props.type}`]}
           >
@@ -70,13 +65,11 @@ const BlockGiaiHSG = (props: { fieldName: string; type: string; cauHinh: any }) 
           </FormItem>
         </Col>
       )}
-      {props?.cauHinh?.danhSach?.thongTinGiaiHSG?.[props?.fieldName]?.[
-        `noiCapGiaiHSG${props.type}`
-      ] && (
+      {cauHinhGiai?.[`noiCapGiaiHSG${props.type}`] && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
             initialValue={recordHoSo?.[props.fieldName]?.[`noiCapGiaiHSG${props.type}`]}
-            rules={[...rules.required]}
+            rules={cauHinhGiai?.[`noiCapGiaiHSG${props.type}`]?.required ? [...rules.required] : []}
             label="Nơi cấp giải"
             name={[props.fieldName, `noiCapGiaiHSG${props.type}`]}
           >
@@ -84,15 +77,15 @@ const BlockGiaiHSG = (props: { fieldName: string; type: string; cauHinh: any }) 
           </FormItem>
         </Col>
       )}
-      {props?.cauHinh?.danhSach?.thongTinGiaiHSG?.[props?.fieldName]?.[
-        `urlBangKhenHSG${props.type}`
-      ] && (
+      {cauHinhGiai?.[`urlBangKhenHSG${props.type}`] && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
             initialValue={renderFileList(
               recordHoSo?.[props.fieldName]?.[`urlBangKhenHSG${props.type}`] ?? [],
             )}
-            rules={[...rules.fileRequired]}
+            rules={
+              cauHinhGiai?.[`urlBangKhenHSG${props.type}`]?.required ? [...rules.fileRequired] : []
+            }
             label={'Bằng khen đính kèm'}
             name={[`urlBangKhenHSG${props.type}`]}
           >
@@ -102,11 +95,7 @@ const BlockGiaiHSG = (props: { fieldName: string; type: string; cauHinh: any }) 
                 multiple: true,
                 showUploadList: { showDownloadIcon: false },
               }}
-              limit={
-                props?.cauHinh?.danhSach?.thongTinGiaiHSG?.[props?.fieldName]?.[
-                  `urlBangKhenHSG${props.type}`
-                ]?.maxLength ?? 5
-              }
+              limit={cauHinhGiai?.[`urlBangKhenHSG${props.type}`]?.maxLength ?? 5}
             />
           </FormItem>
         </Col>

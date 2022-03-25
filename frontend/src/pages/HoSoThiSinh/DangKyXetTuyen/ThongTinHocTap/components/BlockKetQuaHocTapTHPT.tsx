@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
+// to do : neu trong cau hinh ko yeu cau nhap diem tung mon theo to hop, chi yeu cau nhap diem tong ket thi giao dien bi xau
 const BlockKetQuaHocTapTHPT = (props: {
   cauHinh: any;
   haveSelectToHop: boolean;
@@ -15,7 +16,7 @@ const BlockKetQuaHocTapTHPT = (props: {
     label: string;
     name: string[];
     show: boolean;
-    field: string;
+    field: 'truongLop10' | 'truongLop11' | 'truongLop12';
   }[];
   arrKyHoc: {
     label: string;
@@ -77,67 +78,85 @@ const BlockKetQuaHocTapTHPT = (props: {
               const arrKyHocFinal = props?.arrKyHoc?.filter(
                 (kyHoc) => props?.cauHinh?.danhSach?.thongTinHocTapTHPT?.[item.field]?.[kyHoc.name],
               );
+              let label = arrKyHocFinal[0]?.label ?? '';
+              if (item.field === 'truongLop12' && record?.choPhepHK1HoacCaNamLop12) {
+                label = `${arrKyHocFinal[0].label} hoặc Học kỳ 1`;
+              }
               return (
                 <Row gutter={[10, 0]} key={item.label}>
                   <Divider plain>
                     <b>
-                      Điểm TBC {arrKyHocFinal?.length > 1 ? '' : arrKyHocFinal[0]?.label}{' '}
-                      {item.label}
+                      Điểm TBC {arrKyHocFinal?.length > 1 ? '' : label} {item.label}
                     </b>
                   </Divider>
 
-                  {arrKyHocFinal?.map((kyHoc) => (
-                    <>
-                      {arrKyHocFinal?.length > 1 && <b>{kyHoc?.label}</b>}
-                      <Col span={24}>
-                        <Row gutter={[10, 0]}>
-                          {arrMonHoc?.map((mon) => (
-                            <Col key={mon} xs={12} sm={12} md={6} lg={6}>
-                              <FormItem
-                                initialValue={_.get(
-                                  recordHoSo,
-                                  `${item.name.join('.')}.${kyHoc.name}.${MonToHop?.[mon]}`,
-                                  undefined,
-                                )}
-                                rules={[...rules.required]}
-                                name={[...item.name, kyHoc.name, MonToHop?.[mon]]}
-                                label={mon}
-                                style={{ width: '100%' }}
-                              >
-                                <InputNumber
-                                  step={0.1}
-                                  placeholder="Số thập phân dạng 0.0"
-                                  min={0}
-                                  max={10}
+                  {arrKyHocFinal?.map((kyHoc) => {
+                    const cauHinhKyHoc =
+                      props?.cauHinh?.danhSach?.thongTinHocTapTHPT?.[item.field]?.[kyHoc.name];
+                    return (
+                      <>
+                        {arrKyHocFinal?.length > 1 && (
+                          <b>
+                            {item.field === 'truongLop12' && record?.choPhepHK1HoacCaNamLop12
+                              ? `${kyHoc?.label} hoặc Học kỳ 1`
+                              : kyHoc?.label}
+                          </b>
+                        )}
+                        <Col span={24}>
+                          <Row gutter={[10, 0]}>
+                            {cauHinhKyHoc?.diemToHop &&
+                              arrMonHoc?.map((mon) => (
+                                <Col key={mon} xs={12} sm={12} md={6} lg={6} xxl={4}>
+                                  <FormItem
+                                    initialValue={_.get(
+                                      recordHoSo,
+                                      `${item.name.join('.')}.${kyHoc.name}.${MonToHop?.[mon]}`,
+                                      undefined,
+                                    )}
+                                    rules={
+                                      cauHinhKyHoc?.diemToHop?.required ? [...rules.required] : []
+                                    }
+                                    name={[...item.name, kyHoc.name, MonToHop?.[mon]]}
+                                    label={mon}
+                                    style={{ width: '100%' }}
+                                  >
+                                    <InputNumber
+                                      step={0.1}
+                                      placeholder="Số thập phân dạng 0.0"
+                                      min={0}
+                                      max={10}
+                                      style={{ width: '100%' }}
+                                    />
+                                  </FormItem>
+                                </Col>
+                              ))}
+                            {cauHinhKyHoc?.diemTBC && (
+                              <Col xs={12} sm={12} md={6} lg={6} xxl={4}>
+                                <FormItem
+                                  rules={cauHinhKyHoc?.diemTBC?.required ? [...rules.required] : []}
+                                  initialValue={_.get(
+                                    recordHoSo,
+                                    `${item.name.join('.')}.${kyHoc.name}.diemTBC`,
+                                    undefined,
+                                  )}
+                                  name={[...item.name, kyHoc.name, 'diemTBC']}
+                                  label="Tổng kết"
                                   style={{ width: '100%' }}
-                                />
-                              </FormItem>
-                            </Col>
-                          ))}
-                          <Col xs={12} sm={12} md={6} lg={6}>
-                            <FormItem
-                              rules={[...rules.required]}
-                              initialValue={_.get(
-                                recordHoSo,
-                                `${item.name.join('.')}.${kyHoc.name}.diemTBC`,
-                                undefined,
-                              )}
-                              name={[...item.name, kyHoc.name, 'diemTBC']}
-                              label="Tổng kết"
-                              style={{ width: '100%' }}
-                            >
-                              <InputNumber
-                                placeholder="Số thập phân dạng 0.0"
-                                min={0}
-                                max={10}
-                                style={{ width: '100%' }}
-                              />
-                            </FormItem>
-                          </Col>
-                        </Row>
-                      </Col>
-                    </>
-                  ))}
+                                >
+                                  <InputNumber
+                                    placeholder="Số thập phân dạng 0.0"
+                                    min={0}
+                                    max={10}
+                                    style={{ width: '100%' }}
+                                  />
+                                </FormItem>
+                              </Col>
+                            )}
+                          </Row>
+                        </Col>
+                      </>
+                    );
+                  })}
                 </Row>
               );
             })}

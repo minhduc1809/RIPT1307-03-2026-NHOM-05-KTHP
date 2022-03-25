@@ -150,6 +150,13 @@ export enum ETrangThaiXacNhanNhapHoc {
   XAC_NHAN = 'Xác nhận',
   KHONG_XAC_NHAN = 'Không xác nhận',
   CHUA_XAC_NHAN = 'Chưa xác nhận',
+  DA_TIEP_NHAN = 'Đã tiếp nhận',
+  KHONG_TIEP_NHAN = 'Không tiếp nhận',
+}
+
+export enum EModeKhoiTao {
+  SO_LUONG = 'SO_LUONG',
+  DIEM_SAN = 'DIEM_SAN',
 }
 
 export enum ETenTruongThongTin {

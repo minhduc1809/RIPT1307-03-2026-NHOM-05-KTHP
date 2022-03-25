@@ -5,6 +5,7 @@ import type {
   ETrangThaiHoSo,
 } from '@/utils/constants';
 import type { Login } from '../ant-design-pro/typings';
+import type { DotTuyenSinh } from '../DotTuyenSinh/typings';
 
 declare module HoSoXetTuyen {
   export interface Record {
@@ -14,7 +15,7 @@ declare module HoSoXetTuyen {
     thongTinGiaiKHKT: ThongTinGiaiKHKT;
     thongTinGiaiQuocGia: ThongTinGiaiQuocGia;
     thongTinGiaiTinhTP: ThongTinGiaiTinhTP;
-    thongTinGiayToNopOnline: GiayToNopOnline[];
+    thongTinGiayToNopOnline: DotTuyenSinh.GiayTo[];
     thongTinKetQuaDanhGiaNangLuc: ThongTinKetQuaDanhGiaNangLuc;
     thongTinKetQuaThiTHPT: ThongTinKetQuaThiTHPT;
     thongTinChungChiNgoaiNgu: ThongTinChungChiNgoaiNgu;
@@ -27,9 +28,9 @@ declare module HoSoXetTuyen {
     idDotTuyenSinh: string;
     maHoSo: string;
     trangThai: ETrangThaiHoSo;
-    danhSachNguyenVong: any[];
+    danhSachNguyenVong: NguyenVong[];
     trangThaiThanhToan: string;
-    thongTinGiayToNopHoSo: any[];
+    thongTinGiayToNopHoSo: DotTuyenSinh.GiayTo[];
     thongTinGiaDinh: any[];
     createdAt: string;
     updatedAt: string;
@@ -140,19 +141,6 @@ declare module HoSoXetTuyen {
     namDatGiaiHSGTinhTP: number;
     noiCapGiaiHSGTinhTP: string;
     urlBangKhenHSGTinhTP: string[];
-  }
-
-  export interface GiayToNopOnline {
-    ten: string;
-    soLuong: number;
-    ghiChu: string;
-    soLuongNop: number;
-    ghiChuNop: string;
-    urlGiayToNop: string[];
-    soLuongTiepNhan: number;
-    ghiChuTiepNhan: string;
-    maGiayTo: string;
-    thoiGianNop: string;
   }
 
   export interface ThongTinKetQuaDanhGiaNangLuc {

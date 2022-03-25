@@ -17,6 +17,8 @@ const BlockChungChiQuocTe = (props: { form: FormInstance; cauHinh: any }) => {
     recordHoSo?.thongTinChungChiQuocTe?.loaiChungChiQuocTe ?? '',
   );
 
+  const cauHinhChungChi = props?.cauHinh?.danhSach?.[loaiChungChi];
+
   return (
     <>
       <Col xs={24} md={8} lg={6} sm={12}>
@@ -46,11 +48,10 @@ const BlockChungChiQuocTe = (props: { form: FormInstance; cauHinh: any }) => {
           </Select>
         </FormItem>
       </Col>
-      {((loaiChungChi && props?.cauHinh?.danhSach?.[loaiChungChi]?.maDuThiChungChiQuocTe) ||
-        !loaiChungChi) && (
+      {((loaiChungChi && cauHinhChungChi?.maDuThiChungChiQuocTe) || !loaiChungChi) && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
-            rules={[...rules.required]}
+            rules={cauHinhChungChi?.maDuThiChungChiQuocTe?.required ? [...rules.required] : []}
             initialValue={recordHoSo?.thongTinChungChiQuocTe?.maDuThiChungChiQuocTe}
             label="Mã dự thi"
             name={['thongTinChungChiQuocTe', 'maDuThiChungChiQuocTe']}
@@ -59,30 +60,28 @@ const BlockChungChiQuocTe = (props: { form: FormInstance; cauHinh: any }) => {
           </FormItem>
         </Col>
       )}
-      {((loaiChungChi && props?.cauHinh?.danhSach?.[loaiChungChi]?.diemChungChiQuocTe) ||
-        !loaiChungChi) && (
+      {((loaiChungChi && cauHinhChungChi?.diemChungChiQuocTe) || !loaiChungChi) && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
-            rules={[...rules.required]}
+            rules={cauHinhChungChi?.diemChungChiQuocTe?.required ? [...rules.required] : []}
             initialValue={recordHoSo?.thongTinChungChiQuocTe?.diemChungChiQuocTe}
             label="Điểm thi"
             name={['thongTinChungChiQuocTe', 'diemChungChiQuocTe']}
           >
             <InputNumber
-              step={props?.cauHinh?.danhSach?.[loaiChungChi]?.diemChungChiQuocTe?.step}
-              min={props?.cauHinh?.danhSach?.[loaiChungChi]?.diemChungChiQuocTe?.min}
-              max={props?.cauHinh?.danhSach?.[loaiChungChi]?.diemChungChiQuocTe?.max}
+              step={cauHinhChungChi?.diemChungChiQuocTe?.step}
+              min={cauHinhChungChi?.diemChungChiQuocTe?.min}
+              max={cauHinhChungChi?.diemChungChiQuocTe?.max}
               placeholder="Nhập điểm thi"
               style={{ width: '100%' }}
             />
           </FormItem>
         </Col>
       )}
-      {((loaiChungChi && props?.cauHinh?.danhSach?.[loaiChungChi]?.ngayCapChungChiQuocTe) ||
-        !loaiChungChi) && (
+      {((loaiChungChi && cauHinhChungChi?.ngayCapChungChiQuocTe) || !loaiChungChi) && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
-            rules={[...rules.required]}
+            rules={cauHinhChungChi?.ngayCapChungChiQuocTe?.required ? [...rules.required] : []}
             initialValue={
               recordHoSo?.thongTinChungChiQuocTe?.ngayCapChungChiQuocTe
                 ? moment(recordHoSo?.thongTinChungChiQuocTe?.ngayCapChungChiQuocTe)
@@ -99,11 +98,10 @@ const BlockChungChiQuocTe = (props: { form: FormInstance; cauHinh: any }) => {
           </FormItem>
         </Col>
       )}
-      {((loaiChungChi && props?.cauHinh?.danhSach?.[loaiChungChi]?.donViCapChungChiQuocTe) ||
-        !loaiChungChi) && (
+      {((loaiChungChi && cauHinhChungChi?.donViCapChungChiQuocTe) || !loaiChungChi) && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
-            rules={[...rules.required]}
+            rules={cauHinhChungChi?.donViCapChungChiQuocTe?.required ? [...rules.required] : []}
             initialValue={recordHoSo?.thongTinChungChiQuocTe?.donViCapChungChiQuocTe}
             label="Đơn vị cấp chứng chỉ"
             name={['thongTinChungChiQuocTe', 'donViCapChungChiQuocTe']}
@@ -112,11 +110,10 @@ const BlockChungChiQuocTe = (props: { form: FormInstance; cauHinh: any }) => {
           </FormItem>
         </Col>
       )}
-      {((loaiChungChi && props?.cauHinh?.danhSach?.[loaiChungChi]?.urlChungChiQuocTe) ||
-        !loaiChungChi) && (
+      {((loaiChungChi && cauHinhChungChi?.urlChungChiQuocTe) || !loaiChungChi) && (
         <Col xs={24} md={8} lg={6} sm={12}>
           <FormItem
-            rules={[...rules.fileRequired]}
+            rules={cauHinhChungChi?.urlChungChiQuocTe?.required ? [...rules.fileRequired] : []}
             initialValue={renderFileList(
               recordHoSo?.thongTinChungChiQuocTe?.urlChungChiQuocTe ?? [],
             )}
@@ -129,7 +126,7 @@ const BlockChungChiQuocTe = (props: { form: FormInstance; cauHinh: any }) => {
                 multiple: true,
                 showUploadList: { showDownloadIcon: false },
               }}
-              limit={props?.cauHinh?.danhSach?.[loaiChungChi]?.urlChungChiQuocTe?.maxLength ?? 5}
+              limit={cauHinhChungChi?.urlChungChiQuocTe?.maxLength ?? 5}
             />
           </FormItem>
         </Col>

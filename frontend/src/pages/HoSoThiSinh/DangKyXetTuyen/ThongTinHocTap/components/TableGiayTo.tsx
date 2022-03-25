@@ -1,0 +1,85 @@
+import { useModel } from 'umi';
+import { FormItem } from '@/components/FormItem';
+import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
+import type { IColumn } from '@/utils/interfaces';
+import { renderFileList } from '@/utils/utils';
+import { Table } from 'antd';
+import Upload from '@/components/Upload/UploadMultiFile';
+import rules from '@/utils/rules';
+
+const TableGiayTo = (props: { fieldName: 'thongTinGiayToNopHoSo' | 'thongTinGiayToNopOnline' }) => {
+  const { record } = useModel('dottuyensinh');
+  const { recordHoSo } = useModel('hosoxettuyen');
+  const columns: IColumn<DotTuyenSinh.GiayTo>[] = [
+    {
+      title: 'STT',
+      dataIndex: 'index',
+      width: 80,
+      align: 'center',
+      render: (val) => <div>{val + 1}</div>,
+    },
+    {
+      title: 'Tên giấy tờ',
+      dataIndex: 'ten',
+      width: 200,
+      align: 'center',
+      search: 'search',
+    },
+    {
+      title: 'Số lượng',
+      dataIndex: 'soLuong',
+      width: 80,
+      align: 'center',
+      hide: props?.fieldName === 'thongTinGiayToNopOnline',
+    },
+    {
+      title: 'Ghi chú',
+      dataIndex: 'ghiChu',
+      align: 'center',
+      width: 200,
+      hide: props?.fieldName === 'thongTinGiayToNopOnline',
+    },
+    {
+      title: 'Bắt buộc',
+      dataIndex: 'required',
+      width: 80,
+      align: 'center',
+      render: (val) => <div>{val ? 'Có' : 'Không'}</div>,
+    },
+    {
+      title: 'File đính kèm',
+      dataIndex: 'urlGiayToNop',
+      width: 200,
+      align: 'center',
+      render: (val, recordGiayTo: DotTuyenSinh.GiayTo) => (
+        <FormItem
+          initialValue={renderFileList(
+            recordHoSo?.[props.fieldName]?.find((item) => item.maGiayTo === recordGiayTo.maGiayTo)
+              ?.urlGiayToNop ?? [],
+          )}
+          rules={recordGiayTo?.required ? [...rules.fileRequired] : []}
+          name={[props.fieldName, recordGiayTo?.index ?? 0]}
+        >
+          <Upload
+            otherProps={{
+              accept: 'application/pdf, image/png, .jpg',
+              multiple: true,
+              showUploadList: { showDownloadIcon: false },
+            }}
+            limit={5}
+          />
+        </FormItem>
+      ),
+    },
+  ];
+
+  return (
+    <Table
+      pagination={false}
+      columns={columns?.filter((item) => item?.hide !== true)}
+      dataSource={record?.[props.fieldName]?.map((item, index) => ({ ...item, index }))}
+    />
+  );
+};
+
+export default TableGiayTo;

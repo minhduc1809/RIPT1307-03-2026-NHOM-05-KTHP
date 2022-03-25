@@ -21,6 +21,8 @@ export default () => {
   const [danhSachNganh, setDanhSachNganh] = useState<DotTuyenSinh.NganhTuyenSinh[]>([]);
   const [editGiayTo, setEditGiayTo] = useState<boolean>(false);
   const [visibleFormGiayTo, setVisibleFormGiayTo] = useState<boolean>(false);
+  const [visibleFormGiayToNopHoSo, setVisibleFormGiayToNopHoSo] = useState<boolean>(false);
+  const [visibleFormGiayToNopOnline, setVisibleFormGiayToNopOnline] = useState<boolean>(false);
   const [visibleFormNganh, setVisibleFormNganh] = useState<boolean>(false);
   const [recordGiayTo, setRecordGiayTo] = useState<DotTuyenSinh.GiayTo>();
   const [recordNganh, setRecordNganh] = useState<DotTuyenSinh.NganhTuyenSinh>();
@@ -94,6 +96,10 @@ export default () => {
   };
 
   return {
+    visibleFormGiayToNopHoSo,
+    setVisibleFormGiayToNopHoSo,
+    visibleFormGiayToNopOnline,
+    setVisibleFormGiayToNopOnline,
     visibleFormNganh,
     setVisibleFormNganh,
     recordNganh,

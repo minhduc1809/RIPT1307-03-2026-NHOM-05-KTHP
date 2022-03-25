@@ -46,7 +46,7 @@ const BlockDanhGiaNangLuc = (props: { cauHinh: any }) => {
       {itemCauHinh?.[donVi]?.diemDanhGiaNangLuc && (
         <Col xs={12} sm={12} md={8} lg={8}>
           <FormItem
-            rules={[...rules.required]}
+            rules={itemCauHinh?.[donVi]?.diemDanhGiaNangLuc?.required ? [...rules.required] : []}
             labelCol={{ span: 24 }}
             wrapperCol={{ span: 24 }}
             label="Điểm đánh giá năng lực"
@@ -66,7 +66,9 @@ const BlockDanhGiaNangLuc = (props: { cauHinh: any }) => {
       {itemCauHinh?.[donVi]?.ngayDuThiDanhGiaNangLuc && (
         <Col xs={12} sm={12} md={8} lg={8}>
           <FormItem
-            rules={[...rules.required]}
+            rules={
+              itemCauHinh?.[donVi]?.ngayDuThiDanhGiaNangLuc?.required ? [...rules.required] : []
+            }
             initialValue={
               recordHoSo?.thongTinKetQuaDanhGiaNangLuc?.ngayDuThiDanhGiaNangLuc
                 ? moment(recordHoSo?.thongTinKetQuaDanhGiaNangLuc?.ngayDuThiDanhGiaNangLuc)
@@ -88,7 +90,11 @@ const BlockDanhGiaNangLuc = (props: { cauHinh: any }) => {
       {itemCauHinh?.[donVi]?.urlGiayXacNhanDanhGiaNangLuc && (
         <Col xs={24} md={8} lg={8} sm={12}>
           <FormItem
-            rules={[...rules.fileRequired]}
+            rules={
+              itemCauHinh?.[donVi]?.urlGiayXacNhanDanhGiaNangLuc?.required
+                ? [...rules.fileRequired]
+                : []
+            }
             initialValue={renderFileList(
               recordHoSo?.thongTinKetQuaDanhGiaNangLuc?.urlGiayXacNhanDanhGiaNangLuc ?? [],
             )}

@@ -6,6 +6,7 @@ import { Col, Form, Input, Row, Select } from 'antd';
 import type { FormInstance } from 'antd/es/form/Form';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
+import _ from 'lodash';
 
 type Props = {
   type: '10' | '11' | '12';
@@ -45,9 +46,11 @@ const TruongTHPT = (props: Props) => {
   const { danhSachTinh, loading, getTinhTPModel, getQuanHuyenModel, getTruongTHPTModel } =
     modelTruongTHPT;
 
-  const [maQuanHuyen, setMaQuanHuyen] = useState<string>(props?.initialValue?.maQuanHuyen ?? '');
-  const [maTinh, setMaTinh] = useState<string>(props?.initialValue?.maTinh ?? '');
-  const [maTruong, setMaTruong] = useState<string>(props?.initialValue?.maTruong ?? '');
+  const [maQuanHuyen, setMaQuanHuyen] = useState<string | undefined>(
+    props?.initialValue?.maQuanHuyen,
+  );
+  const [maTinh, setMaTinh] = useState<string | undefined>(props?.initialValue?.maTinh);
+  const [maTruong, setMaTruong] = useState<string | undefined>(props?.initialValue?.maTruong);
 
   useEffect(() => {
     getTinhTPModel();
@@ -60,7 +63,7 @@ const TruongTHPT = (props: Props) => {
   }, [maTinh]);
 
   useEffect(() => {
-    if (maQuanHuyen) {
+    if (maQuanHuyen && maTinh) {
       getTruongTHPTModel(maTinh, maQuanHuyen, props.type);
     }
   }, [maTinh, maQuanHuyen]);
@@ -89,12 +92,14 @@ const TruongTHPT = (props: Props) => {
                   danhSachTinh?.find((item) => item.maTinh === val)?.tenTinhTP,
                 );
                 setMaTinh(val);
+                setMaTruong(undefined);
+                setMaQuanHuyen(undefined);
                 modelTruongTHPT?.[`setDanhSachTruongTHPT${props.type}`]([]);
+                modelHoSoXetTuyen?.[`setIsTruongChuyenLop${props.type}`](false);
+                modelHoSoXetTuyen?.[`setKhuVucUuTienLop${props.type}`](undefined);
                 const newValue = {};
-                newValue[`${props?.fields?.quanHuyen?.[0]}`] = {
-                  maQuanHuyen: undefined,
-                  maTruong: undefined,
-                };
+                _.set(newValue, props?.fields?.quanHuyen, undefined);
+                _.set(newValue, props?.fields?.truongTHPT, undefined);
                 props.form.setFieldsValue(newValue);
               }}
               allowClear
@@ -131,10 +136,12 @@ const TruongTHPT = (props: Props) => {
                   )?.tenQH,
                 );
                 setMaQuanHuyen(val);
+                setMaTruong(undefined);
+                modelTruongTHPT?.[`setDanhSachTruongTHPT${props.type}`]([]);
+                modelHoSoXetTuyen?.[`setIsTruongChuyenLop${props.type}`](false);
+                modelHoSoXetTuyen?.[`setKhuVucUuTienLop${props.type}`](undefined);
                 const newValue = {};
-                newValue[`${props?.fields?.quanHuyen?.[0]}`] = {
-                  maTruong: undefined,
-                };
+                _.set(newValue, props?.fields?.truongTHPT, undefined);
                 props.form.setFieldsValue(newValue);
               }}
               showSearch

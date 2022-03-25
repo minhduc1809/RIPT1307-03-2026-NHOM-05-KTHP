@@ -8,11 +8,14 @@ declare module DotTuyenSinh {
     ghiChu: string;
     soLuongNop: string;
     ghiChuNop: string;
-    urlGiayToNop: string;
+    urlGiayToNop: string[];
     soLuongTiepNhan: number;
     ghiChuTiepNhan: string;
     maGiayTo: string;
     thoiGianNop: string;
+    required: boolean;
+    textHuongDan: string;
+    urlHuongDan: string[];
   }
 
   export interface NganhTuyenSinh {
@@ -65,5 +68,6 @@ declare module DotTuyenSinh {
       thongTinDoiTuong: DoiTuongTuyenSinh.Record;
     }[];
     danhSachNganhTuyenSinh: NganhTuyenSinh[];
+    choPhepHK1HoacCaNamLop12: boolean;
   }
 }

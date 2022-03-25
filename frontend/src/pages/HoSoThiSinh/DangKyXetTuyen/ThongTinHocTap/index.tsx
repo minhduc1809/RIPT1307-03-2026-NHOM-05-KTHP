@@ -1,5 +1,5 @@
 import { FormItem } from '@/components/FormItem';
-import Upload from '@/components/Upload/UploadMultiFile';
+import TableGiayTo from './components/TableGiayTo';
 import {
   arrKhuVucUuTien,
   doiTuongUuTienTuyenSinh,
@@ -11,13 +11,7 @@ import {
   Setting,
 } from '@/utils/constants';
 import rules from '@/utils/rules';
-import {
-  calculateChuyen,
-  calculateKhuVuc,
-  checkFileSize,
-  renderFileList,
-  uploadMultiFile,
-} from '@/utils/utils';
+import { calculateChuyen, calculateKhuVuc, checkFileSize, uploadMultiFile } from '@/utils/utils';
 import { ArrowLeftOutlined, ArrowRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import {
   Button,
@@ -67,7 +61,6 @@ const QuaTrinhHocTap = () => {
   const { tenTruong10, tenTruong11, tenTruong12, setTenTruong10, setTenTruong11, setTenTruong12 } =
     useModel('truongthpt');
 
-  const [doiTuongXetTuyen, setDoiTuongXetTuyen] = useState<string>(recordHoSo?.maDoiTuong ?? '');
   const [cauHinhDoiTuong, setCauHinhDoiTuong] = useState<any>(
     record?.danhSachDoiTuongTuyenSinh?.find((item) => item?.maDoiTuong === recordHoSo?.maDoiTuong)
       ?.cauHinhDoiTuong ?? {},
@@ -79,11 +72,6 @@ const QuaTrinhHocTap = () => {
   );
   const [isChuyenTruong, setIsChuyenTruong] = useState<boolean>(false);
   const [typeHSG, setTypeHSG] = useState<string | string[] | undefined>(recordHoSo?.giaiHSG);
-  const [namTotNghiep, setNamTotNghiep] = useState<number>(
-    recordHoSo?.thongTinHocTapTHPT?.namTotNghiep ||
-      record?.namTuyenSinh ||
-      new Date().getFullYear(),
-  );
 
   const [ngonNgu, setNgonNgu] = useState<string | string[] | undefined>(recordHoSo?.ngonNgu);
 
@@ -137,8 +125,6 @@ const QuaTrinhHocTap = () => {
           form={form}
           onFinish={async (values) => {
             const arrFieldNameUpload = [
-              'urlChungNhanDoiTuongUuTien',
-              'urlHocBa',
               'urlBangKhenHSGQG',
               'urlBangKhenHSGTinhTP',
               'urlChungChiTiengAnh',
@@ -146,12 +132,26 @@ const QuaTrinhHocTap = () => {
               'urlChungChiQuocTe',
               'urlGiayXacNhanDanhGiaNangLuc',
             ];
+
             for (const item of arrFieldNameUpload) {
               if (values[item]?.fileList) {
                 const checkSize = checkFileSize(values[item]?.fileList ?? []);
                 if (!checkSize) return;
                 values[item] = await uploadMultiFile(values[item]?.fileList ?? []);
               }
+            }
+            let index = 0;
+            for (const item of values?.thongTinGiayToNopOnline) {
+              if (item?.fileList) {
+                const checkSize = checkFileSize(item?.fileList ?? []);
+                if (!checkSize) return;
+                const urlGiayToNop = await uploadMultiFile(item?.fileList ?? []);
+                values.thongTinGiayToNopOnline[index] = {
+                  ...record?.thongTinGiayToNopOnline?.[index],
+                  urlGiayToNop,
+                };
+              }
+              index += 1;
             }
             values.thongTinHocTapTHPT.truongLop10 = {
               ...values?.thongTinHocTapTHPT?.truongLop10,
@@ -191,6 +191,7 @@ const QuaTrinhHocTap = () => {
 
             const { truongChuyen, monChuyen } = calculateChuyen(values?.thongTinHocTapTHPT);
             const valueFinal: any = {
+              thongTinGiayToNopOnline: values?.thongTinGiayToNopOnline ?? [],
               ngonNgu: values?.ngonNgu,
               giaiHSG: values?.giaiHSG,
               toHopMongMuon: values?.toHopMongMuon ?? [],
@@ -238,7 +239,6 @@ const QuaTrinhHocTap = () => {
               maDoiTuong: values?.maDoiTuong,
               urlBangKhenHSGQG: undefined,
             };
-
             putMyThongTinXetTuyenModel(recordHoSo?._id ?? '', valueFinal);
           }}
         >
@@ -322,9 +322,6 @@ const QuaTrinhHocTap = () => {
                 style={{ width: '100%', marginBottom: '0' }}
               >
                 <InputNumber
-                  onChange={(val) => {
-                    setNamTotNghiep(val);
-                  }}
                   style={{ width: '100%' }}
                   placeholder="Năm tốt nghiệp"
                   max={new Date().getFullYear()}
@@ -362,7 +359,6 @@ const QuaTrinhHocTap = () => {
                       record?.danhSachDoiTuongTuyenSinh?.find((item) => item?.maDoiTuong === val)
                         ?.cauHinhDoiTuong,
                     );
-                    setDoiTuongXetTuyen(val);
                   }}
                   showSearch
                   placeholder="Chọn đối tượng"
@@ -396,7 +392,6 @@ const QuaTrinhHocTap = () => {
                     },
                     {
                       label: 'lớp 12',
-                      // namTotNghiep === new Date().getFullYear() ? 'học kỳ I lớp 12' : 'lớp 12',
                       name: ['thongTinHocTapTHPT', 'truongLop12'],
                       field: 'truongLop12',
                       show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop12,
@@ -420,60 +415,31 @@ const QuaTrinhHocTap = () => {
               </>
             )}
 
-            {doiTuongXetTuyen !== 'CQ_PTIT_DGNL1' && (
-              <BlockHanhKiem
-                arrHanhKiem={[
-                  { label: 'Lớp 10', name: ['thongTinHocTapTHPT', 'truongLop10', 'hanhKiem'] },
-                  {
-                    label: 'Lớp 11',
-                    name: ['thongTinHocTapTHPT', 'truongLop11', 'hanhKiem'],
-                  },
-                  {
-                    label: namTotNghiep === new Date().getFullYear() ? 'Học kỳ I lớp 12' : 'Lớp 12',
-                    name: ['thongTinHocTapTHPT', 'truongLop12', 'hanhKiem'],
-                  },
-                ]}
-              />
-            )}
-
-            <Divider plain>
-              <b>File minh chứng</b>
-            </Divider>
-            <Col xs={24} lg={12}>
-              <FormItem
-                initialValue={renderFileList(recordHoSo?.thongTinHocTapTHPT?.urlHocBa ?? [])}
-                rules={[...rules.fileRequired]}
-                name="urlHocBa"
-                label={<b>Phiếu điểm hoặc học bạ</b>}
-              >
-                <Upload
-                  otherProps={{
-                    accept: 'application/pdf, image/png, .jpg',
-                    multiple: true,
-                    showUploadList: { showDownloadIcon: false },
-                  }}
-                  limit={8}
-                />
-              </FormItem>
-            </Col>
-            <Col xs={24} lg={12}>
-              <FormItem
-                initialValue={renderFileList(
-                  recordHoSo?.thongTinHocTapTHPT?.urlChungNhanDoiTuongUuTien ?? [],
-                )}
-                label={<b>Giấy tờ đối tượng ưu tiên</b>}
-                name="urlChungNhanDoiTuongUuTien"
-              >
-                <Upload
-                  otherProps={{
-                    accept: 'application/pdf, image/png, .jpg',
-                    multiple: true,
-                    showUploadList: { showDownloadIcon: false },
-                  }}
-                  limit={8}
-                />
-              </FormItem>
-            </Col>
+            <BlockHanhKiem
+              arrHanhKiem={[
+                {
+                  label: 'Lớp 10',
+                  name: ['thongTinHocTapTHPT', 'truongLop10', 'hanhKiem'],
+                  show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10?.hanhKiem,
+                  required:
+                    cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10?.hanhKiem?.required,
+                },
+                {
+                  label: 'Lớp 11',
+                  name: ['thongTinHocTapTHPT', 'truongLop11', 'hanhKiem'],
+                  show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop11?.hanhKiem,
+                  required:
+                    cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10?.hanhKiem?.required,
+                },
+                {
+                  label: record?.choPhepHK1HoacCaNamLop12 ? 'Học kỳ I lớp 12' : 'Lớp 12',
+                  name: ['thongTinHocTapTHPT', 'truongLop12', 'hanhKiem'],
+                  show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop12?.hanhKiem,
+                  required:
+                    cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10?.hanhKiem?.required,
+                },
+              ]}
+            />
 
             {cauHinhDoiTuong?.danhSach?.thongTinChungChiQuocTe && (
               <>
@@ -618,6 +584,12 @@ const QuaTrinhHocTap = () => {
               </>
             )}
             <Col />
+            <Divider plain>
+              <b>Giấy tờ cần nộp</b>
+            </Divider>
+            <Col span={24}>
+              <TableGiayTo fieldName="thongTinGiayToNopOnline" />
+            </Col>
           </Row>
           <br />
           <b style={{ color: Setting.primaryColor }}>Lưu ý:</b>

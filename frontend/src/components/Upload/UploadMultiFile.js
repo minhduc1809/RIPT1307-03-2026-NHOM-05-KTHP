@@ -1,5 +1,6 @@
 import React from 'react';
 import { Upload, Icon, message, Button } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 /**
  * @param
  */
@@ -41,11 +42,7 @@ class PicturesWall extends React.Component {
     const { otherProps, value } = this.props;
     let initialList = fileList;
     if (fileList.length === 0 && Array.isArray(value?.fileList)) initialList = value?.fileList;
-    const uploadButton = (
-      <Button>
-        <Icon type="upload" /> Tải tệp
-      </Button>
-    );
+    const uploadButton = <Button icon={<UploadOutlined />}>Chọn tệp</Button>;
     // if (this.props.){
     // }
     return (

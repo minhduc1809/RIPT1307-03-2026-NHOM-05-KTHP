@@ -185,25 +185,27 @@ const TableBase = (props: Props) => {
     };
   };
 
-  const getFilterS = (dataIndex: any, columnKey: any) => ({
-    // cần đảm bảo trong file data.js đã có dữ liệu
-    // trangThaiDon  = [ 'Đang xử lý', 'Đã xử lý']
-    // dataIndex : 'trangThaiHienThi'
-    // columnKey :'trangThaiDon'
-    filters: (data?.[columnKey || dataIndex] ?? []).map((item: any) => {
-      const type = typeof item;
-      return {
-        text: type === 'string' ? item : item?.text ?? '', // cai hien thi ở ô lọc
-        value: type === 'string' ? item : item?.value,
-      };
-    }),
+  const getFilterS = (dataIndex: any, columnKey: any) => {
+    return {
+      // cần đảm bảo trong file data.js đã có dữ liệu
+      // trangThaiDon  = [ 'Đang xử lý', 'Đã xử lý']
+      // dataIndex : 'trangThaiHienThi'
+      // columnKey :'trangThaiDon'
+      filters: (data?.[columnKey || dataIndex] ?? []).map((item: any) => {
+        const type = typeof item;
+        return {
+          text: type === 'string' ? item : item?.text ?? '', // cai hien thi ở ô lọc
+          value: type === 'string' ? item : item?.value,
+        };
+      }),
 
-    onFilter: () => true,
-    // đồng bộ với cond đang search
-    filteredValue: getCondValue(dataIndex),
-    filterMultiple: false,
-    // render: (item: string | number) => item ?? 'Chưa xác định',
-  });
+      onFilter: () => true,
+      // đồng bộ với cond đang search
+      filteredValue: getCondValue(dataIndex),
+      filterMultiple: false,
+      // render: (item: string | number) => item ?? 'Chưa xác định',
+    };
+  };
 
   const getSortValue = (dataIndex: any) => {
     if (getCondValue('sort') !== dataIndex) {

@@ -236,6 +236,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
       otherProps={{ scroll: { x: 1300 } }}
     >
       <Select
+        placeholder="Hình thức đào tạo"
         onChange={(val) => {
           setRecordNamTuyenSinh(undefined);
           setRecordDotTuyenSinh(undefined);
@@ -249,6 +250,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
         style={{ width: 120, marginRight: 8 }}
       />
       <Select
+        placeholder="Năm tuyển sinh"
         onChange={(val) => {
           setRecordDotTuyenSinh(undefined);
           setRecordNamTuyenSinh(danhSachNam?.find((item) => item.nam === val));
@@ -261,6 +263,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
         style={{ width: 180, marginRight: 8 }}
       />
       <Select
+        placeholder="Đợt tuyển sinh"
         onChange={(val) => setRecordDotTuyenSinh(danhSachDot?.find((item) => item._id === val))}
         value={recordDotTuyenSinh?._id}
         options={danhSachDot?.map((item) => ({

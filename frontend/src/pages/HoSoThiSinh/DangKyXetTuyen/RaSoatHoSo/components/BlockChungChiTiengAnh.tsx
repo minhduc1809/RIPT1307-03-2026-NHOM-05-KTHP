@@ -72,6 +72,7 @@ const BlockChungChiTiengAnh = (props: { index?: number }) => {
         </Item>
       </Descriptions>
       <Table
+        size="small"
         pagination={false}
         bordered
         columns={columnChungChi}

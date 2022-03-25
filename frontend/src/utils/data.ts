@@ -1,3 +1,5 @@
+import { ETrangThaiXacNhanNhapHoc } from './constants';
+
 const data: any = {
   trangThai: [
     { value: 'PROCESSING', text: 'Đang xử lý' },
@@ -18,6 +20,12 @@ const data: any = {
   'info.anToan': [
     { value: false, text: 'Không an toàn' },
     { value: true, text: 'An toàn' },
+  ],
+
+  'thongTinXacNhanNhapHoc.trangThaiXacNhan': [
+    ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
+    ETrangThaiXacNhanNhapHoc.XAC_NHAN,
+    ETrangThaiXacNhanNhapHoc.KHONG_XAC_NHAN,
   ],
 
   loaiHinhDaoTao: ['Đại học Chính quy', 'Đại học Phi chính quy', 'Sau Đại học', 'Liên kết quốc tế'],

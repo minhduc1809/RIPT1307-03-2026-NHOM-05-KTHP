@@ -13,6 +13,7 @@ import {
   putMyTinhQuyDoiNguyenVong,
   adminTiepNhanHoSoByIdHoSo,
   khoaMyHoSo,
+  adminGetHoSoByIdHoSo,
 } from '@/services/HoSoXetTuyen/hosoxettuyen';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { ETrangThaiHoSo } from '@/utils/constants';
@@ -194,7 +195,16 @@ export default () => {
     }
   };
 
+  const adminGetHoSoByIdHoSoModel = async (idHoSo: string) => {
+    setLoading(true);
+    if (!idHoSo) return;
+    const response = await adminGetHoSoByIdHoSo(idHoSo);
+    setRecordHoSo(response?.data?.data ?? {});
+    setLoading(false);
+  };
+
   return {
+    adminGetHoSoByIdHoSoModel,
     khoaMyHoSoModel,
     adminTiepNhanHoSoByIdHoSoModel,
     setRecordHoSo,

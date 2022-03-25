@@ -255,6 +255,7 @@ export default defineConfig({
             {
               name: 'KetQuaXetTuyen',
               path: './ketquaxettuyen',
+              component: './KetQuaXetTuyen',
             },
           ],
         },
