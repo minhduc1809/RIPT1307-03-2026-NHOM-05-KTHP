@@ -287,6 +287,20 @@ export default defineConfig({
         },
       ],
     },
+    {
+      name: 'Biểu mẫu',
+      icon: 'FileDoneOutlined',
+      path: '/send_email',
+      access: 'admin',
+      routes: [
+        {
+          name: 'Gửi Email',
+          path: './send_email',
+          component: './SendEmail/index.tsx',
+        },
+      ],
+    },
+
     // {
     //   name: 'BieuMau',
     //   icon: 'FileDoneOutlined',

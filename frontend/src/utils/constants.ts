@@ -26,7 +26,7 @@ export enum ESystemRole {
 
 export enum Gender {
   Nam = 'Nam',
-  Nu = 'Nữ',
+  Nu = 'Nữ',
   Khac = 'Khác',
 }
 
