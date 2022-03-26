@@ -1,6 +1,7 @@
 import { Badge, Card, Col, Row } from 'antd';
 import styles from './index.less';
 import logo from '@/assets/logo.png';
+import { Setting } from '@/utils/constants';
 
 const GlobalFooter = () => (
   <Card bodyStyle={{ padding: '0px 24px' }}>
@@ -160,7 +161,7 @@ const GlobalFooter = () => (
     </Row>
     <Row>
       <Col xs={24}>
-        <div style={{ textAlign: 'center', color: '#C01718' }}>
+        <div style={{ textAlign: 'center', color: Setting.primaryColor }}>
           <b>© 2021 Designed and developed by A.I-SOFT</b>
         </div>
       </Col>

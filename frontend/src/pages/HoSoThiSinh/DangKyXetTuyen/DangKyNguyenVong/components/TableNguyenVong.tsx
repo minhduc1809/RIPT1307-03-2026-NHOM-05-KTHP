@@ -1,14 +1,15 @@
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { Setting } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import Icon, {
+import {
   CaretDownOutlined,
   CaretUpOutlined,
   DeleteOutlined,
+  EditOutlined,
   EllipsisOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import { Button, Col, Divider, Modal, Popconfirm, Popover, Row, Table } from 'antd';
+import { Button, Col, Divider, Modal, Popconfirm, Popover, Row, Table, Tooltip } from 'antd';
 import { useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
@@ -106,27 +107,27 @@ const TableNguyenVong = () => {
   const renderLast = (recordNguyenVong: HoSoXetTuyen.NguyenVong, index: number) => (
     <div style={{ textAlign: 'center' }}>
       <div style={{ marginBottom: 10 }}>
-        <Button
-          size="small"
-          onClick={() => suaNguyenVong(recordNguyenVong)}
-          style={{ width: '100%' }}
-        >
-          <Icon type="form" />
-          Chỉnh sửa
-        </Button>
+        <Tooltip title="Chỉnh sửa">
+          <Button
+            icon={<EditOutlined />}
+            size="small"
+            style={{ marginRight: 8 }}
+            onClick={() => suaNguyenVong(recordNguyenVong)}
+          />
+        </Tooltip>
+        <Tooltip title="Xóa">
+          <Popconfirm
+            placement="top"
+            title="Bạn có chắc muốn xóa nguyện vọng?"
+            onConfirm={() => xoaNguyenVong(index)}
+            okText="Có"
+            cancelText="Không"
+          >
+            <Button icon={<DeleteOutlined />} size="small" type="primary" />
+          </Popconfirm>
+        </Tooltip>
       </div>
-      <div style={{ marginBottom: 10 }} />
-      <Popconfirm
-        placement="top"
-        title="Bạn có chắc muốn xóa nguyện vọng?"
-        onConfirm={() => xoaNguyenVong(index)}
-        okText="Có"
-        cancelText="Không"
-      >
-        <Button icon={<DeleteOutlined />} size="small" type="primary" style={{ width: '100%' }}>
-          Xóa
-        </Button>
-      </Popconfirm>
+
       <div style={{ marginTop: 10 }}>
         <Button
           style={{ marginRight: 8 }}
@@ -146,7 +147,7 @@ const TableNguyenVong = () => {
   );
   const columnsNV: IColumn<HoSoXetTuyen.NguyenVong>[] = [
     {
-      title: 'STT',
+      title: 'TT',
       dataIndex: 'soThuTu',
       align: 'center',
       width: '80px',
@@ -167,13 +168,31 @@ const TableNguyenVong = () => {
       title: 'Tổ hợp',
       dataIndex: 'toHopXetTuyen',
       align: 'center',
-      width: '200px',
+      width: '100px',
     },
     {
-      title: 'Điểm quy đổi',
+      title: 'Điểm xét tuyển chưa có ưu tiên',
+      dataIndex: ['diemQuyDoi', 'thanhPhan'],
+      align: 'center',
+      width: '120px',
+      render: (val: HoSoXetTuyen.ThanhPhanDiemQuyDoi[]) => (
+        <div>
+          {val
+            ?.filter((item) => !item.tenThanhPhan.includes('Điểm'))
+            ?.map((item) => (
+              <div key={item._id}>
+                {item?.tenThanhPhan}: {item?.diem}
+              </div>
+            ))}
+        </div>
+      ),
+    },
+    {
+      title: 'Điểm xét tuyển có ưu tiên',
       dataIndex: ['diemQuyDoi', 'tongDiem'],
       align: 'center',
       width: '120px',
+      render: (val) => <div>{val && val !== -1 ? val : ''}</div>,
     },
     {
       title: 'Chi tiết thành phần',
@@ -207,10 +226,8 @@ const TableNguyenVong = () => {
         <b>Danh sách nguyện vọng</b>
       </Divider>
       <p style={{ margin: '12px 0px', color: Setting.primaryColor }}>
-        Lưu ý: Thí sinh có thể thay đổi thứ tự nguyện vọng bằng cách click vào
-        {window.screen.width > 991
-          ? ' dấu ba chấm ở mỗi nguyện vọng và kéo thả theo ý muốn hoặc di chuột vào một nguyện vọng và click vào nút mũi tên lên hoặc xuống.'
-          : ' nút mũi tên lên hoặc xuống ở cột thao tác đối với mỗi nguyện vọng'}
+        Lưu ý: Thí sinh có thể thay đổi thứ tự nguyện vọng bằng cách click vào nút mũi tên lên hoặc
+        xuống ở cột thao tác đối với mỗi nguyện vọng
       </p>
       <Button
         disabled={
@@ -235,7 +252,7 @@ const TableNguyenVong = () => {
           setIndexNV(-1);
         }}
       >
-        <Col xl={24} lg={24} md={0} xs={0} sm={0}>
+        <Col xl={0} lg={0} md={0} xs={0} sm={0}>
           <Row>
             <Col span={3} style={styleHeader}>
               Thứ tự nguyện vọng
@@ -344,8 +361,9 @@ const TableNguyenVong = () => {
         </Col>
       </Row>
       <Row>
-        <Col xl={0} lg={0} md={24} xs={24} sm={24}>
+        <Col xl={24} lg={24} md={24} xs={24} sm={24}>
           <Table
+            pagination={false}
             size="small"
             columns={columnsNV}
             dataSource={danhSachNguyenVong}

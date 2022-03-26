@@ -175,24 +175,29 @@ const FormDangKyNguyenVong = () => {
               }))}
           />
         </Form.Item>
-        <Form.Item
-          initialValue={recordNguyenVong?.toHopXetTuyen}
-          rules={[...rules.required]}
-          name="toHopXetTuyen"
-          label="Chọn tổ hợp xét tuyển"
-        >
-          <Select
-            showSearch
-            style={{ width: '100%' }}
-            placeholder="Tổ hợp xét tuyển"
-            options={record?.danhSachNganhTuyenSinh
-              ?.find((item) => item?.nganh?._id === idNganhChuyenNganh)
-              ?.danhSachToHop?.map((item) => ({
-                value: item,
-                label: `${item} (${ToHopXetTuyen[item]})`,
-              }))}
-          />
-        </Form.Item>
+        {record?.danhSachNganhTuyenSinh?.find((item) => item?.nganh?._id === idNganhChuyenNganh)
+          ?.danhSachToHop?.length ? (
+          <Form.Item
+            initialValue={recordNguyenVong?.toHopXetTuyen}
+            rules={[...rules.required]}
+            name="toHopXetTuyen"
+            label="Chọn tổ hợp xét tuyển"
+          >
+            <Select
+              showSearch
+              style={{ width: '100%' }}
+              placeholder="Tổ hợp xét tuyển"
+              options={record?.danhSachNganhTuyenSinh
+                ?.find((item) => item?.nganh?._id === idNganhChuyenNganh)
+                ?.danhSachToHop?.map((item) => ({
+                  value: item,
+                  label: `${item} (${ToHopXetTuyen[item]})`,
+                }))}
+            />
+          </Form.Item>
+        ) : (
+          <div />
+        )}
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
           <Button
             onClick={() => form.resetFields()}

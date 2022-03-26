@@ -105,11 +105,16 @@ export default () => {
     setLoading(true);
     const response = await putMyDanhSachNguyenVong(idHoSo, payload);
     if (response?.data?.data?.success === false) {
-      message?.error(response?.data?.data?.errorStrings);
+      message?.error(response?.data?.data?.errorStrings || response?.data?.data?.message);
     } else {
       const dot = localStorage.getItem('dot');
       if (dot) getMyHoSoXetTuyenModel(dot);
       message.success('Lưu thành công');
+      setCurrent(3);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     }
     setLoading(false);
   };

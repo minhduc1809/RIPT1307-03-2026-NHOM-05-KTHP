@@ -48,13 +48,8 @@ const DangKyNguyenVong = () => {
           disabled={danhSachNguyenVong.length === 0}
           type="primary"
           icon={<CheckOutlined />}
-          onClick={async () => {
-            await putMyDanhSachNguyenVongModel(recordHoSo?._id ?? '', { danhSachNguyenVong });
-            setCurrent(3);
-            window.scrollTo({
-              top: 0,
-              behavior: 'smooth',
-            });
+          onClick={() => {
+            putMyDanhSachNguyenVongModel(recordHoSo?._id ?? '', { danhSachNguyenVong });
           }}
         >
           Bước 4/4

@@ -66,6 +66,7 @@ export const MonToHop = {
   'Tiếng Anh': 'tongKetNgoaiNgu',
   'Lịch sử': 'tongKetSu',
   'Địa lý': 'tongKetDia',
+  'Tổng kết': 'diemTBC',
 };
 
 export enum ELoaiChungChiQuocTe {

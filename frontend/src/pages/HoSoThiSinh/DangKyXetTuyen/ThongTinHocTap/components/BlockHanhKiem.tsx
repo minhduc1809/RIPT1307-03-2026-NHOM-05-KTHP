@@ -11,7 +11,7 @@ const BlockHanhKiem = (props: {
 
   return (
     <>
-      {props.arrHanhKiem.length ? (
+      {props.arrHanhKiem?.filter((item) => item.show).length ? (
         <Divider plain>
           <b>Hạnh kiểm</b>
         </Divider>

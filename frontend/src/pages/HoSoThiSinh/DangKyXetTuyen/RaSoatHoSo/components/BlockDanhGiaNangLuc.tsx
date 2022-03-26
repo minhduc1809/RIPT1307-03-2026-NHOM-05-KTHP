@@ -1,4 +1,5 @@
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
+import { Setting } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { Descriptions, Table, Tag } from 'antd';
 import moment from 'moment';
@@ -38,7 +39,7 @@ const BlockDanhGiaNangLuc = (props: { index?: number }) => {
         value.map((item, indexChungChi) => (
           <>
             <a href={item} target="_blank" rel="noreferrer">
-              <Tag style={{ marginTop: 8 }} color="#c01718">{`Xem tập tin ${
+              <Tag style={{ marginTop: 8 }} color={Setting.primaryColor}>{`Xem tập tin ${
                 indexChungChi + 1
               }  `}</Tag>
             </a>{' '}

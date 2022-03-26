@@ -1,5 +1,4 @@
 import { FormItem } from '@/components/FormItem';
-import TableGiayTo from './components/TableGiayTo';
 import {
   arrKhuVucUuTien,
   doiTuongUuTienTuyenSinh,
@@ -34,9 +33,10 @@ import BlockChungChiTiengPhap from './components/BlockChungChiTiengPhap';
 import BlockDanhGiaNangLuc from './components/BlockDanhGiaNangLuc';
 import BlockGiaiHSG from './components/BlockGiaiHSG';
 import BlockHanhKiem from './components/BlockHanhKiem';
-import BlockKetQuaHocTapTHPT from './components/BlockKetQuaHocTapTHPT';
+import BlockTableDiemTHPT from './components/BlockTableDiemTHPT';
 import InfoDoiTuongKhuVuc from './components/InfoDoiTuongKhuVuc';
 import InfoTruongTHPT from './components/InfoTruongTHPT';
+import TableGiayTo from './components/TableGiayTo';
 
 const QuaTrinhHocTap = () => {
   const {
@@ -355,10 +355,35 @@ const QuaTrinhHocTap = () => {
               >
                 <Select
                   onChange={(val) => {
-                    setCauHinhDoiTuong(
-                      record?.danhSachDoiTuongTuyenSinh?.find((item) => item?.maDoiTuong === val)
-                        ?.cauHinhDoiTuong,
-                    );
+                    const cauHinh = record?.danhSachDoiTuongTuyenSinh?.find(
+                      (item) => item?.maDoiTuong === val,
+                    )?.cauHinhDoiTuong;
+                    setCauHinhDoiTuong(cauHinh);
+
+                    if (cauHinh?.danhSach?.thongTinChungChiNgoaiNgu) {
+                      // neu chi co 1 ngon ngu thi ko hien ra select chon ngon ngu nua, tu dong chon luon
+                      const arrNgonNguChungChiNgoaiNgu = Object.keys(
+                        cauHinh?.danhSach?.thongTinChungChiNgoaiNgu,
+                      );
+
+                      if (arrNgonNguChungChiNgoaiNgu?.length === 1) {
+                        setNgonNgu(MapKeyNgonNgu[arrNgonNguChungChiNgoaiNgu[0]]);
+                        form.setFieldsValue({
+                          ngonNgu: MapKeyNgonNgu[arrNgonNguChungChiNgoaiNgu[0]],
+                        });
+                      }
+                    }
+                    if (cauHinh?.danhSach?.thongTinGiaiHSG) {
+                      // neu chi co 1 cap HSG thi ko hien ra select chon cap nua, tu dong chon luon
+                      const arrCapHSG = Object.keys(cauHinh?.danhSach?.thongTinGiaiHSG);
+
+                      if (arrCapHSG?.length === 1) {
+                        setTypeHSG(MapKeyGiaiHSG[arrCapHSG[0]]);
+                        form.setFieldsValue({
+                          giaiHSG: MapKeyNgonNgu[MapKeyGiaiHSG[arrCapHSG[0]]],
+                        });
+                      }
+                    }
                   }}
                   showSearch
                   placeholder="Chọn đối tượng"
@@ -375,7 +400,7 @@ const QuaTrinhHocTap = () => {
 
             {cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT && (
               <>
-                <BlockKetQuaHocTapTHPT
+                {/* <BlockKetQuaHocTapTHPT
                   cauHinh={cauHinhDoiTuong}
                   arrLopHoc={[
                     {
@@ -411,7 +436,50 @@ const QuaTrinhHocTap = () => {
                       ? recordHoSo?.toHopMongMuon ?? []
                       : record?.danhSachToHopLuaChon ?? []
                   }
-                />
+                /> */}
+                <>
+                  <Divider plain>
+                    <b>Kết quả học tập THPT</b>
+                  </Divider>
+                  <BlockTableDiemTHPT
+                    haveSelectToHop={record?.suDungToHopMongMuon ?? false}
+                    cauHinh={cauHinhDoiTuong}
+                    arrLopHoc={[
+                      {
+                        label: 'Lớp 10',
+                        name: ['thongTinHocTapTHPT', 'truongLop10'],
+                        field: 'truongLop10',
+                        show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10,
+                      },
+                      {
+                        label: 'Lớp 11',
+                        name: ['thongTinHocTapTHPT', 'truongLop11'],
+                        field: 'truongLop11',
+                        show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop11,
+                      },
+                      {
+                        label: 'Lớp 12',
+                        name: ['thongTinHocTapTHPT', 'truongLop12'],
+                        field: 'truongLop12',
+                        show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop12,
+                      },
+                    ]}
+                    arrKyHoc={[
+                      { label: 'Học kỳ 1', name: 'kqhtHK1' },
+                      { label: 'Học kỳ 2', name: 'kqhtHK2' },
+                      {
+                        label: 'Cả năm',
+                        name: 'kqhtCaNam',
+                      },
+                    ]}
+                    // haveSelectToHop={record?.suDungToHopMongMuon ?? false}
+                    toHop={
+                      record?.suDungToHopMongMuon
+                        ? recordHoSo?.toHopMongMuon ?? []
+                        : record?.danhSachToHopLuaChon ?? []
+                    }
+                  />
+                </>
               </>
             )}
 
@@ -486,14 +554,21 @@ const QuaTrinhHocTap = () => {
 
                 {String(ngonNgu)?.includes(ELoaiNgoaiNgu.ANH) && (
                   <>
-                    <Divider plain>
-                      <b>Chứng chỉ tiếng Anh</b>
-                    </Divider>
-                    <Col span={24}>
-                      <Row gutter={[10, 0]}>
-                        <BlockChungChiTiengAnh cauHinh={cauHinhDoiTuong} form={form} />
-                      </Row>
-                    </Col>
+                    {cauHinhDoiTuong?.cauHinh?.selectModeChungChiNgoaiNgu === 'MULTIPLE' ? (
+                      <>
+                        {' '}
+                        <Divider plain>
+                          <b>Chứng chỉ tiếng Anh</b>
+                        </Divider>
+                        <Col span={24}>
+                          <Row gutter={[10, 0]}>
+                            <BlockChungChiTiengAnh cauHinh={cauHinhDoiTuong} form={form} />
+                          </Row>
+                        </Col>
+                      </>
+                    ) : (
+                      <BlockChungChiTiengAnh cauHinh={cauHinhDoiTuong} form={form} />
+                    )}
                   </>
                 )}
                 {String(ngonNgu)?.includes(ELoaiNgoaiNgu.PHAP) && (
@@ -541,36 +616,58 @@ const QuaTrinhHocTap = () => {
                     />
                   </FormItem>
                 </Col>
+
                 {String(typeHSG)?.includes(ELoaiGiaiHSG.QUOC_GIA) && (
                   <>
-                    <Divider plain>
-                      <b>Giải HSG Quốc gia</b>
-                    </Divider>
-                    <Col span={24}>
-                      <Row gutter={[10, 0]}>
-                        <BlockGiaiHSG
-                          cauHinh={cauHinhDoiTuong}
-                          fieldName={'thongTinGiaiQuocGia'}
-                          type={'QG'}
-                        />
-                      </Row>
-                    </Col>
+                    {cauHinhDoiTuong?.cauHinh?.selectModeGiaiHSG === 'MULTIPLE' ? (
+                      <>
+                        <Divider plain>
+                          <b>Giải HSG Quốc gia</b>
+                        </Divider>
+                        <Col span={24}>
+                          <Row gutter={[10, 0]}>
+                            <BlockGiaiHSG
+                              cauHinh={cauHinhDoiTuong}
+                              fieldName={'thongTinGiaiQuocGia'}
+                              type={'QG'}
+                            />
+                          </Row>
+                        </Col>
+                      </>
+                    ) : (
+                      <BlockGiaiHSG
+                        cauHinh={cauHinhDoiTuong}
+                        fieldName={'thongTinGiaiQuocGia'}
+                        type={'QG'}
+                      />
+                    )}
                   </>
                 )}
                 {String(typeHSG)?.includes(ELoaiGiaiHSG.TINH_TP) && (
                   <>
-                    <Divider plain>
-                      <b>Giải HSG Tỉnh/TP</b>
-                    </Divider>
-                    <Col span={24}>
-                      <Row gutter={[10, 0]}>
-                        <BlockGiaiHSG
-                          cauHinh={cauHinhDoiTuong}
-                          fieldName={'thongTinGiaiTinhTP'}
-                          type={'TinhTP'}
-                        />
-                      </Row>
-                    </Col>
+                    {cauHinhDoiTuong?.cauHinh?.selectModeGiaiHSG === 'MULTIPLE' ? (
+                      <>
+                        {' '}
+                        <Divider plain>
+                          <b>Giải HSG Tỉnh/TP</b>
+                        </Divider>
+                        <Col span={24}>
+                          <Row gutter={[10, 0]}>
+                            <BlockGiaiHSG
+                              cauHinh={cauHinhDoiTuong}
+                              fieldName={'thongTinGiaiTinhTP'}
+                              type={'TinhTP'}
+                            />
+                          </Row>
+                        </Col>
+                      </>
+                    ) : (
+                      <BlockGiaiHSG
+                        cauHinh={cauHinhDoiTuong}
+                        fieldName={'thongTinGiaiTinhTP'}
+                        type={'TinhTP'}
+                      />
+                    )}
                   </>
                 )}
               </>

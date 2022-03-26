@@ -135,7 +135,7 @@ class BaseView extends Component<BaseViewProps> {
               <Form.Item
                 initialValue={currentUser?.soDienThoai}
                 name="soDienThoai"
-                label="Email"
+                label="Số điện thoại"
                 rules={[...rules.soDienThoai]}
               >
                 <Input placeholder="Số điện thoại" />

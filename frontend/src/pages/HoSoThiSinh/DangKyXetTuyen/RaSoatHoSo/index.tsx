@@ -1,6 +1,6 @@
 import FormTiepNhanHoSo from '@/pages/TiepNhanHoSo/components/FormTiepNhanHoSo';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
-import { ELoaiNgoaiNgu, ETrangThaiHoSo } from '@/utils/constants';
+import { ELoaiNgoaiNgu, ETrangThaiHoSo, Setting } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import {
   CheckOutlined,
@@ -18,7 +18,6 @@ import BlockChungChiQuocTe from './components/BlockChungChiQuocTe';
 import BlockChungChiTiengAnh from './components/BlockChungChiTiengAnh';
 import BlockChungChiTiengPhap from './components/BlockChungChiTiengPhap';
 import BlockDanhGiaNangLuc from './components/BlockDanhGiaNangLuc';
-import BlockDiemTBC from './components/BlockDiemTBC';
 import BlockDiemTBCCacMon from './components/BlockDiemTBCCacMon';
 import BlockDoiTuongKhuVucUuTien from './components/BlockDoiTuongKhuVucUuTien';
 import BlockGiaiHSG from './components/BlockGiaiHSG';
@@ -76,7 +75,9 @@ const RaSoatHoSo = () => {
         Array.isArray(value) &&
         value.map((item, indexGiai) => (
           <a key={item} href={item} target="_blank" rel="noreferrer">
-            <Tag style={{ marginTop: 8 }} color="#c01718">{`Xem tập tin ${indexGiai + 1}`}</Tag>
+            <Tag style={{ marginTop: 8 }} color={Setting.primaryColor}>{`Xem tập tin ${
+              indexGiai + 1
+            }`}</Tag>
           </a>
         )),
     },
@@ -122,11 +123,10 @@ const RaSoatHoSo = () => {
               <BlockHanhKiem index={14} />
             )}
 
-            <BlockDiemTBC index={15} />
             {
               <BlockDiemTBCCacMon
                 cauHinh={cauHinhDoiTuong}
-                index={16}
+                index={15}
                 toHop={
                   record?.suDungToHopMongMuon
                     ? recordHoSo?.toHopMongMuon ?? []
@@ -134,19 +134,19 @@ const RaSoatHoSo = () => {
                 }
                 arrLopHoc={[
                   {
-                    label: 'lớp 10',
+                    label: 'Lớp 10',
                     name: ['thongTinHocTapTHPT', 'truongLop10'],
                     field: 'truongLop10',
                     show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10,
                   },
                   {
-                    label: 'lớp 11',
+                    label: 'Lớp 11',
                     name: ['thongTinHocTapTHPT', 'truongLop11'],
                     field: 'truongLop11',
                     show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop11,
                   },
                   {
-                    label: 'lớp 12',
+                    label: 'Lớp 12',
                     name: ['thongTinHocTapTHPT', 'truongLop12'],
                     field: 'truongLop12',
                     show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop12,

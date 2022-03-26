@@ -12,6 +12,9 @@ mm.tz.setDefault('Asia/Ho_Chi_Minh');
 const { Countdown } = Statistic;
 
 const Timeline = () => {
+  const isMediumScreen = useMediaQuery({
+    query: '(min-width: 1261px)',
+  });
   const { record, getDotTuyenSinhByIdModel } = useModel('dottuyensinh');
   const idDot = localStorage.getItem('dot');
   const isLargeScreen = useMediaQuery({
@@ -67,12 +70,12 @@ const Timeline = () => {
               <div
                 style={{
                   color: Setting.primaryColor,
-                  display: 'flex',
+                  display: isMediumScreen ? 'flex' : 'unset',
                   alignItems: 'baseline',
                   fontSize: 16,
                 }}
               >
-                {data[checkDay + 1].description ?? ''}:
+                {record?.tenDotTuyenSinh}, {data[checkDay + 1].description ?? ''}:
                 {data[checkDay + 1]?.title && data[checkDay + 1]?.title !== 'Chưa xác định' ? (
                   <>
                     <Countdown

@@ -5,6 +5,7 @@ import type { IColumn } from '@/utils/interfaces';
 import { Descriptions, Table } from 'antd';
 const { Item } = Descriptions;
 import { useModel } from 'umi';
+import _ from 'lodash';
 
 const BlockDiemTBCCacMon = (props: {
   cauHinh: any;
@@ -31,6 +32,18 @@ const BlockDiemTBCCacMon = (props: {
     });
   });
 
+  const renderLast = (val: any, record: any, lop: string[], ky: string) => {
+    const fieldName = record?.mon === 'diemTBC' ? 'diemTBC' : 'diemToHop';
+    const isYeuCau = _.get(
+      props?.cauHinh?.danhSach,
+      `${lop.join('.')}.${ky}.${fieldName}`,
+      undefined,
+    );
+    return <div>{isYeuCau ? val : 'Không yêu cầu'}</div>;
+  };
+
+  arrMonHoc.push('Tổng kết');
+
   const columns: IColumn<any>[] = props?.arrLopHoc
     ?.filter((item) => item.show)
     ?.map((lop) => {
@@ -38,9 +51,15 @@ const BlockDiemTBCCacMon = (props: {
         (kyHoc) => props?.cauHinh?.danhSach?.thongTinHocTapTHPT?.[lop.field]?.[kyHoc.name],
       );
       return {
-        title: lop?.label,
+        title:
+          arrKyHocFinal?.length > 1 ? lop?.label : `${arrKyHocFinal?.[0]?.label} ${lop?.label}`,
         align: 'center',
         width: 200,
+        dataIndex: arrKyHocFinal?.length > 1 ? undefined : [...lop.name, arrKyHocFinal?.[0]?.name],
+        render:
+          arrKyHocFinal?.length > 1
+            ? undefined
+            : (val, record) => renderLast(val, record, lop.name, arrKyHocFinal?.[0]?.name),
         children:
           arrKyHocFinal?.length > 1
             ? arrKyHocFinal?.map((kyHoc) => ({
@@ -48,6 +67,7 @@ const BlockDiemTBCCacMon = (props: {
                 align: 'center',
                 width: 100,
                 dataIndex: [...lop.name, kyHoc.name],
+                render: (val: any, record: any) => renderLast(val, record, lop.name, kyHoc.name),
               }))
             : [],
       };
@@ -55,20 +75,19 @@ const BlockDiemTBCCacMon = (props: {
   columns.splice(
     0,
     0,
+    // {
+    //   title: 'STT',
+    //   dataIndex: 'index',
+    //   align: 'center',
+    //   width: 70,
+    // },
     {
-      title: 'STT',
-      dataIndex: 'index',
-      align: 'center',
-      width: 70,
-    },
-    {
-      title: 'Tên môn',
+      title: 'Loại',
       dataIndex: 'tenMon',
       align: 'center',
       width: 100,
     },
   );
-
   return (
     <>
       <Descriptions>
@@ -77,7 +96,7 @@ const BlockDiemTBCCacMon = (props: {
           label={
             <span style={{ fontWeight: 'bold' }}>
               {' '}
-              {props?.index ? `${props?.index}.` : ''} Điểm TBC các môn
+              {props?.index ? `${props?.index}.` : ''} Kết quả học tập THPT
             </span>
           }
         >
@@ -91,6 +110,7 @@ const BlockDiemTBCCacMon = (props: {
           return {
             index: index + 1,
             tenMon: item,
+            mon: MonToHop?.[item],
             thongTinHocTapTHPT: {
               truongLop10: {
                 kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK1?.[MonToHop?.[item]],
@@ -99,16 +119,16 @@ const BlockDiemTBCCacMon = (props: {
                   recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtCaNam?.[MonToHop?.[item]],
               },
               truongLop11: {
-                kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK1?.[MonToHop?.[item]],
-                kqhtHK2: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK2?.[MonToHop?.[item]],
+                kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop11?.kqhtHK1?.[MonToHop?.[item]],
+                kqhtHK2: recordHoSo?.thongTinHocTapTHPT?.truongLop11?.kqhtHK2?.[MonToHop?.[item]],
                 kqhtCaNam:
-                  recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtCaNam?.[MonToHop?.[item]],
+                  recordHoSo?.thongTinHocTapTHPT?.truongLop11?.kqhtCaNam?.[MonToHop?.[item]],
               },
               truongLop12: {
-                kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK1?.[MonToHop?.[item]],
-                kqhtHK2: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK2?.[MonToHop?.[item]],
+                kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop12?.kqhtHK1?.[MonToHop?.[item]],
+                kqhtHK2: recordHoSo?.thongTinHocTapTHPT?.truongLop12?.kqhtHK2?.[MonToHop?.[item]],
                 kqhtCaNam:
-                  recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtCaNam?.[MonToHop?.[item]],
+                  recordHoSo?.thongTinHocTapTHPT?.truongLop12?.kqhtCaNam?.[MonToHop?.[item]],
               },
             },
           };

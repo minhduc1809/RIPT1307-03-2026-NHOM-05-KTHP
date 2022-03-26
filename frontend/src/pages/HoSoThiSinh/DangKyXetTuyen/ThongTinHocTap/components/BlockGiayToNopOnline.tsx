@@ -1,4 +1,5 @@
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
+import { Setting } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { Tag, Table, Descriptions } from 'antd';
 
@@ -30,7 +31,7 @@ const BlockGiayToNopOnline = (props: { index?: number }) => {
         <div>
           {val.map((x: string, indexFile: number) => (
             <a key={x} href={x} target="_blank" rel="noreferrer">
-              <Tag color="#c01718"> Xem tập tin {indexFile + 1}</Tag>
+              <Tag color={Setting.primaryColor}> Xem tập tin {indexFile + 1}</Tag>
             </a>
           ))}
         </div>
