@@ -4,34 +4,21 @@ import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
 import { useModel } from 'umi';
-import FormGiayTo from './FormGiayTo';
+import FormKhaiThongTinNhapHoc from './FormThongTinKhaiNhapHoc';
 
-const TableGiayTo = (props: {
-  fieldName: 'danhSachGiayToNopHoSo' | 'danhSachGiayToNopOnline' | 'danhSachGiayToXacNhanNhapHoc';
-}) => {
+const TableKhaiThongTinNhapHoc = () => {
   const modelDotTuyenSinh = useModel('dottuyensinh');
   const {
-    setVisibleFormGiayToNopHoSo,
-    setVisibleFormGiayToNopOnline,
-    setVisibleFormGiayToXacNhanNhapHoc,
-
-    visibleFormGiayToNopHoSo,
-    visibleFormGiayToNopOnline,
-    visibleFormGiayToXacNhanNhapHoc,
-
+    setVisibleFormThongTinKhaiXacNhan,
+    visibleFormThongTinKhaiXacNhan,
+    setdanhSachThongTinKhaiXacNhan,
+    danhSachThongTinKhaiXacNhan,
     setEditGiayTo,
-    setRecordGiayTo,
+    setRecordThongTinKhaiXacNhan,
   } = modelDotTuyenSinh;
 
-  let visible = visibleFormGiayToNopHoSo;
-  if (props.fieldName === 'danhSachGiayToNopOnline') visible = visibleFormGiayToNopOnline;
-  else if (props.fieldName === 'danhSachGiayToXacNhanNhapHoc')
-    visible = visibleFormGiayToXacNhanNhapHoc;
-
   const visibleForm = (show: boolean) => {
-    if (props.fieldName === 'danhSachGiayToNopHoSo') setVisibleFormGiayToNopHoSo(show);
-    else if (props.fieldName === 'danhSachGiayToNopOnline') setVisibleFormGiayToNopOnline(show);
-    else setVisibleFormGiayToXacNhanNhapHoc(show);
+    setVisibleFormThongTinKhaiXacNhan(show);
   };
 
   const columns: IColumn<DotTuyenSinh.GiayTo>[] = [
@@ -43,24 +30,16 @@ const TableGiayTo = (props: {
     },
     {
       title: 'Tên',
-      dataIndex: props.fieldName === 'danhSachGiayToXacNhanNhapHoc' ? 'tieuDe' : 'ten',
-      width: 200,
+      dataIndex: 'tieuDe',
       align: 'center',
       search: 'search',
     },
+
     {
-      title: 'Số lượng',
-      dataIndex: 'soLuong',
-      width: 80,
-      align: 'center',
-      hide: ['danhSachGiayToNopOnline', 'danhSachGiayToXacNhanNhapHoc'].includes(props.fieldName),
-    },
-    {
-      title: 'Ghi chú',
-      dataIndex: 'ghiChu',
+      title: 'Hướng dẫn',
+      dataIndex: 'textHuongDan',
       align: 'center',
       width: 200,
-      hide: ['danhSachGiayToNopOnline', 'danhSachGiayToXacNhanNhapHoc'].includes(props.fieldName),
     },
     {
       title: 'Bắt buộc',
@@ -73,14 +52,14 @@ const TableGiayTo = (props: {
       title: 'Thao tác',
       align: 'center',
       width: 150,
-      render: (record: DotTuyenSinh.GiayTo) => (
+      render: (record: DotTuyenSinh.ThongTinKhaiXacNhan) => (
         <>
           <Tooltip title="Chỉnh sửa">
             <Button
               onClick={() => {
                 setEditGiayTo(true);
                 visibleForm(true);
-                setRecordGiayTo(record);
+                setRecordThongTinKhaiXacNhan(record);
               }}
               shape="circle"
               icon={<EditOutlined />}
@@ -91,9 +70,9 @@ const TableGiayTo = (props: {
           <Tooltip title="Xóa">
             <Popconfirm
               onConfirm={() => {
-                const listGiayToTemp = [...modelDotTuyenSinh?.[props.fieldName]];
-                listGiayToTemp.splice(record.index - 1, 1);
-                modelDotTuyenSinh?.[`set${props.fieldName}`](listGiayToTemp);
+                const listThongTinTemp = [...danhSachThongTinKhaiXacNhan];
+                listThongTinTemp.splice(record.index - 1, 1);
+                setdanhSachThongTinKhaiXacNhan(listThongTinTemp);
               }}
               title="Bạn có chắc chắn muốn xóa?"
             >
@@ -112,7 +91,7 @@ const TableGiayTo = (props: {
           pagination: false,
           size: 'small',
         }}
-        data={modelDotTuyenSinh?.[props.fieldName]?.map((item, index) => ({
+        data={danhSachThongTinKhaiXacNhan?.map((item, index) => ({
           ...item,
           index: index + 1,
         }))}
@@ -124,7 +103,7 @@ const TableGiayTo = (props: {
           onClick={() => {
             visibleForm(true);
             setEditGiayTo(false);
-            setRecordGiayTo(undefined);
+            setRecordThongTinKhaiXacNhan(undefined);
           }}
         >
           Thêm mới
@@ -132,17 +111,17 @@ const TableGiayTo = (props: {
       </Table>
       <Modal
         destroyOnClose
-        visible={visible}
+        visible={visibleFormThongTinKhaiXacNhan}
         onCancel={() => {
           visibleForm(false);
         }}
         footer={false}
         bodyStyle={{ padding: 0 }}
       >
-        <FormGiayTo fieldName={props?.fieldName} />
+        <FormKhaiThongTinNhapHoc />
       </Modal>
     </>
   );
 };
 
-export default TableGiayTo;
+export default TableKhaiThongTinNhapHoc;

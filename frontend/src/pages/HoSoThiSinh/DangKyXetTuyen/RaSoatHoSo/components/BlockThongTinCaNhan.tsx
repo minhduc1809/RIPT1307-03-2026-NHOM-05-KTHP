@@ -1,9 +1,11 @@
+import type { Login } from '@/services/ant-design-pro/typings';
 import { Descriptions } from 'antd';
 import moment from 'moment';
 import { useModel } from 'umi';
 const { Item } = Descriptions;
-const BlockRaSoatThongTinCaNhan = () => {
-  const { recordHoSo } = useModel('hosoxettuyen');
+const BlockRaSoatThongTinCaNhan = (props: { record?: { thongTinThiSinh: Login.Profile } }) => {
+  const modelHoSoXetTuyen = useModel('hosoxettuyen');
+  const recordHoSo = props?.record?.thongTinThiSinh ? props.record : modelHoSoXetTuyen.recordHoSo;
   const hoKhauThuongTru = recordHoSo?.thongTinThiSinh?.hoKhauThuongTru ?? {};
   const diaChiLienHe = recordHoSo?.thongTinThiSinh?.diaChiLienHe ?? {};
   return (

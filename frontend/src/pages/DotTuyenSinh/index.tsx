@@ -21,7 +21,9 @@ const DotTuyenSinhComponent = () => {
     deleteDotTuyenSinhModel,
     setdanhSachGiayToNopHoSo,
     setdanhSachGiayToNopOnline,
+    setdanhSachGiayToXacNhanNhapHoc,
     setDanhSachNganh,
+    setdanhSachThongTinKhaiXacNhan,
   } = useModel('dottuyensinh');
 
   const { getProductByCodeModel } = useModel('thanhtoan');
@@ -121,7 +123,9 @@ const DotTuyenSinhComponent = () => {
                 getProductByCodeModel(record?.maLePhi);
                 setdanhSachGiayToNopHoSo(record?.thongTinGiayToNopHoSo ?? []);
                 setdanhSachGiayToNopOnline(record?.thongTinGiayToNopOnline ?? []);
+                setdanhSachGiayToXacNhanNhapHoc(record?.danhSachGiayToXacNhanNhapHoc ?? []);
                 setDanhSachNganh(record?.danhSachNganhTuyenSinh ?? []);
+                setdanhSachThongTinKhaiXacNhan(record?.danhSachThongTinKhaiXacNhan ?? []);
                 setEdit(true);
                 setRecord(record);
                 setVisibleForm(true);

@@ -4,6 +4,7 @@ declare module DotTuyenSinh {
   export interface GiayTo {
     index: number;
     ten: string;
+    tieuDe: string;
     soLuong: number;
     ghiChu: string;
     soLuongNop: string;
@@ -13,6 +14,17 @@ declare module DotTuyenSinh {
     ghiChuTiepNhan: string;
     maGiayTo: string;
     thoiGianNop: string;
+    required: boolean;
+    textHuongDan: string;
+    urlHuongDan: string[];
+    urlGiayTo: string[];
+  }
+
+  export interface ThongTinKhaiXacNhan {
+    index: number;
+    maThongTin: string;
+    tieuDe: string;
+    noiDung: string;
     required: boolean;
     textHuongDan: string;
     urlHuongDan: string[];
@@ -48,6 +60,8 @@ declare module DotTuyenSinh {
     tenDotTuyenSinh: string;
     thongTinGiayToNopHoSo: GiayTo[];
     thongTinGiayToNopOnline: GiayTo[];
+    danhSachGiayToXacNhanNhapHoc: GiayTo[];
+    danhSachThongTinKhaiXacNhan: ThongTinKhaiXacNhan[];
     moTa: string;
     maDotTuyenSinh: number;
     thoiGianMoDangKy: string;

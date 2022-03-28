@@ -30,7 +30,6 @@ const { Item } = Descriptions;
 
 const RaSoatHoSo = () => {
   const { recordHoSo, setVisibleForm, setCurrent, khoaMyHoSoModel } = useModel('hosoxettuyen');
-  const { setVisibleForm: setVisibleFormKetQua } = useModel('ketquaxettuyen');
   const { record, visibleFormGiayTo, setVisibleFormGiayTo } = useModel('dottuyensinh');
   const cauHinhDoiTuong = record?.danhSachDoiTuongTuyenSinh?.find(
     (item) => item.maDoiTuong === recordHoSo?.maDoiTuong,
@@ -91,11 +90,11 @@ const RaSoatHoSo = () => {
             <b style={{ fontSize: 22 }}>
               PHIẾU ĐĂNG KÝ XÉT TUYỂN ĐẠI HỌC HỆ CHÍNH QUY NĂM {record?.namTuyenSinh ?? ''}
             </b>
-            {localStorage.getItem('loaiDot') !== 'Đặc cách' && (
-              <div style={{ color: 'red' }}>
-                <i>({record?.phuongThucTuyenSinh?.tenPhuongThuc ?? ''})</i>
-              </div>
-            )}
+
+            <div style={{ color: 'red' }}>
+              <i>({record?.phuongThucTuyenSinh?.tenPhuongThuc ?? ''})</i>
+            </div>
+
             {recordHoSo?.trangThai === ETrangThaiHoSo.dakhoa && (
               <div style={{ color: 'red', fontStyle: 'italic' }}>(Bản chính thức)</div>
             )}
@@ -123,7 +122,7 @@ const RaSoatHoSo = () => {
               <BlockHanhKiem index={14} />
             )}
 
-            {
+            {cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT && (
               <BlockDiemTBCCacMon
                 cauHinh={cauHinhDoiTuong}
                 index={15}
@@ -161,7 +160,7 @@ const RaSoatHoSo = () => {
                   },
                 ]}
               />
-            }
+            )}
 
             <br />
 
@@ -267,7 +266,6 @@ const RaSoatHoSo = () => {
                   <Button
                     onClick={() => {
                       setVisibleForm(false);
-                      setVisibleFormKetQua(false);
                     }}
                     icon={<CloseOutlined />}
                   >

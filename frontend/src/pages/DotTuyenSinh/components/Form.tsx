@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import TableGiayTo from './TableGiayTo';
 import TableNganh from './TableNganh';
+import TableKhaiThongTinNhapHoc from './TableThongTinKhaiNhapHoc';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
@@ -36,7 +37,9 @@ const FormDotTuyenSinh = () => {
     setDanhSachNganh,
     danhSachGiayToNopHoSo,
     danhSachGiayToNopOnline,
+    danhSachGiayToXacNhanNhapHoc,
     danhSachNganh,
+    danhSachThongTinKhaiXacNhan,
   } = useModel('dottuyensinh');
   const { danhSach } = useModel('namtuyensinh');
   const { record: recordProduct } = useModel('thanhtoan');
@@ -70,7 +73,7 @@ const FormDotTuyenSinh = () => {
     };
   }, []);
   return (
-    <Card loading={loading} title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} đợt tuyển sinh`}>
+    <Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} đợt tuyển sinh`}>
       <Form
         scrollToFirstError
         labelCol={{ span: 24 }}
@@ -97,6 +100,8 @@ const FormDotTuyenSinh = () => {
               choPhepHK1HoacCaNamLop12,
               thongTinGiayToNopOnline: danhSachGiayToNopOnline,
               thongTinGiayToNopHoSo: danhSachGiayToNopHoSo,
+              danhSachGiayToXacNhanNhapHoc,
+              danhSachThongTinKhaiXacNhan,
               danhSachNganhTuyenSinh: danhSachNganh?.map((item) => ({
                 ...item,
                 nganh: item?.nganh?._id,
@@ -112,6 +117,8 @@ const FormDotTuyenSinh = () => {
               choPhepDangKyKhacCoSo,
               thongTinGiayToNopOnline: danhSachGiayToNopOnline,
               thongTinGiayToNopHoSo: danhSachGiayToNopHoSo,
+              danhSachGiayToXacNhanNhapHoc,
+              danhSachThongTinKhaiXacNhan,
               danhSachNganhTuyenSinh: danhSachNganh?.map((item) => ({
                 ...item,
                 nganh: item.nganh._id,
@@ -251,6 +258,16 @@ const FormDotTuyenSinh = () => {
           <Col span={24}>
             <Form.Item label="Danh sách giấy tờ nộp onlline">
               <TableGiayTo fieldName="danhSachGiayToNopOnline" />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item label="Danh sách giấy tờ xác nhận nhập học">
+              <TableGiayTo fieldName="danhSachGiayToXacNhanNhapHoc" />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item label="Danh sách thông tin khai nhập học">
+              <TableKhaiThongTinNhapHoc />
             </Form.Item>
           </Col>
           <Col xs={24}>

@@ -22,6 +22,7 @@ declare module KetQuaXetTuyen {
     _id: string;
     nguyenVongTrungTuyen: HoSoXetTuyen.NguyenVong;
     idDotTuyenSinh: string;
+    idHoSoXetTuyen: string;
     maHoSo: string;
     thongTinThiSinh: Login.Profile;
     trangThai: ETrangThaiTrungTuyen;

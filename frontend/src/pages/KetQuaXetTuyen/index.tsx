@@ -2,11 +2,10 @@ import TableBase from '@/components/Table';
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
 import { EModeKhoiTao } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import { Button, Dropdown, Menu, Select } from 'antd';
+import { Button, Dropdown, Menu, Modal, Select } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
-import RaSoatHoSo from '../HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo';
-// import Form from './components/Form';
+import ViewHoSoTrungTuyen from './components/ViewKetQua';
 
 const KetQuaXetTuyenComponent = () => {
   const {
@@ -17,11 +16,11 @@ const KetQuaXetTuyenComponent = () => {
     getKetQuaXetTuyenPageableModel,
     setDanhSach,
     setVisibleForm,
+    setRecord: setRecordKetQuaXetTuyen,
+    visibleForm,
   } = useModel('ketquaxettuyen');
 
   const { KhoiTaoKetQuaXetTuyenModel, loading: loadingChiTieu } = useModel('chitieu');
-
-  const { adminGetHoSoByIdHoSoModel } = useModel('hosoxettuyen');
 
   const {
     getAllDotTuyenSinhModel,
@@ -63,7 +62,7 @@ const KetQuaXetTuyenComponent = () => {
   const onCell = (recordKetQua: KetQuaXetTuyen.Record) => ({
     onClick: () => {
       setVisibleForm(true);
-      adminGetHoSoByIdHoSoModel(recordKetQua?._id);
+      setRecordKetQuaXetTuyen(recordKetQua);
     },
     style: { cursor: 'pointer' },
   });
@@ -118,10 +117,8 @@ const KetQuaXetTuyenComponent = () => {
       getData={() => getKetQuaXetTuyenPageableModel(recordDotTuyenSinh?._id ?? '')}
       modelName="ketquaxettuyen"
       title="Danh sách trúng tuyển"
-      widthDrawer="1100px"
       loading={loading}
       columns={columns}
-      Form={RaSoatHoSo}
       dependencies={[
         page,
         limit,
@@ -183,6 +180,15 @@ const KetQuaXetTuyenComponent = () => {
           Khởi tạo DS Trúng tuyển
         </Button>
       </Dropdown>
+      <Modal
+        width={1100}
+        visible={visibleForm}
+        onCancel={() => setVisibleForm(false)}
+        bodyStyle={{ padding: 0 }}
+        footer={false}
+      >
+        <ViewHoSoTrungTuyen />
+      </Modal>
     </TableBase>
   );
 };

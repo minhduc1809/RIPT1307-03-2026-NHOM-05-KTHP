@@ -18,13 +18,25 @@ export default () => {
   const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
   const [danhSachGiayToNopHoSo, setdanhSachGiayToNopHoSo] = useState<DotTuyenSinh.GiayTo[]>([]);
   const [danhSachGiayToNopOnline, setdanhSachGiayToNopOnline] = useState<DotTuyenSinh.GiayTo[]>([]);
+  const [danhSachGiayToXacNhanNhapHoc, setdanhSachGiayToXacNhanNhapHoc] = useState<
+    DotTuyenSinh.GiayTo[]
+  >([]);
+  const [danhSachThongTinKhaiXacNhan, setdanhSachThongTinKhaiXacNhan] = useState<
+    DotTuyenSinh.ThongTinKhaiXacNhan[]
+  >([]);
   const [danhSachNganh, setDanhSachNganh] = useState<DotTuyenSinh.NganhTuyenSinh[]>([]);
   const [editGiayTo, setEditGiayTo] = useState<boolean>(false);
   const [visibleFormGiayTo, setVisibleFormGiayTo] = useState<boolean>(false);
   const [visibleFormGiayToNopHoSo, setVisibleFormGiayToNopHoSo] = useState<boolean>(false);
   const [visibleFormGiayToNopOnline, setVisibleFormGiayToNopOnline] = useState<boolean>(false);
+  const [visibleFormThongTinKhaiXacNhan, setVisibleFormThongTinKhaiXacNhan] =
+    useState<boolean>(false);
+  const [visibleFormGiayToXacNhanNhapHoc, setVisibleFormGiayToXacNhanNhapHoc] =
+    useState<boolean>(false);
   const [visibleFormNganh, setVisibleFormNganh] = useState<boolean>(false);
   const [recordGiayTo, setRecordGiayTo] = useState<DotTuyenSinh.GiayTo>();
+  const [recordThongTinKhaiXacNhan, setRecordThongTinKhaiXacNhan] =
+    useState<DotTuyenSinh.ThongTinKhaiXacNhan>();
   const [recordNganh, setRecordNganh] = useState<DotTuyenSinh.NganhTuyenSinh>();
   const getAllDotTuyenSinhModel = async (
     payload: {
@@ -96,6 +108,16 @@ export default () => {
   };
 
   return {
+    recordThongTinKhaiXacNhan,
+    setRecordThongTinKhaiXacNhan,
+    setdanhSachThongTinKhaiXacNhan,
+    danhSachThongTinKhaiXacNhan,
+    setVisibleFormThongTinKhaiXacNhan,
+    visibleFormThongTinKhaiXacNhan,
+    danhSachGiayToXacNhanNhapHoc,
+    setdanhSachGiayToXacNhanNhapHoc,
+    visibleFormGiayToXacNhanNhapHoc,
+    setVisibleFormGiayToXacNhanNhapHoc,
     visibleFormGiayToNopHoSo,
     setVisibleFormGiayToNopHoSo,
     visibleFormGiayToNopOnline,

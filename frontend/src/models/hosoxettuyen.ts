@@ -201,8 +201,8 @@ export default () => {
   };
 
   const adminGetHoSoByIdHoSoModel = async (idHoSo: string) => {
-    setLoading(true);
     if (!idHoSo) return;
+    setLoading(true);
     const response = await adminGetHoSoByIdHoSo(idHoSo);
     setRecordHoSo(response?.data?.data ?? {});
     setLoading(false);

@@ -4,15 +4,27 @@ import { Descriptions, Table } from 'antd';
 import { useModel } from 'umi';
 const { Item } = Descriptions;
 
-const BlockNguyenVong = (props: { index?: number }) => {
-  const { recordHoSo } = useModel('hosoxettuyen');
-
+const BlockNguyenVong = (props: {
+  index?: number;
+  title?: string;
+  record?: { danhSachNguyenVong: HoSoXetTuyen.NguyenVong[] };
+}) => {
+  const modelHoSoXetTuyen = useModel('hosoxettuyen');
+  const recordHoSo = props?.record?.danhSachNguyenVong
+    ? props.record
+    : modelHoSoXetTuyen.recordHoSo;
   const columnsNV: IColumn<HoSoXetTuyen.NguyenVong>[] = [
     {
-      title: 'STT',
+      title: 'TT',
       dataIndex: 'soThuTu',
       align: 'center',
       width: '80px',
+    },
+    {
+      title: 'Cơ sở đào tạo',
+      dataIndex: 'tenCoSoDaoTao',
+      align: 'center',
+      width: '200px',
     },
     {
       title: 'Mã ngành',
@@ -30,7 +42,7 @@ const BlockNguyenVong = (props: { index?: number }) => {
       title: 'Tổ hợp',
       dataIndex: 'toHopXetTuyen',
       align: 'center',
-      width: '200px',
+      width: '100px',
     },
     {
       title: 'Điểm quy đổi',
@@ -60,7 +72,7 @@ const BlockNguyenVong = (props: { index?: number }) => {
           span={3}
           label={
             <span style={{ fontWeight: 'bold' }}>
-              {props?.index ? `${props?.index}.` : ''} Danh sách nguyện vọng
+              {props?.index ? `${props?.index}.` : ''} {props?.title ?? 'Danh sách nguyện vọng'}
             </span>
           }
         >
