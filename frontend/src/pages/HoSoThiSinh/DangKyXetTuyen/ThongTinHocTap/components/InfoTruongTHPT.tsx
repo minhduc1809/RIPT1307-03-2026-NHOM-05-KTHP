@@ -7,6 +7,7 @@ type Props = {
   form: FormInstance<any>;
   setIsChuyenTruong: any;
   isChuyenTruong: boolean;
+  cauHinh: any;
 };
 
 const InfoTruongTHPT = (props: Props) => {
@@ -34,6 +35,7 @@ const InfoTruongTHPT = (props: Props) => {
       {!props?.isChuyenTruong ? (
         <Col span={24}>
           <TruongTHPT
+            cauHinh={props.cauHinh}
             type="10"
             form={props.form}
             fields={{
@@ -55,6 +57,7 @@ const InfoTruongTHPT = (props: Props) => {
           <Col span={24}>
             <b style={{ color: 'rgba(0, 0, 0, 0.85)', width: '100%' }}>Lớp 10</b>
             <TruongTHPT
+              cauHinh={props.cauHinh}
               type="10"
               form={props.form}
               fields={{
@@ -74,6 +77,7 @@ const InfoTruongTHPT = (props: Props) => {
           <Col style={{ marginTop: 20 }} span={24}>
             <b style={{ color: 'rgba(0, 0, 0, 0.85)', width: '100%' }}>Lớp 11</b>
             <TruongTHPT
+              cauHinh={props.cauHinh}
               type="11"
               form={props.form}
               fields={{
@@ -93,6 +97,7 @@ const InfoTruongTHPT = (props: Props) => {
           <Col style={{ marginTop: 20 }} span={24}>
             <b style={{ color: 'rgba(0, 0, 0, 0.85)', width: '100%' }}>Lớp 12</b>
             <TruongTHPT
+              cauHinh={props.cauHinh}
               type="12"
               form={props.form}
               fields={{

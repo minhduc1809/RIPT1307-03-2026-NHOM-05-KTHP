@@ -153,6 +153,12 @@ const TableNguyenVong = () => {
       width: '80px',
     },
     {
+      title: 'Cơ sở đào tạo',
+      align: 'center',
+      width: '150px',
+      render: (nguyenVong) => <div>{nguyenVong?.coSoDaoTao?.ten || nguyenVong?.tenCoSoDaoTao}</div>,
+    },
+    {
       title: 'Mã ngành',
       dataIndex: 'maNganhChuyenNganh',
       align: 'center',
@@ -162,7 +168,7 @@ const TableNguyenVong = () => {
       title: 'Tên ngành',
       dataIndex: 'tenNganhChuyenNganh',
       align: 'center',
-      width: '200px',
+      width: '100px',
     },
     {
       title: 'Tổ hợp',
@@ -174,38 +180,31 @@ const TableNguyenVong = () => {
       title: 'Điểm xét tuyển chưa có ưu tiên',
       dataIndex: ['diemQuyDoi', 'thanhPhan'],
       align: 'center',
-      width: '120px',
-      render: (val: HoSoXetTuyen.ThanhPhanDiemQuyDoi[]) => (
-        <div>
-          {val
-            ?.filter((item) => !item.tenThanhPhan.includes('Điểm'))
-            ?.map((item) => (
-              <div key={item._id}>
-                {item?.tenThanhPhan}: {item?.diem}
-              </div>
-            ))}
-        </div>
-      ),
+      width: '100px',
+      render: (val: HoSoXetTuyen.ThanhPhanDiemQuyDoi[]) => {
+        let diem = 0;
+        val
+          ?.filter((item) => !item.tenThanhPhan.includes('Điểm'))
+          ?.map((item) => (diem += item?.diem ?? 0));
+        return <div>{diem}</div>;
+      },
     },
     {
       title: 'Điểm xét tuyển có ưu tiên',
       dataIndex: ['diemQuyDoi', 'tongDiem'],
       align: 'center',
-      width: '120px',
+      width: '100px',
       render: (val) => <div>{val && val !== -1 ? val : ''}</div>,
     },
     {
       title: 'Chi tiết thành phần',
       dataIndex: ['diemQuyDoi', 'thanhPhan'],
       render: (val: HoSoXetTuyen.ThanhPhanDiemQuyDoi[]) => {
-        return val?.map(
-          (item: any, index: number) =>
-            index > 2 && (
-              <div>
-                {item?.tenThanhPhan}: {item?.diem}
-              </div>
-            ),
-        );
+        return val?.map((item) => (
+          <div key={item?._id}>
+            {item?.tenThanhPhan}: {item?.diem}
+          </div>
+        ));
       },
       align: 'center',
       // width: '120px',
@@ -214,7 +213,7 @@ const TableNguyenVong = () => {
       title: 'Thao tác',
       align: 'center',
       fixed: 'right',
-      width: 120,
+      width: 100,
       render: (recordTemp: HoSoXetTuyen.NguyenVong) =>
         renderLast(recordTemp, recordTemp?.soThuTu - 1),
     },

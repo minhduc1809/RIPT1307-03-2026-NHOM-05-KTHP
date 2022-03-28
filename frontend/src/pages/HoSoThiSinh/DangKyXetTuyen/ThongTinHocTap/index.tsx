@@ -244,6 +244,7 @@ const QuaTrinhHocTap = () => {
         >
           <Row gutter={[10, 0]}>
             <InfoTruongTHPT
+              cauHinh={cauHinhDoiTuong}
               setIsChuyenTruong={setIsChuyenTruong}
               isChuyenTruong={isChuyenTruong}
               form={form}
@@ -447,21 +448,21 @@ const QuaTrinhHocTap = () => {
                     arrLopHoc={[
                       {
                         label: 'Lớp 10',
-                        name: ['thongTinHocTapTHPT', 'truongLop10'],
+                        name: ['thongTinHocTapTHPT', 'danhSach', 'truongLop10'],
                         field: 'truongLop10',
-                        show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10,
+                        show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop10,
                       },
                       {
                         label: 'Lớp 11',
-                        name: ['thongTinHocTapTHPT', 'truongLop11'],
+                        name: ['thongTinHocTapTHPT', 'danhSach', 'truongLop11'],
                         field: 'truongLop11',
-                        show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop11,
+                        show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop11,
                       },
                       {
                         label: 'Lớp 12',
-                        name: ['thongTinHocTapTHPT', 'truongLop12'],
+                        name: ['thongTinHocTapTHPT', 'danhSach', 'truongLop12'],
                         field: 'truongLop12',
-                        show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop12,
+                        show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop12,
                       },
                     ]}
                     arrKyHoc={[
@@ -488,23 +489,29 @@ const QuaTrinhHocTap = () => {
                 {
                   label: 'Lớp 10',
                   name: ['thongTinHocTapTHPT', 'truongLop10', 'hanhKiem'],
-                  show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10?.hanhKiem,
+                  show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop10
+                    ?.hanhKiem,
                   required:
-                    cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10?.hanhKiem?.required,
+                    cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop10?.hanhKiem
+                      ?.required,
                 },
                 {
                   label: 'Lớp 11',
                   name: ['thongTinHocTapTHPT', 'truongLop11', 'hanhKiem'],
-                  show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop11?.hanhKiem,
+                  show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop11
+                    ?.hanhKiem,
                   required:
-                    cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10?.hanhKiem?.required,
+                    cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop11?.hanhKiem
+                      ?.required,
                 },
                 {
                   label: record?.choPhepHK1HoacCaNamLop12 ? 'Học kỳ I lớp 12' : 'Lớp 12',
                   name: ['thongTinHocTapTHPT', 'truongLop12', 'hanhKiem'],
-                  show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop12?.hanhKiem,
+                  show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop12
+                    ?.hanhKiem,
                   required:
-                    cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10?.hanhKiem?.required,
+                    cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop12?.hanhKiem
+                      ?.required,
                 },
               ]}
             />

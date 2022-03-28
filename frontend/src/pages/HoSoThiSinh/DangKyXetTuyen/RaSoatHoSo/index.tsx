@@ -116,9 +116,9 @@ const RaSoatHoSo = () => {
             <BlockRaSoatThongTinCaNhan />
             <BlockNoiHocTHPT index={10} />
             <BlockDoiTuongKhuVucUuTien indexDoiTuong={11} indexKhuVuc={12} indexNamTotNghiep={13} />
-            {(cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10?.hanhKiem ||
-              cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop11?.hanhKiem ||
-              cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop12?.hanhKiem) && (
+            {(cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop10?.hanhKiem ||
+              cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop11?.hanhKiem ||
+              cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop12?.hanhKiem) && (
               <BlockHanhKiem index={14} />
             )}
 
@@ -134,21 +134,21 @@ const RaSoatHoSo = () => {
                 arrLopHoc={[
                   {
                     label: 'Lớp 10',
-                    name: ['thongTinHocTapTHPT', 'truongLop10'],
+                    name: ['thongTinHocTapTHPT', 'danhSach', 'truongLop10'],
                     field: 'truongLop10',
-                    show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10,
+                    show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop10,
                   },
                   {
                     label: 'Lớp 11',
-                    name: ['thongTinHocTapTHPT', 'truongLop11'],
+                    name: ['thongTinHocTapTHPT', 'danhSach', 'truongLop11'],
                     field: 'truongLop11',
-                    show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop11,
+                    show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop11,
                   },
                   {
                     label: 'Lớp 12',
-                    name: ['thongTinHocTapTHPT', 'truongLop12'],
+                    name: ['thongTinHocTapTHPT', 'danhSach', 'truongLop12'],
                     field: 'truongLop12',
-                    show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop12,
+                    show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop12,
                   },
                 ]}
                 arrKyHoc={[

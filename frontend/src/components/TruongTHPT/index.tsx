@@ -1,14 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { EKhuVucUuTien, EMonHoc } from '@/utils/constants';
+import { EKhuVucUuTien } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { includes } from '@/utils/utils';
 import { Col, Form, Input, Row, Select } from 'antd';
 import type { FormInstance } from 'antd/es/form/Form';
+import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import _ from 'lodash';
 
 type Props = {
+  cauHinh: any;
   type: '10' | '11' | '12';
   disabled?: boolean;
   form: FormInstance<any>;
@@ -69,7 +70,7 @@ const TruongTHPT = (props: Props) => {
   }, [maTinh, maQuanHuyen]);
 
   return (
-    <Row gutter={[20, 0]}>
+    <Row gutter={[10, 0]}>
       {!props.hideTinh && (
         <Col
           xs={24}
@@ -245,25 +246,30 @@ const TruongTHPT = (props: Props) => {
           <Input placeholder="Tên lớp" style={{ width: '100%' }} />
         </Form.Item>
       </Col> */}
-      {modelHoSoXetTuyen?.[`isTruongChuyenLop${props.type}`] && (
-        <Col xs={24} lg={8}>
-          <Form.Item
-            rules={[...rules.required]}
-            initialValue={props?.initialValue?.monChuyen}
-            label="Môn chuyên"
-            name={props.fields.monChuyen}
-          >
-            <Select
-              showSearch
-              allowClear
-              placeholder="Chọn môn chuyên"
-              options={Object.values(EMonHoc)
-                .filter((mon) => mon !== '')
-                .map((mon) => ({ value: mon, label: mon }))}
-            />
-          </Form.Item>
-        </Col>
-      )}
+      {modelHoSoXetTuyen?.[`isTruongChuyenLop${props.type}`] &&
+        props?.cauHinh?.danhSach?.thongTinHocTapTHPT?.danhSach?.monChuyen && (
+          <Col xs={24} lg={8}>
+            <Form.Item
+              rules={
+                props?.cauHinh?.danhSach?.thongTinHocTapTHPT?.danhSach?.monChuyen?.required
+                  ? [...rules.required]
+                  : []
+              }
+              initialValue={props?.initialValue?.monChuyen}
+              label="Môn chuyên"
+              name={props.fields.monChuyen}
+            >
+              <Select
+                showSearch
+                allowClear
+                placeholder="Chọn môn chuyên"
+                options={props?.cauHinh?.danhSach?.thongTinHocTapTHPT?.danhSach?.monChuyen?.enum.map(
+                  (mon: string) => ({ value: mon, label: mon }),
+                )}
+              />
+            </Form.Item>
+          </Col>
+        )}
     </Row>
   );
 };

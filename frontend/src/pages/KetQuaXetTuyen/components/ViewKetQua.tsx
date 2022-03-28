@@ -5,6 +5,7 @@ import { EyeOutlined } from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
 import { Button, Card, Col, Divider, Modal, Row } from 'antd';
 import { useModel } from 'umi';
+import { TableThongTinKhaiXacNhanNhapHoc } from './TableThongTinKhaiXacNhanNhapHoc';
 
 const ViewHoSoTrungTuyen = () => {
   const { record } = useModel('dottuyensinh');
@@ -56,6 +57,9 @@ const ViewHoSoTrungTuyen = () => {
                   : [],
               }}
             />
+            <br />
+            <h2 style={{ fontWeight: 'bold' }}>C. THÔNG TIN XÁC NHẬN NHẬP HỌC:</h2>
+            <TableThongTinKhaiXacNhanNhapHoc index={1} />
           </GridContent>
         </Card>
         <Modal

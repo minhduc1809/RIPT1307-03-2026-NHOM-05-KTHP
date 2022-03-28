@@ -1,4 +1,5 @@
 import type { EDonViTinh, EToHopXetTuyen } from '@/utils/constants';
+import type { KetQuaXetTuyen } from '../KetQuaXetTuyen/typings';
 
 declare module DotTuyenSinh {
   export interface GiayTo {
@@ -19,17 +20,6 @@ declare module DotTuyenSinh {
     urlHuongDan: string[];
     urlGiayTo: string[];
   }
-
-  export interface ThongTinKhaiXacNhan {
-    index: number;
-    maThongTin: string;
-    tieuDe: string;
-    noiDung: string;
-    required: boolean;
-    textHuongDan: string;
-    urlHuongDan: string[];
-  }
-
   export interface NganhTuyenSinh {
     index: number;
     danhSachCoSoDaoTao: CoSoDaoTao.Record[];
@@ -61,7 +51,7 @@ declare module DotTuyenSinh {
     thongTinGiayToNopHoSo: GiayTo[];
     thongTinGiayToNopOnline: GiayTo[];
     danhSachGiayToXacNhanNhapHoc: GiayTo[];
-    danhSachThongTinKhaiXacNhan: ThongTinKhaiXacNhan[];
+    danhSachThongTinKhaiXacNhan: KetQuaXetTuyen.ThongTinKhaiXacNhan[];
     moTa: string;
     maDotTuyenSinh: number;
     thoiGianMoDangKy: string;

@@ -82,7 +82,7 @@ export default () => {
     setLoading(true);
     const response = await putMyThongTinXetTuyen(idHoSo, payload);
     if (response?.data?.data?.success === false) {
-      message?.error(response?.data?.data?.errorStrings);
+      response?.data?.data?.errorStrings?.map((item: string) => message?.error(item));
     } else {
       message.success('Lưu thành công');
       setRecordHoSo(response?.data?.data?.result);
@@ -98,7 +98,7 @@ export default () => {
   const putMyDanhSachNguyenVongModel = async (
     idHoSo: string,
     payload: {
-      danhSachNguyenVong: HoSoXetTuyen.NguyenVong[];
+      danhSachNguyenVong: any[];
     },
   ) => {
     if (!idHoSo) return;
@@ -110,13 +110,9 @@ export default () => {
       const dot = localStorage.getItem('dot');
       if (dot) getMyHoSoXetTuyenModel(dot);
       message.success('Lưu thành công');
-      setCurrent(3);
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
     }
     setLoading(false);
+    return response?.data?.data?.success ?? false;
   };
 
   const putMyTinhQuyDoiNguyenVongModel = async (payload: {

@@ -53,8 +53,12 @@ const BlockTableDiemTHPT = (props: {
           ? [...rules.required]
           : []
       }
-      initialValue={_.get(recordHoSo, `${lop.join('.')}.${kyHoc}.${record?.mon}`, undefined)}
-      name={[...lop, kyHoc, record?.mon]}
+      initialValue={_.get(
+        recordHoSo,
+        `${lop?.filter((item) => item !== 'danhSach').join('.')}.${kyHoc}.${record?.mon}`,
+        undefined,
+      )}
+      name={[...lop?.filter((item) => item !== 'danhSach'), kyHoc, record?.mon]}
       style={{ width: '100%', marginBottom: 0 }}
     >
       <InputNumber
@@ -83,7 +87,8 @@ const BlockTableDiemTHPT = (props: {
     ?.filter((item) => item.show)
     ?.map((lop) => {
       const arrKyHocFinal = props?.arrKyHoc?.filter(
-        (kyHoc) => props?.cauHinh?.danhSach?.thongTinHocTapTHPT?.[lop.field]?.[kyHoc.name],
+        (kyHoc) =>
+          props?.cauHinh?.danhSach?.thongTinHocTapTHPT?.danhSach?.[lop.field]?.[kyHoc.name],
       );
 
       const dataIndex =
@@ -152,23 +157,25 @@ const BlockTableDiemTHPT = (props: {
             tenMon: item,
             mon: MonToHop[item],
             thongTinHocTapTHPT: {
-              truongLop10: {
-                kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK1?.[MonToHop?.[item]],
-                kqhtHK2: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK2?.[MonToHop?.[item]],
-                kqhtCaNam:
-                  recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtCaNam?.[MonToHop?.[item]],
-              },
-              truongLop11: {
-                kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK1?.[MonToHop?.[item]],
-                kqhtHK2: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK2?.[MonToHop?.[item]],
-                kqhtCaNam:
-                  recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtCaNam?.[MonToHop?.[item]],
-              },
-              truongLop12: {
-                kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK1?.[MonToHop?.[item]],
-                kqhtHK2: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK2?.[MonToHop?.[item]],
-                kqhtCaNam:
-                  recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtCaNam?.[MonToHop?.[item]],
+              danhSach: {
+                truongLop10: {
+                  kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK1?.[MonToHop?.[item]],
+                  kqhtHK2: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK2?.[MonToHop?.[item]],
+                  kqhtCaNam:
+                    recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtCaNam?.[MonToHop?.[item]],
+                },
+                truongLop11: {
+                  kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop11?.kqhtHK1?.[MonToHop?.[item]],
+                  kqhtHK2: recordHoSo?.thongTinHocTapTHPT?.truongLop11?.kqhtHK2?.[MonToHop?.[item]],
+                  kqhtCaNam:
+                    recordHoSo?.thongTinHocTapTHPT?.truongLop11?.kqhtCaNam?.[MonToHop?.[item]],
+                },
+                truongLop12: {
+                  kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop12?.kqhtHK1?.[MonToHop?.[item]],
+                  kqhtHK2: recordHoSo?.thongTinHocTapTHPT?.truongLop12?.kqhtHK2?.[MonToHop?.[item]],
+                  kqhtCaNam:
+                    recordHoSo?.thongTinHocTapTHPT?.truongLop12?.kqhtCaNam?.[MonToHop?.[item]],
+                },
               },
             },
           };

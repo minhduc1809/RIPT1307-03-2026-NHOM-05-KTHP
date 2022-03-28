@@ -10,7 +10,12 @@ const DangKyNguyenVong = () => {
     <Form
       style={{ backgroundColor: '#fff', padding: 24 }}
       onFinish={() => {
-        putMyDanhSachNguyenVongModel(recordHoSo?._id ?? '', { danhSachNguyenVong });
+        putMyDanhSachNguyenVongModel(recordHoSo?._id ?? '', {
+          danhSachNguyenVong: danhSachNguyenVong?.map((item) => ({
+            ...item,
+            coSoDaoTao: item?.coSoDaoTao?._id,
+          })),
+        });
       }}
     >
       <TableNguyenVong />
@@ -38,7 +43,6 @@ const DangKyNguyenVong = () => {
         </Popconfirm>
         <Button
           style={{ float: 'right', marginBottom: 8 }}
-          type="primary"
           icon={<SaveOutlined />}
           htmlType="submit"
         >
@@ -48,8 +52,20 @@ const DangKyNguyenVong = () => {
           disabled={danhSachNguyenVong.length === 0}
           type="primary"
           icon={<CheckOutlined />}
-          onClick={() => {
-            putMyDanhSachNguyenVongModel(recordHoSo?._id ?? '', { danhSachNguyenVong });
+          onClick={async () => {
+            const success = await putMyDanhSachNguyenVongModel(recordHoSo?._id ?? '', {
+              danhSachNguyenVong: danhSachNguyenVong?.map((item) => ({
+                ...item,
+                coSoDaoTao: item?.coSoDaoTao?._id,
+              })),
+            });
+            if (success) {
+              setCurrent(3);
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+              });
+            }
           }}
         >
           Bước 4/4

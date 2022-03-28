@@ -1,7 +1,9 @@
 import useInitModel from '@/hooks/useInitModel';
+import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import {
   getKetQuaXetTuyenPageable,
   getMyKetQuaXetTuyen,
+  xacNhanKhongNhapHoc,
   xacNhanNhapHoc,
 } from '@/services/KetQuaXetTuyen/ketquaxettuyen';
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
@@ -12,7 +14,7 @@ export default () => {
   const [record, setRecord] = useState<KetQuaXetTuyen.Record>();
   const [danhSach, setDanhSach] = useState<KetQuaXetTuyen.Record[]>([]);
   const objInitModel = useInitModel();
-  const { setLoading, condition, page, limit, setTotal } = objInitModel;
+  const { setLoading, condition, page, limit, setTotal, setVisibleForm } = objInitModel;
 
   const getMyKetQuaXetTuyenModel = async (idDotTuyenSinh: string) => {
     setLoading(true);
@@ -30,15 +32,36 @@ export default () => {
     setLoading(false);
   };
 
-  const xacNhanNhapHocModel = async (mode: 'xac-nhan' | 'khong-xac-nhan', idKetQua: string) => {
+  const xacNhanNhapHocModel = async (
+    idKetQua: string,
+    payload: {
+      danhSachGiayToXacNhanNhapHoc: DotTuyenSinh.GiayTo[];
+      danhSachThongTinKhaiXacNhan: KetQuaXetTuyen.ThongTinKhaiXacNhan[];
+    },
+  ) => {
+    if (!idKetQua) return;
+    try {
+      setLoading(true);
+      const response = await xacNhanNhapHoc(idKetQua, payload);
+      message.success('Xác nhận thành công');
+      setLoading(false);
+      setRecord(response?.data?.data);
+      setVisibleForm(false);
+    } catch (err) {
+      setLoading(false);
+    }
+  };
+
+  const xacNhanKhongNhapHocModel = async (idKetQua: string) => {
     setLoading(true);
-    const response = await xacNhanNhapHoc(mode, idKetQua);
+    const response = await xacNhanKhongNhapHoc(idKetQua);
     message.success('Xác nhận thành công');
     setLoading(false);
     setRecord(response?.data?.data);
   };
 
   return {
+    xacNhanKhongNhapHocModel,
     getKetQuaXetTuyenPageableModel,
     record,
     setRecord,

@@ -27,11 +27,7 @@ const FormDangKyNguyenVong = () => {
     });
   });
 
-  const [coSoDaoTao, setCoSoDaoTao] = useState<any>(
-    recordNguyenVong?.coSoDaoTao?._id
-      ? recordNguyenVong?.coSoDaoTao?._id
-      : recordNguyenVong?.coSoDaoTao,
-  );
+  const [coSoDaoTao, setCoSoDaoTao] = useState<string>(recordNguyenVong?.coSoDaoTao?._id ?? '');
   const [tenCoSoDaoTao, setTenCoSoDaoTao] = useState<string>(recordNguyenVong?.tenCoSoDaoTao ?? '');
   const [idNganhChuyenNganh, setIdNganhChuyenNganh] = useState<string>(
     recordNguyenVong?.idNganhChuyenNganh ?? '',
@@ -46,7 +42,7 @@ const FormDangKyNguyenVong = () => {
     let check = true;
     danhSachNguyenVong?.map((item) => {
       if (
-        item.coSoDaoTao === nguyenVong.coSoDaoTao &&
+        item.coSoDaoTao._id === nguyenVong.coSoDaoTao._id &&
         item.idNganhChuyenNganh === nguyenVong.idNganhChuyenNganh &&
         item.toHopXetTuyen === nguyenVong.toHopXetTuyen
       ) {
@@ -96,7 +92,7 @@ const FormDangKyNguyenVong = () => {
             maNganhChuyenNganh,
             nganhXetTuyen: undefined,
           };
-          if (!verifyNguyenVong(valueNguyenVong)) {
+          if (!verifyNguyenVong({ ...valueNguyenVong, coSoDaoTao: { _id: coSoDaoTao } })) {
             message.error('Nguyện vọng đã tồn tại');
             return;
           }
@@ -104,14 +100,17 @@ const FormDangKyNguyenVong = () => {
             nguyenVong: valueNguyenVong,
           });
           if (responseQuyDoi?.data?.statusCode === 200) {
-            if (!edit) setDanhSachNguyenVong([...danhSachNguyenVong, responseQuyDoi?.data?.data]);
+            if (!edit)
+              setDanhSachNguyenVong([
+                ...danhSachNguyenVong,
+                { ...responseQuyDoi?.data?.data, coSoDaoTao: { _id: coSoDaoTao } },
+              ]);
             else {
               if (recordNguyenVong) {
-                danhSachNguyenVong.splice(
-                  recordNguyenVong?.soThuTu - 1,
-                  1,
-                  responseQuyDoi?.data?.data,
-                );
+                danhSachNguyenVong.splice(recordNguyenVong?.soThuTu - 1, 1, {
+                  ...responseQuyDoi?.data?.data,
+                  coSoDaoTao: { _id: coSoDaoTao },
+                });
                 setDanhSachNguyenVong(danhSachNguyenVong);
               }
             }
@@ -122,11 +121,7 @@ const FormDangKyNguyenVong = () => {
         <Form.Item
           initialValue={
             edit
-              ? `${
-                  recordNguyenVong?.coSoDaoTao?._id
-                    ? recordNguyenVong?.coSoDaoTao?._id
-                    : recordNguyenVong?.coSoDaoTao
-                }||${recordNguyenVong?.tenCoSoDaoTao}`
+              ? `${recordNguyenVong?.coSoDaoTao?._id}||${recordNguyenVong?.tenCoSoDaoTao}`
               : undefined
           }
           rules={[...rules.required]}
