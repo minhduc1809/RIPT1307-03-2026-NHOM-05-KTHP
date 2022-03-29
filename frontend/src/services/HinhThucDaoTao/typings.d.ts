@@ -4,5 +4,8 @@ declare module HinhThucDaoTao {
     ma: string;
     kyHieu: string;
     _id: string;
+    createdAt: string;
+    updatedAt: string;
+    
   }
 }
