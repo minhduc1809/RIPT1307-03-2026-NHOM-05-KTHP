@@ -4,7 +4,6 @@ import type { IColumn } from '@/utils/interfaces';
 import { EditOutlined } from '@ant-design/icons';
 import { Button, Popconfirm, Tag, Tooltip } from 'antd';
 import moment from 'moment';
-import { useEffect } from 'react';
 import { useModel } from 'umi';
 import Form from './components/Form';
 
@@ -20,10 +19,10 @@ const KhaoSat = () => {
     setVisibleForm,
     getIdBieuMauDaTraLoiModel,
     listIdBieuMauDaTraLoi,
-    getBieuMauAdminModel
+    getBieuMauAdminModel,
   } = useModel('bieumau');
 
-  // useEffect(() => {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+  // useEffect(() => {
   //   setLoaiBieuMau('Khảo sát');
   //   return () => {
   //     setLoaiBieuMau(undefined);
@@ -132,7 +131,7 @@ const KhaoSat = () => {
     <TableBase
       columns={columns}
       //getData={() => getBieuMauUserAdminModel('Trắc nghiệm')}
-      getData = {getBieuMauAdminModel}
+      getData={getBieuMauAdminModel}
       loading={false}
       dependencies={[page, limit]}
       modelName="bieumau"

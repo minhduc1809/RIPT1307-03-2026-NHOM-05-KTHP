@@ -11,6 +11,7 @@ const Settings: LayoutSettings & {
   fixedHeader: true,
   fixSiderbar: true,
   colorWeak: false,
+  headerTheme: 'dark',
   title: 'Xét tuyển PTIT',
   pwa: false,
   logo: '/favicon.ico',

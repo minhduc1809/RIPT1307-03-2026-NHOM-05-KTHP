@@ -84,8 +84,6 @@ export default {
   'menu.QuanTriChung.ToChucTuyenSinh': 'Tổ chức tuyển sinh',
   'menu.QuanTriChung.QuanLyKinhPhiChung': 'Quản lý kinh phí chung',
   'menu.QuanTriChung.QuanLyHoSo': 'Quản lý hồ sơ',
-  'menu.QuanTriChung.QuanLyBieuMau': 'Quản lý biểu mẫu',
-  'menu.QuanTriChung.QuanLyThongBao': 'Quản lý thông báo',
   'menu.QuanTriChung.ToChucTuyenSinh.DotTuyenSinh': 'Đợt tuyển sinh',
   'menu.QuanTriChung.ToChucTuyenSinh.DotNhapHoc': 'Đợt nhập học',
   'menu.BieuMau': 'Biểu mẫu',
@@ -94,4 +92,8 @@ export default {
   'menu.QuanTriChung.QuanLyNganhChuyenNganh': 'Quản lý ngành/chuyên ngành',
   'menu.QuanTriChung.QuanLyDoiTuongTuyenSinh': 'Quản lý đối tượng tuyển sinh',
   'menu.QuanTriChung.HinhThucDaoTao': 'Hình thức đào tạo',
+  'menu.ChucNang': 'Chức năng chung',
+  'menu.ChucNang.Email': 'Gửi email',
+  'menu.ChucNang.BieuMau': 'Khảo sát',
+  'menu.ChucNang.ThongBao': 'Thông báo',
 };

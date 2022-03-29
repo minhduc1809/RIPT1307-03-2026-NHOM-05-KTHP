@@ -131,7 +131,7 @@ export default defineConfig({
       path: '/khaosattructuyen',
       icon: 'CheckSquareOutlined',
       component: './HoSoThiSinh/KhaoSatTrucTuyen',
-      //access: 'thiSinh',
+      access: 'thiSinh',
     },
     {
       name: 'NhapHoc',
@@ -215,19 +215,9 @@ export default defineConfig({
           path: './quanlyhoso',
         },
         {
-          name: 'QuanLyBieuMau',
-          path: './quanlybieumau',
-          component: './QuanLyBieuMau'
-        },
-        {
-          name: 'QuanLyThongBao',
-          path: './quanlythongbao',
-          component: './QuanLyThongBao'
-        },
-        {
           name: 'HinhThucDaoTao',
           path: './hinhthucdaotao',
-          component: './HinhThucDaoTao'
+          component: './HinhThucDaoTao',
         },
       ],
     },
@@ -311,35 +301,29 @@ export default defineConfig({
       ],
     },
     {
-      name: 'Biểu mẫu',
-      icon: 'FileDoneOutlined',
-      path: '/bieumau',
+      name: 'ChucNang',
+      path: '/chucnang',
       access: 'admin',
+      icon: 'AppstoreAddOutlined',
       routes: [
         {
-          name: 'Gửi Email',
+          name: 'Email',
           path: './sendemail',
           component: './SendEmail/index.tsx',
+        },
+        {
+          name: 'BieuMau',
+          path: './quanlybieumau',
+          component: './QuanLyBieuMau',
+        },
+        {
+          name: 'ThongBao',
+          path: './quanlythongbao',
+          component: './QuanLyThongBao',
         },
       ],
     },
 
-    // {
-    //   name: 'BieuMau',
-    //   icon: 'FileDoneOutlined',
-    //   path: '/bieumau',
-    //   access: 'admin',
-    //   routes: [
-    //     {
-    //       name: 'KhaoSat',
-    //       path: './khaosat',
-    //       component: './BieuMau/KhaoSat',
-    //       access: 'admin',
-    //       maChucNang: 'khao-sat:read',
-    //     },
-
-    //   ],
-    // },
     {
       path: '/',
       redirect: '/user/login',

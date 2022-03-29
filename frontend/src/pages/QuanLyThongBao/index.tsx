@@ -8,16 +8,8 @@ import Form from './components/Form';
 import ViewThongBao from './components/ViewThongBao';
 
 const ThongBao = () => {
-  const {
-    getThongBaoAdminModel,
-    page,
-    limit,
-    loading,
-    condition,
-    setRecord,
-    record,
-    phamVi,
-  } = useModel('quanlythongbao');
+  const { getThongBaoAdminModel, page, limit, loading, condition, setRecord, record, phamVi } =
+    useModel('quanlythongbao');
   const [visible, setVisible] = useState<boolean>(false);
 
   const onCell = (recordThongBao: ThongBao.Record) => ({
@@ -88,7 +80,7 @@ const ThongBao = () => {
         <Typography.Paragraph
           ellipsis={{ rows: 2, expandable: true, symbol: <span>Xem tiếp</span> }}
         >
-          {val}
+          <div dangerouslySetInnerHTML={{ __html: val }} />
         </Typography.Paragraph>
       ),
     },

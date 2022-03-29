@@ -1,21 +1,31 @@
-import TableBase from "@/components/Table";
-import { IColumn } from "@/utils/interfaces";
-import { DeleteFilled, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Divider, Popconfirm, Tooltip } from "antd";
-import moment from "moment";
-import { useModel } from "umi";
+import TableBase from '@/components/Table';
+import type { IColumn } from '@/utils/interfaces';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, Divider, Popconfirm, Tooltip } from 'antd';
+import moment from 'moment';
+import { useModel } from 'umi';
 import Form from './components/Form';
 
 const HinhThucDaoTao = () => {
-  const { setVisibleForm, setRecord, setEdit, page, limit, condition, delHinhThucDaoTaoModel, loading, getHinhThucDaoTaoPageableModel } = useModel('hinhthucdaotao');
+  const {
+    setVisibleForm,
+    setRecord,
+    setEdit,
+    page,
+    limit,
+    condition,
+    delHinhThucDaoTaoModel,
+    loading,
+    getHinhThucDaoTaoPageableModel,
+  } = useModel('hinhthucdaotao');
 
   const onCell = (recordHinhThucDaoTao: HinhThucDaoTao.Record) => ({
     onclick: () => {
       setVisibleForm(true);
-      setRecord(recordHinhThucDaoTao)
+      setRecord(recordHinhThucDaoTao);
     },
-    style: { cursor: 'pointer' }
-  })
+    style: { cursor: 'pointer' },
+  });
 
   const columns: IColumn<HinhThucDaoTao.Record>[] = [
     {
@@ -30,21 +40,21 @@ const HinhThucDaoTao = () => {
       dataIndex: 'ten',
       align: 'center',
       width: 80,
-      onCell
+      onCell,
     },
     {
       title: 'Mã',
       dataIndex: 'ma',
       align: 'center',
       width: 80,
-      onCell
+      onCell,
     },
     {
       title: 'Ký hiệu',
       dataIndex: 'kyHieu',
       align: 'center',
       width: 80,
-      onCell
+      onCell,
     },
     {
       title: 'Thời gian bắt đầu',
@@ -52,9 +62,11 @@ const HinhThucDaoTao = () => {
       align: 'center',
       width: 80,
       render: (val) => {
-        return <div>{val ? moment(val).format('HH:mm - DD/MM/YYYY') : 'Chưa có thời gian bắt đầu'}</div>
+        return (
+          <div>{val ? moment(val).format('HH:mm - DD/MM/YYYY') : 'Chưa có thời gian bắt đầu'}</div>
+        );
       },
-      onCell
+      onCell,
     },
     {
       title: 'Thời gian kết thúc',
@@ -62,11 +74,11 @@ const HinhThucDaoTao = () => {
       align: 'center',
       width: 80,
       render: (val) => {
-        return <div>
-          {val ? moment(val).format('HH:mm - DD/MM/YYYY') : 'Chưa có thời gian kết thúc'}
-        </div>
+        return (
+          <div>{val ? moment(val).format('HH:mm - DD/MM/YYYY') : 'Chưa có thời gian kết thúc'}</div>
+        );
       },
-      onCell
+      onCell,
     },
     {
       title: 'Thao tác',
@@ -79,7 +91,6 @@ const HinhThucDaoTao = () => {
             <Tooltip title="Chỉnh sửa">
               <Button
                 onClick={() => {
-
                   setVisibleForm(true);
                   setEdit(true);
                   setRecord(record);
@@ -92,22 +103,25 @@ const HinhThucDaoTao = () => {
             </Tooltip>
             <Divider type="vertical" />
 
-
             <Tooltip title="Xóa">
-              <Popconfirm title="Bạn có chắc chắn muốn xoá?" onConfirm={() => delHinhThucDaoTaoModel({ id: record?._id })}>
-                <Button type="primary" shape="circle"><DeleteOutlined /></Button>
+              <Popconfirm
+                title="Bạn có chắc chắn muốn xoá?"
+                onConfirm={() => delHinhThucDaoTaoModel({ id: record?._id })}
+              >
+                <Button type="primary" shape="circle">
+                  <DeleteOutlined />
+                </Button>
               </Popconfirm>
-
             </Tooltip>
           </>
-        )
-      }
-    }
-  ]
+        );
+      },
+    },
+  ];
   return (
     <>
       <TableBase
-        title="Hình thức đào tạo"
+        title="Quản lý hình thức đào tạo"
         columns={columns}
         getData={getHinhThucDaoTaoPageableModel}
         dependencies={[page, limit, condition]}
@@ -115,10 +129,8 @@ const HinhThucDaoTao = () => {
         loading={loading}
         hascreate
         Form={Form}
-        widthDrawer="35%"
       />
     </>
-
-  )
-}
+  );
+};
 export default HinhThucDaoTao;

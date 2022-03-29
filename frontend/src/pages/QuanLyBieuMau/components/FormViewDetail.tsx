@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 import { Button, Card, Form } from 'antd';
+import Text from 'antd/lib/typography/Text';
 import { useModel } from 'umi';
-import SingleChoice from './QuestionType/SingleChoice'; 
-import MultipleChoice from './QuestionType/MultipleChoice'; 
-import Text from 'antd/lib/typography/Text'; 
-import GridChoice from './QuestionType/GridChoice'; 
+import GridChoice from './QuestionType/GridChoice';
+import MultipleChoice from './QuestionType/MultipleChoice';
+import SingleChoice from './QuestionType/SingleChoice';
 import ThongKeNumericChoice from './ThongKeType/NumericChoice';
 
 const FormBaiHoc = () => {
