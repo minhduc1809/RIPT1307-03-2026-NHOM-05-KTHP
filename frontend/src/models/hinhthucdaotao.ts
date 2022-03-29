@@ -1,8 +1,10 @@
 import useInitModel from '@/hooks/useInitModel';
 import {
+  delHinhThucDaoTao,
   getAllHinhThucDaoTao,
   getHinhThucDaoTaoPageable,
   postHinhThucDaoTao,
+  putHinhThucDaoTao,
 } from '@/services/HinhThucDaoTao/hinhthucdaotao';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -38,6 +40,25 @@ export default () => {
     setLoading(false);
   };
 
+  const putHinhThucDaoTaoModel = async (payload: {id: string, payload: HinhThucDaoTao.Record}) => {
+    if(!payload.id) return;
+    setLoading(true);
+    await putHinhThucDaoTao(payload);
+    getHinhThucDaoTaoPageableModel();
+    message.success("Sửa thành công");
+    setVisibleForm(false);
+    setLoading(false)
+  }
+
+  const delHinhThucDaoTaoModel = async (payload: {id: string}) => {
+    setLoading(true);
+    await delHinhThucDaoTao(payload);
+    getHinhThucDaoTaoPageableModel();
+    message.success("Xoá thành công");
+    setVisibleForm(false);
+    setLoading(false)
+  }
+
   return {
     postHinhThucDaoTaoModel,
     getHinhThucDaoTaoPageableModel,
@@ -47,5 +68,7 @@ export default () => {
     danhSach,
     setDanhSach,
     ...objInitModel,
+    putHinhThucDaoTaoModel,
+    delHinhThucDaoTaoModel
   };
 };

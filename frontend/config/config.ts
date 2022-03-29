@@ -127,6 +127,13 @@ export default defineConfig({
       access: 'thiSinh',
     },
     {
+      name: 'KhaoSatTrucTuyen',
+      path: '/khaosattructuyen',
+      icon: 'CheckSquareOutlined',
+      component: './HoSoThiSinh/KhaoSatTrucTuyen',
+      //access: 'thiSinh',
+    },
+    {
       name: 'NhapHoc',
       path: '/nhaphoc',
       icon: 'BankOutlined',
@@ -205,6 +212,21 @@ export default defineConfig({
         {
           name: 'QuanLyHoSo',
           path: './quanlyhoso',
+        },
+        {
+          name: 'QuanLyBieuMau',
+          path: './quanlybieumau',
+          component: './QuanLyBieuMau'
+        },
+        {
+          name: 'QuanLyThongBao',
+          path: './quanlythongbao',
+          component: './QuanLyThongBao'
+        },
+        {
+          name: 'HinhThucDaoTao',
+          path: './hinhthucdaotao',
+          component: './HinhThucDaoTao'
         },
       ],
     },
