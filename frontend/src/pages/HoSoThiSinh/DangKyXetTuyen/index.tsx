@@ -13,13 +13,6 @@ const DangKyXetTuyen = () => {
     query: '(min-width: 992px)',
   });
   const { getAllDanToc, getAllTonGiao } = useModel('dantoctongiao');
-  const { getMyHoSoXetTuyenModel } = useModel('hosoxettuyen');
-  const idDot = localStorage.getItem('dot');
-  useEffect(() => {
-    if (idDot) {
-      getMyHoSoXetTuyenModel(idDot);
-    }
-  }, [idDot]);
 
   useEffect(() => {
     getAllDanToc();

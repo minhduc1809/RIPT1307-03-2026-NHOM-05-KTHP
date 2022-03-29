@@ -157,6 +157,7 @@ export default defineConfig({
         {
           name: 'QuanLyTaiKhoan',
           path: './quanlytaikhoan',
+          component: './QuanLyTaiKhoan',
         },
         {
           name: 'QuanLyNamTuyenSinh',
@@ -287,6 +288,20 @@ export default defineConfig({
         },
       ],
     },
+    {
+      name: 'Biểu mẫu',
+      icon: 'FileDoneOutlined',
+      path: '/bieumau',
+      access: 'admin',
+      routes: [
+        {
+          name: 'Gửi Email',
+          path: './sendemail',
+          component: './SendEmail/index.tsx',
+        },
+      ],
+    },
+
     // {
     //   name: 'BieuMau',
     //   icon: 'FileDoneOutlined',

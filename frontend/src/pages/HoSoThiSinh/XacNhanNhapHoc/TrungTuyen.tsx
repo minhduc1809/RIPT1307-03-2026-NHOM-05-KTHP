@@ -10,7 +10,12 @@ const TrungTuyen = () => {
   const { record, xacNhanKhongNhapHocModel, setVisibleForm, visibleForm } =
     useModel('ketquaxettuyen');
   const { record: recordDot } = useModel('dottuyensinh');
-
+  const isKetThucThoiGianXacNhan = moment(recordDot?.thoiGianKetThucXacNhanNhapHoc).isBefore(
+    moment(new Date()),
+  );
+  const isChuaBatDauThoiGianXacNhan = moment(recordDot?.thoiGianBatDauXacNhanNhapHoc).isAfter(
+    moment(new Date()),
+  );
   return (
     <div style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
       <Card
@@ -98,7 +103,7 @@ const TrungTuyen = () => {
         {record?.thongTinXacNhanNhapHoc?.trangThaiXacNhan ===
           ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN && (
           <>
-            {
+            {!isChuaBatDauThoiGianXacNhan && !isKetThucThoiGianXacNhan && (
               <div style={{ textAlign: 'center', fontSize: '17px' }}>
                 <Button
                   onClick={() => setVisibleForm(true)}
@@ -124,7 +129,12 @@ const TrungTuyen = () => {
                   </Button>
                 </Popconfirm>
               </div>
-            }
+            )}
+            {isKetThucThoiGianXacNhan && (
+              <div style={{ color: 'red', fontWeight: 'bold' }}>
+                Bạn chưa xác nhận nhập học trong thời gian cho phép
+              </div>
+            )}
           </>
         )}
         {record?.thongTinXacNhanNhapHoc?.trangThaiXacNhan === ETrangThaiXacNhanNhapHoc.XAC_NHAN && (

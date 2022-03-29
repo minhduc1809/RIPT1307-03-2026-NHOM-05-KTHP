@@ -56,6 +56,7 @@ const QuaTrinhHocTap = () => {
     setIsTruongChuyenLop12,
     putMyThongTinXetTuyenModel,
   } = useModel('hosoxettuyen');
+
   const { record } = useModel('dottuyensinh');
   const [form] = Form.useForm();
   const { tenTruong10, tenTruong11, tenTruong12, setTenTruong10, setTenTruong11, setTenTruong12 } =

@@ -15,6 +15,7 @@ const Stepper = () => {
     setCurrent(step);
     window.scroll({ top: 0 });
   };
+
   return (
     <Card title="Quy trình đăng ký">
       <Steps current={current} onChange={onChangeStep} direction="vertical">

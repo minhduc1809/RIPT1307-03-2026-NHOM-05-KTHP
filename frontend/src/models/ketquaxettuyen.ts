@@ -17,10 +17,14 @@ export default () => {
   const { setLoading, condition, page, limit, setTotal, setVisibleForm } = objInitModel;
 
   const getMyKetQuaXetTuyenModel = async (idDotTuyenSinh: string) => {
-    setLoading(true);
-    const response = await getMyKetQuaXetTuyen(idDotTuyenSinh);
-    setRecord(response?.data?.data);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const response = await getMyKetQuaXetTuyen(idDotTuyenSinh);
+      setRecord(response?.data?.data);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   const getKetQuaXetTuyenPageableModel = async (idDotTuyenSinh: string) => {

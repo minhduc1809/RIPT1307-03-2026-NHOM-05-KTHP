@@ -24,6 +24,29 @@ export enum ESystemRole {
   Guest = 'Guest',
 }
 
+export const MapKeyRole = {
+  Admin: 'Admin',
+  ChuyenVien: 'Chuyên viên',
+  ThiSinh: 'Thí sinh',
+  PhuHuynh: 'Phụ huynh',
+  Guest: 'Khách',
+};
+
+export enum Gender {
+  Nam = 'Nam',
+  Nu = 'Nữ',
+  Khac = 'Khác',
+}
+
+export enum LoaiNoiSinh {
+  TRONG_NUOC = 'TRONG_NUOC',
+  NUOC_NGOAI = 'NUOC_NGOAI',
+}
+
+export const MapKeyLoaiNoiSinh = {
+  TRONG_NUOC: 'Trong nước',
+  NUOC_NGOAI: 'Nước ngoài',
+};
 export const arrKhuVucUuTien = ['KV1', 'KV2_NT', 'KV2', 'KV3'];
 
 export const hanhKiem = ['Tốt', 'Khá', 'Trung bình', 'Yếu'];

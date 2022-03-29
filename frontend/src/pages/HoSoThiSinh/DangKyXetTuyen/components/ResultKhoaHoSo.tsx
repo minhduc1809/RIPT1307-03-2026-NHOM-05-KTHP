@@ -1,4 +1,4 @@
-import img from '@/assets/success.png';
+import logo from '@/assets/logo.png';
 import ThanhToan from '@/components/ThanhToan';
 import { ETrangThaiHoSo } from '@/utils/constants';
 import { Button, Col, Modal, Result, Row } from 'antd';
@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useModel } from 'umi';
 import RaSoatHoSo from '../RaSoatHoSo';
 
-const ResultKhoaHoSo = () => {
+const ResultHoSo = () => {
   const { recordHoSo } = useModel('hosoxettuyen');
   const [visibleHoSo, setVisibleHoSo] = useState<boolean>(false);
   const [visibleThanhToan, setVisibleThanhToan] = useState<boolean>(false);
@@ -14,6 +14,7 @@ const ResultKhoaHoSo = () => {
     'Đã khóa': 'Bạn đã nộp hồ sơ',
     'Đã tiếp nhận': 'Hồ sơ của bạn đã được tiếp nhận',
     'Không tiếp nhận': 'Rất tiếc, hồ sơ của bạn không đủ điều kiện tiếp nhận',
+    'Chưa khóa': 'Đã kết thúc thời gian nộp hồ sơ',
   };
 
   const lyDoKhongTiepNhan = (
@@ -32,6 +33,7 @@ const ResultKhoaHoSo = () => {
   const subTitleByTrangThai = {
     'Đã khóa': 'Hãy đợi đến ngày công bố kết quả xét tuyển của Học viện nhé.',
     'Đã tiếp nhận': 'Vui lòng chờ các thông báo mới nhất từ Học viện',
+    'Chưa khóa': 'Bạn chưa khóa hồ sơ trong thời gian cho phép',
   };
 
   return (
@@ -39,8 +41,17 @@ const ResultKhoaHoSo = () => {
       <Col span={24}>
         <Result
           style={{ backgroundColor: 'white', paddingBottom: 20 }}
-          icon={<img alt="" height="200px" src={img} />}
-          title={titleByTrangThai?.[recordHoSo?.trangThai ?? ''] ?? ''}
+          icon={<img alt="" height="200px" src={logo} />}
+          title={
+            <div style={{ fontSize: 22 }}>
+              <div>{titleByTrangThai?.[recordHoSo?.trangThai ?? ''] ?? ''}</div>
+              {recordHoSo?.trangThai !== ETrangThaiHoSo.chuakhoa && (
+                <div>
+                  Trạng thái thanh toán: <b>{recordHoSo?.trangThaiThanhToan}</b>
+                </div>
+              )}
+            </div>
+          }
           subTitle={
             <>
               {recordHoSo?.trangThai === ETrangThaiHoSo.khongtiepnhan
@@ -59,15 +70,17 @@ const ResultKhoaHoSo = () => {
               >
                 Xem hồ sơ đã nộp
               </Button>
-              <Button
-                onClick={() => {
-                  setVisibleThanhToan(true);
-                }}
-                type="primary"
-                style={{ marginBottom: 8, marginLeft: 8 }}
-              >
-                Xem thông tin thanh toán
-              </Button>
+              {recordHoSo?.trangThai !== ETrangThaiHoSo.chuakhoa && (
+                <Button
+                  onClick={() => {
+                    setVisibleThanhToan(true);
+                  }}
+                  type="primary"
+                  style={{ marginBottom: 8 }}
+                >
+                  Xem thông tin thanh toán
+                </Button>
+              )}
             </>
           }
         />
@@ -115,4 +128,4 @@ const ResultKhoaHoSo = () => {
   );
 };
 
-export default ResultKhoaHoSo;
+export default ResultHoSo;

@@ -5,7 +5,7 @@ import moment from 'moment';
 import mm from 'moment-timezone';
 import { useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { useModel, history } from 'umi';
+import { useModel } from 'umi';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
@@ -15,13 +15,13 @@ const Timeline = () => {
   const isMediumScreen = useMediaQuery({
     query: '(min-width: 1261px)',
   });
-  const { record, getDotTuyenSinhByIdModel } = useModel('dottuyensinh');
-  const idDot = localStorage.getItem('dot');
+  const { record } = useModel('dottuyensinh');
   const isLargeScreen = useMediaQuery({
     query: '(min-width: 831px)',
   });
 
   const { data, dayFinal, checkDay, setupTimeline, finishStep } = useInitTimeline();
+  // console.log('data', data)
   const customDot = (
     dot: any,
     info: {
@@ -49,11 +49,6 @@ const Timeline = () => {
       {dot}
     </Popover>
   );
-
-  useEffect(() => {
-    if (idDot) getDotTuyenSinhByIdModel(idDot);
-    else history.push('/phuongthucxettuyen');
-  }, []);
 
   useEffect(() => {
     if (record?._id) setupTimeline(record);

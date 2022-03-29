@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
 import { Button, Card, Col, Descriptions, Divider, Modal, Popconfirm, Row, Tag } from 'antd';
+import moment from 'moment';
 import { useState } from 'react';
 import { useAccess, useModel } from 'umi';
 import BlockGiayToNopOnline from '../ThongTinHocTap/components/BlockGiayToNopOnline';
@@ -38,7 +39,9 @@ const RaSoatHoSo = () => {
   let indexThongTinTiepNhanHoSo = 1;
   const access = useAccess();
   const [typeXuLy, setTypeXuLy] = useState<ETrangThaiHoSo>();
-
+  const isTrongThoiGianDangKy =
+    moment(record?.thoiGianMoDangKy).isBefore(moment(new Date())) &&
+    moment(record?.thoiGianKetThucNopHoSo).isAfter(moment(new Date()));
   const columnGiaiHSG: IColumn<
     HoSoXetTuyen.ThongTinGiaiTinhTP | HoSoXetTuyen.ThongTinGiaiQuocGia
   >[] = [
@@ -296,7 +299,7 @@ const RaSoatHoSo = () => {
                   justifyContent: 'space-around',
                 }}
               >
-                {recordHoSo?.trangThai === ETrangThaiHoSo.chuakhoa && (
+                {recordHoSo?.trangThai === ETrangThaiHoSo.chuakhoa && isTrongThoiGianDangKy && (
                   <>
                     <Button
                       onClick={() => {

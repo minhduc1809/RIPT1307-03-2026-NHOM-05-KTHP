@@ -18,6 +18,7 @@ import {
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { ETrangThaiHoSo } from '@/utils/constants';
 import { message } from 'antd';
+import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
 
@@ -38,7 +39,7 @@ export default () => {
   const [isTruongChuyenLop12, setIsTruongChuyenLop12] = useState<boolean>(false);
   const { record: recordHinhThuc } = useModel('hinhthucdaotao');
   const { record: recordNam } = useModel('namtuyensinh');
-  const { setVisibleFormGiayTo } = useModel('dottuyensinh');
+  const { setVisibleFormGiayTo, record: recordDot } = useModel('dottuyensinh');
 
   const khoiTaoHoSoXetTuyenModel = async (idDotXetTuyen: string) => {
     const response = await khoiTaoHoSoXetTuyen(idDotXetTuyen);
@@ -47,12 +48,16 @@ export default () => {
   };
 
   const getMyHoSoXetTuyenModel = async (idDotXetTuyen: string) => {
+    if (!idDotXetTuyen) return;
     setLoading(true);
     const response = await getMyHoSoXetTuyen(idDotXetTuyen);
-    if (response?.data?.data === null) {
+    const isTrongThoiGianDangKy =
+      moment(recordDot?.thoiGianMoDangKy).isBefore() &&
+      moment(recordDot?.thoiGianKetThucNopHoSo).isAfter();
+    if (response?.data?.data === null && isTrongThoiGianDangKy) {
       khoiTaoHoSoXetTuyenModel(idDotXetTuyen);
     } else {
-      setRecordHoSo(response?.data?.data);
+      setRecordHoSo(response?.data?.data ?? null);
       setDanhSachNguyenVong(response?.data?.data?.danhSachNguyenVong ?? []);
       setLoading(false);
     }
