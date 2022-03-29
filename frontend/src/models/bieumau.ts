@@ -56,11 +56,9 @@ export default () => {
       limit,
       condition: { ...condition },
     });
-    debugger;
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total);
     setLoading(false);
-    debugger;
   };
   const getBieuMauUserModel = async (loaiParam?: string) => {
     setLoading(true);

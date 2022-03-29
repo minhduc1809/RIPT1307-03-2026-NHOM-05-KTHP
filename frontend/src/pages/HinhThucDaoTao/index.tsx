@@ -1,6 +1,6 @@
 import TableBase from "@/components/Table";
 import { IColumn } from "@/utils/interfaces";
-import { DeleteFilled, EditOutlined } from "@ant-design/icons";
+import { DeleteFilled, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Divider, Popconfirm, Tooltip } from "antd";
 import moment from "moment";
 import { useModel } from "umi";
@@ -95,7 +95,7 @@ const HinhThucDaoTao = () => {
 
             <Tooltip title="Xóa">
               <Popconfirm title="Bạn có chắc chắn muốn xoá?" onConfirm={() => delHinhThucDaoTaoModel({ id: record?._id })}>
-                <Button type="primary" shape="circle"><DeleteFilled /></Button>
+                <Button type="primary" shape="circle"><DeleteOutlined /></Button>
               </Popconfirm>
 
             </Tooltip>
