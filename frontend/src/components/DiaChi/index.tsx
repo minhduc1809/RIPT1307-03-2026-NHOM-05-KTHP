@@ -138,7 +138,11 @@ const DiaChi = (props: Props) => {
                   );
 
                 setMaQuanHuyen(val);
-                props.form.resetFields([props.fields.xaPhuong]);
+                const newValue = {};
+                newValue[`${props?.fields?.quanHuyen?.[0]}`] = {
+                  maXaPhuong: undefined,
+                };
+                props.form.setFieldsValue(newValue);
               }}
               showSearch
               allowClear

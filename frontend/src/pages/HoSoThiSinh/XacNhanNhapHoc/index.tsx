@@ -12,7 +12,6 @@ const XacNhanNhapHoc = () => {
   const {
     getDotTuyenSinhByIdModel,
     record: recordDot,
-    setRecord: setRecordDot,
     loading: loadingDot,
   } = useModel('dottuyensinh');
   const {
@@ -24,9 +23,9 @@ const XacNhanNhapHoc = () => {
   const isChuaDenThoiGianCongBo = moment(recordDot?.thoiGianCongBoKetQua).isAfter();
   const idDot = localStorage.getItem('dot');
   useEffect(() => {
-    if (idDot) {
+    if (idDot && !recordDot?._id) {
       getDotTuyenSinhByIdModel(idDot);
-    } else history.push('/phuongthucxettuyen');
+    } else if (!idDot) history.push('/phuongthucxettuyen');
   }, [idDot]);
 
   useEffect(() => {
@@ -44,7 +43,6 @@ const XacNhanNhapHoc = () => {
   useEffect(() => {
     return () => {
       setRecordHoSo(undefined);
-      setRecordDot(undefined);
       setRecord(undefined);
     };
   }, []);
@@ -66,7 +64,9 @@ const XacNhanNhapHoc = () => {
       );
     } else {
       if (recordHoSo === null) {
-        <ResultWithLogo logo={logo} title="Bạn không có hồ sơ trong đợt tuyển sinh này" />;
+        contentComponent = (
+          <ResultWithLogo logo={logo} title="Bạn không có hồ sơ trong đợt tuyển sinh này" />
+        );
       } else if (recordHoSo && record?._id) {
         if (record?.trangThai === ETrangThaiTrungTuyen.TRUNG_TUYEN)
           contentComponent = <TrungTuyen />;

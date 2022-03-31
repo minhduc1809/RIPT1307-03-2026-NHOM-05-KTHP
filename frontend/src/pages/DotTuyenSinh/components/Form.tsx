@@ -17,6 +17,7 @@ import moment from 'moment';
 import mm from 'moment-timezone';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
+import TableDoiTuong from './TableDoiTuong';
 import TableGiayTo from './TableGiayTo';
 import TableNganh from './TableNganh';
 import TableKhaiThongTinNhapHoc from './TableThongTinKhaiNhapHoc';
@@ -40,11 +41,12 @@ const FormDotTuyenSinh = () => {
     danhSachGiayToXacNhanNhapHoc,
     danhSachNganh,
     danhSachThongTinKhaiXacNhan,
+    danhSachDoiTuong,
+    setDanhSachDoiTuong,
   } = useModel('dottuyensinh');
   const { danhSach } = useModel('namtuyensinh');
   const { record: recordProduct } = useModel('thanhtoan');
   const { danhSach: danhSachHinhThucDaoTao } = useModel('hinhthucdaotao');
-  const { danhSach: danhSachDoiTuongTuyenSinh } = useModel('doituongtuyensinh');
   const [recordNamTuyenSinh, setRecordNamTuyenSinh] = useState<NamTuyenSinh.Record | undefined>(
     danhSach?.find((item) => item.nam === record?.namTuyenSinh),
   );
@@ -78,14 +80,14 @@ const FormDotTuyenSinh = () => {
         scrollToFirstError
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          values.danhSachDoiTuongTuyenSinh = values?.danhSachDoiTuongTuyenSinh?.map(
-            (item: string) => ({
-              maDoiTuong: item,
-              cauHinhDoiTuong:
-                record?.danhSachDoiTuongTuyenSinh?.find((doiTuong) => doiTuong.maDoiTuong === item)
-                  ?.cauHinhDoiTuong ?? {},
-            }),
-          );
+          // values.danhSachDoiTuongTuyenSinh = values?.danhSachDoiTuongTuyenSinh?.map(
+          //   (item: string) => ({
+          //     maDoiTuong: item,
+          //     cauHinhDoiTuong:
+          //       record?.danhSachDoiTuongTuyenSinh?.find((doiTuong) => doiTuong.maDoiTuong === item)
+          //         ?.cauHinhDoiTuong ?? {},
+          //   }),
+          // );
 
           if (edit) {
             putDotTuyenSinhModel(record?._id ?? '', {
@@ -100,6 +102,7 @@ const FormDotTuyenSinh = () => {
               choPhepHK1HoacCaNamLop12,
               thongTinGiayToNopOnline: danhSachGiayToNopOnline,
               thongTinGiayToNopHoSo: danhSachGiayToNopHoSo,
+              danhSachDoiTuongTuyenSinh: danhSachDoiTuong,
               danhSachGiayToXacNhanNhapHoc,
               danhSachThongTinKhaiXacNhan,
               danhSachNganhTuyenSinh: danhSachNganh?.map((item) => ({
@@ -151,6 +154,11 @@ const FormDotTuyenSinh = () => {
                 allowClear
                 onChange={(val) => {
                   setHinhThucDaoTao(val);
+                  setDanhSachDoiTuong(
+                    record?.danhSachDoiTuongTuyenSinh?.filter(
+                      (item) => item.thongTinDoiTuong?.hinhThucDaoTao === val,
+                    ) ?? [],
+                  );
                   form.setFieldsValue({
                     namTuyenSinh: undefined,
                   });
@@ -178,16 +186,7 @@ const FormDotTuyenSinh = () => {
               />
             </Form.Item>
           </Col>
-          {/* <Col xs={24} md={8}>
-            <Form.Item
-              initialValue={record?.maThanhToanDot}
-              name="maThanhToanDot"
-              label="Mã thanh toán đợt"
-              rules={[...rules.required]}
-            >
-              <Input placeholder="Mã thanh toán đợt" />
-            </Form.Item>
-          </Col> */}
+
           <Col xs={24} md={8}>
             <Form.Item
               initialValue={record?.namTuyenSinh}
@@ -227,22 +226,9 @@ const FormDotTuyenSinh = () => {
               />
             </Form.Item>
           </Col>
-          <Col xs={24}>
-            <Form.Item
-              name="danhSachDoiTuongTuyenSinh"
-              label="Đối tượng tuyển sinh"
-              initialValue={record?.danhSachDoiTuongTuyenSinh?.map((item) => item.maDoiTuong)}
-              rules={[...rules.required]}
-            >
-              <Select
-                mode="multiple"
-                notFoundContent="Bạn chưa chọn hình thức đào tạo hoặc không có đối tượng tuyển sinh nào cho hình thức đào tạo này"
-                placeholder="Đối tượng tuyển sinh"
-                options={danhSachDoiTuongTuyenSinh?.map((item) => ({
-                  value: item.maDoiTuong,
-                  label: item.tenDoiTuong,
-                }))}
-              />
+          <Col span={24}>
+            <Form.Item label="Danh sách đối tượng tuyển sinh">
+              <TableDoiTuong hinhThucDaoTao={hinhThucDaoTao} />
             </Form.Item>
           </Col>
           <Col span={24}>

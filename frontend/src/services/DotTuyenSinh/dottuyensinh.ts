@@ -1,5 +1,6 @@
 import axios from '@/utils/axios';
 import { ip3 } from '@/utils/ip';
+import type { DotTuyenSinh } from './typings';
 
 const url = 'dot-tuyen-sinh';
 

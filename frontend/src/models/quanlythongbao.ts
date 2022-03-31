@@ -35,7 +35,7 @@ export default () => {
       page,
       limit,
       condition: {
-        ...condition
+        ...condition,
       },
     });
     setDanhSach(response?.data?.data?.result ?? []);
@@ -85,7 +85,6 @@ export default () => {
 
   const postThongBaoGeneralModel = async (payload: ThongBao.PostRecord) => {
     try {
-      debugger
       setLoading(true);
       await postThongBaoGeneral(payload);
       message.success('Gửi thành công');

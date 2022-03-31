@@ -38,13 +38,16 @@ const FormDangKyNguyenVong = () => {
   const [tenNganhChuyenNganh, setTenNganhChuyenNganh] = useState<string>(
     recordNguyenVong?.tenNganhChuyenNganh ?? '',
   );
+
+  const [maDoiTuong, setMaDoiTuong] = useState<string>(recordNguyenVong?.maDoiTuong ?? '');
   const verifyNguyenVong = (nguyenVong: HoSoXetTuyen.NguyenVong): boolean => {
     let check = true;
     danhSachNguyenVong?.map((item) => {
       if (
-        item.coSoDaoTao._id === nguyenVong.coSoDaoTao._id &&
-        item.idNganhChuyenNganh === nguyenVong.idNganhChuyenNganh &&
-        item.toHopXetTuyen === nguyenVong.toHopXetTuyen
+        item?.coSoDaoTao?._id === nguyenVong?.coSoDaoTao?._id &&
+        item?.idNganhChuyenNganh === nguyenVong?.idNganhChuyenNganh &&
+        item?.toHopXetTuyen === nguyenVong?.toHopXetTuyen &&
+        item?.maDoiTuong === nguyenVong?.maDoiTuong
       ) {
         check = false;
       }
@@ -70,6 +73,11 @@ const FormDangKyNguyenVong = () => {
         coSoDaoTao: `${listCoSoDaoTao[0]._id}||${listCoSoDaoTao[0].ten}`,
       });
     }
+    if (!edit && recordHoSo?.maDoiTuong?.length === 1) {
+      form.setFieldsValue({
+        maDoiTuong: recordHoSo?.maDoiTuong?.[0],
+      });
+    }
   }, []);
 
   return (
@@ -83,10 +91,9 @@ const FormDangKyNguyenVong = () => {
             soThuTu: edit ? recordNguyenVong?.soThuTu : danhSachNguyenVong.length + 1,
             tenNganhChuyenNganh,
             coSoDaoTao,
-            maDoiTuong: recordHoSo?.maDoiTuong,
             tenCoSoDaoTao,
             tenDoiTuong: record?.danhSachDoiTuongTuyenSinh?.find(
-              (item) => item.maDoiTuong === recordHoSo?.maDoiTuong,
+              (item) => item.maDoiTuong === values?.maDoiTuong,
             )?.thongTinDoiTuong?.tenDoiTuong,
             idNganhChuyenNganh,
             maNganhChuyenNganh,
@@ -118,6 +125,24 @@ const FormDangKyNguyenVong = () => {
           }
         }}
       >
+        <Form.Item
+          initialValue={recordNguyenVong?.maDoiTuong}
+          rules={[...rules.required]}
+          label="Chọn đối tượng xét tuyển"
+          name="maDoiTuong"
+        >
+          <Select
+            onChange={(val) => setMaDoiTuong(val)}
+            placeholder="Chọn đối tượng xét tuyển"
+            style={{ width: '100%' }}
+            options={record?.danhSachDoiTuongTuyenSinh
+              ?.filter((item) => recordHoSo?.maDoiTuong?.includes(item?.maDoiTuong ?? ''))
+              ?.map((item) => ({
+                value: item?.maDoiTuong,
+                label: item?.thongTinDoiTuong?.tenDoiTuong,
+              }))}
+          />
+        </Form.Item>
         <Form.Item
           initialValue={
             edit
@@ -171,7 +196,9 @@ const FormDangKyNguyenVong = () => {
           />
         </Form.Item>
         {record?.danhSachNganhTuyenSinh?.find((item) => item?.nganh?._id === idNganhChuyenNganh)
-          ?.danhSachToHop?.length ? (
+          ?.danhSachToHop?.length &&
+        record?.danhSachDoiTuongTuyenSinh?.find((item) => item.maDoiTuong === maDoiTuong)
+          ?.yeuCauLuaChonToHop === true ? (
           <Form.Item
             initialValue={recordNguyenVong?.toHopXetTuyen}
             rules={[...rules.required]}

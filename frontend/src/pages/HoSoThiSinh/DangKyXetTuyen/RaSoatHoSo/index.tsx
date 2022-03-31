@@ -2,6 +2,7 @@ import FormTiepNhanHoSo from '@/pages/TiepNhanHoSo/components/FormTiepNhanHoSo';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { ELoaiNgoaiNgu, ETrangThaiHoSo, Setting } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
+import { mergeCauHinhDoiTuongXetTuyen } from '@/utils/utils';
 import {
   CheckOutlined,
   CloseOutlined,
@@ -30,11 +31,12 @@ import BlockRaSoatThongTinCaNhan from './components/BlockThongTinCaNhan';
 const { Item } = Descriptions;
 
 const RaSoatHoSo = () => {
-  const { recordHoSo, setVisibleForm, setCurrent, khoaMyHoSoModel } = useModel('hosoxettuyen');
+  const { recordHoSo, setVisibleForm, setCurrent, khoaMyHoSoModel, loading } =
+    useModel('hosoxettuyen');
   const { record, visibleFormGiayTo, setVisibleFormGiayTo } = useModel('dottuyensinh');
-  const cauHinhDoiTuong = record?.danhSachDoiTuongTuyenSinh?.find(
-    (item) => item.maDoiTuong === recordHoSo?.maDoiTuong,
-  )?.cauHinhDoiTuong;
+  const cauHinhDoiTuong: any = record?._id
+    ? mergeCauHinhDoiTuongXetTuyen(recordHoSo?.maDoiTuong ?? [], record)
+    : {};
   let index = 1;
   let indexThongTinTiepNhanHoSo = 1;
   const access = useAccess();
@@ -322,7 +324,7 @@ const RaSoatHoSo = () => {
                         </div>
                       }
                     >
-                      <Button type="primary" icon={<LockOutlined />}>
+                      <Button loading={loading} type="primary" icon={<LockOutlined />}>
                         Khóa hồ sơ
                       </Button>
                     </Popconfirm>

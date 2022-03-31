@@ -8,6 +8,7 @@ import {
   putDotTuyenSinh,
 } from '@/services/DotTuyenSinh/dottuyensinh';
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
+import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
 import { message } from 'antd';
 import { useState } from 'react';
 
@@ -22,9 +23,10 @@ export default () => {
     DotTuyenSinh.GiayTo[]
   >([]);
   const [danhSachThongTinKhaiXacNhan, setdanhSachThongTinKhaiXacNhan] = useState<
-    DotTuyenSinh.ThongTinKhaiXacNhan[]
+    KetQuaXetTuyen.ThongTinKhaiXacNhan[]
   >([]);
   const [danhSachNganh, setDanhSachNganh] = useState<DotTuyenSinh.NganhTuyenSinh[]>([]);
+  const [danhSachDoiTuong, setDanhSachDoiTuong] = useState<DotTuyenSinh.DoiTuongTuyenSinh[]>([]);
   const [editGiayTo, setEditGiayTo] = useState<boolean>(false);
   const [visibleFormGiayTo, setVisibleFormGiayTo] = useState<boolean>(false);
   const [visibleFormGiayToNopHoSo, setVisibleFormGiayToNopHoSo] = useState<boolean>(false);
@@ -34,10 +36,12 @@ export default () => {
   const [visibleFormGiayToXacNhanNhapHoc, setVisibleFormGiayToXacNhanNhapHoc] =
     useState<boolean>(false);
   const [visibleFormNganh, setVisibleFormNganh] = useState<boolean>(false);
+  const [visibleFormDoiTuong, setVisibleFormDoiTuong] = useState<boolean>(false);
   const [recordGiayTo, setRecordGiayTo] = useState<DotTuyenSinh.GiayTo>();
   const [recordThongTinKhaiXacNhan, setRecordThongTinKhaiXacNhan] =
-    useState<DotTuyenSinh.ThongTinKhaiXacNhan>();
+    useState<KetQuaXetTuyen.ThongTinKhaiXacNhan>();
   const [recordNganh, setRecordNganh] = useState<DotTuyenSinh.NganhTuyenSinh>();
+  const [recordDoiTuong, setRecordDoiTuong] = useState<DotTuyenSinh.DoiTuongTuyenSinh>();
   const getAllDotTuyenSinhModel = async (
     payload: {
       phuongThucTuyenSinh?: string;
@@ -108,6 +112,8 @@ export default () => {
   };
 
   return {
+    recordDoiTuong,
+    setRecordDoiTuong,
     recordThongTinKhaiXacNhan,
     setRecordThongTinKhaiXacNhan,
     setdanhSachThongTinKhaiXacNhan,
@@ -124,10 +130,14 @@ export default () => {
     setVisibleFormGiayToNopOnline,
     visibleFormNganh,
     setVisibleFormNganh,
+    visibleFormDoiTuong,
+    setVisibleFormDoiTuong,
     recordNganh,
     setRecordNganh,
     danhSachNganh,
     setDanhSachNganh,
+    danhSachDoiTuong,
+    setDanhSachDoiTuong,
     recordGiayTo,
     setRecordGiayTo,
     visibleFormGiayTo,

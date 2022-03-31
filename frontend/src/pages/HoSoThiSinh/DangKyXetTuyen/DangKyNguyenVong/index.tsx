@@ -4,7 +4,7 @@ import { useModel } from 'umi';
 import { ArrowLeftOutlined, CheckOutlined, SaveOutlined } from '@ant-design/icons';
 
 const DangKyNguyenVong = () => {
-  const { danhSachNguyenVong, setCurrent, putMyDanhSachNguyenVongModel, recordHoSo } =
+  const { danhSachNguyenVong, setCurrent, putMyDanhSachNguyenVongModel, recordHoSo, loading } =
     useModel('hosoxettuyen');
   return (
     <Form
@@ -42,6 +42,7 @@ const DangKyNguyenVong = () => {
           </Button>
         </Popconfirm>
         <Button
+          loading={loading}
           style={{ float: 'right', marginBottom: 8 }}
           icon={<SaveOutlined />}
           htmlType="submit"
@@ -49,6 +50,7 @@ const DangKyNguyenVong = () => {
           Lưu
         </Button>
         <Button
+          loading={loading}
           disabled={danhSachNguyenVong.length === 0}
           type="primary"
           icon={<CheckOutlined />}

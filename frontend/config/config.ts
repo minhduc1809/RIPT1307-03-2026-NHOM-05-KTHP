@@ -126,13 +126,13 @@ export default defineConfig({
       component: './HoSoThiSinh/XacNhanNhapHoc',
       access: 'thiSinh',
     },
-    {
-      name: 'KhaoSatTrucTuyen',
-      path: '/khaosattructuyen',
-      icon: 'CheckSquareOutlined',
-      component: './HoSoThiSinh/KhaoSatTrucTuyen',
-      access: 'thiSinh',
-    },
+    // {
+    //   name: 'KhaoSatTrucTuyen',
+    //   path: '/khaosattructuyen',
+    //   icon: 'CheckSquareOutlined',
+    //   component: './HoSoThiSinh/KhaoSatTrucTuyen',
+    //   access: 'thiSinh',
+    // },
     {
       name: 'NhapHoc',
       path: '/nhaphoc',

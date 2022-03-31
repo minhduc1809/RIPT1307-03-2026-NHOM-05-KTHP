@@ -56,7 +56,7 @@ const EditCCCD = () => {
         <Form.Item
           initialValue={initialState?.currentUser?.noiCapCmtCccd}
           name="noiCapCmtCccd"
-          rules={[...rules.required]}
+          rules={[...rules.required, ...rules.text]}
           label="Nơi cấp"
         >
           <Input.TextArea rows={2} placeholder="Nhập nơi cấp" />

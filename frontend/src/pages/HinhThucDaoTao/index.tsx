@@ -2,7 +2,6 @@ import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Divider, Popconfirm, Tooltip } from 'antd';
-import moment from 'moment';
 import { useModel } from 'umi';
 import Form from './components/Form';
 
@@ -56,30 +55,7 @@ const HinhThucDaoTao = () => {
       width: 80,
       onCell,
     },
-    {
-      title: 'Thời gian bắt đầu',
-      dataIndex: 'createdAt',
-      align: 'center',
-      width: 80,
-      render: (val) => {
-        return (
-          <div>{val ? moment(val).format('HH:mm - DD/MM/YYYY') : 'Chưa có thời gian bắt đầu'}</div>
-        );
-      },
-      onCell,
-    },
-    {
-      title: 'Thời gian kết thúc',
-      dataIndex: 'updatedAt',
-      align: 'center',
-      width: 80,
-      render: (val) => {
-        return (
-          <div>{val ? moment(val).format('HH:mm - DD/MM/YYYY') : 'Chưa có thời gian kết thúc'}</div>
-        );
-      },
-      onCell,
-    },
+
     {
       title: 'Thao tác',
       align: 'center',

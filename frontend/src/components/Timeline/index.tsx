@@ -62,15 +62,16 @@ const Timeline = () => {
           <br /> */}
           {typeof checkDay === 'number' && checkDay + 1 < data.length && (
             <>
+              <div style={{ color: Setting.primaryColor }}> {record?.tenDotTuyenSinh},</div>
               <div
                 style={{
                   color: Setting.primaryColor,
                   display: isMediumScreen ? 'flex' : 'unset',
                   alignItems: 'baseline',
-                  fontSize: 16,
+                  fontSize: 14,
                 }}
               >
-                {record?.tenDotTuyenSinh}, {data[checkDay + 1].description ?? ''}:
+                {data[checkDay + 1].description ?? ''}:
                 {data[checkDay + 1]?.title && data[checkDay + 1]?.title !== 'Chưa xác định' ? (
                   <>
                     <Countdown
@@ -79,7 +80,7 @@ const Timeline = () => {
                       format="Còn D ngày H giờ m phút s giây"
                       valueStyle={{
                         color: Setting.primaryColor,
-                        fontSize: 16,
+                        fontSize: 14,
                         marginLeft: 5,
                       }}
                       onFinish={finishStep}
@@ -106,6 +107,7 @@ const Timeline = () => {
           {checkDay === false && <i style={{ color: '#0065ca' }}>Đã kết thúc đợt xét tuyển.</i>}
         </div>
         <Steps
+          size="small"
           direction={isLargeScreen ? 'horizontal' : 'vertical'}
           current={typeof checkDay === 'number' ? checkDay : data.length - 1}
           progressDot={customDot}

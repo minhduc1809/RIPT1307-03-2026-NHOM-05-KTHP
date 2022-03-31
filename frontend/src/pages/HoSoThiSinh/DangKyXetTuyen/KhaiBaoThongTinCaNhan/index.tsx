@@ -12,7 +12,7 @@ mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const KhaiBaoThongTinCaNhan = () => {
   const [form] = Form.useForm();
-  const { recordHoSo, putMyThongTinThiSinhModel } = useModel('hosoxettuyen');
+  const { recordHoSo, putMyThongTinThiSinhModel, loading } = useModel('hosoxettuyen');
   const { danhSachDanToc, danhSachTonGiao } = useModel('dantoctongiao');
   const { danhSachTinh } = useModel('donvihanhchinh');
   const [loaiNoiSinh, setLoaiNoiSinh] = useState<'TRONG_NUOC' | 'NUOC_NGOAI'>('TRONG_NUOC');
@@ -186,8 +186,8 @@ const KhaiBaoThongTinCaNhan = () => {
               name="gioiTinh"
             >
               <Select placeholder="Giới tính">
-                {['Nam', 'Nữ', 'Khác'].map((item, index) => (
-                  <Select.Option key={item} value={index}>
+                {['Nam', 'Nữ', 'Khác'].map((item) => (
+                  <Select.Option key={item} value={item}>
                     {item}
                   </Select.Option>
                 ))}
@@ -412,7 +412,7 @@ const KhaiBaoThongTinCaNhan = () => {
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
           <Button
             icon={<ArrowRightOutlined />}
-            loading={false}
+            loading={loading}
             style={{ marginRight: 8 }}
             htmlType="submit"
             type="primary"

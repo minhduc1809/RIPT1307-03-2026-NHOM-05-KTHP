@@ -28,6 +28,15 @@ declare module DotTuyenSinh {
     nganh: NganhChuyenNganh.Record;
   }
 
+  export interface DoiTuongTuyenSinh {
+    index: number;
+    cauHinhDoiTuong?: CauHinhDoiTuong;
+    _id: string;
+    maDoiTuong: string;
+    thongTinDoiTuong: DoiTuongTuyenSinh.Record;
+    yeuCauLuaChonToHop: boolean;
+  }
+
   export interface CauHinhDoiTuong {
     cauHinh: any;
     danhSach: any;
@@ -65,12 +74,7 @@ declare module DotTuyenSinh {
     hinhThucDaoTao: HinhThucDaoTao.Record;
     cauHinhPhuongThuc: any;
     soLuongDangKy: number;
-    danhSachDoiTuongTuyenSinh: {
-      cauHinhDoiTuong?: CauHinhDoiTuong;
-      _id: string;
-      maDoiTuong: string;
-      thongTinDoiTuong: DoiTuongTuyenSinh.Record;
-    }[];
+    danhSachDoiTuongTuyenSinh: DoiTuongTuyenSinh[];
     danhSachNganhTuyenSinh: NganhTuyenSinh[];
     choPhepHK1HoacCaNamLop12: boolean;
   }

@@ -40,7 +40,7 @@ const BlockChungChiQuocTe = (props: { form: FormInstance; cauHinh: any }) => {
             style={{ width: '100%' }}
             placeholder="Chọn loại chứng chỉ quốc tế"
           >
-            {Object.keys(props?.cauHinh?.danhSach).map((item) => (
+            {Object.keys(props?.cauHinh?.danhSach ?? {}).map((item) => (
               <Select.Option key={item} value={item}>
                 {item}
               </Select.Option>

@@ -10,7 +10,13 @@ import {
   Setting,
 } from '@/utils/constants';
 import rules from '@/utils/rules';
-import { calculateChuyen, calculateKhuVuc, checkFileSize, uploadMultiFile } from '@/utils/utils';
+import {
+  calculateChuyen,
+  calculateKhuVuc,
+  checkFileSize,
+  mergeCauHinhDoiTuongXetTuyen,
+  uploadMultiFile,
+} from '@/utils/utils';
 import { ArrowLeftOutlined, ArrowRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import {
   Button,
@@ -55,6 +61,8 @@ const QuaTrinhHocTap = () => {
     setIsTruongChuyenLop11,
     setIsTruongChuyenLop12,
     putMyThongTinXetTuyenModel,
+    loading,
+    setLoading,
   } = useModel('hosoxettuyen');
 
   const { record } = useModel('dottuyensinh');
@@ -62,10 +70,7 @@ const QuaTrinhHocTap = () => {
   const { tenTruong10, tenTruong11, tenTruong12, setTenTruong10, setTenTruong11, setTenTruong12 } =
     useModel('truongthpt');
 
-  const [cauHinhDoiTuong, setCauHinhDoiTuong] = useState<any>(
-    record?.danhSachDoiTuongTuyenSinh?.find((item) => item?.maDoiTuong === recordHoSo?.maDoiTuong)
-      ?.cauHinhDoiTuong ?? {},
-  );
+  const [cauHinhDoiTuong, setCauHinhDoiTuong] = useState<any>();
 
   const [visibleModalInfo, setVisibleModalInfo] = useState<boolean>(false);
   const [typeInfo, setTypeInfo] = useState<'doituonguutien' | 'khuvucuutien' | 'doituongxettuyen'>(
@@ -94,6 +99,10 @@ const QuaTrinhHocTap = () => {
           recordHoSo?.thongTinHocTapTHPT?.truongLop12?.maTruong
       ),
     );
+    if (recordHoSo && record?._id) {
+      const cauHinh = mergeCauHinhDoiTuongXetTuyen(recordHoSo?.maDoiTuong ?? [], record);
+      setCauHinhDoiTuong(cauHinh);
+    }
   }, [recordHoSo?._id]);
 
   useEffect(() => {
@@ -125,6 +134,7 @@ const QuaTrinhHocTap = () => {
           labelCol={{ span: 24 }}
           form={form}
           onFinish={async (values) => {
+            setLoading(true);
             const arrFieldNameUpload = [
               'urlBangKhenHSGQG',
               'urlBangKhenHSGTinhTP',
@@ -137,15 +147,21 @@ const QuaTrinhHocTap = () => {
             for (const item of arrFieldNameUpload) {
               if (values[item]?.fileList) {
                 const checkSize = checkFileSize(values[item]?.fileList ?? []);
-                if (!checkSize) return;
+                if (!checkSize) {
+                  setLoading(false);
+                  return;
+                }
                 values[item] = await uploadMultiFile(values[item]?.fileList ?? []);
               }
             }
             let index = 0;
-            for (const item of values?.thongTinGiayToNopOnline) {
+            for (const item of values?.thongTinGiayToNopOnline ?? []) {
               if (item?.fileList) {
                 const checkSize = checkFileSize(item?.fileList ?? []);
-                if (!checkSize) return;
+                if (!checkSize) {
+                  setLoading(false);
+                  return;
+                }
                 const urlGiayToNop = await uploadMultiFile(item?.fileList ?? []);
                 values.thongTinGiayToNopOnline[index] = {
                   ...record?.thongTinGiayToNopOnline?.[index],
@@ -189,7 +205,6 @@ const QuaTrinhHocTap = () => {
                 khuVucUuTienTuyenSinh: khuVucUuTienLop10,
               };
             }
-
             const { truongChuyen, monChuyen } = calculateChuyen(values?.thongTinHocTapTHPT);
             const valueFinal: any = {
               thongTinGiayToNopOnline: values?.thongTinGiayToNopOnline ?? [],
@@ -237,7 +252,7 @@ const QuaTrinhHocTap = () => {
                 suDungDanhGiaNangLuc: values?.thongTinKetQuaDanhGiaNangLuc ? true : false,
                 urlGiayXacNhanDanhGiaNangLuc: values?.urlGiayXacNhanDanhGiaNangLuc ?? [],
               },
-              maDoiTuong: values?.maDoiTuong,
+              maDoiTuong: record?.gioiHanDoiTuong ? [values?.maDoiTuong] : values?.maDoiTuong,
               urlBangKhenHSGQG: undefined,
             };
             putMyThongTinXetTuyenModel(recordHoSo?._id ?? '', valueFinal);
@@ -335,7 +350,9 @@ const QuaTrinhHocTap = () => {
             <Col xs={24} lg={24}>
               <FormItem
                 rules={[...rules.required]}
-                initialValue={recordHoSo?.maDoiTuong}
+                initialValue={
+                  record?.gioiHanDoiTuong ? recordHoSo?.maDoiTuong?.[0] : recordHoSo?.maDoiTuong
+                }
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
                 name="maDoiTuong"
@@ -356,16 +373,23 @@ const QuaTrinhHocTap = () => {
                 style={{ width: '100%', marginBottom: '0' }}
               >
                 <Select
+                  mode={record?.gioiHanDoiTuong ? undefined : 'multiple'}
                   onChange={(val) => {
-                    const cauHinh = record?.danhSachDoiTuongTuyenSinh?.find(
-                      (item) => item?.maDoiTuong === val,
-                    )?.cauHinhDoiTuong;
+                    if (!record?._id) return;
+                    let cauHinh: any = {};
+                    if (typeof val === 'string') {
+                      cauHinh = record?.danhSachDoiTuongTuyenSinh?.find(
+                        (item) => item?.maDoiTuong === val,
+                      )?.cauHinhDoiTuong;
+                    } else if (typeof val === 'object') {
+                      cauHinh = mergeCauHinhDoiTuongXetTuyen(val, record);
+                    }
                     setCauHinhDoiTuong(cauHinh);
 
                     if (cauHinh?.danhSach?.thongTinChungChiNgoaiNgu) {
                       // neu chi co 1 ngon ngu thi ko hien ra select chon ngon ngu nua, tu dong chon luon
                       const arrNgonNguChungChiNgoaiNgu = Object.keys(
-                        cauHinh?.danhSach?.thongTinChungChiNgoaiNgu,
+                        cauHinh?.danhSach?.thongTinChungChiNgoaiNgu ?? {},
                       );
 
                       if (arrNgonNguChungChiNgoaiNgu?.length === 1) {
@@ -377,7 +401,7 @@ const QuaTrinhHocTap = () => {
                     }
                     if (cauHinh?.danhSach?.thongTinGiaiHSG) {
                       // neu chi co 1 cap HSG thi ko hien ra select chon cap nua, tu dong chon luon
-                      const arrCapHSG = Object.keys(cauHinh?.danhSach?.thongTinGiaiHSG);
+                      const arrCapHSG = Object.keys(cauHinh?.danhSach?.thongTinGiaiHSG ?? {});
 
                       if (arrCapHSG?.length === 1) {
                         setTypeHSG(MapKeyGiaiHSG[arrCapHSG[0]]);
@@ -551,7 +575,7 @@ const QuaTrinhHocTap = () => {
                       }
                       placeholder="Chọn ngôn ngữ"
                       options={Object.keys(
-                        cauHinhDoiTuong?.danhSach?.thongTinChungChiNgoaiNgu,
+                        cauHinhDoiTuong?.danhSach?.thongTinChungChiNgoaiNgu ?? {},
                       )?.map((item) => ({
                         label: MapKeyNgonNgu[item],
                         value: MapKeyNgonNgu[item],
@@ -615,7 +639,7 @@ const QuaTrinhHocTap = () => {
                       }
                       style={{ width: '100%' }}
                       placeholder="Chọn cấp"
-                      options={Object.keys(cauHinhDoiTuong?.danhSach?.thongTinGiaiHSG)?.map(
+                      options={Object.keys(cauHinhDoiTuong?.danhSach?.thongTinGiaiHSG ?? {})?.map(
                         (item) => ({
                           label: MapKeyGiaiHSG[item],
                           value: MapKeyGiaiHSG[item],
@@ -734,7 +758,7 @@ const QuaTrinhHocTap = () => {
             </Popconfirm>
             <Button
               icon={<ArrowRightOutlined />}
-              loading={false}
+              loading={loading}
               style={{ marginRight: 8 }}
               htmlType="submit"
               type="primary"

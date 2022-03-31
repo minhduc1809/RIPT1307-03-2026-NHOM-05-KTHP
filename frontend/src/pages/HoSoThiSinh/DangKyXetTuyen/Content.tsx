@@ -16,19 +16,14 @@ const Content = () => {
   const { current, loading, recordHoSo, getMyHoSoXetTuyenModel, setRecordHoSo } =
     useModel('hosoxettuyen');
 
-  const {
-    record,
-    getDotTuyenSinhByIdModel,
-    loading: loadingDot,
-    setRecord,
-  } = useModel('dottuyensinh');
+  const { record, getDotTuyenSinhByIdModel, loading: loadingDot } = useModel('dottuyensinh');
   const idDot = localStorage.getItem('dot');
 
   const { setupTimeline } = useInitTimeline();
 
   useEffect(() => {
-    if (idDot) getDotTuyenSinhByIdModel(idDot);
-    else history.push('/phuongthucxettuyen');
+    if (idDot && !record?._id) getDotTuyenSinhByIdModel(idDot);
+    else if (!idDot) history.push('/phuongthucxettuyen');
   }, [idDot]);
 
   useEffect(() => {
@@ -41,7 +36,6 @@ const Content = () => {
   useEffect(() => {
     return () => {
       setRecordHoSo(undefined);
-      setRecord(undefined);
     };
   }, []);
 
@@ -60,17 +54,15 @@ const Content = () => {
       />
     );
   } else if (record?._id && isKetThucThoiGianDangKy) {
-    if (recordHoSo !== null) {
-      contentComponent = recordHoSo?._id ? (
-        <ResultHoSo />
-      ) : (
-        <ResultWithLogo
-          logo={logo}
-          title="Đã kết thúc thời gian đăng ký"
-          subTitle={'Bạn không có hồ sơ trong đợt xét tuyển này'}
-        />
-      );
-    }
+    contentComponent = recordHoSo?._id ? (
+      <ResultHoSo />
+    ) : (
+      <ResultWithLogo
+        logo={logo}
+        title="Đã kết thúc thời gian đăng ký"
+        subTitle={'Bạn không có hồ sơ trong đợt xét tuyển này'}
+      />
+    );
   } else {
     if (recordHoSo?.trangThai === ETrangThaiHoSo.chuakhoa) {
       switch (current) {
@@ -93,7 +85,7 @@ const Content = () => {
     }
   }
 
-  return <Spin spinning={loadingDot || loading}>{contentComponent}</Spin>;
+  return <Spin spinning={loading || loadingDot}>{contentComponent}</Spin>;
 };
 
 export default Content;

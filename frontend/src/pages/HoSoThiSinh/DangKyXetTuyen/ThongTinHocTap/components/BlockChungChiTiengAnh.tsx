@@ -20,7 +20,7 @@ const BlockChungChiTiengAnh = (props: { form: FormInstance; cauHinh: any }) => {
   const cauHinhChungChi =
     props?.cauHinh?.danhSach?.thongTinChungChiNgoaiNgu?.thongTinChungChiTiengAnh?.danhSach?.[
       loaiChungChi
-    ];
+    ] ?? {};
 
   return (
     <>
@@ -45,7 +45,7 @@ const BlockChungChiTiengAnh = (props: { form: FormInstance; cauHinh: any }) => {
           >
             {Object.keys(
               props?.cauHinh?.danhSach?.thongTinChungChiNgoaiNgu?.thongTinChungChiTiengAnh
-                ?.danhSach,
+                ?.danhSach ?? {},
             ).map((item) => (
               <Select.Option key={item} value={item}>
                 {item}

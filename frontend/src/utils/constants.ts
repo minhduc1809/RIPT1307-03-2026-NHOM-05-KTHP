@@ -248,9 +248,9 @@ export const DoiTuongXetTuyen = [
 ];
 
 export enum ELoaiPhuongThucTuyenSinh {
-  XET_TUYEN_THANG_BGD = 'Xét tuyển thăng BGD',
-  THI_THPT = 'Thi THPT',
-  KET_HOP = 'Kết hợp',
+  XET_TUYEN_THANG_BGD = 'Xét tuyển thẳng BGD',
+  THI_THPT = 'Kết quả thi THPT',
+  DE_AN_RIENG = 'Đề án riêng',
 }
 
 export enum EMonHoc {

@@ -22,7 +22,7 @@ declare module HoSoXetTuyen {
     thongTinChungChiTiengAnh: ThongTinChungChiTiengAnh;
     thongTinChungChiTiengPhap: ThongTinChungChiTiengPhap;
     thongTinKhac: any;
-    maDoiTuong: string;
+    maDoiTuong: string[];
     _id: string;
     namTuyenSinh: number;
     idDotTuyenSinh: string;
@@ -200,5 +200,6 @@ declare module HoSoXetTuyen {
     soThuTu: number;
     toHopXetTuyen: string;
     _id?: string;
+    errorStrings?: string[];
   }
 }

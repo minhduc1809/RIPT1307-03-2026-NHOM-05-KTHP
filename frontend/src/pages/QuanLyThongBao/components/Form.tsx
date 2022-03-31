@@ -2,13 +2,10 @@
 /* eslint-disable no-param-reassign */
 import UploadAvatar from '@/components/Upload/UploadAvatar';
 import rules from '@/utils/rules';
-import {
-  checkFileSize,
-  includes, renderFileListUrl, uploadMultiFile
-} from '@/utils/utils';
+import { checkFileSize, includes, renderFileListUrl, uploadMultiFile } from '@/utils/utils';
 import { Button, Card, Col, Form, Input, Modal, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
-import {  useModel } from 'umi';
+import { useModel } from 'umi';
 
 const FormThongBaoAdmin = () => {
   //const access = useAccess();
@@ -20,8 +17,8 @@ const FormThongBaoAdmin = () => {
   const { danhSachNguoiDungCuThe, getUserModel } = useModel('user');
 
   useEffect(() => {
-    getUserModel(1, 100)
-  }, [])
+    getUserModel(1, 100);
+  }, []);
 
   return (
     <Card title={'Thêm mới'}>
@@ -44,7 +41,6 @@ const FormThongBaoAdmin = () => {
               ...values,
               imageUrl: imageUrl?.[0],
             });
-            debugger;
           }
         }}
         form={form}
@@ -63,7 +59,7 @@ const FormThongBaoAdmin = () => {
           <Row gutter={[8, 0]}>
             <Col xs={24} md={12}>
               <Form.Item
-                style={{ marginBottom: 8, width : '100%' }}
+                style={{ marginBottom: 8, width: '100%' }}
                 label="Người nhận"
                 name="loaiDoiTuong"
                 rules={[...rules.required]}
@@ -74,14 +70,14 @@ const FormThongBaoAdmin = () => {
                     setNguoiNhan(val);
                   }}
                   placeholder="Người nhận"
-                  style={{width : '100%'}}
+                  style={{ width: '100%' }}
                 >
                   {[
                     { name: 'Tất cả', value: 'all' },
                     { name: 'Người dùng cụ thể', value: 'user' },
                     { name: 'Vai trò', value: 'vai-tro' },
                   ].map((item) => (
-                    <Select.Option key={item.value} value={item.value} >
+                    <Select.Option key={item.value} value={item.value}>
                       {item.name}
                     </Select.Option>
                   ))}
@@ -89,15 +85,14 @@ const FormThongBaoAdmin = () => {
               </Form.Item>
             </Col>
           </Row>
-        )
-        }
+        )}
 
-        {(nguoiNhan === 'vai-tro') && !edit && (
+        {nguoiNhan === 'vai-tro' && !edit && (
           <Form.Item
             style={{ marginBottom: 8 }}
             name="roles"
             //rules={isNguoiDungCuThe ? [] : [...rules.required]}
-            label='Vai trò'
+            label="Vai trò"
           >
             <Select
               maxTagCount={8}
@@ -107,7 +102,11 @@ const FormThongBaoAdmin = () => {
               mode="multiple"
               placeholder="Vai trò"
             >
-              {[{ name: 'Chuyên viên', value: 'ChuyenVien' }, { name: 'Thí sinh', value: 'ThiSinh' }, { name: 'Phụ huynh', value: 'PhuHuynh' }].map((item) => (
+              {[
+                { name: 'Chuyên viên', value: 'ChuyenVien' },
+                { name: 'Thí sinh', value: 'ThiSinh' },
+                { name: 'Phụ huynh', value: 'PhuHuynh' },
+              ].map((item) => (
                 <Select.Option key={item.value} value={item.value}>
                   {item.name}
                 </Select.Option>
@@ -130,11 +129,11 @@ const FormThongBaoAdmin = () => {
                 mode="tags"
                 placeholder="Tìm kiếm theo mã định danh"
                 maxTagCount={8}
-               filterOption={(value, option) => includes(option?.props.children, value)}
+                filterOption={(value, option) => includes(option?.props.children, value)}
               >
                 {danhSachNguoiDungCuThe.map((item) => (
                   <Select.Option key={item?.code} value={item?._id}>
-                    {item?.hoDem}{' '}{item?.ten}
+                    {item?.hoDem} {item?.ten}
                   </Select.Option>
                 ))}
               </Select>
@@ -156,18 +155,18 @@ const FormThongBaoAdmin = () => {
           name="content"
           rules={[...rules.text]}
           label="Nội dung"
-          initialValue={record?.content || '' }
+          initialValue={record?.content || ''}
         >
-          <Input placeholder='Nội dung'/>
+          <Input placeholder="Nội dung" />
         </Form.Item>
 
         <Form.Item
           name="htmlContent"
           rules={[...rules.text]}
           label="Nội dung HTML"
-          initialValue={record?.htmlContent || '' }
+          initialValue={record?.htmlContent || ''}
         >
-          <Input placeholder='Nội dung HTML'/>
+          <Input placeholder="Nội dung HTML" />
         </Form.Item>
 
         <Form.Item

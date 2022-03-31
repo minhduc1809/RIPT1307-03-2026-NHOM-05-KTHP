@@ -1,4 +1,5 @@
 /* eslint-disable no-return-assign */
+import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { getPhanNhomUserCurrent } from '@/services/PhanQuyen/phanquyen';
 import { uploadFile } from '@/services/uploadFile';
@@ -9,6 +10,7 @@ import { parse } from 'path';
 import { useModel } from 'umi';
 import { arrKhuVucUuTien, EKhuVucUuTien, EMonHoc } from './constants';
 import { ip3 } from './ip';
+import _ from 'lodash';
 
 const reg =
   /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -356,3 +358,35 @@ export function calculateKhuVuc(arrKhuVuc: [string, string, string]) {
   const arrCountKhuVuc = Object.values(countKhuVuc);
   return arrCountKhuVuc.indexOf(Math.max(...arrCountKhuVuc));
 }
+
+export const mergeCauHinh = (value1: any, value2: any, key: string) => {
+  const type1 = typeof value1;
+  const type2 = typeof value2;
+  if (type1 === 'boolean' && type2 === 'boolean') return value1 || value2;
+  if (
+    (key === 'max' || key === 'namMax' || key === 'maxLength') &&
+    type1 === 'number' &&
+    type2 === 'number'
+  ) {
+    if (value1 >= value2) return value1;
+    else return value2;
+  }
+  if ((key === 'min' || key === 'step') && type1 === 'number' && type2 === 'number') {
+    if (value1 >= value2) return value2;
+    else return value1;
+  }
+};
+
+export const mergeCauHinhDoiTuongXetTuyen = (
+  maDoiTuong: string[],
+  recordDot: DotTuyenSinh.Record,
+) => {
+  const cauHinh = {};
+  for (let i = 0; i < maDoiTuong?.length; i += 1) {
+    const cauHinhEle = recordDot?.danhSachDoiTuongTuyenSinh?.find(
+      (item) => item.maDoiTuong === maDoiTuong?.[i],
+    )?.cauHinhDoiTuong;
+    _.mergeWith(cauHinh, cauHinhEle, mergeCauHinh);
+  }
+  return cauHinh;
+};

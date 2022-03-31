@@ -3,17 +3,17 @@ import type { Login } from '@/services/ant-design-pro/typings';
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import {
   adminGetHoSoByIdDot,
+  adminGetHoSoByIdHoSo,
   adminKhoaHoSoByIdHoSo,
   adminMoKhoaHoSoByIdHoSo,
+  adminTiepNhanHoSoByIdHoSo,
   getMyHoSoXetTuyen,
+  khoaMyHoSo,
   khoiTaoHoSoXetTuyen,
   putMyDanhSachNguyenVong,
   putMyThongTinThiSinh,
   putMyThongTinXetTuyen,
   putMyTinhQuyDoiNguyenVong,
-  adminTiepNhanHoSoByIdHoSo,
-  khoaMyHoSo,
-  adminGetHoSoByIdHoSo,
 } from '@/services/HoSoXetTuyen/hosoxettuyen';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { ETrangThaiHoSo } from '@/utils/constants';
@@ -91,6 +91,20 @@ export default () => {
     } else {
       message.success('Lưu thành công');
       setRecordHoSo(response?.data?.data?.result);
+      setDanhSachNguyenVong(
+        response?.data?.data?.result?.danhSachNguyenVong?.map((item: HoSoXetTuyen.NguyenVong) => ({
+          ...item,
+          coSoDaoTao: { _id: item?.coSoDaoTao },
+        })) ?? [],
+      );
+      response?.data?.data?.result?.danhSachNguyenVong?.map((nv: HoSoXetTuyen.NguyenVong) => {
+        if (nv?.wrong === true) {
+          message.error(
+            `Nguyện vọng ${nv?.soThuTu} không hợp lệ, Chi tiết: ${nv?.errorStrings?.join(', ')}`,
+            10,
+          );
+        }
+      });
       setCurrent(2);
       window.scrollTo({
         top: 0,
@@ -109,15 +123,30 @@ export default () => {
     if (!idHoSo) return;
     setLoading(true);
     const response = await putMyDanhSachNguyenVong(idHoSo, payload);
-    if (response?.data?.data?.success === false) {
+    let success = response?.data?.data?.success ?? false;
+    if (success === false) {
       message?.error(response?.data?.data?.errorStrings || response?.data?.data?.message);
     } else {
-      const dot = localStorage.getItem('dot');
-      if (dot) getMyHoSoXetTuyenModel(dot);
-      message.success('Lưu thành công');
+      setRecordHoSo(response?.data?.data?.result);
+      setDanhSachNguyenVong(
+        response?.data?.data?.result?.danhSachNguyenVong?.map((item: HoSoXetTuyen.NguyenVong) => ({
+          ...item,
+          coSoDaoTao: { _id: item?.coSoDaoTao },
+        })) ?? [],
+      );
+      response?.data?.data?.result?.danhSachNguyenVong?.map((nv: HoSoXetTuyen.NguyenVong) => {
+        if (nv?.wrong === true) {
+          success = false;
+          message.error(
+            `Nguyện vọng ${nv?.soThuTu} không hợp lệ, Chi tiết: ${nv?.errorStrings?.join(', ')}`,
+            10,
+          );
+        }
+      });
+      if (success === true) message.success('Lưu thành công');
     }
     setLoading(false);
-    return response?.data?.data?.success ?? false;
+    return success;
   };
 
   const putMyTinhQuyDoiNguyenVongModel = async (payload: {
@@ -126,6 +155,7 @@ export default () => {
     if (!recordHoSo?._id) return;
     setLoading(true);
     const response = await putMyTinhQuyDoiNguyenVong(recordHoSo?._id, payload);
+    setLoading(false);
     return response;
   };
 
