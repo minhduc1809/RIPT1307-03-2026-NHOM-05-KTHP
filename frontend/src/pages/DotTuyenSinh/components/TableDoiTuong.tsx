@@ -6,7 +6,10 @@ import { Button, Divider, Modal, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import FormDoiTuong from './FormDoiTuong';
 
-const TableDoiTuong = (props: { hinhThucDaoTao: string }) => {
+const TableDoiTuong = (props: {
+  hinhThucDaoTao: string;
+  danhSachPhuongThuc: PhuongThucTuyenSinh.Record[];
+}) => {
   const {
     visibleFormDoiTuong,
     setVisibleFormDoiTuong,
@@ -45,6 +48,15 @@ const TableDoiTuong = (props: { hinhThucDaoTao: string }) => {
       ),
     },
     {
+      title: 'Phương thức tuyển sinh',
+      dataIndex: 'phuongThucTuyenSinh',
+      width: 150,
+      align: 'center',
+      render: (val) => (
+        <div>{props?.danhSachPhuongThuc?.find((item) => item._id === val)?.tenPhuongThuc}</div>
+      ),
+    },
+    {
       title: 'Yêu cầu lựa chọn tổ hợp',
       dataIndex: 'yeuCauLuaChonToHop',
       width: 100,
@@ -55,7 +67,7 @@ const TableDoiTuong = (props: { hinhThucDaoTao: string }) => {
     {
       title: 'Thao tác',
       align: 'center',
-      width: 150,
+      width: 100,
       render: (record: DotTuyenSinh.DoiTuongTuyenSinh) => (
         <>
           <Tooltip title="Chỉnh sửa">
@@ -121,7 +133,10 @@ const TableDoiTuong = (props: { hinhThucDaoTao: string }) => {
         footer={false}
         bodyStyle={{ padding: 0 }}
       >
-        <FormDoiTuong hinhThucDaoTao={props?.hinhThucDaoTao} />
+        <FormDoiTuong
+          danhSachPhuongThuc={props?.danhSachPhuongThuc ?? []}
+          hinhThucDaoTao={props?.hinhThucDaoTao}
+        />
       </Modal>
     </>
   );

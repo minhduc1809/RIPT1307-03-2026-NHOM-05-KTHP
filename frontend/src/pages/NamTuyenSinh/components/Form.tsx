@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import TinyEditor from '@/components/TinyEditor/Tiny';
 import UploadAvatar from '@/components/Upload/UploadAvatar';
+import { EHinhThucDangKyXetTuyen } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { getURLImg, renderFileListUrl } from '@/utils/utils';
 import { Button, Card, Col, Form, Input, InputNumber, Row, Select } from 'antd';
@@ -95,11 +96,13 @@ const FormNamTuyenSinh = () => {
         <Form.Item
           name="danhSachPhuongThuc"
           label="Phương thức tuyển sinh"
-          initialValue={record?.danhSachPhuongThuc?.map((item) => item.phuongThucTuyenSinh._id)}
+          initialValue={record?.danhSachPhuongThuc?.map(
+            (item: { phuongThucTuyenSinh: PhuongThucTuyenSinh.Record }) =>
+              item.phuongThucTuyenSinh._id,
+          )}
           rules={[...rules.required]}
         >
           <Select
-            // onChange={(val) => setDanhSachIdPhuongThuc(val)}
             notFoundContent="Bạn chưa chọn hình thức đào tạo hoặc không có phương thức tuyển sinh nào cho hình thức đào tạo này"
             placeholder="Phương thức tuyển sinh"
             mode="multiple"
@@ -111,25 +114,26 @@ const FormNamTuyenSinh = () => {
               }))}
           />
         </Form.Item>
-        {/* {danhSachIdPhuongThuc?.map((item, index) => {
-          const recordPhuongThuc = danhSachPhuongThuc?.find((pt) => pt._id === item);
-          return (
-            <Form.Item
-              key={item}
-              name={['moTaPhuongThuc', index]}
-              label={`Mô tả phương thức ${recordPhuongThuc?.tenPhuongThuc}`}
-              initialValue={{ text: record?.danhSachPhuongThuc?.[index]?.moTaPhuongThuc || '' }}
-              rules={[...rules.textEditor]}
-            >
-              <TinyEditor height={350} />
-            </Form.Item>
-          );
-        })} */}
+
+        <Form.Item
+          rules={[...rules.required]}
+          initialValue={record?.hinhThucDangKyXetTuyen}
+          name="hinhThucDangKyXetTuyen"
+          label="Hình thức đăng ký xét tuyển"
+        >
+          <Select
+            placeholder="Chọn hình thức"
+            options={Object.values(EHinhThucDangKyXetTuyen)?.map((item) => ({
+              value: item,
+              label: item,
+            }))}
+          />
+        </Form.Item>
+
         <Form.Item
           name="urlAnhMoTa"
           label="Ảnh mô tả"
           initialValue={renderFileListUrl(record?.urlAnhMoTa ?? '')}
-          // rules={[...rules.fileRequired]}
         >
           <UploadAvatar
             style={{

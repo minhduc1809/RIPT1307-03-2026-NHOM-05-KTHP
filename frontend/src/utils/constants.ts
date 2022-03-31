@@ -247,23 +247,25 @@ export const DoiTuongXetTuyen = [
   },
 ];
 
-export enum ELoaiPhuongThucTuyenSinh {
-  XET_TUYEN_THANG_BGD = 'Xét tuyển thẳng BGD',
-  THI_THPT = 'Kết quả thi THPT',
+export enum ELoaiDot {
   DE_AN_RIENG = 'Đề án riêng',
+  KHAC = 'Khác',
+}
+
+export enum EHinhThucDangKyXetTuyen {
+  THEO_PHUONG_THUC = 'Theo phương thức',
+  THEO_DOT = 'Theo đợt',
 }
 
 export enum EMonHoc {
   TOAN = 'Toán học',
   VAT_LY = 'Vật lý',
   DIA_LY = 'Địa lý',
-  DIA_LI = 'Địa lí',
   HOA = 'Hóa học',
   TIN = 'Tin học',
   SINH = 'Sinh học',
   SU = 'Lịch sử',
   GDCD = 'Giáo dục công dân',
-  // CN = 'Tiếng Trung Quốc',
   VAN = 'Ngữ văn',
   ENG = 'Tiếng Anh',
   RUS = 'Tiếng Nga',

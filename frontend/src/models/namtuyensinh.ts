@@ -6,6 +6,7 @@ import {
   postNamTuyenSinh,
   putNamTuyenSinh,
 } from '@/services/NamTuyenSinh/namtuyensinh';
+import type { NamTuyenSinh } from '@/services/NamTuyenSinh/typings';
 import { message } from 'antd';
 import { useState } from 'react';
 

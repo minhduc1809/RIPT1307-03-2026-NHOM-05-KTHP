@@ -5,8 +5,9 @@ import { Button, Divider, Popconfirm, Tag, Tooltip, Typography } from 'antd';
 import { useModel } from 'umi';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import Form from './components/Form';
+import type { NamTuyenSinh } from '@/services/NamTuyenSinh/typings';
 
-const NamTuyenSinh = () => {
+const NamTuyenSinhComponent = () => {
   const {
     getNamTuyenSinhPageableModel,
     page,
@@ -37,13 +38,13 @@ const NamTuyenSinh = () => {
     {
       title: 'Năm',
       dataIndex: 'nam',
-      width: 100,
+      width: 70,
       align: 'center',
     },
     {
       title: 'Nội dung',
       dataIndex: 'noiDung',
-      width: 200,
+      width: 150,
       align: 'center',
       render: (val) => {
         return (
@@ -59,27 +60,27 @@ const NamTuyenSinh = () => {
     {
       title: 'Mô tả',
       dataIndex: 'moTa',
-      width: 200,
+      width: 150,
       align: 'center',
     },
     {
       title: 'Hình thức đào tạo',
       dataIndex: 'hinhThucDaoTao',
-      width: 100,
+      width: 120,
       align: 'center',
       render: (val: HinhThucDaoTao.Record) => <div>{val?.ten}</div>,
     },
     {
       title: 'Phương thức tuyển sinh',
       dataIndex: 'danhSachPhuongThuc',
-      width: 200,
+      // width: 200,
       align: 'center',
       render: (
         val: { moTaPhuongThuc: string; phuongThucTuyenSinh: PhuongThucTuyenSinh.Record }[],
       ) => (
-        <div>
+        <div style={{ textAlign: 'left' }}>
           {val?.map((item) => (
-            <Tag key={item.phuongThucTuyenSinh._id}>{item.phuongThucTuyenSinh.tenPhuongThuc}</Tag>
+            <div key={item.phuongThucTuyenSinh._id}>- {item.phuongThucTuyenSinh.tenPhuongThuc}</div>
           ))}
         </div>
       ),
@@ -136,4 +137,4 @@ const NamTuyenSinh = () => {
   );
 };
 
-export default NamTuyenSinh;
+export default NamTuyenSinhComponent;

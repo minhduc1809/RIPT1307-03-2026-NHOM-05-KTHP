@@ -1,5 +1,6 @@
 import TinyEditor from '@/components/TinyEditor/Tiny';
-import { EDonViTinh } from '@/utils/constants';
+import type { NamTuyenSinh } from '@/services/NamTuyenSinh/typings';
+import { EDonViTinh, ELoaiDot } from '@/utils/constants';
 import rules from '@/utils/rules';
 import {
   Button,
@@ -53,6 +54,7 @@ const FormDotTuyenSinh = () => {
   const [hinhThucDaoTao, setHinhThucDaoTao] = useState<string>(record?.hinhThucDaoTao?._id ?? '');
   const [yeuCauTraPhi, setYeuCauTraPhi] = useState<boolean>(record?.yeuCauTraPhi ?? false);
   const [gioiHanDoiTuong, setGioiHanDoiTuong] = useState<boolean>(record?.gioiHanDoiTuong ?? false);
+  const [loaiDot, setLoaiDot] = useState<ELoaiDot | undefined>(record?.loaiDot);
   const [suDungToHopMongMuon, setSuDungToHopMongMuon] = useState<boolean>(
     record?.suDungToHopMongMuon ?? false,
   );
@@ -62,6 +64,10 @@ const FormDotTuyenSinh = () => {
 
   const [choPhepHK1HoacCaNamLop12, setChoPhepHK1HoacCaNamLop12] = useState<boolean>(
     record?.choPhepHK1HoacCaNamLop12 ?? false,
+  );
+
+  const [danhSachIdPhuongThuc, setDanhSachIdPhuongThuc] = useState<string[]>(
+    record?.danhSachPhuongThucTuyenSinh?.map((item) => item._id) ?? [],
   );
   useEffect(() => {
     form.resetFields();
@@ -80,15 +86,6 @@ const FormDotTuyenSinh = () => {
         scrollToFirstError
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          // values.danhSachDoiTuongTuyenSinh = values?.danhSachDoiTuongTuyenSinh?.map(
-          //   (item: string) => ({
-          //     maDoiTuong: item,
-          //     cauHinhDoiTuong:
-          //       record?.danhSachDoiTuongTuyenSinh?.find((doiTuong) => doiTuong.maDoiTuong === item)
-          //         ?.cauHinhDoiTuong ?? {},
-          //   }),
-          // );
-
           if (edit) {
             putDotTuyenSinhModel(record?._id ?? '', {
               ...record,
@@ -143,7 +140,7 @@ const FormDotTuyenSinh = () => {
               <Input placeholder="Tên đợt tuyển sinh" />
             </Form.Item>
           </Col>
-          <Col xs={8}>
+          <Col xs={24} md={12} lg={6}>
             <Form.Item
               initialValue={record?.hinhThucDaoTao?._id}
               name="hinhThucDaoTao"
@@ -171,7 +168,7 @@ const FormDotTuyenSinh = () => {
               />
             </Form.Item>{' '}
           </Col>
-          <Col xs={24} md={8}>
+          <Col xs={24} md={12} lg={6}>
             <Form.Item
               initialValue={record?.maDotTuyenSinh}
               name="maDotTuyenSinh"
@@ -187,7 +184,7 @@ const FormDotTuyenSinh = () => {
             </Form.Item>
           </Col>
 
-          <Col xs={24} md={8}>
+          <Col xs={24} md={12} lg={6}>
             <Form.Item
               initialValue={record?.namTuyenSinh}
               name="namTuyenSinh"
@@ -209,14 +206,43 @@ const FormDotTuyenSinh = () => {
               />
             </Form.Item>
           </Col>
-          <Col xs={24}>
+          <Col xs={24} md={12} lg={6}>
             <Form.Item
-              name="phuongThucTuyenSinh"
-              label="Phương thức tuyển sinh"
-              initialValue={record?.phuongThucTuyenSinh?._id}
+              initialValue={record?.loaiDot}
+              name="loaiDot"
+              label="Loại đợt"
               rules={[...rules.required]}
             >
               <Select
+                onChange={(val) => setLoaiDot(val)}
+                placeholder="Chọn loại đợt"
+                options={Object.values(ELoaiDot)?.map((item) => ({ value: item, label: item }))}
+              />
+            </Form.Item>
+          </Col>
+          {loaiDot === ELoaiDot.KHAC && (
+            <>
+              <Col xs={24}>
+                <Form.Item
+                  name={'urlRedirectLoaiDot'}
+                  label="Url loại đợt"
+                  initialValue={record?.urlRedirectLoaiDot}
+                >
+                  <Input placeholder="Nhập url nếu có" />
+                </Form.Item>
+              </Col>
+            </>
+          )}
+          <Col xs={24}>
+            <Form.Item
+              name="danhSachPhuongThucTuyenSinh"
+              label="Phương thức tuyển sinh"
+              initialValue={record?.danhSachPhuongThucTuyenSinh?.map((item) => item?._id)}
+              rules={[...rules.required]}
+            >
+              <Select
+                onChange={(val) => setDanhSachIdPhuongThuc(val)}
+                mode="multiple"
                 notFoundContent="Bạn chưa chọn năm tuyển sinh"
                 placeholder="Phương thức tuyển sinh"
                 options={recordNamTuyenSinh?.danhSachPhuongThuc?.map((item) => ({
@@ -228,7 +254,16 @@ const FormDotTuyenSinh = () => {
           </Col>
           <Col span={24}>
             <Form.Item label="Danh sách đối tượng tuyển sinh">
-              <TableDoiTuong hinhThucDaoTao={hinhThucDaoTao} />
+              <TableDoiTuong
+                danhSachPhuongThuc={
+                  recordNamTuyenSinh?.danhSachPhuongThuc
+                    ?.filter((item) =>
+                      danhSachIdPhuongThuc?.includes(item?.phuongThucTuyenSinh?._id),
+                    )
+                    ?.map((item) => item?.phuongThucTuyenSinh) ?? []
+                }
+                hinhThucDaoTao={hinhThucDaoTao}
+              />
             </Form.Item>
           </Col>
           <Col span={24}>

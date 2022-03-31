@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-import { ELoaiPhuongThucTuyenSinh } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { Button, Card, Form, Input, Select } from 'antd';
 import { useModel } from 'umi';
@@ -52,20 +51,6 @@ const FormPhuongThucTuyenSinh = () => {
           label="Tên phương thức"
         >
           <Input placeholder="Tên phương thức" />
-        </Form.Item>
-        <Form.Item
-          initialValue={record?.loaiPhuongThuc}
-          rules={[...rules.required]}
-          name="loaiPhuongThuc"
-          label="Loại phương thức"
-        >
-          <Select
-            placeholder="Loại phương thức"
-            options={Object.keys(ELoaiPhuongThucTuyenSinh)?.map((item) => ({
-              value: ELoaiPhuongThucTuyenSinh[item],
-              label: ELoaiPhuongThucTuyenSinh[item],
-            }))}
-          />
         </Form.Item>
 
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>

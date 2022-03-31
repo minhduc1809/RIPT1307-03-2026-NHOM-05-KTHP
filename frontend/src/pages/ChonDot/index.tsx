@@ -23,7 +23,7 @@ const LuaChonDotXetTuyen = () => {
 
   useEffect(() => {
     if (record?._id && nam)
-      getAllDotTuyenSinhModel({ phuongThucTuyenSinh: record._id, namTuyenSinh: +nam });
+      getAllDotTuyenSinhModel({ danhSachPhuongThucTuyenSinh: record._id, namTuyenSinh: +nam });
   }, [record?._id, nam]);
 
   useEffect(() => {

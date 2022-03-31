@@ -1,12 +1,17 @@
 import GlobalFooter from '@/components/GlobalFooter';
 import Header from '@/components/Header';
+import ResultWithLogo from '@/components/ResultWithLogo';
+import { EHinhThucDangKyXetTuyen } from '@/utils/constants';
+import { Select, Spin } from 'antd';
 import { useEffect } from 'react';
-import { Button, Divider, Select, Spin } from 'antd';
-import { history, useModel } from 'umi';
+import { useModel } from 'umi';
+import ModeDot from './components/ChonDot';
+import ModePhuongThuc from './components/ChonPhuongThuc';
 import styles from './index.css';
+import logo from '@/assets/logo.png';
 
 const LuaChonPhuongThuc = () => {
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const { initialState } = useModel('@@initialState');
   const {
     getAllNamTuyenSinhModel,
     danhSach,
@@ -18,9 +23,8 @@ const LuaChonPhuongThuc = () => {
     getAllHinhThucDaoTaoModel,
     danhSach: danhSachHinhThucDaoTao,
     record,
+    setRecord: setRecordHinhThucDaoTao,
   } = useModel('hinhthucdaotao');
-
-  const { setRecord } = useModel('phuongthuctuyensinh');
 
   useEffect(() => {
     getAllHinhThucDaoTaoModel();
@@ -29,6 +33,12 @@ const LuaChonPhuongThuc = () => {
   useEffect(() => {
     if (record?._id) getAllNamTuyenSinhModel(record?._id);
   }, [record?._id]);
+
+  useEffect(() => {
+    if (recordNamTuyenSinh?.hinhThucDangKyXetTuyen === EHinhThucDangKyXetTuyen.THEO_DOT) {
+      localStorage.removeItem('phuongThuc');
+    }
+  }, [recordNamTuyenSinh?.hinhThucDangKyXetTuyen]);
 
   return (
     <>
@@ -59,6 +69,13 @@ const LuaChonPhuongThuc = () => {
                   <div className={styles.title}>Vui lòng chọn phương thức để tiếp tục:</div>
                   <br />
                   <Select
+                    placeholder="Chọn hình thức đào tạo"
+                    onChange={(val) => {
+                      setRecordNamTuyenSinh(undefined);
+                      setRecordHinhThucDaoTao(
+                        danhSachHinhThucDaoTao?.find((item) => item._id === val),
+                      );
+                    }}
                     value={record?._id}
                     options={danhSachHinhThucDaoTao?.map((item) => ({
                       value: item._id,
@@ -67,6 +84,7 @@ const LuaChonPhuongThuc = () => {
                     style={{ width: 200, marginRight: 8 }}
                   />
                   <Select
+                    placeholder="Chọn năm tuyển sinh"
                     onChange={(val) =>
                       setRecordNamTuyenSinh(danhSach?.find((item) => item.nam === val))
                     }
@@ -77,68 +95,21 @@ const LuaChonPhuongThuc = () => {
                     }))}
                     style={{ width: 200 }}
                   />
-
-                  <div>
-                    {recordNamTuyenSinh?.danhSachPhuongThuc?.map((item, index) => (
-                      <div
-                        key={item.phuongThucTuyenSinh._id}
-                        className={styles.answer}
-                        onClick={() => {
-                          localStorage.setItem('phuongThuc', item.phuongThucTuyenSinh._id);
-                          localStorage.setItem('nam', recordNamTuyenSinh.nam.toString());
-                          setRecord(item.phuongThucTuyenSinh);
-                          history.push('/dotxettuyen');
-                        }}
-                      >
-                        <Button
-                          type="primary"
-                          style={{ fontWeight: 'bold' }}
-                          size="large"
-                          shape="circle"
-                        >
-                          {index + 1}
-                        </Button>
-                        <div style={{ marginLeft: 8 }}>
-                          <div>
-                            <b>
-                              Phương thức {index + 1}:{' '}
-                              {item?.phuongThucTuyenSinh.tenPhuongThuc ?? ''}
-                            </b>
-                            {/* <div>{item.time}</div>
-                          <div>{item.isCoHoSo}</div> */}
-                            {/* <div>Trạng thái: {item?.trangThai ?? ''}</div> */}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  {recordNamTuyenSinh?.danhSachPhuongThuc?.length === 0 && (
+                  {recordNamTuyenSinh?._id && record?._id ? (
                     <div>
-                      Chưa có thông tin về các phương thức tuyển sinh ở kỳ tuyển sinh năm nay
+                      {recordNamTuyenSinh?.hinhThucDangKyXetTuyen ===
+                        EHinhThucDangKyXetTuyen.THEO_DOT && <ModeDot />}
+                      {recordNamTuyenSinh?.hinhThucDangKyXetTuyen ===
+                        EHinhThucDangKyXetTuyen.THEO_PHUONG_THUC && <ModePhuongThuc />}
                     </div>
+                  ) : (
+                    <ResultWithLogo
+                      logo={logo}
+                      title={`Chưa có thông tin về hình thức đào tạo và năm tuyển sinh`}
+                    />
                   )}
                 </div>
-                <Divider style={{ marginBottom: 0 }} />
-                <div className={styles.footer}>
-                  <Button
-                    className={styles['footer-btn']}
-                    type="link"
-                    onClick={() => {
-                      setInitialState({ ...initialState, currentUser: undefined });
-                      localStorage.removeItem('vaiTro');
-                      localStorage.removeItem('token');
-                      localStorage.removeItem('accessTokens');
-                      localStorage.removeItem('phuongThuc');
-                      localStorage.removeItem('dot');
-                      localStorage.removeItem('nam');
-                      history.push({
-                        pathname: '/user/login',
-                      });
-                    }}
-                  >
-                    Quay lại đăng nhập
-                  </Button>
-                </div>
+                <br />
               </div>
             </div>
           </div>

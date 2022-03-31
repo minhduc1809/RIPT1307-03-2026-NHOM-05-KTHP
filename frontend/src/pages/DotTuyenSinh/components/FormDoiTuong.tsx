@@ -2,7 +2,10 @@ import rules from '@/utils/rules';
 import { Button, Card, Col, Form, Input, Radio, Row, Select } from 'antd';
 import { useModel } from 'umi';
 
-const FormDoiTuong = (props: { hinhThucDaoTao: string }) => {
+const FormDoiTuong = (props: {
+  hinhThucDaoTao: string;
+  danhSachPhuongThuc: PhuongThucTuyenSinh.Record[];
+}) => {
   const [form] = Form.useForm();
 
   const {
@@ -55,6 +58,23 @@ const FormDoiTuong = (props: { hinhThucDaoTao: string }) => {
                     value: item.maDoiTuong,
                     label: item.tenDoiTuong,
                   }))}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} lg={12}>
+            {' '}
+            <Form.Item
+              name="phuongThucTuyenSinh"
+              label="Phương thức tuyển sinh"
+              initialValue={recordDoiTuong?.phuongThucTuyenSinh}
+              rules={[...rules.required]}
+            >
+              <Select
+                placeholder="Phương thức tuyển sinh"
+                options={props?.danhSachPhuongThuc?.map((item) => ({
+                  value: item?._id,
+                  label: item?.tenPhuongThuc,
+                }))}
               />
             </Form.Item>
           </Col>

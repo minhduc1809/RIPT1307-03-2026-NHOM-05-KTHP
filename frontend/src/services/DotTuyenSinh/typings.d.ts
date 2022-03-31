@@ -1,4 +1,4 @@
-import type { EDonViTinh, EToHopXetTuyen } from '@/utils/constants';
+import type { EDonViTinh, ELoaiDot, EToHopXetTuyen } from '@/utils/constants';
 import type { KetQuaXetTuyen } from '../KetQuaXetTuyen/typings';
 
 declare module DotTuyenSinh {
@@ -35,6 +35,7 @@ declare module DotTuyenSinh {
     maDoiTuong: string;
     thongTinDoiTuong: DoiTuongTuyenSinh.Record;
     yeuCauLuaChonToHop: boolean;
+    phuongThucTuyenSinh: string;
   }
 
   export interface CauHinhDoiTuong {
@@ -54,7 +55,7 @@ declare module DotTuyenSinh {
     choPhepDangKyKhacCoSo: boolean;
     _id: string;
     namTuyenSinh: number;
-    phuongThucTuyenSinh: PhuongThucTuyenSinh.Record;
+    danhSachPhuongThucTuyenSinh: PhuongThucTuyenSinh.Record[];
     dotTuyenSinh: number;
     tenDotTuyenSinh: string;
     thongTinGiayToNopHoSo: GiayTo[];
@@ -77,5 +78,8 @@ declare module DotTuyenSinh {
     danhSachDoiTuongTuyenSinh: DoiTuongTuyenSinh[];
     danhSachNganhTuyenSinh: NganhTuyenSinh[];
     choPhepHK1HoacCaNamLop12: boolean;
+    loaiDot: ELoaiDot;
+    thongBaoLoaiDot?: string;
+    urlRedirectLoaiDot?: string;
   }
 }

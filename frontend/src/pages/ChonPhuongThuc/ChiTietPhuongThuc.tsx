@@ -7,10 +7,18 @@ import GlobalFooter from '@/components/GlobalFooter';
 
 const DanhSachPhuongThuc = () => {
   const { record, getDotTuyenSinhByIdModel, loading } = useModel('dottuyensinh');
+  const { getPhuongThucTuyenSinhByIdModel, record: recordPhuongThuc } =
+    useModel('phuongthuctuyensinh');
   const idDot = localStorage.getItem('dot');
+  const phuongThuc = localStorage.getItem('phuongThuc');
   useEffect(() => {
-    if (idDot) getDotTuyenSinhByIdModel(idDot);
+    if (idDot && !record?._id) getDotTuyenSinhByIdModel(idDot);
   }, [idDot]);
+
+  useEffect(() => {
+    if (phuongThuc) getPhuongThucTuyenSinhByIdModel(phuongThuc);
+  }, [phuongThuc]);
+
   return (
     <>
       <Header />
@@ -27,9 +35,11 @@ const DanhSachPhuongThuc = () => {
             </Breadcrumb>
           }
         >
-          <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
-            <h2>{record?.phuongThucTuyenSinh?.tenPhuongThuc?.toUpperCase()}</h2>
-          </div>
+          {phuongThuc && (
+            <div style={{ textAlign: 'center', fontWeight: 'bold' }}>
+              <h2>{recordPhuongThuc?.tenPhuongThuc?.toUpperCase()}</h2>
+            </div>
+          )}
           <div
             dangerouslySetInnerHTML={{
               __html: record?.moTa ?? '',
@@ -39,7 +49,11 @@ const DanhSachPhuongThuc = () => {
             <Button
               style={{ marginRight: 8 }}
               onClick={() => {
-                history.push('/dotxettuyen');
+                history.push(phuongThuc ? '/dotxettuyen' : '/phuongThucXetTuyen');
+                window.scrollTo({
+                  top: 0,
+                  behavior: 'smooth',
+                });
               }}
               icon={<ArrowLeftOutlined />}
             >

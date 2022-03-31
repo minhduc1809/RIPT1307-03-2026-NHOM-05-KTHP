@@ -44,17 +44,14 @@ export default () => {
   const [recordDoiTuong, setRecordDoiTuong] = useState<DotTuyenSinh.DoiTuongTuyenSinh>();
   const getAllDotTuyenSinhModel = async (
     payload: {
-      phuongThucTuyenSinh?: string;
+      danhSachPhuongThucTuyenSinh?: string;
       namTuyenSinh?: number;
     },
     isSetRecord?: boolean,
   ) => {
     setLoading(true);
     const response = await getAllDotTuyenSinh({
-      condition: {
-        phuongThucTuyenSinh: payload?.phuongThucTuyenSinh,
-        namTuyenSinh: payload?.namTuyenSinh,
-      },
+      condition: payload,
     });
     setDanhSach(response?.data?.data ?? []);
     if (isSetRecord) setRecord(response?.data?.data?.[0]);
