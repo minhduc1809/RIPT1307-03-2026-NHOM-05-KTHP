@@ -96,7 +96,6 @@ const ResultHoSo = () => {
       <Modal
         footer={
           <Button
-            type="primary"
             onClick={() => {
               setVisibleHoSo(false);
             }}

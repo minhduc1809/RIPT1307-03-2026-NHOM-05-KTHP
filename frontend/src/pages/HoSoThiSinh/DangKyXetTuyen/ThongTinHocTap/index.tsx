@@ -349,6 +349,13 @@ const QuaTrinhHocTap = () => {
             <Divider />
             <Col xs={24} lg={24}>
               <FormItem
+                extra={
+                  record?.gioiHanDoiTuong ? undefined : (
+                    <div style={{ color: 'red' }}>
+                      Lưu ý: Thí sinh có thể chọn nhiều phương thức và đối tượng xét tuyển khác nhau
+                    </div>
+                  )
+                }
                 rules={[...rules.required]}
                 initialValue={
                   record?.gioiHanDoiTuong ? recordHoSo?.maDoiTuong?.[0] : recordHoSo?.maDoiTuong

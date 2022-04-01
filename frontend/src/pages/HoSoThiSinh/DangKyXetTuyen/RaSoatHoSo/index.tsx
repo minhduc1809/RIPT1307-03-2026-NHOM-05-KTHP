@@ -12,7 +12,7 @@ import {
   StopOutlined,
 } from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
-import { Button, Card, Col, Descriptions, Divider, Modal, Popconfirm, Row, Tag } from 'antd';
+import { Button, Card, Col, Descriptions, Divider, Modal, Row, Tag } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useAccess, useModel } from 'umi';
@@ -35,6 +35,7 @@ const RaSoatHoSo = () => {
   const { recordHoSo, setVisibleForm, setCurrent, khoaMyHoSoModel, loading } =
     useModel('hosoxettuyen');
   const { record, visibleFormGiayTo, setVisibleFormGiayTo } = useModel('dottuyensinh');
+  const [visible, setVisible] = useState<boolean>(false);
   const cauHinhDoiTuong: any = record?._id
     ? mergeCauHinhDoiTuongXetTuyen(recordHoSo?.maDoiTuong ?? [], record)
     : {};
@@ -325,19 +326,18 @@ const RaSoatHoSo = () => {
                     >
                       Chỉnh sửa hồ sơ
                     </Button>
-                    <Popconfirm
-                      onConfirm={() => khoaMyHoSoModel(recordHoSo?._id)}
-                      title={
-                        <div>
-                          Bạn sẽ không thể chỉnh sửa lại hồ sơ sau khi khóa, bạn có chắc chắn muốn
-                          khóa hồ sơ?
-                        </div>
-                      }
+
+                    <Button
+                      onClick={() => {
+                        setVisible(true);
+                      }}
+                      loading={loading}
+                      type="primary"
+                      icon={<LockOutlined />}
                     >
-                      <Button loading={loading} type="primary" icon={<LockOutlined />}>
-                        Khóa hồ sơ
-                      </Button>
-                    </Popconfirm>
+                      Khóa hồ sơ
+                    </Button>
+                    {/* </Popconfirm> */}
                   </>
                 ) : (
                   <Button
@@ -356,6 +356,45 @@ const RaSoatHoSo = () => {
             )}
           </GridContent>
         </Card>
+        <Modal
+          onCancel={() => {
+            setVisible(false);
+          }}
+          visible={visible}
+          title="Khóa hồ sơ"
+          footer={
+            <>
+              <Button
+                loading={loading}
+                onClick={async () => {
+                  await khoaMyHoSoModel(recordHoSo?._id ?? '');
+                  setVisible(false);
+                }}
+                type="primary"
+              >
+                Xác nhận
+              </Button>
+
+              <Button
+                onClick={() => {
+                  setVisible(false);
+                }}
+              >
+                Hủy
+              </Button>
+            </>
+          }
+        >
+          <div>
+            Bạn sẽ không thể chỉnh sửa lại hồ sơ sau khi khóa, bạn có chắc chắn muốn khóa hồ sơ?
+          </div>
+          <br />
+          <div>
+            <b>Lưu ý:</b> Thí sinh chưa bắt buộc Khóa hồ sơ ngay lập tức mà có thể thực hiện cập
+            nhật thông tin hồ sơ, thay đổi nguyện vọng đăng kí xét tuyển và Khóa hồ sơ trước hạn{' '}
+            {moment(record?.thoiGianKetThucNopHoSo).format('HH:mm DD/MM/YYYY')}
+          </div>
+        </Modal>
       </div>
     </>
   );
