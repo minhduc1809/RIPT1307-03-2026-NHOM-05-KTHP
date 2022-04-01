@@ -8,6 +8,7 @@ import {
   CloseOutlined,
   EditOutlined,
   LockOutlined,
+  PrinterOutlined,
   StopOutlined,
 } from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
@@ -310,7 +311,7 @@ const RaSoatHoSo = () => {
                   justifyContent: 'space-around',
                 }}
               >
-                {recordHoSo?.trangThai === ETrangThaiHoSo.chuakhoa && isTrongThoiGianDangKy && (
+                {recordHoSo?.trangThai === ETrangThaiHoSo.chuakhoa && isTrongThoiGianDangKy ? (
                   <>
                     <Button
                       onClick={() => {
@@ -338,6 +339,18 @@ const RaSoatHoSo = () => {
                       </Button>
                     </Popconfirm>
                   </>
+                ) : (
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      Modal.info({
+                        title: 'Tính năng đang được cập nhật, vui lòng thử lại sau',
+                      });
+                    }}
+                    icon={<PrinterOutlined />}
+                  >
+                    In phiếu
+                  </Button>
                 )}
               </div>
             )}

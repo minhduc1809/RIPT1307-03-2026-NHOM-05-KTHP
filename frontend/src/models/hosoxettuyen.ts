@@ -86,34 +86,40 @@ export default () => {
 
   const putMyThongTinXetTuyenModel = async (idHoSo: string, payload: HoSoXetTuyen.Record) => {
     if (!idHoSo) return;
-    setLoading(true);
-    const response = await putMyThongTinXetTuyen(idHoSo, payload);
-    if (response?.data?.data?.success === false) {
-      response?.data?.data?.errorStrings?.map((item: string) => message?.error(item));
-    } else {
-      message.success('Lưu thành công');
-      setRecordHoSo(response?.data?.data?.result);
-      setDanhSachNguyenVong(
-        response?.data?.data?.result?.danhSachNguyenVong?.map((item: HoSoXetTuyen.NguyenVong) => ({
-          ...item,
-          coSoDaoTao: { _id: item?.coSoDaoTao },
-        })) ?? [],
-      );
-      response?.data?.data?.result?.danhSachNguyenVong?.map((nv: HoSoXetTuyen.NguyenVong) => {
-        if (nv?.wrong === true) {
-          message.error(
-            `Nguyện vọng ${nv?.soThuTu} không hợp lệ, Chi tiết: ${nv?.errorStrings?.join(', ')}`,
-            10,
-          );
-        }
-      });
-      setCurrent(2);
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
+    try {
+      setLoading(true);
+      const response = await putMyThongTinXetTuyen(idHoSo, payload);
+      if (response?.data?.data?.success === false) {
+        response?.data?.data?.errorStrings?.map((item: string) => message?.error(item));
+      } else {
+        message.success('Lưu thành công');
+        setRecordHoSo(response?.data?.data?.result);
+        setDanhSachNguyenVong(
+          response?.data?.data?.result?.danhSachNguyenVong?.map(
+            (item: HoSoXetTuyen.NguyenVong) => ({
+              ...item,
+              coSoDaoTao: { _id: item?.coSoDaoTao },
+            }),
+          ) ?? [],
+        );
+        response?.data?.data?.result?.danhSachNguyenVong?.map((nv: HoSoXetTuyen.NguyenVong) => {
+          if (nv?.wrong === true) {
+            message.error(
+              `Nguyện vọng ${nv?.soThuTu} không hợp lệ, Chi tiết: ${nv?.errorStrings?.join(', ')}`,
+              10,
+            );
+          }
+        });
+        setCurrent(2);
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      }
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const putMyDanhSachNguyenVongModel = async (

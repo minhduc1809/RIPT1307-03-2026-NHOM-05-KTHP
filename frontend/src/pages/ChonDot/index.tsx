@@ -2,19 +2,26 @@ import GlobalFooter from '@/components/GlobalFooter';
 import Header from '@/components/Header';
 import ResultWithLogo from '@/components/ResultWithLogo';
 import styles from '@/pages/ChonPhuongThuc/index.css';
-import { Button, Divider, Spin } from 'antd';
-import { useEffect } from 'react';
+import { Button, Divider, Modal, Spin } from 'antd';
+import { useEffect, useState } from 'react';
 import { history, useModel } from 'umi';
 import TimeLineChonDot from './components/Timeline';
 import logo from '@/assets/logo.png';
+import { ELoaiDot } from '@/utils/constants';
 
 const LuaChonDotXetTuyen = () => {
-  const { getAllDotTuyenSinhModel, danhSach, loading, setDanhSach, setRecord } =
-    useModel('dottuyensinh');
+  const {
+    getAllDotTuyenSinhModel,
+    danhSach,
+    loading,
+    setDanhSach,
+    setRecord,
+    record: recordDot,
+  } = useModel('dottuyensinh');
   const idPhuongThuc = localStorage.getItem('phuongThuc');
   const nam = localStorage.getItem('nam');
   const { getPhuongThucTuyenSinhByIdModel, record } = useModel('phuongthuctuyensinh');
-
+  const [visible, setVisible] = useState<boolean>(false);
   useEffect(() => {
     if (idPhuongThuc && !record?._id) {
       getPhuongThucTuyenSinhByIdModel(idPhuongThuc);
@@ -58,8 +65,12 @@ const LuaChonDotXetTuyen = () => {
                         className={styles.answer}
                         onClick={() => {
                           setRecord(item);
-                          localStorage.setItem('dot', item._id);
-                          history.push('/hosothisinh/phuongthucxettuyen/chitiet');
+                          if (item?.loaiDot === ELoaiDot.DE_AN_RIENG) {
+                            localStorage.setItem('dot', item._id);
+                            history.push('/hosothisinh/phuongthucxettuyen/chitiet');
+                          } else {
+                            setVisible(true);
+                          }
                         }}
                       >
                         <Button type="default" size="large" shape="circle">
@@ -104,6 +115,35 @@ const LuaChonDotXetTuyen = () => {
             </div>
           </div>
         </div>
+        <Modal
+          width={1000}
+          visible={visible}
+          onCancel={() => {
+            setVisible(false);
+            setRecord(undefined);
+          }}
+          footer={
+            <Button
+              type="primary"
+              onClick={() => {
+                setVisible(false);
+                setRecord(undefined);
+              }}
+            >
+              OK
+            </Button>
+          }
+        >
+          <div dangerouslySetInnerHTML={{ __html: recordDot?.moTa ?? '' }} />
+          {recordDot?.urlRedirectLoaiDot && (
+            <div>
+              Xem chi tiết{' '}
+              <a href={recordDot?.urlRedirectLoaiDot} target="_blank" rel="noreferrer">
+                tại đây
+              </a>
+            </div>
+          )}
+        </Modal>
       </Spin>
       <GlobalFooter />
     </>

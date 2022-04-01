@@ -1,5 +1,4 @@
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
-import { Setting } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import {
   CaretDownOutlined,
@@ -153,7 +152,7 @@ const TableNguyenVong = () => {
       align: 'center',
       width: '60px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>{val}</div>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{val}</div>
       ),
     },
     {
@@ -162,7 +161,7 @@ const TableNguyenVong = () => {
       align: 'center',
       width: '100px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>{val}</div>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{val}</div>
       ),
     },
     {
@@ -171,7 +170,7 @@ const TableNguyenVong = () => {
       align: 'center',
       width: '100px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>{val}</div>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{val}</div>
       ),
     },
     {
@@ -179,7 +178,7 @@ const TableNguyenVong = () => {
       align: 'center',
       width: '150px',
       render: (nguyenVong) => (
-        <div style={{ color: nguyenVong?.wrong ? Setting.primaryColor : '#000000D9' }}>
+        <div style={{ color: nguyenVong?.wrong ? 'red' : '#000000D9' }}>
           {nguyenVong?.coSoDaoTao?.ten || nguyenVong?.tenCoSoDaoTao}
         </div>
       ),
@@ -190,7 +189,7 @@ const TableNguyenVong = () => {
       align: 'center',
       width: '100px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>{val}</div>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{val}</div>
       ),
     },
     {
@@ -199,7 +198,7 @@ const TableNguyenVong = () => {
       align: 'center',
       width: '60px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>{val}</div>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{val}</div>
       ),
     },
     {
@@ -212,9 +211,7 @@ const TableNguyenVong = () => {
         val
           ?.filter((item) => !item?.tenThanhPhan?.includes('Điểm'))
           ?.map((item) => (diem += item?.diem ?? 0));
-        return (
-          <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>{diem}</div>
-        );
+        return <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{diem}</div>;
       },
     },
     {
@@ -223,7 +220,7 @@ const TableNguyenVong = () => {
       align: 'center',
       width: '100px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>
           {val && val !== -1 ? val : ''}
         </div>
       ),
@@ -235,10 +232,7 @@ const TableNguyenVong = () => {
         return val
           ?.filter((item) => item?.tenThanhPhan)
           ?.map((item) => (
-            <div
-              style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}
-              key={item?._id}
-            >
+            <div style={{ color: record?.wrong ? 'red' : '#000000D9' }} key={item?._id}>
               {item?.tenThanhPhan}: {item?.diem ?? 0}
             </div>
           ));
@@ -261,7 +255,7 @@ const TableNguyenVong = () => {
       <Divider plain>
         <b>Danh sách nguyện vọng</b>
       </Divider>
-      <p style={{ margin: '12px 0px', color: Setting.primaryColor }}>
+      <p style={{ margin: '12px 0px', color: 'red' }}>
         Lưu ý: Thí sinh có thể thay đổi thứ tự nguyện vọng bằng cách click vào nút mũi tên lên hoặc
         xuống ở cột thao tác đối với mỗi nguyện vọng
       </p>

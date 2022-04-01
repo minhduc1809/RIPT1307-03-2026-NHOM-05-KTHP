@@ -1,5 +1,4 @@
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
-import { Setting } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { Descriptions, Table } from 'antd';
 import { useModel } from 'umi';
@@ -21,7 +20,7 @@ const BlockNguyenVong = (props: {
       align: 'center',
       width: '60px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>{val}</div>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{val}</div>
       ),
     },
     {
@@ -30,7 +29,7 @@ const BlockNguyenVong = (props: {
       align: 'center',
       width: '100px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>{val}</div>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{val}</div>
       ),
     },
     {
@@ -39,7 +38,7 @@ const BlockNguyenVong = (props: {
       align: 'center',
       width: '100px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>{val}</div>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{val}</div>
       ),
     },
     {
@@ -47,7 +46,7 @@ const BlockNguyenVong = (props: {
       align: 'center',
       width: '150px',
       render: (nguyenVong) => (
-        <div style={{ color: nguyenVong?.wrong ? Setting.primaryColor : '#000000D9' }}>
+        <div style={{ color: nguyenVong?.wrong ? 'red' : '#000000D9' }}>
           {nguyenVong?.coSoDaoTao?.ten || nguyenVong?.tenCoSoDaoTao}
         </div>
       ),
@@ -58,7 +57,7 @@ const BlockNguyenVong = (props: {
       align: 'center',
       width: '100px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>{val}</div>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{val}</div>
       ),
     },
     {
@@ -67,7 +66,7 @@ const BlockNguyenVong = (props: {
       align: 'center',
       width: '60px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>{val}</div>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{val}</div>
       ),
     },
     {
@@ -80,9 +79,7 @@ const BlockNguyenVong = (props: {
         val
           ?.filter((item) => !item?.tenThanhPhan?.includes('Điểm'))
           ?.map((item) => (diem += item?.diem ?? 0));
-        return (
-          <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>{diem}</div>
-        );
+        return <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{diem}</div>;
       },
     },
     {
@@ -91,7 +88,7 @@ const BlockNguyenVong = (props: {
       align: 'center',
       width: '100px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>
           {val && val !== -1 ? val : ''}
         </div>
       ),
@@ -103,10 +100,7 @@ const BlockNguyenVong = (props: {
         return val
           ?.filter((item) => item?.tenThanhPhan)
           ?.map((item) => (
-            <div
-              style={{ color: record?.wrong ? Setting.primaryColor : '#000000D9' }}
-              key={item?._id}
-            >
+            <div style={{ color: record?.wrong ? 'red' : '#000000D9' }} key={item?._id}>
               {item?.tenThanhPhan}: {item?.diem ?? 0}
             </div>
           ));
