@@ -48,8 +48,8 @@ const ThongTinThanhToan = (props: ThongTinThanhToanProps) => {
         >
           {props?.trangThaiThanhToan === 'Đã thanh toán đủ' ||
           props?.trangThaiThanhToan === 'Thanh toán thừa'
-            ? `${!access.sinhVien ? 'Sinh viên' : 'Bạn'} đã hoàn thành nộp Lệ phí`
-            : `${!access.sinhVien ? 'Sinh viên' : 'Bạn'} chưa nộp đủ Lệ phí`}
+            ? `${!access.thiSinh ? 'Sinh viên' : 'Bạn'} đã hoàn thành nộp Lệ phí`
+            : `${!access.thiSinh ? 'Sinh viên' : 'Bạn'} chưa nộp đủ Lệ phí`}
         </b>
         <p>{`Số lượng: ${invoice?.items?.[0]?.quantity ?? 0} ${
           invoice?.items?.[0]?.unitLabel ?? ''
@@ -111,13 +111,13 @@ const ThongTinThanhToan = (props: ThongTinThanhToanProps) => {
           {currencyFormat(invoice?.amountRemaining ?? 0)} đ
         </Descriptions.Item>
         <Descriptions.Item
-          label={`Số tiền ${access.sinhVien ? 'thanh toán thừa' : 'phải hoàn trả'}`}
+          label={`Số tiền ${access.thiSinh ? 'thanh toán thừa' : 'phải hoàn trả'}`}
         >
           {currencyFormat(invoice?.amountRefund ?? 0)} đ
         </Descriptions.Item>
         {((invoice?.amountRemaining && invoice.amountRemaining > 0) ||
           (invoice?.amountRefund && invoice.amountRefund > 0)) &&
-          access.nhanVien && (
+          access.chuyenVien && (
             <>
               <Descriptions.Item
                 label={invoice?.amountRemaining ?? 0 > 0 ? 'Thanh toán' : 'Hoàn trả'}
@@ -179,9 +179,9 @@ const ThongTinThanhToan = (props: ThongTinThanhToanProps) => {
 
       {((invoice?.amountRemaining && invoice.amountRemaining > 0) ||
         (invoice?.amountRefund && invoice.amountRefund > 0)) &&
-      access.nhanVien ? (
+      access.chuyenVien ? (
         <Form.Item style={{ textAlign: 'center', marginBottom: 0, marginTop: 8 }}>
-          {invoice?.amountPaid && invoice.amountPaid > 0 && access.nhanVien ? (
+          {invoice?.amountPaid && invoice.amountPaid > 0 && access.chuyenVien ? (
             <Button
               onClick={() => {
                 setEdit(true);

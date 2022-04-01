@@ -81,7 +81,7 @@ const FormBaiHoc = () => {
             </Select>
           </Form.Item>
         )}
-        {(access.admin || access.nhanVien) && (
+        {(access.admin || access.chuyenVien) && (
           <Form.Item
             initialValue={record?.phamVi}
             rules={[...rules.required]}
@@ -98,7 +98,7 @@ const FormBaiHoc = () => {
           </Form.Item>
         )}
 
-        {phamVi === 'Hình thức đào tạo' && (access.admin || access.nhanVien) && (
+        {phamVi === 'Hình thức đào tạo' && (access.admin || access.chuyenVien) && (
           <Form.Item
             initialValue={record?.hinhThucDaoTaoId}
             rules={[...rules.required]}
