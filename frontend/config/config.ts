@@ -156,80 +156,14 @@ export default defineConfig({
     },
 
     {
-      name: 'QuanTriChung',
-      path: './quantrichung',
-      access: 'admin',
-      icon: 'SettingOutlined',
-      routes: [
-        {
-          name: 'QuanLyTaiKhoan',
-          path: './quanlytaikhoan',
-          component: './QuanLyTaiKhoan',
-        },
-        {
-          name: 'QuanLyNamTuyenSinh',
-          path: './quanlynamtuyensinh',
-          component: './NamTuyenSinh',
-        },
-        {
-          name: 'QuanLyPhuongThucXetTuyen',
-          path: './quanlyphuongthucxettuyen',
-          component: './PhuongThucTuyenSinh',
-        },
-        {
-          name: 'ToChucTuyenSinh',
-          path: './tochuctuyensinh',
-          routes: [
-            {
-              name: 'DotTuyenSinh',
-              path: './dottuyensinh',
-              component: './DotTuyenSinh',
-            },
-            {
-              name: 'DotNhapHoc',
-              path: './dotnhaphoc',
-            },
-          ],
-        },
-        {
-          name: 'QuanLyCoSoDaoTao',
-          path: './quanlycosodaotao',
-          component: './CoSoDaoTao',
-        },
-        {
-          name: 'QuanLyNganhChuyenNganh',
-          path: './quanlynganhchuyennganh',
-          component: './NganhChuyenNganh',
-        },
-        {
-          name: 'QuanLyDoiTuongTuyenSinh',
-          path: './quanlydoituongtuyensinh',
-          component: './DoiTuongTuyenSinh',
-        },
-        {
-          name: 'QuanLyKinhPhiChung',
-          path: './quanlykinhphichung',
-        },
-        {
-          name: 'QuanLyHoSo',
-          path: './quanlyhoso',
-        },
-        {
-          name: 'HinhThucDaoTao',
-          path: './hinhthucdaotao',
-          component: './HinhThucDaoTao',
-        },
-      ],
-    },
-    {
-      name: 'QuanTriChiTiet',
-      path: '/quantrichitiet',
+      name: 'QuanTriXetTuyen',
+      path: '/quantrixettuyen',
       icon: 'FormOutlined',
-      access: 'admin',
       routes: [
         {
-          name: 'ThongTinChung',
-          path: './thongtinchung',
+          name: 'DotTuyenSinh',
+          path: './dottuyensinh',
+          component: './DotTuyenSinh',
         },
         {
           name: 'TiepNhanHoSoXetTuyen',
@@ -258,20 +192,30 @@ export default defineConfig({
           ],
         },
         {
-          name: 'ThucHienXetTuyen',
-          path: './thuchienxettuyen',
+          name: 'ChiTieuVaGiaLap',
+          path: './chitieuvagialap',
           routes: [
             {
               name: 'ChiTieuXetTuyen',
               path: './chitieuxettuyen',
             },
             {
-              name: 'KetQuaXetTuyen',
-              path: './ketquaxettuyen',
+              name: 'DanhSachTrungTuyen',
+              path: './danhSachTrungTuyen',
               component: './KetQuaXetTuyen',
             },
           ],
         },
+      ],
+    },
+
+    {
+      name: 'QuanTriNhapHoc',
+      path: '/quantrinhaphoc',
+      icon: 'BankOutlined',
+      access: 'admin',
+      routes: [
+        { name: 'DotNhapHoc', path: './dotnhaphoc' },
         {
           name: 'TiepNhanHoSoNhapHoc',
           path: './tiepnhanhosonhaphoc',
@@ -294,15 +238,26 @@ export default defineConfig({
             },
           ],
         },
+      ],
+    },
+    {
+      name: 'QuanTriThanhToan',
+      path: '/quantrithanhtoan',
+      icon: 'DollarOutlined',
+      routes: [
         {
-          name: 'QuanLyHDSD',
-          path: './quanlyhdsd',
+          name: 'LoaiLePhi',
+          path: './loailephi',
+        },
+        {
+          name: 'ThongTinCongNo',
+          path: './thongtincongno',
         },
       ],
     },
     {
-      name: 'ChucNang',
-      path: '/chucnang',
+      name: 'TuongTac',
+      path: '/tuongtac',
       access: 'admin',
       icon: 'AppstoreAddOutlined',
       routes: [
@@ -323,7 +278,69 @@ export default defineConfig({
         },
       ],
     },
+    {
+      name: 'ThongKeBaoCao',
+      path: '/thongkebaocao',
+      icon: 'PieChartOutlined',
+      routes: [
+        {
+          name: 'TuyenSinh',
+          path: './tuyensinh',
+        },
+        {
+          name: 'NhapHoc',
+          path: './nhaphoc',
+        },
+      ],
+    },
+    {
+      name: 'CauHinhHeThong',
+      path: './cauhinhhethong',
+      access: 'admin',
+      icon: 'SettingOutlined',
+      routes: [
+        {
+          name: 'QuanLyTaiKhoan',
+          path: './quanlytaikhoan',
+          component: './QuanLyTaiKhoan',
+        },
+        {
+          name: 'QuanLyNamTuyenSinh',
+          path: './quanlynamtuyensinh',
+          component: './NamTuyenSinh',
+        },
+        {
+          name: 'QuanLyPhuongThucXetTuyen',
+          path: './quanlyphuongthucxettuyen',
+          component: './PhuongThucTuyenSinh',
+        },
 
+        {
+          name: 'QuanLyCoSoDaoTao',
+          path: './quanlycosodaotao',
+          component: './CoSoDaoTao',
+        },
+        {
+          name: 'QuanLyNganhChuyenNganh',
+          path: './quanlynganhchuyennganh',
+          component: './NganhChuyenNganh',
+        },
+        {
+          name: 'QuanLyDoiTuongTuyenSinh',
+          path: './quanlydoituongtuyensinh',
+          component: './DoiTuongTuyenSinh',
+        },
+        {
+          name: 'HinhThucDaoTao',
+          path: './hinhthucdaotao',
+          component: './HinhThucDaoTao',
+        },
+        {
+          name: 'HuongDanSuDung',
+          path: './huongdansudung',
+        },
+      ],
+    },
     {
       path: '/',
       redirect: '/user/login',

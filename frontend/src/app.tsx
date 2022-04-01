@@ -1,7 +1,7 @@
 import RightContent from '@/components/RightContent';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
-import { notification } from 'antd';
+import { notification, Tooltip } from 'antd';
 import 'moment/locale/vi';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
@@ -159,16 +159,16 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
     menuItemRender: (item, dom) => {
       return (
-        // <Tooltip placement="right" title={item.name}>
-        <div
-          style={{ flex: 'auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
-          onClick={() => {
-            history.push(item?.path ?? '/');
-          }}
-        >
-          {dom}
-        </div>
-        // </Tooltip>
+        <Tooltip placement="right" title={item.name}>
+          <div
+            style={{ flex: 'auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
+            onClick={() => {
+              history.push(item?.path ?? '/');
+            }}
+          >
+            {dom}
+          </div>
+        </Tooltip>
       );
     },
 
