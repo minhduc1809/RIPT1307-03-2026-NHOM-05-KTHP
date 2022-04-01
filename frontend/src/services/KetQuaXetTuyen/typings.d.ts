@@ -5,6 +5,7 @@ import type { HoSoXetTuyen } from '../HoSoXetTuyen/typings';
 
 declare module KetQuaXetTuyen {
   export interface ThongTinKhaiXacNhan {
+    index: number;
     maThongTin: string;
     tieuDe: string;
     noiDung: string;

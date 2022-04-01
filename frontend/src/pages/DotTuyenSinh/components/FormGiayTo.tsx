@@ -115,6 +115,7 @@ const FormGiayTo = (props: {
             <FormItem
               name="textHuongDan"
               label="Hướng dẫn"
+              rules={[...rules.text]}
               initialValue={recordGiayTo?.textHuongDan}
             >
               <Input.TextArea rows={3} placeholder="Hướng dẫn" />

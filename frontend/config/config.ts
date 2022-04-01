@@ -159,50 +159,60 @@ export default defineConfig({
       name: 'QuanTriXetTuyen',
       path: '/quantrixettuyen',
       icon: 'FormOutlined',
+      access: 'admin',
       routes: [
         {
           name: 'DotTuyenSinh',
           path: './dottuyensinh',
           component: './DotTuyenSinh',
+          access: 'admin',
         },
         {
           name: 'TiepNhanHoSoXetTuyen',
           path: './tiepnhanhoso',
+          access: 'admin',
           routes: [
             {
               name: 'HoSoChuaKhoa',
               path: './hosochuakhoa',
               component: './TiepNhanHoSo/ChuaKhoa.tsx',
+              access: 'admin',
             },
             {
               name: 'HoSoDaKhoa',
               path: './hosodakhoa',
               component: './TiepNhanHoSo/DaKhoa.tsx',
+              access: 'admin',
             },
             {
               name: 'HoSoDaTiepNhan',
               path: './hosodatiepnhan',
               component: './TiepNhanHoSo/DaTiepNhan.tsx',
+              access: 'admin',
             },
             {
               name: 'HoSoKhongTiepNhan',
               path: './hosokhongtiepnhan',
               component: './TiepNhanHoSo/KhongTiepNhan.tsx',
+              access: 'admin',
             },
           ],
         },
         {
           name: 'ChiTieuVaGiaLap',
           path: './chitieuvagialap',
+          access: 'admin',
           routes: [
             {
               name: 'ChiTieuXetTuyen',
               path: './chitieuxettuyen',
+              access: 'admin',
             },
             {
               name: 'DanhSachTrungTuyen',
               path: './danhSachTrungTuyen',
               component: './KetQuaXetTuyen',
+              access: 'admin',
             },
           ],
         },
@@ -215,26 +225,31 @@ export default defineConfig({
       icon: 'BankOutlined',
       access: 'admin',
       routes: [
-        { name: 'DotNhapHoc', path: './dotnhaphoc' },
+        { name: 'DotNhapHoc', path: './dotnhaphoc', access: 'admin' },
         {
           name: 'TiepNhanHoSoNhapHoc',
           path: './tiepnhanhosonhaphoc',
+          access: 'admin',
           routes: [
             {
               name: 'DanhSachChuaXacNhanNhapHoc',
               path: './danhsachchuaxacnhannhaphoc',
+              access: 'admin',
             },
             {
               name: 'DanhSachDaXacNhanNhapHoc',
               path: './danhsachdaxacnhannhaphoc',
+              access: 'admin',
             },
             {
               name: 'DanhSachHoanThienHoSoNhapHoc',
               path: './danhsachdahoanthienhosonhaphoc',
+              access: 'admin',
             },
             {
               name: 'DanhSachDuDieuKienNhapHoc',
               path: './danhsachdudieukiennhaphoc',
+              access: 'admin',
             },
           ],
         },
@@ -244,14 +259,17 @@ export default defineConfig({
       name: 'QuanTriThanhToan',
       path: '/quantrithanhtoan',
       icon: 'DollarOutlined',
+      access: 'admin',
       routes: [
         {
           name: 'LoaiLePhi',
           path: './loailephi',
+          access: 'admin',
         },
         {
           name: 'ThongTinCongNo',
           path: './thongtincongno',
+          access: 'admin',
         },
       ],
     },
@@ -265,16 +283,19 @@ export default defineConfig({
           name: 'Email',
           path: './sendemail',
           component: './SendEmail/index.tsx',
+          access: 'admin',
         },
         {
           name: 'BieuMau',
           path: './quanlybieumau',
           component: './QuanLyBieuMau',
+          access: 'admin',
         },
         {
           name: 'ThongBao',
           path: './quanlythongbao',
           component: './QuanLyThongBao',
+          access: 'admin',
         },
       ],
     },
@@ -282,14 +303,17 @@ export default defineConfig({
       name: 'ThongKeBaoCao',
       path: '/thongkebaocao',
       icon: 'PieChartOutlined',
+      access: 'admin',
       routes: [
         {
           name: 'TuyenSinh',
           path: './tuyensinh',
+          access: 'admin',
         },
         {
           name: 'NhapHoc',
           path: './nhaphoc',
+          access: 'admin',
         },
       ],
     },

@@ -1,6 +1,9 @@
+import { useModel } from 'umi';
+
 const InfoDoiTuongKhuVuc = (props: {
   type: 'doituonguutien' | 'khuvucuutien' | 'doituongxettuyen';
 }) => {
+  const { record } = useModel('dottuyensinh');
   let titleModal = '';
   let contentModal = <div />;
   switch (props.type) {
@@ -163,31 +166,7 @@ const InfoDoiTuongKhuVuc = (props: {
     }
     case 'doituongxettuyen': {
       titleModal = 'Thông tin chi tiết đối tượng xét tuyển';
-      contentModal = (
-        <div>
-          <p>
-            - Thí sinh có Chứng chỉ quốc tế SAT từ 1130/1600 trở lên hoặc ACT từ 25/36 trở lên và có
-            kết quả điểm trung bình chung học tập lớp 10, 11, 12 (hoặc học kỳ 1 lớp 12) đạt từ 7,5
-            trở lên và có hạnh kiểm Khá trở lên;
-            <br />- Thí sinh có Chứng chỉ tiếng Anh quốc tế trong thời hạn (tính đến ngày xét tuyển)
-            đạt IELTS 5.5 trở lên hoặc TOEFL iBT 65 trở lên hoặc TOEFL ITP 513 trở lên và có kết quả
-            điểm trung bình chung học tập lớp 10, 11, 12 (hoặc học kỳ 1 lớp 12) đạt từ 7,5 trở lên
-            và có hạnh kiểm Khá trở lên;
-            <br />
-            - Thí sinh đạt giải Khuyến khích trong kỳ thi chọn học sinh giỏi quốc gia hoặc đã tham
-            gia kỳ thi chọn học sinh giỏi quốc gia hoặc đạt giải Nhất, Nhì, Ba trong kỳ thi chọn học
-            sinh giỏi cấp Tỉnh, Thành phố trực thuộc Trung ương (TW) các môn Toán, Lý, Hóa, Tin học
-            và có kết quả điểm chung bình chung học tập lớp 10, 11, 12 (hoặc học kỳ 1 lớp 12) đạt từ
-            7,5 trở lên và có hạnh kiểm Khá trở lên;
-            <br />- Là học sinh chuyên các môn Toán, Lý, Hóa, Tin học của trường THPT chuyên trên
-            phạm vi toàn quốc (các trường THPT chuyên thuộc Tỉnh, Thành phố trực thuộc TW và các
-            trường THPT chuyên thuộc Cơ sở giáo dục đại học) hoặc hệ/lớp chuyên môn Toán, Lý, Hóa,
-            Tin học của các trường THPT chuyên trọng điểm quốc gia; và có kết quả điểm trung bình
-            chung học tập lớp 10, 11, 12 (hoặc học kỳ 1 lớp 12) đạt từ 8,0 trở lên và có hạnh kiểm
-            Khá trở lên.
-          </p>
-        </div>
-      );
+      contentModal = <div dangerouslySetInnerHTML={{ __html: record?.moTa ?? '' }} />;
     }
     default: {
       break;

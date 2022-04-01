@@ -67,8 +67,7 @@ const RaSoatHoSo = () => {
       dataIndex: 'noiCap',
       align: 'center',
       key: 'noiCap',
-      // render: value => moment(value).format('DD/MM/YYYY'),
-      width: '100px',
+      width: '200px',
     },
     {
       title: 'File minh chứng',
@@ -87,18 +86,28 @@ const RaSoatHoSo = () => {
     },
   ];
 
+  const phuongThuc = localStorage.getItem('phuongThuc');
+
   return (
     <>
       <div className="box">
         <Card bordered>
           <div style={{ textAlign: 'center' }}>
             <b style={{ fontSize: 22 }}>
-              PHIẾU ĐĂNG KÝ XÉT TUYỂN ĐẠI HỌC HỆ CHÍNH QUY NĂM {record?.namTuyenSinh ?? ''}
+              PHIẾU ĐĂNG KÝ XÉT TUYỂN ĐẠI HỌC HỆ {record?.hinhThucDaoTao?.ten?.toUpperCase() ?? ''}{' '}
+              NĂM {record?.namTuyenSinh ?? ''}
             </b>
 
-            <div style={{ color: 'red' }}>
-              <i>({record?.phuongThucTuyenSinh?.tenPhuongThuc ?? ''})</i>
-            </div>
+            {phuongThuc && (
+              <div style={{ color: 'red' }}>
+                <i>
+                  (
+                  {record?.danhSachPhuongThucTuyenSinh?.find((item) => item._id === phuongThuc)
+                    ?.tenPhuongThuc ?? ''}
+                  )
+                </i>
+              </div>
+            )}
 
             {recordHoSo?.trangThai === ETrangThaiHoSo.dakhoa && (
               <div style={{ color: 'red', fontStyle: 'italic' }}>(Bản chính thức)</div>

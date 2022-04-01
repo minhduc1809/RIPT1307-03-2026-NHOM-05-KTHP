@@ -417,7 +417,12 @@ const QuaTrinhHocTap = () => {
                 >
                   {record?.danhSachDoiTuongTuyenSinh.map((item) => (
                     <Select.Option key={item?.maDoiTuong} value={item?.maDoiTuong}>
-                      {item?.thongTinDoiTuong?.tenDoiTuong}
+                      {
+                        record?.danhSachPhuongThucTuyenSinh?.find(
+                          (phuongThuc) => phuongThuc?._id === item?.phuongThucTuyenSinh,
+                        )?.tenPhuongThuc
+                      }{' '}
+                      - {item?.thongTinDoiTuong?.tenDoiTuong}
                     </Select.Option>
                   ))}
                 </Select>
@@ -728,11 +733,11 @@ const QuaTrinhHocTap = () => {
                 - Tổng dung lượng tập tin tải lên không quá 20MB!
               </b>
             </li>
-            <li>
+            {/* <li>
               <b style={{ color: Setting.primaryColor }}>
                 - Nếu bạn thay đổi thông tin ở bước 2 thì tất cả nguyện vọng ở bước 3 sẽ bị xóa
               </b>
-            </li>
+            </li> */}
           </ul>
           <div style={{ display: 'flex', justifyContent: 'space-around' }}>
             <Popconfirm

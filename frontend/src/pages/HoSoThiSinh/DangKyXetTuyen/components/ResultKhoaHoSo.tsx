@@ -1,6 +1,6 @@
 import logo from '@/assets/logo.png';
 import ThanhToan from '@/components/ThanhToan';
-import { ETrangThaiHoSo } from '@/utils/constants';
+import { ETrangThaiHoSo, ETrangThaiThanhToan } from '@/utils/constants';
 import { Button, Col, Modal, Result, Row } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
@@ -54,9 +54,17 @@ const ResultHoSo = () => {
           }
           subTitle={
             <>
-              {recordHoSo?.trangThai === ETrangThaiHoSo.khongtiepnhan
-                ? lyDoKhongTiepNhan
-                : subTitleByTrangThai?.[recordHoSo?.trangThai ?? '']}
+              {recordHoSo?.trangThai !== ETrangThaiHoSo.chuakhoa &&
+                recordHoSo?.trangThaiThanhToan === ETrangThaiThanhToan.CHUA_THANH_TOAN_DU && (
+                  <div>
+                    Thí sinh xem thông tin thanh toán và thực hiện thanh toán theo hướng dẫn
+                  </div>
+                )}
+              <div>
+                {recordHoSo?.trangThai === ETrangThaiHoSo.khongtiepnhan
+                  ? lyDoKhongTiepNhan
+                  : subTitleByTrangThai?.[recordHoSo?.trangThai ?? '']}
+              </div>
             </>
           }
           extra={

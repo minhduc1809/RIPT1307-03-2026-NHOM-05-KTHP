@@ -1,8 +1,9 @@
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
-import { ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
+import { ETrangThaiXacNhanNhapHoc, Setting } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { checkFileSize, uploadMultiFile } from '@/utils/utils';
-import { Form, Row, Col, Input, Button, Divider, Popconfirm } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Form, Row, Col, Input, Button, Divider, Popconfirm, Modal, Tag, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import TableGiayToXacNhanNhapHoc from './TableGiayToXacNhanNhapHoc';
 
@@ -17,12 +18,7 @@ export const FormXacNhanNhapHoc = () => {
   const { record } = useModel('dottuyensinh');
 
   return (
-    <Form
-      labelCol={{ xs: 24, md: 12, lg: 8, xl: 8 }}
-      labelAlign="left"
-      title="Xác nhận nhập học"
-      form={form}
-    >
+    <Form labelCol={{ span: 24 }} labelAlign="left" title="Xác nhận nhập học" form={form}>
       <Row gutter={[10, 0]}>
         {record?.danhSachThongTinKhaiXacNhan?.map((item, index) => (
           <Col key={item.maThongTin} xs={24}>
@@ -34,7 +30,38 @@ export const FormXacNhanNhapHoc = () => {
               }
               rules={item?.required ? [...rules.required] : []}
               name={['danhSachThongTinKhaiXacNhan', index, 'noiDung']}
-              label={item?.tieuDe}
+              label={
+                <div>
+                  {item?.tieuDe}
+                  {item?.textHuongDan?.length || item?.urlHuongDan?.length ? (
+                    <Tooltip placement="bottom" title="Xem hướng dẫn">
+                      <QuestionCircleOutlined
+                        style={{ marginLeft: '5px' }}
+                        onClick={() => {
+                          Modal.info({
+                            title: (
+                              <div>
+                                <div>{item?.textHuongDan ?? ''}</div>
+                                {item?.urlHuongDan?.length && <div>File hướng dẫn đính kèm:</div>}
+                                {item?.urlHuongDan?.map((url, indexChungChi) => (
+                                  <a key={url} href={url} target="_blank" rel="noreferrer">
+                                    <Tag
+                                      style={{ marginTop: 8 }}
+                                      color={Setting.primaryColor}
+                                    >{`Xem tập tin ${indexChungChi + 1}  `}</Tag>
+                                  </a>
+                                ))}
+                              </div>
+                            ),
+                          });
+                        }}
+                      />
+                    </Tooltip>
+                  ) : (
+                    <div />
+                  )}
+                </div>
+              }
             >
               <Input placeholder={item?.tieuDe} />
             </Form.Item>

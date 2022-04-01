@@ -1,8 +1,9 @@
 import Table from '@/components/Table/Table';
-import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
+import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
+import { Setting } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
+import { DeleteOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Button, Divider, Modal, Popconfirm, Tag, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import FormKhaiThongTinNhapHoc from './FormThongTinKhaiNhapHoc';
 
@@ -21,7 +22,7 @@ const TableKhaiThongTinNhapHoc = () => {
     setVisibleFormThongTinKhaiXacNhan(show);
   };
 
-  const columns: IColumn<DotTuyenSinh.GiayTo>[] = [
+  const columns: IColumn<KetQuaXetTuyen.ThongTinKhaiXacNhan>[] = [
     {
       title: 'STT',
       dataIndex: 'index',
@@ -33,6 +34,38 @@ const TableKhaiThongTinNhapHoc = () => {
       dataIndex: 'tieuDe',
       align: 'center',
       search: 'search',
+      render: (val, recordThongTin) => (
+        <div>
+          {val}
+          {recordThongTin?.textHuongDan?.length || recordThongTin?.urlHuongDan?.length ? (
+            <Tooltip placement="bottom" title="Xem hướng dẫn">
+              <QuestionCircleOutlined
+                style={{ marginLeft: '5px' }}
+                onClick={() => {
+                  Modal.info({
+                    title: (
+                      <div>
+                        <div>{recordThongTin?.textHuongDan ?? ''}</div>
+                        {recordThongTin?.urlHuongDan?.length && <div>File hướng dẫn đính kèm:</div>}
+                        {recordThongTin?.urlHuongDan?.map((item, indexChungChi) => (
+                          <a key={item} href={item} target="_blank" rel="noreferrer">
+                            <Tag
+                              style={{ marginTop: 8 }}
+                              color={Setting.primaryColor}
+                            >{`Xem tập tin ${indexChungChi + 1}  `}</Tag>
+                          </a>
+                        ))}
+                      </div>
+                    ),
+                  });
+                }}
+              />
+            </Tooltip>
+          ) : (
+            <div />
+          )}
+        </div>
+      ),
     },
 
     {
@@ -52,7 +85,7 @@ const TableKhaiThongTinNhapHoc = () => {
       title: 'Thao tác',
       align: 'center',
       width: 150,
-      render: (record: DotTuyenSinh.ThongTinKhaiXacNhan) => (
+      render: (record) => (
         <>
           <Tooltip title="Chỉnh sửa">
             <Button

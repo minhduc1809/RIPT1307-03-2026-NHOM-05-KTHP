@@ -17,10 +17,10 @@ const BlockChungChiQuocTe = (props: { index?: number }) => {
       key: 'tenChungChi',
     },
     {
-      title: 'mã dự thi chứng chỉ',
+      title: 'Mã dự thi chứng chỉ',
       dataIndex: 'maDuThiChungChiQuocTe',
       align: 'center',
-      width: '100px',
+      width: '150px',
     },
     {
       title: 'Điểm thi chứng chỉ',
@@ -43,7 +43,7 @@ const BlockChungChiQuocTe = (props: { index?: number }) => {
       dataIndex: 'donViCapChungChiQuocTe',
       align: 'center',
       key: 'donvicap',
-      width: '100px',
+      width: '200px',
     },
     {
       title: 'File minh chứng',

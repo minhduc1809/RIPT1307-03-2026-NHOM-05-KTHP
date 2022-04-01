@@ -111,6 +111,10 @@ export enum ELoaiChungChiTiengAnh {
   TOEFL_CBT = 'TOEFL_CBT',
 }
 
+export enum ETrangThaiThanhToan {
+  CHUA_THANH_TOAN_DU = 'Chưa thanh toán đủ',
+}
+
 export enum ELoaiChungChiTiengPhap {
   DELF = 'DELF',
   DALF = 'DALF',

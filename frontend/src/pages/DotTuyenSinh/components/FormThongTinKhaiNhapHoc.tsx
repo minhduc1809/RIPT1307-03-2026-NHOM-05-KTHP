@@ -89,6 +89,7 @@ const FormKhaiThongTinNhapHoc = () => {
             <FormItem
               name="textHuongDan"
               label="Hướng dẫn"
+              rules={[...rules.text]}
               initialValue={recordThongTinKhaiXacNhan?.textHuongDan}
             >
               <Input.TextArea rows={3} placeholder="Hướng dẫn" />

@@ -1,6 +1,8 @@
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
+import { Setting } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import { Descriptions, Table } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Descriptions, Modal, Table, Tag, Tooltip } from 'antd';
 import { useModel } from 'umi';
 const { Item } = Descriptions;
 
@@ -19,6 +21,38 @@ const BlockGiayTo = (props: { index?: number }) => {
       width: 200,
       align: 'center',
       search: 'search',
+      render: (val, recordGiayTo) => (
+        <div>
+          {val}
+          {recordGiayTo?.textHuongDan?.length || recordGiayTo?.urlHuongDan?.length ? (
+            <Tooltip placement="bottom" title="Xem hướng dẫn">
+              <QuestionCircleOutlined
+                style={{ marginLeft: '5px' }}
+                onClick={() => {
+                  Modal.info({
+                    title: (
+                      <div>
+                        <div>{recordGiayTo?.textHuongDan ?? ''}</div>
+                        {recordGiayTo?.urlHuongDan?.length && <div>File hướng dẫn đính kèm:</div>}
+                        {recordGiayTo?.urlHuongDan?.map((item, indexChungChi) => (
+                          <a key={item} href={item} target="_blank" rel="noreferrer">
+                            <Tag
+                              style={{ marginTop: 8 }}
+                              color={Setting.primaryColor}
+                            >{`Xem tập tin ${indexChungChi + 1}  `}</Tag>
+                          </a>
+                        ))}
+                      </div>
+                    ),
+                  });
+                }}
+              />
+            </Tooltip>
+          ) : (
+            <div />
+          )}
+        </div>
+      ),
     },
     {
       title: 'Số lượng',

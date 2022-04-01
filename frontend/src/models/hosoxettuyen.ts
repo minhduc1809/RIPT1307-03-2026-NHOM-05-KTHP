@@ -42,9 +42,11 @@ export default () => {
   const { setVisibleFormGiayTo, record: recordDot } = useModel('dottuyensinh');
 
   const khoiTaoHoSoXetTuyenModel = async (idDotXetTuyen: string) => {
+    setLoading(true);
     const response = await khoiTaoHoSoXetTuyen(idDotXetTuyen);
     setRecordHoSo(response?.data?.data);
     message.success('Khởi tạo hồ sơ thành công');
+    setLoading(false);
   };
 
   const getMyHoSoXetTuyenModel = async (idDotXetTuyen: string) => {
@@ -121,32 +123,38 @@ export default () => {
     },
   ) => {
     if (!idHoSo) return;
-    setLoading(true);
-    const response = await putMyDanhSachNguyenVong(idHoSo, payload);
-    let success = response?.data?.data?.success ?? false;
-    if (success === false) {
-      message?.error(response?.data?.data?.errorStrings || response?.data?.data?.message);
-    } else {
-      setRecordHoSo(response?.data?.data?.result);
-      setDanhSachNguyenVong(
-        response?.data?.data?.result?.danhSachNguyenVong?.map((item: HoSoXetTuyen.NguyenVong) => ({
-          ...item,
-          coSoDaoTao: { _id: item?.coSoDaoTao },
-        })) ?? [],
-      );
-      response?.data?.data?.result?.danhSachNguyenVong?.map((nv: HoSoXetTuyen.NguyenVong) => {
-        if (nv?.wrong === true) {
-          success = false;
-          message.error(
-            `Nguyện vọng ${nv?.soThuTu} không hợp lệ, Chi tiết: ${nv?.errorStrings?.join(', ')}`,
-            10,
-          );
-        }
-      });
-      if (success === true) message.success('Lưu thành công');
+    try {
+      setLoading(true);
+      const response = await putMyDanhSachNguyenVong(idHoSo, payload);
+      let success = response?.data?.data?.success ?? false;
+      if (success === false) {
+        message?.error(response?.data?.data?.errorStrings || response?.data?.data?.message);
+      } else {
+        setRecordHoSo(response?.data?.data?.result);
+        setDanhSachNguyenVong(
+          response?.data?.data?.result?.danhSachNguyenVong?.map(
+            (item: HoSoXetTuyen.NguyenVong) => ({
+              ...item,
+              coSoDaoTao: { _id: item?.coSoDaoTao },
+            }),
+          ) ?? [],
+        );
+        response?.data?.data?.result?.danhSachNguyenVong?.map((nv: HoSoXetTuyen.NguyenVong) => {
+          if (nv?.wrong === true) {
+            success = false;
+            message.error(
+              `Nguyện vọng ${nv?.soThuTu} không hợp lệ, Chi tiết: ${nv?.errorStrings?.join(', ')}`,
+              10,
+            );
+          }
+        });
+        if (success === true) message.success('Lưu thành công');
+      }
+      setLoading(false);
+      return success;
+    } catch (err) {
+      setLoading(false);
     }
-    setLoading(false);
-    return success;
   };
 
   const putMyTinhQuyDoiNguyenVongModel = async (payload: {

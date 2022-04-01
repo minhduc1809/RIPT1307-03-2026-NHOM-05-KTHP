@@ -13,7 +13,7 @@ const BlockDanhGiaNangLuc = (props: { index?: number }) => {
       title: 'Đơn vị tổ chức',
       dataIndex: 'truongDanhGiaNangLuc',
       align: 'center',
-      width: '140px',
+      width: '200px',
     },
     {
       title: 'Điểm đánh giá năng lực',

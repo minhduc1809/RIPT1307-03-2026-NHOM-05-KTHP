@@ -38,7 +38,7 @@ const BlockChungChiTiengAnh = (props: { index?: number }) => {
       dataIndex: 'noiCap',
       align: 'center',
       key: 'donvicap',
-      width: '100px',
+      width: '200px',
     },
     {
       title: 'File minh chứng',

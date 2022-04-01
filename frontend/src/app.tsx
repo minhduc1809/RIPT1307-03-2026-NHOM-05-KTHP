@@ -159,7 +159,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
     menuItemRender: (item, dom) => {
       return (
-        <Tooltip placement="right" title={item.name}>
+        <Tooltip
+          placement={
+            initialState?.currentUser?.systemRole === ESystemRole.ThiSinh ? 'bottom' : 'right'
+          }
+          title={item.name}
+        >
           <div
             style={{ flex: 'auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
             onClick={() => {

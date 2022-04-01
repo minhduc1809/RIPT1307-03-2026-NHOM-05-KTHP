@@ -61,12 +61,7 @@ const BlockTableDiemTHPT = (props: {
       name={[...lop?.filter((item) => item !== 'danhSach'), kyHoc, record?.mon]}
       style={{ width: '100%', marginBottom: 0 }}
     >
-      <InputNumber
-        placeholder="Số thập phân dạng 0.0"
-        min={0}
-        max={10}
-        style={{ width: '100%', maxWidth: 200 }}
-      />
+      <InputNumber placeholder="0.0" min={0} max={10} style={{ width: '100%', maxWidth: 100 }} />
     </Form.Item>
   );
 
@@ -149,6 +144,7 @@ const BlockTableDiemTHPT = (props: {
         </Col>
       )}
       <Table
+        size="small"
         style={{ width: '100%' }}
         columns={columns}
         dataSource={[...arrMonHoc, 'Tổng kết']?.map((item, index) => {
