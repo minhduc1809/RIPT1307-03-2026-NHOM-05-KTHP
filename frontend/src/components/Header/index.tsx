@@ -98,7 +98,7 @@ const Header = () => {
             </div>
           </>
         )}
-        <AvatarDropdown />
+        <AvatarDropdown menu />
       </div>
     </div>
   );

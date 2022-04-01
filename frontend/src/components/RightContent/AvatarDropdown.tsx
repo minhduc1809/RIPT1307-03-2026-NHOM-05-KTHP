@@ -3,7 +3,7 @@ import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons
 import { Avatar, Menu, Spin } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
-import { history, useModel } from 'umi';
+import { history, useAccess, useModel } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
@@ -18,22 +18,22 @@ const loginOut = async () => {
     history.replace({
       pathname: '/user/login',
     });
+    localStorage.removeItem('vaiTro');
+    localStorage.removeItem('token');
+    localStorage.removeItem('accessTokens');
+    localStorage.removeItem('phuongThuc');
+    localStorage.removeItem('dot');
+    localStorage.removeItem('nam');
   }
 };
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
-
+  const access = useAccess();
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
       const { key } = event;
       if (key === 'logout' && initialState) {
         setInitialState({ ...initialState, currentUser: undefined });
-        localStorage.removeItem('vaiTro');
-        localStorage.removeItem('token');
-        localStorage.removeItem('accessTokens');
-        localStorage.removeItem('phuongThuc');
-        localStorage.removeItem('dot');
-        localStorage.removeItem('nam');
         loginOut();
         return;
       }
@@ -69,14 +69,16 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-      {menu && localStorage.getItem('vaiTro') !== 'Admin' && (
-        <Menu.Item key="center">
-          <UserOutlined />
-          Trang cá nhân
-        </Menu.Item>
+      {menu && access.thiSinh && (
+        <>
+          <Menu.Item key="center">
+            <UserOutlined />
+            Trang cá nhân
+          </Menu.Item>
+          <Menu.Divider />
+        </>
       )}
 
-      {menu && localStorage.getItem('vaiTro') !== 'Admin' && <Menu.Divider />}
       {accessTokens?.length > 1 && (
         <>
           <Menu.Item key="settings">

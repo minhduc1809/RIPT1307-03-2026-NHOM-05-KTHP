@@ -27,11 +27,11 @@ const LuaChonPhuongThuc = () => {
   } = useModel('hinhthucdaotao');
 
   useEffect(() => {
-    getAllHinhThucDaoTaoModel();
+    if (initialState?.currentUser) getAllHinhThucDaoTaoModel();
   }, []);
 
   useEffect(() => {
-    if (record?._id) getAllNamTuyenSinhModel(record?._id);
+    if (record?._id && initialState?.currentUser) getAllNamTuyenSinhModel(record?._id);
   }, [record?._id]);
 
   useEffect(() => {

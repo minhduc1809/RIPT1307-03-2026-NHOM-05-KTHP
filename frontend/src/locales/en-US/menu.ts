@@ -75,7 +75,7 @@ export default {
   'menu.CauHinhHeThong.HuongDanSuDung': 'Hướng dẫn sử dụng',
   'menu.QuanTriXetTuyen': 'Quản trị xét tuyển',
   'menu.QuanTriXetTuyen.DotTuyenSinh': 'Đợt tuyển sinh',
-  'menu.QuanTriXetTuyen.TiepNhanHoSoXetTuyen': 'Tiếp nhận hố sơ xét tuyển',
+  'menu.QuanTriXetTuyen.TiepNhanHoSoXetTuyen': 'Tiếp nhận hồ sơ xét tuyển',
   'menu.QuanTriXetTuyen.TiepNhanHoSoXetTuyen.HoSoChuaKhoa': 'Hồ sơ chưa khóa',
   'menu.QuanTriXetTuyen.TiepNhanHoSoXetTuyen.HoSoDaKhoa': 'Hồ sơ đã khóa',
   'menu.QuanTriXetTuyen.TiepNhanHoSoXetTuyen.HoSoDaTiepNhan': 'Hồ sơ đã tiếp nhận',

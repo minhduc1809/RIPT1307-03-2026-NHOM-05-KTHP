@@ -1,5 +1,6 @@
 import axios from '@/utils/axios';
 import { ip3 } from '@/utils/ip';
+import type { NamTuyenSinh } from './typings';
 
 const url = 'nam-tuyen-sinh';
 

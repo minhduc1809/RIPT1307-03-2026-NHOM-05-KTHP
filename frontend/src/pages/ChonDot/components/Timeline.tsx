@@ -10,7 +10,7 @@ const { Countdown } = Statistic;
 
 const TimeLineChonDot = (props: { record: DotTuyenSinh.Record }) => {
   const isMediumScreen = useMediaQuery({
-    query: '(min-width: 753px)',
+    query: '(min-width: 810px)',
   });
   const { data, checkDay, setupTimeline, finishStep } = useInitTimeline();
 
@@ -25,7 +25,7 @@ const TimeLineChonDot = (props: { record: DotTuyenSinh.Record }) => {
           <div
             style={{
               color: Setting.primaryColor,
-              display: 'flex',
+              display: isMediumScreen ? 'flex' : 'unset',
               alignItems: 'baseline',
               fontSize: 16,
             }}

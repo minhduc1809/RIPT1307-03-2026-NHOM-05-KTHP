@@ -2,6 +2,7 @@
 /* eslint-disable */
 import axios from '@/utils/axios';
 import { ip3 } from '@/utils/ip';
+import { Login } from './typings';
 
 export async function getInfo() {
   return axios.get(`${ip3}/user/me`);
@@ -28,7 +29,7 @@ export async function adminlogin(payload: { username?: string; password?: string
 }
 
 export async function changePassword(payload: { oldPassword: string; newPassword: string }) {
-  return axios.post(`${ip3}/odoo-user/me/change/password`, payload);
+  return axios.post(`${ip3}/user/me/change/password`, payload);
 }
 
 export async function resendEmail() {

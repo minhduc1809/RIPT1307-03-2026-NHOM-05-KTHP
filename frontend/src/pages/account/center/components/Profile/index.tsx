@@ -56,6 +56,7 @@ class BaseView extends Component<BaseViewProps> {
       // avatar_path,
       ngaySinh: toISOString(val?.ngaySinh),
     });
+    message.success('Cập nhật thành công');
     getInfo();
 
     dispatch({
@@ -74,8 +75,8 @@ class BaseView extends Component<BaseViewProps> {
     return currentUser ? (
       <div ref={this.getViewDom}>
         <Form layout="vertical" onFinish={this.handleFinish}>
-          <Row gutter={[50, 0]}>
-            <Col xl={12}>
+          <Row gutter={[20, 0]}>
+            <Col xl={16}>
               <Row gutter={[20, 0]}>
                 <Col xs={24} lg={12}>
                   {' '}
@@ -124,9 +125,9 @@ class BaseView extends Component<BaseViewProps> {
                     <Select
                       placeholder="Giới tính"
                       options={[
-                        { value: 'NAM', label: 'Nam' },
-                        { value: 'NU', label: 'Nữ' },
-                        { value: 'KHAC', label: 'Khác' },
+                        { value: 'Nam', label: 'Nam' },
+                        { value: 'Nữ', label: 'Nữ' },
+                        { value: 'Khác', label: 'Khác' },
                       ]}
                     />
                   </Form.Item>
@@ -150,7 +151,7 @@ class BaseView extends Component<BaseViewProps> {
                 </Button>
               </Form.Item>
             </Col>
-            <Col xl={12}>
+            <Col xl={8}>
               <Form.Item
                 name="anhDaiDien"
                 label="Ảnh đại diện"

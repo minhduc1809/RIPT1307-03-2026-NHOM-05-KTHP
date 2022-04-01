@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import ViewThongBao from '@/pages/ThongBao/components/ViewThongBao';
+import ViewThongBao from '@/pages/QuanLyThongBao/components/ViewThongBao';
 import { readAllNotification, readOneNotification } from '@/services/ThongBao/thongbao';
 import { Button, message, Modal } from 'antd';
 import moment from 'moment';
