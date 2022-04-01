@@ -1,7 +1,7 @@
 import axios from '@/utils/axios';
 import { ip3 } from '@/utils/ip';
 
-export async function getUser(payload: { page?: number, limit?: number, condition?: any }) {
+export async function getUser(payload: { page?: number; limit?: number; condition?: any }) {
   return axios.get(`${ip3}/user/pageable`, { params: payload });
 }
 
@@ -12,18 +12,3 @@ export async function getUser(payload: { page?: number, limit?: number, conditio
 // export async function putUser(payload: Login.Profile & { partner_id: number }) {
 //   return axios.put(`${ip3}/odoo-user/admin/profile`, payload);
 //}
-
-export async function getUserMetaDataFilter(
-  payload: {
-    vaiTroList: string[];
-    lopHanhChinhIds: string[];
-    lopTinChiIds: string[];
-    donViIds?: string[];
-    khoaSinhVienIds?: string[];
-    nganhIds?: string[];
-  },
-  page?: number,
-  limit?: number,
-) {
-  return axios.post(`${ip3}/user-metadata/filter/pageable?page=${page}&limit=${limit}`, payload);
-}

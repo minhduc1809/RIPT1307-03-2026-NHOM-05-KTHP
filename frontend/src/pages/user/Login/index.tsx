@@ -14,14 +14,15 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
-import { Button, Col, ConfigProvider, Divider, message, Row, Tabs, Tooltip } from 'antd';
+import { Button, Col, ConfigProvider, Divider, message, Modal, Row, Tabs, Tooltip } from 'antd';
 import viVN from 'antd/lib/locale/vi_VN';
 import React, { useState } from 'react';
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
 import { useMediaQuery } from 'react-responsive';
-import { FormattedMessage, history, Link, useIntl, useModel } from 'umi';
+import { FormattedMessage, history, useIntl, useModel } from 'umi';
 import Register from '../register';
+import FormForgetPassword from './FormForgetPassword';
 import styles from './index.less';
 
 const goto = () => {
@@ -45,6 +46,7 @@ const LoginGlobal: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const { isLogin, setIsLogin } = useModel('user');
   const intl = useIntl();
+  const [visibile, setVisible] = useState<boolean>(false);
 
   const handleRole = async (role: { accessToken: string; user: Login.Profile }) => {
     const defaultloginSuccessMessage = intl.formatMessage({
@@ -146,13 +148,9 @@ const LoginGlobal: React.FC = () => {
                       <>
                         {dom.pop()}
                         <div style={{ width: '100%', textAlign: 'center', marginTop: '15px' }}>
-                          <Link
-                            className={styles.link}
-                            style={{ cursor: 'pointer' }}
-                            to="/user/quenMatKhau"
-                          >
+                          <Button onClick={() => setVisible(true)} type="link">
                             <FormattedMessage id="pages.login.forgotPassword" />
-                          </Link>
+                          </Button>
                         </div>
                         <Divider style={{ margin: '13px 0px' }} />
                         <div style={{ textAlign: 'center' }}>
@@ -313,6 +311,21 @@ const LoginGlobal: React.FC = () => {
           />
         )}
       </div>
+      <Modal
+        destroyOnClose
+        visible={visibile}
+        footer={false}
+        title="Quên mật khẩu"
+        onCancel={() => {
+          setVisible(false);
+        }}
+      >
+        <FormForgetPassword
+          onCancel={() => {
+            setVisible(false);
+          }}
+        />
+      </Modal>
       <div className={styles.image}>
         {isMediumScreen && (
           <div className={styles.containericonhuongdan}>

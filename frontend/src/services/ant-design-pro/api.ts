@@ -32,6 +32,10 @@ export async function changePassword(payload: { oldPassword: string; newPassword
   return axios.post(`${ip3}/user/me/change/password`, payload);
 }
 
+export async function forgetPassword(payload: { email: string }) {
+  return axios.post(`${ip3}/user/forget-password`, payload);
+}
+
 export async function resendEmail() {
   return axios.post(`${ip3}/user/my/resend-active-token`);
 }

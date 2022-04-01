@@ -35,7 +35,7 @@ export default () => {
   };
 
   const getUserModel = async (page?: number, limit?: number) => {
-    const response = await getUser({page, limit});
+    const response = await getUser({ page, limit });
     setDanhSachNguoiDungCuThe(response?.data?.data?.result ?? []);
   };
 
@@ -46,6 +46,6 @@ export default () => {
     registerModel,
     getUserModel,
     danhSachNguoiDungCuThe,
-    setDanhSachNguoiDungCuThe
+    setDanhSachNguoiDungCuThe,
   };
 };
