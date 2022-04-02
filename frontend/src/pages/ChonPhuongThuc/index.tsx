@@ -89,7 +89,7 @@ const LuaChonPhuongThuc = () => {
                       value: item._id,
                       label: item.ten,
                     }))}
-                    style={{ width: 200, marginRight: 8 }}
+                    style={{ width: 200, marginRight: 8, marginBottom: 8 }}
                   />
                   <Select
                     placeholder="Chọn năm tuyển sinh"

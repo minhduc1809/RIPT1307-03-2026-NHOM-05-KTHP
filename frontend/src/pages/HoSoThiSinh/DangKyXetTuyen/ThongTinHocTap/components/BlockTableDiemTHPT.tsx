@@ -130,6 +130,7 @@ const BlockTableDiemTHPT = (props: {
     dataIndex: 'tenMon',
     align: 'center',
     width: 100,
+    fixed: 'left',
   });
 
   const isNhapDiemToHop = checkIsNhapDiemToHop();

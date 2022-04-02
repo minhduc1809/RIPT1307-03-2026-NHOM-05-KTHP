@@ -84,6 +84,7 @@ const TableGiayTo = (props: { fieldName: 'thongTinGiayToNopHoSo' | 'thongTinGiay
       dataIndex: 'urlGiayToNop',
       width: 200,
       align: 'center',
+      fixed: 'right',
       render: (val, recordGiayTo: DotTuyenSinh.GiayTo) => (
         <FormItem
           initialValue={renderFileList(

@@ -1,12 +1,11 @@
-import { CloseOutlined, PlusOutlined, RetweetOutlined } from '@ant-design/icons';
-import _ from 'lodash';
-import { Button, Card, Form, message, Select } from 'antd';
-import { useModel } from 'umi';
-import { useState } from 'react';
+import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { ToHopXetTuyen } from '@/utils/constants';
 import rules from '@/utils/rules';
-import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
-import { useEffect } from 'react';
+import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Card, Form, message, Select } from 'antd';
+import _ from 'lodash';
+import { useEffect, useState } from 'react';
+import { useModel } from 'umi';
 
 const FormDangKyNguyenVong = () => {
   const [form] = Form.useForm();
@@ -191,7 +190,7 @@ const FormDangKyNguyenVong = () => {
               ?.filter((item) => item.danhSachCoSoDaoTao?.find((coSo) => coSo._id === coSoDaoTao))
               ?.map((item) => ({
                 value: `${item?.nganh?._id}||${item?.nganh?.ma}||${item?.nganh?.ten}`,
-                label: `${item?.nganh?.ma} - ${item?.nganh?.ten}`,
+                label: `${item?.nganh?.ma} - ${item?.nganh?.ten} (${item?.danhSachToHop})`,
               }))}
           />
         </Form.Item>
@@ -221,13 +220,13 @@ const FormDangKyNguyenVong = () => {
           <div />
         )}
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
-          <Button
+          {/* <Button
             onClick={() => form.resetFields()}
             icon={<RetweetOutlined />}
             style={{ marginRight: 10 }}
           >
             Làm sạch
-          </Button>
+          </Button> */}
           <Button
             icon={<PlusOutlined />}
             // onClick={() => this.handleSubmit(0)}

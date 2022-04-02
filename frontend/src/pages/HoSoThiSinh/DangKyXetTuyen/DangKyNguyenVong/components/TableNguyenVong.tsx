@@ -168,9 +168,11 @@ const TableNguyenVong = () => {
       title: 'Tên ngành',
       dataIndex: 'tenNganhChuyenNganh',
       align: 'center',
-      width: '100px',
+      width: '150px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{val}</div>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9', whiteSpace: 'normal' }}>
+          {val}
+        </div>
       ),
     },
     {
@@ -178,7 +180,7 @@ const TableNguyenVong = () => {
       align: 'center',
       width: '150px',
       render: (nguyenVong) => (
-        <div style={{ color: nguyenVong?.wrong ? 'red' : '#000000D9' }}>
+        <div style={{ color: nguyenVong?.wrong ? 'red' : '#000000D9', whiteSpace: 'normal' }}>
           {nguyenVong?.coSoDaoTao?.ten || nguyenVong?.tenCoSoDaoTao}
         </div>
       ),
@@ -187,9 +189,11 @@ const TableNguyenVong = () => {
       title: 'Đối tượng xét tuyển',
       dataIndex: 'tenDoiTuong',
       align: 'center',
-      width: '100px',
+      width: '150px',
       render: (val, record) => (
-        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{val}</div>
+        <div style={{ color: record?.wrong ? 'red' : '#000000D9', whiteSpace: 'normal' }}>
+          {val}
+        </div>
       ),
     },
     {

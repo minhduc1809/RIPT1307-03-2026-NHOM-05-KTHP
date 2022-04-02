@@ -41,6 +41,7 @@ const ModeDot = () => {
                 <b>
                   Đợt {index + 1}: {item?.tenDotTuyenSinh ?? ''}
                 </b>
+                <br />
                 <TimeLineChonDot record={item} />
                 {/* <div>{item.isCoHoSo}</div>
       <div>Trạng thái: {item?.trangThai ?? ''}</div> */}

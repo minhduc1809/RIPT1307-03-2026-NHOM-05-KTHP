@@ -239,7 +239,7 @@ const KhaiBaoThongTinCaNhan = () => {
           </Col>
           <Col xs={24} md={12} lg={12}>
             <Row gutter={[10, 0]}>
-              <Col span={8}>
+              <Col xs={12} md={8}>
                 <FormItem
                   rules={[...rules.required]}
                   initialValue={recordHoSo?.thongTinThiSinh?.loaiNoiSinh ?? 'TRONG_NUOC'}
@@ -256,7 +256,7 @@ const KhaiBaoThongTinCaNhan = () => {
                   />
                 </FormItem>
               </Col>
-              <Col span={16}>
+              <Col xs={12} md={16}>
                 {loaiNoiSinh === 'TRONG_NUOC' ? (
                   <FormItem
                     rules={[
