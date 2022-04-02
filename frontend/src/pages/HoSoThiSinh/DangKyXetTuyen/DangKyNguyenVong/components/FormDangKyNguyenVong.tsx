@@ -76,6 +76,7 @@ const FormDangKyNguyenVong = () => {
       form.setFieldsValue({
         maDoiTuong: recordHoSo?.maDoiTuong?.[0],
       });
+      setMaDoiTuong(recordHoSo?.maDoiTuong?.[0]);
     }
   }, []);
 

@@ -21,6 +21,8 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
     adminMoKhoaHoSoByIdHoSoModel,
     setDanhSach,
     setRecordHoSo,
+    setPage,
+    setLimit,
   } = useModel('hosoxettuyen');
 
   const {
@@ -50,6 +52,8 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
     if (danhSachHinhThuc.length === 0) getAllHinhThucDaoTaoModel();
     return () => {
       setDanhSach([]);
+      setPage(1);
+      setLimit(10);
     };
   }, []);
 
@@ -115,6 +119,22 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
       width: 150,
       search: 'search',
       onCell,
+    },
+    {
+      title: 'Mã thanh toán',
+      dataIndex: 'identityCode',
+      align: 'center',
+      width: 110,
+      onCell,
+      hide: props?.type === ETrangThaiHoSo.chuakhoa,
+    },
+    {
+      title: 'Trạng thái thanh toán',
+      dataIndex: 'trangThaiThanhToan',
+      align: 'center',
+      width: 110,
+      onCell,
+      hide: props?.type === ETrangThaiHoSo.chuakhoa,
     },
     {
       title: 'Giới tính',
