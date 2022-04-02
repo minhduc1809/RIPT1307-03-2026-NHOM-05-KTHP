@@ -42,6 +42,19 @@ const BlockTableDiemTHPT = (props: {
     setArrMonHoc(arrMonHocTemp);
   };
 
+  const checkIsNhapDiemToHop = () => {
+    for (const lop of props?.arrLopHoc ?? []) {
+      for (const ky of props?.arrKyHoc ?? []) {
+        if (
+          _.get(props?.cauHinh?.danhSach, `${lop?.name.join('.')}.${ky?.name}.diemToHop`, undefined)
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
   useEffect(() => {
     onChangeToHop(props?.toHop ?? []);
   }, []);
@@ -67,10 +80,11 @@ const BlockTableDiemTHPT = (props: {
 
   const renderLast = (val: any, record: any, lop: string[], ky: string) => {
     const fieldName = record?.mon === 'diemTBC' ? 'diemTBC' : 'diemToHop';
-    const isNhap =
-      fieldName === 'diemToHop'
-        ? true
-        : _.get(props?.cauHinh?.danhSach, `${lop.join('.')}.${ky}.${fieldName}`, undefined);
+    const isNhap = _.get(
+      props?.cauHinh?.danhSach,
+      `${lop.join('.')}.${ky}.${fieldName}`,
+      undefined,
+    );
     return isNhap ? (
       FormItemKyHoc(lop || [], ky || '', fieldName, record)
     ) : (
@@ -117,9 +131,12 @@ const BlockTableDiemTHPT = (props: {
     align: 'center',
     width: 100,
   });
+
+  const isNhapDiemToHop = checkIsNhapDiemToHop();
+
   return (
     <>
-      {props?.haveSelectToHop && (
+      {props?.haveSelectToHop && isNhapDiemToHop && (
         <Col style={{ marginBottom: 20 }} xs={24}>
           <FormItem
             rules={[...rules.required]}
@@ -147,7 +164,7 @@ const BlockTableDiemTHPT = (props: {
         size="small"
         style={{ width: '100%' }}
         columns={columns}
-        dataSource={[...arrMonHoc, 'Tổng kết']?.map((item, index) => {
+        dataSource={[...(isNhapDiemToHop ? arrMonHoc : []), 'Tổng kết']?.map((item, index) => {
           return {
             index: index + 1,
             tenMon: item,

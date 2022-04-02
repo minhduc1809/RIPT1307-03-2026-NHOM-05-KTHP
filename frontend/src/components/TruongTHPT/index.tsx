@@ -203,7 +203,7 @@ const TruongTHPT = (props: Props) => {
         </Col>
       )}
 
-      <Col xs={24} lg={8}>
+      <Col xs={24} md={12} lg={8}>
         <Form.Item
           labelCol={{ span: 24 }}
           wrapperCol={{ span: 24 }}
@@ -214,7 +214,7 @@ const TruongTHPT = (props: Props) => {
           <Input value={maTinh} placeholder="Chưa chọn tỉnh" disabled style={{ width: '100%' }} />
         </Form.Item>
       </Col>
-      <Col xs={24} lg={8}>
+      <Col xs={24} md={12} lg={8}>
         <Form.Item
           initialValue={props?.initialValue?.maTruong}
           labelCol={{ span: 24 }}
@@ -248,7 +248,7 @@ const TruongTHPT = (props: Props) => {
       </Col> */}
       {modelHoSoXetTuyen?.[`isTruongChuyenLop${props.type}`] &&
         props?.cauHinh?.danhSach?.thongTinHocTapTHPT?.danhSach?.monChuyen && (
-          <Col xs={24} lg={8}>
+          <Col xs={24} md={12} lg={8}>
             <Form.Item
               rules={
                 props?.cauHinh?.danhSach?.thongTinHocTapTHPT?.danhSach?.monChuyen?.required

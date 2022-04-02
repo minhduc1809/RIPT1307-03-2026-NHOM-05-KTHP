@@ -10,6 +10,7 @@ const BlockNguyenVong = (props: {
   record?: { danhSachNguyenVong: HoSoXetTuyen.NguyenVong[] };
 }) => {
   const modelHoSoXetTuyen = useModel('hosoxettuyen');
+  const { record: recordDot } = useModel('dottuyensinh');
   const recordHoSo = props?.record?.danhSachNguyenVong
     ? props.record
     : modelHoSoXetTuyen.recordHoSo;
@@ -75,11 +76,18 @@ const BlockNguyenVong = (props: {
       align: 'center',
       width: '100px',
       render: (val: HoSoXetTuyen.ThanhPhanDiemQuyDoi[], record) => {
+        const hienThiDiemQuyDoi = recordDot?.danhSachDoiTuongTuyenSinh?.find(
+          (item) => item.maDoiTuong === record?.maDoiTuong,
+        )?.hienThiDiemQuyDoi;
         let diem = 0;
-        val
-          ?.filter((item) => !item?.tenThanhPhan?.includes('Điểm'))
-          ?.map((item) => (diem += item?.diem ?? 0));
-        return <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{diem}</div>;
+        if (hienThiDiemQuyDoi) {
+          val
+            ?.filter((item) => !item?.tenThanhPhan?.includes('Điểm'))
+            ?.map((item) => (diem += item?.diem ?? 0));
+          return (
+            <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{diem?.toFixed(2)}</div>
+          );
+        } else return <div />;
       },
     },
     {
@@ -87,23 +95,35 @@ const BlockNguyenVong = (props: {
       dataIndex: ['diemQuyDoi', 'tongDiem'],
       align: 'center',
       width: '100px',
-      render: (val, record) => (
-        <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>
-          {val && val !== -1 ? val : ''}
-        </div>
-      ),
+      render: (val, record) => {
+        const hienThiDiemQuyDoi = recordDot?.danhSachDoiTuongTuyenSinh?.find(
+          (item) => item.maDoiTuong === record?.maDoiTuong,
+        )?.hienThiDiemQuyDoi;
+        return (
+          <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>
+            {hienThiDiemQuyDoi ? val : ''}
+          </div>
+        );
+      },
     },
     {
       title: 'Chi tiết thành phần',
       dataIndex: ['diemQuyDoi', 'thanhPhan'],
       render: (val: HoSoXetTuyen.ThanhPhanDiemQuyDoi[], record) => {
-        return val
-          ?.filter((item) => item?.tenThanhPhan)
-          ?.map((item) => (
-            <div style={{ color: record?.wrong ? 'red' : '#000000D9' }} key={item?._id}>
-              {item?.tenThanhPhan}: {item?.diem ?? 0}
-            </div>
-          ));
+        const hienThiDiemQuyDoi = recordDot?.danhSachDoiTuongTuyenSinh?.find(
+          (item) => item.maDoiTuong === record?.maDoiTuong,
+        )?.hienThiDiemQuyDoi;
+        return hienThiDiemQuyDoi ? (
+          val
+            ?.filter((item) => item?.tenThanhPhan)
+            ?.map((item) => (
+              <div style={{ color: record?.wrong ? 'red' : '#000000D9' }} key={item?._id}>
+                {item?.tenThanhPhan}: {item?.diem ?? 0}
+              </div>
+            ))
+        ) : (
+          <div />
+        );
       },
       align: 'center',
       // width: '120px',

@@ -3,6 +3,8 @@ import React from 'react';
 import { useModel, useAccess } from 'umi';
 import NoticeIcon from '../NoticeIcon';
 import Avatar from './AvatarDropdown';
+import HuongDanDropdown from './HuongDanDropdown';
+
 import styles from './index.less';
 
 export type SiderTheme = 'light' | 'dark';
@@ -24,7 +26,12 @@ const GlobalHeaderRight: React.FC = () => {
 
   return (
     <Space className={className}>
-      {!access.admin && <NoticeIcon />}
+      {!access.admin && (
+        <>
+          <NoticeIcon />
+          <HuongDanDropdown />
+        </>
+      )}
       <Avatar menu />
     </Space>
   );

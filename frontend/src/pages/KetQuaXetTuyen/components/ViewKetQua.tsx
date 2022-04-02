@@ -11,18 +11,27 @@ const ViewHoSoTrungTuyen = () => {
   const { record } = useModel('dottuyensinh');
   const { record: recordKetQua } = useModel('ketquaxettuyen');
   const { visibleForm, setVisibleForm, adminGetHoSoByIdHoSoModel } = useModel('hosoxettuyen');
+  const phuongThuc = localStorage.getItem('phuongThuc');
   return (
     <>
       <div className="box">
         <Card bordered>
           <div style={{ textAlign: 'center' }}>
             <b style={{ fontSize: 22 }}>
-              HỐ SƠ TRÚNG TUYỂN ĐẠI HỌC HỆ CHÍNH QUY NĂM {record?.namTuyenSinh ?? ''}
+              HỐ SƠ TRÚNG TUYỂN ĐẠI HỌC HỆ {record?.hinhThucDaoTao?.ten?.toUpperCase() ?? ''} NĂM{' '}
+              {record?.namTuyenSinh ?? ''}
             </b>
 
-            <div style={{ color: 'red' }}>
-              <i>({record?.phuongThucTuyenSinh?.tenPhuongThuc ?? ''})</i>
-            </div>
+            {phuongThuc && (
+              <div style={{ color: 'red' }}>
+                <i>
+                  (
+                  {record?.danhSachPhuongThucTuyenSinh?.find((item) => item._id === phuongThuc)
+                    ?.tenPhuongThuc ?? ''}
+                  )
+                </i>
+              </div>
+            )}
           </div>
 
           <Divider />

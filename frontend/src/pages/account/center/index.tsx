@@ -25,12 +25,12 @@ import type { ModalState } from './model';
 const operationTabList = [
   {
     key: 'editCCCD',
-    tab: 'Thông tin CMT/CCCD',
+    tab: 'Thông tin cá nhân',
   },
-  {
-    key: 'editProfile',
-    tab: <span>Thông tin cá nhân</span>,
-  },
+  // {
+  //   key: 'editProfile',
+  //   tab: <span>Thông tin cá nhân</span>,
+  // },
   {
     key: 'changePassword',
     tab: 'Đổi mật khẩu',

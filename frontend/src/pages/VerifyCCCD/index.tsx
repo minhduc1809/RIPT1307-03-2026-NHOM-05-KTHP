@@ -18,7 +18,7 @@ const VerifyCCCD = () => {
     <>
       <Header />
       <Card
-        title="Cập nhật thông tin CMT/CCCD"
+        title="Cập nhật thông tin cá nhân"
         style={{
           width: '400px',
           margin: '50px auto',

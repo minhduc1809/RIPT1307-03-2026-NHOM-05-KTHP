@@ -191,7 +191,7 @@ const FormDangKyNguyenVong = () => {
               ?.filter((item) => item.danhSachCoSoDaoTao?.find((coSo) => coSo._id === coSoDaoTao))
               ?.map((item) => ({
                 value: `${item?.nganh?._id}||${item?.nganh?.ma}||${item?.nganh?.ten}`,
-                label: `${item?.nganh?.ma}-${item?.nganh?.ten}`,
+                label: `${item?.nganh?.ma} - ${item?.nganh?.ten}`,
               }))}
           />
         </Form.Item>

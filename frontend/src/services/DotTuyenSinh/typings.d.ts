@@ -36,6 +36,7 @@ declare module DotTuyenSinh {
     thongTinDoiTuong: DoiTuongTuyenSinh.Record;
     yeuCauLuaChonToHop: boolean;
     phuongThucTuyenSinh: string;
+    hienThiDiemQuyDoi: boolean;
   }
 
   export interface CauHinhDoiTuong {

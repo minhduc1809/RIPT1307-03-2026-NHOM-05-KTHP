@@ -66,7 +66,15 @@ const LuaChonPhuongThuc = () => {
                   </div>
                 </div>
                 <div className={styles.form}>
-                  <div className={styles.title}>Vui lòng chọn phương thức để tiếp tục:</div>
+                  <div className={styles.title}>
+                    Vui lòng chọn một{' '}
+                    {recordNamTuyenSinh?.hinhThucDangKyXetTuyen ===
+                    EHinhThucDangKyXetTuyen.THEO_PHUONG_THUC
+                      ? 'phương thức'
+                      : 'đợt'}{' '}
+                    để tiếp tục:
+                  </div>
+
                   <br />
                   <Select
                     placeholder="Chọn hình thức đào tạo"

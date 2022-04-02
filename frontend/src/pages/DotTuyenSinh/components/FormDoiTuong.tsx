@@ -79,12 +79,24 @@ const FormDoiTuong = (props: {
             </Form.Item>
           </Col>
           <Col xs={24} lg={12}>
-            {' '}
             <Form.Item
               style={{ marginBottom: 8 }}
               name="yeuCauLuaChonToHop"
               label="Yêu cầu lựa chọn tổ hợp"
               initialValue={recordDoiTuong?.yeuCauLuaChonToHop ?? false}
+            >
+              <Radio.Group>
+                <Radio value={true}>Có</Radio>
+                <Radio value={false}>Không</Radio>
+              </Radio.Group>
+            </Form.Item>
+          </Col>
+          <Col xs={24} lg={12}>
+            <Form.Item
+              style={{ marginBottom: 8 }}
+              name="hienThiDiemQuyDoi"
+              label="Hiển thị điểm quy đổi"
+              initialValue={recordDoiTuong?.hienThiDiemQuyDoi ?? false}
             >
               <Radio.Group>
                 <Radio value={true}>Có</Radio>

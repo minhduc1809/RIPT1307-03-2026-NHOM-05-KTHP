@@ -1,11 +1,11 @@
 import TableBase from '@/components/Table';
-import type { IColumn } from '@/utils/interfaces';
-import { useEffect } from 'react';
-import { Button, Divider, Popconfirm, Tag, Tooltip, Typography } from 'antd';
-import { useModel } from 'umi';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import Form from './components/Form';
 import type { NamTuyenSinh } from '@/services/NamTuyenSinh/typings';
+import type { IColumn } from '@/utils/interfaces';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, Divider, Popconfirm, Tooltip, Typography } from 'antd';
+import { useEffect } from 'react';
+import { useModel } from 'umi';
+import Form from './components/Form';
 
 const NamTuyenSinhComponent = () => {
   const {

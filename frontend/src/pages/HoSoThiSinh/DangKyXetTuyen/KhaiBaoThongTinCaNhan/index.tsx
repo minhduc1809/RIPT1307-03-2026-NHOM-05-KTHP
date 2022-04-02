@@ -1,7 +1,7 @@
 import DiaChi from '@/components/DiaChi';
 import { FormItem } from '@/components/FormItem';
 import rules from '@/utils/rules';
-import { includes } from '@/utils/utils';
+import { includes, toISOString } from '@/utils/utils';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select } from 'antd';
 import moment from 'moment';
@@ -63,6 +63,7 @@ const KhaiBaoThongTinCaNhan = () => {
             tenQH: tenQuanHuyenDiaChiLienHe,
             tenXaPhuong: tenPhuongXaDiaChiLienHe,
           };
+          values.ngaySinh = toISOString(values?.ngaySinh);
           putMyThongTinThiSinhModel(recordHoSo?._id ?? '', { thongTinThiSinh: values });
         }}
       >
@@ -72,7 +73,7 @@ const KhaiBaoThongTinCaNhan = () => {
         <Row gutter={[10, 0]}>
           <Col xs={24} lg={8}>
             <Row gutter={[10, 0]}>
-              <Col span={14}>
+              <Col xs={24} md={12} lg={14}>
                 <FormItem
                   rules={[...rules.required, ...rules.ten]}
                   initialValue={recordHoSo?.thongTinThiSinh?.hoDem}
@@ -82,7 +83,7 @@ const KhaiBaoThongTinCaNhan = () => {
                   <Input placeholder="Nhập họ và tên" />
                 </FormItem>
               </Col>
-              <Col span={10}>
+              <Col xs={24} md={12} lg={10}>
                 <FormItem
                   rules={[...rules.required, ...rules.ten]}
                   initialValue={recordHoSo?.thongTinThiSinh?.ten}
@@ -94,7 +95,7 @@ const KhaiBaoThongTinCaNhan = () => {
               </Col>
             </Row>
           </Col>
-          <Col xs={24} lg={8}>
+          <Col xs={24} md={12} lg={8}>
             <FormItem
               rules={[...rules.required, ...rules.CMND]}
               initialValue={recordHoSo?.thongTinThiSinh?.cmtCccd}
@@ -104,7 +105,7 @@ const KhaiBaoThongTinCaNhan = () => {
               <Input placeholder="Nhập số CMT/CCCD" />
             </FormItem>
           </Col>
-          <Col xs={24} lg={8}>
+          <Col xs={24} md={12} lg={8}>
             <FormItem
               rules={[...rules.required]}
               initialValue={
@@ -123,7 +124,7 @@ const KhaiBaoThongTinCaNhan = () => {
               />
             </FormItem>
           </Col>
-          <Col xs={24} lg={8}>
+          <Col xs={24} md={12} lg={8}>
             <FormItem
               rules={[...rules.required]}
               initialValue={recordHoSo?.thongTinThiSinh?.noiCapCmtCccd}
@@ -133,7 +134,7 @@ const KhaiBaoThongTinCaNhan = () => {
               <Input placeholder="Nhập nơi cấp CMT/CCCD" />
             </FormItem>
           </Col>
-          <Col xs={24} lg={8}>
+          <Col xs={24} md={12} lg={8}>
             <FormItem
               rules={[...rules.required, ...rules.email]}
               initialValue={recordHoSo?.thongTinThiSinh?.email}
@@ -143,7 +144,7 @@ const KhaiBaoThongTinCaNhan = () => {
               <Input placeholder="Nhập email" />
             </FormItem>
           </Col>
-          <Col xs={24} lg={8}>
+          <Col xs={24} md={12} lg={8}>
             <FormItem
               rules={[...rules.required, ...rules.soDienThoai]}
               initialValue={recordHoSo?.thongTinThiSinh?.soDienThoai}
@@ -159,7 +160,7 @@ const KhaiBaoThongTinCaNhan = () => {
           <strong>Thông tin bổ sung</strong>
         </Divider>
         <Row gutter={[10, 0]}>
-          <Col xs={24} lg={8}>
+          <Col xs={24} md={12} lg={8}>
             <FormItem
               rules={[...rules.required]}
               initialValue={
@@ -178,7 +179,7 @@ const KhaiBaoThongTinCaNhan = () => {
               />
             </FormItem>
           </Col>
-          <Col xs={24} lg={8}>
+          <Col xs={24} md={12} lg={8}>
             <FormItem
               rules={[...rules.required]}
               initialValue={recordHoSo?.thongTinThiSinh?.gioiTinh}
@@ -194,7 +195,7 @@ const KhaiBaoThongTinCaNhan = () => {
               </Select>
             </FormItem>
           </Col>
-          <Col xs={24} lg={8}>
+          <Col xs={24} md={12} lg={8}>
             <FormItem
               rules={[...rules.required]}
               initialValue={recordHoSo?.thongTinThiSinh?.danToc ?? 'Kinh'}
@@ -210,7 +211,7 @@ const KhaiBaoThongTinCaNhan = () => {
               </Select>
             </FormItem>
           </Col>
-          <Col xs={24} lg={6}>
+          <Col xs={24} md={12} lg={6}>
             <FormItem
               rules={[...rules.required]}
               initialValue={recordHoSo?.thongTinThiSinh?.quocTich ?? 'Việt Nam'}
@@ -220,7 +221,7 @@ const KhaiBaoThongTinCaNhan = () => {
               <Input placeholder="Nhập quốc tịch" />
             </FormItem>
           </Col>
-          <Col xs={24} lg={6}>
+          <Col xs={24} md={12} lg={6}>
             <FormItem
               rules={[...rules.required]}
               initialValue={recordHoSo?.thongTinThiSinh?.tonGiao ?? 'Không'}
@@ -236,7 +237,7 @@ const KhaiBaoThongTinCaNhan = () => {
               </Select>
             </FormItem>
           </Col>
-          <Col xs={24} lg={12}>
+          <Col xs={24} md={12} lg={12}>
             <Row gutter={[10, 0]}>
               <Col span={8}>
                 <FormItem
@@ -350,7 +351,7 @@ const KhaiBaoThongTinCaNhan = () => {
           <Divider plain>
             <strong>Thông tin liên hệ</strong>
           </Divider>
-          <Col xs={24} lg={12}>
+          <Col xs={24} md={12} lg={12}>
             <FormItem
               rules={[...rules.required, ...rules.ten]}
               initialValue={recordHoSo?.thongTinThiSinh?.tenNguoiLienHe}
@@ -360,7 +361,7 @@ const KhaiBaoThongTinCaNhan = () => {
               <Input placeholder="Nhập tên người liên hệ" />
             </FormItem>
           </Col>
-          <Col xs={24} lg={12}>
+          <Col xs={24} md={12} lg={12}>
             <FormItem
               rules={[...rules.required, ...rules.soDienThoai]}
               initialValue={recordHoSo?.thongTinThiSinh?.soDienThoaiNguoiLienHe}

@@ -63,6 +63,13 @@ const TableDoiTuong = (props: {
       align: 'center',
       render: (val) => <div>{val ? 'Có' : 'Không'}</div>,
     },
+    {
+      title: 'Hiển thị điểm quy đổi',
+      dataIndex: 'hienThiDiemQuyDoi',
+      width: 100,
+      align: 'center',
+      render: (val) => <div>{val ? 'Có' : 'Không'}</div>,
+    },
 
     {
       title: 'Thao tác',

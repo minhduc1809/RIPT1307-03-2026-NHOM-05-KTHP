@@ -1,4 +1,5 @@
 import { FormItem } from '@/components/FormItem';
+import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import {
   arrKhuVucUuTien,
   doiTuongUuTienTuyenSinh,
@@ -33,6 +34,7 @@ import {
 } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
+import BlockNguyenVong from '../RaSoatHoSo/components/BlockNguyenVong';
 import BlockChungChiQuocTe from './components/BlockChungChiQuocTe';
 import BlockChungChiTiengAnh from './components/BlockChungChiTiengAnh';
 import BlockChungChiTiengPhap from './components/BlockChungChiTiengPhap';
@@ -73,6 +75,7 @@ const QuaTrinhHocTap = () => {
   const [cauHinhDoiTuong, setCauHinhDoiTuong] = useState<any>();
 
   const [visibleModalInfo, setVisibleModalInfo] = useState<boolean>(false);
+  const [visibleXoaNguyenVong, setVisibleXoaNguyenVong] = useState<boolean>(false);
   const [typeInfo, setTypeInfo] = useState<'doituonguutien' | 'khuvucuutien' | 'doituongxettuyen'>(
     'doituonguutien',
   );
@@ -80,7 +83,9 @@ const QuaTrinhHocTap = () => {
   const [typeHSG, setTypeHSG] = useState<string | string[] | undefined>(recordHoSo?.giaiHSG);
 
   const [ngonNgu, setNgonNgu] = useState<string | string[] | undefined>(recordHoSo?.ngonNgu);
-
+  const [danhSachNguyenVongBiXoa, setDanhSachNguyenVongBiXoa] = useState<HoSoXetTuyen.NguyenVong[]>(
+    [],
+  );
   useEffect(() => {
     setKhuVucUuTienLop10(recordHoSo?.thongTinHocTapTHPT?.truongLop10?.khuVucUuTienTuyenSinh);
     setKhuVucUuTienLop11(recordHoSo?.thongTinHocTapTHPT?.truongLop11?.khuVucUuTienTuyenSinh);
@@ -126,6 +131,131 @@ const QuaTrinhHocTap = () => {
     setVisibleModalInfo(false);
   };
 
+  const handlePutThongTinXetTuyen = async (values: any) => {
+    setLoading(true);
+    const arrFieldNameUpload = [
+      'urlBangKhenHSGQG',
+      'urlBangKhenHSGTinhTP',
+      'urlChungChiTiengAnh',
+      'urlChungChiTiengPhap',
+      'urlChungChiQuocTe',
+      'urlGiayXacNhanDanhGiaNangLuc',
+    ];
+
+    for (const item of arrFieldNameUpload) {
+      if (values[item]?.fileList) {
+        const checkSize = checkFileSize(values[item]?.fileList ?? []);
+        if (!checkSize) {
+          setLoading(false);
+          return;
+        }
+        values[item] = await uploadMultiFile(values[item]?.fileList ?? []);
+      }
+    }
+    let index = 0;
+    for (const item of values?.thongTinGiayToNopOnline ?? []) {
+      if (item?.fileList) {
+        const checkSize = checkFileSize(item?.fileList ?? []);
+        if (!checkSize) {
+          setLoading(false);
+          return;
+        }
+        const urlGiayToNop = await uploadMultiFile(item?.fileList ?? []);
+        values.thongTinGiayToNopOnline[index] = {
+          ...record?.thongTinGiayToNopOnline?.[index],
+          urlGiayToNop,
+        };
+      }
+      index += 1;
+    }
+    values.thongTinHocTapTHPT.truongLop10 = {
+      ...values?.thongTinHocTapTHPT?.truongLop10,
+      tenTruong: tenTruong10,
+      truongChuyen: isTruongChuyenLop10,
+      khuVucUuTienTuyenSinh: khuVucUuTienLop10,
+    };
+    values.thongTinHocTapTHPT.truongLop11 = {
+      ...values?.thongTinHocTapTHPT?.truongLop11,
+      tenTruong: tenTruong11,
+      truongChuyen: isTruongChuyenLop11,
+      khuVucUuTienTuyenSinh: khuVucUuTienLop11,
+    };
+    values.thongTinHocTapTHPT.truongLop12 = {
+      ...values?.thongTinHocTapTHPT?.truongLop12,
+      tenTruong: tenTruong12,
+      truongChuyen: isTruongChuyenLop12,
+      khuVucUuTienTuyenSinh: khuVucUuTienLop12,
+    };
+    if (!isChuyenTruong) {
+      //ko chuyen truong cap 3
+      values.thongTinHocTapTHPT.truongLop11 = {
+        ...values?.thongTinHocTapTHPT?.truongLop10,
+        ...values?.thongTinHocTapTHPT?.truongLop11,
+        tenTruong: tenTruong10,
+        truongChuyen: isTruongChuyenLop10,
+        khuVucUuTienTuyenSinh: khuVucUuTienLop10,
+      };
+      values.thongTinHocTapTHPT.truongLop12 = {
+        ...values?.thongTinHocTapTHPT?.truongLop10,
+        ...values?.thongTinHocTapTHPT?.truongLop12,
+        tenTruong: tenTruong10,
+        truongChuyen: isTruongChuyenLop10,
+        khuVucUuTienTuyenSinh: khuVucUuTienLop10,
+      };
+    }
+    const { truongChuyen, monChuyen } = calculateChuyen(values?.thongTinHocTapTHPT);
+    const valueFinal: any = {
+      thongTinGiayToNopOnline: values?.thongTinGiayToNopOnline ?? [],
+      ngonNgu: values?.ngonNgu,
+      giaiHSG: values?.giaiHSG,
+      toHopMongMuon: values?.toHopMongMuon ?? [],
+      thongTinHocTapTHPT: {
+        ...values?.thongTinHocTapTHPT,
+        truongChuyen,
+        monChuyen,
+        urlHocBa: values?.urlHocBa ?? [],
+        urlChungNhanDoiTuongUuTien: values?.urlChungNhanDoiTuongUuTien ?? [],
+      },
+      thongTinGiaiQuocGia: {
+        ...values?.thongTinGiaiQuocGia,
+        urlBangKhenHSGQG: values?.urlBangKhenHSGQG ?? [],
+        suDungGiaiHGSQG: values?.thongTinGiaiQuocGia ? true : false,
+      },
+
+      thongTinGiaiTinhTP: {
+        ...values?.thongTinGiaiTinhTP,
+        urlBangKhenHSGTinhTP: values?.urlBangKhenHSGTinhTP ?? [],
+        suDungGiaiHGSTinhTP: values?.thongTinGiaiTinhTP ? true : false,
+      },
+
+      thongTinChungChiTiengAnh: values?.thongTinChungChiTiengAnh?.loai
+        ? {
+            ...values?.thongTinChungChiTiengAnh,
+            urlChungChi: values?.urlChungChiTiengAnh ?? [],
+          }
+        : undefined,
+      thongTinChungChiTiengPhap: values?.thongTinChungChiTiengPhap?.loai
+        ? {
+            ...values?.thongTinChungChiTiengPhap,
+            urlChungChi: values?.urlChungChiTiengPhap ?? [],
+          }
+        : undefined,
+      thongTinChungChiQuocTe: {
+        ...values?.thongTinChungChiQuocTe,
+        urlChungChiQuocTe: values?.urlChungChiQuocTe ?? [],
+        suDungChungChiQuocTe: values?.thongTinChungChiQuocTe ? true : false,
+      },
+      thongTinKetQuaDanhGiaNangLuc: {
+        ...values?.thongTinKetQuaDanhGiaNangLuc,
+        suDungDanhGiaNangLuc: values?.thongTinKetQuaDanhGiaNangLuc ? true : false,
+        urlGiayXacNhanDanhGiaNangLuc: values?.urlGiayXacNhanDanhGiaNangLuc ?? [],
+      },
+      maDoiTuong: record?.gioiHanDoiTuong ? [values?.maDoiTuong] : values?.maDoiTuong,
+      urlBangKhenHSGQG: undefined,
+    };
+    putMyThongTinXetTuyenModel(recordHoSo?._id ?? '', valueFinal);
+  };
+
   return (
     <>
       <Card bodyStyle={{ paddingTop: 0 }} bordered>
@@ -134,128 +264,18 @@ const QuaTrinhHocTap = () => {
           labelCol={{ span: 24 }}
           form={form}
           onFinish={async (values) => {
-            setLoading(true);
-            const arrFieldNameUpload = [
-              'urlBangKhenHSGQG',
-              'urlBangKhenHSGTinhTP',
-              'urlChungChiTiengAnh',
-              'urlChungChiTiengPhap',
-              'urlChungChiQuocTe',
-              'urlGiayXacNhanDanhGiaNangLuc',
-            ];
+            const danhSachNguyenVongBiXoaTemp: HoSoXetTuyen.NguyenVong[] =
+              recordHoSo?.danhSachNguyenVong?.filter(
+                (item) => !values?.maDoiTuong?.includes(item?.maDoiTuong ?? ''),
+              ) ?? [];
 
-            for (const item of arrFieldNameUpload) {
-              if (values[item]?.fileList) {
-                const checkSize = checkFileSize(values[item]?.fileList ?? []);
-                if (!checkSize) {
-                  setLoading(false);
-                  return;
-                }
-                values[item] = await uploadMultiFile(values[item]?.fileList ?? []);
-              }
+            if (danhSachNguyenVongBiXoaTemp?.length) {
+              setDanhSachNguyenVongBiXoa(danhSachNguyenVongBiXoaTemp);
+              setVisibleXoaNguyenVong(true);
+              return;
             }
-            let index = 0;
-            for (const item of values?.thongTinGiayToNopOnline ?? []) {
-              if (item?.fileList) {
-                const checkSize = checkFileSize(item?.fileList ?? []);
-                if (!checkSize) {
-                  setLoading(false);
-                  return;
-                }
-                const urlGiayToNop = await uploadMultiFile(item?.fileList ?? []);
-                values.thongTinGiayToNopOnline[index] = {
-                  ...record?.thongTinGiayToNopOnline?.[index],
-                  urlGiayToNop,
-                };
-              }
-              index += 1;
-            }
-            values.thongTinHocTapTHPT.truongLop10 = {
-              ...values?.thongTinHocTapTHPT?.truongLop10,
-              tenTruong: tenTruong10,
-              truongChuyen: isTruongChuyenLop10,
-              khuVucUuTienTuyenSinh: khuVucUuTienLop10,
-            };
-            values.thongTinHocTapTHPT.truongLop11 = {
-              ...values?.thongTinHocTapTHPT?.truongLop11,
-              tenTruong: tenTruong11,
-              truongChuyen: isTruongChuyenLop11,
-              khuVucUuTienTuyenSinh: khuVucUuTienLop11,
-            };
-            values.thongTinHocTapTHPT.truongLop12 = {
-              ...values?.thongTinHocTapTHPT?.truongLop12,
-              tenTruong: tenTruong12,
-              truongChuyen: isTruongChuyenLop12,
-              khuVucUuTienTuyenSinh: khuVucUuTienLop12,
-            };
-            if (!isChuyenTruong) {
-              //ko chuyen truong cap 3
-              values.thongTinHocTapTHPT.truongLop11 = {
-                ...values?.thongTinHocTapTHPT?.truongLop10,
-                ...values?.thongTinHocTapTHPT?.truongLop11,
-                tenTruong: tenTruong10,
-                truongChuyen: isTruongChuyenLop10,
-                khuVucUuTienTuyenSinh: khuVucUuTienLop10,
-              };
-              values.thongTinHocTapTHPT.truongLop12 = {
-                ...values?.thongTinHocTapTHPT?.truongLop10,
-                ...values?.thongTinHocTapTHPT?.truongLop12,
-                tenTruong: tenTruong10,
-                truongChuyen: isTruongChuyenLop10,
-                khuVucUuTienTuyenSinh: khuVucUuTienLop10,
-              };
-            }
-            const { truongChuyen, monChuyen } = calculateChuyen(values?.thongTinHocTapTHPT);
-            const valueFinal: any = {
-              thongTinGiayToNopOnline: values?.thongTinGiayToNopOnline ?? [],
-              ngonNgu: values?.ngonNgu,
-              giaiHSG: values?.giaiHSG,
-              toHopMongMuon: values?.toHopMongMuon ?? [],
-              thongTinHocTapTHPT: {
-                ...values?.thongTinHocTapTHPT,
-                truongChuyen,
-                monChuyen,
-                urlHocBa: values?.urlHocBa ?? [],
-                urlChungNhanDoiTuongUuTien: values?.urlChungNhanDoiTuongUuTien ?? [],
-              },
-              thongTinGiaiQuocGia: {
-                ...values?.thongTinGiaiQuocGia,
-                urlBangKhenHSGQG: values?.urlBangKhenHSGQG ?? [],
-                suDungGiaiHGSQG: values?.thongTinGiaiQuocGia ? true : false,
-              },
 
-              thongTinGiaiTinhTP: {
-                ...values?.thongTinGiaiTinhTP,
-                urlBangKhenHSGTinhTP: values?.urlBangKhenHSGTinhTP ?? [],
-                suDungGiaiHGSTinhTP: values?.thongTinGiaiTinhTP ? true : false,
-              },
-
-              thongTinChungChiTiengAnh: values?.thongTinChungChiTiengAnh?.loai
-                ? {
-                    ...values?.thongTinChungChiTiengAnh,
-                    urlChungChi: values?.urlChungChiTiengAnh ?? [],
-                  }
-                : undefined,
-              thongTinChungChiTiengPhap: values?.thongTinChungChiTiengPhap?.loai
-                ? {
-                    ...values?.thongTinChungChiTiengPhap,
-                    urlChungChi: values?.urlChungChiTiengPhap ?? [],
-                  }
-                : undefined,
-              thongTinChungChiQuocTe: {
-                ...values?.thongTinChungChiQuocTe,
-                urlChungChiQuocTe: values?.urlChungChiQuocTe ?? [],
-                suDungChungChiQuocTe: values?.thongTinChungChiQuocTe ? true : false,
-              },
-              thongTinKetQuaDanhGiaNangLuc: {
-                ...values?.thongTinKetQuaDanhGiaNangLuc,
-                suDungDanhGiaNangLuc: values?.thongTinKetQuaDanhGiaNangLuc ? true : false,
-                urlGiayXacNhanDanhGiaNangLuc: values?.urlGiayXacNhanDanhGiaNangLuc ?? [],
-              },
-              maDoiTuong: record?.gioiHanDoiTuong ? [values?.maDoiTuong] : values?.maDoiTuong,
-              urlBangKhenHSGQG: undefined,
-            };
-            putMyThongTinXetTuyenModel(recordHoSo?._id ?? '', valueFinal);
+            handlePutThongTinXetTuyen(values);
           }}
         >
           <Row gutter={[10, 0]}>
@@ -392,7 +412,6 @@ const QuaTrinhHocTap = () => {
                       cauHinh = mergeCauHinhDoiTuongXetTuyen(val, record);
                     }
                     setCauHinhDoiTuong(cauHinh);
-
                     if (cauHinh?.danhSach?.thongTinChungChiNgoaiNgu) {
                       // neu chi co 1 ngon ngu thi ko hien ra select chon ngon ngu nua, tu dong chon luon
                       const arrNgonNguChungChiNgoaiNgu = Object.keys(
@@ -445,19 +464,25 @@ const QuaTrinhHocTap = () => {
                       label: 'lớp 10',
                       name: ['thongTinHocTapTHPT', 'truongLop10'],
                       field: 'truongLop10',
-                      show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10,
+                      show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop10
+                        ? true
+                        : false,
                     },
                     {
                       label: 'lớp 11',
                       name: ['thongTinHocTapTHPT', 'truongLop11'],
                       field: 'truongLop11',
-                      show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop11,
+                      show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop11
+                        ? true
+                        : false,
                     },
                     {
                       label: 'lớp 12',
                       name: ['thongTinHocTapTHPT', 'truongLop12'],
                       field: 'truongLop12',
-                      show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop12,
+                      show: cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.truongLop12
+                        ? true
+                        : false,
                     },
                   ]}
                   arrKyHoc={[
@@ -791,6 +816,46 @@ const QuaTrinhHocTap = () => {
         visible={visibleModalInfo}
       >
         <InfoDoiTuongKhuVuc type={typeInfo} />
+      </Modal>
+      <Modal
+        destroyOnClose
+        width={1100}
+        visible={visibleXoaNguyenVong}
+        onCancel={() => {
+          setVisibleXoaNguyenVong(false);
+        }}
+        footer={
+          <>
+            <Button
+              loading={loading}
+              onClick={async () => {
+                const values = await form.validateFields();
+                handlePutThongTinXetTuyen(values);
+              }}
+              type="primary"
+            >
+              Lưu
+            </Button>
+            <Button
+              onClick={() => {
+                setVisibleXoaNguyenVong(false);
+              }}
+            >
+              Đóng
+            </Button>
+          </>
+        }
+      >
+        <div>
+          <b>Lưu ý:</b> Hệ thống sẽ xóa các nguyện vọng không hợp lệ dưới đây do thí sinh đã thay
+          đổi thông tin đối tượng xét tuyển, thí sinh có chắc chắn muốn lưu thông tin?
+        </div>
+        <BlockNguyenVong
+          title="Danh sách nguyện vọng không hợp lệ"
+          record={{
+            danhSachNguyenVong: danhSachNguyenVongBiXoa,
+          }}
+        />
       </Modal>
     </>
   );
