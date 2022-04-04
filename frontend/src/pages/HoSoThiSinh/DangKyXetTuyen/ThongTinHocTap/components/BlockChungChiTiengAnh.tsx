@@ -88,7 +88,12 @@ const BlockChungChiTiengAnh = (props: { form: FormInstance; cauHinh: any }) => {
             <DatePicker
               style={{ width: '100%' }}
               format="DD/MM/YYYY"
-              disabledDate={(val) => moment(val).isAfter(moment())}
+              disabledDate={(val) =>
+                moment(val).isAfter(moment()) ||
+                moment(val).isBefore(
+                  moment().subtract(cauHinhChungChi?.ngayCap?.namMax ?? 10, 'years'),
+                )
+              }
             />
           </FormItem>
         </Col>

@@ -126,7 +126,7 @@ const KhaiBaoThongTinCaNhan = () => {
           </Col>
           <Col xs={24} md={12} lg={8}>
             <FormItem
-              rules={[...rules.required]}
+              rules={[...rules.required, ...rules.text]}
               initialValue={recordHoSo?.thongTinThiSinh?.noiCapCmtCccd}
               label="Nơi cấp"
               name="noiCapCmtCccd"

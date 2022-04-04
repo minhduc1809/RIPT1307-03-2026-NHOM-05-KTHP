@@ -196,7 +196,11 @@ const DiaChi = (props: Props) => {
         <Col span={24}>
           <Form.Item
             initialValue={props?.initialValue?.diaChi}
-            rules={props?.notRequiredDiaChiCuThe ? [] : [...rules.required]}
+            rules={
+              props?.notRequiredDiaChiCuThe
+                ? [...rules.text, ...rules.length(400)]
+                : [...rules.required, ...rules.text, ...rules.length(400)]
+            }
             name={props?.fields?.diaChiCuThe ?? []}
             style={{ marginBottom: 0 }}
           >

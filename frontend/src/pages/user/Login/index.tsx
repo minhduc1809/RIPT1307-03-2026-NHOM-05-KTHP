@@ -5,6 +5,7 @@ import { getInfo, login } from '@/services/ant-design-pro/api';
 import type { Login } from '@/services/ant-design-pro/typings';
 import { Setting } from '@/utils/constants';
 import data from '@/utils/data';
+import rules from '@/utils/rules';
 import {
   FileExcelOutlined,
   FileTextOutlined,
@@ -264,7 +265,7 @@ const LoginGlobal: React.FC = () => {
                             />
                           ),
                         },
-                        // ...rules.username,
+                        ...rules.length(50),
                       ]}
                     />
                     <ProFormText.Password

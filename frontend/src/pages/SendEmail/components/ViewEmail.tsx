@@ -1,10 +1,10 @@
 import { Card, Tag } from 'antd';
 
-const ViewEmail = (props?: { record?: any }) => {
+const ViewEmail = (props?: { recordPost?: any }) => {
   // const record = props;
   // const {record} = props;
-  const object1 = props?.record[0];
-  const object2 = props?.record[1];
+  const object1 = props?.recordPost[0];
+  const object2 = props?.recordPost[1];
   return (
     <Card>
       <Card.Meta />

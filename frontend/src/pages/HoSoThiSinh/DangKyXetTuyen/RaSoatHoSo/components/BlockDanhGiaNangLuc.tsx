@@ -54,7 +54,7 @@ const BlockDanhGiaNangLuc = (props: { index?: number }) => {
           span={3}
           label={
             <span style={{ fontWeight: 'bold' }}>
-              {props?.index ? `${props?.index}.` : ''} Thông tin về chứng chỉ quốc tế
+              {props?.index ? `${props?.index}.` : ''} Thông tin thi đánh giá năng lực
             </span>
           }
         >

@@ -81,7 +81,15 @@ const BlockDanhGiaNangLuc = (props: { cauHinh: any }) => {
             <DatePicker
               placeholder="DD/MM/YYYY"
               format="DD/MM/YYYY"
-              disabledDate={(cur) => moment(cur).isAfter(moment())}
+              disabledDate={(cur) =>
+                moment(cur).isAfter(moment()) ||
+                moment(cur).isBefore(
+                  moment().subtract(
+                    itemCauHinh?.[donVi]?.ngayDuThiDanhGiaNangLuc?.namMax ?? 10,
+                    'years',
+                  ),
+                )
+              }
               style={{ width: '100%' }}
             />
           </FormItem>

@@ -6,6 +6,7 @@ import {
   ContactsOutlined,
   ManOutlined,
   UserOutlined,
+  WomanOutlined,
 } from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
 import type { Input } from 'antd';
@@ -83,9 +84,6 @@ class Center extends Component<CenterProps, CenterState> {
   renderUserInfo = (currentUser: Partial<Login.Profile>) => {
     const role = currentUser?.systemRole;
     let roleText = 'Chưa xác định';
-    let gioiTinhText = 'Khác';
-    if (currentUser?.gioiTinh === 'NAM') gioiTinhText = 'Nam';
-    else if (currentUser.gioiTinh === 'NU') gioiTinhText = 'Nữ';
     if (role === 'ThiSinh') roleText = 'Thí sinh';
     else if (role === 'ChuyenVien') roleText = 'Chuyên viên';
     return (
@@ -115,12 +113,16 @@ class Center extends Component<CenterProps, CenterState> {
           {currentUser?.ngaySinh ? moment(currentUser?.ngaySinh).format('DD/MM/YYYY') : ''}
         </p>
         <p>
-          <ManOutlined
-            style={{
-              marginRight: 8,
-            }}
-          />
-          {gioiTinhText}
+          {currentUser?.gioiTinh === 'Nam' ? (
+            <ManOutlined
+              style={{
+                marginRight: 8,
+              }}
+            />
+          ) : (
+            <WomanOutlined />
+          )}
+          {currentUser?.gioiTinh ?? ''}
         </p>
         <p>
           <ClusterOutlined

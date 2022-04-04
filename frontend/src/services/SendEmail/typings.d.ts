@@ -1,13 +1,14 @@
 declare module SendEmail {
   export interface Record {
-    content: any;
-    subject: any;
-    file: any;
+    content: string;
+    email: string;
+    ngaySend: string;
+    subject: string;
   }
 
   export interface PostEmail {
-    content: any;
-    subject: any;
+    content: string;
+    subject: string;
     file: any;
   }
 }

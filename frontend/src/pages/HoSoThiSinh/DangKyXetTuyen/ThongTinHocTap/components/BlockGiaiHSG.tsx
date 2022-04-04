@@ -58,8 +58,10 @@ const BlockGiaiHSG = (props: { fieldName: string; type: string; cauHinh: any }) 
           >
             <InputNumber
               placeholder="Nhập năm đoạt giải"
-              max={2100}
-              min={2010}
+              max={new Date().getFullYear()}
+              min={
+                new Date().getFullYear() - cauHinhGiai?.[`namDatGiaiHSG${props.type}`]?.namMax ?? 10
+              }
               style={{ width: '100%' }}
             />
           </FormItem>

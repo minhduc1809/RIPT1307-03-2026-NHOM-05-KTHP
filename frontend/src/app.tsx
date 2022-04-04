@@ -157,6 +157,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         else history.push('/verifycccd');
       }
     },
+    logo: <img src="/favicon.ico" onClick={() => history.push('/')} />,
     menuItemRender: (item, dom) => {
       return (
         <Tooltip
