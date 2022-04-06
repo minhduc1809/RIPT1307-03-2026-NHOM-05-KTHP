@@ -16,6 +16,7 @@ const TrungTuyen = () => {
   const isChuaBatDauThoiGianXacNhan = moment(recordDot?.thoiGianBatDauXacNhanNhapHoc).isAfter(
     moment(new Date()),
   );
+  const phuongThuc = localStorage.getItem('phuongThuc');
   return (
     <div style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
       <Card
@@ -71,8 +72,11 @@ const TrungTuyen = () => {
         <br />
         <div>
           Thí sinh đã đạt ngưỡng điểm trúng tuyển vào đại học hệ chính quy theo phương thức{' '}
-          {recordDot?.phuongThucTuyenSinh?.tenPhuongThuc} năm {recordDot?.namTuyenSinh}, cụ thể như
-          sau:
+          {
+            recordDot?.danhSachPhuongThucTuyenSinh?.find((item) => item._id === phuongThuc)
+              ?.tenPhuongThuc
+          }{' '}
+          năm {recordDot?.namTuyenSinh}, cụ thể như sau:
         </div>
 
         <div>
