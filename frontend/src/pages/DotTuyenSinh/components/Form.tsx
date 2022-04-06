@@ -1,6 +1,11 @@
 import TinyEditor from '@/components/TinyEditor/Tiny';
 import type { NamTuyenSinh } from '@/services/NamTuyenSinh/typings';
-import { EDonViTinh, ELoaiDot } from '@/utils/constants';
+import {
+  EDonViTinh,
+  EHinhThucThanhToan,
+  ELoaiDot,
+  MapKeyHinhThucThanhToan,
+} from '@/utils/constants';
 import rules from '@/utils/rules';
 import {
   Button,
@@ -55,6 +60,9 @@ const FormDotTuyenSinh = () => {
   const [yeuCauTraPhi, setYeuCauTraPhi] = useState<boolean>(record?.yeuCauTraPhi ?? false);
   const [gioiHanDoiTuong, setGioiHanDoiTuong] = useState<boolean>(record?.gioiHanDoiTuong ?? false);
   const [loaiDot, setLoaiDot] = useState<ELoaiDot | undefined>(record?.loaiDot);
+  const [hinhThucThanhToan, setHinhThucThanhToan] = useState<EHinhThucThanhToan>(
+    record?.hinhThucThanhToan ?? EHinhThucThanhToan.BIDV_SMART_BANKING,
+  );
   const [suDungToHopMongMuon, setSuDungToHopMongMuon] = useState<boolean>(
     record?.suDungToHopMongMuon ?? false,
   );
@@ -91,6 +99,7 @@ const FormDotTuyenSinh = () => {
               ...record,
               ...values,
               moTa: values?.moTa?.text,
+              huongDanThanhToan: values?.huongDanThanhToan?.text,
               cauHinhPhuongThuc: {},
               yeuCauTraPhi,
               choPhepDangKyKhacCoSo,
@@ -112,6 +121,7 @@ const FormDotTuyenSinh = () => {
             postDotTuyenSinhModel({
               ...values,
               moTa: values?.moTa?.text,
+              huongDanThanhToan: values?.huongDanThanhToan?.text,
               cauHinhPhuongThuc: {},
               yeuCauTraPhi,
               choPhepDangKyKhacCoSo,
@@ -378,7 +388,7 @@ const FormDotTuyenSinh = () => {
           </Col>
           {yeuCauTraPhi && (
             <>
-              <Col md={12}>
+              <Col md={8}>
                 <Form.Item
                   name="mucLePhi"
                   label="Mức lệ phí"
@@ -394,7 +404,7 @@ const FormDotTuyenSinh = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col md={12}>
+              <Col md={8}>
                 <Form.Item
                   name="donViTinh"
                   label="Đơn vị tính"
@@ -410,6 +420,35 @@ const FormDotTuyenSinh = () => {
                   />
                 </Form.Item>
               </Col>
+              <Col md={8}>
+                <Form.Item
+                  name="hinhThucThanhToan"
+                  label="Hình thức thanh toán"
+                  initialValue={record?.hinhThucThanhToan}
+                  rules={[...rules.required]}
+                >
+                  <Select
+                    onChange={(val) => setHinhThucThanhToan(val)}
+                    options={Object.keys(EHinhThucThanhToan).map((item) => ({
+                      value: item,
+                      label: MapKeyHinhThucThanhToan[item],
+                    }))}
+                    placeholder="Hình thức thanh toán"
+                  />
+                </Form.Item>
+              </Col>
+              {hinhThucThanhToan === EHinhThucThanhToan.TRUYEN_THONG && (
+                <Col xs={24}>
+                  <Form.Item
+                    name={'huongDanThanhToan'}
+                    label={`Hướng dẫn thanh toán`}
+                    initialValue={{ text: record?.huongDanThanhToan || '' }}
+                    // rules={[...rules.textEditor]}
+                  >
+                    <TinyEditor height={350} />
+                  </Form.Item>
+                </Col>
+              )}
             </>
           )}
           <Col lg={12}>

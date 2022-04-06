@@ -1,4 +1,4 @@
-import type { EDonViTinh, ELoaiDot, EToHopXetTuyen } from '@/utils/constants';
+import type { EDonViTinh, EHinhThucThanhToan, ELoaiDot, EToHopXetTuyen } from '@/utils/constants';
 import type { KetQuaXetTuyen } from '../KetQuaXetTuyen/typings';
 
 declare module DotTuyenSinh {
@@ -82,5 +82,8 @@ declare module DotTuyenSinh {
     loaiDot: ELoaiDot;
     thongBaoLoaiDot?: string;
     urlRedirectLoaiDot?: string;
+    mauPhieuDangKy: string;
+    hinhThucThanhToan: EHinhThucThanhToan;
+    huongDanThanhToan: string;
   }
 }

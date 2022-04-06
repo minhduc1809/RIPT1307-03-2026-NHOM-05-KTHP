@@ -103,6 +103,16 @@ export enum ELoaiChungChiNgoaiNgu {
   TOEFL_ITP = 'TOEFL ITP',
 }
 
+export enum EHinhThucThanhToan {
+  BIDV_SMART_BANKING = 'BIDV_SMART_BANKING',
+  TRUYEN_THONG = 'TRUYEN_THONG',
+}
+
+export const MapKeyHinhThucThanhToan = {
+  BIDV_SMART_BANKING: 'BIDV Smart Banking',
+  TRUYEN_THONG: 'Truyền thống',
+};
+
 export enum ELoaiChungChiTiengAnh {
   IELTS = 'IELTS',
   TOEFL_IBT = 'TOEFL iBT',
