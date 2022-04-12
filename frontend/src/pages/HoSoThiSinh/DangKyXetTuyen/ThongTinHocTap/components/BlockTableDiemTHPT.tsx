@@ -1,5 +1,6 @@
 import { FormItem } from '@/components/FormItem';
 import type { EToHopXetTuyen } from '@/utils/constants';
+import { hanhKiem } from '@/utils/constants';
 import { MonToHop, ToHopXetTuyen } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import rules from '@/utils/rules';
@@ -74,12 +75,23 @@ const BlockTableDiemTHPT = (props: {
       name={[...lop?.filter((item) => item !== 'danhSach'), kyHoc, record?.mon]}
       style={{ width: '100%', marginBottom: 0 }}
     >
-      <InputNumber placeholder="0.0" min={0} max={10} style={{ width: '100%', maxWidth: 100 }} />
+      {fieldName === 'hanhKiem' ? (
+        <Select
+          style={{ maxWidth: 170 }}
+          options={hanhKiem.map((item) => ({ label: item, value: item }))}
+          placeholder="Chọn hạnh kiểm"
+        />
+      ) : (
+        <InputNumber placeholder="0.0" min={0} max={10} style={{ width: '100%', maxWidth: 100 }} />
+      )}
     </Form.Item>
   );
 
   const renderLast = (val: any, record: any, lop: string[], ky: string) => {
-    const fieldName = record?.mon === 'diemTBC' ? 'diemTBC' : 'diemToHop';
+    let fieldName = 'diemToHop';
+    if (record?.mon === 'diemTBC' || record?.mon === 'hanhKiem') {
+      fieldName = record?.mon;
+    }
     const isNhap = _.get(
       props?.cauHinh?.danhSach,
       `${lop.join('.')}.${ky}.${fieldName}`,
@@ -165,35 +177,43 @@ const BlockTableDiemTHPT = (props: {
         size="small"
         style={{ width: '100%' }}
         columns={columns}
-        dataSource={[...(isNhapDiemToHop ? arrMonHoc : []), 'Tổng kết']?.map((item, index) => {
-          return {
-            index: index + 1,
-            tenMon: item,
-            mon: MonToHop[item],
-            thongTinHocTapTHPT: {
-              danhSach: {
-                truongLop10: {
-                  kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK1?.[MonToHop?.[item]],
-                  kqhtHK2: recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK2?.[MonToHop?.[item]],
-                  kqhtCaNam:
-                    recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtCaNam?.[MonToHop?.[item]],
-                },
-                truongLop11: {
-                  kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop11?.kqhtHK1?.[MonToHop?.[item]],
-                  kqhtHK2: recordHoSo?.thongTinHocTapTHPT?.truongLop11?.kqhtHK2?.[MonToHop?.[item]],
-                  kqhtCaNam:
-                    recordHoSo?.thongTinHocTapTHPT?.truongLop11?.kqhtCaNam?.[MonToHop?.[item]],
-                },
-                truongLop12: {
-                  kqhtHK1: recordHoSo?.thongTinHocTapTHPT?.truongLop12?.kqhtHK1?.[MonToHop?.[item]],
-                  kqhtHK2: recordHoSo?.thongTinHocTapTHPT?.truongLop12?.kqhtHK2?.[MonToHop?.[item]],
-                  kqhtCaNam:
-                    recordHoSo?.thongTinHocTapTHPT?.truongLop12?.kqhtCaNam?.[MonToHop?.[item]],
+        dataSource={[...(isNhapDiemToHop ? arrMonHoc : []), 'Tổng kết', 'Hạnh kiểm']?.map(
+          (item, index) => {
+            return {
+              index: index + 1,
+              tenMon: item,
+              mon: MonToHop[item],
+              thongTinHocTapTHPT: {
+                danhSach: {
+                  truongLop10: {
+                    kqhtHK1:
+                      recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK1?.[MonToHop?.[item]],
+                    kqhtHK2:
+                      recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtHK2?.[MonToHop?.[item]],
+                    kqhtCaNam:
+                      recordHoSo?.thongTinHocTapTHPT?.truongLop10?.kqhtCaNam?.[MonToHop?.[item]],
+                  },
+                  truongLop11: {
+                    kqhtHK1:
+                      recordHoSo?.thongTinHocTapTHPT?.truongLop11?.kqhtHK1?.[MonToHop?.[item]],
+                    kqhtHK2:
+                      recordHoSo?.thongTinHocTapTHPT?.truongLop11?.kqhtHK2?.[MonToHop?.[item]],
+                    kqhtCaNam:
+                      recordHoSo?.thongTinHocTapTHPT?.truongLop11?.kqhtCaNam?.[MonToHop?.[item]],
+                  },
+                  truongLop12: {
+                    kqhtHK1:
+                      recordHoSo?.thongTinHocTapTHPT?.truongLop12?.kqhtHK1?.[MonToHop?.[item]],
+                    kqhtHK2:
+                      recordHoSo?.thongTinHocTapTHPT?.truongLop12?.kqhtHK2?.[MonToHop?.[item]],
+                    kqhtCaNam:
+                      recordHoSo?.thongTinHocTapTHPT?.truongLop12?.kqhtCaNam?.[MonToHop?.[item]],
+                  },
                 },
               },
-            },
-          };
-        })}
+            };
+          },
+        )}
         pagination={false}
       />
     </>

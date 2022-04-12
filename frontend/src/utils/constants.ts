@@ -90,6 +90,7 @@ export const MonToHop = {
   'Lịch sử': 'tongKetSu',
   'Địa lý': 'tongKetDia',
   'Tổng kết': 'diemTBC',
+  'Hạnh kiểm': 'hanhKiem',
 };
 
 export enum ELoaiChungChiQuocTe {

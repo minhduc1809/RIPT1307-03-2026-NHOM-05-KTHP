@@ -33,7 +33,10 @@ const BlockDiemTBCCacMon = (props: {
   });
 
   const renderLast = (val: any, record: any, lop: string[], ky: string) => {
-    const fieldName = record?.mon === 'diemTBC' ? 'diemTBC' : 'diemToHop';
+    let fieldName = 'diemToHop';
+    if (record?.mon === 'diemTBC' || record?.mon === 'hanhKiem') {
+      fieldName = record?.mon;
+    }
     const isYeuCau = _.get(
       props?.cauHinh?.danhSach,
       `${lop.join('.')}.${ky}.${fieldName}`,
@@ -42,7 +45,7 @@ const BlockDiemTBCCacMon = (props: {
     return <div>{isYeuCau ? val : 'Không yêu cầu'}</div>;
   };
 
-  arrMonHoc.push('Tổng kết');
+  arrMonHoc.push('Tổng kết', 'Hạnh kiểm');
 
   const columns: IColumn<any>[] = props?.arrLopHoc
     ?.filter((item) => item.show)

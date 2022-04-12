@@ -45,6 +45,7 @@ import BlockTableDiemTHPT from './components/BlockTableDiemTHPT';
 import InfoDoiTuongKhuVuc from './components/InfoDoiTuongKhuVuc';
 import InfoTruongTHPT from './components/InfoTruongTHPT';
 import TableGiayTo from './components/TableGiayTo';
+import _ from 'lodash';
 
 const QuaTrinhHocTap = () => {
   const {
@@ -81,7 +82,14 @@ const QuaTrinhHocTap = () => {
   );
   const [isChuyenTruong, setIsChuyenTruong] = useState<boolean>(false);
   const [typeHSG, setTypeHSG] = useState<string | string[] | undefined>(recordHoSo?.giaiHSG);
-
+  const [danhSachMaPhuongThuc, setDanhSachMaPhuongThuc] = useState<string[]>(
+    _.uniqBy(
+      record?.danhSachDoiTuongTuyenSinh?.filter((item) =>
+        recordHoSo?.maDoiTuong?.includes(item?.maDoiTuong ?? ''),
+      ),
+      'phuongThucTuyenSinh',
+    )?.map((item) => item?.phuongThucTuyenSinh) ?? [],
+  );
   const [ngonNgu, setNgonNgu] = useState<string | string[] | undefined>(recordHoSo?.ngonNgu);
   const [danhSachNguyenVongBiXoa, setDanhSachNguyenVongBiXoa] = useState<HoSoXetTuyen.NguyenVong[]>(
     [],
@@ -367,7 +375,50 @@ const QuaTrinhHocTap = () => {
               </FormItem>
             </Col>
             <Divider />
-            <Col xs={24} lg={24}>
+            <Col xs={24} lg={12}>
+              <FormItem
+                rules={[...rules.required]}
+                initialValue={danhSachMaPhuongThuc}
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                name="maPhuongThuc"
+                label={
+                  <b>
+                    Phương thức xét tuyển
+                    <Tooltip placement="bottom" title="Chi tiết">
+                      <QuestionCircleOutlined
+                        style={{ marginLeft: '5px' }}
+                        onClick={() => {
+                          setTypeInfo('doituongxettuyen');
+                          setVisibleModalInfo(true);
+                        }}
+                      />
+                    </Tooltip>
+                  </b>
+                }
+                style={{ width: '100%', marginBottom: '0' }}
+              >
+                <Select
+                  mode={record?.gioiHanDoiTuong ? undefined : 'multiple'}
+                  onChange={(val) => {
+                    setDanhSachMaPhuongThuc(typeof val === 'string' ? [val] : val);
+                    form.setFieldsValue({
+                      maDoiTuong: undefined,
+                    });
+                  }}
+                  showSearch
+                  placeholder="Chọn phương thức"
+                  allowClear
+                >
+                  {record?.danhSachPhuongThucTuyenSinh.map((item) => (
+                    <Select.Option key={item?._id} value={item?._id}>
+                      {item?.tenPhuongThuc}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </FormItem>
+            </Col>
+            <Col xs={24} lg={12}>
               <FormItem
                 extra={
                   record?.gioiHanDoiTuong ? undefined : (
@@ -441,16 +492,15 @@ const QuaTrinhHocTap = () => {
                   placeholder="Chọn đối tượng"
                   allowClear
                 >
-                  {record?.danhSachDoiTuongTuyenSinh.map((item) => (
-                    <Select.Option key={item?.maDoiTuong} value={item?.maDoiTuong}>
-                      {
-                        record?.danhSachPhuongThucTuyenSinh?.find(
-                          (phuongThuc) => phuongThuc?._id === item?.phuongThucTuyenSinh,
-                        )?.tenPhuongThuc
-                      }{' '}
-                      - {item?.thongTinDoiTuong?.tenDoiTuong}
-                    </Select.Option>
-                  ))}
+                  {record?.danhSachDoiTuongTuyenSinh
+                    ?.filter((item) =>
+                      danhSachMaPhuongThuc?.includes(item?.phuongThucTuyenSinh ?? ''),
+                    )
+                    .map((item) => (
+                      <Select.Option key={item?.maDoiTuong} value={item?.maDoiTuong}>
+                        {item?.thongTinDoiTuong?.tenDoiTuong}
+                      </Select.Option>
+                    ))}
                 </Select>
               </FormItem>
             </Col>
@@ -535,7 +585,6 @@ const QuaTrinhHocTap = () => {
                         name: 'kqhtCaNam',
                       },
                     ]}
-                    // haveSelectToHop={record?.suDungToHopMongMuon ?? false}
                     toHop={
                       record?.suDungToHopMongMuon
                         ? recordHoSo?.toHopMongMuon ?? []

@@ -22,6 +22,7 @@ declare module HoSoXetTuyen {
     thongTinChungChiTiengAnh: ThongTinChungChiTiengAnh;
     thongTinChungChiTiengPhap: ThongTinChungChiTiengPhap;
     thongTinKhac: any;
+    thongTinDoiTuong: DoiTuongTuyenSinh.Record[];
     maDoiTuong: string[];
     _id: string;
     namTuyenSinh: number;
