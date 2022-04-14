@@ -151,6 +151,11 @@ export enum ELoaiGiaiHSG {
   TINH_TP = 'Tỉnh TP',
 }
 
+export enum EThoiGianTotNghiep {
+  HIEN_TAI = 'HIEN_TAI',
+  TRUOC_HIEN_TAI = 'TRUOC_HIEN_TAI',
+}
+
 export const MapKeyNgonNgu = {
   thongTinChungChiTiengAnh: ELoaiNgoaiNgu.ANH,
   thongTinChungChiTiengPhap: ELoaiNgoaiNgu.PHAP,

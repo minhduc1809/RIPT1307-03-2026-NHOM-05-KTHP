@@ -1,15 +1,19 @@
 import { FormItem } from '@/components/FormItem';
 import type { EToHopXetTuyen } from '@/utils/constants';
+import { EThoiGianTotNghiep } from '@/utils/constants';
 import { hanhKiem } from '@/utils/constants';
 import { MonToHop, ToHopXetTuyen } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import rules from '@/utils/rules';
+import type { FormInstance } from 'antd';
 import { Col, Form, InputNumber, Select, Table } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
 const BlockTableDiemTHPT = (props: {
+  namTotNghiep?: number;
+  form: FormInstance<any>;
   cauHinh: any;
   toHop: EToHopXetTuyen[];
   haveSelectToHop: boolean;
@@ -79,7 +83,7 @@ const BlockTableDiemTHPT = (props: {
         <Select
           style={{ maxWidth: 170 }}
           options={hanhKiem.map((item) => ({ label: item, value: item }))}
-          placeholder="Chọn hạnh kiểm"
+          placeholder="Hạnh kiểm"
         />
       ) : (
         <InputNumber placeholder="0.0" min={0} max={10} style={{ width: '100%', maxWidth: 100 }} />
@@ -97,7 +101,26 @@ const BlockTableDiemTHPT = (props: {
       `${lop.join('.')}.${ky}.${fieldName}`,
       undefined,
     );
-    return isNhap ? (
+    let isHienThiTheoNamTotNghiep = false;
+
+    const thoiGianTotNghiep = _.get(
+      props?.cauHinh?.danhSach,
+      `${lop.join('.')}.${ky}.${fieldName}.hienThiTheoNamTotNghiep`,
+      undefined,
+    );
+    const namTotNghiep = props?.namTotNghiep;
+    if (
+      (thoiGianTotNghiep === EThoiGianTotNghiep.HIEN_TAI &&
+        namTotNghiep &&
+        namTotNghiep === recordDot?.namTuyenSinh) ||
+      (thoiGianTotNghiep === EThoiGianTotNghiep.TRUOC_HIEN_TAI &&
+        namTotNghiep &&
+        namTotNghiep !== recordDot?.namTuyenSinh)
+    ) {
+      isHienThiTheoNamTotNghiep = true;
+    }
+
+    return isHienThiTheoNamTotNghiep || (!thoiGianTotNghiep && isNhap) ? (
       FormItemKyHoc(lop || [], ky || '', fieldName, record)
     ) : (
       <div>Không yêu cầu</div>
@@ -174,6 +197,7 @@ const BlockTableDiemTHPT = (props: {
         </Col>
       )}
       <Table
+        scroll={{ x: 1000 }}
         size="small"
         style={{ width: '100%' }}
         columns={columns}

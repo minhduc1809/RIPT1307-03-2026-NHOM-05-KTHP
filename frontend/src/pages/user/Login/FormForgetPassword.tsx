@@ -28,7 +28,7 @@ const FormForgetPassword = (props: { onCancel: any }) => {
       </Form.Item>
       <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
         <Button style={{ marginRight: 8 }} htmlType="submit" type="primary">
-          Lưu
+          Gửi
         </Button>
 
         <Button onClick={() => props?.onCancel()}>Đóng</Button>

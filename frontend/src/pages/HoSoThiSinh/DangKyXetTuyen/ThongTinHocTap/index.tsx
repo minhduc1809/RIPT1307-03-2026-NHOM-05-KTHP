@@ -81,6 +81,7 @@ const QuaTrinhHocTap = () => {
     'doituonguutien',
   );
   const [isChuyenTruong, setIsChuyenTruong] = useState<boolean>(false);
+
   const [typeHSG, setTypeHSG] = useState<string | string[] | undefined>(recordHoSo?.giaiHSG);
   const [danhSachMaPhuongThuc, setDanhSachMaPhuongThuc] = useState<string[]>(
     _.uniqBy(
@@ -94,6 +95,7 @@ const QuaTrinhHocTap = () => {
   const [danhSachNguyenVongBiXoa, setDanhSachNguyenVongBiXoa] = useState<HoSoXetTuyen.NguyenVong[]>(
     [],
   );
+
   useEffect(() => {
     setKhuVucUuTienLop10(recordHoSo?.thongTinHocTapTHPT?.truongLop10?.khuVucUuTienTuyenSinh);
     setKhuVucUuTienLop11(recordHoSo?.thongTinHocTapTHPT?.truongLop11?.khuVucUuTienTuyenSinh);
@@ -134,6 +136,10 @@ const QuaTrinhHocTap = () => {
       });
     }
   }, [isChuyenTruong, khuVucUuTienLop10, khuVucUuTienLop11, khuVucUuTienLop12]);
+
+  const [namTotNghiep, setNamTotNghiep] = useState<number | undefined>(
+    recordHoSo?.thongTinHocTapTHPT?.namTotNghiep || record?.namTuyenSinh,
+  );
 
   const onCancelModalInfo = () => {
     setVisibleModalInfo(false);
@@ -367,6 +373,7 @@ const QuaTrinhHocTap = () => {
                 style={{ width: '100%', marginBottom: '0' }}
               >
                 <InputNumber
+                  onChange={(val) => setNamTotNghiep(val)}
                   style={{ width: '100%' }}
                   placeholder="Năm tốt nghiệp"
                   max={new Date().getFullYear()}
@@ -555,6 +562,8 @@ const QuaTrinhHocTap = () => {
                     <b>Kết quả học tập THPT</b>
                   </Divider>
                   <BlockTableDiemTHPT
+                    namTotNghiep={namTotNghiep}
+                    form={form}
                     haveSelectToHop={record?.suDungToHopMongMuon ?? false}
                     cauHinh={cauHinhDoiTuong}
                     arrLopHoc={[

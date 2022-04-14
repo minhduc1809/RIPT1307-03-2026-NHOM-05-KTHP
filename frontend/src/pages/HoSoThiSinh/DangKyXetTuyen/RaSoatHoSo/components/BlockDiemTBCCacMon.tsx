@@ -1,4 +1,5 @@
 import type { EToHopXetTuyen } from '@/utils/constants';
+import { EThoiGianTotNghiep } from '@/utils/constants';
 import { ToHopXetTuyen } from '@/utils/constants';
 import { MonToHop } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
@@ -23,6 +24,7 @@ const BlockDiemTBCCacMon = (props: {
   }[];
 }) => {
   const { recordHoSo } = useModel('hosoxettuyen');
+  const { record: recordDot } = useModel('dottuyensinh');
   const arrMonHoc: string[] = [];
   props?.toHop?.map((toHopItem: string) => {
     ToHopXetTuyen[toHopItem]?.map((mon: string) => {
@@ -42,7 +44,29 @@ const BlockDiemTBCCacMon = (props: {
       `${lop.join('.')}.${ky}.${fieldName}`,
       undefined,
     );
-    return <div>{isYeuCau ? val : 'Không yêu cầu'}</div>;
+    let isHienThiTheoNamTotNghiep = false;
+    const thoiGianTotNghiep = _.get(
+      props?.cauHinh?.danhSach,
+      `${lop.join('.')}.${ky}.${fieldName}.hienThiTheoNamTotNghiep`,
+      undefined,
+    );
+    const namTotNghiep = recordHoSo?.thongTinHocTapTHPT?.namTotNghiep;
+    if (
+      (thoiGianTotNghiep === EThoiGianTotNghiep.HIEN_TAI &&
+        namTotNghiep &&
+        namTotNghiep === recordDot?.namTuyenSinh) ||
+      (thoiGianTotNghiep === EThoiGianTotNghiep.TRUOC_HIEN_TAI &&
+        namTotNghiep &&
+        namTotNghiep !== recordDot?.namTuyenSinh)
+    ) {
+      isHienThiTheoNamTotNghiep = true;
+    }
+
+    return (
+      <div>
+        {isHienThiTheoNamTotNghiep || (isYeuCau && !thoiGianTotNghiep) ? val : 'Không yêu cầu'}
+      </div>
+    );
   };
 
   arrMonHoc.push('Tổng kết', 'Hạnh kiểm');
@@ -109,6 +133,7 @@ const BlockDiemTBCCacMon = (props: {
       </Descriptions>
 
       <Table
+        scroll={{ x: 1000 }}
         columns={columns}
         dataSource={arrMonHoc?.map((item, index) => {
           return {
