@@ -105,7 +105,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
     },
 
     {
-      title: 'Số CMT/CCCD',
+      title: 'Số CMND/CCCD',
       dataIndex: ['thongTinThiSinh', 'cmtCccd'],
       align: 'center',
       width: 140,

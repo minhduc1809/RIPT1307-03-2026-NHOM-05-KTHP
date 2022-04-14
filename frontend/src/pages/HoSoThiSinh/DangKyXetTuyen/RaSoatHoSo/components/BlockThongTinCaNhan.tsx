@@ -25,7 +25,7 @@ const BlockRaSoatThongTinCaNhan = (props: { record?: { thongTinThiSinh: Login.Pr
             ? recordHoSo?.thongTinThiSinh?.noiSinhTrongNuoc?.tenTP
             : recordHoSo?.thongTinThiSinh?.noiSinhNuocNgoai}
         </Item>
-        <Item span={1} label={<span style={{ fontWeight: 'bold' }}>5. CMT/CCCD</span>}>
+        <Item span={1} label={<span style={{ fontWeight: 'bold' }}>5. CMND/CCCD</span>}>
           {recordHoSo?.thongTinThiSinh?.cmtCccd}
         </Item>
         <Item span={3} label={<span style={{ fontWeight: 'bold' }}>6. Hộ khẩu thường trú</span>}>

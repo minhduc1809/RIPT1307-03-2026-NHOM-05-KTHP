@@ -183,17 +183,17 @@ const FormQuanLy = () => {
                   : undefined
               }
               name="ngayCapCmtCccd"
-              label="Ngày cấp CMT-CCCD"
+              label="Ngày cấp CMND-CCCD"
               // rules={[...rules.required]}
             >
-              <Input placeholder="Ngày cấp CMT-CCCD" />
+              <Input placeholder="Ngày cấp CMND-CCCD" />
             </Form.Item>
           </Col>
           <Col xs={12}>
             <Form.Item
               initialValue={record?.noiCapCmtCccd}
               name="noiCapCmtCccd"
-              label="Nơi cấp CMT-CCCD"
+              label="Nơi cấp CMND-CCCD"
               // rules={[...rules.required]}
             >
               <Input placeholder="Nơi cấp" />

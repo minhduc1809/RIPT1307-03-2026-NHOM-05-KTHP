@@ -99,10 +99,10 @@ const KhaiBaoThongTinCaNhan = () => {
             <FormItem
               rules={[...rules.required, ...rules.CMND]}
               initialValue={recordHoSo?.thongTinThiSinh?.cmtCccd}
-              label="Số CMT/CCCD"
+              label="Số CMND/CCCD"
               name="cmtCccd"
             >
-              <Input placeholder="Nhập số CMT/CCCD" />
+              <Input placeholder="Nhập số CMND/CCCD" />
             </FormItem>
           </Col>
           <Col xs={24} md={12} lg={8}>
@@ -131,7 +131,7 @@ const KhaiBaoThongTinCaNhan = () => {
               label="Nơi cấp"
               name="noiCapCmtCccd"
             >
-              <Input placeholder="Nhập nơi cấp CMT/CCCD" />
+              <Input placeholder="Nhập nơi cấp CMND/CCCD" />
             </FormItem>
           </Col>
           <Col xs={24} md={12} lg={8}>

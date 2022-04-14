@@ -1,13 +1,15 @@
 import logo from '@/assets/logo.png';
 import ThanhToan from '@/components/ThanhToan';
 import { ETrangThaiHoSo, ETrangThaiThanhToan } from '@/utils/constants';
-import { Button, Col, Modal, Result, Row } from 'antd';
+import { Button, Col, Modal, Popconfirm, Result, Row } from 'antd';
+import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import RaSoatHoSo from '../RaSoatHoSo';
 
 const ResultHoSo = () => {
-  const { recordHoSo } = useModel('hosoxettuyen');
+  const { recordHoSo, moKhoaMyHoSoModel } = useModel('hosoxettuyen');
+  const { record } = useModel('dottuyensinh');
   const [visibleHoSo, setVisibleHoSo] = useState<boolean>(false);
   const [visibleThanhToan, setVisibleThanhToan] = useState<boolean>(false);
   const titleByTrangThai = {
@@ -16,6 +18,8 @@ const ResultHoSo = () => {
     'Không tiếp nhận': 'Rất tiếc, hồ sơ của bạn không đủ điều kiện tiếp nhận',
     'Chưa khóa': 'Đã kết thúc thời gian nộp hồ sơ',
   };
+
+  const isKetThucThoiGianDangKy = moment(record?.thoiGianKetThucNopHoSo).isBefore();
 
   const lyDoKhongTiepNhan = (
     <div style={{ textAlign: 'center' }}>
@@ -78,6 +82,20 @@ const ResultHoSo = () => {
               >
                 Xem hồ sơ đã nộp
               </Button>
+              {recordHoSo?.trangThai === ETrangThaiHoSo.dakhoa &&
+                !isKetThucThoiGianDangKy &&
+                record?.choPhepThiSinhMoKhoa === true && (
+                  <Popconfirm
+                    onConfirm={() => {
+                      moKhoaMyHoSoModel(recordHoSo?._id);
+                    }}
+                    title="Bạn có chắc chắn muốn mở khóa hồ sơ?"
+                  >
+                    <Button type="primary" style={{ marginBottom: 8 }}>
+                      Mở khóa hồ sơ
+                    </Button>
+                  </Popconfirm>
+                )}
               {recordHoSo?.trangThai !== ETrangThaiHoSo.chuakhoa && (
                 <Button
                   onClick={() => {

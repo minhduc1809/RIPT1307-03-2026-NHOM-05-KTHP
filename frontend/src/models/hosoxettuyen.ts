@@ -10,6 +10,7 @@ import {
   getMyHoSoXetTuyen,
   khoaMyHoSo,
   khoiTaoHoSoXetTuyen,
+  moKhoaMyHoSo,
   putMyDanhSachNguyenVong,
   putMyThongTinThiSinh,
   putMyThongTinXetTuyen,
@@ -230,11 +231,29 @@ export default () => {
   };
 
   const khoaMyHoSoModel = async (idHoSo: string) => {
+    if (!idHoSo) return;
     try {
       setLoading(true);
       const response = await khoaMyHoSo(idHoSo);
       setRecordHoSo(response?.data?.data);
       message.success('Khóa hồ sơ thành công');
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
+  };
+
+  const moKhoaMyHoSoModel = async (idHoSo: string) => {
+    if (!idHoSo) return;
+    try {
+      setLoading(true);
+      const response = await moKhoaMyHoSo(idHoSo);
+      setRecordHoSo(response?.data?.data);
+      message.success('Mở khóa hồ sơ thành công');
       window.scrollTo({
         top: 0,
         behavior: 'smooth',
@@ -254,6 +273,7 @@ export default () => {
   };
 
   return {
+    moKhoaMyHoSoModel,
     adminGetHoSoByIdHoSoModel,
     khoaMyHoSoModel,
     adminTiepNhanHoSoByIdHoSoModel,

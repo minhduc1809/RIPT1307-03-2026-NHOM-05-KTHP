@@ -74,6 +74,10 @@ const FormDotTuyenSinh = () => {
     record?.choPhepHK1HoacCaNamLop12 ?? false,
   );
 
+  const [choPhepThiSinhMoKhoa, setChoPhepThiSinhMoKhoa] = useState<boolean>(
+    record?.choPhepThiSinhMoKhoa ?? false,
+  );
+
   const [danhSachIdPhuongThuc, setDanhSachIdPhuongThuc] = useState<string[]>(
     record?.danhSachPhuongThucTuyenSinh?.map((item) => item._id) ?? [],
   );
@@ -106,6 +110,7 @@ const FormDotTuyenSinh = () => {
               gioiHanDoiTuong,
               suDungToHopMongMuon,
               choPhepHK1HoacCaNamLop12,
+              choPhepThiSinhMoKhoa,
               thongTinGiayToNopOnline: danhSachGiayToNopOnline,
               thongTinGiayToNopHoSo: danhSachGiayToNopHoSo,
               danhSachDoiTuongTuyenSinh: danhSachDoiTuong,
@@ -488,6 +493,20 @@ const FormDotTuyenSinh = () => {
                 }}
               />{' '}
               Cho phép HK1 hoặc cả năm Lớp 12
+            </Form.Item>
+          </Col>
+          <Col lg={12}>
+            <Form.Item
+              name={'choPhepThiSinhMoKhoa'}
+              initialValue={record?.choPhepThiSinhMoKhoa ?? false}
+            >
+              <Checkbox
+                checked={choPhepThiSinhMoKhoa}
+                onChange={(e) => {
+                  setChoPhepThiSinhMoKhoa(e.target.checked);
+                }}
+              />{' '}
+              Cho phép thí sinh mở khóa hồ sơ
             </Form.Item>
           </Col>
         </Row>

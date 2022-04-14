@@ -56,7 +56,7 @@ const QuanLyTaiKhoan = () => {
       align: 'center',
     },
     {
-      title: 'Số thẻ CMT-CCCD',
+      title: 'Số thẻ CMND-CCCD',
       dataIndex: 'cmtCccd',
       width: 200,
       align: 'center',

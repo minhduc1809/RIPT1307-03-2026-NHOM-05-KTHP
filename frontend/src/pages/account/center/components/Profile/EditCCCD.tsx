@@ -35,9 +35,9 @@ const EditCCCD = () => {
           initialValue={initialState?.currentUser?.cmtCccd}
           rules={[...rules.required, ...rules.CMND]}
           name="cmtCccd"
-          label="Số CMT/CCCD"
+          label="Số CMND/CCCD"
         >
-          <Input placeholder="Nhập số CMT/CCCD" />
+          <Input placeholder="Nhập số CMND/CCCD" />
         </FormItem>
 
         <FormItem
