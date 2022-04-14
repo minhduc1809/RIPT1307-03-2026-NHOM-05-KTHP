@@ -85,5 +85,6 @@ declare module DotTuyenSinh {
     mauPhieuDangKy: string;
     hinhThucThanhToan: EHinhThucThanhToan;
     huongDanThanhToan: string;
+    choPhepThiSinhMoKhoa: boolean;
   }
 }

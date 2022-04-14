@@ -202,15 +202,20 @@ const QuaTrinhHocTap = () => {
     };
     if (!isChuyenTruong) {
       //ko chuyen truong cap 3
+      const thongTinTruongTHPT = {
+        maQuanHuyen: values?.thongTinHocTapTHPT?.truongLop10?.maQuanHuyen,
+        maTinh: values?.thongTinHocTapTHPT?.truongLop10?.maTinh,
+        maTruong: values?.thongTinHocTapTHPT?.truongLop10?.maTruong,
+      };
       values.thongTinHocTapTHPT.truongLop11 = {
-        ...values?.thongTinHocTapTHPT?.truongLop10,
+        ...thongTinTruongTHPT,
         ...values?.thongTinHocTapTHPT?.truongLop11,
         tenTruong: tenTruong10,
         truongChuyen: isTruongChuyenLop10,
         khuVucUuTienTuyenSinh: khuVucUuTienLop10,
       };
       values.thongTinHocTapTHPT.truongLop12 = {
-        ...values?.thongTinHocTapTHPT?.truongLop10,
+        ...thongTinTruongTHPT,
         ...values?.thongTinHocTapTHPT?.truongLop12,
         tenTruong: tenTruong10,
         truongChuyen: isTruongChuyenLop10,
