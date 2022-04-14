@@ -64,7 +64,7 @@ const BlockChungChiTiengAnh = (props: { form: FormInstance; cauHinh: any }) => {
           >
             <InputNumber
               step={cauHinhChungChi?.diem?.step}
-              min={cauHinhChungChi?.diem?.min}
+              min={0}
               max={cauHinhChungChi?.diem?.max}
               placeholder="Nhập điểm thi"
               style={{ width: '100%' }}

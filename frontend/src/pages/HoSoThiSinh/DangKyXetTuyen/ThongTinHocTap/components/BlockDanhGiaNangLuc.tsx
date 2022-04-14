@@ -55,7 +55,7 @@ const BlockDanhGiaNangLuc = (props: { cauHinh: any }) => {
             style={{ width: '100%', marginBottom: '0' }}
           >
             <InputNumber
-              min={itemCauHinh?.[donVi]?.diemDanhGiaNangLuc?.min ?? 0}
+              min={0}
               max={itemCauHinh?.[donVi]?.diemDanhGiaNangLuc?.max ?? 1000000}
               style={{ width: '100%' }}
               placeholder="Nhập điểm"
