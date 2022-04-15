@@ -182,6 +182,7 @@ export function renderFileListUrlWithName(url: string, fileName?: string) {
   return {
     fileList: [
       {
+        remote: true,
         name: fileName || getNameFile(url),
         url,
         status: 'done',
@@ -254,8 +255,12 @@ export const toISOString = (date: moment.MomentInput) => {
   return undefined;
 };
 
-export const uploadMultiFile = async (arrFile: any[]) => {
-  const url: string[] = arrFile
+export const uploadMultiFile = async (
+  arrFile: any[],
+  returnAllResponse?: boolean,
+  isPublic?: boolean,
+) => {
+  const url: any[] = arrFile
     ?.filter((item) => item?.remote === true)
     ?.map((item) => item?.url ?? '');
   if (!arrFile) return [];
@@ -266,9 +271,9 @@ export const uploadMultiFile = async (arrFile: any[]) => {
       const response = await uploadFile({
         file: file?.originFileObj,
         filename: parse(file?.name).name,
-        public: true,
+        public: isPublic || true,
       });
-      return response?.data?.data?.url;
+      return returnAllResponse === true ? response?.data?.data : response?.data?.data?.url;
     });
   arrUrl = await Promise.all(arrUpload);
   return [...url, ...arrUrl];
@@ -389,4 +394,27 @@ export const mergeCauHinhDoiTuongXetTuyen = (
     _.mergeWith(cauHinh, cauHinhEle, mergeCauHinh);
   }
   return cauHinh;
+};
+
+export const calculateLuaChonToHopVaHienThiDiemQuyDoi = (
+  arrMaDoiTuong: string[],
+  arrDoiTuong: DotTuyenSinh.DoiTuongTuyenSinh[],
+): {
+  luaChonToHop: boolean;
+  hienThiDiemQuyDoi: boolean;
+} => {
+  let luaChonToHop = false;
+  let hienThiDiemQuyDoi = false;
+
+  arrDoiTuong
+    ?.filter((item) => arrMaDoiTuong?.includes(item?.maDoiTuong))
+    ?.map((item) => {
+      luaChonToHop = luaChonToHop || item?.yeuCauLuaChonToHop;
+      hienThiDiemQuyDoi = hienThiDiemQuyDoi || item?.hienThiDiemQuyDoi;
+    });
+
+  return {
+    luaChonToHop,
+    hienThiDiemQuyDoi,
+  };
 };

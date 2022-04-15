@@ -3,11 +3,12 @@ import RaSoatHoSo from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { ETrangThaiHoSo } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import { LockOutlined, PrinterOutlined, UnlockOutlined } from '@ant-design/icons';
-import { Button, Divider, Popconfirm, Select, Tooltip } from 'antd';
+import { DollarOutlined, LockOutlined, PrinterOutlined, UnlockOutlined } from '@ant-design/icons';
+import { Button, Divider, Modal, Popconfirm, Select, Tooltip } from 'antd';
 import moment from 'moment';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
+import ThanhToan from '@/components/ThanhToan';
 
 const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
   const {
@@ -23,8 +24,9 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
     setRecordHoSo,
     setPage,
     setLimit,
+    recordHoSo: recordHS,
   } = useModel('hosoxettuyen');
-
+  const [visibleThanhToan, setVisibleThanhToan] = useState<boolean>(false);
   const {
     getAllDotTuyenSinhModel,
     record: recordDotTuyenSinh,
@@ -189,7 +191,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
     {
       title: 'Thao tác',
       align: 'center',
-      width: 150,
+      width: 170,
       fixed: 'right',
       render: (recordHoSo: HoSoXetTuyen.Record) => (
         <>
@@ -225,6 +227,23 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
             </Popconfirm>
           )}
 
+          {[ETrangThaiHoSo.dakhoa, ETrangThaiHoSo.datiepnhan]?.includes(props?.type) && (
+            <>
+              <Divider type="vertical" />
+              <Tooltip title="Thanh toán">
+                <Button
+                  onClick={() => {
+                    setRecordHoSo(recordHoSo);
+                    setVisibleThanhToan(true);
+                  }}
+                  type="primary"
+                  icon={<DollarOutlined />}
+                  shape="circle"
+                />
+              </Tooltip>
+            </>
+          )}
+
           <Divider type="vertical" />
           <Tooltip title="In hồ sơ">
             <Button icon={<PrinterOutlined />} shape="circle" />
@@ -235,64 +254,88 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
   ];
 
   return (
-    <TableBase
-      getData={() => adminGetHoSoByIdDotModel(recordDotTuyenSinh?._id ?? '', props.type)}
-      modelName="hosoxettuyen"
-      widthDrawer="1100px"
-      title={`Hồ sơ ${props.type}`}
-      loading={loading}
-      columns={columns}
-      Form={RaSoatHoSo}
-      maskCloseableForm
-      dependencies={[
-        page,
-        limit,
-        condition,
-        props.type,
-        recordDotTuyenSinh?._id,
-        recordNamTuyenSinh?._id,
-        record?._id,
-      ]}
-      otherProps={{ scroll: { x: 1300 } }}
-    >
-      <Select
-        placeholder="Hình thức đào tạo"
-        onChange={(val) => {
-          setRecordNamTuyenSinh(undefined);
-          setRecordDotTuyenSinh(undefined);
-          setRecord(danhSachHinhThuc?.find((item) => item._id === val));
+    <>
+      <TableBase
+        getData={() => adminGetHoSoByIdDotModel(recordDotTuyenSinh?._id ?? '', props.type)}
+        modelName="hosoxettuyen"
+        widthDrawer="1100px"
+        title={`Hồ sơ ${props.type}`}
+        loading={loading}
+        columns={columns}
+        Form={RaSoatHoSo}
+        maskCloseableForm
+        dependencies={[
+          page,
+          limit,
+          condition,
+          props.type,
+          recordDotTuyenSinh?._id,
+          recordNamTuyenSinh?._id,
+          record?._id,
+        ]}
+        otherProps={{ scroll: { x: 1300 } }}
+      >
+        <Select
+          placeholder="Hình thức đào tạo"
+          onChange={(val) => {
+            setRecordNamTuyenSinh(undefined);
+            setRecordDotTuyenSinh(undefined);
+            setRecord(danhSachHinhThuc?.find((item) => item._id === val));
+          }}
+          value={record?._id}
+          options={danhSachHinhThuc?.map((item) => ({
+            value: item._id,
+            label: item.ten,
+          }))}
+          style={{ width: 120, marginRight: 8 }}
+        />
+        <Select
+          placeholder="Năm tuyển sinh"
+          onChange={(val) => {
+            setRecordDotTuyenSinh(undefined);
+            setRecordNamTuyenSinh(danhSachNam?.find((item) => item.nam === val));
+          }}
+          value={recordNamTuyenSinh?.nam}
+          options={danhSachNam?.map((item) => ({
+            value: item.nam,
+            label: `Năm tuyển sinh ${item.nam}`,
+          }))}
+          style={{ width: 180, marginRight: 8 }}
+        />
+        <Select
+          placeholder="Đợt tuyển sinh"
+          onChange={(val) => setRecordDotTuyenSinh(danhSachDot?.find((item) => item._id === val))}
+          value={recordDotTuyenSinh?._id}
+          options={danhSachDot?.map((item) => ({
+            value: item?._id,
+            label: item?.tenDotTuyenSinh,
+          }))}
+          style={{ width: 400 }}
+        />
+      </TableBase>
+      <Modal
+        destroyOnClose
+        footer={
+          <Button
+            type="primary"
+            onClick={() => {
+              setVisibleThanhToan(false);
+              setRecordHoSo(undefined);
+            }}
+          >
+            OK
+          </Button>
+        }
+        width="1000px"
+        onCancel={() => {
+          setVisibleThanhToan(false);
+          setRecordHoSo(undefined);
         }}
-        value={record?._id}
-        options={danhSachHinhThuc?.map((item) => ({
-          value: item._id,
-          label: item.ten,
-        }))}
-        style={{ width: 120, marginRight: 8 }}
-      />
-      <Select
-        placeholder="Năm tuyển sinh"
-        onChange={(val) => {
-          setRecordDotTuyenSinh(undefined);
-          setRecordNamTuyenSinh(danhSachNam?.find((item) => item.nam === val));
-        }}
-        value={recordNamTuyenSinh?.nam}
-        options={danhSachNam?.map((item) => ({
-          value: item.nam,
-          label: `Năm tuyển sinh ${item.nam}`,
-        }))}
-        style={{ width: 180, marginRight: 8 }}
-      />
-      <Select
-        placeholder="Đợt tuyển sinh"
-        onChange={(val) => setRecordDotTuyenSinh(danhSachDot?.find((item) => item._id === val))}
-        value={recordDotTuyenSinh?._id}
-        options={danhSachDot?.map((item) => ({
-          value: item?._id,
-          label: item?.tenDotTuyenSinh,
-        }))}
-        style={{ width: 400 }}
-      />
-    </TableBase>
+        visible={visibleThanhToan}
+      >
+        <ThanhToan record={recordHS} />
+      </Modal>
+    </>
   );
 };
 

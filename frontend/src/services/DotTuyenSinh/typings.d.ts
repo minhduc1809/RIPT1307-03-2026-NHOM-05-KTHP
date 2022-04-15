@@ -82,7 +82,7 @@ declare module DotTuyenSinh {
     loaiDot: ELoaiDot;
     thongBaoLoaiDot?: string;
     urlRedirectLoaiDot?: string;
-    mauPhieuDangKy: string;
+    mauPhieuDangKy: { id: string; url: string; filename: string };
     hinhThucThanhToan: EHinhThucThanhToan;
     huongDanThanhToan: string;
     choPhepThiSinhMoKhoa: boolean;

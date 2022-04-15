@@ -8,7 +8,8 @@ import { useModel } from 'umi';
 import RaSoatHoSo from '../RaSoatHoSo';
 
 const ResultHoSo = () => {
-  const { recordHoSo, moKhoaMyHoSoModel } = useModel('hosoxettuyen');
+  const { recordHoSo, moKhoaMyHoSoModel, exportPhieuDangKyModel, loading } =
+    useModel('hosoxettuyen');
   const { record } = useModel('dottuyensinh');
   const [visibleHoSo, setVisibleHoSo] = useState<boolean>(false);
   const [visibleThanhToan, setVisibleThanhToan] = useState<boolean>(false);
@@ -82,6 +83,16 @@ const ResultHoSo = () => {
               >
                 Xem hồ sơ đã nộp
               </Button>
+              {recordHoSo?.trangThai !== ETrangThaiHoSo.chuakhoa && (
+                <Button
+                  loading={loading}
+                  onClick={() => {
+                    exportPhieuDangKyModel(recordHoSo?._id ?? '');
+                  }}
+                >
+                  In phiếu
+                </Button>
+              )}
               {recordHoSo?.trangThai === ETrangThaiHoSo.dakhoa &&
                 !isKetThucThoiGianDangKy &&
                 record?.choPhepThiSinhMoKhoa === true && (

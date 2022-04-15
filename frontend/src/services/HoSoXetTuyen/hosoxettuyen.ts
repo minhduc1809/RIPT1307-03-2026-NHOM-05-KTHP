@@ -52,6 +52,12 @@ export function moKhoaMyHoSo(idHoSo: string) {
   return axios.put(`${ip3}/${url}/thi-sinh/my/${url}/${idHoSo}/mo-khoa`);
 }
 
+export function exportPhieuDangKy(idHoSoXetTuyen: string) {
+  return axios.get(`${ip3}/${url}/thi-sinh/my/export/${idHoSoXetTuyen}`, {
+    responseType: 'arraybuffer',
+  });
+}
+
 export function adminGetHoSoByIdDot(
   idDotTuyenSinh: string,
   payload: {

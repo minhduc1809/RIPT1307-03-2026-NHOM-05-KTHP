@@ -32,8 +32,14 @@ import BlockRaSoatThongTinCaNhan from './components/BlockThongTinCaNhan';
 const { Item } = Descriptions;
 
 const RaSoatHoSo = () => {
-  const { recordHoSo, setVisibleForm, setCurrent, khoaMyHoSoModel, loading } =
-    useModel('hosoxettuyen');
+  const {
+    recordHoSo,
+    setVisibleForm,
+    setCurrent,
+    khoaMyHoSoModel,
+    loading,
+    exportPhieuDangKyModel,
+  } = useModel('hosoxettuyen');
   const { record, visibleFormGiayTo, setVisibleFormGiayTo } = useModel('dottuyensinh');
   const [visible, setVisible] = useState<boolean>(false);
   const cauHinhDoiTuong: any = record?._id
@@ -342,10 +348,9 @@ const RaSoatHoSo = () => {
                 ) : (
                   <Button
                     type="primary"
+                    loading={loading}
                     onClick={() => {
-                      Modal.info({
-                        title: 'Tính năng đang được cập nhật, vui lòng thử lại sau',
-                      });
+                      exportPhieuDangKyModel(recordHoSo?._id ?? '');
                     }}
                     icon={<PrinterOutlined />}
                   >

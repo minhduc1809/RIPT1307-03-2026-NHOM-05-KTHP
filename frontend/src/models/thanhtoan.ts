@@ -22,8 +22,10 @@ export default () => {
 
   const getInvoiceByIdentityCodeModel = async (identityCode?: string) => {
     if (!identityCode) return;
+    setLoading(true);
     const response = await getInvoiceByIdentityCode(identityCode);
     setInvoice(response?.data?.data?.data);
+    setLoading(false);
   };
 
   const payInvoiceByIdentityCodeModel = async (

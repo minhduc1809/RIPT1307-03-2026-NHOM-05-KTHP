@@ -7,6 +7,7 @@ import {
   adminKhoaHoSoByIdHoSo,
   adminMoKhoaHoSoByIdHoSo,
   adminTiepNhanHoSoByIdHoSo,
+  exportPhieuDangKy,
   getMyHoSoXetTuyen,
   khoaMyHoSo,
   khoiTaoHoSoXetTuyen,
@@ -22,6 +23,7 @@ import { message } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
+import FileDownload from 'js-file-download';
 
 export default () => {
   const [danhSach, setDanhSach] = useState<HoSoXetTuyen.Record[]>([]);
@@ -272,7 +274,22 @@ export default () => {
     setLoading(false);
   };
 
+  const exportPhieuDangKyModel = async (idHoSo: string) => {
+    if (!idHoSo) return;
+    try {
+      setLoading(true);
+      const response = await exportPhieuDangKy(idHoSo);
+      const fileName = `${recordHoSo?.maHoSo ?? ''}_${moment().format('DDMMYYYYHHmm')}.pdf`;
+      FileDownload(response.data, fileName);
+      setLoading(false);
+    } catch (err) {
+      message.error('Mẫu phiếu đang được cập nhật, vui lòng thử lại sau');
+      setLoading(false);
+    }
+  };
+
   return {
+    exportPhieuDangKyModel,
     moKhoaMyHoSoModel,
     adminGetHoSoByIdHoSoModel,
     khoaMyHoSoModel,

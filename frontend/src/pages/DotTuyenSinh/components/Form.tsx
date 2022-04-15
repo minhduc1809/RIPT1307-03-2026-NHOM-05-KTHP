@@ -1,4 +1,5 @@
 import TinyEditor from '@/components/TinyEditor/Tiny';
+import Upload from '@/components/Upload/UploadMultiFile';
 import type { NamTuyenSinh } from '@/services/NamTuyenSinh/typings';
 import {
   EDonViTinh,
@@ -7,6 +8,7 @@ import {
   MapKeyHinhThucThanhToan,
 } from '@/utils/constants';
 import rules from '@/utils/rules';
+import { checkFileSize, renderFileListUrlWithName, uploadMultiFile } from '@/utils/utils';
 import {
   Button,
   Card,
@@ -98,10 +100,18 @@ const FormDotTuyenSinh = () => {
         scrollToFirstError
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
+          const checkSize = checkFileSize(values?.mauPhieuDangKy?.fileList ?? []);
+          if (!checkSize) return;
+          const mauPhieuDangKy = await uploadMultiFile(
+            values?.mauPhieuDangKy?.fileList ?? [],
+            true,
+            false,
+          );
           if (edit) {
             putDotTuyenSinhModel(record?._id ?? '', {
               ...record,
               ...values,
+              mauPhieuDangKy: mauPhieuDangKy?.[0]?.file?.id || record?.mauPhieuDangKy?.id,
               moTa: values?.moTa?.text,
               huongDanThanhToan: values?.huongDanThanhToan?.text,
               cauHinhPhuongThuc: {},
@@ -125,6 +135,7 @@ const FormDotTuyenSinh = () => {
           } else {
             postDotTuyenSinhModel({
               ...values,
+              mauPhieuDangKy: mauPhieuDangKy?.[0]?.file?.id,
               moTa: values?.moTa?.text,
               huongDanThanhToan: values?.huongDanThanhToan?.text,
               cauHinhPhuongThuc: {},
@@ -360,7 +371,7 @@ const FormDotTuyenSinh = () => {
                 min={1}
                 max={1000}
                 style={{ width: '100%' }}
-                placeholder="Nhập số lượng"
+                placeholder="Nhập số lượng nguyện vọng tối đa nếu có"
               />
             </Form.Item>
           </Col>
@@ -507,6 +518,26 @@ const FormDotTuyenSinh = () => {
                 }}
               />{' '}
               Cho phép thí sinh mở khóa hồ sơ
+            </Form.Item>
+          </Col>
+          <Col lg={12}>
+            <Form.Item
+              // rules={[...rules.fileRequired]}
+              initialValue={renderFileListUrlWithName(
+                record?.mauPhieuDangKy?.url ?? '',
+                record?.mauPhieuDangKy?.filename ?? '',
+              )}
+              label="Mẫu phiếu đăng ký"
+              name="mauPhieuDangKy"
+            >
+              <Upload
+                otherProps={{
+                  accept: 'application/pdf, .doc, .docx',
+                  multiple: false,
+                  showUploadList: { showDownloadIcon: false },
+                }}
+                limit={1}
+              />
             </Form.Item>
           </Col>
         </Row>

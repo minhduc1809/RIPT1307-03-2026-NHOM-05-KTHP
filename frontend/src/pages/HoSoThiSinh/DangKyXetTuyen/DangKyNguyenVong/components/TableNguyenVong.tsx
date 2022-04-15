@@ -1,5 +1,6 @@
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import type { IColumn } from '@/utils/interfaces';
+import { calculateLuaChonToHopVaHienThiDiemQuyDoi } from '@/utils/utils';
 import {
   CaretDownOutlined,
   CaretUpOutlined,
@@ -23,10 +24,14 @@ const TableNguyenVong = () => {
     setVisibleFormNguyenVong,
     setEdit,
     setRecordNguyenVong,
+    recordHoSo,
   } = useModel('hosoxettuyen');
 
   const { record: recordDot } = useModel('dottuyensinh');
-
+  const { hienThiDiemQuyDoi, luaChonToHop } = calculateLuaChonToHopVaHienThiDiemQuyDoi(
+    recordHoSo?.maDoiTuong ?? [],
+    recordDot?.danhSachDoiTuongTuyenSinh ?? [],
+  );
   const [indexNV, setIndexNV] = useState<number>(-1);
   const PopoverDiv = styled.div`
     &:hover {
@@ -201,6 +206,7 @@ const TableNguyenVong = () => {
       dataIndex: 'toHopXetTuyen',
       align: 'center',
       width: '60px',
+      hide: !luaChonToHop,
       render: (val, record) => (
         <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{val}</div>
       ),
@@ -210,12 +216,13 @@ const TableNguyenVong = () => {
       dataIndex: ['diemQuyDoi', 'thanhPhan'],
       align: 'center',
       width: '100px',
+      hide: !hienThiDiemQuyDoi,
       render: (val: HoSoXetTuyen.ThanhPhanDiemQuyDoi[], record) => {
-        const hienThiDiemQuyDoi = recordDot?.danhSachDoiTuongTuyenSinh?.find(
+        const hienThiDiemQuyDoiTemp = recordDot?.danhSachDoiTuongTuyenSinh?.find(
           (item) => item.maDoiTuong === record?.maDoiTuong,
         )?.hienThiDiemQuyDoi;
         let diem = 0;
-        if (hienThiDiemQuyDoi) {
+        if (hienThiDiemQuyDoiTemp) {
           val
             ?.filter((item) => !item?.tenThanhPhan?.includes('Điểm'))
             ?.map((item) => (diem += item?.diem ?? 0));
@@ -230,13 +237,14 @@ const TableNguyenVong = () => {
       dataIndex: ['diemQuyDoi', 'tongDiem'],
       align: 'center',
       width: '100px',
+      hide: !hienThiDiemQuyDoi,
       render: (val, record) => {
-        const hienThiDiemQuyDoi = recordDot?.danhSachDoiTuongTuyenSinh?.find(
+        const hienThiDiemQuyDoiTemp = recordDot?.danhSachDoiTuongTuyenSinh?.find(
           (item) => item.maDoiTuong === record?.maDoiTuong,
         )?.hienThiDiemQuyDoi;
         return (
           <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>
-            {hienThiDiemQuyDoi ? val : ''}
+            {hienThiDiemQuyDoiTemp ? val : ''}
           </div>
         );
       },
@@ -244,11 +252,12 @@ const TableNguyenVong = () => {
     {
       title: 'Chi tiết thành phần',
       dataIndex: ['diemQuyDoi', 'thanhPhan'],
+      hide: !hienThiDiemQuyDoi,
       render: (val: HoSoXetTuyen.ThanhPhanDiemQuyDoi[], record) => {
-        const hienThiDiemQuyDoi = recordDot?.danhSachDoiTuongTuyenSinh?.find(
+        const hienThiDiemQuyDoiTemp = recordDot?.danhSachDoiTuongTuyenSinh?.find(
           (item) => item.maDoiTuong === record?.maDoiTuong,
         )?.hienThiDiemQuyDoi;
-        return hienThiDiemQuyDoi ? (
+        return hienThiDiemQuyDoiTemp ? (
           val
             ?.filter((item) => item?.tenThanhPhan)
             ?.map((item) => (
@@ -418,7 +427,7 @@ const TableNguyenVong = () => {
           <Table
             pagination={false}
             size="small"
-            columns={columnsNV}
+            columns={columnsNV?.filter((item) => item?.hide !== true)}
             dataSource={danhSachNguyenVong?.map((item) => item)}
             scroll={{ x: 1000 }}
           />
