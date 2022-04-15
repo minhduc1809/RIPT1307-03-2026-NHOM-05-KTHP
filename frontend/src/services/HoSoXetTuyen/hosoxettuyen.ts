@@ -52,8 +52,14 @@ export function moKhoaMyHoSo(idHoSo: string) {
   return axios.put(`${ip3}/${url}/thi-sinh/my/${url}/${idHoSo}/mo-khoa`);
 }
 
-export function exportPhieuDangKy(idHoSoXetTuyen: string) {
+export function exportMyPhieuDangKy(idHoSoXetTuyen: string) {
   return axios.get(`${ip3}/${url}/thi-sinh/my/export/${idHoSoXetTuyen}`, {
+    responseType: 'arraybuffer',
+  });
+}
+
+export function adminExportPhieuDangKy(idHoSoXetTuyen: string) {
+  return axios.get(`${ip3}/${url}/admin/export/${idHoSoXetTuyen}`, {
     responseType: 'arraybuffer',
   });
 }

@@ -38,7 +38,7 @@ const RaSoatHoSo = () => {
     setCurrent,
     khoaMyHoSoModel,
     loading,
-    exportPhieuDangKyModel,
+    exportMyPhieuDangKyModel,
   } = useModel('hosoxettuyen');
   const { record, visibleFormGiayTo, setVisibleFormGiayTo } = useModel('dottuyensinh');
   const [visible, setVisible] = useState<boolean>(false);
@@ -350,7 +350,7 @@ const RaSoatHoSo = () => {
                     type="primary"
                     loading={loading}
                     onClick={() => {
-                      exportPhieuDangKyModel(recordHoSo?._id ?? '');
+                      exportMyPhieuDangKyModel(recordHoSo?._id ?? '');
                     }}
                     icon={<PrinterOutlined />}
                   >

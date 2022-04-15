@@ -2,12 +2,13 @@ import useInitModel from '@/hooks/useInitModel';
 import type { Login } from '@/services/ant-design-pro/typings';
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import {
+  adminExportPhieuDangKy,
   adminGetHoSoByIdDot,
   adminGetHoSoByIdHoSo,
   adminKhoaHoSoByIdHoSo,
   adminMoKhoaHoSoByIdHoSo,
   adminTiepNhanHoSoByIdHoSo,
-  exportPhieuDangKy,
+  exportMyPhieuDangKy,
   getMyHoSoXetTuyen,
   khoaMyHoSo,
   khoiTaoHoSoXetTuyen,
@@ -274,11 +275,11 @@ export default () => {
     setLoading(false);
   };
 
-  const exportPhieuDangKyModel = async (idHoSo: string) => {
+  const exportMyPhieuDangKyModel = async (idHoSo: string) => {
     if (!idHoSo) return;
     try {
       setLoading(true);
-      const response = await exportPhieuDangKy(idHoSo);
+      const response = await exportMyPhieuDangKy(idHoSo);
       const fileName = `${recordHoSo?.maHoSo ?? ''}_${moment().format('DDMMYYYYHHmm')}.pdf`;
       FileDownload(response.data, fileName);
       setLoading(false);
@@ -288,8 +289,23 @@ export default () => {
     }
   };
 
+  const adminExportPhieuDangKyModel = async (idHoSo: string, maHoSo: string) => {
+    if (!idHoSo) return;
+    try {
+      setLoading(true);
+      const response = await adminExportPhieuDangKy(idHoSo);
+      const fileName = `${maHoSo}_${moment().format('DDMMYYYYHHmm')}.pdf`;
+      FileDownload(response.data, fileName);
+      setLoading(false);
+    } catch (err) {
+      message.error('Mẫu phiếu đang được cập nhật, vui lòng thử lại sau');
+      setLoading(false);
+    }
+  };
+
   return {
-    exportPhieuDangKyModel,
+    adminExportPhieuDangKyModel,
+    exportMyPhieuDangKyModel,
     moKhoaMyHoSoModel,
     adminGetHoSoByIdHoSoModel,
     khoaMyHoSoModel,

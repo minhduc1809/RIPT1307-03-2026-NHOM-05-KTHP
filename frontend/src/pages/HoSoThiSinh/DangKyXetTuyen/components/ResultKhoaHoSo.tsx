@@ -8,7 +8,7 @@ import { useModel } from 'umi';
 import RaSoatHoSo from '../RaSoatHoSo';
 
 const ResultHoSo = () => {
-  const { recordHoSo, moKhoaMyHoSoModel, exportPhieuDangKyModel, loading } =
+  const { recordHoSo, moKhoaMyHoSoModel, exportMyPhieuDangKyModel, loading } =
     useModel('hosoxettuyen');
   const { record } = useModel('dottuyensinh');
   const [visibleHoSo, setVisibleHoSo] = useState<boolean>(false);
@@ -87,7 +87,7 @@ const ResultHoSo = () => {
                 <Button
                   loading={loading}
                   onClick={() => {
-                    exportPhieuDangKyModel(recordHoSo?._id ?? '');
+                    exportMyPhieuDangKyModel(recordHoSo?._id ?? '');
                   }}
                 >
                   In phiếu

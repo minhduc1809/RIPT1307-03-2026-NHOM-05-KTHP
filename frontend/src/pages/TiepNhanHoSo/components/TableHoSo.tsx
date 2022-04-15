@@ -24,6 +24,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
     setRecordHoSo,
     setPage,
     setLimit,
+    adminExportPhieuDangKyModel,
     recordHoSo: recordHS,
   } = useModel('hosoxettuyen');
   const [visibleThanhToan, setVisibleThanhToan] = useState<boolean>(false);
@@ -246,7 +247,13 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
 
           <Divider type="vertical" />
           <Tooltip title="In hồ sơ">
-            <Button icon={<PrinterOutlined />} shape="circle" />
+            <Button
+              onClick={() => {
+                adminExportPhieuDangKyModel(recordHoSo._id, recordHoSo?.maHoSo);
+              }}
+              icon={<PrinterOutlined />}
+              shape="circle"
+            />
           </Tooltip>
         </>
       ),
