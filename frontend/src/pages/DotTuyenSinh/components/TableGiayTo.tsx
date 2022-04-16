@@ -85,7 +85,7 @@ const TableGiayTo = (props: {
       dataIndex: 'soLuong',
       width: 80,
       align: 'center',
-      hide: ['danhSachGiayToNopOnline', 'danhSachGiayToXacNhanNhapHoc'].includes(props.fieldName),
+      hide: ['danhSachGiayToXacNhanNhapHoc'].includes(props.fieldName),
     },
     {
       title: 'Ghi chú',

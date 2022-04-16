@@ -100,7 +100,7 @@ const TableGiayTo = (props: { fieldName: 'thongTinGiayToNopHoSo' | 'thongTinGiay
               multiple: true,
               showUploadList: { showDownloadIcon: false },
             }}
-            limit={5}
+            limit={recordGiayTo?.soLuong ?? 5}
           />
         </FormItem>
       ),

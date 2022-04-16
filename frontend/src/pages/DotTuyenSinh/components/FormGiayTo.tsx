@@ -69,7 +69,7 @@ const FormGiayTo = (props: {
               <Input placeholder="Tên giấy tờ" />
             </FormItem>
           </Col>
-          {['danhSachGiayToNopHoSo'].includes(props.fieldName) && (
+          {['danhSachGiayToNopHoSo', 'danhSachGiayToNopOnline'].includes(props.fieldName) && (
             <Col span={12}>
               <FormItem
                 name="soLuong"
@@ -77,7 +77,7 @@ const FormGiayTo = (props: {
                 initialValue={recordGiayTo?.soLuong ?? 0}
                 rules={[...rules.required]}
               >
-                <InputNumber min={0} max={100} placeholder="Số lượng" />
+                <InputNumber min={1} max={100} placeholder="Số lượng" />
               </FormItem>
             </Col>
           )}
