@@ -2,6 +2,7 @@ import useInitModel from '@/hooks/useInitModel';
 import type { Login } from '@/services/ant-design-pro/typings';
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import {
+  adminExportHoSoByIdDot,
   adminExportPhieuDangKy,
   adminGetHoSoByIdDot,
   adminGetHoSoByIdHoSo,
@@ -190,6 +191,19 @@ export default () => {
     setLoading(false);
   };
 
+  const adminExportHoSoByIdDotModel = async (idDotTuyenSinh: string, trangThai: ETrangThaiHoSo) => {
+    if (!idDotTuyenSinh || !recordHinhThuc?._id || !recordNam?._id) return;
+    setLoading(true);
+    const response = await adminExportHoSoByIdDot(idDotTuyenSinh, {
+      page,
+      limit,
+      condition: { ...condition, trangThai },
+    });
+    const fileName = `${trangThai}_${moment().format('DD-MM-YYYY HH:mm')}.xlsx`;
+    FileDownload(response.data, fileName);
+    setLoading(false);
+  };
+
   const adminKhoaHoSoByIdHoSoModel = async (
     idHoSo: string,
     idDotTuyenSinh: string,
@@ -304,6 +318,7 @@ export default () => {
   };
 
   return {
+    adminExportHoSoByIdDotModel,
     adminExportPhieuDangKyModel,
     exportMyPhieuDangKyModel,
     moKhoaMyHoSoModel,

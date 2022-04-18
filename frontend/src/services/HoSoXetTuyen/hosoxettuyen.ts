@@ -75,6 +75,21 @@ export function adminGetHoSoByIdDot(
   return axios.get(`${ip3}/${url}/admin/dot/${idDotTuyenSinh}`, { params: payload });
 }
 
+// todo change url
+export function adminExportHoSoByIdDot(
+  idDotTuyenSinh: string,
+  payload: {
+    page: number;
+    limit: number;
+    condition?: any;
+  },
+) {
+  return axios.get(`${ip3}/${url}/admin/dot/${idDotTuyenSinh}/export`, {
+    params: payload,
+    responseType: 'arraybuffer',
+  });
+}
+
 export function adminGetHoSoByIdHoSo(idHoSo: string) {
   return axios.get(`${ip3}/${url}/admin/${idHoSo}`);
 }

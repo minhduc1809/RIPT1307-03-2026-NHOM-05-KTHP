@@ -5,6 +5,10 @@ export function getUserPageable(payload: { page: number; limit: number; conditio
   return axios.get(`${ip3}/user/pageable`, { params: payload });
 }
 
+export async function adminChangePassword(payload: { user_id?: number; password: string }) {
+  return axios.post(`${ip3}/odoo-user/admin/change-password`, payload);
+}
+
 export function getUserId(payload: { id: string }) {
   return axios.get(`${ip3}/user`, { params: payload });
 }

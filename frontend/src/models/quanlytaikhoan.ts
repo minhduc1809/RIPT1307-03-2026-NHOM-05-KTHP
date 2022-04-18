@@ -4,7 +4,9 @@ import {
   deleteUser,
   postUser,
   putUser,
+  adminChangePassword,
 } from '@/services/QuanLyTaiKhoan/quanlytaikhoan';
+import { message } from 'antd';
 import { useState } from 'react';
 
 export default () => {
@@ -30,40 +32,55 @@ export default () => {
     setFilterInfo,
   } = objInitModel;
 
-  const getUserPageableModel = async () => {
+  const getUserPageableModel = async (paramCondition?: any) => {
     setLoading(true);
-    const response = await getUserPageable({ page, limit, condition });
+    const response = await getUserPageable({
+      page,
+      limit,
+      condition: { ...condition, ...paramCondition },
+    });
     setRecord(response?.data?.data?.result ?? []);
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? '0');
     setLoading(false);
   };
 
-  const deleteUserModal = async (id: any) => {
+  const deleteUserModel = async (id: string, paramCondition?: any) => {
     setLoading(true);
     await deleteUser(id);
-    getUserPageableModel();
-    setLoading(false);
+    getUserPageableModel(paramCondition);
   };
 
-  const postUserModal = async (payload: QuanLyTaiKhoan.PostRecord) => {
+  const postUserModel = async (payload: QuanLyTaiKhoan.PostRecord, paramCondition?: any) => {
     setLoading(true);
     await postUser(payload);
-    setLoading(false);
+    getUserPageableModel(paramCondition);
   };
 
-  const putUserModal = async (id: string, data: QuanLyTaiKhoan.PostRecord) => {
+  const putUserModel = async (
+    id: string,
+    data: QuanLyTaiKhoan.PostRecord,
+    paramCondition?: any,
+  ) => {
     try {
       setLoading(true);
       await putUser(id, data);
-      getUserPageableModel();
-      setLoading(false);
+      getUserPageableModel(paramCondition);
     } catch (err) {
       setLoading(false);
     }
   };
 
+  const adminChangePasswordModel = async (payload: { user_id?: number; password: string }) => {
+    if (!payload?.user_id) return;
+    setLoading(true);
+    await adminChangePassword(payload);
+    message.success('Cấp lại mật khẩu thành công');
+    setLoading(false);
+  };
+
   return {
+    adminChangePasswordModel,
     record,
     setRecord,
     danhSach,
@@ -85,8 +102,8 @@ export default () => {
     getUserPageableModel,
     filterInfo,
     setFilterInfo,
-    deleteUserModal,
-    postUserModal,
-    putUserModal,
+    deleteUserModel,
+    postUserModel,
+    putUserModel,
   };
 };

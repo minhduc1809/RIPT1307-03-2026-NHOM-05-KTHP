@@ -70,6 +70,8 @@ export default {
     'Danh sách đủ điều kiện nhập học',
   'menu.CauHinhHeThong': 'Cấu hình hệ thống',
   'menu.CauHinhHeThong.QuanLyTaiKhoan': 'Tài khoản',
+  'menu.CauHinhHeThong.QuanLyTaiKhoan.TaiKhoanThiSinh': 'Tài khoản thí sinh',
+  'menu.CauHinhHeThong.QuanLyTaiKhoan.TaiKhoanChuyenVien': 'Tài khoản chuyên viên',
   'menu.CauHinhHeThong.QuanLyNamTuyenSinh': 'Năm tuyển sinh',
   'menu.CauHinhHeThong.QuanLyPhuongThucXetTuyen': 'Phương thức xét tuyển',
   'menu.CauHinhHeThong.HuongDanSuDung': 'Hướng dẫn sử dụng',
@@ -97,4 +99,8 @@ export default {
   'menu.ThongKeBaoCao': 'Thống kê báo cáo',
   'menu.ThongKeBaoCao.TuyenSinh': 'Tuyển sinh',
   'menu.ThongKeBaoCao.NhapHoc': 'Nhập học',
+  'menu.CauHinhHeThong.PhanQuyen': 'Phân quyền',
+  'menu.CauHinhHeThong.PhanQuyen.NhomVaiTro': 'Nhóm vai trò',
+  'menu.CauHinhHeThong.PhanQuyen.ChucNang': 'Chức năng',
+  'menu.CauHinhHeThong.PhanQuyen.PhanNhom': 'Phân nhóm',
 };

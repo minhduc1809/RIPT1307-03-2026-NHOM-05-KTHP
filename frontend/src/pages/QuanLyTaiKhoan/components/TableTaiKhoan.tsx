@@ -1,29 +1,15 @@
-import { useEffect } from 'react';
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
-import { Button, Divider, Popconfirm, Tooltip } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import FormQuanLy from './components/Form';
+import { DeleteOutlined, EditOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
+import { useState } from 'react';
 import { useModel } from 'umi';
+import FormCapLaiMatKhau from './FormCapLaiMatKhau';
 
-const QuanLyTaiKhoan = () => {
-  const {
-    getUserPageableModel,
-    loading,
-    page,
-    limit,
-    condition,
-    setEdit,
-    setVisibleForm,
-    setRecord,
-    deleteUserModal,
-  } = useModel('quanlytaikhoan');
-  // console.log(record)
-
-  useEffect(() => {
-    getUserPageableModel();
-  }, []);
-
+const TableTaiKhoan = (props: { Form: React.FC; getData: Function; title: string }) => {
+  const { loading, page, limit, condition, setEdit, setVisibleForm, setRecord, deleteUserModel } =
+    useModel('quanlytaikhoan');
+  const [visibleFormCapLaiMatKhau, setVisibleFormCapLaiMatKhau] = useState<boolean>(false);
   const columns: IColumn<QuanLyTaiKhoan.Record>[] = [
     {
       title: 'STT',
@@ -34,32 +20,37 @@ const QuanLyTaiKhoan = () => {
     {
       title: 'Họ đệm',
       dataIndex: 'hoDem',
-      width: 100,
+      width: 150,
       align: 'center',
+      search: 'search',
     },
     {
       title: 'Tên',
       dataIndex: 'ten',
-      width: 100,
+      width: 150,
       align: 'center',
+      search: 'search',
     },
     {
       title: 'Email',
       dataIndex: 'email',
       width: 200,
       align: 'center',
+      search: 'search',
     },
     {
       title: 'Số điện thoại',
       dataIndex: 'soDienThoai',
-      width: 150,
+      width: 130,
       align: 'center',
+      search: 'search',
     },
     {
       title: 'Số thẻ CMND-CCCD',
       dataIndex: 'cmtCccd',
       width: 200,
       align: 'center',
+      search: 'search',
     },
     {
       title: 'Giới tính',
@@ -70,10 +61,22 @@ const QuanLyTaiKhoan = () => {
     {
       title: 'Thao tác',
       align: 'center',
-      width: 150,
+      width: 140,
       fixed: 'right',
       render: (record: QuanLyTaiKhoan.Record) => (
         <>
+          {/* <Tooltip title="Cấp lại mật khẩu">
+            <Button
+              onClick={() => {
+                setVisibleFormCapLaiMatKhau(true);
+                setRecord(record);
+              }}
+              shape="circle"
+              icon={<ReloadOutlined />}
+              type="primary"
+            />
+          </Tooltip>
+          <Divider type="vertical" /> */}
           <Tooltip title="Chỉnh sửa">
             <Button
               onClick={() => {
@@ -90,7 +93,7 @@ const QuanLyTaiKhoan = () => {
           <Divider type="vertical" />
           <Tooltip title="Xóa">
             <Popconfirm
-              onConfirm={() => deleteUserModal(record._id)}
+              onConfirm={() => deleteUserModel(record._id)}
               title="Bạn có chắc chắn muốn xóa tài khoản này?"
             >
               <Button type="primary" shape="circle">
@@ -104,22 +107,39 @@ const QuanLyTaiKhoan = () => {
   ];
 
   return (
-    <div>
+    <>
       <TableBase
+        otherProps={{
+          scroll: { x: 1000 },
+        }}
         widthDrawer="700px"
         hascreate
         formType="Drawer"
-        getData={getUserPageableModel}
+        getData={() => props?.getData()}
         modelName="quanlytaikhoan"
-        title="Quản lý tài khoản"
+        title={props?.title || 'Quản lý tài khoản'}
         loading={loading}
         columns={columns}
         dependencies={[page, limit, condition]}
-        // dataState="record"
-        Form={FormQuanLy}
+        Form={props?.Form}
       />
-    </div>
+      <Modal
+        destroyOnClose
+        footer={false}
+        bodyStyle={{ padding: 0 }}
+        visible={visibleFormCapLaiMatKhau}
+        onCancel={() => {
+          setVisibleFormCapLaiMatKhau(false);
+        }}
+      >
+        <FormCapLaiMatKhau
+          onCancel={() => {
+            setVisibleFormCapLaiMatKhau(false);
+          }}
+        />
+      </Modal>
+    </>
   );
 };
 
-export default QuanLyTaiKhoan;
+export default TableTaiKhoan;

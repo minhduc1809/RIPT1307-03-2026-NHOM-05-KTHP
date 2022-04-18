@@ -1,14 +1,15 @@
-import rules from '@/utils/rules';
-import { Button, Card, Col, Form, Input, Row, Select } from 'antd';
-import { Gender, ESystemRole, LoaiNoiSinh, MapKeyRole, MapKeyLoaiNoiSinh } from '@/utils/constants';
 import UploadAvatar from '@/components/Upload/UploadAvatar';
+import type { ESystemRole } from '@/utils/constants';
+import { Gender, LoaiNoiSinh, MapKeyLoaiNoiSinh } from '@/utils/constants';
+import rules from '@/utils/rules';
 import { getURLImg, renderFileListUrl } from '@/utils/utils';
-import { useModel } from 'umi';
+import { Button, Card, Col, Form, Input, Row, Select } from 'antd';
 import moment from 'moment';
+import { useModel } from 'umi';
 
-const FormQuanLy = () => {
+const FormTaiKhoan = (props: { systemRole: ESystemRole }) => {
   const [form] = Form.useForm();
-  const { loading, setVisibleForm, edit, record, postUserModal, putUserModal } =
+  const { loading, setVisibleForm, edit, record, postUserModel, putUserModel } =
     useModel('quanlytaikhoan');
 
   return (
@@ -27,9 +28,16 @@ const FormQuanLy = () => {
           } else values.urlAnhMoTa = values.urlAnhMoTa.fileList?.[0]?.url;
 
           if (edit) {
-            putUserModal(record?._id ?? '', { ...values });
+            putUserModel(
+              record?._id ?? '',
+              { ...record, ...values },
+              { systemRole: props.systemRole },
+            );
           } else {
-            postUserModal(values);
+            postUserModel(
+              { ...values, systemRole: props.systemRole },
+              { systemRole: props.systemRole },
+            );
           }
           // setVisibleForm(false)
         }}
@@ -57,9 +65,7 @@ const FormQuanLy = () => {
               <Input placeholder="Tên giấy tờ" />
             </Form.Item>
           </Col>
-        </Row>
 
-        <Row gutter={[12, 0]}>
           <Col xs={12}>
             <Form.Item
               initialValue={record?.soDienThoai}
@@ -80,34 +86,13 @@ const FormQuanLy = () => {
               <Input placeholder="Email" />
             </Form.Item>
           </Col>
-        </Row>
 
-        <Row gutter={[12, 0]}>
           <Col xs={12}>
             <Form.Item name="cmtCccd" label="Căn cước công dân" initialValue={record?.cmtCccd}>
               <Input placeholder="Căn cước công dân" disabled={edit ? true : false} />
             </Form.Item>
           </Col>
-          <Col xs={12}>
-            <Form.Item
-              initialValue={record?.systemRole}
-              name="systemRole"
-              label="Vai trò"
-              rules={[...rules.required]}
-            >
-              <Select
-                disabled
-                placeholder="Vai trò"
-                options={Object.keys(ESystemRole)?.map((item) => ({
-                  value: item,
-                  label: MapKeyRole[item],
-                }))}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
 
-        <Row gutter={[12, 0]}>
           <Col xs={12}>
             <Form.Item
               name="urlAnhMoTa"
@@ -141,9 +126,7 @@ const FormQuanLy = () => {
               />
             </Form.Item>
           </Col>
-        </Row>
 
-        <Row gutter={[12, 0]}>
           <Col xs={12}>
             <Form.Item
               initialValue={record?.loaiNoiSinh}
@@ -172,9 +155,7 @@ const FormQuanLy = () => {
               <Input placeholder="Ngày sinh" />
             </Form.Item>
           </Col>
-        </Row>
 
-        <Row gutter={[12, 0]}>
           <Col xs={12}>
             <Form.Item
               initialValue={
@@ -213,4 +194,4 @@ const FormQuanLy = () => {
   );
 };
 
-export default FormQuanLy;
+export default FormTaiKhoan;

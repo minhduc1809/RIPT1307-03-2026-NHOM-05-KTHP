@@ -3,7 +3,13 @@ import RaSoatHoSo from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { ETrangThaiHoSo } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import { DollarOutlined, LockOutlined, PrinterOutlined, UnlockOutlined } from '@ant-design/icons';
+import {
+  DollarOutlined,
+  ExportOutlined,
+  LockOutlined,
+  PrinterOutlined,
+  UnlockOutlined,
+} from '@ant-design/icons';
 import { Button, Divider, Modal, Popconfirm, Select, Tooltip } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -25,6 +31,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
     setPage,
     setLimit,
     adminExportPhieuDangKyModel,
+    adminExportHoSoByIdDotModel,
     recordHoSo: recordHS,
   } = useModel('hosoxettuyen');
   const [visibleThanhToan, setVisibleThanhToan] = useState<boolean>(false);
@@ -96,15 +103,20 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
     },
 
     {
-      title: 'Họ và tên',
-      dataIndex: ['thongTinThiSinh', 'ten'],
+      title: 'Họ đệm',
+      dataIndex: ['thongTinThiSinh', 'hoDem'],
       align: 'center',
       width: 150,
       search: 'search',
       onCell,
-      render: (val, recordHoSo: HoSoXetTuyen.Record) => (
-        <div>{`${recordHoSo?.thongTinThiSinh?.hoDem} ${val}`}</div>
-      ),
+    },
+    {
+      title: 'Tên',
+      dataIndex: ['thongTinThiSinh', 'ten'],
+      align: 'center',
+      width: 120,
+      search: 'search',
+      onCell,
     },
 
     {
@@ -319,6 +331,15 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
           }))}
           style={{ width: 400 }}
         />
+        <Button
+          loading={loading}
+          onClick={() => adminExportHoSoByIdDotModel(recordDotTuyenSinh?._id ?? '', props.type)}
+          style={{ marginLeft: 8 }}
+          icon={<ExportOutlined />}
+          type="primary"
+        >
+          Xuất DS
+        </Button>
       </TableBase>
       <Modal
         destroyOnClose

@@ -326,7 +326,18 @@ export default defineConfig({
         {
           name: 'QuanLyTaiKhoan',
           path: './quanlytaikhoan',
-          component: './QuanLyTaiKhoan',
+          routes: [
+            {
+              name: 'TaiKhoanThiSinh',
+              path: './taikhoanthisinh',
+              component: './QuanLyTaiKhoan/TaiKhoanThiSinh',
+            },
+            {
+              name: 'TaiKhoanChuyenVien',
+              path: './taikhoanchuyenvien',
+              component: './QuanLyTaiKhoan/TaiKhoanChuyenVien',
+            },
+          ],
         },
         {
           name: 'QuanLyNamTuyenSinh',
@@ -363,6 +374,32 @@ export default defineConfig({
           name: 'HuongDanSuDung',
           path: './huongdansudung',
         },
+        // {
+        //   name: 'PhanQuyen',
+        //   icon: 'DeploymentUnitOutlined',
+        //   path: './phanquyen',
+        //   access: 'admin',
+        //   routes: [
+        //     {
+        //       name: 'NhomVaiTro',
+        //       path: './nhomvaitro',
+        //       access: 'admin',
+        //       component: './PhanQuyen/NhomVaiTro',
+        //     },
+        //     {
+        //       name: 'ChucNang',
+        //       path: './phanchucnang',
+        //       access: 'admin',
+        //       component: './PhanQuyen',
+        //     },
+        //     {
+        //       name: 'PhanNhom',
+        //       path: './phannhom',
+        //       access: 'admin',
+        //       component: './PhanQuyen/UserQLDT',
+        //     },
+        //   ],
+        // },
       ],
     },
     {

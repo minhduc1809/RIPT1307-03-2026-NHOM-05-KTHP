@@ -28,6 +28,7 @@ type Props = {
   dataState?: string;
   otherProps?: TableProps<any>;
   maskCloseableForm?: boolean;
+  noCleanUp?: boolean;
 };
 
 const TableBase = (props: Props) => {
@@ -47,6 +48,7 @@ const TableBase = (props: Props) => {
     dataState,
     otherProps,
     maskCloseableForm,
+    noCleanUp,
   } = props;
   let { columns } = props;
   const {
@@ -74,8 +76,10 @@ const TableBase = (props: Props) => {
 
   useEffect(() => {
     return () => {
-      setCondition({});
-      setFilterInfo({});
+      if (noCleanUp !== true) {
+        setCondition({});
+        setFilterInfo({});
+      }
     };
   }, []);
 
@@ -328,6 +332,7 @@ const TableBase = (props: Props) => {
         />
       </h4>
       <Table
+        scroll={{ x: 1000 }}
         loading={loading}
         bordered={border || false}
         pagination={{
