@@ -77,6 +77,13 @@ const XacNhanNhapHoc = () => {
               title="Rất tiếc hồ sơ của bạn không đủ điều kiện trúng tuyển trong đợt tuyển sinh này"
             />
           );
+      } else if (!record?._id) {
+        contentComponent = (
+          <ResultWithLogo
+            logo={logo}
+            title="Rất tiếc hồ sơ của bạn không đủ điều kiện trúng tuyển trong đợt tuyển sinh này"
+          />
+        );
       }
     }
   }

@@ -224,7 +224,7 @@ const TableNguyenVong = () => {
         let diem = 0;
         if (hienThiDiemQuyDoiTemp) {
           val
-            ?.filter((item) => !item?.tenThanhPhan?.includes('Điểm'))
+            ?.filter((item) => !item?.tenThanhPhan?.includes('ưu tiên'))
             ?.map((item) => (diem += item?.diem ?? 0));
           return (
             <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{diem?.toFixed(2)}</div>

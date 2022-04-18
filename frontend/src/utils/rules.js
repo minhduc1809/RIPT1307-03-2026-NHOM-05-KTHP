@@ -186,8 +186,8 @@ const rules = {
   fileRequired: [
     {
       validator: (__, value, callback) => {
-        if (_.get(value, 'fileList', []).length === 0) callback('');
-        callback();
+        if (_.get(value, 'fileList', []).length === 0) return Promise.reject();
+        return Promise.resolve();
       },
       message: 'Hãy chọn file',
     },

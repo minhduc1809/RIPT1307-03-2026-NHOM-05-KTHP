@@ -84,17 +84,56 @@ const QuaTrinhHocTap = () => {
 
   const [typeHSG, setTypeHSG] = useState<string | string[] | undefined>(recordHoSo?.giaiHSG);
   const [danhSachMaPhuongThuc, setDanhSachMaPhuongThuc] = useState<string[]>(
-    _.uniqBy(
-      record?.danhSachDoiTuongTuyenSinh?.filter((item) =>
-        recordHoSo?.maDoiTuong?.includes(item?.maDoiTuong ?? ''),
-      ),
-      'phuongThucTuyenSinh',
-    )?.map((item) => item?.phuongThucTuyenSinh) ?? [],
+    record?.danhSachPhuongThucTuyenSinh?.length === 1
+      ? [record?.danhSachPhuongThucTuyenSinh?.[0]?._id]
+      : _.uniqBy(
+          record?.danhSachDoiTuongTuyenSinh?.filter((item) =>
+            recordHoSo?.maDoiTuong?.includes(item?.maDoiTuong ?? ''),
+          ),
+          'phuongThucTuyenSinh',
+        )?.map((item) => item?.phuongThucTuyenSinh) ?? [],
   );
   const [ngonNgu, setNgonNgu] = useState<string | string[] | undefined>(recordHoSo?.ngonNgu);
   const [danhSachNguyenVongBiXoa, setDanhSachNguyenVongBiXoa] = useState<HoSoXetTuyen.NguyenVong[]>(
     [],
   );
+
+  const handleChangeDoiTuong = (val: string | string[]) => {
+    if (!record?._id) return;
+    let cauHinh: any = {};
+    if (typeof val === 'string') {
+      cauHinh = record?.danhSachDoiTuongTuyenSinh?.find(
+        (item) => item?.maDoiTuong === val,
+      )?.cauHinhDoiTuong;
+    } else if (typeof val === 'object') {
+      cauHinh = mergeCauHinhDoiTuongXetTuyen(val, record);
+    }
+    setCauHinhDoiTuong(cauHinh);
+    if (cauHinh?.danhSach?.thongTinChungChiNgoaiNgu) {
+      // neu chi co 1 ngon ngu thi ko hien ra select chon ngon ngu nua, tu dong chon luon
+      const arrNgonNguChungChiNgoaiNgu = Object.keys(
+        cauHinh?.danhSach?.thongTinChungChiNgoaiNgu ?? {},
+      );
+
+      if (arrNgonNguChungChiNgoaiNgu?.length === 1) {
+        setNgonNgu(MapKeyNgonNgu[arrNgonNguChungChiNgoaiNgu[0]]);
+        form.setFieldsValue({
+          ngonNgu: MapKeyNgonNgu[arrNgonNguChungChiNgoaiNgu[0]],
+        });
+      }
+    }
+    if (cauHinh?.danhSach?.thongTinGiaiHSG) {
+      // neu chi co 1 cap HSG thi ko hien ra select chon cap nua, tu dong chon luon
+      const arrCapHSG = Object.keys(cauHinh?.danhSach?.thongTinGiaiHSG ?? {});
+
+      if (arrCapHSG?.length === 1) {
+        setTypeHSG(MapKeyGiaiHSG[arrCapHSG[0]]);
+        form.setFieldsValue({
+          giaiHSG: MapKeyNgonNgu[MapKeyGiaiHSG[arrCapHSG[0]]],
+        });
+      }
+    }
+  };
 
   useEffect(() => {
     setKhuVucUuTienLop10(recordHoSo?.thongTinHocTapTHPT?.truongLop10?.khuVucUuTienTuyenSinh);
@@ -114,7 +153,7 @@ const QuaTrinhHocTap = () => {
           recordHoSo?.thongTinHocTapTHPT?.truongLop12?.maTruong
       ),
     );
-    if (recordHoSo && record?._id) {
+    if (recordHoSo?._id && record?._id) {
       const cauHinh = mergeCauHinhDoiTuongXetTuyen(recordHoSo?.maDoiTuong ?? [], record);
       setCauHinhDoiTuong(cauHinh);
     }
@@ -136,6 +175,25 @@ const QuaTrinhHocTap = () => {
       });
     }
   }, [isChuyenTruong, khuVucUuTienLop10, khuVucUuTienLop11, khuVucUuTienLop12]);
+
+  useEffect(() => {
+    if (recordHoSo?.thongTinDoiTuong?.length === 0) {
+      const listDoiTuong = record?.danhSachDoiTuongTuyenSinh?.filter((item) =>
+        danhSachMaPhuongThuc?.includes(item?.phuongThucTuyenSinh ?? ''),
+      );
+      if (listDoiTuong?.length === 1) {
+        form.setFieldsValue({
+          maDoiTuong: record?.gioiHanDoiTuong
+            ? listDoiTuong?.[0]?.maDoiTuong
+            : [listDoiTuong?.[0]?.maDoiTuong],
+        });
+        if (recordHoSo?._id && record?._id) {
+          const cauHinh = mergeCauHinhDoiTuongXetTuyen([listDoiTuong?.[0]?.maDoiTuong], record);
+          setCauHinhDoiTuong(cauHinh);
+        }
+      }
+    }
+  }, [record?._id]);
 
   const [namTotNghiep, setNamTotNghiep] = useState<number | undefined>(
     recordHoSo?.thongTinHocTapTHPT?.namTotNghiep || record?.namTuyenSinh,
@@ -206,6 +264,7 @@ const QuaTrinhHocTap = () => {
         maQuanHuyen: values?.thongTinHocTapTHPT?.truongLop10?.maQuanHuyen,
         maTinh: values?.thongTinHocTapTHPT?.truongLop10?.maTinh,
         maTruong: values?.thongTinHocTapTHPT?.truongLop10?.maTruong,
+        monChuyen: values?.thongTinHocTapTHPT?.truongLop10?.monChuyen,
       };
       values.thongTinHocTapTHPT.truongLop11 = {
         ...thongTinTruongTHPT,
@@ -390,7 +449,11 @@ const QuaTrinhHocTap = () => {
             <Col xs={24} lg={12}>
               <FormItem
                 rules={[...rules.required]}
-                initialValue={danhSachMaPhuongThuc}
+                initialValue={
+                  record?.danhSachPhuongThucTuyenSinh?.length === 1
+                    ? [record?.danhSachPhuongThucTuyenSinh?.[0]?._id]
+                    : danhSachMaPhuongThuc
+                }
                 labelCol={{ span: 24 }}
                 wrapperCol={{ span: 24 }}
                 name="maPhuongThuc"
@@ -464,42 +527,7 @@ const QuaTrinhHocTap = () => {
               >
                 <Select
                   mode={record?.gioiHanDoiTuong ? undefined : 'multiple'}
-                  onChange={(val) => {
-                    if (!record?._id) return;
-                    let cauHinh: any = {};
-                    if (typeof val === 'string') {
-                      cauHinh = record?.danhSachDoiTuongTuyenSinh?.find(
-                        (item) => item?.maDoiTuong === val,
-                      )?.cauHinhDoiTuong;
-                    } else if (typeof val === 'object') {
-                      cauHinh = mergeCauHinhDoiTuongXetTuyen(val, record);
-                    }
-                    setCauHinhDoiTuong(cauHinh);
-                    if (cauHinh?.danhSach?.thongTinChungChiNgoaiNgu) {
-                      // neu chi co 1 ngon ngu thi ko hien ra select chon ngon ngu nua, tu dong chon luon
-                      const arrNgonNguChungChiNgoaiNgu = Object.keys(
-                        cauHinh?.danhSach?.thongTinChungChiNgoaiNgu ?? {},
-                      );
-
-                      if (arrNgonNguChungChiNgoaiNgu?.length === 1) {
-                        setNgonNgu(MapKeyNgonNgu[arrNgonNguChungChiNgoaiNgu[0]]);
-                        form.setFieldsValue({
-                          ngonNgu: MapKeyNgonNgu[arrNgonNguChungChiNgoaiNgu[0]],
-                        });
-                      }
-                    }
-                    if (cauHinh?.danhSach?.thongTinGiaiHSG) {
-                      // neu chi co 1 cap HSG thi ko hien ra select chon cap nua, tu dong chon luon
-                      const arrCapHSG = Object.keys(cauHinh?.danhSach?.thongTinGiaiHSG ?? {});
-
-                      if (arrCapHSG?.length === 1) {
-                        setTypeHSG(MapKeyGiaiHSG[arrCapHSG[0]]);
-                        form.setFieldsValue({
-                          giaiHSG: MapKeyNgonNgu[MapKeyGiaiHSG[arrCapHSG[0]]],
-                        });
-                      }
-                    }
-                  }}
+                  onChange={handleChangeDoiTuong}
                   showSearch
                   placeholder="Chọn đối tượng"
                   allowClear

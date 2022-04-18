@@ -47,6 +47,7 @@ const RaSoatHoSo = () => {
     : {};
   let index = 1;
   let indexThongTinTiepNhanHoSo = 1;
+  let indexThongTinThiSinh = 10;
   const access = useAccess();
   const [typeXuLy, setTypeXuLy] = useState<ETrangThaiHoSo>();
   const isTrongThoiGianDangKy =
@@ -136,18 +137,22 @@ const RaSoatHoSo = () => {
             </Row>
 
             <BlockRaSoatThongTinCaNhan />
-            <BlockNoiHocTHPT index={10} />
-            <BlockDoiTuongKhuVucUuTien indexDoiTuong={11} indexKhuVuc={12} indexNamTotNghiep={13} />
+            <BlockNoiHocTHPT index={indexThongTinThiSinh++} />
+            <BlockDoiTuongKhuVucUuTien
+              indexDoiTuong={indexThongTinThiSinh++}
+              indexKhuVuc={indexThongTinThiSinh++}
+              indexNamTotNghiep={indexThongTinThiSinh++}
+            />
             {(cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop10?.hanhKiem ||
               cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop11?.hanhKiem ||
               cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT?.danhSach?.truongLop12?.hanhKiem) && (
-              <BlockHanhKiem index={14} />
+              <BlockHanhKiem index={indexThongTinThiSinh++} />
             )}
 
             {cauHinhDoiTuong?.danhSach?.thongTinHocTapTHPT && (
               <BlockDiemTBCCacMon
                 cauHinh={cauHinhDoiTuong}
-                index={15}
+                index={indexThongTinThiSinh++}
                 toHop={
                   record?.suDungToHopMongMuon
                     ? recordHoSo?.toHopMongMuon ?? []

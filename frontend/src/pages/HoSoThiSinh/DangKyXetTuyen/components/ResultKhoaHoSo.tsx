@@ -28,16 +28,17 @@ const ResultHoSo = () => {
         <b> Lý do</b>
       </u>
       : {recordHoSo?.ghiChuTiepNhan ?? ''}
-      <b>
+      <br />
+      <div style={{ fontSize: 14, color: '#00000073' }}>
         Trong trường hợp có thắc mắc, thí sinh vui lòng liên hệ số hotline hoặc email bộ phận tuyển
         sinh để được giải đáp.
-      </b>
+      </div>
     </div>
   );
 
   const subTitleByTrangThai = {
-    'Đã khóa': 'Hãy đợi đến ngày công bố kết quả xét tuyển của Học viện nhé.',
-    'Đã tiếp nhận': 'Vui lòng chờ các thông báo mới nhất từ Học viện',
+    // 'Đã khóa': 'Hãy đợi đến ngày công bố kết quả xét tuyển của Học viện nhé.',
+    // 'Đã tiếp nhận': 'Vui lòng chờ các thông báo mới nhất từ Học viện',
     'Chưa khóa': 'Bạn chưa khóa hồ sơ trong thời gian cho phép',
   };
 
@@ -50,6 +51,11 @@ const ResultHoSo = () => {
           title={
             <div style={{ fontSize: 22 }}>
               <div>{titleByTrangThai?.[recordHoSo?.trangThai ?? ''] ?? ''}</div>
+              <div>
+                {recordHoSo?.trangThai === ETrangThaiHoSo.khongtiepnhan
+                  ? lyDoKhongTiepNhan
+                  : subTitleByTrangThai?.[recordHoSo?.trangThai ?? '']}
+              </div>
               {recordHoSo?.trangThai !== ETrangThaiHoSo.chuakhoa && (
                 <div>
                   Trạng thái thanh toán: <b>{recordHoSo?.trangThaiThanhToan}</b>
@@ -65,11 +71,6 @@ const ResultHoSo = () => {
                     Thí sinh xem thông tin thanh toán và thực hiện thanh toán theo hướng dẫn
                   </div>
                 )}
-              <div>
-                {recordHoSo?.trangThai === ETrangThaiHoSo.khongtiepnhan
-                  ? lyDoKhongTiepNhan
-                  : subTitleByTrangThai?.[recordHoSo?.trangThai ?? '']}
-              </div>
             </>
           }
           extra={
