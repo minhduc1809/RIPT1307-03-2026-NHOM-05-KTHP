@@ -28,12 +28,20 @@ const FormDoiTuong = (props: {
             listDoiTuongTemp.splice(0, 0, {
               ...values,
               cauHinhDoiTuong: JSON.parse(values?.cauHinhDoiTuong),
+              cauHinhQuyDoi: JSON.parse(values?.cauHinhQuyDoi),
+              cauHinhValidateTheoNganhToHopCoSo: JSON.parse(
+                values?.cauHinhValidateTheoNganhToHopCoSo,
+              ),
             });
           } else
             listDoiTuongTemp.splice(recordDoiTuong?.index ? recordDoiTuong.index - 1 : 0, 1, {
               ...recordDoiTuong,
               ...values,
               cauHinhDoiTuong: JSON.parse(values?.cauHinhDoiTuong),
+              cauHinhQuyDoi: JSON.parse(values?.cauHinhQuyDoi),
+              cauHinhValidateTheoNganhToHopCoSo: JSON.parse(
+                values?.cauHinhValidateTheoNganhToHopCoSo,
+              ),
             });
           setDanhSachDoiTuong(listDoiTuongTemp);
           setVisibleFormDoiTuong(false);
@@ -113,6 +121,30 @@ const FormDoiTuong = (props: {
             label="Cấu hình đối tượng"
             rules={[...rules.required]}
             initialValue={JSON.stringify(recordDoiTuong?.cauHinhDoiTuong ?? {})}
+          >
+            <Input.TextArea rows={10} />
+          </Form.Item>
+        </Col>
+
+        <Col span={24}>
+          <Form.Item
+            style={{ marginBottom: 8 }}
+            name="cauHinhQuyDoi"
+            label="Cấu hình công thức quy đổi"
+            rules={[...rules.required]}
+            initialValue={JSON.stringify(recordDoiTuong?.cauHinhQuyDoi ?? {})}
+          >
+            <Input.TextArea rows={10} />
+          </Form.Item>
+        </Col>
+
+        <Col span={24}>
+          <Form.Item
+            style={{ marginBottom: 8 }}
+            name="cauHinhValidateTheoNganhToHopCoSo"
+            label="Cấu hình điều kiện theo ngành"
+            rules={[...rules.required]}
+            initialValue={JSON.stringify(recordDoiTuong?.cauHinhValidateTheoNganhToHopCoSo ?? {})}
           >
             <Input.TextArea rows={10} />
           </Form.Item>

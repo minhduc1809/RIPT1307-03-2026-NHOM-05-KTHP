@@ -1,7 +1,9 @@
-import { Card } from 'antd';
-import { useEffect } from 'react';
+import { Card, Select } from 'antd';
+import NhomVaiTro from './components/NhomVaiTro';
 import { useModel } from 'umi';
+import { Role } from '@/utils/constants';
 import ChucNang from './ChucNang';
+import { useEffect } from 'react';
 
 const PhanQuyen = () => {
   const { setVaiTro, vaiTro, setDanhSachNhomVaiTro } = useModel('phanquyen');
@@ -14,8 +16,8 @@ const PhanQuyen = () => {
   }, []);
 
   return (
-    <Card title="Chức năng">
-      {/* <div>
+    <Card title="Phân chức năng">
+      <div>
         <b>Vai trò hệ thống: </b>
         <Select
           onChange={(val) => {
@@ -30,10 +32,10 @@ const PhanQuyen = () => {
             </Select.Option>
           ))}
         </Select>
-      </div> */}
-      {/* <br />
+      </div>
+      <br />
       <NhomVaiTro />
-      <br /> */}
+      <br />
       <ChucNang />
     </Card>
   );

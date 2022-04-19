@@ -1,10 +1,11 @@
-import { ETrangThaiXacNhanNhapHoc } from './constants';
+import { ETrangThaiHoSo, ETrangThaiThanhToan, ETrangThaiXacNhanNhapHoc } from './constants';
 
 const data: any = {
   trangThai: [
-    { value: 'PROCESSING', text: 'Đang xử lý' },
-    { value: 'OK', text: 'Đã duyệt' },
-    { value: 'NOT_OK', text: 'Không duyệt' },
+    ETrangThaiHoSo.chuakhoa,
+    ETrangThaiHoSo.dakhoa,
+    ETrangThaiHoSo.datiepnhan,
+    ETrangThaiHoSo.khongtiepnhan,
   ],
   path: {
     ThiSinh: '/phuongthucxettuyen',
@@ -28,6 +29,11 @@ const data: any = {
     ETrangThaiXacNhanNhapHoc.KHONG_XAC_NHAN,
   ],
 
+  'thongTinThiSinh.gioiTinh': ['Nam', 'Nữ', 'Khác'],
+  trangThaiThanhToan: [
+    ETrangThaiThanhToan.CHUA_THANH_TOAN_DU,
+    ETrangThaiThanhToan.DA_THANH_TOAN_DU,
+  ],
   loaiHinhDaoTao: ['Đại học Chính quy', 'Đại học Phi chính quy', 'Sau Đại học', 'Liên kết quốc tế'],
 
   loaiDonVi: ['Đơn vị cứng', 'Đơn vị mềm'],

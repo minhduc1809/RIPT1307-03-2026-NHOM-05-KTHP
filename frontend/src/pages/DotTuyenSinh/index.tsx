@@ -55,12 +55,14 @@ const DotTuyenSinhComponent = () => {
       dataIndex: 'tenDotTuyenSinh',
       align: 'center',
       width: 200,
+      search: 'search',
     },
     {
       title: 'Năm tuyển sinh',
       dataIndex: 'namTuyenSinh',
       align: 'center',
       width: 120,
+      search: 'search',
     },
 
     {

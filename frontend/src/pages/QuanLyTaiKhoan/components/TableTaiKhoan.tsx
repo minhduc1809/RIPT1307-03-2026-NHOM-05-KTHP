@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useModel } from 'umi';
 import FormCapLaiMatKhau from './FormCapLaiMatKhau';
 
-const TableTaiKhoan = (props: { Form: React.FC; getData: Function; title: string }) => {
+const TableTaiKhoan = (props: { Form: React.FC; getData: any; title: string }) => {
   const { loading, page, limit, condition, setEdit, setVisibleForm, setRecord, deleteUserModel } =
     useModel('quanlytaikhoan');
   const [visibleFormCapLaiMatKhau, setVisibleFormCapLaiMatKhau] = useState<boolean>(false);

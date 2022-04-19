@@ -178,7 +178,7 @@ export default () => {
     return response;
   };
 
-  const adminGetHoSoByIdDotModel = async (idDotTuyenSinh: string, trangThai: ETrangThaiHoSo) => {
+  const adminGetHoSoByIdDotModel = async (idDotTuyenSinh: string, trangThai?: ETrangThaiHoSo) => {
     if (!idDotTuyenSinh || !recordHinhThuc?._id || !recordNam?._id) return;
     setLoading(true);
     const response = await adminGetHoSoByIdDot(idDotTuyenSinh, {
@@ -191,7 +191,10 @@ export default () => {
     setLoading(false);
   };
 
-  const adminExportHoSoByIdDotModel = async (idDotTuyenSinh: string, trangThai: ETrangThaiHoSo) => {
+  const adminExportHoSoByIdDotModel = async (
+    idDotTuyenSinh: string,
+    trangThai?: ETrangThaiHoSo,
+  ) => {
     if (!idDotTuyenSinh || !recordHinhThuc?._id || !recordNam?._id) return;
     setLoading(true);
     const response = await adminExportHoSoByIdDot(idDotTuyenSinh, {
@@ -207,7 +210,7 @@ export default () => {
   const adminKhoaHoSoByIdHoSoModel = async (
     idHoSo: string,
     idDotTuyenSinh: string,
-    trangThai: ETrangThaiHoSo,
+    trangThai?: ETrangThaiHoSo,
   ) => {
     try {
       setLoading(true);
@@ -222,7 +225,7 @@ export default () => {
   const adminMoKhoaHoSoByIdHoSoModel = async (
     idHoSo: string,
     idDotTuyenSinh: string,
-    trangThai: ETrangThaiHoSo,
+    trangThai?: ETrangThaiHoSo,
   ) => {
     setLoading(true);
     await adminMoKhoaHoSoByIdHoSo(idHoSo);

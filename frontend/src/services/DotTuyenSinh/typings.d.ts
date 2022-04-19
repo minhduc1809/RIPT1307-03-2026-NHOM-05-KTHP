@@ -31,6 +31,8 @@ declare module DotTuyenSinh {
   export interface DoiTuongTuyenSinh {
     index: number;
     cauHinhDoiTuong?: CauHinhDoiTuong;
+    cauHinhQuyDoi?: CauHinhDoiTuong;
+    cauHinhValidateTheoNganhToHopCoSo?: CauHinhDoiTuong;
     _id: string;
     maDoiTuong: string;
     thongTinDoiTuong: DoiTuongTuyenSinh.Record;

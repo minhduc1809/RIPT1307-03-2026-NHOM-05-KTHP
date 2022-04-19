@@ -173,6 +173,12 @@ export default defineConfig({
           access: 'admin',
           routes: [
             {
+              name: 'TatCaHoSo',
+              path: './tatcahoso',
+              component: './TiepNhanHoSo/TatCa.tsx',
+              access: 'admin',
+            },
+            {
               name: 'HoSoChuaKhoa',
               path: './hosochuakhoa',
               component: './TiepNhanHoSo/ChuaKhoa.tsx',
@@ -207,6 +213,7 @@ export default defineConfig({
               name: 'ChiTieuXetTuyen',
               path: './chitieuxettuyen',
               access: 'admin',
+              // component: './ChiTieu',
             },
             {
               name: 'DanhSachTrungTuyen',
@@ -297,6 +304,10 @@ export default defineConfig({
           component: './QuanLyThongBao',
           access: 'admin',
         },
+        {
+          name: 'HuongDanSuDung',
+          path: './huongdansudung',
+        },
       ],
     },
     {
@@ -370,10 +381,7 @@ export default defineConfig({
           path: './hinhthucdaotao',
           component: './HinhThucDaoTao',
         },
-        {
-          name: 'HuongDanSuDung',
-          path: './huongdansudung',
-        },
+
         // {
         //   name: 'PhanQuyen',
         //   icon: 'DeploymentUnitOutlined',

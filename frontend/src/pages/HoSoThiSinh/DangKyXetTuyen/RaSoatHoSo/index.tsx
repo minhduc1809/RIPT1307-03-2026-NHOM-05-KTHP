@@ -240,11 +240,13 @@ const RaSoatHoSo = () => {
             ) && (
               <>
                 <h2 style={{ fontWeight: 'bold' }}>C. THÔNG TIN TIẾP NHẬN HỒ SƠ:</h2>
-                {recordHoSo?.thongTinGiayToNopHoSo?.length && (
+                {recordHoSo?.thongTinGiayToNopHoSo?.length ? (
                   <>
                     <BlockGiayTo index={indexThongTinTiepNhanHoSo++} />
                     <br />
                   </>
+                ) : (
+                  <div />
                 )}
                 <Descriptions>
                   <Item

@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import ThanhToan from '@/components/ThanhToan';
 
-const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
+const TableHoSo = (props: { type?: ETrangThaiHoSo }) => {
   const {
     page,
     loading,
@@ -33,6 +33,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
     adminExportPhieuDangKyModel,
     adminExportHoSoByIdDotModel,
     recordHoSo: recordHS,
+    setCondition,
   } = useModel('hosoxettuyen');
   const [visibleThanhToan, setVisibleThanhToan] = useState<boolean>(false);
   const {
@@ -40,6 +41,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
     record: recordDotTuyenSinh,
     danhSach: danhSachDot,
     setRecord: setRecordDotTuyenSinh,
+    setDanhSach: setDanhSachDot,
   } = useModel('dottuyensinh');
   const {
     getAllHinhThucDaoTaoModel,
@@ -55,7 +57,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
   } = useModel('namtuyensinh');
 
   const khoaHoSo = (recordHoSo: HoSoXetTuyen.Record) => {
-    adminKhoaHoSoByIdHoSoModel(recordHoSo._id, recordDotTuyenSinh?._id ?? '', props.type);
+    adminKhoaHoSoByIdHoSoModel(recordHoSo._id, recordDotTuyenSinh?._id ?? '', props?.type);
   };
 
   useEffect(() => {
@@ -101,6 +103,16 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
       search: 'search',
       onCell,
     },
+    {
+      title: 'Trạng thái hồ sơ',
+      dataIndex: 'trangThai',
+      align: 'center',
+      width: 140,
+      // search: 'filterString',
+      notRegex: true,
+      hide: props?.type ? true : false,
+      onCell,
+    },
 
     {
       title: 'Họ đệm',
@@ -114,7 +126,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
       title: 'Tên',
       dataIndex: ['thongTinThiSinh', 'ten'],
       align: 'center',
-      width: 120,
+      width: 100,
       search: 'search',
       onCell,
     },
@@ -142,21 +154,43 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
       width: 110,
       onCell,
       hide: props?.type === ETrangThaiHoSo.chuakhoa,
+      search: 'search',
     },
     {
       title: 'Trạng thái thanh toán',
       dataIndex: 'trangThaiThanhToan',
       align: 'center',
-      width: 110,
+      width: 130,
       onCell,
+      search: 'filterString',
+      notRegex: true,
       hide: props?.type === ETrangThaiHoSo.chuakhoa,
+    },
+    {
+      title: 'Đối tượng tuyển sinh',
+      dataIndex: 'maDoiTuong',
+      align: 'center',
+      width: 300,
+      render: (val: string[]) => (
+        <div style={{ textAlign: 'left' }}>
+          {recordDotTuyenSinh?.danhSachDoiTuongTuyenSinh
+            ?.filter((item) => val?.includes(item?.maDoiTuong ?? ''))
+            ?.map((item) => (
+              <div key={item?.thongTinDoiTuong?._id}>- {item?.thongTinDoiTuong?.tenDoiTuong}</div>
+            ))}
+        </div>
+      ),
     },
     {
       title: 'Giới tính',
       dataIndex: ['thongTinThiSinh', 'gioiTinh'],
       align: 'center',
       width: 120,
+      columnKey: 'thongTinThiSinh.gioiTinh',
+      key: 'thongTinThiSinh.gioiTinh',
       onCell,
+      // search: 'filterString',
+      notRegex: true,
     },
 
     {
@@ -212,7 +246,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
             ETrangThaiHoSo.chuakhoa,
             ETrangThaiHoSo.datiepnhan,
             ETrangThaiHoSo.khongtiepnhan,
-          ].includes(props.type) && (
+          ].includes(recordHoSo?.trangThai) && (
             <Popconfirm
               title="Bạn có chắc chắc muốn khóa hồ sơ này"
               onConfirm={() => khoaHoSo(recordHoSo)}
@@ -223,7 +257,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
             </Popconfirm>
           )}
 
-          {[ETrangThaiHoSo.dakhoa].includes(props.type) && (
+          {[ETrangThaiHoSo.dakhoa].includes(recordHoSo?.trangThai) && (
             <Popconfirm
               title="Bạn có chắc chắc muốn mở khóa hồ sơ này"
               onConfirm={() =>
@@ -240,7 +274,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
             </Popconfirm>
           )}
 
-          {[ETrangThaiHoSo.dakhoa, ETrangThaiHoSo.datiepnhan]?.includes(props?.type) && (
+          {[ETrangThaiHoSo.dakhoa, ETrangThaiHoSo.datiepnhan]?.includes(recordHoSo?.trangThai) && (
             <>
               <Divider type="vertical" />
               <Tooltip title="Thanh toán">
@@ -278,7 +312,7 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
         getData={() => adminGetHoSoByIdDotModel(recordDotTuyenSinh?._id ?? '', props.type)}
         modelName="hosoxettuyen"
         widthDrawer="1100px"
-        title={`Hồ sơ ${props.type}`}
+        title={props?.type ? `Hồ sơ ${props?.type}` : 'Tất cả hồ sơ'}
         loading={loading}
         columns={columns}
         Form={RaSoatHoSo}
@@ -292,11 +326,13 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
           recordNamTuyenSinh?._id,
           record?._id,
         ]}
-        otherProps={{ scroll: { x: 1300 } }}
+        otherProps={{ scroll: { x: 1500 } }}
       >
         <Select
           placeholder="Hình thức đào tạo"
           onChange={(val) => {
+            setDanhSachDot([]);
+            setDanhSach([]);
             setRecordNamTuyenSinh(undefined);
             setRecordDotTuyenSinh(undefined);
             setRecord(danhSachHinhThuc?.find((item) => item._id === val));
@@ -317,9 +353,9 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
           value={recordNamTuyenSinh?.nam}
           options={danhSachNam?.map((item) => ({
             value: item.nam,
-            label: `Năm tuyển sinh ${item.nam}`,
+            label: `Năm ${item.nam}`,
           }))}
-          style={{ width: 180, marginRight: 8 }}
+          style={{ width: 120, marginRight: 8 }}
         />
         <Select
           placeholder="Đợt tuyển sinh"
@@ -329,7 +365,18 @@ const TableHoSo = (props: { type: ETrangThaiHoSo }) => {
             value: item?._id,
             label: item?.tenDotTuyenSinh,
           }))}
-          style={{ width: 400 }}
+          style={{ width: 250, marginRight: 8 }}
+        />
+        <Select
+          allowClear
+          placeholder="Đối tượng"
+          onChange={(val) => setCondition({ ...condition, maDoiTuong: val })}
+          value={condition?.maDoiTuong}
+          options={recordDotTuyenSinh?.danhSachDoiTuongTuyenSinh?.map((item) => ({
+            value: item?.thongTinDoiTuong?.maDoiTuong,
+            label: item?.thongTinDoiTuong?.tenDoiTuong,
+          }))}
+          style={{ width: 250 }}
         />
         <Button
           loading={loading}

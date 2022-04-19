@@ -295,7 +295,6 @@ const TableBase = (props: Props) => {
       const notRegex = columns?.find(
         (item) => item.dataIndex === key || item.key === key,
       )?.notRegex;
-
       const isSearch = typeof value === 'string';
       tmpCond[key] = isSearch && notRegex !== true ? toRegex(value) : value;
       // return 0;

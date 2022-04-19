@@ -1,5 +1,8 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-param-reassign */
+import { Role } from '@/utils/constants';
 import rules from '@/utils/rules';
-import { Button, Card, Form, Input } from 'antd';
+import { Button, Card, Form, Input, Select } from 'antd';
 import { useModel } from 'umi';
 
 const FormNhomVaiTro = () => {
@@ -26,7 +29,7 @@ const FormNhomVaiTro = () => {
           <Input disabled={edit} placeholder="Tên nhóm vai trò" />
         </Form.Item>
 
-        {/* <Form.Item
+        <Form.Item
           rules={[...rules.required]}
           name="vaiTro"
           label="Vai trò hệ thống"
@@ -39,10 +42,10 @@ const FormNhomVaiTro = () => {
               </Select.Option>
             ))}
           </Select>
-        </Form.Item> */}
+        </Form.Item>
 
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
-          <Button loading={false} style={{ marginRight: 8 }} htmlType="submit" type="primary">
+          <Button loading={loading} style={{ marginRight: 8 }} htmlType="submit" type="primary">
             {!edit ? 'Thêm mới' : 'Lưu'}
           </Button>
           <Button onClick={() => setVisibleForm(false)}>Đóng</Button>

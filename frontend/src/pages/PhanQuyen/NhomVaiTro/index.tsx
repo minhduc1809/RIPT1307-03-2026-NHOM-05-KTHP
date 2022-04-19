@@ -1,11 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
+import { Role } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Divider, Popconfirm, Tooltip } from 'antd';
-import { useEffect } from 'react';
+import { Button, Divider, Popconfirm, Tag, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import FormNhomVaiTro from './components/Form';
+import { useEffect } from 'react';
 
 const NhomVaiTro = () => {
   const {
@@ -36,10 +37,22 @@ const NhomVaiTro = () => {
       align: 'center',
     },
     {
-      title: 'Tên vai trò',
+      title: 'Tên nhóm vai trò',
       dataIndex: '_id',
       width: 300,
       align: 'center',
+    },
+    {
+      title: 'Vai trò',
+      dataIndex: 'vaiTro',
+      align: 'center',
+      render: (val: string[]) => (
+        <>
+          {val?.map((item) => (
+            <Tag key={item}>{Role[item]}</Tag>
+          ))}
+        </>
+      ),
     },
     {
       title: 'Thao tác',
@@ -78,10 +91,10 @@ const NhomVaiTro = () => {
   return (
     <TableBase
       hascreate
-      title="Vai trò"
+      title="Nhóm vai trò"
       modelName="phanquyen"
       dataState="danhSachNhomVaiTro"
-      loading={false}
+      loading={loading}
       Form={FormNhomVaiTro}
       dependencies={[page, limit, condition, vaiTro]}
       getData={getNhomVaiTroModel}

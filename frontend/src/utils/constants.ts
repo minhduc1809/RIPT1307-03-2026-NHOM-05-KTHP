@@ -24,6 +24,13 @@ export enum ESystemRole {
   Guest = 'Guest',
 }
 
+export enum Role {
+  nhan_vien = 'Cán bộ, giảng viên',
+  sinh_vien = 'Sinh viên',
+  Admin = 'Quản trị viên hệ thống',
+  quan_tri = 'Quản trị viên đơn vị',
+}
+
 export const MapKeyRole = {
   Admin: 'Admin',
   ChuyenVien: 'Chuyên viên',
@@ -124,6 +131,7 @@ export enum ELoaiChungChiTiengAnh {
 
 export enum ETrangThaiThanhToan {
   CHUA_THANH_TOAN_DU = 'Chưa thanh toán đủ',
+  DA_THANH_TOAN_DU = 'Đã thanh toán đủ',
 }
 
 export enum ELoaiChungChiTiengPhap {
