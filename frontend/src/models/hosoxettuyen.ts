@@ -202,7 +202,7 @@ export default () => {
       limit,
       condition: { ...condition, trangThai },
     });
-    const fileName = `${trangThai}_${moment().format('DD-MM-YYYY HH:mm')}.xlsx`;
+    const fileName = `${trangThai || 'Tất cả hồ sơ'}_${moment().format('DD-MM-YYYY HH:mm')}.xlsx`;
     FileDownload(response.data, fileName);
     setLoading(false);
   };
