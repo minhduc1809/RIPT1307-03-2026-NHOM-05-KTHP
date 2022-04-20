@@ -316,7 +316,6 @@ export enum ETrangThaiHoSo {
   dakhoa = 'Đã khóa',
   khongtiepnhan = 'Không tiếp nhận',
   datiepnhan = 'Đã tiếp nhận',
-  darasoat = 'Đã rà soát',
 }
 
 export const Setting = {

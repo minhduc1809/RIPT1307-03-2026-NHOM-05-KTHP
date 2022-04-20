@@ -1,4 +1,6 @@
+import FilterDotTuyenSinh from '@/components/FilterDotTuyenSinh';
 import TableBase from '@/components/Table';
+import ThanhToan from '@/components/ThanhToan';
 import RaSoatHoSo from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { ETrangThaiHoSo } from '@/utils/constants';
@@ -12,9 +14,8 @@ import {
 } from '@ant-design/icons';
 import { Button, Divider, Modal, Popconfirm, Select, Tooltip } from 'antd';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useModel } from 'umi';
-import ThanhToan from '@/components/ThanhToan';
 
 const TableHoSo = (props: { type?: ETrangThaiHoSo }) => {
   const {
@@ -26,58 +27,22 @@ const TableHoSo = (props: { type?: ETrangThaiHoSo }) => {
     adminGetHoSoByIdDotModel,
     adminKhoaHoSoByIdHoSoModel,
     adminMoKhoaHoSoByIdHoSoModel,
-    setDanhSach,
+
     setRecordHoSo,
-    setPage,
-    setLimit,
+
     adminExportPhieuDangKyModel,
     adminExportHoSoByIdDotModel,
     recordHoSo: recordHS,
     setCondition,
   } = useModel('hosoxettuyen');
   const [visibleThanhToan, setVisibleThanhToan] = useState<boolean>(false);
-  const {
-    getAllDotTuyenSinhModel,
-    record: recordDotTuyenSinh,
-    danhSach: danhSachDot,
-    setRecord: setRecordDotTuyenSinh,
-    setDanhSach: setDanhSachDot,
-  } = useModel('dottuyensinh');
-  const {
-    getAllHinhThucDaoTaoModel,
-    record,
-    setRecord,
-    danhSach: danhSachHinhThuc,
-  } = useModel('hinhthucdaotao');
-  const {
-    getAllNamTuyenSinhModel,
-    record: recordNamTuyenSinh,
-    danhSach: danhSachNam,
-    setRecord: setRecordNamTuyenSinh,
-  } = useModel('namtuyensinh');
+  const { record: recordDotTuyenSinh } = useModel('dottuyensinh');
+  const { record } = useModel('hinhthucdaotao');
+  const { record: recordNamTuyenSinh } = useModel('namtuyensinh');
 
   const khoaHoSo = (recordHoSo: HoSoXetTuyen.Record) => {
     adminKhoaHoSoByIdHoSoModel(recordHoSo._id, recordDotTuyenSinh?._id ?? '', props?.type);
   };
-
-  useEffect(() => {
-    if (danhSachHinhThuc.length === 0) getAllHinhThucDaoTaoModel();
-    return () => {
-      setDanhSach([]);
-      setPage(1);
-      setLimit(10);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (record?._id && !recordNamTuyenSinh?._id) getAllNamTuyenSinhModel(record?._id);
-  }, [record?._id]);
-
-  useEffect(() => {
-    if (recordNamTuyenSinh?._id && !recordDotTuyenSinh?._id) {
-      getAllDotTuyenSinhModel({ namTuyenSinh: recordNamTuyenSinh?.nam }, true);
-    }
-  }, [recordNamTuyenSinh?._id]);
 
   const onCell = (recordHoSo: HoSoXetTuyen.Record) => ({
     onClick: () => {
@@ -328,45 +293,7 @@ const TableHoSo = (props: { type?: ETrangThaiHoSo }) => {
         ]}
         otherProps={{ scroll: { x: 1500 } }}
       >
-        <Select
-          placeholder="Hình thức đào tạo"
-          onChange={(val) => {
-            setDanhSachDot([]);
-            setDanhSach([]);
-            setRecordNamTuyenSinh(undefined);
-            setRecordDotTuyenSinh(undefined);
-            setRecord(danhSachHinhThuc?.find((item) => item._id === val));
-          }}
-          value={record?._id}
-          options={danhSachHinhThuc?.map((item) => ({
-            value: item._id,
-            label: item.ten,
-          }))}
-          style={{ width: 120, marginRight: 8 }}
-        />
-        <Select
-          placeholder="Năm tuyển sinh"
-          onChange={(val) => {
-            setRecordDotTuyenSinh(undefined);
-            setRecordNamTuyenSinh(danhSachNam?.find((item) => item.nam === val));
-          }}
-          value={recordNamTuyenSinh?.nam}
-          options={danhSachNam?.map((item) => ({
-            value: item.nam,
-            label: `Năm ${item.nam}`,
-          }))}
-          style={{ width: 120, marginRight: 8 }}
-        />
-        <Select
-          placeholder="Đợt tuyển sinh"
-          onChange={(val) => setRecordDotTuyenSinh(danhSachDot?.find((item) => item._id === val))}
-          value={recordDotTuyenSinh?._id}
-          options={danhSachDot?.map((item) => ({
-            value: item?._id,
-            label: item?.tenDotTuyenSinh,
-          }))}
-          style={{ width: 250, marginRight: 8 }}
-        />
+        <FilterDotTuyenSinh />
         <Select
           allowClear
           placeholder="Đối tượng"

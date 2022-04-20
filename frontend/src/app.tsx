@@ -46,12 +46,13 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo: () => Promise<any> = async () => {
     try {
-      const auth = localStorage.getItem('vaiTro');
+      const auth = localStorage.getItem('vaiTro') as ESystemRole;
       const token = localStorage.getItem('token');
       let currentUser;
 
       if (auth && token) {
-        if (auth === 'Admin') currentUser = (await getInfoAdmin())?.data?.data;
+        if ([ESystemRole.Admin, ESystemRole.QuanTriVien].includes(auth))
+          currentUser = (await getInfoAdmin())?.data?.data;
         else currentUser = (await getInfo())?.data?.data;
       }
       return currentUser;
@@ -70,7 +71,7 @@ export async function getInitialState(): Promise<{
       currentUser,
       settings: {
         primaryColor: 'daybreak',
-        layout: currentUser?.systemRole === 'Admin' ? 'side' : 'top',
+        layout: currentUser?.systemRole === ESystemRole.ThiSinh ? 'top' : 'side',
       },
       authorizedRoles: [],
       // phanNhom,

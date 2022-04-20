@@ -6,6 +6,7 @@ const Donut = (props: {
   hideLabel?: boolean;
   hideLegend?: boolean;
   height?: number;
+  labelTong?: string;
 }) => {
   const { DataView } = DataSet;
   const { Html } = Guide;
@@ -19,7 +20,7 @@ const Donut = (props: {
   const cols = {
     percent: {
       formatter: (val: number) => {
-        return `${val * 100}%`;
+        return `${(val * 100).toFixed(2)}%`;
       },
     },
   };
@@ -41,7 +42,7 @@ const Donut = (props: {
                 return sum + currentValue.y;
               },
               0,
-            )}</span>người</div>`}
+            )}</span>${props?.labelTong ?? ''}</div>`}
             alignX="middle"
             alignY="middle"
           />

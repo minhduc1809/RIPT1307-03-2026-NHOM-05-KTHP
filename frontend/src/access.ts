@@ -1,4 +1,5 @@
 import type { Login } from './services/ant-design-pro/typings';
+import { ESystemRole } from './utils/constants';
 import { handlePhanNhom } from './utils/utils';
 
 /**
@@ -23,10 +24,12 @@ export default function access(initialState: {
   const verifiedCCCD = initialState?.currentUser?.cmtCccd !== undefined;
   const token = localStorage.getItem('token');
   return {
-    admin: token && vaiTro && vaiTro === 'Admin',
-    thiSinh: token && vaiTro && verifiedEmail && verifiedCCCD && vaiTro === 'ThiSinh',
-    thiSinhChuaKichHoat: token && vaiTro === 'ThiSinh',
-    quanTriVien: token && vaiTro && vaiTro === 'QuanTriVien',
+    admin: token && vaiTro && vaiTro === ESystemRole.Admin,
+    thiSinh: token && vaiTro && verifiedEmail && verifiedCCCD && vaiTro === ESystemRole.ThiSinh,
+    thiSinhChuaKichHoat: token && vaiTro === ESystemRole.ThiSinh,
+    quanTriVien: token && vaiTro && vaiTro === ESystemRole.QuanTriVien,
+    adminVaQuanTriVien:
+      token && vaiTro && (vaiTro === ESystemRole.Admin || vaiTro === ESystemRole.QuanTriVien),
     routeFilter: (route: any) => {
       return handlePhanNhom(initialState, route?.maChucNang);
     },

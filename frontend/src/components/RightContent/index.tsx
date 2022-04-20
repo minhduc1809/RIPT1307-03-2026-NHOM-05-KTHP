@@ -26,7 +26,7 @@ const GlobalHeaderRight: React.FC = () => {
 
   return (
     <Space className={className}>
-      {!access.admin && (
+      {!access.adminVaQuanTriVien && (
         <>
           <NoticeIcon />
           <HuongDanDropdown />

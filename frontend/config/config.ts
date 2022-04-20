@@ -159,7 +159,7 @@ export default defineConfig({
       name: 'QuanTriXetTuyen',
       path: '/quantrixettuyen',
       icon: 'FormOutlined',
-      access: 'admin',
+      access: 'adminVaQuanTriVien',
       routes: [
         {
           name: 'DotTuyenSinh',
@@ -170,37 +170,37 @@ export default defineConfig({
         {
           name: 'TiepNhanHoSoXetTuyen',
           path: './tiepnhanhoso',
-          access: 'admin',
+          access: 'adminVaQuanTriVien',
           routes: [
             {
               name: 'TatCaHoSo',
               path: './tatcahoso',
               component: './TiepNhanHoSo/TatCa.tsx',
-              access: 'admin',
+              access: 'adminVaQuanTriVien',
             },
             {
               name: 'HoSoChuaKhoa',
               path: './hosochuakhoa',
               component: './TiepNhanHoSo/ChuaKhoa.tsx',
-              access: 'admin',
+              access: 'adminVaQuanTriVien',
             },
             {
               name: 'HoSoDaKhoa',
               path: './hosodakhoa',
               component: './TiepNhanHoSo/DaKhoa.tsx',
-              access: 'admin',
+              access: 'adminVaQuanTriVien',
             },
             {
               name: 'HoSoDaTiepNhan',
               path: './hosodatiepnhan',
               component: './TiepNhanHoSo/DaTiepNhan.tsx',
-              access: 'admin',
+              access: 'adminVaQuanTriVien',
             },
             {
               name: 'HoSoKhongTiepNhan',
               path: './hosokhongtiepnhan',
               component: './TiepNhanHoSo/KhongTiepNhan.tsx',
-              access: 'admin',
+              access: 'adminVaQuanTriVien',
             },
           ],
         },
@@ -314,17 +314,18 @@ export default defineConfig({
       name: 'ThongKeBaoCao',
       path: '/thongkebaocao',
       icon: 'PieChartOutlined',
-      access: 'admin',
+      access: 'adminVaQuanTriVien',
       routes: [
         {
           name: 'TuyenSinh',
           path: './tuyensinh',
-          access: 'admin',
+          access: 'adminVaQuanTriVien',
+          component: './Dashboard',
         },
         {
           name: 'NhapHoc',
           path: './nhaphoc',
-          access: 'admin',
+          access: 'adminVaQuanTriVien',
         },
       ],
     },
