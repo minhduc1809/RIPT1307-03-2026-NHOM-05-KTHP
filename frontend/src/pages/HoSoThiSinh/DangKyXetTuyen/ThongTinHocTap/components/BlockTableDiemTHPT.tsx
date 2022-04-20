@@ -140,7 +140,13 @@ const BlockTableDiemTHPT = (props: {
 
       return {
         title:
-          arrKyHocFinal?.length > 1 ? lop?.label : `${arrKyHocFinal?.[0]?.label} ${lop?.label}`,
+          arrKyHocFinal?.length > 1
+            ? lop?.label
+            : `${
+                recordDot?.choPhepHK1HoacCaNamLop12 && lop?.field === 'truongLop12'
+                  ? `Học kỳ 1 hoặc ${arrKyHocFinal?.[0]?.label}`
+                  : arrKyHocFinal?.[0]?.label
+              } ${lop?.label}`,
         align: 'center',
         width: 200,
         dataIndex,

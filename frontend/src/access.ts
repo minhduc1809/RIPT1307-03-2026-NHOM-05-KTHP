@@ -26,7 +26,7 @@ export default function access(initialState: {
     admin: token && vaiTro && vaiTro === 'Admin',
     thiSinh: token && vaiTro && verifiedEmail && verifiedCCCD && vaiTro === 'ThiSinh',
     thiSinhChuaKichHoat: token && vaiTro === 'ThiSinh',
-    chuyenVien: token && vaiTro && vaiTro === 'ChuyenVien',
+    quanTriVien: token && vaiTro && vaiTro === 'QuanTriVien',
     routeFilter: (route: any) => {
       return handlePhanNhom(initialState, route?.maChucNang);
     },

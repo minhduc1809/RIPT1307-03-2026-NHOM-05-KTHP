@@ -115,7 +115,15 @@ const FormTiepNhanHoSo = (props: { type?: ETrangThaiHoSo }) => {
         </Form.Item>
       )}
 
-      <Form.Item rules={[...rules.required]} label="Ghi chú" name="ghiChuTiepNhan">
+      <Form.Item
+        rules={
+          props?.type === ETrangThaiHoSo.khongtiepnhan
+            ? [...rules.required, ...rules.text]
+            : [...rules.text]
+        }
+        label="Ghi chú"
+        name="ghiChuTiepNhan"
+      >
         <Input.TextArea rows={3} placeholder="Nhập ghi chú" />
       </Form.Item>
 

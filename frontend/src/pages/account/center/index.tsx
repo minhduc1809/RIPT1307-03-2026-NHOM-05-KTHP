@@ -85,7 +85,7 @@ class Center extends Component<CenterProps, CenterState> {
     const role = currentUser?.systemRole;
     let roleText = 'Chưa xác định';
     if (role === 'ThiSinh') roleText = 'Thí sinh';
-    else if (role === 'ChuyenVien') roleText = 'Chuyên viên';
+    else if (role === 'QuanTriVien') roleText = 'Quản trị viên';
     return (
       <div className={styles.detail}>
         <p>

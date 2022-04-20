@@ -213,7 +213,7 @@ export default defineConfig({
               name: 'ChiTieuXetTuyen',
               path: './chitieuxettuyen',
               access: 'admin',
-              // component: './ChiTieu',
+              component: './ChiTieu',
             },
             {
               name: 'DanhSachTrungTuyen',
@@ -382,32 +382,32 @@ export default defineConfig({
           component: './HinhThucDaoTao',
         },
 
-        // {
-        //   name: 'PhanQuyen',
-        //   icon: 'DeploymentUnitOutlined',
-        //   path: './phanquyen',
-        //   access: 'admin',
-        //   routes: [
-        //     {
-        //       name: 'NhomVaiTro',
-        //       path: './nhomvaitro',
-        //       access: 'admin',
-        //       component: './PhanQuyen/NhomVaiTro',
-        //     },
-        //     {
-        //       name: 'ChucNang',
-        //       path: './phanchucnang',
-        //       access: 'admin',
-        //       component: './PhanQuyen',
-        //     },
-        //     {
-        //       name: 'PhanNhom',
-        //       path: './phannhom',
-        //       access: 'admin',
-        //       component: './PhanQuyen/UserQLDT',
-        //     },
-        //   ],
-        // },
+        {
+          name: 'PhanQuyen',
+          icon: 'DeploymentUnitOutlined',
+          path: './phanquyen',
+          access: 'admin',
+          routes: [
+            {
+              name: 'NhomVaiTro',
+              path: './nhomvaitro',
+              access: 'admin',
+              component: './PhanQuyen/NhomVaiTro',
+            },
+            {
+              name: 'ChucNang',
+              path: './phanchucnang',
+              access: 'admin',
+              component: './PhanQuyen',
+            },
+            {
+              name: 'PhanNhom',
+              path: './phannhom',
+              access: 'admin',
+              component: './PhanQuyen/UserQLDT',
+            },
+          ],
+        },
       ],
     },
     {

@@ -103,7 +103,7 @@ const FormThongBaoAdmin = () => {
               placeholder="Vai trò"
             >
               {[
-                { name: 'Chuyên viên', value: 'ChuyenVien' },
+                { name: 'Quản trị viên', value: 'QuanTriVien' },
                 { name: 'Thí sinh', value: 'ThiSinh' },
                 { name: 'Phụ huynh', value: 'PhuHuynh' },
               ].map((item) => (

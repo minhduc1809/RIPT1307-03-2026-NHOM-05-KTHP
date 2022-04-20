@@ -122,7 +122,7 @@ const ThongTinThanhToan = (props: ThongTinThanhToanProps) => {
           </Descriptions.Item>
           {((invoice?.amountRemaining && invoice.amountRemaining > 0) ||
             (invoice?.amountRefund && invoice.amountRefund > 0)) &&
-            (access.chuyenVien || access.admin) && (
+            (access.quanTriVien || access.admin) && (
               <>
                 <Descriptions.Item
                   label={invoice?.amountRemaining ?? 0 > 0 ? 'Thanh toán' : 'Hoàn trả'}
@@ -184,11 +184,11 @@ const ThongTinThanhToan = (props: ThongTinThanhToanProps) => {
 
         {((invoice?.amountRemaining && invoice.amountRemaining > 0) ||
           (invoice?.amountRefund && invoice.amountRefund > 0)) &&
-        (access.chuyenVien || access.admin) ? (
+        (access.quanTriVien || access.admin) ? (
           <Form.Item style={{ textAlign: 'center', marginBottom: 0, marginTop: 8 }}>
             {invoice?.amountPaid &&
             invoice.amountPaid > 0 &&
-            (access.chuyenVien || access.admin) ? (
+            (access.quanTriVien || access.admin) ? (
               <Button
                 onClick={() => {
                   setEdit(true);

@@ -18,7 +18,7 @@ export enum EKhuVucUuTien {
 
 export enum ESystemRole {
   Admin = 'Admin',
-  ChuyenVien = 'ChuyenVien',
+  QuanTriVien = 'QuanTriVien',
   ThiSinh = 'ThiSinh',
   PhuHuynh = 'PhuHuynh',
   Guest = 'Guest',
@@ -33,7 +33,7 @@ export enum Role {
 
 export const MapKeyRole = {
   Admin: 'Admin',
-  ChuyenVien: 'Chuyên viên',
+  QuanTriVien: 'Quản trị viên',
   ThiSinh: 'Thí sinh',
   PhuHuynh: 'Phụ huynh',
   Guest: 'Khách',

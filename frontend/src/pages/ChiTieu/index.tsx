@@ -11,6 +11,12 @@ const ChiTieu = () => {
       align: 'center',
       width: 80,
     },
+    {
+      title: 'Cơ sở đào tạo',
+      dataIndex: 'coSoDaoTao',
+      align: 'center',
+      render: (val: CoSoDaoTao.Record) => <div>{val?.ten}</div>,
+    },
   ];
   return (
     <TableBase
@@ -18,7 +24,7 @@ const ChiTieu = () => {
       modelName="chitieu"
       loading={loading}
       title="Chỉ tiêu xét tuyển"
-      dependencies={[page, limit, condition, loading]}
+      dependencies={[page, limit, condition]}
       getData={getChiTieuPageableModel}
     />
   );

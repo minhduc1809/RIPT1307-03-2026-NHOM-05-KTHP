@@ -118,8 +118,20 @@ const RaSoatHoSo = () => {
               </div>
             )}
 
-            {recordHoSo?.trangThai === ETrangThaiHoSo.dakhoa && (
+            {[
+              ETrangThaiHoSo.dakhoa,
+              ETrangThaiHoSo.datiepnhan,
+              ETrangThaiHoSo.khongtiepnhan,
+            ]?.includes(recordHoSo?.trangThai ?? ETrangThaiHoSo.chuakhoa) && (
               <div style={{ color: 'red', fontStyle: 'italic' }}>(Bản chính thức)</div>
+            )}
+            {recordHoSo?.ghiChuTiepNhan && (
+              <div>
+                <b>
+                  <u>Ghi chú xử lý:</u>
+                </b>{' '}
+                {recordHoSo?.ghiChuTiepNhan ?? ''}
+              </div>
             )}
           </div>
 
@@ -235,9 +247,7 @@ const RaSoatHoSo = () => {
             <BlockGiayToNopOnline index={index++} />
             <br />
 
-            {[ETrangThaiHoSo.datiepnhan, ETrangThaiHoSo.khongtiepnhan]?.includes(
-              recordHoSo?.trangThai ?? ETrangThaiHoSo.chuakhoa,
-            ) && (
+            {recordHoSo?.ghiChuTiepNhan && (
               <>
                 <h2 style={{ fontWeight: 'bold' }}>C. THÔNG TIN TIẾP NHẬN HỒ SƠ:</h2>
                 {recordHoSo?.thongTinGiayToNopHoSo?.length ? (

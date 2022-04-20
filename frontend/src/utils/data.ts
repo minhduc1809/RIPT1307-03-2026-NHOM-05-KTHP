@@ -9,7 +9,7 @@ const data: any = {
   ],
   path: {
     ThiSinh: '/phuongthucxettuyen',
-    ChuyenVien: '/dashboard',
+    QuanTriVien: '/dashboard',
     Admin: '/quantrixettuyen/dottuyensinh',
   },
   doiTuong: ['Vai trò', 'Tất cả'],

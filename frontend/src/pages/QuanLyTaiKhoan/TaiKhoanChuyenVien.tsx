@@ -5,12 +5,12 @@ import { ESystemRole } from '@/utils/constants';
 
 const TaiKhoanChuyenVien = () => {
   const { getUserPageableModel } = useModel('quanlytaikhoan');
-  const form: any = () => <Form systemRole={ESystemRole.ChuyenVien} />;
+  const form: any = () => <Form systemRole={ESystemRole.QuanTriVien} />;
   return (
     <TableTaiKhoan
-      title="Tài khoản chuyên viên"
+      title="Tài khoản quản trị viên"
       Form={form}
-      getData={() => getUserPageableModel({ systemRole: ESystemRole.ChuyenVien })}
+      getData={() => getUserPageableModel({ systemRole: ESystemRole.QuanTriVien })}
     />
   );
 };
