@@ -1,17 +1,16 @@
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
-// import { EyeOutlined } from '@ant-design/icons';
-// import { Button, Divider, Modal, Tooltip, Typography } from 'antd';
 import { useModel } from 'umi';
-// import Form from './components/Form';
 import { useEffect } from 'react';
 import CreateEmail from './components/index';
 import moment from 'moment';
+import { useCheckAccess } from '@/utils/utils';
 
 const Index = () => {
+  const createAll = useCheckAccess('email:create-all');
+
   const { getEmailPageableModel, loading, page, condition, limit, dataTable } =
     useModel('sendemail');
-  // console.log(danhSach)
 
   useEffect(() => {
     getEmailPageableModel();
@@ -44,7 +43,7 @@ const Index = () => {
     <div>
       <TableBase
         widthDrawer="700px"
-        hascreate
+        hascreate={createAll}
         formType="Drawer"
         getData={getEmailPageableModel}
         modelName="sendemail"
@@ -52,7 +51,6 @@ const Index = () => {
         loading={loading}
         columns={columns}
         dependencies={[page, limit, condition]}
-        // dataState="danhSach"
         Form={CreateEmail}
       />
     </div>

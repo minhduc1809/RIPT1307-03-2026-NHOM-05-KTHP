@@ -71,12 +71,16 @@ export default () => {
     }
   };
 
-  const adminChangePasswordModel = async (payload: { user_id?: number; password: string }) => {
-    if (!payload?.user_id) return;
-    setLoading(true);
-    await adminChangePassword(payload);
-    message.success('Cấp lại mật khẩu thành công');
-    setLoading(false);
+  const adminChangePasswordModel = async (userId: string, payload: { password: string }) => {
+    if (!userId) return;
+    try {
+      setLoading(true);
+      await adminChangePassword(userId, payload);
+      message.success('Cập nhật mật khẩu thành công');
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   return {

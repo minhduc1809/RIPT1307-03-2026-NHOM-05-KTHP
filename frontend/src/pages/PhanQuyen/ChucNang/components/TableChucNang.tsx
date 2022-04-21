@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import type { IColumn } from '@/utils/interfaces';
-import { Button, Checkbox, Popconfirm, Table } from 'antd';
+import { Button, Checkbox, Popconfirm, Select, Table } from 'antd';
 import { useModel } from 'umi';
 import { useState, useEffect } from 'react';
 import { SaveOutlined } from '@ant-design/icons';
@@ -8,8 +8,14 @@ import { SaveOutlined } from '@ant-design/icons';
 const TableChucNang = (props: {
   data: { tenChucNang: string; children: PhanQuyen.ChucNang[] }[];
 }) => {
-  const { danhSachNhomVaiTro, putPhanQuyenChucNangNhomVaiTroModel, loading } =
-    useModel('phanquyen');
+  const {
+    danhSachNhomVaiTro,
+    putPhanQuyenChucNangNhomVaiTroModel,
+    loading,
+    vaiTro,
+    setVaiTro,
+    danhSachVaiTro,
+  } = useModel('phanquyen');
   const [dataPhanQuyen, setDataPhanQuyen] = useState<
     { idNhomVaiTro: string; idChucNang: string }[]
   >([]);
@@ -21,7 +27,9 @@ const TableChucNang = (props: {
       fixed: 'left',
       align: 'center',
       render: (record) => (
-        <div style={{ textAlign: 'left' }}>{record?.tenChucNang || record?.ten}</div>
+        <div style={{ textAlign: 'left' }}>
+          {record?.tenChucNang || record?.ten} <b>({record?._id})</b>
+        </div>
       ),
     },
   ];
@@ -80,21 +88,39 @@ const TableChucNang = (props: {
 
   return (
     <>
-      <Popconfirm
-        onConfirm={() => {
-          putPhanQuyenChucNangNhomVaiTroModel(dataPhanQuyen);
-        }}
-        title="Bạn có chắc chắn muốn lưu ?"
-      >
-        <Button
-          loading={loading}
-          style={{ marginBottom: 8 }}
-          icon={<SaveOutlined />}
-          type="primary"
+      <div style={{ display: 'flex' }}>
+        <div>
+          <b>Vai trò hệ thống: </b>
+          <Select
+            onChange={(val) => {
+              setVaiTro(val);
+            }}
+            style={{ width: 200, marginRight: 8 }}
+            value={vaiTro}
+          >
+            {danhSachVaiTro.map((item) => (
+              <Select.Option key={item.vaiTro} value={item.vaiTro}>
+                {item.ten}
+              </Select.Option>
+            ))}
+          </Select>
+        </div>
+        <Popconfirm
+          onConfirm={() => {
+            putPhanQuyenChucNangNhomVaiTroModel(dataPhanQuyen);
+          }}
+          title="Bạn có chắc chắn muốn lưu ?"
         >
-          Lưu
-        </Button>
-      </Popconfirm>
+          <Button
+            loading={loading}
+            style={{ marginBottom: 8 }}
+            icon={<SaveOutlined />}
+            type="primary"
+          >
+            Lưu
+          </Button>
+        </Popconfirm>
+      </div>
 
       <Table
         loading={loading}

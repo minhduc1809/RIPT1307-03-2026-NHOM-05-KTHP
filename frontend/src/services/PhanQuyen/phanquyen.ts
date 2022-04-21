@@ -16,6 +16,10 @@ export async function getNhomVaiTro(payload: { page: number; limit: number; cond
   return axios.get(`${ip3}/phan-quyen/nhom-vai-tro/paging`, { params: payload });
 }
 
+export async function getAllVaiTro() {
+  return axios.get(`${ip3}/phan-quyen/vai-tro/all`);
+}
+
 /**
  * thanhpq 27/10/2021
  * thêm 1 nhóm vai trò mới
@@ -106,8 +110,6 @@ export async function getUserPhanNhom(payload: {
 export async function putUserPhanNhom(payload: {
   userId: string;
   danhSachPhanNhom: PhanQuyen.PhanNhom[];
-  vaiTro: string;
-  service: 'Odoo' | 'Internal';
 }) {
   return axios.put(`${ip3}/phan-quyen/phan-nhom`, payload);
 }
@@ -132,14 +134,6 @@ export async function getDoiTuongPhanNhomByMucDo(mucDo: string) {
   return axios.get(`${ip3}/phan-quyen/doi-tuong-phan-nhom/muc-do/${mucDo}`);
 }
 
-/**
- * thanhpq 08/11/2021
- * get danh sách chuyên viên để điều phối đơn 1 cửa
- * @returns danh sách chuyên viên được phép xử lý đơn
- */
-
-export async function getChuyenVienXuLyDon(idDonVi: string) {
-  return axios.get(
-    `${ip3}/phan-quyen/phan-nhom/user/odoo/all/don-vi/${idDonVi}?nhomVaiTroId=Chuyên viên tiếp nhận`,
-  );
+export async function getPhanNhomByUserId(idUser: string) {
+  return axios.get(`${ip3}/phan-quyen/phan-nhom/${idUser}`);
 }

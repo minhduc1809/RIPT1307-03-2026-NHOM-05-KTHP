@@ -2,7 +2,7 @@ import FormTiepNhanHoSo from '@/pages/TiepNhanHoSo/components/FormTiepNhanHoSo';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { ELoaiNgoaiNgu, ETrangThaiHoSo, Setting } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import { mergeCauHinhDoiTuongXetTuyen } from '@/utils/utils';
+import { mergeCauHinhDoiTuongXetTuyen, useCheckAccess } from '@/utils/utils';
 import {
   CheckOutlined,
   CloseOutlined,
@@ -53,6 +53,7 @@ const RaSoatHoSo = () => {
   const isTrongThoiGianDangKy =
     moment(record?.thoiGianMoDangKy).isBefore(moment(new Date())) &&
     moment(record?.thoiGianKetThucNopHoSo).isAfter(moment(new Date()));
+  const duyetAll = useCheckAccess('ho-so-xet-tuyen-da-khoa:duyet-all');
   const columnGiaiHSG: IColumn<
     HoSoXetTuyen.ThongTinGiaiTinhTP | HoSoXetTuyen.ThongTinGiaiQuocGia
   >[] = [
@@ -276,7 +277,7 @@ const RaSoatHoSo = () => {
             {!access.thiSinh ? (
               <>
                 <div style={{ textAlign: 'center', marginTop: 10 }}>
-                  {recordHoSo?.trangThai === ETrangThaiHoSo.dakhoa && (
+                  {recordHoSo?.trangThai === ETrangThaiHoSo.dakhoa && duyetAll && (
                     <>
                       <Button
                         onClick={() => {

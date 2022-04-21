@@ -7,7 +7,7 @@ export function getSoLuongHoSoByIdDot(
   idDot: string,
   payload?: { condition?: any; today?: number },
 ) {
-  return axios.get(`${ip3}/${url}/so-luong/ho-so/dot/${idDot}`, { params: payload });
+  return axios.get(`${ip3}/${url}/phan-loai/ho-so/dot/${idDot}`, { params: payload });
 }
 
 export function getSoLuongNguyenVongByIdDot(

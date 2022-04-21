@@ -12,7 +12,8 @@ const FormCapLaiMatKhau = (props: { onCancel: any }) => {
       <Form
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          adminChangePasswordModel({ user_id: record?._id, ...values });
+          await adminChangePasswordModel(record?._id ?? '', { ...values });
+          props?.onCancel();
         }}
         form={form}
       >

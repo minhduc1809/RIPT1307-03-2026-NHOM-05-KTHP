@@ -8,7 +8,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { parse } from 'path';
 import { useModel } from 'umi';
-import { arrKhuVucUuTien, EKhuVucUuTien, EMonHoc } from './constants';
+import { arrKhuVucUuTien, EKhuVucUuTien, EMonHoc, ESystemRole } from './constants';
 import { ip3 } from './ip';
 import _ from 'lodash';
 
@@ -222,7 +222,8 @@ export async function getPhanNhom() {
   return response?.data?.data ?? {};
 }
 
-export function handlePhanNhom(initialState: any, code: string, idDoiTuong?: string) {
+export function handlePhanNhom(initialState: any, code: string): boolean {
+  if (initialState?.currentUser?.systemRole === ESystemRole.Admin) return true;
   let flag = false;
   if (initialState?.phanNhom?.danhSachPhanNhom?.length === 0) return false;
   initialState?.phanNhom?.danhSachPhanNhom?.forEach((item: any) => {
@@ -231,21 +232,21 @@ export function handlePhanNhom(initialState: any, code: string, idDoiTuong?: str
       if (mucDo === 'Tất cả' && idChucNang === code) {
         flag = true;
       }
-      if (mucDo !== 'Tất cả' && idChucNang === code) {
-        if (idDoiTuong === undefined) {
-          flag = true;
-          return;
-        }
-        flag = item?.idDoiTuong === idDoiTuong;
-      }
+      // if (mucDo !== 'Tất cả' && idChucNang === code) {
+      //   if (idDoiTuong === undefined) {
+      //     flag = true;
+      //     return;
+      //   }
+      //   flag = item?.idDoiTuong === idDoiTuong;
+      // }
     });
   });
   return flag;
 }
 
-export function useCheckAccess(code: string, idDoiTuong?: string) {
+export function useCheckAccess(code: string): boolean {
   const { initialState } = useModel('@@initialState');
-  return handlePhanNhom(initialState, code, idDoiTuong);
+  return handlePhanNhom(initialState, code);
 }
 
 export const toISOString = (date: moment.MomentInput) => {

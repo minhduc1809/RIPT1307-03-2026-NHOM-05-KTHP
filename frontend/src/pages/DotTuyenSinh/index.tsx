@@ -1,6 +1,7 @@
 import TableBase from '@/components/Table';
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import type { IColumn } from '@/utils/interfaces';
+import { useCheckAccess } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Divider, Popconfirm, Tooltip } from 'antd';
 import moment from 'moment';
@@ -28,7 +29,6 @@ const DotTuyenSinhComponent = () => {
   } = useModel('dottuyensinh');
 
   const { getProductByCodeModel } = useModel('thanhtoan');
-
   const { getAllNamTuyenSinhModel } = useModel('namtuyensinh');
   const { getAllHinhThucDaoTaoModel } = useModel('hinhthucdaotao');
   const { getAllDoiTuongTuyenSinhModel } = useModel('doituongtuyensinh');
@@ -42,6 +42,10 @@ const DotTuyenSinhComponent = () => {
     getAllHinhThucDaoTaoModel();
     getAllNamTuyenSinhModel();
   }, []);
+
+  const createAll = useCheckAccess('dot-tuyen-sinh:create-all');
+  const updateAll = useCheckAccess('dot-tuyen-sinh:update-all');
+  const deleteAll = useCheckAccess('dot-tuyen-sinh:delete-all');
 
   const columns: IColumn<DotTuyenSinh.Record>[] = [
     {
@@ -122,6 +126,7 @@ const DotTuyenSinhComponent = () => {
         <>
           <Tooltip title="Chỉnh sửa">
             <Button
+              disabled={!updateAll}
               onClick={() => {
                 getProductByCodeModel(record?.maLePhi);
                 setdanhSachGiayToNopHoSo(record?.thongTinGiayToNopHoSo ?? []);
@@ -143,10 +148,11 @@ const DotTuyenSinhComponent = () => {
           <Divider type="vertical" />
           <Tooltip title="Xóa">
             <Popconfirm
+              disabled={!deleteAll}
               onConfirm={() => deleteDotTuyenSinhModel(record._id)}
               title="Bạn có chắc chắn muốn xóa?"
             >
-              <Button type="primary" shape="circle">
+              <Button disabled={!deleteAll} type="primary" shape="circle">
                 <DeleteOutlined />
               </Button>
             </Popconfirm>
@@ -161,7 +167,7 @@ const DotTuyenSinhComponent = () => {
       widthDrawer="1000px"
       formType="Drawer"
       otherProps={{ scroll: { x: 1000 } }}
-      hascreate
+      hascreate={createAll}
       getData={getDotTuyenSinhPageableModel}
       modelName="dottuyensinh"
       title="Quản lý đợt tuyển sinh"

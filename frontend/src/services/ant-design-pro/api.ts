@@ -47,3 +47,7 @@ export async function updateCCCD(payload: {
 }) {
   return axios.put(`${ip3}/user/me/cmt-cccd`, payload);
 }
+
+export async function updatePassword(idUser: string, payload: { password: string }) {
+  return axios.put(`${ip3}/user/${idUser}/password`);
+}

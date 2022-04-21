@@ -69,9 +69,9 @@ export default {
   'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc.DanhSachDuDieuKienNhapHoc':
     'Danh sách đủ điều kiện nhập học',
   'menu.CauHinhHeThong': 'Cấu hình hệ thống',
-  'menu.CauHinhHeThong.QuanLyTaiKhoan': 'Tài khoản',
-  'menu.CauHinhHeThong.QuanLyTaiKhoan.TaiKhoanThiSinh': 'Tài khoản thí sinh',
-  'menu.CauHinhHeThong.QuanLyTaiKhoan.TaiKhoanChuyenVien': 'Tài khoản quản trị viên',
+  'menu.QuanTriTaiKhoan': 'Tài khoản',
+  'menu.QuanTriTaiKhoan.TaiKhoanThiSinh': 'Tài khoản thí sinh',
+  'menu.QuanTriTaiKhoan.TaiKhoanChuyenVien': 'Tài khoản quản trị viên',
   'menu.CauHinhHeThong.QuanLyNamTuyenSinh': 'Năm tuyển sinh',
   'menu.CauHinhHeThong.QuanLyPhuongThucXetTuyen': 'Phương thức xét tuyển',
   'menu.TuongTac.HuongDanSuDung': 'Hướng dẫn sử dụng',

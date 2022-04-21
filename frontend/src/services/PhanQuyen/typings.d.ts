@@ -6,6 +6,11 @@ declare module PhanQuyen {
     vaiTro: string[];
   }
 
+  export interface VaiTro {
+    vaiTro: string;
+    ten: string;
+  }
+
   export interface ChucNang {
     _id: string;
     loai: string;
@@ -16,8 +21,6 @@ declare module PhanQuyen {
   export interface PhanNhom {
     nhomVaiTroId: string;
     mucDo: string;
-    idDoiTuong: string;
-    tenDoiTuong: string;
   }
 
   export interface UserPhanNhom {

@@ -50,7 +50,7 @@ const Dashboard = () => {
         <Col xs={24} md={12} xl={6}>
           <BlockSoLuongHoSo title="Tổng Số Lượng Hồ Sơ" recordSoLuongHoSo={recordTongSoLuongHoSo} />
         </Col>
-        <Col>
+        <Col xs={24} md={12} xl={6}>
           <Card>
             <Statistic
               title={<div style={{ fontSize: 16 }}>Số Lượng Hồ Sơ Đã Tiếp Nhận</div>}

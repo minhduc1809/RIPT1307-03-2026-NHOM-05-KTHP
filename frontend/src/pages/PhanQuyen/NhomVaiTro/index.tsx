@@ -1,12 +1,11 @@
-/* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
-import { Role } from '@/utils/constants';
+import { MapKeyRole } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Divider, Popconfirm, Tag, Tooltip } from 'antd';
+import { useEffect } from 'react';
 import { useModel } from 'umi';
 import FormNhomVaiTro from './components/Form';
-import { useEffect } from 'react';
 
 const NhomVaiTro = () => {
   const {
@@ -21,9 +20,11 @@ const NhomVaiTro = () => {
     setEdit,
     setVisibleForm,
     setDanhSachNhomVaiTro,
+    getAllVaiTroModel,
   } = useModel('phanquyen');
 
   useEffect(() => {
+    getAllVaiTroModel();
     return () => {
       setDanhSachNhomVaiTro([]);
     };
@@ -49,7 +50,7 @@ const NhomVaiTro = () => {
       render: (val: string[]) => (
         <>
           {val?.map((item) => (
-            <Tag key={item}>{Role[item]}</Tag>
+            <Tag key={item}>{MapKeyRole[item]}</Tag>
           ))}
         </>
       ),

@@ -13,6 +13,7 @@ import { getInfo, getInfoAdmin } from './services/ant-design-pro/api';
 import type { Login } from './services/ant-design-pro/typings';
 import { ESystemRole } from './utils/constants';
 import data from './utils/data';
+import { getPhanNhom } from './utils/utils';
 
 const loginPath = '/user/login';
 const pathAuth = ['/admin/login', '/user/quenMatKhau'];
@@ -62,10 +63,9 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
-
   if (history.location.pathname !== loginPath) {
     const currentUser: Login.Profile & Login.ProfileAdmin = await fetchUserInfo();
-    // const phanNhom = await getPhanNhom();
+    const phanNhom = await getPhanNhom();
     return {
       fetchUserInfo,
       currentUser,
@@ -74,7 +74,7 @@ export async function getInitialState(): Promise<{
         layout: currentUser?.systemRole === ESystemRole.ThiSinh ? 'top' : 'side',
       },
       authorizedRoles: [],
-      // phanNhom,
+      phanNhom,
     };
   }
 

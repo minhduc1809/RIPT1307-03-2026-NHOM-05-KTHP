@@ -1,6 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-param-reassign */
-import { Role } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { Button, Card, Form, Input, Select } from 'antd';
 import { useModel } from 'umi';
@@ -8,8 +5,15 @@ import { useModel } from 'umi';
 const FormNhomVaiTro = () => {
   const [form] = Form.useForm();
 
-  const { loading, record, setVisibleForm, edit, postNhomVaiTroModel, putNhomVaiTroModel } =
-    useModel('phanquyen');
+  const {
+    loading,
+    record,
+    setVisibleForm,
+    edit,
+    postNhomVaiTroModel,
+    putNhomVaiTroModel,
+    danhSachVaiTro,
+  } = useModel('phanquyen');
   return (
     <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
       <Form
@@ -36,9 +40,9 @@ const FormNhomVaiTro = () => {
           initialValue={record?.vaiTro ?? []}
         >
           <Select mode="multiple" placeholder="Chọn đối tượng">
-            {['nhan_vien', 'Admin', 'quan_tri'].map((item) => (
-              <Select.Option key={item} value={item}>
-                {Role?.[item] ?? ''}
+            {danhSachVaiTro.map((item) => (
+              <Select.Option key={item?.vaiTro} value={item?.vaiTro}>
+                {item?.ten}
               </Select.Option>
             ))}
           </Select>

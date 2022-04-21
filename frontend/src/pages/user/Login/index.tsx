@@ -3,9 +3,10 @@ import logo from '@/assets/logo.png';
 import Footer from '@/components/Footer';
 import { getInfo, login } from '@/services/ant-design-pro/api';
 import type { Login } from '@/services/ant-design-pro/typings';
-import { Setting } from '@/utils/constants';
+import { ESystemRole, Setting } from '@/utils/constants';
 import data from '@/utils/data';
 import rules from '@/utils/rules';
+import { getPhanNhom } from '@/utils/utils';
 import {
   FileExcelOutlined,
   FileTextOutlined,
@@ -57,15 +58,17 @@ const LoginGlobal: React.FC = () => {
     localStorage.setItem('token', role?.accessToken);
     localStorage.setItem('vaiTro', role?.user?.systemRole);
     const info = await getInfo();
-    // const phanNhom = await getPhanNhom();
+    const phanNhom = await getPhanNhom();
     setInitialState({
       ...initialState,
       currentUser: info?.data?.data ?? {},
       settings: {
         primaryColor: 'daybreak',
-        layout: role?.user?.systemRole === 'Admin' ? 'side' : 'top',
+        layout: [ESystemRole.Admin, ESystemRole.QuanTriVien].includes(role?.user?.systemRole)
+          ? 'side'
+          : 'top',
       },
-      // phanNhom,
+      phanNhom,
     });
     message.success(defaultloginSuccessMessage);
     history.push(data?.path?.[role?.user?.systemRole || 'guest'] ?? '/');

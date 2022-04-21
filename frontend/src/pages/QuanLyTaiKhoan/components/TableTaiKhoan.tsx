@@ -6,7 +6,16 @@ import { useState } from 'react';
 import { useModel } from 'umi';
 import FormCapLaiMatKhau from './FormCapLaiMatKhau';
 
-const TableTaiKhoan = (props: { Form: React.FC; getData: any; title: string }) => {
+const TableTaiKhoan = (props: {
+  Form: React.FC;
+  getData: any;
+  title: string;
+  phanQuyen?: {
+    updateAll?: boolean;
+    deleteAll?: boolean;
+    resetAll?: boolean;
+  };
+}) => {
   const { loading, page, limit, condition, setEdit, setVisibleForm, setRecord, deleteUserModel } =
     useModel('quanlytaikhoan');
   const [visibleFormCapLaiMatKhau, setVisibleFormCapLaiMatKhau] = useState<boolean>(false);
@@ -61,12 +70,13 @@ const TableTaiKhoan = (props: { Form: React.FC; getData: any; title: string }) =
     {
       title: 'Thao tác',
       align: 'center',
-      width: 140,
+      width: 170,
       fixed: 'right',
       render: (record: QuanLyTaiKhoan.Record) => (
         <>
-          {/* <Tooltip title="Cấp lại mật khẩu">
+          <Tooltip title="Cấp lại mật khẩu">
             <Button
+              disabled={!props?.phanQuyen?.resetAll}
               onClick={() => {
                 setVisibleFormCapLaiMatKhau(true);
                 setRecord(record);
@@ -76,9 +86,10 @@ const TableTaiKhoan = (props: { Form: React.FC; getData: any; title: string }) =
               type="primary"
             />
           </Tooltip>
-          <Divider type="vertical" /> */}
+          <Divider type="vertical" />
           <Tooltip title="Chỉnh sửa">
             <Button
+              disabled={!props?.phanQuyen?.updateAll}
               onClick={() => {
                 setEdit(true);
                 setRecord(record);
@@ -93,10 +104,11 @@ const TableTaiKhoan = (props: { Form: React.FC; getData: any; title: string }) =
           <Divider type="vertical" />
           <Tooltip title="Xóa">
             <Popconfirm
+              disabled={props?.phanQuyen?.deleteAll}
               onConfirm={() => deleteUserModel(record._id)}
               title="Bạn có chắc chắn muốn xóa tài khoản này?"
             >
-              <Button type="primary" shape="circle">
+              <Button disabled={props?.phanQuyen?.deleteAll} type="primary" shape="circle">
                 <DeleteOutlined />
               </Button>
             </Popconfirm>

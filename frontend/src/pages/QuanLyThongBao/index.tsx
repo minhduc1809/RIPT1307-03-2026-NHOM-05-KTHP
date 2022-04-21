@@ -1,5 +1,6 @@
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
+import { useCheckAccess } from '@/utils/utils';
 import { EyeOutlined } from '@ant-design/icons';
 import { Button, Divider, Modal, Tooltip, Typography } from 'antd';
 import { useState } from 'react';
@@ -8,6 +9,8 @@ import Form from './components/Form';
 import ViewThongBao from './components/ViewThongBao';
 
 const ThongBao = () => {
+  const createAll = useCheckAccess('thong-bao:create-all');
+
   const { getThongBaoAdminModel, page, limit, loading, condition, setRecord, record, phamVi } =
     useModel('quanlythongbao');
   const [visible, setVisible] = useState<boolean>(false);
@@ -143,7 +146,7 @@ const ThongBao = () => {
         columns={columns}
         modelName="quanlythongbao"
         loading={loading}
-        hascreate={true}
+        hascreate={createAll}
         Form={Form}
         widthDrawer="50%"
         formType="Drawer"

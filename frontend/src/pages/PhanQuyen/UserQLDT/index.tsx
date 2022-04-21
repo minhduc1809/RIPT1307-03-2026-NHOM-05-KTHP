@@ -1,31 +1,32 @@
 import TableBase from '@/components/Table';
-import { Role } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { EditOutlined } from '@ant-design/icons';
 import { Button, Select, Tooltip } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
-import TableNhomChucNang from './components/TableNhomVaiTro';
+import Form from './components/Form';
 
 const UserPhanNhom = () => {
   const {
+    vaiTro,
+    setVaiTro,
+    getAllNhomVaiTroModel,
+    setRecordUser,
+    setCondition,
+    setQuery,
+    getAllVaiTroModel,
+    danhSachVaiTro,
+    loading,
+    setVisibleForm,
     getUserPhanNhomModel,
     page,
     limit,
-    loading,
-    vaiTro,
-    setVaiTro,
-    query,
-    getAllNhomVaiTroModel,
-    setRecordUser,
-    setVisibleForm,
-    setCondition,
-    setQuery,
     condition,
   } = useModel('phanquyen');
 
   useEffect(() => {
-    getAllNhomVaiTroModel(true);
+    getAllNhomVaiTroModel();
+    getAllVaiTroModel();
     return () => {
       setCondition({});
       setQuery({});
@@ -40,24 +41,31 @@ const UserPhanNhom = () => {
       align: 'center',
     },
     {
-      title: 'Họ tên',
-      dataIndex: ['name'],
-      key: 'name',
-      width: 200,
+      title: 'Họ đệm',
+      dataIndex: 'hoDem',
+      width: 150,
       align: 'center',
       search: 'search',
-      typeFilter: 'query',
-      notRegex: true,
-      render: (val, record) => <div>{record?.user?.name}</div>,
     },
     {
-      title: 'Mã định danh',
-      dataIndex: 'ma_dinh_danh',
-      width: 200,
-      typeFilter: 'query',
+      title: 'Tên',
+      dataIndex: 'ten',
+      width: 150,
       align: 'center',
       search: 'search',
-      render: (val, record) => <div>{record?.user?.ma_dinh_danh ?? ''}</div>,
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      width: 200,
+      align: 'center',
+      search: 'search',
+    },
+    {
+      title: 'Giới tính',
+      dataIndex: 'gioiTinh',
+      width: 100,
+      align: 'center',
     },
     {
       title: 'Thao tác',
@@ -80,31 +88,33 @@ const UserPhanNhom = () => {
   ];
 
   return (
-    <TableBase
-      title="Quản lý đào tạo"
-      dataState="danhSachUser"
-      loading={loading}
-      columns={columns}
-      modelName="phanquyen"
-      getData={getUserPhanNhomModel}
-      widthDrawer="80%"
-      dependencies={[page, limit, vaiTro, query, condition]}
-      Form={TableNhomChucNang}
-    >
-      <Select
-        onChange={(val) => {
-          setVaiTro(val);
+    <>
+      <TableBase
+        otherProps={{
+          scroll: { x: 1000 },
         }}
-        value={vaiTro}
-        style={{ width: 220, marginBottom: 8, marginRight: 8 }}
+        getData={getUserPhanNhomModel}
+        modelName="phanquyen"
+        title={'Phân nhóm'}
+        loading={loading}
+        columns={columns}
+        dependencies={[vaiTro, page, limit, condition]}
+        Form={Form}
+        dataState="danhSachUser"
       >
-        {['nhan_vien']?.map((item) => (
-          <Select.Option key={item} value={item}>
-            {Role?.[item]}
-          </Select.Option>
-        ))}
-      </Select>
-    </TableBase>
+        <Select
+          value={vaiTro}
+          style={{ width: 200, marginRight: 8 }}
+          onChange={(val) => setVaiTro(val)}
+        >
+          {danhSachVaiTro?.map((item) => (
+            <Select.Option key={item.vaiTro} value={item.vaiTro}>
+              {item.ten}
+            </Select.Option>
+          ))}
+        </Select>
+      </TableBase>
+    </>
   );
 };
 

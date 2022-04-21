@@ -17,7 +17,14 @@ import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
 
-const TableHoSo = (props: { type?: ETrangThaiHoSo }) => {
+const TableHoSo = (props: {
+  type?: ETrangThaiHoSo;
+  phanQuyen?: {
+    thaoTacAll?: boolean;
+    duyetAll?: boolean;
+    exportAll?: boolean;
+  };
+}) => {
   const {
     page,
     loading,
@@ -27,9 +34,7 @@ const TableHoSo = (props: { type?: ETrangThaiHoSo }) => {
     adminGetHoSoByIdDotModel,
     adminKhoaHoSoByIdHoSoModel,
     adminMoKhoaHoSoByIdHoSoModel,
-
     setRecordHoSo,
-
     adminExportPhieuDangKyModel,
     adminExportHoSoByIdDotModel,
     recordHoSo: recordHS,
@@ -205,6 +210,7 @@ const TableHoSo = (props: { type?: ETrangThaiHoSo }) => {
       align: 'center',
       width: 170,
       fixed: 'right',
+      hide: !props?.phanQuyen?.thaoTacAll ?? true,
       render: (recordHoSo: HoSoXetTuyen.Record) => (
         <>
           {[
@@ -306,6 +312,7 @@ const TableHoSo = (props: { type?: ETrangThaiHoSo }) => {
           style={{ width: 250 }}
         />
         <Button
+          disabled={!props?.phanQuyen?.exportAll ?? true}
           loading={loading}
           onClick={() => adminExportHoSoByIdDotModel(recordDotTuyenSinh?._id ?? '', props.type)}
           style={{ marginLeft: 8 }}

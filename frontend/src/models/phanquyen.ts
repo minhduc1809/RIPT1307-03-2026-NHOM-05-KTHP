@@ -4,32 +4,33 @@ import {
   getAllChucNang,
   getAllLoaiChucNang,
   getAllNhomVaiTro,
-  getChuyenVienXuLyDon,
+  getAllVaiTro,
   getDoiTuongPhanNhomByMucDo,
   getNhomVaiTro,
-  getUserPhanNhom,
   postNhomVaiTro,
   putNhomVaiTro,
   putPhanQuyenChucNangNhomVaiTro,
   putUserPhanNhom,
 } from '@/services/PhanQuyen/phanquyen';
+import { getUserPageable } from '@/services/QuanLyTaiKhoan/quanlytaikhoan';
 import { message } from 'antd';
 import { useState } from 'react';
 
 export default () => {
   const [danhSachNhomVaiTro, setDanhSachNhomVaiTro] = useState<PhanQuyen.NhomVaiTro[]>([]);
+  const [danhSachVaiTro, setDanhSachVaiTro] = useState<PhanQuyen.VaiTro[]>([]);
   const [danhSachChucNang, setDanhSachChucNang] = useState<PhanQuyen.ChucNang[]>([]);
   const [danhSachLoaiChucNang, setDanhSachLoaiChucNang] = useState<string[]>([]);
   const [danhSachDoiTuong, setDanhSachDoiTuong] = useState<PhanQuyen.DoiTuongPhanNhom[]>([]);
-  const [danhSachUser, setDanhSachUser] = useState<PhanQuyen.UserPhanNhom[]>([]);
+  const [danhSachUser, setDanhSachUser] = useState<Login.Profile[]>([]);
   const [danhSachChuyenVienXuLy, setDanhSachChuyenVienXuLy] = useState<Login.Profile[]>([]);
   const [recordNhomVaiTro, setRecordNhomVaiTro] = useState<PhanQuyen.NhomVaiTro>();
   const [record, setRecord] = useState<PhanQuyen.NhomVaiTro>();
-  const [recordUser, setRecordUser] = useState<PhanQuyen.UserPhanNhom>();
+  const [recordUser, setRecordUser] = useState<Login.Profile>();
   const [filterInfo, setFilterInfo] = useState<any>({});
   const [condition, setCondition] = useState<any>({});
   const [query, setQuery] = useState<any>({});
-  const [vaiTro, setVaiTro] = useState<string>('nhan_vien');
+  const [vaiTro, setVaiTro] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
@@ -110,18 +111,22 @@ export default () => {
   };
 
   const getUserPhanNhomModel = async () => {
+    if (!vaiTro) return;
     setLoading(true);
-    const response = await getUserPhanNhom({ page, limit, vaiTro, ...query, condition });
+    const response = await getUserPageable({
+      page,
+      limit,
+      condition: { ...condition, systemRole: vaiTro },
+    });
+    setRecord(response?.data?.data?.result ?? []);
     setDanhSachUser(response?.data?.data?.result ?? []);
-    setTotal(response?.data?.data?.total ?? 0);
+    setTotal(response?.data?.data?.total ?? '0');
     setLoading(false);
   };
 
   const putUserPhanNhomModel = async (payload: {
     userId: string;
     danhSachPhanNhom: PhanQuyen.PhanNhom[];
-    vaiTro: string;
-    service: 'Odoo' | 'Internal';
   }) => {
     setLoading(true);
     await putUserPhanNhom(payload);
@@ -138,19 +143,22 @@ export default () => {
     setLoading(false);
   };
 
-  const getChuyenVienXuLyDonModel = async (idDonVi: string) => {
+  const getAllVaiTroModel = async () => {
     setLoading(true);
-    const response = await getChuyenVienXuLyDon(idDonVi);
-    setDanhSachChuyenVienXuLy(response?.data?.data ?? []);
+    const response = await getAllVaiTro();
+    setDanhSachVaiTro(response?.data?.data ?? []);
+    setVaiTro(response?.data?.data?.[0]?.vaiTro);
     setLoading(false);
   };
 
   return {
+    getAllVaiTroModel,
+    danhSachVaiTro,
+    setDanhSachVaiTro,
     record,
     setRecord,
     getNhomVaiTroModel,
     putNhomVaiTroModel,
-    getChuyenVienXuLyDonModel,
     danhSachChuyenVienXuLy,
     setDanhSachChuyenVienXuLy,
     getDoiTuongPhanNhomByMucDoModel,

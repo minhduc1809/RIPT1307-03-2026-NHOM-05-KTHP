@@ -1,12 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
+import { useCheckAccess } from '@/utils/utils';
 import {
-    DeleteOutlined,
-    EditOutlined,
-    ExportOutlined,
-    EyeOutlined,
-    PieChartOutlined
+  DeleteOutlined,
+  EditOutlined,
+  ExportOutlined,
+  EyeOutlined,
+  PieChartOutlined,
 } from '@ant-design/icons';
 import { Button, Divider, Popconfirm, Popover, Switch, Tooltip } from 'antd';
 import moment from 'moment';
@@ -17,7 +18,11 @@ import FormViewDetail from './components/FormViewDetail';
 import ThongKe from './components/ThongKe';
 
 const KhaoSat = () => {
-
+  const createAll = useCheckAccess('khao-sat:create-all');
+  const updateAll = useCheckAccess('khao-sat:update-all');
+  const deleteAll = useCheckAccess('khao-sat:delete-all');
+  const exportAll = useCheckAccess('khao-sat:export-all');
+  const thongKeAll = useCheckAccess('khao-sat:thong-ke-all');
   const {
     getBieuMauAdminModel,
     delBieuMauModel,
@@ -124,6 +129,7 @@ const KhaoSat = () => {
             <>
               <Tooltip title="Xuất kết quả">
                 <Button
+                  disabled={!exportAll}
                   type="primary"
                   onClick={() => {
                     // exportKetQuaKhaoSatModel({ idKhaoSat: record._id });
@@ -136,6 +142,7 @@ const KhaoSat = () => {
               <Divider type="vertical" />
               <Tooltip title="Thống kê">
                 <Button
+                  disabled={!thongKeAll}
                   onClick={() => {
                     setForm('statistic');
                     setVisibleForm(true);
@@ -167,6 +174,7 @@ const KhaoSat = () => {
               <Divider type="vertical" />
               <Tooltip title="Chỉnh sửa">
                 <Button
+                  disabled={!updateAll}
                   onClick={() => handleEdit(record)}
                   type="default"
                   shape="circle"
@@ -178,10 +186,11 @@ const KhaoSat = () => {
               <Divider type="vertical" />
               <Tooltip title="Xóa">
                 <Popconfirm
+                  disabled={!deleteAll}
                   onConfirm={() => delBieuMauModel({ id: record._id })}
                   title="Bạn có chắc chắn muốn xóa khảo sát này"
                 >
-                  <Button  type="primary" shape="circle">
+                  <Button disabled={!deleteAll} type="primary" shape="circle">
                     <DeleteOutlined />
                   </Button>
                 </Popconfirm>
@@ -200,14 +209,12 @@ const KhaoSat = () => {
   return (
     <TableBase
       columns={columns}
-      getData={ 
-        getBieuMauAdminModel
-      }
+      getData={getBieuMauAdminModel}
       loading={loading}
       dependencies={[page, limit, condition]}
       modelName="bieumau"
       title="Quản lý biểu mẫu"
-      hascreate
+      hascreate={createAll}
       formType="Drawer"
       widthDrawer="60%"
       Form={formTable}

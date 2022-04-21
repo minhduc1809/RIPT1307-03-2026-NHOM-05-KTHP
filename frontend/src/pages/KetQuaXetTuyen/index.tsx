@@ -2,6 +2,7 @@ import TableBase from '@/components/Table';
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
 import { EModeKhoiTao } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
+import { useCheckAccess } from '@/utils/utils';
 import { Button, Dropdown, Menu, Modal, Select } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
@@ -112,6 +113,8 @@ const KetQuaXetTuyenComponent = () => {
     },
   ];
 
+  const khoiTaoAll = useCheckAccess('danh-sach-trung-tuyen:khoi-tao-all');
+
   return (
     <TableBase
       getData={() => getKetQuaXetTuyenPageableModel(recordDotTuyenSinh?._id ?? '')}
@@ -162,24 +165,26 @@ const KetQuaXetTuyenComponent = () => {
         }))}
         style={{ width: 300, marginRight: 8 }}
       />
-      <Dropdown
-        overlay={
-          <Menu
-            onClick={async (val: any) => {
-              await KhoiTaoKetQuaXetTuyenModel(recordDotTuyenSinh?._id ?? '', { mode: val?.key });
-              getKetQuaXetTuyenPageableModel(recordDotTuyenSinh?._id ?? '');
-            }}
-          >
-            <Menu.Item key={EModeKhoiTao.SO_LUONG}>Sử dụng chỉ tiêu số lượng</Menu.Item>
-            <Menu.Item key={EModeKhoiTao.DIEM_SAN}>Sử dụng chỉ tiêu điểm sàn</Menu.Item>
-          </Menu>
-        }
-        key="ellipsis"
-      >
-        <Button loading={loadingChiTieu} type="primary">
-          Khởi tạo DS Trúng tuyển
-        </Button>
-      </Dropdown>
+      {khoiTaoAll && (
+        <Dropdown
+          overlay={
+            <Menu
+              onClick={async (val: any) => {
+                await KhoiTaoKetQuaXetTuyenModel(recordDotTuyenSinh?._id ?? '', { mode: val?.key });
+                getKetQuaXetTuyenPageableModel(recordDotTuyenSinh?._id ?? '');
+              }}
+            >
+              <Menu.Item key={EModeKhoiTao.SO_LUONG}>Sử dụng chỉ tiêu số lượng</Menu.Item>
+              <Menu.Item key={EModeKhoiTao.DIEM_SAN}>Sử dụng chỉ tiêu điểm sàn</Menu.Item>
+            </Menu>
+          }
+          key="ellipsis"
+        >
+          <Button loading={loadingChiTieu} type="primary">
+            Khởi tạo DS Trúng tuyển
+          </Button>
+        </Dropdown>
+      )}
       <Modal
         width={1100}
         visible={visibleForm}
