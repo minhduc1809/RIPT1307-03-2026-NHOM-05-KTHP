@@ -49,12 +49,13 @@ const Dashboard = () => {
     getSoLuongHoSoTheoNgay(moment().format('YYYY-MM-DD'));
   }, [record?._id]);
 
-  const tongSoLuongHoSo = Object?.values(recordTongSoLuongHoSo)
-    ?.filter((item) => typeof item === 'number')
-    ?.map((item: any) => item)
-    ?.reduce((previousValue, currentValue) => {
-      return previousValue + currentValue;
-    }, 0);
+  const tongSoLuongHoSo =
+    Object?.values(recordTongSoLuongHoSo)
+      ?.filter((item) => typeof item === 'number')
+      ?.map((item: any) => item)
+      ?.reduce((previousValue, currentValue) => {
+        return previousValue + currentValue;
+      }, 0) ?? 0;
 
   return (
     <div>
@@ -72,7 +73,8 @@ const Dashboard = () => {
             <br />
             <br />
             <div>
-              <ArrowUpOutlined /> Tăng {tongSoLuongHoSo - soLuongHoSoTheoNgay} hồ sơ
+              <ArrowUpOutlined /> Tăng{' '}
+              {(soLuongHoSoTheoNgay / (tongSoLuongHoSo - soLuongHoSoTheoNgay)) * 100} hồ sơ
               {/* {(((tongSoLuongHoSo - soLuongHoSoTheoNgay) / soLuongHoSoTheoNgay) * 100).toFixed(2)}%) */}
             </div>
           </Card>
