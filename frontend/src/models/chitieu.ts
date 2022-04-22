@@ -3,11 +3,12 @@ import {
   deleteChiTieu,
   getAllChiTieu,
   getChiTieuById,
-  getChiTieuByIdDotTuyenSinh,
+  getChiTieuByIdDotTuyenSinhIdCoSo,
   getChiTieuPageable,
   KhoiTaoKetQuaXetTuyen,
   postChiTieu,
   putChiTieu,
+  adminKhoiTaoChiTieu,
 } from '@/services/ChiTieu/chitieu';
 import type { EModeKhoiTao } from '@/utils/constants';
 import { message } from 'antd';
@@ -17,7 +18,8 @@ export default () => {
   const objInit = useInitModel();
   const [danhSach, setDanhSach] = useState<ChiTieu.Record[]>([]);
   const [record, setRecord] = useState<ChiTieu.Record>();
-  const { setLoading, page, limit, condition, setTotal } = objInit;
+  const [recordChiTieuChiTiet, setRecordChiTieuChiTiet] = useState<ChiTieu.ChiTieuChiTiet>();
+  const { setLoading, page, limit, condition, setTotal, setVisibleForm } = objInit;
   const KhoiTaoKetQuaXetTuyenModel = async (
     idDotTuyenSinh: string,
     payload: { mode: EModeKhoiTao },
@@ -43,7 +45,7 @@ export default () => {
 
   const getAllChiTieuModel = async () => {
     setLoading(true);
-    const response = await getAllChiTieu();
+    const response = await getAllChiTieu({ ...condition });
     setDanhSach(response?.data?.data ?? []);
     setTotal(response?.data?.data?.length ?? 0);
     setLoading(false);
@@ -56,10 +58,11 @@ export default () => {
     setLoading(false);
   };
 
-  const getChiTieuByIdDotTuyenSinhModel = async (idDot: string) => {
+  const getChiTieuByIdDotTuyenSinhIdCoSoModel = async (idDot: string, idCoSo: string) => {
+    if (!idDot || !idCoSo) return;
     setLoading(true);
-    const response = await getChiTieuByIdDotTuyenSinh(idDot);
-    setRecord(response?.data?.data);
+    const response = await getChiTieuByIdDotTuyenSinhIdCoSo(idDot, idCoSo);
+    setRecord(response?.data?.data ?? {});
     setLoading(false);
   };
 
@@ -75,13 +78,18 @@ export default () => {
     }
   };
 
-  const putChiTieuModel = async (payload: ChiTieu.Record, idChiTieu: string) => {
+  const putChiTieuModel = async (payload: {
+    dotTuyenSinh: string;
+    coSoDaoTao: string;
+    danhSachChiTieuChiTiet: any[];
+  }) => {
     try {
       setLoading(true);
-      await putChiTieu(payload, idChiTieu);
+      await putChiTieu(payload);
       message.success('Lưu thành công');
-      getChiTieuPageableModel();
+      getChiTieuByIdDotTuyenSinhIdCoSoModel(payload?.dotTuyenSinh, payload?.coSoDaoTao);
       setLoading(false);
+      setVisibleForm(false);
     } catch (err) {
       setLoading(false);
     }
@@ -95,8 +103,18 @@ export default () => {
     setLoading(false);
   };
 
+  const adminKhoiTaoChiTieuModel = async (payload: ChiTieu.PayloadKhoiTaoChiTieu) => {
+    setLoading(true);
+    await adminKhoiTaoChiTieu(payload);
+    message.success('Khởi tạo thành công');
+    getChiTieuByIdDotTuyenSinhIdCoSoModel(payload?.idDotTuyenSinh, payload?.idCoSoDaoTao);
+  };
+
   return {
-    getChiTieuByIdDotTuyenSinhModel,
+    adminKhoiTaoChiTieuModel,
+    recordChiTieuChiTiet,
+    setRecordChiTieuChiTiet,
+    getChiTieuByIdDotTuyenSinhIdCoSoModel,
     getChiTieuByIdModel,
     deleteChiTieuModel,
     putChiTieuModel,

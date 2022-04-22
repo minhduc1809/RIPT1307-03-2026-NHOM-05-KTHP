@@ -5,19 +5,23 @@ import { useModel } from 'umi';
 import { getSoLuongNguyenVongByIdDot } from '@/services/Dashboard/dashboard';
 import Donut from '@/components/Chart/Pie';
 
-const BlockNguyenVong = () => {
-  const { getAllCoSoDaoTaoModel, danhSach, record: recordCoSo, setRecord } = useModel('cosodaotao');
+const BlockNguyenVong = (props: {
+  groupBy: 'coSo' | 'nganh' | 'doiTuong' | 'phuongThuc';
+  title: string;
+}) => {
+  const { getAllCoSoDaoTaoModel, danhSach, record: recordCoSo } = useModel('cosodaotao');
   const { record } = useModel('dottuyensinh');
   const [recordSoLuongNguyenVongTheoNganh, setRecordSoLuongNguyenVongTheoNganh] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [trangThai, setTrangThai] = useState<ETrangThaiHoSo | undefined>();
+  const [idCoSo, setIdCoSo] = useState<string | undefined>(recordCoSo?._id);
   const getSoLuongNguyenVong = async () => {
     if (record?._id) {
       setLoading(true);
       const response = await getSoLuongNguyenVongByIdDot(record?._id, {
-        groupBy: 'nganh',
+        groupBy: props?.groupBy,
         condition: {
-          coSoDaoTao: recordCoSo?._id,
+          coSoDaoTao: idCoSo,
           trangThai,
         },
       });
@@ -32,22 +36,24 @@ const BlockNguyenVong = () => {
 
   useEffect(() => {
     getSoLuongNguyenVong();
-  }, [record?._id, recordCoSo?._id, trangThai]);
+  }, [record?._id, idCoSo, trangThai]);
 
   return (
     <Card
+      bodyStyle={{ padding: 0 }}
       title={
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontWeight: 'bold', color: Setting.primaryColor, marginBottom: 8 }}>
-            Số lượng nguyện vọng đăng ký theo ngành
+            {props?.title ?? ''}
           </div>
           <Select
+            allowClear
             onChange={(val) => {
-              setRecord(danhSach?.find((item) => item._id === val));
+              setIdCoSo(val);
             }}
-            value={recordCoSo?._id}
+            value={idCoSo}
             placeholder="Chọn cơ sở đào tạo"
-            style={{ width: 300, marginRight: 8 }}
+            style={{ width: 400, marginRight: 8 }}
             options={danhSach?.map((item) => ({
               value: item._id,
               label: `${item.tenVietTat} - ${item.ten}`,

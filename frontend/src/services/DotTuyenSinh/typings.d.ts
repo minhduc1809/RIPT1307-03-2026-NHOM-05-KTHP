@@ -88,5 +88,6 @@ declare module DotTuyenSinh {
     hinhThucThanhToan: EHinhThucThanhToan;
     huongDanThanhToan: string;
     choPhepThiSinhMoKhoa: boolean;
+    danhSachCoSoDaoTao: CoSoDaoTao.Record[];
   }
 }

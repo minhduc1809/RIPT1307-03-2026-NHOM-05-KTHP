@@ -1,6 +1,12 @@
 import FilterDotTuyenSinh from '@/components/FilterDotTuyenSinh';
-import { getSoLuongHoSoByIdDot, getSoLuongNguyenVongByIdDot } from '@/services/Dashboard/dashboard';
+import {
+  getSoLuongHoSoByIdDot,
+  getSoLuongHoSoTheoNgayByIdDot,
+  getSoLuongNguyenVongByIdDot,
+} from '@/services/Dashboard/dashboard';
+import { ArrowUpOutlined } from '@ant-design/icons/lib/icons';
 import { Badge, Card, Col, Row, Statistic } from 'antd';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import BlockNguyenVong from './components/BlockNguyenVong';
@@ -10,21 +16,14 @@ const Dashboard = () => {
   const arrColor = ['orange', 'blue', 'green', 'red'];
 
   const [recordTongSoLuongHoSo, setRecordTongSoLuongHoSo] = useState<any>({});
-  const [recordSoLuongHoSoHomNay, setRecordSoLuongHoSoHomNay] = useState<any>({});
   const [recordSoLuongNguyenVong, setRecordSoLuongNguyenVong] = useState<any>({});
   const { record } = useModel('dottuyensinh');
+  const [soLuongHoSoTheoNgay, setSoLuongHoSoTheoNgay] = useState<number>(0);
 
   const getTongSoLuongHoSo = async () => {
     if (record?._id) {
       const response = await getSoLuongHoSoByIdDot(record?._id);
       setRecordTongSoLuongHoSo(response?.data?.data ?? {});
-    }
-  };
-
-  const getSoLuongHoSoHomNay = async () => {
-    if (record?._id) {
-      const response = await getSoLuongHoSoByIdDot(record?._id, { today: 1 });
-      setRecordSoLuongHoSoHomNay(response?.data?.data ?? {});
     }
   };
 
@@ -35,11 +34,27 @@ const Dashboard = () => {
     }
   };
 
+  const getSoLuongHoSoTheoNgay = async (ngayThongKe: string) => {
+    if (record?._id) {
+      const response = await getSoLuongHoSoTheoNgayByIdDot(record?._id, {
+        ngayThongKe,
+      });
+      setSoLuongHoSoTheoNgay(response?.data?.data ?? 0);
+    }
+  };
+
   useEffect(() => {
     getSoLuongNguyenVong('coSo');
     getTongSoLuongHoSo();
-    getSoLuongHoSoHomNay();
+    getSoLuongHoSoTheoNgay(moment().format('YYYY-MM-DD'));
   }, [record?._id]);
+
+  const tongSoLuongHoSo = Object?.values(recordTongSoLuongHoSo)
+    ?.filter((item) => typeof item === 'number')
+    ?.map((item: any) => item)
+    ?.reduce((previousValue, currentValue) => {
+      return previousValue + currentValue;
+    }, 0);
 
   return (
     <div>
@@ -48,27 +63,34 @@ const Dashboard = () => {
           <FilterDotTuyenSinh />
         </Col>
         <Col xs={24} md={12} xl={6}>
-          <BlockSoLuongHoSo title="Tổng Số Lượng Hồ Sơ" recordSoLuongHoSo={recordTongSoLuongHoSo} />
-        </Col>
-        <Col xs={24} md={12} xl={6}>
           <Card>
             <Statistic
-              title={<div style={{ fontSize: 16 }}>Số Lượng Hồ Sơ Đã Tiếp Nhận</div>}
-              value={0}
+              title={<div style={{ fontSize: 16 }}>Tổng số lượng hồ sơ</div>}
+              value={tongSoLuongHoSo}
             />
             <br />
             <br />
             <br />
-            <Badge color="orange" />
-            Dữ liệu đang cập nhật: {0}
-            <br />
+            <div>
+              <ArrowUpOutlined /> Tăng {tongSoLuongHoSo - soLuongHoSoTheoNgay} hồ sơ
+              {/* {(((tongSoLuongHoSo - soLuongHoSoTheoNgay) / soLuongHoSoTheoNgay) * 100).toFixed(2)}%) */}
+            </div>
           </Card>
         </Col>
         <Col xs={24} md={12} xl={6}>
-          <BlockSoLuongHoSo
-            title="Số Lượng Hồ Sơ Hôm Nay"
-            recordSoLuongHoSo={recordSoLuongHoSoHomNay}
-          />
+          <BlockSoLuongHoSo title="Phân loại hồ sơ" recordSoLuongHoSo={recordTongSoLuongHoSo} />
+        </Col>
+        <Col xs={24} md={12} xl={6}>
+          <Card>
+            <Statistic
+              title={<div style={{ fontSize: 16 }}>Số lượng hồ sơ hôm nay</div>}
+              value={soLuongHoSoTheoNgay}
+            />
+            <br />
+            <br />
+            <br />
+            <br />
+          </Card>
         </Col>
         <Col xs={24} md={12} xl={6}>
           <Card>
@@ -97,8 +119,11 @@ const Dashboard = () => {
               ))}
           </Card>
         </Col>
-        <Col span={24}>
-          <BlockNguyenVong />
+        <Col md={24} lg={24}>
+          <BlockNguyenVong title="Số lượng nguyện vọng đăng ký theo ngành" groupBy="nganh" />
+        </Col>
+        <Col md={24} lg={24}>
+          <BlockNguyenVong title="Số lượng nguyện vọng đăng ký theo đối tượng" groupBy="doiTuong" />
         </Col>
       </Row>
     </div>

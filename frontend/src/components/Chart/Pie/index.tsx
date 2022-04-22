@@ -37,7 +37,7 @@ const Donut = (props: {
         <Guide>
           <Html
             position={['50%', '50%']}
-            html={`<div style="color:#8c8c8c;font-size:1.16em;text-align: center;width: 10em;">Tổng số<br><span style="color:#262626;font-size:2.0em">${props.data.reduce(
+            html={`<div style="color:#8c8c8c;font-size:1.16em;text-align: center;width: 10em;">Tổng số<br><span style="color:#262626;font-size:1.5em">${props.data.reduce(
               (sum, currentValue) => {
                 return sum + currentValue.y;
               },

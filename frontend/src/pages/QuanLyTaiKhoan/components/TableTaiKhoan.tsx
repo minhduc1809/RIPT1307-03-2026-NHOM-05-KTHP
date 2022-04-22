@@ -104,11 +104,11 @@ const TableTaiKhoan = (props: {
           <Divider type="vertical" />
           <Tooltip title="Xóa">
             <Popconfirm
-              disabled={props?.phanQuyen?.deleteAll}
+              disabled={!props?.phanQuyen?.deleteAll}
               onConfirm={() => deleteUserModel(record._id)}
               title="Bạn có chắc chắn muốn xóa tài khoản này?"
             >
-              <Button disabled={props?.phanQuyen?.deleteAll} type="primary" shape="circle">
+              <Button disabled={!props?.phanQuyen?.deleteAll} type="primary" shape="circle">
                 <DeleteOutlined />
               </Button>
             </Popconfirm>

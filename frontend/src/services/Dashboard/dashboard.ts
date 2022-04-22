@@ -16,3 +16,7 @@ export function getSoLuongNguyenVongByIdDot(
 ) {
   return axios.get(`${ip3}/${url}/so-luong/nguyen-vong/dot/${idDot}`, { params: payload });
 }
+
+export function getSoLuongHoSoTheoNgayByIdDot(idDot: string, payload: { ngayThongKe: string }) {
+  return axios.get(`${ip3}/${url}/so-luong/ho-so/dot/${idDot}`, { params: payload });
+}
