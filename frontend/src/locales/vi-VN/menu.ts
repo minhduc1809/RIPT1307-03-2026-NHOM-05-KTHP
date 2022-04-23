@@ -97,6 +97,7 @@ export default {
   'menu.TuongTac.Email': 'Gửi email',
   'menu.TuongTac.BieuMau': 'Khảo sát',
   'menu.TuongTac.ThongBao': 'Thông báo',
+  'menu.TuongTac.BaiVietChung': 'Giới thiệu chung',
   'menu.ThongKeBaoCao': 'Thống kê báo cáo',
   'menu.ThongKeBaoCao.TuyenSinh': 'Tuyển sinh',
   'menu.ThongKeBaoCao.NhapHoc': 'Nhập học',

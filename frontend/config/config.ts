@@ -307,6 +307,13 @@ export default defineConfig({
       icon: 'AppstoreAddOutlined',
       routes: [
         {
+          path: './baivietchung',
+          name: 'BaiVietChung',
+          component: './BaiVietChung',
+          icon: 'EditOutlined',
+          access: 'admin',
+        },
+        {
           name: 'Email',
           path: './sendemail',
           component: './SendEmail/index.tsx',

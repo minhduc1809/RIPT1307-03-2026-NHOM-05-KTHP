@@ -48,14 +48,9 @@ const HuongDanDropdown: React.FC = () => {
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       <Menu.SubMenu title="Hướng dẫn hệ thống" key="HDHT">
-        <Menu.SubMenu title="Hướng dẫn sử dụng" key="HDSD">
-          {danhSach?.map((item) => (
-            <Menu.Item key={item?.tepDinhKem}>{item?.tenHuongDan}</Menu.Item>
-          ))}
-        </Menu.SubMenu>
-        <Menu.Item key="https://dkxt.apd.edu.vn/api-v3/file/6246a47d61ed770f349d7e7d/huongdanthanhtoan.pdf">
-          Hướng dẫn nộp lệ phí
-        </Menu.Item>
+        {danhSach?.map((item) => (
+          <Menu.Item key={item?.tepDinhKem}>{item?.tenHuongDan}</Menu.Item>
+        ))}
       </Menu.SubMenu>
 
       {record?._id && record?.danhSachHuongDanSuDung?.length ? (

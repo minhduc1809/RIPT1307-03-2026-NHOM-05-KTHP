@@ -1,4 +1,4 @@
-import { getByKey, put } from '@/services/Setting/setting';
+import { getByKey, upsertSetting } from '@/services/Setting/setting';
 import { message } from 'antd';
 import { useState } from 'react';
 
@@ -14,9 +14,9 @@ export default () => {
     setLoading(false);
   };
 
-  const putSettingModel = async (payload: { key: string; data: Setting.Record }) => {
+  const upsertSettingModel = async (payload: Setting.Record) => {
     setLoading(true);
-    await put(payload);
+    await upsertSetting(payload);
     message.success('Lưu thành công');
     getSettingByKeyModel('GIOI_THIEU_CHUNG');
     setVisibleForm(false);
@@ -25,7 +25,7 @@ export default () => {
   return {
     visibleForm,
     setVisibleForm,
-    putSettingModel,
+    upsertSettingModel,
     record,
     setRecord,
     loading,

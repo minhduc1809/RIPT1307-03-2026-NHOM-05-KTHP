@@ -1,10 +1,10 @@
 import { Space } from 'antd';
 import React from 'react';
-import { useModel, useAccess } from 'umi';
+import { useAccess, useModel } from 'umi';
 import NoticeIcon from '../NoticeIcon';
 import Avatar from './AvatarDropdown';
+import GioiThieuChung from './GioiThieuChung';
 import HuongDanDropdown from './HuongDanDropdown';
-
 import styles from './index.less';
 
 export type SiderTheme = 'light' | 'dark';
@@ -30,6 +30,7 @@ const GlobalHeaderRight: React.FC = () => {
         <>
           <NoticeIcon />
           <HuongDanDropdown />
+          <GioiThieuChung />
         </>
       )}
       <Avatar menu />
