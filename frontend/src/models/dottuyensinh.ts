@@ -18,6 +18,10 @@ export default () => {
   const objInitModel = useInitModel();
   const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
   const [danhSachGiayToNopHoSo, setdanhSachGiayToNopHoSo] = useState<DotTuyenSinh.GiayTo[]>([]);
+  const [danhSachHDSD, setDanhSachHDSD] = useState<HuongDanSuDung.Record[]>([]);
+  const [recordHDSD, setRecordHDSD] = useState<HuongDanSuDung.Record>();
+  const [visibleFormHDSD, setVisibleFormHDSD] = useState<boolean>(false);
+  const [editHDSD, setEditHDSD] = useState<boolean>();
   const [danhSachGiayToNopOnline, setdanhSachGiayToNopOnline] = useState<DotTuyenSinh.GiayTo[]>([]);
   const [danhSachGiayToXacNhanNhapHoc, setdanhSachGiayToXacNhanNhapHoc] = useState<
     DotTuyenSinh.GiayTo[]
@@ -109,6 +113,14 @@ export default () => {
   };
 
   return {
+    editHDSD,
+    setEditHDSD,
+    recordHDSD,
+    setRecordHDSD,
+    danhSachHDSD,
+    setDanhSachHDSD,
+    visibleFormHDSD,
+    setVisibleFormHDSD,
     recordDoiTuong,
     setRecordDoiTuong,
     recordThongTinKhaiXacNhan,

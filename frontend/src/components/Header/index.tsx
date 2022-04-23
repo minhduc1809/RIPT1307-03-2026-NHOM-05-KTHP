@@ -1,7 +1,6 @@
 import { Setting } from '@/utils/constants';
 import { useMediaQuery } from 'react-responsive';
-import AvatarDropdown from '../RightContent/AvatarDropdown';
-
+import RightContent from '@/components/RightContent';
 const Header = () => {
   const isMediumScreen = useMediaQuery({
     query: '(min-width: 950px)',
@@ -98,7 +97,7 @@ const Header = () => {
             </div>
           </>
         )}
-        <AvatarDropdown menu />
+        <RightContent />
       </div>
     </div>
   );

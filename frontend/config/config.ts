@@ -332,6 +332,7 @@ export default defineConfig({
           path: './huongdansudung',
           access: 'routeFilter',
           maChucNang: 'huong-dan-su-dung:read-all',
+          component: './HuongDanSuDung',
         },
       ],
     },

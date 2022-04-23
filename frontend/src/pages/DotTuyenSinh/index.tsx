@@ -26,6 +26,7 @@ const DotTuyenSinhComponent = () => {
     setDanhSachNganh,
     setdanhSachThongTinKhaiXacNhan,
     setDanhSachDoiTuong,
+    setDanhSachHDSD,
   } = useModel('dottuyensinh');
 
   const { getProductByCodeModel } = useModel('thanhtoan');
@@ -135,6 +136,7 @@ const DotTuyenSinhComponent = () => {
                 setDanhSachNganh(record?.danhSachNganhTuyenSinh ?? []);
                 setdanhSachThongTinKhaiXacNhan(record?.danhSachThongTinKhaiXacNhan ?? []);
                 setDanhSachDoiTuong(record?.danhSachDoiTuongTuyenSinh ?? []);
+                setDanhSachHDSD(record?.danhSachHuongDanSuDung ?? []);
                 setEdit(true);
                 setRecord(record);
                 setVisibleForm(true);

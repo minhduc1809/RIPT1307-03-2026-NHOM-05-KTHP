@@ -166,13 +166,7 @@ export function renderFileListUrl(url: string) {
   if (!url) return { fileList: [] };
   return {
     fileList: [
-      {
-        name: getNameFile(url),
-        url,
-        status: 'done',
-        size: 0,
-        type: 'img/png',
-      },
+      { remote: true, name: getNameFile(url), url, status: 'done', size: 0, type: 'img/png' },
     ],
   };
 }

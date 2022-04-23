@@ -2,7 +2,7 @@ import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
 import { useCheckAccess } from '@/utils/utils';
 import { EyeOutlined } from '@ant-design/icons';
-import { Button, Divider, Modal, Tooltip, Typography } from 'antd';
+import { Button, Modal, Tooltip, Typography } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import Form from './components/Form';
@@ -105,7 +105,7 @@ const ThongBao = () => {
               icon={<EyeOutlined />}
             />
           </Tooltip>
-          <Divider type="vertical" />
+          {/* <Divider type="vertical" /> */}
           {/* <Tooltip title="Sửa">
                         <Button
                             disabled

@@ -27,6 +27,7 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import TableDoiTuong from './TableDoiTuong';
 import TableGiayTo from './TableGiayTo';
+import TableHDSD from './TableHDSD';
 import TableNganh from './TableNganh';
 import TableKhaiThongTinNhapHoc from './TableThongTinKhaiNhapHoc';
 
@@ -50,6 +51,7 @@ const FormDotTuyenSinh = () => {
     danhSachNganh,
     danhSachThongTinKhaiXacNhan,
     danhSachDoiTuong,
+    danhSachHDSD,
     setDanhSachDoiTuong,
   } = useModel('dottuyensinh');
   const { danhSach } = useModel('namtuyensinh');
@@ -126,6 +128,7 @@ const FormDotTuyenSinh = () => {
               danhSachDoiTuongTuyenSinh: danhSachDoiTuong,
               danhSachGiayToXacNhanNhapHoc,
               danhSachThongTinKhaiXacNhan,
+              danhSachHuongDanSuDung: danhSachHDSD,
               danhSachNganhTuyenSinh: danhSachNganh?.map((item) => ({
                 ...item,
                 nganh: item?.nganh?._id,
@@ -145,6 +148,7 @@ const FormDotTuyenSinh = () => {
               thongTinGiayToNopHoSo: danhSachGiayToNopHoSo,
               danhSachGiayToXacNhanNhapHoc,
               danhSachThongTinKhaiXacNhan,
+              danhSachHuongDanSuDung: danhSachHDSD,
               danhSachNganhTuyenSinh: danhSachNganh?.map((item) => ({
                 ...item,
                 nganh: item.nganh._id,
@@ -315,6 +319,11 @@ const FormDotTuyenSinh = () => {
           <Col span={24}>
             <Form.Item label="Danh sách thông tin khai nhập học">
               <TableKhaiThongTinNhapHoc />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item label="Danh sách hướng dẫn sử dụng">
+              <TableHDSD />
             </Form.Item>
           </Col>
           <Col xs={24}>

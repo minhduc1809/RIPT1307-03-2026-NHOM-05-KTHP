@@ -1,4 +1,5 @@
-import { EuroCircleOutlined, FileTextOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { useEffect } from 'react';
 import { Badge, Menu, Spin } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
@@ -8,19 +9,17 @@ import styles from './index.less';
 
 const HuongDanDropdown: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
+  const { record } = useModel('dottuyensinh');
+  const { getAllHuongDanSuDungModel, danhSach } = useModel('huongdansudung');
+
+  useEffect(() => {
+    getAllHuongDanSuDungModel();
+  }, []);
+
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
       const { key } = event;
-      if (key === 'HDSD' && initialState) {
-        window.open('https://dkxt.apd.edu.vn/api-v3/file/6247b7ac3c3c4d7ffb2a38db/hdsd.pdf');
-        return;
-      }
-      if (key === 'HDTT') {
-        window.open(
-          'https://dkxt.apd.edu.vn/api-v3/file/6246a47d61ed770f349d7e7d/huongdanthanhtoan.pdf',
-        );
-        return;
-      }
+      window.open(key);
     },
     [initialState, setInitialState],
   );
@@ -48,16 +47,29 @@ const HuongDanDropdown: React.FC = () => {
 
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-      <Menu.Item key="HDSD">
-        <FileTextOutlined />
-        Hướng dẫn sử dụng
-      </Menu.Item>
-      <Menu.Divider />
+      <Menu.SubMenu title="Hướng dẫn hệ thống" key="HDHT">
+        <Menu.SubMenu title="Hướng dẫn sử dụng" key="HDSD">
+          {danhSach?.map((item) => (
+            <Menu.Item key={item?.tepDinhKem}>{item?.tenHuongDan}</Menu.Item>
+          ))}
+        </Menu.SubMenu>
+        <Menu.Item key="https://dkxt.apd.edu.vn/api-v3/file/6246a47d61ed770f349d7e7d/huongdanthanhtoan.pdf">
+          Hướng dẫn nộp lệ phí
+        </Menu.Item>
+      </Menu.SubMenu>
 
-      <Menu.Item key="HDTT">
-        <EuroCircleOutlined />
-        Hướng dẫn nộp lệ phí
-      </Menu.Item>
+      {record?._id && record?.danhSachHuongDanSuDung?.length ? (
+        <>
+          <Menu.Divider />
+          <Menu.SubMenu title="Hướng dẫn theo đợt" key="HDTD">
+            {record?.danhSachHuongDanSuDung?.map((item) => (
+              <Menu.Item key={item?.tepDinhKem}>{item?.tenHuongDan}</Menu.Item>
+            ))}
+          </Menu.SubMenu>
+        </>
+      ) : (
+        <div />
+      )}
     </Menu>
   );
   return (
@@ -65,7 +77,7 @@ const HuongDanDropdown: React.FC = () => {
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
           <Badge style={{ fontSize: 12, boxShadow: 'none' }} count={2}>
-            <QuestionCircleOutlined style={{ fontSize: 20 }} />
+            <QuestionCircleOutlined style={{ fontSize: 20, color: '#fff' }} />
           </Badge>
         </span>
       </HeaderDropdown>
