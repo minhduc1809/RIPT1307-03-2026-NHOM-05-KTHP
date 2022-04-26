@@ -33,7 +33,7 @@ export default () => {
     const response = await getKetQuaXetTuyenPageable(idDotTuyenSinh, {
       page,
       limit,
-      condition: { ...condition, idCoSoDaoTao },
+      condition: { ...condition, 'nguyenVongTrungTuyen.coSoDaoTao': idCoSoDaoTao },
     });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);

@@ -4,7 +4,7 @@ import { readAllNotification, readOneNotification } from '@/services/ThongBao/th
 import { Button, message, Modal } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useAccess, useModel } from 'umi';
 import NoticeIcon from './NoticeIcon';
 
 export type GlobalHeaderRightProps = {
@@ -36,6 +36,7 @@ const getNoticeData = (notices: ThongBao.Record[]): ThongBao.Record[] => {
 };
 
 const NoticeIconView = () => {
+  const access = useAccess();
   const { initialState } = useModel('@@initialState');
   const { danhSachNoticeIcon, getThongBaoModel, totalNoticeIcon, pageNoticeIcon, limitNoticeIcon } =
     useModel('thongbao');
@@ -46,7 +47,7 @@ const NoticeIconView = () => {
   const [record, setRecord] = useState<ThongBao.Record>();
 
   useEffect(() => {
-    getThongBaoModel();
+    if (access.thiSinh || access.thiSinhChuaKichHoat) getThongBaoModel();
   }, [pageNoticeIcon, limitNoticeIcon]);
 
   useEffect(() => {

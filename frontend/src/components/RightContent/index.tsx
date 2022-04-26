@@ -9,7 +9,9 @@ import styles from './index.less';
 
 export type SiderTheme = 'light' | 'dark';
 
-const GlobalHeaderRight: React.FC = () => {
+const GlobalHeaderRight: React.FC<{ marginTopGioiThieuChung: number }> = (props: {
+  marginTopGioiThieuChung: number;
+}) => {
   const access = useAccess();
   const { initialState } = useModel('@@initialState');
 
@@ -30,7 +32,7 @@ const GlobalHeaderRight: React.FC = () => {
         <>
           <NoticeIcon />
           <HuongDanDropdown />
-          <GioiThieuChung />
+          <GioiThieuChung marginTop={props.marginTopGioiThieuChung} />
         </>
       )}
       <Avatar menu />

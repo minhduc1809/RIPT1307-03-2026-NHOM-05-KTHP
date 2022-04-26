@@ -128,7 +128,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     unAccessible: <NotAccessible />,
     noFound: <NotFoundContent />,
-    rightContentRender: () => <RightContent />,
+    rightContentRender: () => <RightContent marginTopGioiThieuChung={17} />,
     disableContentMargin: false,
     waterMarkProps: {
       content: initialState?.currentUser?.ten,

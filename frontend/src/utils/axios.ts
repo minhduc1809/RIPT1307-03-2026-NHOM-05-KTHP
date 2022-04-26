@@ -64,7 +64,13 @@ axios.interceptors.response.use(
         notification.error({
           message:
             'Lỗi không tìm thấy dữ liệu, bạn hãy thử f5 refresh lại trình duyệt để cập nhật phiên bản mới nhất.',
-          description: error?.response?.data?.detail?.message || error?.message,
+          description:
+            data.error[
+              error?.response?.data?.detail?.errorCode || error?.response?.data?.errorCode
+            ] ||
+            error?.response?.data?.errorDescription ||
+            error?.data?.detail?.message ||
+            error?.message,
         });
         break;
 

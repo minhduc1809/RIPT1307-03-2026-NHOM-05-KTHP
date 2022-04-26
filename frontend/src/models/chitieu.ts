@@ -25,7 +25,7 @@ export default () => {
   const { setLoading, page, limit, condition, setTotal, setVisibleForm } = objInit;
   const KhoiTaoKetQuaXetTuyenModel = async (
     idDotTuyenSinh: string,
-    payload: { mode: EModeKhoiTao },
+    payload: { mode: EModeKhoiTao; idCoSoDaoTao?: string },
   ) => {
     if (!idDotTuyenSinh) return;
     try {

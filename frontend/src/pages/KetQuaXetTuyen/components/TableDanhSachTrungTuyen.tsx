@@ -3,8 +3,8 @@ import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
 import { EModeKhoiTao } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { useCheckAccess } from '@/utils/utils';
-import { Button, Dropdown, Menu, Modal, Select } from 'antd';
-import { useEffect } from 'react';
+import { CheckSquareOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Menu, Modal } from 'antd';
 import { useModel } from 'umi';
 import ViewHoSoTrungTuyen from './ViewKetQua';
 
@@ -15,7 +15,6 @@ const TableDanhSachTrungTuyen = (props: { idCoSo?: string }) => {
     condition,
     loading,
     getKetQuaXetTuyenPageableModel,
-    setDanhSach,
     setVisibleForm,
     setRecord: setRecordKetQuaXetTuyen,
     visibleForm,
@@ -23,42 +22,10 @@ const TableDanhSachTrungTuyen = (props: { idCoSo?: string }) => {
 
   const { KhoiTaoKetQuaXetTuyenModel, loading: loadingChiTieu } = useModel('chitieu');
 
-  const {
-    getAllDotTuyenSinhModel,
-    record: recordDotTuyenSinh,
-    danhSach: danhSachDot,
-    setRecord: setRecordDotTuyenSinh,
-  } = useModel('dottuyensinh');
+  const { record: recordDotTuyenSinh } = useModel('dottuyensinh');
 
-  const {
-    getAllHinhThucDaoTaoModel,
-    record,
-    setRecord,
-    danhSach: danhSachHinhThuc,
-  } = useModel('hinhthucdaotao');
-  const {
-    getAllNamTuyenSinhModel,
-    record: recordNamTuyenSinh,
-    danhSach: danhSachNam,
-    setRecord: setRecordNamTuyenSinh,
-  } = useModel('namtuyensinh');
-
-  useEffect(() => {
-    if (danhSachHinhThuc.length === 0) getAllHinhThucDaoTaoModel();
-    return () => {
-      setDanhSach([]);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (record?._id && !recordNamTuyenSinh?._id) getAllNamTuyenSinhModel(record?._id);
-  }, [record?._id]);
-
-  useEffect(() => {
-    if (recordNamTuyenSinh?._id && !recordDotTuyenSinh?._id) {
-      getAllDotTuyenSinhModel({ namTuyenSinh: recordNamTuyenSinh?.nam }, true);
-    }
-  }, [recordNamTuyenSinh?._id]);
+  const { record } = useModel('hinhthucdaotao');
+  const { record: recordNamTuyenSinh } = useModel('namtuyensinh');
 
   const onCell = (recordKetQua: KetQuaXetTuyen.Record) => ({
     onClick: () => {
@@ -117,9 +84,9 @@ const TableDanhSachTrungTuyen = (props: { idCoSo?: string }) => {
 
   return (
     <TableBase
+      hideCard
       getData={() => getKetQuaXetTuyenPageableModel(recordDotTuyenSinh?._id ?? '', props?.idCoSo)}
       modelName="ketquaxettuyen"
-      title="Danh sách trúng tuyển"
       loading={loading}
       columns={columns}
       dependencies={[
@@ -129,49 +96,19 @@ const TableDanhSachTrungTuyen = (props: { idCoSo?: string }) => {
         recordDotTuyenSinh?._id,
         recordNamTuyenSinh?._id,
         record?._id,
+        props.idCoSo,
       ]}
     >
-      <Select
-        onChange={(val) => {
-          setRecordNamTuyenSinh(undefined);
-          setRecordDotTuyenSinh(undefined);
-          setRecord(danhSachHinhThuc?.find((item) => item._id === val));
-        }}
-        value={record?._id}
-        options={danhSachHinhThuc?.map((item) => ({
-          value: item._id,
-          label: item.ten,
-        }))}
-        style={{ width: 120, marginRight: 8 }}
-      />
-      <Select
-        onChange={(val) => {
-          setRecordDotTuyenSinh(undefined);
-          setRecordNamTuyenSinh(danhSachNam?.find((item) => item.nam === val));
-        }}
-        value={recordNamTuyenSinh?.nam}
-        options={danhSachNam?.map((item) => ({
-          value: item.nam,
-          label: `Năm tuyển sinh ${item.nam}`,
-        }))}
-        style={{ width: 180, marginRight: 8 }}
-      />
-      <Select
-        onChange={(val) => setRecordDotTuyenSinh(danhSachDot?.find((item) => item._id === val))}
-        value={recordDotTuyenSinh?._id}
-        options={danhSachDot?.map((item) => ({
-          value: item?._id,
-          label: item?.tenDotTuyenSinh,
-        }))}
-        style={{ width: 300, marginRight: 8 }}
-      />
-      {khoiTaoAll && (
+      {khoiTaoAll && recordDotTuyenSinh?.choPhepGiaLapTheoCoSo === true && (
         <Dropdown
           overlay={
             <Menu
               onClick={async (val: any) => {
-                await KhoiTaoKetQuaXetTuyenModel(recordDotTuyenSinh?._id ?? '', { mode: val?.key });
-                getKetQuaXetTuyenPageableModel(recordDotTuyenSinh?._id ?? '');
+                await KhoiTaoKetQuaXetTuyenModel(recordDotTuyenSinh?._id ?? '', {
+                  mode: val?.key,
+                  idCoSoDaoTao: props.idCoSo,
+                });
+                getKetQuaXetTuyenPageableModel(recordDotTuyenSinh?._id ?? '', props.idCoSo);
               }}
             >
               <Menu.Item key={EModeKhoiTao.SO_LUONG}>Sử dụng chỉ tiêu số lượng</Menu.Item>
@@ -180,7 +117,7 @@ const TableDanhSachTrungTuyen = (props: { idCoSo?: string }) => {
           }
           key="ellipsis"
         >
-          <Button loading={loadingChiTieu} type="primary">
+          <Button icon={<CheckSquareOutlined />} loading={loadingChiTieu} type="primary">
             Khởi tạo DS Trúng tuyển
           </Button>
         </Dropdown>

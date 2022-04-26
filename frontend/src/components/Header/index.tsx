@@ -97,7 +97,7 @@ const Header = () => {
             </div>
           </>
         )}
-        <RightContent />
+        <RightContent marginTopGioiThieuChung={4} />
       </div>
     </div>
   );

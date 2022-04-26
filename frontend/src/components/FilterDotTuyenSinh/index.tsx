@@ -25,6 +25,8 @@ const FilterDotTuyenSinh = () => {
 
   const { setDanhSach, setPage, setLimit } = useModel('hosoxettuyen');
 
+  const { setDanhSach: setDanhSachTrungTuyen } = useModel('ketquaxettuyen');
+
   useEffect(() => {
     if (danhSachHinhThuc.length === 0) getAllHinhThucDaoTaoModel();
     return () => {
@@ -54,6 +56,7 @@ const FilterDotTuyenSinh = () => {
           setRecordNamTuyenSinh(undefined);
           setRecordDotTuyenSinh(undefined);
           setRecord(danhSachHinhThuc?.find((item) => item._id === val));
+          setDanhSachTrungTuyen([]);
         }}
         value={record?._id}
         options={danhSachHinhThuc?.map((item) => ({
@@ -83,7 +86,7 @@ const FilterDotTuyenSinh = () => {
           value: item?._id,
           label: item?.tenDotTuyenSinh,
         }))}
-        style={{ width: 250, marginRight: 8 }}
+        style={{ width: 300, marginRight: 8 }}
       />
     </>
   );

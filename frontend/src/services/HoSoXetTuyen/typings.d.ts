@@ -39,6 +39,7 @@ declare module HoSoXetTuyen {
     identityCode;
     ngonNgu: string | string[];
     giaiHSG: string | string[];
+    giaiKHKT: string | string[];
     toHopMongMuon: EToHopXetTuyen[];
   }
 

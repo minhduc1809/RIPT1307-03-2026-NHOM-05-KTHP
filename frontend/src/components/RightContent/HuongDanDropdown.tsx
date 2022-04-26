@@ -3,17 +3,18 @@ import { useEffect } from 'react';
 import { Badge, Menu, Spin } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
-import { useModel } from 'umi';
+import { useAccess, useModel } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
 const HuongDanDropdown: React.FC = () => {
+  const access = useAccess();
   const { initialState, setInitialState } = useModel('@@initialState');
   const { record } = useModel('dottuyensinh');
   const { getAllHuongDanSuDungModel, danhSach } = useModel('huongdansudung');
 
   useEffect(() => {
-    getAllHuongDanSuDungModel();
+    if (access.thiSinh || access.thiSinhChuaKichHoat) getAllHuongDanSuDungModel();
   }, []);
 
   const onMenuClick = useCallback(

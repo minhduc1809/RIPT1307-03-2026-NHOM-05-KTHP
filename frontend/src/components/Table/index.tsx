@@ -29,6 +29,7 @@ type Props = {
   otherProps?: TableProps<any>;
   maskCloseableForm?: boolean;
   noCleanUp?: boolean;
+  hideCard?: boolean;
 };
 
 const TableBase = (props: Props) => {
@@ -49,6 +50,7 @@ const TableBase = (props: Props) => {
     otherProps,
     maskCloseableForm,
     noCleanUp,
+    hideCard,
   } = props;
   let { columns } = props;
   const {
@@ -305,8 +307,8 @@ const TableBase = (props: Props) => {
     setCondition(tmpCond);
   };
 
-  return (
-    <Card title={title || false}>
+  const mainContent = (
+    <div>
       {children}
       {hascreate && (
         <Button
@@ -390,8 +392,10 @@ const TableBase = (props: Props) => {
           )}
         </>
       )}
-    </Card>
+    </div>
   );
+
+  return hideCard ? mainContent : <Card title={title || false}>{mainContent}</Card>;
 };
 
 export default TableBase;

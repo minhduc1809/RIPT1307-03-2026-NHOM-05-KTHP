@@ -46,6 +46,7 @@ import InfoDoiTuongKhuVuc from './components/InfoDoiTuongKhuVuc';
 import InfoTruongTHPT from './components/InfoTruongTHPT';
 import TableGiayTo from './components/TableGiayTo';
 import _ from 'lodash';
+import BlockGiaiKHKT from './components/BlockKhoaHocKyThuat';
 
 const QuaTrinhHocTap = () => {
   const {
@@ -83,6 +84,7 @@ const QuaTrinhHocTap = () => {
   const [isChuyenTruong, setIsChuyenTruong] = useState<boolean>(false);
 
   const [typeHSG, setTypeHSG] = useState<string | string[] | undefined>(recordHoSo?.giaiHSG);
+  const [typeKHKT, setTypeKHKT] = useState<string | string[] | undefined>(recordHoSo?.giaiKHKT);
   const [danhSachMaPhuongThuc, setDanhSachMaPhuongThuc] = useState<string[]>(
     record?.danhSachPhuongThucTuyenSinh?.length === 1
       ? [record?.danhSachPhuongThucTuyenSinh?.[0]?._id]
@@ -130,6 +132,18 @@ const QuaTrinhHocTap = () => {
         setTypeHSG(MapKeyGiaiHSG[arrCapHSG[0]]);
         form.setFieldsValue({
           giaiHSG: MapKeyNgonNgu[MapKeyGiaiHSG[arrCapHSG[0]]],
+        });
+      }
+    }
+
+    if (cauHinh?.danhSach?.thongTinGiaiKHKT) {
+      // neu chi co 1 cap KHKT thi ko hien ra select chon cap nua, tu dong chon luon
+      const arrCapKHKT = Object.keys(cauHinh?.danhSach?.thongTinGiaiKHKT ?? {});
+
+      if (arrCapKHKT?.length === 1) {
+        setTypeKHKT(MapKeyGiaiHSG[arrCapKHKT[0]]);
+        form.setFieldsValue({
+          giaiHSG: MapKeyNgonNgu[MapKeyGiaiHSG[arrCapKHKT[0]]],
         });
       }
     }
@@ -208,6 +222,10 @@ const QuaTrinhHocTap = () => {
     const arrFieldNameUpload = [
       'urlBangKhenHSGQG',
       'urlBangKhenHSGTinhTP',
+      'urlBangKhenKHKTQG',
+      'urlBangKhenKHKTTinhTP',
+      'tomTatDeTaiKHKTQG',
+      'tomTatDeTaiKHKTTinhTP',
       'urlChungChiTiengAnh',
       'urlChungChiTiengPhap',
       'urlChungChiQuocTe',
@@ -304,6 +322,20 @@ const QuaTrinhHocTap = () => {
         ...values?.thongTinGiaiTinhTP,
         urlBangKhenHSGTinhTP: values?.urlBangKhenHSGTinhTP ?? [],
         suDungGiaiHGSTinhTP: values?.thongTinGiaiTinhTP ? true : false,
+      },
+
+      thongTinGiaiKHKTQuocGia: {
+        ...values?.thongTinGiaiKHKTQuocGia,
+        urlBangKhenKHKTQG: values?.urlBangKhenHSGQG ?? [],
+        tomTatDeTaiKHKTQG: values?.tomTatDeTaiKHKTQG ?? [],
+        suDungGiaiKHKTQG: values?.thongTinGiaiKHKTQG ? true : false,
+      },
+
+      thongTinGiaiKHKTTinhTP: {
+        ...values?.thongTinGiaiTinhTP,
+        urlBangKhenHSGTinhTP: values?.urlBangKhenHSGTinhTP ?? [],
+        suDungGiaiHGSTinhTP: values?.thongTinGiaiKHKTTinhTP ? true : false,
+        tomTatDeTaiKHKTTinhTP: values?.tomTatDeTaiKHKTTinhTP ?? [],
       },
 
       thongTinChungChiTiengAnh: values?.thongTinChungChiTiengAnh?.loai
@@ -825,6 +857,92 @@ const QuaTrinhHocTap = () => {
                       <BlockGiaiHSG
                         cauHinh={cauHinhDoiTuong}
                         fieldName={'thongTinGiaiTinhTP'}
+                        type={'TinhTP'}
+                      />
+                    )}
+                  </>
+                )}
+              </>
+            )}
+            {cauHinhDoiTuong?.danhSach?.thongTinGiaiKHKT && (
+              <>
+                <Divider plain>
+                  <b>Thông tin về giải KHKT</b>
+                </Divider>
+                <Col xs={24} md={8} lg={6} sm={12}>
+                  <FormItem
+                    initialValue={recordHoSo?.giaiKHKT}
+                    rules={[...rules.required]}
+                    label="Giải KHKT cấp"
+                    name={'giaiKHKT'}
+                  >
+                    <Select
+                      onChange={(val) => setTypeHSG(val)}
+                      mode={
+                        cauHinhDoiTuong?.cauHinh?.selectModeGiaiKHKT === 'MULTIPLE'
+                          ? 'multiple'
+                          : undefined
+                      }
+                      style={{ width: '100%' }}
+                      placeholder="Chọn cấp"
+                      options={Object.keys(cauHinhDoiTuong?.danhSach?.thongTinGiaiKHKT ?? {})?.map(
+                        (item) => ({
+                          label: MapKeyGiaiHSG[item],
+                          value: MapKeyGiaiHSG[item],
+                        }),
+                      )}
+                    />
+                  </FormItem>
+                </Col>
+
+                {String(typeKHKT)?.includes(ELoaiGiaiHSG.QUOC_GIA) && (
+                  <>
+                    {cauHinhDoiTuong?.cauHinh?.selectModeGiaiKHKT === 'MULTIPLE' ? (
+                      <>
+                        <Divider plain>
+                          <b>Giải KHKT Quốc gia</b>
+                        </Divider>
+                        <Col span={24}>
+                          <Row gutter={[10, 0]}>
+                            <BlockGiaiKHKT
+                              cauHinh={cauHinhDoiTuong}
+                              fieldName={'thongTinGiaiKHKTQG'}
+                              type={'QG'}
+                            />
+                          </Row>
+                        </Col>
+                      </>
+                    ) : (
+                      <BlockGiaiKHKT
+                        cauHinh={cauHinhDoiTuong}
+                        fieldName={'thongTinGiaiKHKTQG'}
+                        type={'QG'}
+                      />
+                    )}
+                  </>
+                )}
+                {String(typeHSG)?.includes(ELoaiGiaiHSG.TINH_TP) && (
+                  <>
+                    {cauHinhDoiTuong?.cauHinh?.selectModeGiaiHSG === 'MULTIPLE' ? (
+                      <>
+                        {' '}
+                        <Divider plain>
+                          <b>Giải KHKT Tỉnh/TP</b>
+                        </Divider>
+                        <Col span={24}>
+                          <Row gutter={[10, 0]}>
+                            <BlockGiaiKHKT
+                              cauHinh={cauHinhDoiTuong}
+                              fieldName={'thongTinGiaiKHKTTinhTP'}
+                              type={'TinhTP'}
+                            />
+                          </Row>
+                        </Col>
+                      </>
+                    ) : (
+                      <BlockGiaiKHKT
+                        cauHinh={cauHinhDoiTuong}
+                        fieldName={'thongTinGiaiKHKTTinhTP'}
                         type={'TinhTP'}
                       />
                     )}

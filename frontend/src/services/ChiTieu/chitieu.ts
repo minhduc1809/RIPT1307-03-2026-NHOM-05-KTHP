@@ -4,7 +4,10 @@ import { ip3 } from '@/utils/ip';
 
 const url = 'chi-tieu';
 
-export function KhoiTaoKetQuaXetTuyen(idDotTuyenSinh: string, payload: { mode: EModeKhoiTao }) {
+export function KhoiTaoKetQuaXetTuyen(
+  idDotTuyenSinh: string,
+  payload: { mode: EModeKhoiTao; idCoSoDaoTao?: string },
+) {
   return axios.post(`${ip3}/${url}/admin/khoi-tao-ket-qua-xet-tuyen/${idDotTuyenSinh}`, payload);
 }
 

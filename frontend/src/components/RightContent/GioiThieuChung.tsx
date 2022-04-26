@@ -1,20 +1,21 @@
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { Button, Modal } from 'antd';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useModel, useAccess } from 'umi';
 
-const GioiThieuChung = () => {
+const GioiThieuChung = (props: { marginTop: number }) => {
+  const access = useAccess();
   const { getSettingByKeyModel, record } = useModel('setting');
   const [visible, setVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    getSettingByKeyModel('GIOI_THIEU_CHUNG');
+    if (access.thiSinh || access.thiSinhChuaKichHoat) getSettingByKeyModel('GIOI_THIEU_CHUNG');
   }, []);
 
   return (
     <>
       <InfoCircleOutlined
-        style={{ fontSize: 20, marginTop: 5 }}
+        style={{ fontSize: 20, marginTop: props.marginTop }}
         onClick={() => {
           setVisible(true);
         }}

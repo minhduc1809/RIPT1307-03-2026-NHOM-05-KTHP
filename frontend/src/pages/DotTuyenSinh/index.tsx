@@ -37,7 +37,7 @@ const DotTuyenSinhComponent = () => {
   const { getAllNganhChuyenNganhModel } = useModel('nganhchuyennganh');
 
   useEffect(() => {
-    getAllCoSoDaoTaoModel();
+    getAllCoSoDaoTaoModel(true);
     getAllNganhChuyenNganhModel();
     getAllDoiTuongTuyenSinhModel();
     getAllHinhThucDaoTaoModel();
