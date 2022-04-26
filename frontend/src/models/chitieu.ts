@@ -9,10 +9,13 @@ import {
   postChiTieu,
   putChiTieu,
   adminKhoiTaoChiTieu,
+  adminExportGiaLap,
 } from '@/services/ChiTieu/chitieu';
 import type { EModeKhoiTao } from '@/utils/constants';
 import { message } from 'antd';
 import { useState } from 'react';
+import FileDownload from 'js-file-download';
+import moment from 'moment';
 
 export default () => {
   const objInit = useInitModel();
@@ -104,13 +107,33 @@ export default () => {
   };
 
   const adminKhoiTaoChiTieuModel = async (payload: ChiTieu.PayloadKhoiTaoChiTieu) => {
+    if (!payload.idDotTuyenSinh || !payload.idCoSoDaoTao) return;
+    try {
+      setLoading(true);
+      await adminKhoiTaoChiTieu(payload);
+      message.success('Khởi tạo thành công');
+      getChiTieuByIdDotTuyenSinhIdCoSoModel(payload?.idDotTuyenSinh, payload?.idCoSoDaoTao);
+    } catch (err) {
+      setLoading(false);
+    }
+  };
+
+  const adminExportGiaLapModel = async (
+    idDotTuyenSinh: string,
+    payload: {
+      mode: 'SO_LUONG' | 'DIEM_SAN';
+      idCoSoDaoTao?: string;
+    },
+  ) => {
+    if (!idDotTuyenSinh) return;
     setLoading(true);
-    await adminKhoiTaoChiTieu(payload);
-    message.success('Khởi tạo thành công');
-    getChiTieuByIdDotTuyenSinhIdCoSoModel(payload?.idDotTuyenSinh, payload?.idCoSoDaoTao);
+    const response = await adminExportGiaLap(idDotTuyenSinh, payload);
+    FileDownload(response.data, `gialap_${moment().format('DDMMYYYYHHmm')}.xlsx`);
+    setLoading(false);
   };
 
   return {
+    adminExportGiaLapModel,
     adminKhoiTaoChiTieuModel,
     recordChiTieuChiTiet,
     setRecordChiTieuChiTiet,

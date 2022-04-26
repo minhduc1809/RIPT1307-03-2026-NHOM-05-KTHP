@@ -43,3 +43,16 @@ export function deleteChiTieu(idChiTieu: string) {
 export function adminKhoiTaoChiTieu(payload: ChiTieu.PayloadKhoiTaoChiTieu) {
   return axios.post(`${ip3}/${url}/admin/khoi-tao`, payload);
 }
+
+export function adminExportGiaLap(
+  idDotTuyenSinh: string,
+  payload: {
+    mode: 'SO_LUONG' | 'DIEM_SAN';
+    idCoSoDaoTao?: string;
+  },
+) {
+  return axios.get(`${ip3}/${url}/admin/gia-lap/dot/${idDotTuyenSinh}`, {
+    params: payload,
+    responseType: 'arraybuffer',
+  });
+}

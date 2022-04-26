@@ -27,10 +27,14 @@ export default () => {
     }
   };
 
-  const getKetQuaXetTuyenPageableModel = async (idDotTuyenSinh: string) => {
+  const getKetQuaXetTuyenPageableModel = async (idDotTuyenSinh: string, idCoSoDaoTao?: string) => {
     if (!idDotTuyenSinh) return;
     setLoading(true);
-    const response = await getKetQuaXetTuyenPageable(idDotTuyenSinh, { page, limit, condition });
+    const response = await getKetQuaXetTuyenPageable(idDotTuyenSinh, {
+      page,
+      limit,
+      condition: { ...condition, idCoSoDaoTao },
+    });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);

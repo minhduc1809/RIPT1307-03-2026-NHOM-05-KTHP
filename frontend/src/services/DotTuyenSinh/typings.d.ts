@@ -81,6 +81,7 @@ declare module DotTuyenSinh {
     danhSachDoiTuongTuyenSinh: DoiTuongTuyenSinh[];
     danhSachNganhTuyenSinh: NganhTuyenSinh[];
     choPhepHK1HoacCaNamLop12: boolean;
+    choPhepGiaLapTheoCoSo: boolean;
     loaiDot: ELoaiDot;
     thongBaoLoaiDot?: string;
     urlRedirectLoaiDot?: string;

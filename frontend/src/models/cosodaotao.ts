@@ -15,11 +15,11 @@ export default () => {
   const objInitModel = useInitModel();
   const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
 
-  const getAllCoSoDaoTaoModel = async () => {
+  const getAllCoSoDaoTaoModel = async (isNotSetRecord?: boolean) => {
     setLoading(true);
     const response = await getAllCoSoDaoTao();
     setDanhSach(response?.data?.data ?? []);
-    setRecord(response?.data?.data?.[0]);
+    if (isNotSetRecord !== true) setRecord(response?.data?.data?.[0]);
     setLoading(false);
   };
 

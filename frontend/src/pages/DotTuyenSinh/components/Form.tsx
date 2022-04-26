@@ -74,6 +74,10 @@ const FormDotTuyenSinh = () => {
     record?.choPhepDangKyKhacCoSo ?? false,
   );
 
+  const [choPhepGiaLapTheoCoSo, setChoPhepGiaLapTheoCoSo] = useState<boolean>(
+    record?.choPhepGiaLapTheoCoSo ?? false,
+  );
+
   const [choPhepHK1HoacCaNamLop12, setChoPhepHK1HoacCaNamLop12] = useState<boolean>(
     record?.choPhepHK1HoacCaNamLop12 ?? false,
   );
@@ -119,6 +123,7 @@ const FormDotTuyenSinh = () => {
               cauHinhPhuongThuc: {},
               yeuCauTraPhi,
               choPhepDangKyKhacCoSo,
+              choPhepGiaLapTheoCoSo,
               gioiHanDoiTuong,
               suDungToHopMongMuon,
               choPhepHK1HoacCaNamLop12,
@@ -144,6 +149,7 @@ const FormDotTuyenSinh = () => {
               cauHinhPhuongThuc: {},
               yeuCauTraPhi,
               choPhepDangKyKhacCoSo,
+              choPhepGiaLapTheoCoSo,
               thongTinGiayToNopOnline: danhSachGiayToNopOnline,
               thongTinGiayToNopHoSo: danhSachGiayToNopHoSo,
               danhSachGiayToXacNhanNhapHoc,
@@ -406,6 +412,9 @@ const FormDotTuyenSinh = () => {
                 checked={choPhepDangKyKhacCoSo}
                 onChange={(e) => {
                   setChoPhepDangKyKhacCoSo(e.target.checked);
+                  if (e.target.checked) {
+                    setChoPhepGiaLapTheoCoSo(false);
+                  }
                 }}
               />{' '}
               Cho phép đăng ký khác cơ sở
@@ -529,7 +538,23 @@ const FormDotTuyenSinh = () => {
               Cho phép thí sinh mở khóa hồ sơ
             </Form.Item>
           </Col>
-          <Col lg={12}>
+          {!choPhepDangKyKhacCoSo && (
+            <Col lg={24}>
+              <Form.Item
+                name={'choPhepGiaLapTheoCoSo'}
+                initialValue={record?.choPhepGiaLapTheoCoSo ?? false}
+              >
+                <Checkbox
+                  checked={choPhepGiaLapTheoCoSo}
+                  onChange={(e) => {
+                    setChoPhepGiaLapTheoCoSo(e.target.checked);
+                  }}
+                />{' '}
+                Cho phép giả lập theo cơ sở
+              </Form.Item>
+            </Col>
+          )}
+          <Col lg={24}>
             <Form.Item
               // rules={[...rules.fileRequired]}
               initialValue={renderFileListUrlWithName(

@@ -1,15 +1,17 @@
 import type { IColumn } from '@/utils/interfaces';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import { Button, Divider, Input, Modal, Popconfirm, Table, Tooltip } from 'antd';
+import { Button, Divider, Dropdown, Input, Menu, Modal, Popconfirm, Table, Tooltip } from 'antd';
 import {
   DeleteOutlined,
   EditOutlined,
   PlayCircleOutlined,
   PlusCircleFilled,
+  SlidersOutlined,
 } from '@ant-design/icons';
 import FormChiTieu from './FormChiTieu';
 import FormKhoiTaoChiTieu from './FormKhoiTaoChiTieu';
+import { EModeKhoiTao } from '@/utils/constants';
 
 const TableChiTieu = (props: { idCoSo?: string }) => {
   const { record } = useModel('dottuyensinh');
@@ -24,6 +26,7 @@ const TableChiTieu = (props: { idCoSo?: string }) => {
     setVisibleForm,
     setRecordChiTieuChiTiet,
     putChiTieuModel,
+    adminExportGiaLapModel,
   } = useModel('chitieu');
 
   const { record: recordCoSo } = useModel('cosodaotao');
@@ -31,7 +34,7 @@ const TableChiTieu = (props: { idCoSo?: string }) => {
   const [visibleFormKhoiTao, setVisibleFormKhoiTao] = useState<boolean>(false);
 
   useEffect(() => {
-    if (record?._id && props?.idCoSo) {
+    if (record?._id && props?.idCoSo && record?.danhSachCoSoDaoTao?.length) {
       getChiTieuByIdDotTuyenSinhIdCoSoModel(record?._id, props?.idCoSo);
     } else {
       setRecord(undefined);
@@ -158,9 +161,36 @@ const TableChiTieu = (props: { idCoSo?: string }) => {
       >
         Thêm chỉ tiêu
       </Button>
-      <Button onClick={() => setVisibleFormKhoiTao(true)} icon={<PlayCircleOutlined />}>
+      <Button
+        disabled={record?.danhSachCoSoDaoTao?.length === 0}
+        style={{ marginRight: 8 }}
+        onClick={() => setVisibleFormKhoiTao(true)}
+        icon={<PlayCircleOutlined />}
+      >
         Khởi tạo mặc định
       </Button>
+      {record?.choPhepGiaLapTheoCoSo === true && (
+        <Dropdown
+          overlay={
+            <Menu
+              onClick={async (val: { key: string }) => {
+                adminExportGiaLapModel(record?._id ?? '', {
+                  mode: val.key as EModeKhoiTao,
+                  idCoSoDaoTao: props?.idCoSo,
+                });
+              }}
+            >
+              <Menu.Item key={EModeKhoiTao.SO_LUONG}>Sử dụng chỉ tiêu số lượng</Menu.Item>
+              <Menu.Item key={EModeKhoiTao.DIEM_SAN}>Sử dụng chỉ tiêu điểm sàn</Menu.Item>
+            </Menu>
+          }
+          key="ellipsis"
+        >
+          <Button icon={<SlidersOutlined />} loading={loading} type="primary">
+            Giả lập điểm
+          </Button>
+        </Dropdown>
+      )}
       <h4 style={{ display: 'inline-block', margin: '0 0px 8px 50px', float: 'right' }}>
         Tổng số:
         <Input

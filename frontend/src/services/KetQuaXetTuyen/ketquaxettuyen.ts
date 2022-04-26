@@ -1,6 +1,7 @@
 import axios from '@/utils/axios';
 import { ip3 } from '@/utils/ip';
 import type { DotTuyenSinh } from '../DotTuyenSinh/typings';
+import type { KetQuaXetTuyen } from './typings';
 
 const url = 'ket-qua-xet-tuyen';
 
@@ -19,7 +20,7 @@ export const xacNhanNhapHoc = (
   idKetQua: string,
   payload: {
     danhSachGiayToXacNhanNhapHoc: DotTuyenSinh.GiayTo[];
-    danhSachThongTinKhaiXacNhan: DotTuyenSinh.ThongTinKhaiXacNhan[];
+    danhSachThongTinKhaiXacNhan: KetQuaXetTuyen.ThongTinKhaiXacNhan[];
   },
 ) => {
   return axios.put(`${ip3}/${url}/thi-sinh/xac-nhan/${idKetQua}`, payload);

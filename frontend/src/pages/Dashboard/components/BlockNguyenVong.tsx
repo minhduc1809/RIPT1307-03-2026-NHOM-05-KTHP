@@ -31,7 +31,7 @@ const BlockNguyenVong = (props: {
   };
 
   useEffect(() => {
-    getAllCoSoDaoTaoModel();
+    if (danhSach.length === 0) getAllCoSoDaoTaoModel(true);
   }, []);
 
   useEffect(() => {
