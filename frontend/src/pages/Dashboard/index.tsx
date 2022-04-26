@@ -74,7 +74,7 @@ const Dashboard = () => {
             <br />
             <div>
               <ArrowUpOutlined /> Tăng{' '}
-              {(soLuongHoSoTheoNgay / (tongSoLuongHoSo - soLuongHoSoTheoNgay)) * 100} hồ sơ
+              {((soLuongHoSoTheoNgay / (tongSoLuongHoSo - soLuongHoSoTheoNgay)) * 100).toFixed(2)} %
               {/* {(((tongSoLuongHoSo - soLuongHoSoTheoNgay) / soLuongHoSoTheoNgay) * 100).toFixed(2)}%) */}
             </div>
           </Card>
