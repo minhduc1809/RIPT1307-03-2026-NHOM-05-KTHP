@@ -1,11 +1,23 @@
 import TableTaiKhoan from './components/TableTaiKhoan';
 import Form from './components/Form';
-import { useModel } from 'umi';
+import { useModel, useAccess } from 'umi';
 import { ESystemRole } from '@/utils/constants';
 import { useCheckAccess } from '@/utils/utils';
+import { useEffect } from 'react';
 
 const TaiKhoanChuyenVien = () => {
+  const access = useAccess();
   const { getUserPageableModel } = useModel('quanlytaikhoan');
+  const { getAllCoSoDaoTaoModel } = useModel('cosodaotao');
+  const { getAllHinhThucDaoTaoModel } = useModel('hinhthucdaotao');
+
+  useEffect(() => {
+    if (access.admin) {
+      getAllCoSoDaoTaoModel(true);
+      getAllHinhThucDaoTaoModel();
+    }
+  }, []);
+
   const updateAll = useCheckAccess('tai-khoan-quan-tri-vien:update-all');
   const resetAll = useCheckAccess('tai-khoan-quan-tri-vien:reset-all');
   const deleteAll = useCheckAccess('tai-khoan-quan-tri-vien:delete-all');

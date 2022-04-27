@@ -10,6 +10,7 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import BlockNguyenVong from './components/BlockNguyenVong';
+import BlockPhoDiem from './components/BlockPhoDiem';
 import BlockSoLuongHoSo from './components/BlockSoLuongHoSo';
 
 const Dashboard = () => {
@@ -126,6 +127,9 @@ const Dashboard = () => {
         </Col>
         <Col md={24} lg={24}>
           <BlockNguyenVong title="Số lượng nguyện vọng đăng ký theo đối tượng" groupBy="doiTuong" />
+        </Col>
+        <Col md={24} lg={24}>
+          <BlockPhoDiem />
         </Col>
       </Row>
     </div>

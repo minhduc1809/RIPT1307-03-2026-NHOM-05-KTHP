@@ -56,6 +56,8 @@ declare module Login {
     tenNguoiLienHe: string;
     diaChiLienHe: DonViHanhChinh.DonViHanhChinhRecord;
     soDienThoaiNguoiLienHe: string;
+    idCoSoDaoTao: string;
+    idHinhThucDaoTao: string;
   }
 
   export interface ProfileAdmin {

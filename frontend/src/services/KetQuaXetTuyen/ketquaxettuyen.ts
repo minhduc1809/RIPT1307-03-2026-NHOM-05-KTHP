@@ -1,4 +1,5 @@
 import axios from '@/utils/axios';
+import type { ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
 import { ip3 } from '@/utils/ip';
 import type { DotTuyenSinh } from '../DotTuyenSinh/typings';
 import type { KetQuaXetTuyen } from './typings';
@@ -28,4 +29,17 @@ export const xacNhanNhapHoc = (
 
 export const xacNhanKhongNhapHoc = (idKetQua: string) => {
   return axios.put(`${ip3}/${url}/thi-sinh/khong-xac-nhan/${idKetQua}`);
+};
+
+export const adminTiepNhanXacNhanNhapHoc = (
+  idKetQuaXetTuyen: string,
+  payload: {
+    danhSachGiayToXacNhanNhapHoc: DotTuyenSinh.GiayTo[];
+    danhSachThongTinKhaiXacNhan: KetQuaXetTuyen.ThongTinKhaiXacNhan[];
+    ghiChuTiepNhan?: string;
+    ngayTiepNhan: string;
+    trangThaiXacNhan: ETrangThaiXacNhanNhapHoc;
+  },
+) => {
+  return axios.put(`${ip3}/${url}/admin/tiep-nhan/${idKetQuaXetTuyen}`, payload);
 };

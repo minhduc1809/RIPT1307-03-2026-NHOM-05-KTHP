@@ -16,7 +16,6 @@ import { message } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import FileDownload from 'js-file-download';
 import { useState } from 'react';
-import { useModel } from 'umi';
 
 export default () => {
   const [danhSach, setDanhSach] = useState<BieuMau.Record[]>([]);
@@ -36,7 +35,6 @@ export default () => {
   const [phamVi, setPhamVi] = useState<'Tất cả' | 'Hình thức đào tạo'>('Tất cả');
   const [formCauHinhBieuMau] = useForm();
 
-  const { initialState } = useModel('@@initialState');
   const getBieuMauAdminHeModel = async (loaiParam?: string) => {
     setLoading(true);
     const response = await getBieuMauAdminHe({
@@ -50,7 +48,7 @@ export default () => {
   };
   const getBieuMauAdminModel = async () => {
     setLoading(true);
-    console.log("hi")
+    console.log('hi');
     const response = await getBieuMauAdmin({
       page,
       limit,
@@ -81,11 +79,8 @@ export default () => {
       await addBieuMau(payload);
       message.success('Thêm thành công');
       setLoading(false);
-      if (initialState?.currentUser?.vai_tro === 'quan_tri') {
-        getBieuMauAdminHeModel();
-      } else {
-        getBieuMauAdminModel();
-      }
+
+      getBieuMauAdminModel();
 
       setVisibleForm(false);
     } catch (error) {
@@ -98,11 +93,9 @@ export default () => {
       await putBieuMau(payload);
       message.success('Sửa thành công');
       setLoading(false);
-      if (initialState?.currentUser?.vai_tro === 'quan_tri') {
-        getBieuMauAdminHeModel();
-      } else {
-        getBieuMauAdminModel();
-      }
+
+      getBieuMauAdminModel();
+
       setVisibleForm(false);
     } catch (error) {
       setLoading(false);
@@ -121,11 +114,7 @@ export default () => {
     setLoading(true);
     await delBieuMau(payload);
     message.success('Xóa thành công');
-    if (initialState?.currentUser?.vai_tro === 'quan_tri') {
-      getBieuMauAdminHeModel();
-    } else {
-      getBieuMauAdminModel();
-    }
+    getBieuMauAdminModel();
     setLoading(false);
   };
 
@@ -145,7 +134,7 @@ export default () => {
 
   const traLoiBieuMauModel = async (payload: {
     idBieuMau: string;
-    danhSachTraLoi: KhaiBaoSucKhoe.TraLoiRecord[];
+    danhSachTraLoi: BieuMau.TraLoiRecord[];
   }) => {
     setLoading(true);
     await traLoiBieuMau(payload);

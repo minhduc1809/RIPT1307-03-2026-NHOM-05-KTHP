@@ -1,15 +1,13 @@
 import FilterDotTuyenSinh from '@/components/FilterDotTuyenSinh';
-import { EModeKhoiTao } from '@/utils/constants';
-import { CheckSquareOutlined } from '@ant-design/icons';
-import { Button, Card, Dropdown, Menu, Tabs } from 'antd';
+import { Card, Tabs } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import TableDanhSachTrungTuyen from './components/TableDanhSachTrungTuyen';
 
 const DanhSachTrungTuyen = () => {
   const { record } = useModel('dottuyensinh');
-  const { KhoiTaoKetQuaXetTuyenModel, loading } = useModel('chitieu');
-  const { getKetQuaXetTuyenPageableModel } = useModel('ketquaxettuyen');
+  // const { KhoiTaoKetQuaXetTuyenModel, loading } = useModel('chitieu');
+  // const { getKetQuaXetTuyenPageableModel } = useModel('ketquaxettuyen');
   const [idCoSo, setIdCoSo] = useState<string | undefined>(record?.danhSachCoSoDaoTao?.[0]?._id);
   useEffect(() => {
     setIdCoSo(record?.danhSachCoSoDaoTao?.[0]?._id);
@@ -18,7 +16,7 @@ const DanhSachTrungTuyen = () => {
   return (
     <Card title="Danh sách trúng tuyển">
       <FilterDotTuyenSinh />
-      {record?.choPhepGiaLapTheoCoSo !== true && (
+      {/* {record?.choPhepGiaLapTheoCoSo !== true && (
         <Dropdown
           overlay={
             <Menu
@@ -37,7 +35,7 @@ const DanhSachTrungTuyen = () => {
             Khởi tạo DS Trúng tuyển
           </Button>
         </Dropdown>
-      )}
+      )} */}
       <Tabs
         activeKey={idCoSo}
         onChange={(key) => {

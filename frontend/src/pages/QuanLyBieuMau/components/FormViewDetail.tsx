@@ -1,19 +1,17 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-param-reassign */
 import { Button, Card, Form } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { useModel } from 'umi';
-import GridChoice from './QuestionType/GridChoice';
-import MultipleChoice from './QuestionType/MultipleChoice';
-import SingleChoice from './QuestionType/SingleChoice';
-import ThongKeNumericChoice from './ThongKeType/NumericChoice';
+import GridChoice from './ViewType/GridChoice';
+import MultipleChoice from './ViewType/MultipleChoice';
+import SingleChoice from './ViewType/SingleChoice';
+import ThongKeNumericChoice from './ViewType/NumericChoice';
+import Upload from '@/components/Upload/UploadMultiFile';
 
 const FormBaiHoc = () => {
   const [form] = Form.useForm();
   const { loading, record, setVisibleForm } = useModel('bieumau');
   const renderQuestion = (question: BieuMau.CauHoi) => {
     let questionEleMent = <div />;
-    // const recordDapAn = record?.danhSachTraLoi?.find((item) => item.idCauHoi === question._id);
     if (question.loai === 'SingleChoice')
       questionEleMent = <SingleChoice luaChon={question.luaChon} />;
     else if (question.loai === 'MultipleChoice')
@@ -58,8 +56,8 @@ const FormBaiHoc = () => {
         <h3>{record.tieuDe}</h3>
         <p>{record.moTa}</p>
         <div>
-          {record.danhSachKhoi?.map((item: BieuMau.Khoi, index) => (
-            <div key={index}>
+          {record.danhSachKhoi?.map((item: BieuMau.Khoi) => (
+            <div key={item.tieuDe}>
               <div>{item.tieuDe}</div>
               <div>{item.moTa}</div>
               <div>

@@ -27,6 +27,8 @@ const data: any = {
     ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
     ETrangThaiXacNhanNhapHoc.XAC_NHAN,
     ETrangThaiXacNhanNhapHoc.KHONG_XAC_NHAN,
+    ETrangThaiXacNhanNhapHoc.DA_TIEP_NHAN,
+    ETrangThaiXacNhanNhapHoc.KHONG_TIEP_NHAN,
   ],
 
   'thongTinThiSinh.gioiTinh': ['Nam', 'Nữ', 'Khác'],

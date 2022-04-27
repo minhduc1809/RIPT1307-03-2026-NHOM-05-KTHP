@@ -47,7 +47,7 @@ export default () => {
   const [recordNganh, setRecordNganh] = useState<DotTuyenSinh.NganhTuyenSinh>();
   const [recordDoiTuong, setRecordDoiTuong] = useState<DotTuyenSinh.DoiTuongTuyenSinh>();
   const getAllDotTuyenSinhModel = async (
-    payload: {
+    payload?: {
       danhSachPhuongThucTuyenSinh?: string;
       namTuyenSinh?: number;
     },

@@ -1,8 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
+import { ETrangThaiHoSo, ETrangThaiTrungTuyen } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import { Button, Card, Col, DatePicker, Form, Input, Radio, Row } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Radio, Row, Select } from 'antd';
 import moment from 'moment';
 import mm from 'moment-timezone';
 import { useState } from 'react';
@@ -13,22 +14,9 @@ mm.tz.setDefault('Asia/Ho_Chi_Minh');
 const FormThongTinChungKhaoSat = () => {
   const access = useAccess();
   const [form] = Form.useForm();
-  const { record, edit, setCurrent, setRecord} = useModel('bieumau');
+  const { record, edit, setCurrent, setRecord } = useModel('bieumau');
+  const { danhSach } = useModel('dottuyensinh');
   const [camKet, setCamKet] = useState<boolean>(record?.coCamKet ?? true);
-
-  // const [visible, setVisible] = useState<boolean>(false);
-
-  //const handleData = (newData: any[]) => {
-    // const oldData = form.getFieldValue(ImportExcelType);
-    // const data = {};
-    // data[ImportExcelType] = _.union(
-    //   oldData,
-    //   newData?.map((item: any[]) => item?.join('||')),
-    // );
-
-    // record[ImportExcelType] = form.setFieldsValue(data);
-  //   setVisible(false);
-  // };
 
   return (
     <>
@@ -90,7 +78,7 @@ const FormThongTinChungKhaoSat = () => {
                 />
               </Form.Item>
             </Col>
-           
+
             <Col xs={24} sm={12} md={6}>
               <Form.Item
                 style={{ marginBottom: 8 }}
@@ -121,8 +109,45 @@ const FormThongTinChungKhaoSat = () => {
                 </Radio.Group>
               </Form.Item>
             </Col>
+            <Col xs={24}>
+              <Form.Item
+                style={{ marginBottom: 8 }}
+                name="danhSachDotTuyenSinh"
+                label="Danh sách đợt tuyển sinh"
+                initialValue={record?.danhSachDotTuyenSinh}
+              >
+                <Select
+                  mode="multiple"
+                  placeholder="Chọn đợt tuyển sinh"
+                  options={danhSach?.map((item) => ({
+                    label: item.tenDotTuyenSinh,
+                    value: item._id,
+                  }))}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24}>
+              <Form.Item
+                style={{ marginBottom: 8 }}
+                name="danhSachTrangThai"
+                label="Danh sách trạng thái"
+                initialValue={record?.danhSachTrangThai}
+              >
+                <Select
+                  mode="multiple"
+                  placeholder="Chọn trạng thái"
+                  options={[
+                    ...Object.values(ETrangThaiHoSo),
+                    ...Object.values(ETrangThaiTrungTuyen),
+                  ]?.map((item) => ({
+                    label: item,
+                    value: item,
+                  }))}
+                />
+              </Form.Item>
+            </Col>
           </Row>
-          
+
           {camKet && (
             <Form.Item
               style={{ marginBottom: 8 }}

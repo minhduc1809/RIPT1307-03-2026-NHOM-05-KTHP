@@ -1,8 +1,11 @@
 import logo from '@/assets/logo.png';
+import { TableGiayToXacNhanNhapHoc } from '@/pages/KetQuaXetTuyen/components/TableGiayToXacNhanNhapHoc';
+import { TableThongTinKhaiXacNhanNhapHoc } from '@/pages/KetQuaXetTuyen/components/TableThongTinKhaiXacNhanNhapHoc';
 import { ETrangThaiXacNhanNhapHoc, MapKeyTrangThaiXacNhanNhapHoc } from '@/utils/constants';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Modal, Popconfirm, Row } from 'antd';
 import moment from 'moment';
+import { useState } from 'react';
 import { useModel } from 'umi';
 import { FormXacNhanNhapHoc } from './FormXacNhanNhapHoc';
 
@@ -17,6 +20,16 @@ const TrungTuyen = () => {
     moment(new Date()),
   );
   const phuongThuc = localStorage.getItem('phuongThuc');
+  const [visibleViewThongTinNhapHoc, setVisibleViewThongTinNhapHoc] = useState<boolean>(false);
+
+  const onCancelViewThongTinNhapHoc = () => {
+    setVisibleViewThongTinNhapHoc(false);
+  };
+
+  const onCancelFormXacNhanNhapHoc = () => {
+    setVisibleForm(false);
+  };
+
   return (
     <div style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
       <Card
@@ -141,15 +154,22 @@ const TrungTuyen = () => {
             )}
           </>
         )}
-        {record?.thongTinXacNhanNhapHoc?.trangThaiXacNhan === ETrangThaiXacNhanNhapHoc.XAC_NHAN && (
+        {[
+          ETrangThaiXacNhanNhapHoc.XAC_NHAN,
+          ETrangThaiXacNhanNhapHoc.DA_TIEP_NHAN,
+          ETrangThaiXacNhanNhapHoc.KHONG_TIEP_NHAN,
+        ]?.includes(
+          record?.thongTinXacNhanNhapHoc?.trangThaiXacNhan ??
+            ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
+        ) && (
           <div style={{ textAlign: 'center' }}>
             <Button
               type="primary"
               onClick={() => {
-                setVisibleForm(true);
+                setVisibleViewThongTinNhapHoc(true);
               }}
             >
-              Xem thông tin nhập học
+              Xem thông tin xác nhận nhập học
             </Button>
           </div>
         )}
@@ -159,12 +179,27 @@ const TrungTuyen = () => {
         width={800}
         title="Xác nhận nhập học"
         visible={visibleForm}
-        onCancel={() => {
-          setVisibleForm(false);
-        }}
+        onCancel={onCancelFormXacNhanNhapHoc}
         footer={false}
       >
         <FormXacNhanNhapHoc />
+      </Modal>
+      <Modal
+        footer={
+          <Button onClick={onCancelViewThongTinNhapHoc} type="primary">
+            OK
+          </Button>
+        }
+        width={1000}
+        visible={visibleViewThongTinNhapHoc}
+        onCancel={onCancelViewThongTinNhapHoc}
+        title="Thông tin xác nhận nhập học"
+      >
+        <TableThongTinKhaiXacNhanNhapHoc />
+        <br />
+        <TableGiayToXacNhanNhapHoc />
+        <br />
+        <b>Ghi chú chuyên viên: {record?.thongTinXacNhanNhapHoc?.ghiChuTiepNhan ?? ''}</b>
       </Modal>
     </div>
   );

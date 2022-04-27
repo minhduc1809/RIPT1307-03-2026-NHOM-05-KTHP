@@ -1,4 +1,5 @@
 import useInitModel from '@/hooks/useInitModel';
+import type { Login } from '@/services/ant-design-pro/typings';
 import {
   getUserPageable,
   deleteUser,
@@ -11,8 +12,8 @@ import { useState } from 'react';
 
 export default () => {
   const objInitModel = useInitModel();
-  const [record, setRecord] = useState<QuanLyTaiKhoan.Record>();
-  const [danhSach, setDanhSach] = useState<QuanLyTaiKhoan.Record[]>([]);
+  const [record, setRecord] = useState<Login.Profile>();
+  const [danhSach, setDanhSach] = useState<Login.Profile[]>([]);
   const {
     page,
     setPage,
@@ -39,7 +40,6 @@ export default () => {
       limit,
       condition: { ...condition, ...paramCondition },
     });
-    setRecord(response?.data?.data?.result ?? []);
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? '0');
     setLoading(false);
@@ -48,24 +48,29 @@ export default () => {
   const deleteUserModel = async (id: string, paramCondition?: any) => {
     setLoading(true);
     await deleteUser(id);
+    message.success('Xóa thành công');
     getUserPageableModel(paramCondition);
   };
 
-  const postUserModel = async (payload: QuanLyTaiKhoan.PostRecord, paramCondition?: any) => {
-    setLoading(true);
-    await postUser(payload);
-    getUserPageableModel(paramCondition);
+  const postUserModel = async (payload: Login.Profile) => {
+    try {
+      // setLoading(true);
+      await postUser(payload);
+      message.success('Thêm thành công');
+      getUserPageableModel({ systemRole: payload?.systemRole });
+      setVisibleForm(false);
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
-  const putUserModel = async (
-    id: string,
-    data: QuanLyTaiKhoan.PostRecord,
-    paramCondition?: any,
-  ) => {
+  const putUserModel = async (id: string, data: Login.Profile) => {
     try {
       setLoading(true);
       await putUser(id, data);
-      getUserPageableModel(paramCondition);
+      getUserPageableModel({ systemRole: data?.systemRole });
+      message.success('Lưu thành công');
+      setVisibleForm(false);
     } catch (err) {
       setLoading(false);
     }

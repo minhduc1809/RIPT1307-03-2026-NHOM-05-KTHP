@@ -1,3 +1,5 @@
+import type { ETrangThaiHoSo, ETrangThaiTrungTuyen } from '@/utils/constants';
+
 declare module BieuMau {
   export interface LuaChon {
     noiDung: string;
@@ -62,6 +64,8 @@ declare module BieuMau {
     danhSachKhoi: Khoi[];
     doiTuong: string;
     _id: string;
+    danhSachDotTuyenSinh: string[];
+    danhSachTrangThai: ETrangThaiHoSo | ETrangThaiTrungTuyen;
   }
 
   export interface ThongKeLuaChon {
@@ -106,5 +110,21 @@ declare module BieuMau {
     moTa: string;
     loai: string;
     thongKeKhoi: ThongKeKhoi[];
+  }
+
+  export interface LuaChonBangRecord {
+    _id?: string;
+    idCot: string;
+    idHang: string;
+  }
+
+  export interface TraLoiRecord {
+    listLuaChon?: string[];
+    listLuaChonBang?: LuaChonBangRecord[];
+    traLoiText?: string;
+    _id?: string;
+    idCauHoi: string;
+    luaChonTuyenTinh?: number;
+    listUrlFile?: string[];
   }
 }

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import { Button, Divider, Dropdown, Input, Menu, Modal, Popconfirm, Table, Tooltip } from 'antd';
 import {
+  CheckSquareOutlined,
   DeleteOutlined,
   EditOutlined,
   PlayCircleOutlined,
@@ -12,6 +13,7 @@ import {
 import FormChiTieu from './FormChiTieu';
 import FormKhoiTaoChiTieu from './FormKhoiTaoChiTieu';
 import { EModeKhoiTao } from '@/utils/constants';
+import { useCheckAccess } from '@/utils/utils';
 
 const TableChiTieu = (props: { idCoSo?: string }) => {
   const { record } = useModel('dottuyensinh');
@@ -27,7 +29,10 @@ const TableChiTieu = (props: { idCoSo?: string }) => {
     setRecordChiTieuChiTiet,
     putChiTieuModel,
     adminExportGiaLapModel,
+    KhoiTaoKetQuaXetTuyenModel,
   } = useModel('chitieu');
+
+  const khoiTaoAll = useCheckAccess('danh-sach-trung-tuyen:khoi-tao-all');
 
   const { record: recordCoSo } = useModel('cosodaotao');
 
@@ -170,26 +175,55 @@ const TableChiTieu = (props: { idCoSo?: string }) => {
         Khởi tạo mặc định
       </Button>
       {record?.choPhepGiaLapTheoCoSo === true && (
-        <Dropdown
-          overlay={
-            <Menu
-              onClick={async (val: { key: string }) => {
-                adminExportGiaLapModel(record?._id ?? '', {
-                  mode: val.key as EModeKhoiTao,
-                  idCoSoDaoTao: props?.idCoSo,
-                });
-              }}
+        <>
+          <Dropdown
+            overlay={
+              <Menu
+                onClick={async (val: { key: string }) => {
+                  adminExportGiaLapModel(record?._id ?? '', {
+                    mode: val.key as EModeKhoiTao,
+                    idCoSoDaoTao: props?.idCoSo,
+                  });
+                }}
+              >
+                <Menu.Item key={EModeKhoiTao.SO_LUONG}>Sử dụng chỉ tiêu số lượng</Menu.Item>
+                <Menu.Item key={EModeKhoiTao.DIEM_SAN}>Sử dụng chỉ tiêu điểm sàn</Menu.Item>
+              </Menu>
+            }
+            key="ellipsis"
+          >
+            <Button icon={<SlidersOutlined />} loading={loading} type="primary">
+              Giả lập điểm
+            </Button>
+          </Dropdown>
+          {khoiTaoAll && (
+            <Dropdown
+              overlay={
+                <Menu
+                  onClick={async (val: any) => {
+                    await KhoiTaoKetQuaXetTuyenModel(record?._id ?? '', {
+                      mode: val?.key,
+                      idCoSoDaoTao: props.idCoSo,
+                    });
+                  }}
+                >
+                  <Menu.Item key={EModeKhoiTao.SO_LUONG}>Sử dụng chỉ tiêu số lượng</Menu.Item>
+                  <Menu.Item key={EModeKhoiTao.DIEM_SAN}>Sử dụng chỉ tiêu điểm sàn</Menu.Item>
+                </Menu>
+              }
+              key="ellipsis"
             >
-              <Menu.Item key={EModeKhoiTao.SO_LUONG}>Sử dụng chỉ tiêu số lượng</Menu.Item>
-              <Menu.Item key={EModeKhoiTao.DIEM_SAN}>Sử dụng chỉ tiêu điểm sàn</Menu.Item>
-            </Menu>
-          }
-          key="ellipsis"
-        >
-          <Button icon={<SlidersOutlined />} loading={loading} type="primary">
-            Giả lập điểm
-          </Button>
-        </Dropdown>
+              <Button
+                style={{ marginLeft: 8 }}
+                icon={<CheckSquareOutlined />}
+                loading={loading}
+                type="primary"
+              >
+                Khởi tạo DS Trúng tuyển
+              </Button>
+            </Dropdown>
+          )}
+        </>
       )}
       <h4 style={{ display: 'inline-block', margin: '0 0px 8px 50px', float: 'right' }}>
         Tổng số:

@@ -47,14 +47,18 @@ const TableKhaiThongTinNhapHoc = () => {
                       <div>
                         <div>{recordThongTin?.textHuongDan ?? ''}</div>
                         {recordThongTin?.urlHuongDan?.length && <div>File hướng dẫn đính kèm:</div>}
-                        {recordThongTin?.urlHuongDan?.map((item, indexChungChi) => (
-                          <a key={item} href={item} target="_blank" rel="noreferrer">
-                            <Tag
-                              style={{ marginTop: 8 }}
-                              color={Setting.primaryColor}
-                            >{`Xem tập tin ${indexChungChi + 1}  `}</Tag>
-                          </a>
-                        ))}
+                        {recordThongTin?.urlHuongDan?.length ? (
+                          recordThongTin?.urlHuongDan?.map((item, indexChungChi) => (
+                            <a key={item} href={item} target="_blank" rel="noreferrer">
+                              <Tag
+                                style={{ marginTop: 8 }}
+                                color={Setting.primaryColor}
+                              >{`Xem tập tin ${indexChungChi + 1}  `}</Tag>
+                            </a>
+                          ))
+                        ) : (
+                          <div />
+                        )}
                       </div>
                     ),
                   });

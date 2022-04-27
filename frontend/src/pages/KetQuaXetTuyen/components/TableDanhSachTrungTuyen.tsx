@@ -1,10 +1,7 @@
 import TableBase from '@/components/Table';
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
-import { EModeKhoiTao } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import { useCheckAccess } from '@/utils/utils';
-import { CheckSquareOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Menu, Modal } from 'antd';
+import { Modal } from 'antd';
 import { useModel } from 'umi';
 import ViewHoSoTrungTuyen from './ViewKetQua';
 
@@ -20,7 +17,7 @@ const TableDanhSachTrungTuyen = (props: { idCoSo?: string }) => {
     visibleForm,
   } = useModel('ketquaxettuyen');
 
-  const { KhoiTaoKetQuaXetTuyenModel, loading: loadingChiTieu } = useModel('chitieu');
+  // const { KhoiTaoKetQuaXetTuyenModel, loading: loadingChiTieu } = useModel('chitieu');
 
   const { record: recordDotTuyenSinh } = useModel('dottuyensinh');
 
@@ -80,7 +77,7 @@ const TableDanhSachTrungTuyen = (props: { idCoSo?: string }) => {
     },
   ];
 
-  const khoiTaoAll = useCheckAccess('danh-sach-trung-tuyen:khoi-tao-all');
+  // const khoiTaoAll = useCheckAccess('danh-sach-trung-tuyen:khoi-tao-all');
 
   return (
     <TableBase
@@ -99,29 +96,6 @@ const TableDanhSachTrungTuyen = (props: { idCoSo?: string }) => {
         props.idCoSo,
       ]}
     >
-      {khoiTaoAll && recordDotTuyenSinh?.choPhepGiaLapTheoCoSo === true && (
-        <Dropdown
-          overlay={
-            <Menu
-              onClick={async (val: any) => {
-                await KhoiTaoKetQuaXetTuyenModel(recordDotTuyenSinh?._id ?? '', {
-                  mode: val?.key,
-                  idCoSoDaoTao: props.idCoSo,
-                });
-                getKetQuaXetTuyenPageableModel(recordDotTuyenSinh?._id ?? '', props.idCoSo);
-              }}
-            >
-              <Menu.Item key={EModeKhoiTao.SO_LUONG}>Sử dụng chỉ tiêu số lượng</Menu.Item>
-              <Menu.Item key={EModeKhoiTao.DIEM_SAN}>Sử dụng chỉ tiêu điểm sàn</Menu.Item>
-            </Menu>
-          }
-          key="ellipsis"
-        >
-          <Button icon={<CheckSquareOutlined />} loading={loadingChiTieu} type="primary">
-            Khởi tạo DS Trúng tuyển
-          </Button>
-        </Dropdown>
-      )}
       <Modal
         width={1100}
         visible={visibleForm}
@@ -129,7 +103,7 @@ const TableDanhSachTrungTuyen = (props: { idCoSo?: string }) => {
         bodyStyle={{ padding: 0 }}
         footer={false}
       >
-        <ViewHoSoTrungTuyen />
+        <ViewHoSoTrungTuyen idCoSo={props.idCoSo} />
       </Modal>
     </TableBase>
   );

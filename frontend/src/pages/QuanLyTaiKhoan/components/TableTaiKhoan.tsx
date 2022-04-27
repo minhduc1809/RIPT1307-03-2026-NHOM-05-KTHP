@@ -1,4 +1,5 @@
 import TableBase from '@/components/Table';
+import type { Login } from '@/services/ant-design-pro/typings';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
@@ -19,7 +20,7 @@ const TableTaiKhoan = (props: {
   const { loading, page, limit, condition, setEdit, setVisibleForm, setRecord, deleteUserModel } =
     useModel('quanlytaikhoan');
   const [visibleFormCapLaiMatKhau, setVisibleFormCapLaiMatKhau] = useState<boolean>(false);
-  const columns: IColumn<QuanLyTaiKhoan.Record>[] = [
+  const columns: IColumn<Login.Profile>[] = [
     {
       title: 'STT',
       dataIndex: 'index',
@@ -55,7 +56,7 @@ const TableTaiKhoan = (props: {
       search: 'search',
     },
     {
-      title: 'Số thẻ CMND-CCCD',
+      title: 'Số CMND/CCCD',
       dataIndex: 'cmtCccd',
       width: 200,
       align: 'center',
@@ -72,7 +73,7 @@ const TableTaiKhoan = (props: {
       align: 'center',
       width: 170,
       fixed: 'right',
-      render: (record: QuanLyTaiKhoan.Record) => (
+      render: (record: Login.Profile) => (
         <>
           <Tooltip title="Cấp lại mật khẩu">
             <Button
@@ -105,7 +106,7 @@ const TableTaiKhoan = (props: {
           <Tooltip title="Xóa">
             <Popconfirm
               disabled={!props?.phanQuyen?.deleteAll}
-              onConfirm={() => deleteUserModel(record._id)}
+              onConfirm={() => deleteUserModel(record._id, { systemRole: record?.systemRole })}
               title="Bạn có chắc chắn muốn xóa tài khoản này?"
             >
               <Button disabled={!props?.phanQuyen?.deleteAll} type="primary" shape="circle">

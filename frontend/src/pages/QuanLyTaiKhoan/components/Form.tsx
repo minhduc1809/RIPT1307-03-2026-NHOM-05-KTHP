@@ -1,16 +1,19 @@
-import UploadAvatar from '@/components/Upload/UploadAvatar';
 import type { ESystemRole } from '@/utils/constants';
-import { Gender, LoaiNoiSinh, MapKeyLoaiNoiSinh } from '@/utils/constants';
 import rules from '@/utils/rules';
-import { getURLImg, renderFileListUrl } from '@/utils/utils';
-import { Button, Card, Col, Form, Input, Row, Select } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import moment from 'moment';
-import { useModel } from 'umi';
+import mm from 'moment-timezone';
+import { useModel, useAccess } from 'umi';
+
+mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const FormTaiKhoan = (props: { systemRole: ESystemRole }) => {
+  const access = useAccess();
   const [form] = Form.useForm();
   const { loading, setVisibleForm, edit, record, postUserModel, putUserModel } =
     useModel('quanlytaikhoan');
+  const { danhSach: danhSachHinhThuc } = useModel('hinhthucdaotao');
+  const { danhSach: danhSachCoSo } = useModel('cosodaotao');
 
   return (
     <Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} tài khoản`}>
@@ -18,168 +21,169 @@ const FormTaiKhoan = (props: { systemRole: ESystemRole }) => {
         scrollToFirstError
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
-          if (values.urlAnhMoTa.fileList?.[0]?.originFileObj) {
-            const response = await getURLImg({
-              filename: 'url1',
-              public: true,
-              file: values?.urlAnhMoTa.fileList?.[0].originFileObj,
-            });
-            values.urlAnhMoTa = response?.data?.data?.url;
-          } else values.urlAnhMoTa = values.urlAnhMoTa.fileList?.[0]?.url;
-
           if (edit) {
-            putUserModel(
-              record?._id ?? '',
-              { ...record, ...values },
-              { systemRole: props.systemRole },
-            );
+            putUserModel(record?._id ?? '', { ...record, ...values });
           } else {
-            postUserModel(
-              { ...values, systemRole: props.systemRole },
-              { systemRole: props.systemRole },
-            );
+            postUserModel({
+              ...values,
+              systemRole: props.systemRole,
+              username: values?.email?.trim()?.toLowerCase(),
+            });
           }
-          // setVisibleForm(false)
         }}
         form={form}
       >
+        <Form.Item
+          style={{ marginBottom: 8 }}
+          name="email"
+          label="Email"
+          rules={[...rules.required, ...rules.email]}
+          initialValue={record?.email}
+        >
+          <Input placeholder="Nhập email" />
+        </Form.Item>
+        {!edit && (
+          <Form.Item
+            style={{ marginBottom: 8 }}
+            name="confirmEmail"
+            label="Nhập lại email"
+            rules={[
+              ...rules.required,
+              ...rules.email,
+              {
+                validator: (rule, value, callback) => {
+                  if (value && value !== form.getFieldValue('email')) {
+                    callback('Email không trùng khớp');
+                  } else {
+                    callback();
+                  }
+                },
+              },
+            ]}
+          >
+            <Input placeholder="Nhập lại email" />
+          </Form.Item>
+        )}
+        {!edit && (
+          <Form.Item
+            extra={
+              <div>
+                Nếu không nhập mật khẩu, hệ thống sẽ tự động cấp mật khẩu mặc định cho tài khoản
+              </div>
+            }
+            style={{ marginBottom: 8 }}
+            name="password"
+            label="Mật khẩu"
+            rules={[...rules.password]}
+          >
+            <Input placeholder="Nhập mật khẩu" />
+          </Form.Item>
+        )}
+
         <Row gutter={[12, 0]}>
-          <Col xs={12}>
+          <Col xs={24} md={8}>
             <Form.Item
-              initialValue={record?.hoDem}
+              style={{ marginBottom: 8 }}
               name="hoDem"
-              label="Họ đệm"
-              rules={[...rules.required]}
+              label="Họ đệm"
+              rules={[...rules.required, ...rules.ten]}
+              initialValue={record?.hoDem}
             >
-              <Input placeholder="Họ đệm" />
+              <Input placeholder="Họ đệm" />
             </Form.Item>
           </Col>
-
-          <Col xs={12}>
+          <Col xs={24} md={8}>
             <Form.Item
-              initialValue={record?.ten}
-              rules={[...rules.required]}
+              style={{ marginBottom: 8 }}
               name="ten"
               label="Tên"
+              rules={[...rules.required, ...rules.ten]}
+              initialValue={record?.ten}
             >
-              <Input placeholder="Tên giấy tờ" />
+              <Input placeholder="Tên" />
             </Form.Item>
           </Col>
-
-          <Col xs={12}>
+          <Col xs={24} md={8}>
             <Form.Item
-              initialValue={record?.soDienThoai}
-              rules={[...rules.required]}
-              name="soDienThoai"
-              label="Số điện thoại"
-            >
-              <Input placeholder="Số điện thoại" />
-            </Form.Item>
-          </Col>
-          <Col xs={12}>
-            <Form.Item
-              initialValue={record?.email}
-              rules={[...rules.required]}
-              name="email"
-              label="Email"
-            >
-              <Input placeholder="Email" />
-            </Form.Item>
-          </Col>
-
-          <Col xs={12}>
-            <Form.Item name="cmtCccd" label="Căn cước công dân" initialValue={record?.cmtCccd}>
-              <Input placeholder="Căn cước công dân" disabled={edit ? true : false} />
-            </Form.Item>
-          </Col>
-
-          <Col xs={12}>
-            <Form.Item
-              name="urlAnhMoTa"
-              label="Ảnh đại diện"
-              initialValue={renderFileListUrl(record?.anhDaiDien ?? '')}
-            >
-              <UploadAvatar
-                style={{
-                  width: 102,
-                  maxWidth: 102,
-                  height: 102,
-                  maxHeight: 102,
-                }}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col xs={12}>
-            <Form.Item
-              initialValue={record?.gioiTinh}
-              rules={[...rules.required]}
-              name="gioiTinh"
-              label="Giới tính"
-            >
-              <Select
-                placeholder="Giới tính"
-                options={Object.keys(Gender)?.map((item) => ({
-                  value: Gender[item],
-                  label: Gender[item],
-                }))}
-              />
-            </Form.Item>
-          </Col>
-
-          <Col xs={12}>
-            <Form.Item
-              initialValue={record?.loaiNoiSinh}
-              name="loaiNoiSinh"
-              label="Loại nơi sinh"
-              rules={[...rules.required]}
-            >
-              <Select
-                placeholder="Nơi sinh"
-                options={Object.keys(LoaiNoiSinh)?.map((item) => ({
-                  value: item,
-                  label: MapKeyLoaiNoiSinh[item],
-                }))}
-              />
-            </Form.Item>
-          </Col>
-          <Col xs={12}>
-            <Form.Item
-              initialValue={
-                record?.ngaySinh ? moment(record?.ngaySinh).format('DD/MM/YYYY') : undefined
-              }
+              style={{ marginBottom: 8 }}
               name="ngaySinh"
-              label="Ngày sinh"
+              label="Ngày sinh"
               rules={[...rules.required]}
+              initialValue={record?.ngaySinh ? moment(record?.ngaySinh) : undefined}
             >
-              <Input placeholder="Ngày sinh" />
+              <DatePicker
+                style={{ width: '100%' }}
+                format="DD/MM/YYYY"
+                disabledDate={(cur) => moment(cur).isAfter(moment())}
+                placeholder="Ngày sinh"
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={8}>
+            <Form.Item
+              style={{ marginBottom: 8 }}
+              name="gioiTinh"
+              label="Giới tính"
+              rules={[...rules.required]}
+              initialValue={record?.gioiTinh}
+            >
+              <Select
+                placeholder="Giới tính"
+                options={[
+                  { value: 'Nam', label: 'Nam' },
+                  { value: 'Nữ', label: 'Nữ' },
+                  { value: 'Khác', label: 'Khác' },
+                ]}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={8}>
+            <Form.Item
+              style={{ marginBottom: 8 }}
+              name="soDienThoai"
+              label="Số điện thoại"
+              rules={[...rules.soDienThoai, ...rules.required]}
+              initialValue={record?.soDienThoai}
+            >
+              <Input placeholder="Số điện thoại" />
             </Form.Item>
           </Col>
 
-          <Col xs={12}>
-            <Form.Item
-              initialValue={
-                record?.ngayCapCmtCccd
-                  ? moment(record?.ngayCapCmtCccd).format('DD/MM/YYYY')
-                  : undefined
-              }
-              name="ngayCapCmtCccd"
-              label="Ngày cấp CMND-CCCD"
-              // rules={[...rules.required]}
-            >
-              <Input placeholder="Ngày cấp CMND-CCCD" />
-            </Form.Item>
-          </Col>
-          <Col xs={12}>
-            <Form.Item
-              initialValue={record?.noiCapCmtCccd}
-              name="noiCapCmtCccd"
-              label="Nơi cấp CMND-CCCD"
-              // rules={[...rules.required]}
-            >
-              <Input placeholder="Nơi cấp" />
-            </Form.Item>
-          </Col>
+          {access.admin && (
+            <>
+              <Col md={8}>
+                <Form.Item
+                  style={{ marginBottom: 8 }}
+                  name="idHinhThucDaoTao"
+                  label="Hình thức đào tạo"
+                  initialValue={record?.idHinhThucDaoTao}
+                >
+                  <Select
+                    allowClear
+                    placeholder="Chọn hình thức"
+                    options={danhSachHinhThuc?.map((item) => ({
+                      value: item._id,
+                      label: item?.ten,
+                    }))}
+                  />
+                </Form.Item>
+              </Col>
+              <Col xs={24}>
+                <Form.Item
+                  style={{ marginBottom: 8 }}
+                  name="idCoSoDaoTao"
+                  label="Cơ sở đào tạo"
+                  initialValue={record?.idCoSoDaoTao}
+                >
+                  <Select
+                    allowClear
+                    placeholder="Chọn cơ sở"
+                    options={danhSachCoSo?.map((item) => ({ value: item._id, label: item?.ten }))}
+                  />
+                </Form.Item>
+              </Col>
+            </>
+          )}
         </Row>
 
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>

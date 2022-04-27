@@ -87,7 +87,7 @@ const FormNganh = () => {
           labelCol={{ span: 24 }}
           name={['danhSachToHop']}
           label="Tổ hợp xét tuyển"
-          rules={[...rules.required]}
+          // rules={[...rules.required]}
         >
           <Select
             showSearch

@@ -1,16 +1,23 @@
 import RaSoatHoSo from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo';
 import BlockNguyenVong from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo/components/BlockNguyenVong';
 import BlockRaSoatThongTinCaNhan from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo/components/BlockThongTinCaNhan';
-import { EyeOutlined } from '@ant-design/icons';
+import { ETrangThaiTrungTuyen, ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
+import { CheckOutlined, CloseOutlined, EyeOutlined, StopOutlined } from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
-import { Button, Card, Col, Divider, Modal, Row } from 'antd';
-import { useModel } from 'umi';
+import { Button, Card, Col, Descriptions, Divider, Modal, Row } from 'antd';
+import { useState } from 'react';
+import { useAccess, useModel } from 'umi';
+import FormTiepNhanXacNhanNhapHoc from './FormTiepNhanXacNhanNhapHoc';
+import { TableGiayToXacNhanNhapHoc } from './TableGiayToXacNhanNhapHoc';
 import { TableThongTinKhaiXacNhanNhapHoc } from './TableThongTinKhaiXacNhanNhapHoc';
 
-const ViewHoSoTrungTuyen = () => {
+const ViewHoSoTrungTuyen = (props: { idCoSo?: string }) => {
+  const access = useAccess();
   const { record } = useModel('dottuyensinh');
-  const { record: recordKetQua } = useModel('ketquaxettuyen');
+  const { record: recordKetQua, setVisibleForm: setVisibleFormKetQua } = useModel('ketquaxettuyen');
   const { visibleForm, setVisibleForm, adminGetHoSoByIdHoSoModel } = useModel('hosoxettuyen');
+  const [typeXuLy, setTypeXuLy] = useState<ETrangThaiXacNhanNhapHoc>();
+  const [visibleFormXuLy, setVisibleFormXuLy] = useState<boolean>(false);
   const phuongThuc = localStorage.getItem('phuongThuc');
   return (
     <>
@@ -18,7 +25,7 @@ const ViewHoSoTrungTuyen = () => {
         <Card bordered>
           <div style={{ textAlign: 'center' }}>
             <b style={{ fontSize: 22 }}>
-              HỐ SƠ TRÚNG TUYỂN ĐẠI HỌC HỆ {record?.hinhThucDaoTao?.ten?.toUpperCase() ?? ''} NĂM{' '}
+              HỒ SƠ TRÚNG TUYỂN ĐẠI HỌC HỆ {record?.hinhThucDaoTao?.ten?.toUpperCase() ?? ''} NĂM{' '}
               {record?.namTuyenSinh ?? ''}
             </b>
 
@@ -69,6 +76,80 @@ const ViewHoSoTrungTuyen = () => {
             <br />
             <h2 style={{ fontWeight: 'bold' }}>C. THÔNG TIN XÁC NHẬN NHẬP HỌC:</h2>
             <TableThongTinKhaiXacNhanNhapHoc index={1} />
+            <TableGiayToXacNhanNhapHoc index={2} />
+            <Descriptions>
+              <Descriptions.Item
+                span={3}
+                label={<span style={{ fontWeight: 'bold' }}>3. Ghi chú chuyên viên</span>}
+              >
+                {recordKetQua?.thongTinXacNhanNhapHoc?.ghiChuTiepNhan ?? ''}
+              </Descriptions.Item>
+            </Descriptions>
+
+            {!access.thiSinh ? (
+              <>
+                <div style={{ textAlign: 'center', marginTop: 10 }}>
+                  {recordKetQua?.trangThai === ETrangThaiTrungTuyen.TRUNG_TUYEN &&
+                    recordKetQua?.thongTinXacNhanNhapHoc?.trangThaiXacNhan ===
+                      ETrangThaiXacNhanNhapHoc.XAC_NHAN && (
+                      <>
+                        <Button
+                          onClick={() => {
+                            setVisibleFormXuLy(true);
+                            setTypeXuLy(ETrangThaiXacNhanNhapHoc.DA_TIEP_NHAN);
+                          }}
+                          style={{ marginRight: 8 }}
+                          icon={<CheckOutlined />}
+                          type="primary"
+                        >
+                          Tiếp nhận
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setVisibleFormXuLy(true);
+                            setTypeXuLy(ETrangThaiXacNhanNhapHoc.KHONG_TIEP_NHAN);
+                          }}
+                          style={{ marginRight: 8 }}
+                          icon={<StopOutlined />}
+                          type="primary"
+                        >
+                          Không tiếp nhận
+                        </Button>
+                      </>
+                    )}
+                  <Button
+                    onClick={() => {
+                      setVisibleFormKetQua(false);
+                    }}
+                    icon={<CloseOutlined />}
+                  >
+                    Đóng
+                  </Button>
+                </div>
+                <Modal
+                  destroyOnClose
+                  footer={false}
+                  width="1000px"
+                  title={
+                    typeXuLy === ETrangThaiXacNhanNhapHoc.DA_TIEP_NHAN
+                      ? 'Tiếp nhận hồ sơ'
+                      : 'Không tiếp nhận hồ sơ'
+                  }
+                  visible={visibleFormXuLy}
+                  onCancel={() => setVisibleFormXuLy(false)}
+                >
+                  <FormTiepNhanXacNhanNhapHoc
+                    idCoSo={props.idCoSo}
+                    onCancel={() => {
+                      setVisibleFormXuLy(false);
+                    }}
+                    type={typeXuLy}
+                  />
+                </Modal>
+              </>
+            ) : (
+              <div />
+            )}
           </GridContent>
         </Card>
         <Modal

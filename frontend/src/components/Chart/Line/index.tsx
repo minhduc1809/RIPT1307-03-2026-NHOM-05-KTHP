@@ -15,7 +15,7 @@ const LineChart = (props: { xLabel?: string; yLabel?: string; data: { x: any; y:
   return (
     <div>
       <Chart
-        padding={{ top: 10, bottom: 40, left: 30, right: 30 }}
+        padding={{ top: 10, bottom: 40, left: 70, right: 30 }}
         height={400}
         data={props?.data ?? [{ x: '', y: 0 }]}
         scale={cols}

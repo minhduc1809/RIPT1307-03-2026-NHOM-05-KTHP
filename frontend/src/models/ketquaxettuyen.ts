@@ -1,12 +1,14 @@
 import useInitModel from '@/hooks/useInitModel';
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import {
+  adminTiepNhanXacNhanNhapHoc,
   getKetQuaXetTuyenPageable,
   getMyKetQuaXetTuyen,
   xacNhanKhongNhapHoc,
   xacNhanNhapHoc,
 } from '@/services/KetQuaXetTuyen/ketquaxettuyen';
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
+import type { ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
 import { message } from 'antd';
 import { useState } from 'react';
 
@@ -68,7 +70,28 @@ export default () => {
     setRecord(response?.data?.data);
   };
 
+  const adminTiepNhanXacNhanNhapHocModel = async (
+    idKetQuaXetTuyen: string,
+    payload: {
+      danhSachGiayToXacNhanNhapHoc: DotTuyenSinh.GiayTo[];
+      danhSachThongTinKhaiXacNhan: KetQuaXetTuyen.ThongTinKhaiXacNhan[];
+      ghiChuTiepNhan?: string;
+      ngayTiepNhan: string;
+      trangThaiXacNhan: ETrangThaiXacNhanNhapHoc;
+    },
+    idDotTuyenSinh: string,
+    idCoSo?: string,
+  ) => {
+    if (!idKetQuaXetTuyen) return;
+    setLoading(true);
+    await adminTiepNhanXacNhanNhapHoc(idKetQuaXetTuyen, payload);
+    message.success('Xử lý thành công');
+    setVisibleForm(false);
+    getKetQuaXetTuyenPageableModel(idDotTuyenSinh, idCoSo);
+  };
+
   return {
+    adminTiepNhanXacNhanNhapHocModel,
     xacNhanKhongNhapHocModel,
     getKetQuaXetTuyenPageableModel,
     record,

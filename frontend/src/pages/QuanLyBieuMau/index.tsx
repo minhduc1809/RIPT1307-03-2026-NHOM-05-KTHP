@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
+import type { BieuMau } from '@/services/BieuMau/typings';
 import type { IColumn } from '@/utils/interfaces';
 import { useCheckAccess } from '@/utils/utils';
 import {
@@ -9,6 +10,7 @@ import {
   EyeOutlined,
   PieChartOutlined,
 } from '@ant-design/icons';
+import { useEffect } from 'react';
 import { Button, Divider, Popconfirm, Popover, Switch, Tooltip } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
@@ -37,7 +39,14 @@ const KhaoSat = () => {
     edit,
     getBieuMauThongKeModel,
   } = useModel('bieumau');
+
+  const { getAllDotTuyenSinhModel } = useModel('dottuyensinh');
+
   const [form, setForm] = useState<string>('edit');
+
+  useEffect(() => {
+    getAllDotTuyenSinhModel();
+  }, []);
 
   const handleEdit = (record: BieuMau.Record) => {
     setForm('edit');

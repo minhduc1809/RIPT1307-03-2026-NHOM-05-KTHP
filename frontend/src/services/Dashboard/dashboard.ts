@@ -20,3 +20,7 @@ export function getSoLuongNguyenVongByIdDot(
 export function getSoLuongHoSoTheoNgayByIdDot(idDot: string, payload: { ngayThongKe: string }) {
   return axios.get(`${ip3}/${url}/so-luong/ho-so/dot/${idDot}`, { params: payload });
 }
+
+export function getPhoDiemByIdDot(idDot: string, payload: { condition?: any }) {
+  return axios.get(`${ip3}/${url}/pho-diem/nguyen-vong/dot/${idDot}`, { params: payload });
+}

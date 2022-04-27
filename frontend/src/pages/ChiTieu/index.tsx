@@ -5,11 +5,13 @@ import { useState } from 'react';
 import { useModel } from 'umi';
 import TableChiTieu from './components/TableChiTieu';
 import { EModeKhoiTao } from '@/utils/constants';
-import { SlidersOutlined } from '@ant-design/icons';
+import { CheckSquareOutlined, SlidersOutlined } from '@ant-design/icons';
+import { useCheckAccess } from '@/utils/utils';
 
 const ChiTieu = () => {
   const { record } = useModel('dottuyensinh');
-  const { setRecord, loading, adminExportGiaLapModel } = useModel('chitieu');
+  const { setRecord, loading, adminExportGiaLapModel, KhoiTaoKetQuaXetTuyenModel } =
+    useModel('chitieu');
   const [idCoSo, setIdCoSo] = useState<string | undefined>(record?.danhSachCoSoDaoTao?.[0]?._id);
   useEffect(() => {
     setIdCoSo(record?.danhSachCoSoDaoTao?.[0]?._id);
@@ -21,27 +23,55 @@ const ChiTieu = () => {
     };
   }, []);
 
+  const khoiTaoAll = useCheckAccess('danh-sach-trung-tuyen:khoi-tao-all');
+
   return (
     <Card title="Chỉ tiêu xét tuyển">
       <FilterDotTuyenSinh />
       {record?.choPhepGiaLapTheoCoSo !== true && (
-        <Dropdown
-          overlay={
-            <Menu
-              onClick={async (val: { key: string }) => {
-                adminExportGiaLapModel(record?._id ?? '', { mode: val.key as EModeKhoiTao });
-              }}
+        <>
+          <Dropdown
+            overlay={
+              <Menu
+                onClick={async (val: { key: string }) => {
+                  adminExportGiaLapModel(record?._id ?? '', { mode: val.key as EModeKhoiTao });
+                }}
+              >
+                <Menu.Item key={EModeKhoiTao.SO_LUONG}>Sử dụng chỉ tiêu số lượng</Menu.Item>
+                <Menu.Item key={EModeKhoiTao.DIEM_SAN}>Sử dụng chỉ tiêu điểm sàn</Menu.Item>
+              </Menu>
+            }
+            key="ellipsis"
+          >
+            <Button icon={<SlidersOutlined />} loading={loading} type="primary">
+              Giả lập điểm
+            </Button>
+          </Dropdown>
+          {khoiTaoAll && (
+            <Dropdown
+              overlay={
+                <Menu
+                  onClick={async (val: any) => {
+                    await KhoiTaoKetQuaXetTuyenModel(record?._id ?? '', { mode: val?.key });
+                  }}
+                >
+                  <Menu.Item key={EModeKhoiTao.SO_LUONG}>Sử dụng chỉ tiêu số lượng</Menu.Item>
+                  <Menu.Item key={EModeKhoiTao.DIEM_SAN}>Sử dụng chỉ tiêu điểm sàn</Menu.Item>
+                </Menu>
+              }
+              key="ellipsis"
             >
-              <Menu.Item key={EModeKhoiTao.SO_LUONG}>Sử dụng chỉ tiêu số lượng</Menu.Item>
-              <Menu.Item key={EModeKhoiTao.DIEM_SAN}>Sử dụng chỉ tiêu điểm sàn</Menu.Item>
-            </Menu>
-          }
-          key="ellipsis"
-        >
-          <Button icon={<SlidersOutlined />} loading={loading} type="primary">
-            Giả lập điểm
-          </Button>
-        </Dropdown>
+              <Button
+                style={{ marginLeft: 8 }}
+                icon={<CheckSquareOutlined />}
+                loading={loading}
+                type="primary"
+              >
+                Khởi tạo DS Trúng tuyển
+              </Button>
+            </Dropdown>
+          )}
+        </>
       )}
       <Tabs
         activeKey={idCoSo}
