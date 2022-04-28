@@ -38,6 +38,7 @@ const KhaoSat = () => {
     condition,
     edit,
     getBieuMauThongKeModel,
+    exportKetQuaKhaoSatModel,
   } = useModel('bieumau');
 
   const { getAllDotTuyenSinhModel } = useModel('dottuyensinh');
@@ -141,7 +142,7 @@ const KhaoSat = () => {
                   disabled={!exportAll}
                   type="primary"
                   onClick={() => {
-                    // exportKetQuaKhaoSatModel({ idKhaoSat: record._id });
+                    exportKetQuaKhaoSatModel({ idKhaoSat: record._id });
                   }}
                   shape="circle"
                 >

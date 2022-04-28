@@ -9,7 +9,7 @@ const MultipleChoice = (props: {
     <Checkbox.Group value={props?.dapAn}>
       {props.luaChon?.map((item) => (
         <>
-          <Checkbox key={item._id} value={item._id}>
+          <Checkbox key={item._id} value={item.noiDung}>
             {item.noiDung}
           </Checkbox>
           <br />

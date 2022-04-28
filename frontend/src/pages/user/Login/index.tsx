@@ -18,7 +18,7 @@ import {
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { Button, Col, ConfigProvider, Divider, message, Modal, Row, Tabs, Tooltip } from 'antd';
 import viVN from 'antd/lib/locale/vi_VN';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
 import { useMediaQuery } from 'react-responsive';
@@ -26,6 +26,7 @@ import { FormattedMessage, history, useIntl, useModel } from 'umi';
 import Register from '../register';
 import FormForgetPassword from './FormForgetPassword';
 import styles from './index.less';
+import OneSignal from 'react-onesignal';
 
 const goto = () => {
   if (!history) return;
@@ -49,6 +50,14 @@ const LoginGlobal: React.FC = () => {
   const { isLogin, setIsLogin } = useModel('user');
   const intl = useIntl();
   const [visibile, setVisible] = useState<boolean>(false);
+  const [oneSignalId, setOneSignalId] = useState<string | null | undefined>();
+  const getUserIdOnesignal = async () => {
+    const id = await OneSignal.getUserId();
+    setOneSignalId(id);
+  };
+  useEffect(() => {
+    getUserIdOnesignal();
+  }, []);
 
   const handleRole = async (role: { accessToken: string; user: Login.Profile }) => {
     const defaultloginSuccessMessage = intl.formatMessage({
@@ -77,7 +86,7 @@ const LoginGlobal: React.FC = () => {
   const handleSubmit = async (values: { username: string; password: string }) => {
     setSubmitting(true);
     try {
-      const msg = await login({ ...values });
+      const msg = await login({ ...values, deviceId: 'deviceId', oneSignalId: oneSignalId || '' });
       if (msg.status === 201) {
         handleRole(msg?.data?.data);
       }

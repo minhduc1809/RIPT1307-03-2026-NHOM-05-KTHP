@@ -1,3 +1,4 @@
+import type { BieuMau } from '@/services/BieuMau/typings';
 import rules from '@/utils/rules';
 import { Radio, Form } from 'antd';
 

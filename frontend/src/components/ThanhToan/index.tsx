@@ -5,8 +5,9 @@ import ThongTinThanhToan from './ThongTinThanhToan';
 import Table from '@/components/Table/Table';
 import { currencyFormat } from '@/utils/utils';
 import moment from 'moment';
+import { TrangThaiThanhToan } from '@/utils/constants';
 
-const ThanhToan = (props: { record?: { identityCode: string; trangThaiThanhToan: string } }) => {
+const ThanhToan = (props: { record?: { identityCode: string; trangThaiThanhToan?: string } }) => {
   // const { record, getSettingByKeyModel } = useModel('setting');
   const { getInvoiceByIdentityCodeModel, invoice, setInvoice } = useModel('thanhtoan');
   const access = useAccess();
@@ -31,7 +32,13 @@ const ThanhToan = (props: { record?: { identityCode: string; trangThaiThanhToan:
   });
   return (
     <div>
-      <ThongTinThanhToan trangThaiThanhToan={props?.record?.trangThaiThanhToan ?? ''} />
+      <ThongTinThanhToan
+        trangThaiThanhToan={
+          props?.record?.trangThaiThanhToan
+            ? props?.record?.trangThaiThanhToan ?? ''
+            : TrangThaiThanhToan?.[invoice?.status ?? ''] ?? ''
+        }
+      />
       <br />
       <Tabs>
         <Tabs.TabPane tab="Chi tiết" key="chitiet">

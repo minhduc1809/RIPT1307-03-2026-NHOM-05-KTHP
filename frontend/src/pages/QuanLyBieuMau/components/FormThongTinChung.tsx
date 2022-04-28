@@ -120,7 +120,7 @@ const FormThongTinChungKhaoSat = () => {
                   mode="multiple"
                   placeholder="Chọn đợt tuyển sinh"
                   options={danhSach?.map((item) => ({
-                    label: item.tenDotTuyenSinh,
+                    label: `${item.tenDotTuyenSinh} (năm ${item.namTuyenSinh})`,
                     value: item._id,
                   }))}
                 />

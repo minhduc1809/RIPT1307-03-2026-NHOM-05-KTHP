@@ -6,9 +6,9 @@ const SingleChoice = (props: {
   dapAn?: string[];
 }) => {
   return (
-    <Radio.Group value={props?.luaChon.find((o) => o.dung)?._id}>
+    <Radio.Group value={props?.dapAn?.[0]}>
       {props.luaChon?.map((item) => (
-        <Radio checked={item.dung} key={item._id} value={item._id}>
+        <Radio checked={true} key={item._id} value={item.noiDung}>
           {item.noiDung}
         </Radio>
       ))}

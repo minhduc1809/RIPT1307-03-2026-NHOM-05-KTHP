@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+import type { BieuMau } from '@/services/BieuMau/typings';
 import rules from '@/utils/rules';
 import { Checkbox, Form } from 'antd';
 

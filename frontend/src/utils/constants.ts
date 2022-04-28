@@ -134,6 +134,12 @@ export enum ETrangThaiThanhToan {
   DA_THANH_TOAN_DU = 'Đã thanh toán đủ',
 }
 
+export enum TrangThaiThanhToan {
+  open = 'Chưa thanh toán đủ',
+  paid = 'Đã thanh toán đủ',
+  overpaid = 'Thanh toán thừa',
+}
+
 export enum ELoaiChungChiTiengPhap {
   DELF = 'DELF',
   DALF = 'DALF',

@@ -72,5 +72,39 @@ declare module ThanhToan {
     amountDue: number;
     amountRemaining: number;
     amountRefund: number;
+    metadata: {
+      loai: string;
+      mocThoiGian?: string;
+      thongTinChiTiet?: any[];
+      [x: string]: string;
+    };
+    paidHistory: [];
+  }
+
+  export interface PostInvoice {
+    loaiThanhToan: string;
+    mocThoiGian?: string;
+    maSinhVien: string;
+    soTienPhaiThu: number;
+    thongTinChiTiet: any[];
+    hinhThucDaoTaoId: string;
+    phamVi: string;
+  }
+
+  export interface ThongKeInvoice {
+    totalDue: number;
+    totalRemaining: number;
+    totalPaid: number;
+    totalRefund: number;
+  }
+
+  export interface RecordResponseImport {
+    maSinhVien: string;
+    ghiChu: string;
+  }
+
+  export interface ResponseImportInvoice {
+    listKhongHopLe: RecordResponseImport[];
+    listHopLe: RecordResponseImport[];
   }
 }

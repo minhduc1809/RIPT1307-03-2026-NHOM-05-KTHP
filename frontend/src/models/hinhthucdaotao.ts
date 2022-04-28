@@ -40,24 +40,27 @@ export default () => {
     setLoading(false);
   };
 
-  const putHinhThucDaoTaoModel = async (payload: {id: string, payload: HinhThucDaoTao.Record}) => {
-    if(!payload.id) return;
+  const putHinhThucDaoTaoModel = async (payload: {
+    id: string;
+    payload: HinhThucDaoTao.Record;
+  }) => {
+    if (!payload.id) return;
     setLoading(true);
     await putHinhThucDaoTao(payload);
     getHinhThucDaoTaoPageableModel();
-    message.success("Sửa thành công");
+    message.success('Sửa thành công');
     setVisibleForm(false);
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
-  const delHinhThucDaoTaoModel = async (payload: {id: string}) => {
+  const delHinhThucDaoTaoModel = async (payload: { id: string }) => {
     setLoading(true);
     await delHinhThucDaoTao(payload);
     getHinhThucDaoTaoPageableModel();
-    message.success("Xoá thành công");
+    message.success('Xoá thành công');
     setVisibleForm(false);
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   return {
     postHinhThucDaoTaoModel,
@@ -69,6 +72,6 @@ export default () => {
     setDanhSach,
     ...objInitModel,
     putHinhThucDaoTaoModel,
-    delHinhThucDaoTaoModel
+    delHinhThucDaoTaoModel,
   };
 };

@@ -20,6 +20,15 @@
     />
     <title>Hệ Thống Xét Tuyển Trực Tuyến</title>
     <link rel="icon" href="<%= context.config.publicPath +'favicon.ico'%>" type="image/x-icon" />
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+    <script>
+      window.OneSignal = window.OneSignal || [];
+      OneSignal.push(function () {
+        OneSignal.init({
+          appId: '5a9cdfc3-387f-455f-bcc5-e7aa6b21ad38',
+        });
+      });
+    </script>
   </head>
 
   <body>

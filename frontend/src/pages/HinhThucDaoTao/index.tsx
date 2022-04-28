@@ -19,7 +19,7 @@ const HinhThucDaoTao = () => {
   } = useModel('hinhthucdaotao');
 
   const onCell = (recordHinhThucDaoTao: HinhThucDaoTao.Record) => ({
-    onclick: () => {
+    onClick: () => {
       setVisibleForm(true);
       setRecord(recordHinhThucDaoTao);
     },

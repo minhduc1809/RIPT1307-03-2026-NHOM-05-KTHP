@@ -56,7 +56,7 @@ export default {
   'menu.KhaoSatTrucTuyen': 'Khảo sát trực tuyến',
   'menu.NhapHoc': 'Nhập học',
   'menu.ThanhToan': 'Thanh toán',
-  'menu.HuongDan': 'Hướng dẫn',
+  'menu.KhaoSat': 'Khảo sát',
   'menu.QuanTriNhapHoc': 'Quản trị nhập học',
   'menu.QuanTriNhapHoc.DotNhapHoc': 'Đợt nhập học',
   'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc': 'Tiếp nhận hồ sơ nhập học',

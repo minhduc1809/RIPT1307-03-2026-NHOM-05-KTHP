@@ -1,6 +1,15 @@
 import { ETrangThaiHoSo, ETrangThaiThanhToan, ETrangThaiXacNhanNhapHoc } from './constants';
 
 const data: any = {
+  status: [
+    { value: 'open', text: 'Chưa thanh toán' },
+    {
+      value: {
+        $in: ['paid', 'overpaid'],
+      },
+      text: 'Đã thanh toán',
+    },
+  ],
   trangThai: [
     ETrangThaiHoSo.chuakhoa,
     ETrangThaiHoSo.dakhoa,

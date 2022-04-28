@@ -10,7 +10,7 @@ const ThongKe = () => {
   const { loading, thongKe, setVisibleForm } = useModel('bieumau');
   const renderThongKe = (question: any, index: number) => {
     let questionEleMent = <div />;
-    // const recordDapAn = record?.danhSachTraLoi?.find((item) => item.idCauHoi === question._id);
+    // const recordDapAn = record?.danhSachTraLoi?.find((item) => item.cauHoiId === question._id);
     if (question.loai === 'SingleChoice' && question?.soLuongTraLoi > 0)
       questionEleMent = (
         <SingleChoice ketQua={question.ketQua} tong={question?.soLuongTraLoi ?? 0} />

@@ -19,9 +19,9 @@ export function postHinhThucDaoTao(payload: HinhThucDaoTao.Record) {
   return axios.post(`${ip3}/${url}`, payload);
 }
 
-export function putHinhThucDaoTao( payload: {id: string, payload: HinhThucDaoTao.Record}) {
-  return axios.put(`${ip3}/${url}/${payload.id}`, payload.payload)
+export function putHinhThucDaoTao(payload: { id: string; payload: HinhThucDaoTao.Record }) {
+  return axios.put(`${ip3}/${url}/${payload.id}`, payload.payload);
 }
-export function delHinhThucDaoTao( payload: {id: string}) {
-  return axios.delete(`${ip3}/${url}/${payload.id}`)
+export function delHinhThucDaoTao(payload: { id: string }) {
+  return axios.delete(`${ip3}/${url}/${payload.id}`);
 }

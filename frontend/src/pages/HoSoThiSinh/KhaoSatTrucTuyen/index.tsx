@@ -1,17 +1,18 @@
 /* eslint-disable no-underscore-dangle */
 import TableBase from '@/components/Table';
+import type { BieuMau } from '@/services/BieuMau/typings';
 import type { IColumn } from '@/utils/interfaces';
-import { EditOutlined } from '@ant-design/icons';
-import { Button, Popconfirm, Tag, Tooltip } from 'antd';
+import { EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { Button, Divider, Modal, Popconfirm, Tag, Tooltip } from 'antd';
 import moment from 'moment';
+import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import Form from './components/Form';
+import ViewCauTraLoi from './components/ViewCauTraLoi';
 
 const KhaoSat = () => {
   const {
     getBieuMauUserModel,
-    setLoaiBieuMau,
-    loading,
     page,
     limit,
     setEdit,
@@ -19,19 +20,19 @@ const KhaoSat = () => {
     setVisibleForm,
     getIdBieuMauDaTraLoiModel,
     listIdBieuMauDaTraLoi,
-    getBieuMauAdminModel,
+    getMyCauTraLoiModel,
   } = useModel('bieumau');
+  const dot = localStorage.getItem('dot');
 
-  // useEffect(() => {
-  //   setLoaiBieuMau('Khảo sát');
-  //   return () => {
-  //     setLoaiBieuMau(undefined);
-  //   };
-  // }, []);
+  const [visibleViewCauTraLoi, setVisibleViewCauTraLoi] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   getIdBieuMauDaTraLoiModel();
-  // }, []);
+  const onCancelViewCauTraLoi = () => {
+    setVisibleViewCauTraLoi(false);
+  };
+
+  useEffect(() => {
+    getIdBieuMauDaTraLoiModel();
+  }, []);
 
   const handleEdit = (record: BieuMau.Record) => {
     setEdit(true);
@@ -89,7 +90,7 @@ const KhaoSat = () => {
     {
       title: 'Thao tác',
       align: 'center',
-      width: 100,
+      width: 120,
       fixed: 'right',
       render: (record: BieuMau.Record) => {
         const checkHetThoiGianThucHien =
@@ -97,20 +98,41 @@ const KhaoSat = () => {
           moment(record.thoiGianKetThuc).isBefore(new Date());
         return (
           <>
-            <Tooltip
-              title={checkHetThoiGianThucHien ? 'Ngoài thời gian cho phép' : 'Thực hiện khảo sát'}
-            >
-              {listIdBieuMauDaTraLoi.includes(record._id) ? (
-                <Popconfirm
-                  disabled={checkHetThoiGianThucHien}
-                  title="Bạn đã thực hiện khảo sát này, bạn có muốn thực hiện lại ?"
-                  onConfirm={() => handleEdit(record)}
+            {listIdBieuMauDaTraLoi.includes(record._id) ? (
+              <>
+                <Tooltip title="Xem lại câu trả lời">
+                  <Button
+                    onClick={() => {
+                      getMyCauTraLoiModel(record?._id);
+                      setVisibleViewCauTraLoi(true);
+                      setRecord(record);
+                    }}
+                    shape="circle"
+                    icon={<EyeOutlined />}
+                  />
+                </Tooltip>
+
+                <Divider type="vertical" />
+                <Tooltip
+                  title={
+                    checkHetThoiGianThucHien ? 'Ngoài thời gian cho phép' : 'Thực hiện khảo sát'
+                  }
                 >
-                  <Button disabled={checkHetThoiGianThucHien} type="primary" shape="circle">
-                    <EditOutlined />
-                  </Button>
-                </Popconfirm>
-              ) : (
+                  <Popconfirm
+                    disabled={checkHetThoiGianThucHien}
+                    title="Bạn đã thực hiện khảo sát này, bạn có muốn thực hiện lại ?"
+                    onConfirm={() => handleEdit(record)}
+                  >
+                    <Button disabled={checkHetThoiGianThucHien} type="primary" shape="circle">
+                      <EditOutlined />
+                    </Button>
+                  </Popconfirm>
+                </Tooltip>
+              </>
+            ) : (
+              <Tooltip
+                title={checkHetThoiGianThucHien ? 'Ngoài thời gian cho phép' : 'Thực hiện khảo sát'}
+              >
                 <Button
                   disabled={checkHetThoiGianThucHien}
                   onClick={() => handleEdit(record)}
@@ -119,8 +141,8 @@ const KhaoSat = () => {
                 >
                   <EditOutlined />
                 </Button>
-              )}
-            </Tooltip>
+              </Tooltip>
+            )}
           </>
         );
       },
@@ -128,19 +150,30 @@ const KhaoSat = () => {
   ];
 
   return (
-    <TableBase
-      columns={columns}
-      //getData={() => getBieuMauUserAdminModel('Trắc nghiệm')}
-      getData={getBieuMauAdminModel}
-      loading={false}
-      dependencies={[page, limit]}
-      modelName="bieumau"
-      title="Khảo sát trực tuyến"
-      formType="Drawer"
-      widthDrawer="60%"
-      //scroll={{ x: 1300 }}
-      Form={Form}
-    />
+    <>
+      <TableBase
+        columns={columns}
+        getData={() => {
+          if (dot) getBieuMauUserModel(dot);
+        }}
+        loading={false}
+        dependencies={[page, limit, dot]}
+        modelName="bieumau"
+        title="Khảo sát trực tuyến"
+        formType="Drawer"
+        widthDrawer="60%"
+        Form={Form}
+      />
+      <Modal
+        width={800}
+        footer={false}
+        bodyStyle={{ padding: 0 }}
+        visible={visibleViewCauTraLoi}
+        onCancel={onCancelViewCauTraLoi}
+      >
+        <ViewCauTraLoi onCancel={onCancelViewCauTraLoi} />
+      </Modal>
+    </>
   );
 };
 

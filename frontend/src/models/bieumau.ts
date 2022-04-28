@@ -8,10 +8,12 @@ import {
   getBieuMauThongKe,
   getBieuMauUser,
   getIdBieuMauDaTraLoi,
+  getMyCauTraLoi,
   kichHoatBieuMau,
   putBieuMau,
   traLoiBieuMau,
 } from '@/services/BieuMau/bieumau';
+import type { BieuMau } from '@/services/BieuMau/typings';
 import { message } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import FileDownload from 'js-file-download';
@@ -23,7 +25,8 @@ export default () => {
   const [listIdBieuMauDaTraLoi, setListIdBieuMauDaTraLoi] = useState<string[]>([]);
   const [filterInfo, setFilterInfo] = useState<any>({});
   const [condition, setCondition] = useState<any>({});
-  const [record, setRecord] = useState<BieuMau.Record>({} as BieuMau.Record);
+  const [record, setRecord] = useState<BieuMau.Record>();
+  const [recordTraLoi, setRecordTraLoi] = useState<BieuMau.RecordTraLoi>();
   const [thongKe, setThongKe] = useState<BieuMau.ThongKe>();
   const [loading, setLoading] = useState<boolean>(true);
   const [edit, setEdit] = useState<boolean>(false);
@@ -58,9 +61,10 @@ export default () => {
     setTotal(response?.data?.data?.total);
     setLoading(false);
   };
-  const getBieuMauUserModel = async (loaiParam?: string) => {
+  const getBieuMauUserModel = async (idDotTuyenSinh: string) => {
+    if (!idDotTuyenSinh) return;
     setLoading(true);
-    const response = await getBieuMauUser({ page, limit, loai: loaiParam || loaiBieuMau });
+    const response = await getBieuMauUser(idDotTuyenSinh, { page, limit });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);
@@ -127,13 +131,13 @@ export default () => {
 
   const getIdBieuMauDaTraLoiModel = async () => {
     setLoading(true);
-    const response = await getIdBieuMauDaTraLoi(loaiBieuMau);
+    const response = await getIdBieuMauDaTraLoi();
     setListIdBieuMauDaTraLoi(response?.data?.data ?? []);
     setLoading(false);
   };
 
   const traLoiBieuMauModel = async (payload: {
-    idBieuMau: string;
+    bieuMauId: string;
     danhSachTraLoi: BieuMau.TraLoiRecord[];
   }) => {
     setLoading(true);
@@ -155,7 +159,17 @@ export default () => {
     }
   };
 
+  const getMyCauTraLoiModel = async (idBieuMau: string) => {
+    setLoading(true);
+    const response = await getMyCauTraLoi(idBieuMau);
+    setRecordTraLoi(response?.data?.data?.[0]);
+    setLoading(false);
+  };
+
   return {
+    recordTraLoi,
+    setRecordTraLoi,
+    getMyCauTraLoiModel,
     setDanhSach,
     exportKetQuaKhaoSatModel,
     phamVi,

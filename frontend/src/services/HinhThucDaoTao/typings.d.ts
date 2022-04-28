@@ -6,6 +6,5 @@ declare module HinhThucDaoTao {
     _id: string;
     createdAt: string;
     updatedAt: string;
-    
   }
 }

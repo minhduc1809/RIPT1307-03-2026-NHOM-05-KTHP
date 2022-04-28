@@ -413,3 +413,19 @@ export const calculateLuaChonToHopVaHienThiDiemQuyDoi = (
     hienThiDiemQuyDoi,
   };
 };
+
+export const buildFormData = (payload: any) => {
+  const form = new FormData();
+  Object.keys(payload).map((key) => {
+    if (isValue(payload[key])) {
+      if (Array.isArray(payload[key])) {
+        for (let i = 0; i < payload[key].length; i += 1) {
+          form.append(key, payload[key][i]);
+        }
+        return;
+      }
+      form.set(key, trim(payload[key]));
+    }
+  });
+  return form;
+};

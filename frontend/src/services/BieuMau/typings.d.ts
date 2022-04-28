@@ -123,8 +123,16 @@ declare module BieuMau {
     listLuaChonBang?: LuaChonBangRecord[];
     traLoiText?: string;
     _id?: string;
-    idCauHoi: string;
+    cauHoiId: string;
     luaChonTuyenTinh?: number;
     listUrlFile?: string[];
+  }
+
+  export interface RecordTraLoi {
+    _id: string;
+    idBieuMau: string;
+    danhSachTraLoi: TraLoiRecord[];
+    userId: string;
+    vaiTro: string;
   }
 }

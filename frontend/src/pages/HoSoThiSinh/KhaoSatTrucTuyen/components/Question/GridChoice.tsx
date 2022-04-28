@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+import type { BieuMau } from '@/services/BieuMau/typings';
 import { Checkbox, Form, Table } from 'antd';
 import type { ColumnProps } from 'antd/lib/table';
 

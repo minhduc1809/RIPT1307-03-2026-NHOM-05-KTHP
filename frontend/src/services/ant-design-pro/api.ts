@@ -20,7 +20,12 @@ export async function getInfoAdmin() {
   return axios.get(`${ip3}/user/me`);
 }
 
-export async function login(payload: { username?: string; password?: string }) {
+export async function login(payload: {
+  username?: string;
+  password?: string;
+  deviceId: string;
+  oneSignalId: string;
+}) {
   return axios.post(`${ip3}/auth/login/web`, payload);
 }
 

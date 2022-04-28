@@ -4,7 +4,7 @@ import moment from 'moment';
 const ViewThongBao = (props: { record?: ThongBao.Record }) => {
   const { record } = props;
   return (
-    <Card >
+    <Card>
       <Card.Meta
         avatar={record?.imageUrl ? <Avatar src={record?.imageUrl} /> : false}
         title={<b>{record?.title}</b>}
@@ -13,7 +13,7 @@ const ViewThongBao = (props: { record?: ThongBao.Record }) => {
             {record?.senderName ?? ''} đã gửi vào lúc{' '}
             {moment(record?.createdAt).format('HH:mm DD/MM/YYYY')}
             <br />
-            <br/>
+            <br />
             {record?.description}
           </div>
         }

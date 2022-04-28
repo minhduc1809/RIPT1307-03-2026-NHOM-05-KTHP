@@ -1,13 +1,12 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-param-reassign */
 import { Button, Card, Checkbox, Form } from 'antd';
 import { useModel } from 'umi';
 import SingleChoice from './Question/SingleChoice';
-import MultipleChoice from './Question/MultipleChoice'; 
+import MultipleChoice from './Question/MultipleChoice';
 import Text from './Question/Text';
-import GridChoice from './Question/GridChoice'; 
-import NumericChoice from './Question/NumericChoice'; 
+import GridChoice from './Question/GridChoice';
+import NumericChoice from './Question/NumericChoice';
 import { useState } from 'react';
+import type { BieuMau } from '@/services/BieuMau/typings';
 
 const FormTraLoiKhaoSat = () => {
   const [form] = Form.useForm();
@@ -60,11 +59,11 @@ const FormTraLoiKhaoSat = () => {
       <Form
         scrollToFirstError
         onFinish={(values) => {
-          const danhSachTraLoi: KhaiBaoSucKhoe.TraLoiRecord[] = [];
+          const danhSachTraLoi: BieuMau.TraLoiRecord[] = [];
           record?.danhSachKhoi?.forEach((item, indexKhoi) => {
             item?.danhSachCauHoi?.forEach((cauHoi, indexCauHoi) => {
-              let traLoi: KhaiBaoSucKhoe.TraLoiRecord = {
-                idCauHoi: cauHoi._id,
+              let traLoi: BieuMau.TraLoiRecord = {
+                cauHoiId: cauHoi._id,
                 listLuaChon: [],
                 listLuaChonBang: [],
                 luaChonTuyenTinh: 0,
@@ -87,15 +86,15 @@ const FormTraLoiKhaoSat = () => {
               danhSachTraLoi.push(traLoi);
             });
           });
-          traLoiBieuMauModel({ idBieuMau: record._id, danhSachTraLoi });
+          traLoiBieuMauModel({ bieuMauId: record?._id ?? '', danhSachTraLoi });
         }}
         labelCol={{ span: 24 }}
         form={form}
       >
-        <h3>{record.tieuDe}</h3>
-        <p>{record.moTa}</p>
+        <h3>{record?.tieuDe}</h3>
+        <p>{record?.moTa}</p>
         <div>
-          {record.danhSachKhoi?.map((item: BieuMau.Khoi, indexKhoi) => (
+          {record?.danhSachKhoi?.map((item: BieuMau.Khoi, indexKhoi) => (
             <Card hoverable key={indexKhoi}>
               <div>{item.tieuDe}</div>
               <div>{item.moTa}</div>
@@ -120,7 +119,7 @@ const FormTraLoiKhaoSat = () => {
         )}
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
           <Button
-            disabled={!check}
+            disabled={record?.coCamKet ? !check : false}
             loading={loading}
             style={{ marginRight: 8 }}
             htmlType="submit"

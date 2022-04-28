@@ -126,7 +126,7 @@ const FormCauHinhBieuMau = () => {
           <Button
             icon={edit ? <SaveOutlined /> : <PlusOutlined />}
             //loading={loading}
-            loading = {false}
+            loading={false}
             style={{ marginRight: 8 }}
             htmlType="submit"
             type="primary"
