@@ -247,7 +247,7 @@ export default () => {
     message.success('Xử lý thành công');
     setVisibleForm(false);
     setVisibleFormGiayTo(false);
-    adminGetHoSoByIdDotModel(idDotTuyenSinh, ETrangThaiHoSo.dakhoa);
+    adminGetHoSoByIdDotModel(idDotTuyenSinh, ETrangThaiHoSo.DA_KHOA);
   };
 
   const khoaMyHoSoModel = async (idHoSo: string) => {

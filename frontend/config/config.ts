@@ -286,12 +286,12 @@ export default defineConfig({
       icon: 'DollarOutlined',
       // access: 'admin',
       routes: [
-        {
-          name: 'LoaiLePhi',
-          path: './loailephi',
-          access: 'routeFilter',
-          maChucNang: 'loai-le-phi:read-all',
-        },
+        // {
+        //   name: 'LoaiLePhi',
+        //   path: './loailephi',
+        //   access: 'routeFilter',
+        //   maChucNang: 'loai-le-phi:read-all',
+        // },
         {
           name: 'ThongTinCongNo',
           path: './thongtincongno',

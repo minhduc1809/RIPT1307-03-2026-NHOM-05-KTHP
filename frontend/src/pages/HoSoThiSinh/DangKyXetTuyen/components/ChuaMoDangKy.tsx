@@ -20,7 +20,7 @@ const ChuaMoDangKy = () => {
           title="Chưa đến thời gian đăng ký"
           subTitle={
             <>
-              {recordHoSo?.trangThai === ETrangThaiHoSo.khongtiepnhan
+              {recordHoSo?.trangThai === ETrangThaiHoSo.KHONG_TIEP_NHAN
                 ? 'Chưa đến thời gian đăng ký'
                 : subTitleByTrangThai?.[recordHoSo?.trangThai ?? '']}
             </>

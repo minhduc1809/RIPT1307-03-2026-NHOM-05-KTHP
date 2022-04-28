@@ -3,7 +3,7 @@ import TableCongNo from './components/TableCongNo';
 
 const CongNoAdmin = () => {
   return (
-    <Card bodyStyle={{ padding: 0 }} title="Công nợ">
+    <Card bodyStyle={{ padding: 0 }} title="Thanh toán">
       <TableCongNo />
     </Card>
   );

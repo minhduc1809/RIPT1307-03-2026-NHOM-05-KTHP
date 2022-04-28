@@ -56,3 +56,7 @@ export async function updateCCCD(payload: {
 export async function updatePassword(idUser: string, payload: { password: string }) {
   return axios.put(`${ip3}/user/${idUser}/password`);
 }
+
+export async function logout() {
+  return axios.post(`${ip3}/auth/logout`);
+}

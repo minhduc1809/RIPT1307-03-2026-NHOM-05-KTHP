@@ -92,7 +92,7 @@ export default {
   'menu.CauHinhHeThong.HinhThucDaoTao': 'Hình thức đào tạo',
   'menu.QuanTriThanhToan': 'Quản trị thanh toán',
   'menu.QuanTriThanhToan.LoaiLePhi': 'Loại lệ phí',
-  'menu.QuanTriThanhToan.ThongTinCongNo': 'Thông tin công nợ',
+  'menu.QuanTriThanhToan.ThongTinCongNo': 'Thông tin thanh toán',
   'menu.TuongTac': 'Tương tác',
   'menu.TuongTac.Email': 'Gửi email',
   'menu.TuongTac.BieuMau': 'Khảo sát',

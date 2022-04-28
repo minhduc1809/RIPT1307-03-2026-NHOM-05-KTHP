@@ -1,25 +1,25 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-param-reassign */
+import TinyEditor from '@/components/TinyEditor/Tiny';
 import UploadAvatar from '@/components/Upload/UploadAvatar';
+import {
+  ETrangThaiHoSo,
+  ETrangThaiTrungTuyen,
+  ETrangThaiNhapHoc,
+  ETrangThaiXacNhanNhapHoc,
+} from '@/utils/constants';
 import rules from '@/utils/rules';
 import { checkFileSize, includes, renderFileListUrl, uploadMultiFile } from '@/utils/utils';
 import { Button, Card, Col, Form, Input, Modal, Row, Select } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useModel } from 'umi';
 
 const FormThongBaoAdmin = () => {
-  //const access = useAccess();
   const [form] = Form.useForm();
   const { loading, record, setVisibleForm, postThongBaoGeneralModel, edit, putThongBaoModel } =
     useModel('quanlythongbao');
   const [nguoiNhan, setNguoiNhan] = useState<string>();
   const [visible, setVisible] = useState<boolean>(false);
-  const { danhSachNguoiDungCuThe, getUserModel } = useModel('user');
-
-  useEffect(() => {
-    getUserModel(1, 100);
-  }, []);
-
+  const { danhSachNguoiDungCuThe } = useModel('user');
+  const { danhSach } = useModel('dottuyensinh');
   return (
     <Card title={'Thêm mới'}>
       <Form
@@ -33,6 +33,7 @@ const FormThongBaoAdmin = () => {
               {
                 ...values,
                 imageUrl: imageUrl?.[0],
+                htmlContent: values?.htmlContent?.text,
               },
               record?._id,
             );
@@ -40,24 +41,26 @@ const FormThongBaoAdmin = () => {
             postThongBaoGeneralModel({
               ...values,
               imageUrl: imageUrl?.[0],
+              htmlContent: values?.htmlContent?.text,
             });
           }
         }}
         form={form}
       >
-        <Form.Item
-          style={{ marginBottom: 8 }}
-          name="title"
-          label="Tiêu đề"
-          initialValue={record?.title}
-          rules={[...rules.required, ...rules.text, ...rules.length(100)]}
-        >
-          <Input placeholder="Tiêu đề" />
-        </Form.Item>
-
         {!edit && (
           <Row gutter={[8, 0]}>
-            <Col xs={24} md={12}>
+            <Col xs={24} md={16}>
+              <Form.Item
+                style={{ marginBottom: 8 }}
+                name="title"
+                label="Tiêu đề"
+                initialValue={record?.title}
+                rules={[...rules.required, ...rules.text, ...rules.length(100)]}
+              >
+                <Input placeholder="Tiêu đề" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={8}>
               <Form.Item
                 style={{ marginBottom: 8, width: '100%' }}
                 label="Người nhận"
@@ -76,6 +79,7 @@ const FormThongBaoAdmin = () => {
                     { name: 'Tất cả', value: 'all' },
                     { name: 'Người dùng cụ thể', value: 'user' },
                     { name: 'Vai trò', value: 'vai-tro' },
+                    { name: 'Đợt xét tuyển', value: 'dot-xet-tuyen' },
                   ].map((item) => (
                     <Select.Option key={item.value} value={item.value}>
                       {item.name}
@@ -116,29 +120,69 @@ const FormThongBaoAdmin = () => {
         )}
 
         {nguoiNhan === 'user' && !edit && (
-          <div style={{ position: 'relative' }}>
-            <Form.Item
-              style={{ marginBottom: 8, width: '100%' }}
-              rules={[...rules.required]}
-              name="userIds"
-              label="Người dùng cụ thể"
+          <Form.Item
+            style={{ marginBottom: 8, width: '100%' }}
+            rules={[...rules.required]}
+            name="userIds"
+            label="Người dùng cụ thể"
+          >
+            <Select
+              showSearch
+              allowClear
+              mode="tags"
+              placeholder="Tìm kiếm theo mã định danh"
+              maxTagCount={8}
+              filterOption={(value, option) => includes(option?.props.children, value)}
             >
-              <Select
-                showSearch
-                allowClear
-                mode="tags"
-                placeholder="Tìm kiếm theo mã định danh"
-                maxTagCount={8}
-                filterOption={(value, option) => includes(option?.props.children, value)}
+              {danhSachNguoiDungCuThe.map((item) => (
+                <Select.Option key={item?.code} value={item?._id}>
+                  {item?.hoDem} {item?.ten}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
+
+        {nguoiNhan === 'dot-xet-tuyen' && !edit && (
+          <>
+            <Col xs={24}>
+              <Form.Item
+                style={{ marginBottom: 8 }}
+                name="danhSachDotTuyenSinh"
+                label="Danh sách đợt xét tuyển"
               >
-                {danhSachNguoiDungCuThe.map((item) => (
-                  <Select.Option key={item?.code} value={item?._id}>
-                    {item?.hoDem} {item?.ten}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </div>
+                <Select
+                  mode="multiple"
+                  placeholder="Chọn đợt"
+                  options={danhSach?.map((item) => ({
+                    label: `${item.tenDotTuyenSinh} (năm ${item.namTuyenSinh})`,
+                    value: item._id,
+                  }))}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24}>
+              <Form.Item
+                style={{ marginBottom: 8 }}
+                name="danhSachTrangThai"
+                label="Danh sách trạng thái"
+              >
+                <Select
+                  mode="multiple"
+                  placeholder="Chọn trạng thái"
+                  options={[
+                    ...Object.values(ETrangThaiHoSo),
+                    ...Object.values(ETrangThaiTrungTuyen),
+                    ...Object.values(ETrangThaiNhapHoc),
+                    ...Object.values(ETrangThaiXacNhanNhapHoc),
+                  ]?.map((item) => ({
+                    label: item,
+                    value: item,
+                  }))}
+                />
+              </Form.Item>
+            </Col>
+          </>
         )}
 
         <Form.Item
@@ -153,20 +197,20 @@ const FormThongBaoAdmin = () => {
 
         <Form.Item
           name="content"
-          rules={[...rules.text]}
-          label="Nội dung"
+          rules={[...rules.text, ...rules.required]}
+          label="Nội dung tóm tắt"
           initialValue={record?.content || ''}
         >
-          <Input placeholder="Nội dung" />
+          <Input placeholder="Nhập nội dung tóm tắt" />
         </Form.Item>
 
         <Form.Item
           name="htmlContent"
-          rules={[...rules.text]}
-          label="Nội dung HTML"
-          initialValue={record?.htmlContent || ''}
+          rules={[...rules.textEditor]}
+          label="Nội dung"
+          initialValue={{ text: record?.htmlContent || '' }}
         >
-          <Input placeholder="Nội dung HTML" />
+          <TinyEditor height={350} />
         </Form.Item>
 
         <Form.Item

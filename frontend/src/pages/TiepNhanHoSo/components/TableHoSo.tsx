@@ -123,7 +123,7 @@ const TableHoSo = (props: {
       align: 'center',
       width: 110,
       onCell,
-      hide: props?.type === ETrangThaiHoSo.chuakhoa,
+      hide: props?.type === ETrangThaiHoSo.CHUA_KHOA,
       search: 'search',
     },
     {
@@ -134,7 +134,7 @@ const TableHoSo = (props: {
       onCell,
       search: 'filterString',
       notRegex: true,
-      hide: props?.type === ETrangThaiHoSo.chuakhoa,
+      hide: props?.type === ETrangThaiHoSo.CHUA_KHOA,
     },
     {
       title: 'Đối tượng tuyển sinh',
@@ -214,9 +214,9 @@ const TableHoSo = (props: {
       render: (recordHoSo: HoSoXetTuyen.Record) => (
         <>
           {[
-            ETrangThaiHoSo.chuakhoa,
-            ETrangThaiHoSo.datiepnhan,
-            ETrangThaiHoSo.khongtiepnhan,
+            ETrangThaiHoSo.CHUA_KHOA,
+            ETrangThaiHoSo.DA_TIEP_NHAN,
+            ETrangThaiHoSo.KHONG_TIEP_NHAN,
           ].includes(recordHoSo?.trangThai) && (
             <Popconfirm
               title="Bạn có chắc chắc muốn khóa hồ sơ này"
@@ -228,7 +228,7 @@ const TableHoSo = (props: {
             </Popconfirm>
           )}
 
-          {[ETrangThaiHoSo.dakhoa].includes(recordHoSo?.trangThai) && (
+          {[ETrangThaiHoSo.DA_KHOA].includes(recordHoSo?.trangThai) && (
             <Popconfirm
               title="Bạn có chắc chắc muốn mở khóa hồ sơ này"
               onConfirm={() =>
@@ -245,7 +245,9 @@ const TableHoSo = (props: {
             </Popconfirm>
           )}
 
-          {[ETrangThaiHoSo.dakhoa, ETrangThaiHoSo.datiepnhan]?.includes(recordHoSo?.trangThai) && (
+          {[ETrangThaiHoSo.DA_KHOA, ETrangThaiHoSo.DA_TIEP_NHAN]?.includes(
+            recordHoSo?.trangThai,
+          ) && (
             <>
               <Divider type="vertical" />
               <Tooltip title="Thanh toán">

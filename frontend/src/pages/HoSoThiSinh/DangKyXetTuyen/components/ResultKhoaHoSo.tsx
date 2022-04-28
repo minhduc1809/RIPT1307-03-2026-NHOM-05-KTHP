@@ -52,11 +52,11 @@ const ResultHoSo = () => {
             <div style={{ fontSize: 22 }}>
               <div>{titleByTrangThai?.[recordHoSo?.trangThai ?? ''] ?? ''}</div>
               <div>
-                {recordHoSo?.trangThai === ETrangThaiHoSo.khongtiepnhan
+                {recordHoSo?.trangThai === ETrangThaiHoSo.KHONG_TIEP_NHAN
                   ? lyDoKhongTiepNhan
                   : subTitleByTrangThai?.[recordHoSo?.trangThai ?? '']}
               </div>
-              {recordHoSo?.trangThai !== ETrangThaiHoSo.chuakhoa && (
+              {recordHoSo?.trangThai !== ETrangThaiHoSo.CHUA_KHOA && (
                 <div>
                   Trạng thái thanh toán: <b>{recordHoSo?.trangThaiThanhToan}</b>
                 </div>
@@ -65,7 +65,7 @@ const ResultHoSo = () => {
           }
           subTitle={
             <>
-              {recordHoSo?.trangThai !== ETrangThaiHoSo.chuakhoa &&
+              {recordHoSo?.trangThai !== ETrangThaiHoSo.CHUA_KHOA &&
                 recordHoSo?.trangThaiThanhToan === ETrangThaiThanhToan.CHUA_THANH_TOAN_DU && (
                   <div>
                     Thí sinh xem thông tin thanh toán và thực hiện thanh toán theo hướng dẫn
@@ -84,7 +84,7 @@ const ResultHoSo = () => {
               >
                 Xem hồ sơ đã nộp
               </Button>
-              {recordHoSo?.trangThai !== ETrangThaiHoSo.chuakhoa && (
+              {recordHoSo?.trangThai !== ETrangThaiHoSo.CHUA_KHOA && (
                 <Button
                   loading={loading}
                   onClick={() => {
@@ -94,7 +94,7 @@ const ResultHoSo = () => {
                   In phiếu
                 </Button>
               )}
-              {recordHoSo?.trangThai === ETrangThaiHoSo.dakhoa &&
+              {recordHoSo?.trangThai === ETrangThaiHoSo.DA_KHOA &&
                 !isKetThucThoiGianDangKy &&
                 record?.choPhepThiSinhMoKhoa === true && (
                   <Popconfirm
@@ -108,7 +108,7 @@ const ResultHoSo = () => {
                     </Button>
                   </Popconfirm>
                 )}
-              {recordHoSo?.trangThai !== ETrangThaiHoSo.chuakhoa && (
+              {recordHoSo?.trangThai !== ETrangThaiHoSo.CHUA_KHOA && (
                 <Button
                   onClick={() => {
                     setVisibleThanhToan(true);

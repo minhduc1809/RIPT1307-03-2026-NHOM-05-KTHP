@@ -1,3 +1,10 @@
+import type {
+  ETrangThaiHoSo,
+  ETrangThaiNhapHoc,
+  ETrangThaiTrungTuyen,
+  ETrangThaiXacNhanNhapHoc,
+} from '@/utils/constants';
+
 declare module ThongBao {
   export interface Record {
     urlFile: string[];
@@ -32,6 +39,12 @@ declare module ThongBao {
     datetime?: string;
     description?: string;
     type?: NoticeIconItemType;
+    danhSachDotTuyenSinh: string[];
+    danhSachTrangThai:
+      | ETrangThaiHoSo
+      | ETrangThaiTrungTuyen
+      | ETrangThaiXacNhanNhapHoc
+      | ETrangThaiNhapHoc;
   }
 
   export interface PostRecord {

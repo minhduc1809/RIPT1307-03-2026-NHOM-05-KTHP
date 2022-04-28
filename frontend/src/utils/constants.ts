@@ -205,11 +205,18 @@ export enum ETrangThaiTrungTuyen {
 }
 
 export enum ETrangThaiXacNhanNhapHoc {
-  XAC_NHAN = 'Xác nhận',
-  KHONG_XAC_NHAN = 'Không xác nhận',
-  CHUA_XAC_NHAN = 'Chưa xác nhận',
-  DA_TIEP_NHAN = 'Đã tiếp nhận',
-  KHONG_TIEP_NHAN = 'Không tiếp nhận',
+  CHUA_XAC_NHAN = 'Chưa xác nhận nhập học',
+  XAC_NHAN = 'Xác nhận nhập học',
+  KHONG_XAC_NHAN = 'Không xác nhận nhập học',
+  DA_TIEP_NHAN = 'Đã tiếp nhận xác nhận nhập học',
+  KHONG_TIEP_NHAN = 'Không tiếp nhận xác nhận nhập học',
+}
+
+export enum ETrangThaiNhapHoc {
+  DA_KHOA = 'Đã khóa hồ sơ nhập học',
+  CHUA_KHOA = 'Chưa khóa hồ sơ nhập học',
+  YEU_CAU_CHINH_SUA = 'Yêu cầu chỉnh sửa hồ sơ nhập học',
+  DA_TIEP_NHAN = 'Đã tiếp nhận hồ sơ nhập học',
 }
 
 export const MapKeyTrangThaiXacNhanNhapHoc = {
@@ -318,10 +325,10 @@ export enum EDonViTinh {
 }
 
 export enum ETrangThaiHoSo {
-  chuakhoa = 'Chưa khóa',
-  dakhoa = 'Đã khóa',
-  khongtiepnhan = 'Không tiếp nhận',
-  datiepnhan = 'Đã tiếp nhận',
+  CHUA_KHOA = 'Chưa khóa',
+  DA_KHOA = 'Đã khóa',
+  KHONG_TIEP_NHAN = 'Không tiếp nhận',
+  DA_TIEP_NHAN = 'Đã tiếp nhận',
 }
 
 export const Setting = {

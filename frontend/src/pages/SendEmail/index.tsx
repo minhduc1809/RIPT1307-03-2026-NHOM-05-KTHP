@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import CreateEmail from './components/index';
 import moment from 'moment';
 import { useCheckAccess } from '@/utils/utils';
+import { Typography } from 'antd';
 
 const Index = () => {
   const createAll = useCheckAccess('email:create-all');
@@ -31,6 +32,13 @@ const Index = () => {
       title: 'Content',
       dataIndex: 'content',
       align: 'center',
+      render: (val) => (
+        <Typography.Paragraph
+          ellipsis={{ rows: 2, expandable: true, symbol: <span>Xem tiếp</span> }}
+        >
+          <div dangerouslySetInnerHTML={{ __html: val }} />
+        </Typography.Paragraph>
+      ),
     },
     {
       title: 'Thời gian gửi',

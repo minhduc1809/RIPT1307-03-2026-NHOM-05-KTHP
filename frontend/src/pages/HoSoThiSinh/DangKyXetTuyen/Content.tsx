@@ -64,7 +64,7 @@ const Content = () => {
       />
     );
   } else {
-    if (recordHoSo?.trangThai === ETrangThaiHoSo.chuakhoa) {
+    if (recordHoSo?.trangThai === ETrangThaiHoSo.CHUA_KHOA) {
       switch (current) {
         case 0:
           contentComponent = <KhaiBaoThongTinCaNhan />;

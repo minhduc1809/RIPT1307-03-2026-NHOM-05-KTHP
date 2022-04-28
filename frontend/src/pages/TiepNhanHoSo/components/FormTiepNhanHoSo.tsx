@@ -84,7 +84,7 @@ const FormTiepNhanHoSo = (props: { type?: ETrangThaiHoSo }) => {
       form={form}
       labelCol={{ span: 24 }}
       onFinish={(values) => {
-        if (props?.type === ETrangThaiHoSo.datiepnhan) {
+        if (props?.type === ETrangThaiHoSo.DA_TIEP_NHAN) {
           values.thongTinGiayToNopHoSo = values?.thongTinGiayToNopHoSo?.map(
             (item: DotTuyenSinh.GiayTo, index: number) => ({
               ...record?.thongTinGiayToNopHoSo?.[index],
@@ -99,7 +99,7 @@ const FormTiepNhanHoSo = (props: { type?: ETrangThaiHoSo }) => {
         });
       }}
     >
-      {props?.type === ETrangThaiHoSo.datiepnhan && (
+      {props?.type === ETrangThaiHoSo.DA_TIEP_NHAN && (
         <Form.Item label="Danh sách giấy tờ cần nộp">
           <Table
             otherProps={{
@@ -117,7 +117,7 @@ const FormTiepNhanHoSo = (props: { type?: ETrangThaiHoSo }) => {
 
       <Form.Item
         rules={
-          props?.type === ETrangThaiHoSo.khongtiepnhan
+          props?.type === ETrangThaiHoSo.KHONG_TIEP_NHAN
             ? [...rules.required, ...rules.text]
             : [...rules.text]
         }

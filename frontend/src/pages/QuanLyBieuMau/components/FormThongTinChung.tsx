@@ -1,6 +1,9 @@
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-param-reassign */
-import { ETrangThaiHoSo, ETrangThaiTrungTuyen } from '@/utils/constants';
+import {
+  ETrangThaiHoSo,
+  ETrangThaiNhapHoc,
+  ETrangThaiTrungTuyen,
+  ETrangThaiXacNhanNhapHoc,
+} from '@/utils/constants';
 import rules from '@/utils/rules';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Button, Card, Col, DatePicker, Form, Input, Radio, Row, Select } from 'antd';
@@ -139,6 +142,8 @@ const FormThongTinChungKhaoSat = () => {
                   options={[
                     ...Object.values(ETrangThaiHoSo),
                     ...Object.values(ETrangThaiTrungTuyen),
+                    ...Object.values(ETrangThaiNhapHoc),
+                    ...Object.values(ETrangThaiXacNhanNhapHoc),
                   ]?.map((item) => ({
                     label: item,
                     value: item,

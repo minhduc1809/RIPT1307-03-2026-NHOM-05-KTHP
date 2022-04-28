@@ -1,4 +1,5 @@
 import logo from '@/assets/logo.png';
+import { logout } from '@/services/ant-design-pro/api';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
@@ -30,9 +31,10 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
   const access = useAccess();
   const onMenuClick = useCallback(
-    (event: MenuInfo) => {
+    async (event: MenuInfo) => {
       const { key } = event;
       if (key === 'logout' && initialState) {
+        await logout();
         setInitialState({ ...initialState, currentUser: undefined });
         loginOut();
         return;

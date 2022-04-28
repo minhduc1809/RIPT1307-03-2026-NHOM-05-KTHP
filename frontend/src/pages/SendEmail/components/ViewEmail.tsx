@@ -1,8 +1,6 @@
 import { Card, Tag } from 'antd';
 
 const ViewEmail = (props?: { recordPost?: any }) => {
-  // const record = props;
-  // const {record} = props;
   const object1 = props?.recordPost[0];
   const object2 = props?.recordPost[1];
   return (
@@ -11,14 +9,18 @@ const ViewEmail = (props?: { recordPost?: any }) => {
       <br />
       <p>
         {' '}
-        To: &nbsp;
+        <b>Người nhận:</b> &nbsp;
         <Tag color="success">{object1?.to}</Tag>
         <Tag color="success">{object2?.to}</Tag>
       </p>
-      <p>Title: {object1?.title}</p>
-      <p>Content: {object1?.content}</p>
+      <p>
+        <b>Chủ đề:</b> {object1?.title}
+      </p>
+      <p>
+        <b>Nội dung:</b>
+      </p>
       <div
-        // dangerouslySetInnerHTML={{ __html: record?.htmlContent || '' }}
+        dangerouslySetInnerHTML={{ __html: object1?.content ?? '' }}
         style={{ width: '100%', overflowX: 'auto' }}
       />
     </Card>

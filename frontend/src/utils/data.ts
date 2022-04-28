@@ -11,10 +11,10 @@ const data: any = {
     },
   ],
   trangThai: [
-    ETrangThaiHoSo.chuakhoa,
-    ETrangThaiHoSo.dakhoa,
-    ETrangThaiHoSo.datiepnhan,
-    ETrangThaiHoSo.khongtiepnhan,
+    ETrangThaiHoSo.CHUA_KHOA,
+    ETrangThaiHoSo.DA_KHOA,
+    ETrangThaiHoSo.DA_TIEP_NHAN,
+    ETrangThaiHoSo.KHONG_TIEP_NHAN,
   ],
   path: {
     ThiSinh: '/phuongthucxettuyen',

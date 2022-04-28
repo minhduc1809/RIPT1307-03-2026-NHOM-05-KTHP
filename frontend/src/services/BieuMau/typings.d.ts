@@ -1,4 +1,9 @@
-import type { ETrangThaiHoSo, ETrangThaiTrungTuyen } from '@/utils/constants';
+import type {
+  ETrangThaiHoSo,
+  ETrangThaiNhapHoc,
+  ETrangThaiTrungTuyen,
+  ETrangThaiXacNhanNhapHoc,
+} from '@/utils/constants';
 
 declare module BieuMau {
   export interface LuaChon {
@@ -65,7 +70,11 @@ declare module BieuMau {
     doiTuong: string;
     _id: string;
     danhSachDotTuyenSinh: string[];
-    danhSachTrangThai: ETrangThaiHoSo | ETrangThaiTrungTuyen;
+    danhSachTrangThai:
+      | ETrangThaiHoSo
+      | ETrangThaiTrungTuyen
+      | ETrangThaiXacNhanNhapHoc
+      | ETrangThaiNhapHoc;
   }
 
   export interface ThongKeLuaChon {

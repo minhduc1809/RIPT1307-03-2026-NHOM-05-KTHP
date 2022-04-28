@@ -120,10 +120,10 @@ const RaSoatHoSo = () => {
             )}
 
             {[
-              ETrangThaiHoSo.dakhoa,
-              ETrangThaiHoSo.datiepnhan,
-              ETrangThaiHoSo.khongtiepnhan,
-            ]?.includes(recordHoSo?.trangThai ?? ETrangThaiHoSo.chuakhoa) && (
+              ETrangThaiHoSo.DA_KHOA,
+              ETrangThaiHoSo.DA_TIEP_NHAN,
+              ETrangThaiHoSo.KHONG_TIEP_NHAN,
+            ]?.includes(recordHoSo?.trangThai ?? ETrangThaiHoSo.CHUA_KHOA) && (
               <div style={{ color: 'red', fontStyle: 'italic' }}>(Bản chính thức)</div>
             )}
             {recordHoSo?.ghiChuTiepNhan && (
@@ -277,12 +277,12 @@ const RaSoatHoSo = () => {
             {!access.thiSinh ? (
               <>
                 <div style={{ textAlign: 'center', marginTop: 10 }}>
-                  {recordHoSo?.trangThai === ETrangThaiHoSo.dakhoa && duyetAll && (
+                  {recordHoSo?.trangThai === ETrangThaiHoSo.DA_KHOA && duyetAll && (
                     <>
                       <Button
                         onClick={() => {
                           setVisibleFormGiayTo(true);
-                          setTypeXuLy(ETrangThaiHoSo.datiepnhan);
+                          setTypeXuLy(ETrangThaiHoSo.DA_TIEP_NHAN);
                         }}
                         style={{ marginRight: 8 }}
                         icon={<CheckOutlined />}
@@ -293,7 +293,7 @@ const RaSoatHoSo = () => {
                       <Button
                         onClick={() => {
                           setVisibleFormGiayTo(true);
-                          setTypeXuLy(ETrangThaiHoSo.khongtiepnhan);
+                          setTypeXuLy(ETrangThaiHoSo.KHONG_TIEP_NHAN);
                         }}
                         style={{ marginRight: 8 }}
                         icon={<StopOutlined />}
@@ -317,7 +317,7 @@ const RaSoatHoSo = () => {
                   footer={false}
                   width="1000px"
                   title={
-                    typeXuLy === ETrangThaiHoSo.datiepnhan
+                    typeXuLy === ETrangThaiHoSo.DA_TIEP_NHAN
                       ? 'Tiếp nhận hồ sơ'
                       : 'Không tiếp nhận hồ sơ'
                   }
@@ -336,7 +336,7 @@ const RaSoatHoSo = () => {
                   justifyContent: 'space-around',
                 }}
               >
-                {recordHoSo?.trangThai === ETrangThaiHoSo.chuakhoa && isTrongThoiGianDangKy ? (
+                {recordHoSo?.trangThai === ETrangThaiHoSo.CHUA_KHOA && isTrongThoiGianDangKy ? (
                   <>
                     <Button
                       onClick={() => {

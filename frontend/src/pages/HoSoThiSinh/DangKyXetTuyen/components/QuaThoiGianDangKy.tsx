@@ -20,7 +20,7 @@ const QuaThoiGianDangKy = () => {
           title="Đã quá thời gian đăng ký"
           subTitle={
             <>
-              {recordHoSo?.trangThai === ETrangThaiHoSo.khongtiepnhan
+              {recordHoSo?.trangThai === ETrangThaiHoSo.KHONG_TIEP_NHAN
                 ? 'Đã quá thời gian đăng ký'
                 : subTitleByTrangThai?.[recordHoSo?.trangThai ?? '']}
             </>

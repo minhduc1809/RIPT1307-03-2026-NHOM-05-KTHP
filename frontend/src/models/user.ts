@@ -34,8 +34,8 @@ export default () => {
     message.success('Cập nhật thành công');
   };
 
-  const getUserModel = async (page?: number, limit?: number) => {
-    const response = await getUser({ page, limit });
+  const getUserModel = async (page?: number, limit?: number, condition?: any) => {
+    const response = await getUser({ page, limit, condition });
     setDanhSachNguoiDungCuThe(response?.data?.data?.result ?? []);
   };
 

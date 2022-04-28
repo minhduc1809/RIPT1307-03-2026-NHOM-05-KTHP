@@ -47,7 +47,7 @@ export default () => {
     const response = await getInvoice({
       page,
       limit,
-      condition: { ...condition, metadata: { ...condition?.metadata, loai: 'Tuyển sinh' } },
+      condition: { ...condition, 'metadata.loai': 'Tuyển sinh' },
     });
     setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);

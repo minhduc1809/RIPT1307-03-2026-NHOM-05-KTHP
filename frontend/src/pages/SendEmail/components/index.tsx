@@ -1,3 +1,4 @@
+import TinyEditor from '@/components/TinyEditor/Tiny';
 import Upload from '@/components/Upload/UploadMultiFile';
 import rules from '@/utils/rules';
 import { Button, Card, Col, Form, Input, Modal, Popconfirm, Row, Table } from 'antd';
@@ -7,7 +8,6 @@ import ViewEmail from './ViewEmail';
 
 const CreateEmail = () => {
   const [form] = Form.useForm();
-  const { TextArea } = Input;
   const {
     recordPost,
     loading,
@@ -51,15 +51,14 @@ const CreateEmail = () => {
           scrollToFirstError
           labelCol={{ span: 24 }}
           onFinish={async (values) => {
-            const content = values?.content;
-            const subject = values?.subject;
             const file = values?.file?.fileList[0].originFileObj;
+            const valuesFinal = { ...values, content: values?.content?.text ?? '', file };
             if (preview) {
-              SendEmailPreviewModel({ content, subject, file });
+              SendEmailPreviewModel(valuesFinal);
               setVisible(true);
             } else {
-              SendEmailPreviewModel({ content, subject, file });
-              setData({ content, subject, file });
+              SendEmailPreviewModel(valuesFinal);
+              setData(valuesFinal);
               confirm();
             }
             form.resetFields();
@@ -77,12 +76,7 @@ const CreateEmail = () => {
                 <Input placeholder="Tiêu đề" />
               </Form.Item>
 
-              <Form.Item
-                // initialValue={{ file: recordPost?.file?.fileList[0].originFileObj || '' }}
-                rules={[...rules.fileRequired]}
-                name="file"
-                label={<b>Chọn tệp tin mà bạn muốn gửi</b>}
-              >
+              <Form.Item rules={[...rules.fileRequired]} name="file" label={'Danh sách người nhận'}>
                 <Upload
                   otherProps={{
                     accept: '.xlsx',
@@ -96,10 +90,10 @@ const CreateEmail = () => {
               <Form.Item
                 name="content"
                 label="Nội dung"
-                initialValue={recordPost?.content || ''}
-                rules={[...rules.text]}
+                initialValue={{ text: recordPost?.content || '' }}
+                rules={[...rules.textEditor]}
               >
-                <TextArea placeholder="Nhập nội dung lời nhắn" rows={6} />
+                <TinyEditor height={350} />
               </Form.Item>
             </Col>
           </Row>
@@ -123,7 +117,7 @@ const CreateEmail = () => {
 
       <Modal
         width="80%"
-        bodyStyle={{ padding: '50px' }}
+        bodyStyle={{ padding: '0px' }}
         destroyOnClose
         footer={
           <Popconfirm title="Bạn có chắc chắn gửi không?" onConfirm={confirm}>
@@ -144,7 +138,7 @@ const CreateEmail = () => {
 
       <Modal
         width="80%"
-        bodyStyle={{ padding: '50px' }}
+        bodyStyle={{ padding: '24px' }}
         destroyOnClose
         footer={
           <Button

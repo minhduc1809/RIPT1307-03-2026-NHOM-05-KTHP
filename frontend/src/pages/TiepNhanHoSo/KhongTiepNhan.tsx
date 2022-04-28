@@ -5,7 +5,7 @@ import TableHoSo from './components/TableHoSo';
 const KhongTiepNhan = () => {
   const thaoTacAll = useCheckAccess('ho-so-xet-tuyen-khong-tiep-nhan:thao-tac-all');
   const exportAll = useCheckAccess('ho-so-xet-tuyen-khong-tiep-nhan:export-all');
-  return <TableHoSo phanQuyen={{ thaoTacAll, exportAll }} type={ETrangThaiHoSo.khongtiepnhan} />;
+  return <TableHoSo phanQuyen={{ thaoTacAll, exportAll }} type={ETrangThaiHoSo.KHONG_TIEP_NHAN} />;
 };
 
 export default KhongTiepNhan;

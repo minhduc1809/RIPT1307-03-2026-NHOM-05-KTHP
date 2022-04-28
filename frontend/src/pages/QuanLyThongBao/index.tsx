@@ -3,13 +3,19 @@ import type { IColumn } from '@/utils/interfaces';
 import { useCheckAccess } from '@/utils/utils';
 import { EyeOutlined } from '@ant-design/icons';
 import { Button, Modal, Tooltip, Typography } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import Form from './components/Form';
 import ViewThongBao from './components/ViewThongBao';
 
 const ThongBao = () => {
   const createAll = useCheckAccess('thong-bao:create-all');
+  const { danhSachNguoiDungCuThe, getUserModel } = useModel('user');
+  const { getAllDotTuyenSinhModel } = useModel('dottuyensinh');
+  useEffect(() => {
+    if (danhSachNguoiDungCuThe.length === 0) getUserModel(1, 1000, { systemRole: 'ThiSinh' });
+    getAllDotTuyenSinhModel();
+  }, []);
 
   const { getThongBaoAdminModel, page, limit, loading, condition, setRecord, record, phamVi } =
     useModel('quanlythongbao');
@@ -59,25 +65,12 @@ const ThongBao = () => {
         </Typography.Paragraph>
       ),
     },
+
     {
       title: 'Nội dung',
-      dataIndex: 'content',
-      align: 'center',
-      width: 200,
-      onCell,
-      render: (val) => (
-        <Typography.Paragraph
-          ellipsis={{ rows: 2, expandable: true, symbol: <span>Xem tiếp</span> }}
-        >
-          {val}
-        </Typography.Paragraph>
-      ),
-    },
-    {
-      title: 'Nội dung HTML',
       dataIndex: 'htmlContent',
       align: 'center',
-      width: 200,
+      // width: 200,
       onCell,
       render: (val) => (
         <Typography.Paragraph
@@ -90,7 +83,7 @@ const ThongBao = () => {
     {
       title: 'Thao tác',
       align: 'center',
-      width: 170,
+      width: 100,
       fixed: 'right',
       render: (recordThongBao: ThongBao.Record) => (
         <>
@@ -148,7 +141,7 @@ const ThongBao = () => {
         loading={loading}
         hascreate={createAll}
         Form={Form}
-        widthDrawer="50%"
+        widthDrawer={700}
         formType="Drawer"
         getData={getThongBaoAdminModel}
         dependencies={[page, limit, condition, phamVi]}
