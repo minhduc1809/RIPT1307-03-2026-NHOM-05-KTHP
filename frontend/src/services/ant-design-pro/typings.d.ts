@@ -1,4 +1,4 @@
-import type { ESystemRole } from '@/utils/constants';
+import type { ESystemRole, EThanhPhanXuatThan } from '@/utils/constants';
 
 declare module Login {
   export interface User {
@@ -22,6 +22,7 @@ declare module Login {
   }
 
   export interface Profile {
+    idThiSinh: string;
     diaChi: string;
     cmtCccd: string;
     ngayCapCmtCccd: string;
@@ -58,6 +59,10 @@ declare module Login {
     soDienThoaiNguoiLienHe: string;
     idCoSoDaoTao: string;
     idHinhThucDaoTao: string;
+    thanhPhanXuatThan: EThanhPhanXuatThan;
+    ngayVaoDoan: string;
+    ngayVaoDang: string;
+    facebook: string;
   }
 
   export interface ProfileAdmin {

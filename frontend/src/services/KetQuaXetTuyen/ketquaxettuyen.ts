@@ -1,6 +1,7 @@
 import axios from '@/utils/axios';
 import type { ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
 import { ip3 } from '@/utils/ip';
+import type { Login } from '../ant-design-pro/typings';
 import type { DotTuyenSinh } from '../DotTuyenSinh/typings';
 import type { KetQuaXetTuyen } from './typings';
 
@@ -8,6 +9,16 @@ const url = 'ket-qua-xet-tuyen';
 
 export function getMyKetQuaXetTuyen(idDotTuyenSinh: string) {
   return axios.get(`${ip3}/${url}/thi-sinh/my/dot/${idDotTuyenSinh}`);
+}
+
+export function putMyKetQuaXetTuyenLyLich(
+  idKetQuaXetTuyen: string,
+  payload: {
+    thongTinThiSinh: Login.Profile;
+    thongTinGiaDinh: KetQuaXetTuyen.ThanhVienGiaDinh[];
+  },
+) {
+  return axios.put(`${ip3}/${url}/thi-sinh/ly-lich/${idKetQuaXetTuyen}`, payload);
 }
 
 export function getKetQuaXetTuyenPageable(

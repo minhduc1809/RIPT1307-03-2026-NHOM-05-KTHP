@@ -1,9 +1,11 @@
 import useInitModel from '@/hooks/useInitModel';
+import type { Login } from '@/services/ant-design-pro/typings';
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import {
   adminTiepNhanXacNhanNhapHoc,
   getKetQuaXetTuyenPageable,
   getMyKetQuaXetTuyen,
+  putMyKetQuaXetTuyenLyLich,
   xacNhanKhongNhapHoc,
   xacNhanNhapHoc,
 } from '@/services/KetQuaXetTuyen/ketquaxettuyen';
@@ -17,6 +19,7 @@ export default () => {
   const [danhSach, setDanhSach] = useState<KetQuaXetTuyen.Record[]>([]);
   const objInitModel = useInitModel();
   const { setLoading, condition, page, limit, setTotal, setVisibleForm } = objInitModel;
+  const [recordGiaDinh, setRecordGiaDinh] = useState<KetQuaXetTuyen.ThanhVienGiaDinh>();
 
   const getMyKetQuaXetTuyenModel = async (idDotTuyenSinh: string) => {
     try {
@@ -90,7 +93,29 @@ export default () => {
     getKetQuaXetTuyenPageableModel(idDotTuyenSinh, idCoSo);
   };
 
+  const putMyKetQuaXetTuyenLyLichModel = async (
+    idKetQuaXetTuyen: string,
+    payload: {
+      thongTinThiSinh: Login.Profile;
+      thongTinGiaDinh: KetQuaXetTuyen.ThanhVienGiaDinh[];
+    },
+  ) => {
+    if (!idKetQuaXetTuyen) return;
+    try {
+      setLoading(true);
+      const response = await putMyKetQuaXetTuyenLyLich(idKetQuaXetTuyen, payload);
+      setRecord(response?.data?.data ?? {});
+      message.success('Lưu thành công');
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
+  };
+
   return {
+    putMyKetQuaXetTuyenLyLichModel,
+    recordGiaDinh,
+    setRecordGiaDinh,
     adminTiepNhanXacNhanNhapHocModel,
     xacNhanKhongNhapHocModel,
     getKetQuaXetTuyenPageableModel,

@@ -145,7 +145,7 @@ const ThanhToan = (props: { record?: { identityCode: string; trangThaiThanhToan?
           </p>
           <p>
             - Nếu sinh viên sử dụng tài khoản Ngân hàng khác thì mã thanh toán là:{' '}
-            <b>9648989{invoice?.identityCode}</b>
+            <b>963666{invoice?.identityCode}</b>
           </p>
           <p>
             - Sinh viên có thể tham khảo hướng dẫn thanh toán chi tiết tại{' '}

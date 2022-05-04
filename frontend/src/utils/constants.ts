@@ -331,6 +331,21 @@ export enum ETrangThaiHoSo {
   DA_TIEP_NHAN = 'Đã tiếp nhận',
 }
 
+export enum EThanhPhanXuatThan {
+  CONG_NHAN = 'Công nhân viên chức',
+  NONG_DAN = 'Nông dân',
+  KHAC = 'Khác',
+}
+
+export enum ELoaiThanhVien {
+  BO = 'Bố',
+  ME = 'Mẹ',
+  ANH_TRAI = 'Anh trai',
+  CHI_GAI = 'Chị gái',
+  EM_TRAI = 'Em trai',
+  EM_GAI = 'Em gái',
+}
+
 export const Setting = {
   navTheme: 'dark',
   primaryColor: '#CC0D00',

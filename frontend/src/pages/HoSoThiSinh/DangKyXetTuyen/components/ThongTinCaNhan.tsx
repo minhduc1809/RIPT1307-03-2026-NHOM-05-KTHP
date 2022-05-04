@@ -4,6 +4,7 @@ import { useModel } from 'umi';
 const ThongTinCaNhan = () => {
   const { initialState } = useModel('@@initialState');
   const { recordHoSo } = useModel('hosoxettuyen');
+  const { record } = useModel('ketquaxettuyen');
   return (
     <Card>
       <Card.Meta
@@ -13,9 +14,11 @@ const ThongTinCaNhan = () => {
       />
       <br />
       <div>
-        <div>{`CMND/CCCD: ${recordHoSo?.thongTinThiSinh?.cmtCccd ?? ''}`}</div>
+        <div>{`CMND/CCCD: ${
+          recordHoSo?.thongTinThiSinh?.cmtCccd ?? ('' || record?.thongTinThiSinh?.cmtCccd) ?? ''
+        }`}</div>
         <div style={{ color: 'rgb(213, 0, 0)' }}>{`Mã hồ sơ: ${
-          recordHoSo?.maHoSo ?? 'Chưa cập nhật'
+          recordHoSo?.maHoSo ?? record?.maHoSo ?? 'Chưa cập nhật'
         }`}</div>
       </div>
     </Card>

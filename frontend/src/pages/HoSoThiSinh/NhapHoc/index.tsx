@@ -19,29 +19,31 @@ const NhapHoc = () => {
     getAllTonGiao();
   }, []);
   return (
-    <Row gutter={12}>
-      <Col xs={24} lg={6} xl={5}>
-        {isMdScreen ? (
-          <Sticky top={60} bottomBoundary="#content">
+    <div style={{ maxWidth: 1500, margin: '0 auto' }}>
+      <Row gutter={12}>
+        <Col xs={24} lg={6} xl={5}>
+          {isMdScreen ? (
+            <Sticky top={60} bottomBoundary="#content">
+              <div>
+                <ThongTinCaNhan />
+                <Stepper />
+              </div>
+            </Sticky>
+          ) : (
             <div>
               <ThongTinCaNhan />
               <Stepper />
             </div>
-          </Sticky>
-        ) : (
-          <div>
-            <ThongTinCaNhan />
-            <Stepper />
+          )}
+        </Col>
+        <Col xs={24} lg={18} xl={19}>
+          <div id="content">
+            <Timeline />
+            <Content />
           </div>
-        )}
-      </Col>
-      <Col xs={24} lg={18} xl={19}>
-        <div id="content">
-          <Timeline />
-          <Content />
-        </div>
-      </Col>
-    </Row>
+        </Col>
+      </Row>
+    </div>
   );
 };
 

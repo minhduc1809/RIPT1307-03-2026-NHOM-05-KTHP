@@ -1,4 +1,9 @@
-import type { ETrangThaiTrungTuyen, ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
+import type {
+  ELoaiThanhVien,
+  ETrangThaiNhapHoc,
+  ETrangThaiTrungTuyen,
+  ETrangThaiXacNhanNhapHoc,
+} from '@/utils/constants';
 import type { Login } from '../ant-design-pro/typings';
 import type { DotTuyenSinh } from '../DotTuyenSinh/typings';
 import type { HoSoXetTuyen } from '../HoSoXetTuyen/typings';
@@ -13,9 +18,30 @@ declare module KetQuaXetTuyen {
     textHuongDan: string;
     urlHuongDan: string[];
   }
+
+  export interface ThanhVienGiaDinh {
+    index: number;
+    loaiThanhVien: ELoaiThanhVien;
+    hoDem: string;
+    ten: string;
+    ngaySinh: string;
+    namSinh: number;
+    ngheNghiep: string;
+    soDienThoai?: string;
+    email?: string;
+    coQuanCongTac?: string;
+    quocTich: string;
+    soTheBHYT?: string;
+    tonGiao?: string;
+    danToc?: string;
+    diaChiHienNay: DonViHanhChinh.Record;
+    hoKhauThuongTru: DonViHanhChinh.Record;
+    hoatDongChinhTriXaHoi?: string;
+  }
   export interface Record {
     _id: string;
     nguyenVongTrungTuyen: HoSoXetTuyen.NguyenVong;
+    namTuyenSinh: number;
     idDotTuyenSinh: string;
     idHoSoXetTuyen: string;
     maHoSo: string;
@@ -31,5 +57,7 @@ declare module KetQuaXetTuyen {
       ghiChuTiepNhan: string;
       ngayTiepNhan: string;
     };
+    thongTinGiaDinh: ThanhVienGiaDinh[];
+    trangThaiNhapHoc: ETrangThaiNhapHoc;
   }
 }

@@ -245,6 +245,7 @@ export default defineConfig({
           path: './dotnhaphoc',
           access: 'routeFilter',
           maChucNang: 'dot-nhap-hoc:read-all',
+          component: './DotNhapHoc',
         },
         {
           name: 'TiepNhanHoSoNhapHoc',

@@ -77,6 +77,7 @@ class App extends React.Component {
             }}
             icon={<PlusCircleFilled />}
             type="primary"
+            style={{ marginBottom: 8 }}
           >
             Thêm mới
           </Button>
@@ -128,6 +129,7 @@ class App extends React.Component {
               </Drawer>
             ) : (
               <Modal
+                bodyStyle={{ padding: 0 }}
                 width={this.props?.widthDrawer}
                 onCancel={() => {
                   this.setState({ visible: false });
