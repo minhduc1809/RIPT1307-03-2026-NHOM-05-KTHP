@@ -1,16 +1,15 @@
+import logo from '@/assets/logo.png';
 import ResultWithLogo from '@/components/ResultWithLogo';
-import useInitTimeline from '@/hooks/useInitTimeline';
 import { ETrangThaiHoSo } from '@/utils/constants';
+import { Spin } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
-import { useModel, history } from 'umi';
+import { history, useModel } from 'umi';
 import ResultHoSo from './components/ResultKhoaHoSo';
 import DangKyNguyenVong from './DangKyNguyenVong';
 import KhaiBaoThongTinCaNhan from './KhaiBaoThongTinCaNhan';
 import RaSoatHoSo from './RaSoatHoSo';
 import QuaTrinhHocTap from './ThongTinHocTap';
-import logo from '@/assets/logo.png';
-import { Spin } from 'antd';
 
 const Content = () => {
   const { current, loading, recordHoSo, getMyHoSoXetTuyenModel, setRecordHoSo } =
@@ -19,8 +18,6 @@ const Content = () => {
   const { record, getDotTuyenSinhByIdModel, loading: loadingDot } = useModel('dottuyensinh');
   const idDot = localStorage.getItem('dot');
 
-  const { setupTimeline } = useInitTimeline();
-
   useEffect(() => {
     if (idDot && !record?._id) getDotTuyenSinhByIdModel(idDot);
     else if (!idDot) history.push('/phuongthucxettuyen');
@@ -28,7 +25,6 @@ const Content = () => {
 
   useEffect(() => {
     if (record?._id) {
-      setupTimeline(record);
       getMyHoSoXetTuyenModel(record?._id);
     }
   }, [record?._id]);

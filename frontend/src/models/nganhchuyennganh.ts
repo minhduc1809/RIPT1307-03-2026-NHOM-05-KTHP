@@ -12,7 +12,7 @@ import { useState } from 'react';
 export default () => {
   const [record, setRecord] = useState<NganhChuyenNganh.Record>();
   const [danhSach, setDanhSach] = useState<NganhChuyenNganh.Record[]>([]);
-  const objInitModel = useInitModel();
+  const objInitModel = useInitModel('nganh-chuyen-nganh');
   const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
 
   const getAllNganhChuyenNganhModel = async () => {

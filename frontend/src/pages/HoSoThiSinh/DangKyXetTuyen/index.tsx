@@ -13,6 +13,7 @@ const DangKyXetTuyen = () => {
     query: '(min-width: 992px)',
   });
   const { getAllDanToc, getAllTonGiao } = useModel('dantoctongiao');
+  const { record } = useModel('dottuyensinh');
 
   useEffect(() => {
     getAllDanToc();
@@ -40,7 +41,7 @@ const DangKyXetTuyen = () => {
           </Col>
           <Col xs={24} lg={18} xl={19}>
             <div id="content">
-              <Timeline />
+              <Timeline record={record} />
               <Content />
             </div>
           </Col>

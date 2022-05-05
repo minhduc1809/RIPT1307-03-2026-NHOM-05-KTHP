@@ -12,7 +12,7 @@ import { useState } from 'react';
 export default () => {
   const [record, setRecord] = useState<HinhThucDaoTao.Record>();
   const [danhSach, setDanhSach] = useState<HinhThucDaoTao.Record[]>([]);
-  const objInitModel = useInitModel();
+  const objInitModel = useInitModel('hinh-thuc-dao-tao');
   const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
 
   const getAllHinhThucDaoTaoModel = async () => {

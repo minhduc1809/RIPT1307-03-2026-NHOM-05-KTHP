@@ -18,7 +18,7 @@ export function putMyKetQuaXetTuyenLyLich(
     thongTinGiaDinh: KetQuaXetTuyen.ThanhVienGiaDinh[];
   },
 ) {
-  return axios.put(`${ip3}/${url}/thi-sinh/ly-lich/${idKetQuaXetTuyen}`, payload);
+  return axios.put(`${ip3}/${url}/thi-sinh/my/ly-lich/${idKetQuaXetTuyen}`, payload);
 }
 
 export function getKetQuaXetTuyenPageable(
@@ -35,11 +35,11 @@ export const xacNhanNhapHoc = (
     danhSachThongTinKhaiXacNhan: KetQuaXetTuyen.ThongTinKhaiXacNhan[];
   },
 ) => {
-  return axios.put(`${ip3}/${url}/thi-sinh/xac-nhan/${idKetQua}`, payload);
+  return axios.put(`${ip3}/${url}/thi-sinh/my/xac-nhan/${idKetQua}`, payload);
 };
 
 export const xacNhanKhongNhapHoc = (idKetQua: string) => {
-  return axios.put(`${ip3}/${url}/thi-sinh/khong-xac-nhan/${idKetQua}`);
+  return axios.put(`${ip3}/${url}/thi-sinh/my/khong-xac-nhan/${idKetQua}`);
 };
 
 export const adminTiepNhanXacNhanNhapHoc = (
@@ -52,5 +52,5 @@ export const adminTiepNhanXacNhanNhapHoc = (
     trangThaiXacNhan: ETrangThaiXacNhanNhapHoc;
   },
 ) => {
-  return axios.put(`${ip3}/${url}/admin/tiep-nhan/${idKetQuaXetTuyen}`, payload);
+  return axios.put(`${ip3}/${url}/admin/tiep-nhan-xac-nhan/${idKetQuaXetTuyen}`, payload);
 };

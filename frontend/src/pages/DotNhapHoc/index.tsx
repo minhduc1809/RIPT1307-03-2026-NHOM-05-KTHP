@@ -9,7 +9,7 @@ import Form from './components/Form';
 
 const DotNhapHocComponent = () => {
   const {
-    getDotNhapHocPageableModel,
+    getPageableModel,
     page,
     loading,
     limit,
@@ -17,7 +17,7 @@ const DotNhapHocComponent = () => {
     setEdit,
     setVisibleForm,
     setRecord,
-    deleteDotNhapHocModel,
+    deleteModel,
   } = useModel('dotnhaphoc');
 
   const { getAllDotTuyenSinhModel } = useModel('dottuyensinh');
@@ -83,7 +83,7 @@ const DotNhapHocComponent = () => {
           <Divider type="vertical" />
           <Tooltip title="Xóa">
             <Popconfirm
-              onConfirm={() => deleteDotNhapHocModel(record._id)}
+              onConfirm={() => deleteModel(record._id)}
               title="Bạn có chắc chắn muốn xóa?"
             >
               <Button type="primary" shape="circle">
@@ -101,7 +101,7 @@ const DotNhapHocComponent = () => {
       widthDrawer="700px"
       hascreate
       formType="Drawer"
-      getData={getDotNhapHocPageableModel}
+      getData={getPageableModel}
       modelName="dotnhaphoc"
       title="Quản lý đợt nhập học"
       loading={loading}

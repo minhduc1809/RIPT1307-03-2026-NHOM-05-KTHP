@@ -1,19 +1,19 @@
 import logo from '@/assets/logo.png';
 import ThanhToan from '@/components/ThanhToan';
-import { ETrangThaiHoSo } from '@/utils/constants';
+import { ETrangThaiNhapHoc } from '@/utils/constants';
 import { Button, Col, Modal, Popconfirm, Result, Row } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import RaSoatHoSo from '../RaSoatHoSo';
 
-const ResultHoSo = () => {
-  const { recordHoSo, moKhoaMyHoSoModel, exportMyPhieuDangKyModel, loading } =
-    useModel('hosoxettuyen');
+const ResultHoSoNhapHoc = () => {
+  const { moKhoaMyHoSoModel, exportMyPhieuDangKyModel, loading } = useModel('hosoxettuyen');
+  const { record: recordHoSo } = useModel('ketquaxettuyen');
   const { record } = useModel('dottuyensinh');
   const [visibleHoSo, setVisibleHoSo] = useState<boolean>(false);
   const [visibleThanhToan, setVisibleThanhToan] = useState<boolean>(false);
-  const lyDoKhongTiepNhan = (
+  const lyDoYeuCauChinhSua = (
     <div style={{ textAlign: 'center' }}>
       <u style={{ color: 'black' }}>
         <b> Lý do</b>
@@ -29,29 +29,17 @@ const ResultHoSo = () => {
 
   const titleDaKhoa = (
     <div>
-      <div>Thí sinh đã hoàn thành thủ tục đăng ký xét tuyển.</div>
+      <div>Thí sinh đã hoàn thành thủ tục nhập học.</div>
       <div>Học viện sẽ có thông báo tiếp theo sau khi xác minh hồ sơ của thí sinh</div>
     </div>
   );
 
-  const titleDaTiepNhan = (
-    <div>
-      Đăng ký xét tuyển thành công. Học viện sẽ ra Thông báo kết quả dự kiến sau ngày{' '}
-      {record?.thoiGianCongBoKetQua
-        ? moment(record?.thoiGianCongBoKetQua).format('DD/MM/YYYY HH:mm')
-        : ''}
-    </div>
-  );
+  const titleDaTiepNhan = <div>Hồ sơ nhập học của thí sinh đã được tiếp nhận.</div>;
 
-  const titleKhongTiepNhan = (
+  const titleYeuCauChinhSua = (
     <div>
-      <div>
-        Đăng ký xét tuyển chưa thành công. Học viện sẽ ra Thông báo kết thúc đợt xét tuyển vào ngày{' '}
-        {record?.thoiGianKetThucNopHoSo
-          ? moment(record?.thoiGianKetThucNopHoSo).format('DD/MM/YYYY HH:mm')
-          : ''}
-      </div>
-      <div>{lyDoKhongTiepNhan}</div>
+      <div>Hồ sơ nhập học của thí sinh được yêu cầu chỉnh sửa lại.</div>
+      <div>{lyDoYeuCauChinhSua}</div>
     </div>
   );
 
@@ -66,7 +54,7 @@ const ResultHoSo = () => {
       ),
     },
     'Đã tiếp nhận': titleDaTiepNhan,
-    'Không tiếp nhận': titleKhongTiepNhan,
+    'Không tiếp nhận': titleYeuCauChinhSua,
     'Chưa khóa': 'Đã kết thúc thời gian nộp hồ sơ',
   };
 
@@ -92,13 +80,13 @@ const ResultHoSo = () => {
           title={
             <div style={{ fontSize: 22 }}>
               <div>
-                {recordHoSo?.trangThai === ETrangThaiHoSo.DA_KHOA
+                {recordHoSo?.trangThaiNhapHoc === ETrangThaiNhapHoc.DA_KHOA
                   ? titleByTrangThai?.[recordHoSo?.trangThai ?? '']?.[
                       recordHoSo?.trangThaiThanhToan ?? ''
                     ]
                   : titleByTrangThai?.[recordHoSo?.trangThai ?? ''] ?? ''}
               </div>
-              {recordHoSo?.trangThai !== ETrangThaiHoSo.CHUA_KHOA && (
+              {recordHoSo?.trangThaiNhapHoc !== ETrangThaiNhapHoc.CHUA_KHOA && (
                 <div>
                   Trạng thái thanh toán: <b>{recordHoSo?.trangThaiThanhToan}</b>
                 </div>
@@ -121,7 +109,7 @@ const ResultHoSo = () => {
               >
                 Xem hồ sơ đã nộp
               </Button>
-              {recordHoSo?.trangThai !== ETrangThaiHoSo.CHUA_KHOA && (
+              {recordHoSo?.trangThaiNhapHoc !== ETrangThaiNhapHoc.CHUA_KHOA && (
                 <Button
                   loading={loading}
                   onClick={() => {
@@ -131,7 +119,7 @@ const ResultHoSo = () => {
                   In phiếu
                 </Button>
               )}
-              {recordHoSo?.trangThai === ETrangThaiHoSo.DA_KHOA &&
+              {recordHoSo?.trangThaiNhapHoc === ETrangThaiNhapHoc.DA_KHOA &&
                 !isKetThucThoiGianDangKy &&
                 record?.choPhepThiSinhMoKhoa === true && (
                   <Popconfirm
@@ -145,7 +133,7 @@ const ResultHoSo = () => {
                     </Button>
                   </Popconfirm>
                 )}
-              {recordHoSo?.trangThai !== ETrangThaiHoSo.CHUA_KHOA && (
+              {recordHoSo?.trangThaiNhapHoc !== ETrangThaiNhapHoc.CHUA_KHOA && (
                 <Button
                   onClick={() => {
                     setVisibleThanhToan(true);
@@ -196,10 +184,15 @@ const ResultHoSo = () => {
         }}
         visible={visibleThanhToan}
       >
-        <ThanhToan record={recordHoSo} />
+        <ThanhToan
+          record={{
+            identityCode: recordHoSo?.identityCode ?? '',
+            trangThaiThanhToan: recordHoSo?.trangThaiThanhToan,
+          }}
+        />
       </Modal>
     </Row>
   );
 };
 
-export default ResultHoSo;
+export default ResultHoSoNhapHoc;

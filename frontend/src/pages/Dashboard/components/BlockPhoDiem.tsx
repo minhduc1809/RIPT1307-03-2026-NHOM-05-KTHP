@@ -101,7 +101,7 @@ const BlockPhoDiem = () => {
             allowClear
           />
           <InputNumber
-            min={1}
+            min={0.1}
             max={10000}
             onChange={(val) => setRange(val ? +val : undefined)}
             style={{ width: 200, marginLeft: 8 }}

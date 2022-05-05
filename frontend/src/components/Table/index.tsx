@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
+import { Setting } from '@/utils/constants';
 import data from '@/utils/data';
 import type { IColumn } from '@/utils/interfaces';
 import { toRegex } from '@/utils/utils';
@@ -8,7 +9,7 @@ import { Button, Card, Drawer, Input, Modal, Table } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import type { FilterValue } from 'antd/lib/table/interface';
 import _ from 'lodash';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useModel } from 'umi';
 
 type Props = {
@@ -71,7 +72,7 @@ const TableBase = (props: Props) => {
     setQuery,
   } = useModel(modelName);
   const model = useModel(modelName);
-
+  const totalRef = useRef<any>();
   useEffect(() => {
     getData(params);
   }, [...dependencies]);
@@ -162,7 +163,7 @@ const TableBase = (props: Props) => {
     filterIcon: (filtered: any) => (
       <SearchOutlined
         style={{
-          color: filtered || haveCond(dataIndex) ? '#CC0D00' : undefined,
+          color: filtered || haveCond(dataIndex) ? Setting.primaryColor : undefined,
         }}
         title="Tìm kiếm"
       />
@@ -267,7 +268,6 @@ const TableBase = (props: Props) => {
     filters: Record<string, FilterValue | null>,
     sorter: any,
   ) => {
-    // console.log('this.tableBaseRef :>> ', this.tableBaseRef);
     // this.tableBaseRef.current.focus();
     // this.focusTableBase();
     // thay đổi từ phân trang || filter
@@ -301,7 +301,7 @@ const TableBase = (props: Props) => {
       tmpCond[key] = isSearch && notRegex !== true ? toRegex(value) : value;
       // return 0;
     });
-
+    totalRef?.current?.focus();
     setPage(current);
     setLimit(pageSize);
     setCondition(tmpCond);
@@ -326,10 +326,10 @@ const TableBase = (props: Props) => {
       <h4 style={{ display: 'inline-block', margin: '0 0px 8px 50px', float: 'right' }}>
         Tổng số:
         <Input
+          ref={totalRef}
           style={{ width: '90px', fontWeight: 600, fontSize: 14, marginLeft: 10 }}
           value={total}
           readOnly
-          // ref={this.setTableBaseRef}
         />
       </h4>
       <Table

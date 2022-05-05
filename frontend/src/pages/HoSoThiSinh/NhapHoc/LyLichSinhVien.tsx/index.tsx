@@ -51,7 +51,7 @@ const LyLichSinhVien = () => {
           if (values.thongTinThiSinh.loaiNoiSinh === 'TRONG_NUOC') {
             values.thongTinThiSinh.noiSinhTrongNuoc = {
               tenTP: tenTinhNoiSinh,
-              maTP: values?.noiSinhTrongNuoc,
+              maTP: values?.thongTinThiSinh?.noiSinhTrongNuoc,
             };
           }
           values.thongTinThiSinh.hoKhauThuongTru = {
@@ -488,7 +488,7 @@ const LyLichSinhVien = () => {
             <strong>Thông tin gia đình</strong>
           </Divider>
           <Col span={24}>
-            <TableThongTinGiaDinh />
+            <TableThongTinGiaDinh mode="handle" />
             <br />
           </Col>
         </Row>

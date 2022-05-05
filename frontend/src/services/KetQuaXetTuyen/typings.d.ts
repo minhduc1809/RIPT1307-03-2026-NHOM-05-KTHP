@@ -1,6 +1,7 @@
 import type {
   ELoaiThanhVien,
   ETrangThaiNhapHoc,
+  ETrangThaiThanhToan,
   ETrangThaiTrungTuyen,
   ETrangThaiXacNhanNhapHoc,
 } from '@/utils/constants';
@@ -58,6 +59,9 @@ declare module KetQuaXetTuyen {
       ngayTiepNhan: string;
     };
     thongTinGiaDinh: ThanhVienGiaDinh[];
+    trangThaiThanhToan: ETrangThaiThanhToan;
+    ghiChuTiepNhan: string;
     trangThaiNhapHoc: ETrangThaiNhapHoc;
+    identityCode: string;
   }
 }

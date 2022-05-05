@@ -12,6 +12,7 @@ const TaiKhoanThiSinh = () => {
   const form: any = () => <Form systemRole={ESystemRole.ThiSinh} />;
   return (
     <TableTaiKhoan
+      type={ESystemRole.ThiSinh}
       phanQuyen={{ updateAll, resetAll, deleteAll }}
       title="Tài khoản thí sinh"
       Form={form}

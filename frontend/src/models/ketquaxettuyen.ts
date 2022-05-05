@@ -17,7 +17,7 @@ import { useState } from 'react';
 export default () => {
   const [record, setRecord] = useState<KetQuaXetTuyen.Record>();
   const [danhSach, setDanhSach] = useState<KetQuaXetTuyen.Record[]>([]);
-  const objInitModel = useInitModel();
+  const objInitModel = useInitModel('ket-qua-xet-tuyen');
   const { setLoading, condition, page, limit, setTotal, setVisibleForm } = objInitModel;
   const [recordGiaDinh, setRecordGiaDinh] = useState<KetQuaXetTuyen.ThanhVienGiaDinh>();
 
@@ -25,7 +25,7 @@ export default () => {
     try {
       setLoading(true);
       const response = await getMyKetQuaXetTuyen(idDotTuyenSinh);
-      setRecord(response?.data?.data);
+      setRecord(response?.data?.data ?? null);
       setLoading(false);
     } catch (err) {
       setLoading(false);

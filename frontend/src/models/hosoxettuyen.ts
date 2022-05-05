@@ -29,7 +29,7 @@ import FileDownload from 'js-file-download';
 
 export default () => {
   const [danhSach, setDanhSach] = useState<HoSoXetTuyen.Record[]>([]);
-  const objInitModel = useInitModel();
+  const objInitModel = useInitModel('ho-so-xet-tuyen');
   const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
   const [current, setCurrent] = useState<number>(0);
   const [danhSachNguyenVong, setDanhSachNguyenVong] = useState<HoSoXetTuyen.NguyenVong[]>([]);

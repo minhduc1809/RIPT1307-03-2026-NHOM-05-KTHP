@@ -5,23 +5,21 @@ import moment from 'moment';
 import mm from 'moment-timezone';
 import { useEffect } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { useModel } from 'umi';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const { Countdown } = Statistic;
 
-const Timeline = () => {
+const Timeline = (props: { record: any }) => {
   const isMediumScreen = useMediaQuery({
     query: '(min-width: 1261px)',
   });
-  const { record } = useModel('dottuyensinh');
+
   const isLargeScreen = useMediaQuery({
     query: '(min-width: 831px)',
   });
 
   const { data, dayFinal, checkDay, setupTimeline, finishStep } = useInitTimeline();
-  // console.log('data', data)
   const customDot = (
     dot: any,
     info: {
@@ -51,8 +49,18 @@ const Timeline = () => {
   );
 
   useEffect(() => {
-    if (record?._id) setupTimeline(record);
-  }, [record?._id]);
+    if (props?.record?._id)
+      setupTimeline(props.record, [
+        {
+          title: props?.record?.ngayBatDau ?? 'Chưa xác định',
+          description: 'Ngày bắt đầu nhập học',
+        },
+        {
+          title: props?.record?.ngayKetThuc ?? 'Chưa xác định',
+          description: 'Ngày kết thúc nhập học',
+        },
+      ]);
+  }, [props?.record?._id]);
 
   return (
     <>
@@ -62,7 +70,10 @@ const Timeline = () => {
           <br /> */}
           {typeof checkDay === 'number' && checkDay + 1 < data.length && (
             <>
-              <div style={{ color: Setting.primaryColor }}> {record?.tenDotTuyenSinh},</div>
+              <div style={{ color: Setting.primaryColor }}>
+                {' '}
+                {props?.record?.tenDotTuyenSinh || props?.record?.tenDot},
+              </div>
               <div
                 style={{
                   color: Setting.primaryColor,
@@ -104,7 +115,7 @@ const Timeline = () => {
               </div>
             </>
           )}
-          {checkDay === false && <i style={{ color: '#0065ca' }}>Đã kết thúc đợt xét tuyển.</i>}
+          {checkDay === false && <i style={{ color: Setting.primaryColor }}>Đã kết thúc đợt.</i>}
         </div>
         <Steps
           size="small"

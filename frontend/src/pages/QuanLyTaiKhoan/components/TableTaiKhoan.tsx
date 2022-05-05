@@ -1,5 +1,6 @@
 import TableBase from '@/components/Table';
 import type { Login } from '@/services/ant-design-pro/typings';
+import { ESystemRole } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
@@ -8,6 +9,7 @@ import { useModel } from 'umi';
 import FormCapLaiMatKhau from './FormCapLaiMatKhau';
 
 const TableTaiKhoan = (props: {
+  type: ESystemRole;
   Form: React.FC;
   getData: any;
   title: string;
@@ -61,6 +63,7 @@ const TableTaiKhoan = (props: {
       width: 200,
       align: 'center',
       search: 'search',
+      hide: props.type === ESystemRole.QuanTriVien,
     },
     {
       title: 'Giới tính',

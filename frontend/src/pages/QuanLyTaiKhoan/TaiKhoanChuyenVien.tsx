@@ -24,6 +24,7 @@ const TaiKhoanChuyenVien = () => {
   const form: any = () => <Form systemRole={ESystemRole.QuanTriVien} />;
   return (
     <TableTaiKhoan
+      type={ESystemRole.QuanTriVien}
       phanQuyen={{ updateAll, resetAll, deleteAll }}
       title="Tài khoản quản trị viên"
       Form={form}

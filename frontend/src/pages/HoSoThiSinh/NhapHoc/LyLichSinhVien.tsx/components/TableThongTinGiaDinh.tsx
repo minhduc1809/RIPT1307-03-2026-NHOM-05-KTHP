@@ -7,7 +7,7 @@ import { Button, Divider, message, Modal, Popconfirm } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
-const TableThongTinGiaDinh = () => {
+const TableThongTinGiaDinh = (props: { mode: 'view' | 'handle' }) => {
   const { record, setRecord, setRecordGiaDinh, setEdit } = useModel('ketquaxettuyen');
   const [visible, setVisible] = useState<boolean>(false);
 
@@ -125,6 +125,7 @@ const TableThongTinGiaDinh = () => {
       width: 120,
       align: 'center',
       fixed: 'right',
+      hide: props.mode === 'view',
       render: (val: KetQuaXetTuyen.ThanhVienGiaDinh) => (
         <>
           <Button
@@ -159,17 +160,19 @@ const TableThongTinGiaDinh = () => {
 
   return (
     <>
-      <Button
-        onClick={handleCreate}
-        style={{ marginBottom: 8 }}
-        type="primary"
-        icon={<PlusCircleOutlined />}
-      >
-        Thêm mới
-      </Button>
+      {props.mode === 'handle' && (
+        <Button
+          onClick={handleCreate}
+          style={{ marginBottom: 8 }}
+          type="primary"
+          icon={<PlusCircleOutlined />}
+        >
+          Thêm mới
+        </Button>
+      )}
       <Table
         widthDrawer={800}
-        otherProps={{ scroll: { x: 2000 } }}
+        otherProps={{ scroll: { x: 2000 }, pagination: false }}
         data={record?.thongTinGiaDinh ?? []}
         columns={columns}
       />

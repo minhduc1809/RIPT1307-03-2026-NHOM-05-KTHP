@@ -19,6 +19,7 @@ const FormThongTinGiaDinh = (props: { onCancel?: any }) => {
   const [tenPhuongXaDiaChiLienHe, setTenXaPhuongDiaChiLienHe] = useState<string>('');
 
   const checkBoMe = (loaiThanhVien: ELoaiThanhVien): boolean => {
+    if (edit && loaiThanhVien === recordGiaDinh?.loaiThanhVien) return true;
     if (![ELoaiThanhVien.BO, ELoaiThanhVien.ME].includes(loaiThanhVien)) return true;
     return !record?.thongTinGiaDinh?.map((item) => item.loaiThanhVien)?.includes(loaiThanhVien);
   };

@@ -14,6 +14,8 @@ const NhapHoc = () => {
   });
   const { getAllDanToc, getAllTonGiao } = useModel('dantoctongiao');
 
+  const { record } = useModel('dotnhaphoc');
+
   useEffect(() => {
     getAllDanToc();
     getAllTonGiao();
@@ -38,7 +40,7 @@ const NhapHoc = () => {
         </Col>
         <Col xs={24} lg={18} xl={19}>
           <div id="content">
-            <Timeline />
+            <Timeline record={record} />
             <Content />
           </div>
         </Col>

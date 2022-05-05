@@ -1,13 +1,14 @@
 import rules from '@/utils/rules';
-import { toISOString } from '@/utils/utils';
 import { Button, Card, DatePicker, Form, Input, Select } from 'antd';
 import moment from 'moment';
+import mm from 'moment-timezone';
 import { useModel } from 'umi';
+
+mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const FormDotNhapHoc = () => {
   const [form] = Form.useForm();
-  const { loading, setVisibleForm, postDotNhapHocModel, edit, record, putDotNhapHocModel } =
-    useModel('dotnhaphoc');
+  const { loading, setVisibleForm, postModel, edit, record, putModel } = useModel('dotnhaphoc');
 
   const { danhSach } = useModel('dottuyensinh');
 
@@ -20,18 +21,16 @@ const FormDotNhapHoc = () => {
           values.thongTinDotTuyenSinh = values?.thongTinDotTuyenSinh?.map((item: string) => ({
             idDotTuyenSinh: item,
           }));
-          values.ngayBatDau = toISOString(values.thoiGian[0]);
-          values.ngayKetThuc = toISOString(values.thoiGian[1]);
+          const payload = {
+            ...values,
+            thoiGian: undefined,
+            ngayBatDau: values.thoiGian?.[0],
+            ngayKetThuc: values.thoiGian?.[1],
+          };
           if (edit) {
-            putDotNhapHocModel(record?._id ?? '', {
-              ...values,
-              thoiGian: undefined,
-            });
+            putModel(record?._id ?? '', payload);
           } else {
-            postDotNhapHocModel({
-              ...values,
-              thoiGian: undefined,
-            });
+            postModel(payload);
           }
         }}
         form={form}
@@ -79,7 +78,7 @@ const FormDotNhapHoc = () => {
             showTime
           />
         </Form.Item>
-
+        <br />
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
           <Button loading={loading} style={{ marginRight: 8 }} htmlType="submit" type="primary">
             Lưu

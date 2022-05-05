@@ -13,7 +13,7 @@ import { useState } from 'react';
 export default () => {
   const [record, setRecord] = useState<PhuongThucTuyenSinh.Record>();
   const [danhSach, setDanhSach] = useState<PhuongThucTuyenSinh.Record[]>([]);
-  const objInitModel = useInitModel();
+  const objInitModel = useInitModel('phuong-thuc-tuyen-sinh');
   const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
 
   const getAllPhuongThucTuyenSinhModel = async () => {
