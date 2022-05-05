@@ -1,7 +1,7 @@
 import logo from '@/assets/logo.png';
 import ResultWithLogo from '@/components/ResultWithLogo';
 import useInitTimeline from '@/hooks/useInitTimeline';
-import { ETrangThaiNhapHoc } from '@/utils/constants';
+import { ETrangThaiNhapHoc, ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
 import { Spin } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
@@ -61,6 +61,29 @@ const Content = () => {
         title="Rất tiếc hồ sơ của bạn không đủ điều kiện trúng tuyển trong đợt tuyển sinh này"
       />
     );
+  } else if (
+    [
+      ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
+      ETrangThaiXacNhanNhapHoc.KHONG_TIEP_NHAN,
+      ETrangThaiXacNhanNhapHoc.KHONG_XAC_NHAN,
+    ].includes(
+      recordHoSo?.thongTinXacNhanNhapHoc?.trangThaiXacNhan ??
+        ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
+    )
+  ) {
+    let title = 'Thí sinh chưa thực hiện xác nhận nhập học.';
+    if (
+      recordHoSo?.thongTinXacNhanNhapHoc.trangThaiXacNhan ===
+      ETrangThaiXacNhanNhapHoc.KHONG_XAC_NHAN
+    ) {
+      title = 'Thí sinh đã xác nhận không nhập học.';
+    } else if (
+      recordHoSo?.thongTinXacNhanNhapHoc.trangThaiXacNhan ===
+      ETrangThaiXacNhanNhapHoc.KHONG_TIEP_NHAN
+    ) {
+      title = 'Rất tiếc, hồ sơ xác nhận nhập học của thí sinh không đủ điều kiện tiếp nhận.';
+    }
+    contentComponent = <ResultWithLogo logo={logo} title={title} />;
   } else if (record?._id && recordDotNhapHoc?._id && isChuaDenThoiGianNhapHoc) {
     // co dot nhap hoc, chua den thoi gian nhap hoc
     contentComponent = (

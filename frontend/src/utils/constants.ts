@@ -71,6 +71,7 @@ export const ToHopXetTuyen = {
   D06: ['Ngữ văn', 'Toán học', 'Tiếng Nhật'],
   D07: ['Toán học', 'Hóa học', 'Tiếng Anh'],
   D09: ['Toán học', 'Lịch sử', 'Tiếng Anh'],
+  D10: ['Toán học', 'Địa lý', 'Tiếng Anh'],
 };
 
 export enum EToHopXetTuyen {
@@ -86,6 +87,7 @@ export enum EToHopXetTuyen {
   D06 = 'D06',
   D07 = 'D07',
   D09 = 'D09',
+  D10 = 'D10',
 }
 
 export const MonToHop = {
