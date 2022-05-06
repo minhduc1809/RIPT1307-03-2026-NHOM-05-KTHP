@@ -1,6 +1,6 @@
 import logo from '@/assets/logo.png';
 import ThanhToan from '@/components/ThanhToan';
-import { ETrangThaiHoSo } from '@/utils/constants';
+import { ETrangThaiHoSo, ETrangThaiThanhToan } from '@/utils/constants';
 import { Button, Col, Modal, Popconfirm, Result, Row } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
@@ -13,6 +13,15 @@ const ResultHoSo = () => {
   const { record } = useModel('dottuyensinh');
   const [visibleHoSo, setVisibleHoSo] = useState<boolean>(false);
   const [visibleThanhToan, setVisibleThanhToan] = useState<boolean>(false);
+  const titleByTrangThai = {
+    'Đã khóa': 'Bạn đã nộp hồ sơ',
+    'Đã tiếp nhận': 'Hồ sơ của bạn đã được tiếp nhận',
+    'Không tiếp nhận': 'Rất tiếc, hồ sơ của bạn không đủ điều kiện tiếp nhận',
+    'Chưa khóa': 'Đã kết thúc thời gian nộp hồ sơ',
+  };
+
+  const isKetThucThoiGianDangKy = moment(record?.thoiGianKetThucNopHoSo).isBefore();
+
   const lyDoKhongTiepNhan = (
     <div style={{ textAlign: 'center' }}>
       <u style={{ color: 'black' }}>
@@ -27,59 +36,9 @@ const ResultHoSo = () => {
     </div>
   );
 
-  const titleDaKhoa = (
-    <div>
-      <div>Thí sinh đã hoàn thành thủ tục đăng ký xét tuyển.</div>
-      <div>Học viện sẽ có thông báo tiếp theo sau khi xác minh hồ sơ của thí sinh</div>
-    </div>
-  );
-
-  const titleDaTiepNhan = (
-    <div>
-      Đăng ký xét tuyển thành công. Học viện sẽ ra Thông báo kết quả dự kiến sau ngày{' '}
-      {record?.thoiGianCongBoKetQua
-        ? moment(record?.thoiGianCongBoKetQua).format('DD/MM/YYYY HH:mm')
-        : ''}
-    </div>
-  );
-
-  const titleKhongTiepNhan = (
-    <div>
-      <div>
-        Đăng ký xét tuyển chưa thành công. Học viện sẽ ra Thông báo kết thúc đợt xét tuyển vào ngày{' '}
-        {record?.thoiGianKetThucNopHoSo
-          ? moment(record?.thoiGianKetThucNopHoSo).format('DD/MM/YYYY HH:mm')
-          : ''}
-      </div>
-      <div>{lyDoKhongTiepNhan}</div>
-    </div>
-  );
-
-  const titleByTrangThai = {
-    'Đã khóa': {
-      'Đã thanh toán đủ': titleDaKhoa,
-      'Thanh toán thừa': titleDaKhoa,
-      'Chưa thanh toán đủ': (
-        <div>
-          <div>Thí sinh đã khóa hồ sơ</div>
-        </div>
-      ),
-    },
-    'Đã tiếp nhận': titleDaTiepNhan,
-    'Không tiếp nhận': titleKhongTiepNhan,
-    'Chưa khóa': 'Đã kết thúc thời gian nộp hồ sơ',
-  };
-
-  const isKetThucThoiGianDangKy = moment(record?.thoiGianKetThucNopHoSo).isBefore();
-
   const subTitleByTrangThai = {
-    'Đã khóa': {
-      'Chưa thanh toán đủ': (
-        <div>
-          <div>Thí sinh xem thông tin thanh toán và thực hiện thanh toán theo hướng dẫn</div>
-        </div>
-      ),
-    },
+    // 'Đã khóa': 'Hãy đợi đến ngày công bố kết quả xét tuyển của Học viện nhé.',
+    // 'Đã tiếp nhận': 'Vui lòng chờ các thông báo mới nhất từ Học viện',
     'Chưa khóa': 'Bạn chưa khóa hồ sơ trong thời gian cho phép',
   };
 
@@ -91,12 +50,11 @@ const ResultHoSo = () => {
           icon={<img alt="" height="200px" src={logo} />}
           title={
             <div style={{ fontSize: 22 }}>
+              <div>{titleByTrangThai?.[recordHoSo?.trangThai ?? ''] ?? ''}</div>
               <div>
-                {recordHoSo?.trangThai === ETrangThaiHoSo.DA_KHOA
-                  ? titleByTrangThai?.[recordHoSo?.trangThai ?? '']?.[
-                      recordHoSo?.trangThaiThanhToan ?? ''
-                    ]
-                  : titleByTrangThai?.[recordHoSo?.trangThai ?? ''] ?? ''}
+                {recordHoSo?.trangThai === ETrangThaiHoSo.KHONG_TIEP_NHAN
+                  ? lyDoKhongTiepNhan
+                  : subTitleByTrangThai?.[recordHoSo?.trangThai ?? '']}
               </div>
               {recordHoSo?.trangThai !== ETrangThaiHoSo.CHUA_KHOA && (
                 <div>
@@ -106,9 +64,14 @@ const ResultHoSo = () => {
             </div>
           }
           subTitle={
-            subTitleByTrangThai?.[recordHoSo?.trangThai ?? '']?.[
-              recordHoSo?.trangThaiThanhToan ?? ''
-            ]
+            <>
+              {recordHoSo?.trangThai !== ETrangThaiHoSo.CHUA_KHOA &&
+                recordHoSo?.trangThaiThanhToan === ETrangThaiThanhToan.CHUA_THANH_TOAN_DU && (
+                  <div>
+                    Thí sinh xem thông tin thanh toán và thực hiện thanh toán theo hướng dẫn
+                  </div>
+                )}
+            </>
           }
           extra={
             <>

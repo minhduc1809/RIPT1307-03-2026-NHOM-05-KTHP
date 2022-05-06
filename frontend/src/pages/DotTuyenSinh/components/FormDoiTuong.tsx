@@ -1,5 +1,6 @@
 import rules from '@/utils/rules';
 import { Button, Card, Col, Form, Input, Radio, Row, Select } from 'antd';
+import { useState } from 'react';
 import { useModel } from 'umi';
 
 const FormDoiTuong = (props: {
@@ -17,6 +18,11 @@ const FormDoiTuong = (props: {
   } = useModel('dottuyensinh');
 
   const { danhSach: danhSachDoiTuongTuyenSinh } = useModel('doituongtuyensinh');
+
+  const [isPreviewQuyDoi, setIsPreviewQuyDoi] = useState<boolean>(
+    recordDoiTuong?.hienThiPreviewDiemQuyDoi ?? false,
+  );
+
   return (
     <Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} đối tượng`}>
       <Form
@@ -29,6 +35,11 @@ const FormDoiTuong = (props: {
               ...values,
               cauHinhDoiTuong: JSON.parse(values?.cauHinhDoiTuong),
               cauHinhQuyDoi: JSON.parse(values?.cauHinhQuyDoi),
+              congThucPreviewQuyDoi: JSON.parse(
+                isPreviewQuyDoi
+                  ? values?.congThucPreviewQuyDoi ?? '{}'
+                  : JSON.stringify(recordDoiTuong?.congThucPreviewQuyDoi ?? {}),
+              ),
               cauHinhValidateTheoNganhToHopCoSo: JSON.parse(
                 values?.cauHinhValidateTheoNganhToHopCoSo,
               ),
@@ -39,6 +50,11 @@ const FormDoiTuong = (props: {
               ...values,
               cauHinhDoiTuong: JSON.parse(values?.cauHinhDoiTuong),
               cauHinhQuyDoi: JSON.parse(values?.cauHinhQuyDoi),
+              congThucPreviewQuyDoi: JSON.parse(
+                isPreviewQuyDoi
+                  ? values?.congThucPreviewQuyDoi ?? '{}'
+                  : JSON.stringify(recordDoiTuong?.congThucPreviewQuyDoi ?? {}),
+              ),
               cauHinhValidateTheoNganhToHopCoSo: JSON.parse(
                 values?.cauHinhValidateTheoNganhToHopCoSo,
               ),
@@ -86,7 +102,7 @@ const FormDoiTuong = (props: {
               />
             </Form.Item>
           </Col>
-          <Col xs={24} lg={12}>
+          <Col xs={24} lg={8}>
             <Form.Item
               style={{ marginBottom: 8 }}
               name="yeuCauLuaChonToHop"
@@ -99,7 +115,7 @@ const FormDoiTuong = (props: {
               </Radio.Group>
             </Form.Item>
           </Col>
-          <Col xs={24} lg={12}>
+          <Col xs={24} lg={8}>
             <Form.Item
               style={{ marginBottom: 8 }}
               name="hienThiDiemQuyDoi"
@@ -107,6 +123,19 @@ const FormDoiTuong = (props: {
               initialValue={recordDoiTuong?.hienThiDiemQuyDoi ?? false}
             >
               <Radio.Group>
+                <Radio value={true}>Có</Radio>
+                <Radio value={false}>Không</Radio>
+              </Radio.Group>
+            </Form.Item>
+          </Col>
+          <Col xs={24} lg={8}>
+            <Form.Item
+              style={{ marginBottom: 8 }}
+              name="hienThiPreviewDiemQuyDoi"
+              label="Hiển thị preview điểm quy đổi"
+              initialValue={recordDoiTuong?.hienThiPreviewDiemQuyDoi ?? false}
+            >
+              <Radio.Group onChange={(e) => setIsPreviewQuyDoi(e.target.value)}>
                 <Radio value={true}>Có</Radio>
                 <Radio value={false}>Không</Radio>
               </Radio.Group>
@@ -149,6 +178,20 @@ const FormDoiTuong = (props: {
             <Input.TextArea rows={10} />
           </Form.Item>
         </Col>
+
+        {isPreviewQuyDoi && (
+          <Col span={24}>
+            <Form.Item
+              style={{ marginBottom: 8 }}
+              name="congThucPreviewQuyDoi"
+              label="Cấu hình preview quy đổi"
+              rules={[...rules.required]}
+              initialValue={JSON.stringify(recordDoiTuong?.congThucPreviewQuyDoi ?? {})}
+            >
+              <Input.TextArea rows={10} />
+            </Form.Item>
+          </Col>
+        )}
 
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
           <Button style={{ marginRight: 8 }} htmlType="submit" type="primary">

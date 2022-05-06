@@ -18,14 +18,15 @@ import {
   putMyThongTinThiSinh,
   putMyThongTinXetTuyen,
   putMyTinhQuyDoiNguyenVong,
+  thiSinhGetPreviewQuyDoiDiem,
 } from '@/services/HoSoXetTuyen/hosoxettuyen';
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import { ETrangThaiHoSo } from '@/utils/constants';
 import { message } from 'antd';
+import FileDownload from 'js-file-download';
 import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
-import FileDownload from 'js-file-download';
 
 export default () => {
   const [danhSach, setDanhSach] = useState<HoSoXetTuyen.Record[]>([]);
@@ -45,6 +46,9 @@ export default () => {
   const { record: recordHinhThuc } = useModel('hinhthucdaotao');
   const { record: recordNam } = useModel('namtuyensinh');
   const { setVisibleFormGiayTo, record: recordDot } = useModel('dottuyensinh');
+  const [danhSachPreviewDiemQuyDoi, setDanhSachPreviewDiemQuyDoi] = useState<
+    { diemQuyDoi: number; maDoiTuong: string }[]
+  >([]);
 
   const khoiTaoHoSoXetTuyenModel = async (idDotXetTuyen: string) => {
     setLoading(true);
@@ -320,7 +324,26 @@ export default () => {
     }
   };
 
+  const thiSinhGetPreviewQuyDoiDiemModel = async (payload: {
+    danhSachMaDoiTuong: string[];
+    hoSoXetTuyen: HoSoXetTuyen.Record;
+    idDotTuyenSinh: string;
+  }) => {
+    if (!payload.danhSachMaDoiTuong.length || !payload.idDotTuyenSinh) return;
+    try {
+      setLoading(true);
+      const response = await thiSinhGetPreviewQuyDoiDiem(payload);
+      setDanhSachPreviewDiemQuyDoi(response?.data?.data ?? []);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
+  };
+
   return {
+    danhSachPreviewDiemQuyDoi,
+    setDanhSachPreviewDiemQuyDoi,
+    thiSinhGetPreviewQuyDoiDiemModel,
     adminExportHoSoByIdDotModel,
     adminExportPhieuDangKyModel,
     exportMyPhieuDangKyModel,

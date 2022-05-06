@@ -70,6 +70,13 @@ const TableDoiTuong = (props: {
       align: 'center',
       render: (val) => <div>{val ? 'Có' : 'Không'}</div>,
     },
+    {
+      title: 'Hiển thị preview điểm quy đổi',
+      dataIndex: 'hienThiPreviewDiemQuyDoi',
+      width: 100,
+      align: 'center',
+      render: (val) => <div>{val ? 'Có' : 'Không'}</div>,
+    },
 
     {
       title: 'Thao tác',

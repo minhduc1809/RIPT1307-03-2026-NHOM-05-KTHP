@@ -47,6 +47,7 @@ import InfoTruongTHPT from './components/InfoTruongTHPT';
 import TableGiayTo from './components/TableGiayTo';
 import _ from 'lodash';
 import BlockGiaiKHKT from './components/BlockKhoaHocKyThuat';
+import TablePreviewDiemQuyDoi from './components/TablePreviewDiemQuyDoi';
 
 const QuaTrinhHocTap = () => {
   const {
@@ -67,6 +68,7 @@ const QuaTrinhHocTap = () => {
     putMyThongTinXetTuyenModel,
     loading,
     setLoading,
+    thiSinhGetPreviewQuyDoiDiemModel,
   } = useModel('hosoxettuyen');
 
   const { record } = useModel('dottuyensinh');
@@ -75,6 +77,8 @@ const QuaTrinhHocTap = () => {
     useModel('truongthpt');
 
   const [cauHinhDoiTuong, setCauHinhDoiTuong] = useState<any>();
+
+  const [maDoiTuong, setMaDoiTuong] = useState<string[]>(recordHoSo?.maDoiTuong ?? []);
 
   const [visibleModalInfo, setVisibleModalInfo] = useState<boolean>(false);
   const [visibleXoaNguyenVong, setVisibleXoaNguyenVong] = useState<boolean>(false);
@@ -100,6 +104,25 @@ const QuaTrinhHocTap = () => {
     [],
   );
 
+  const previewDiemQuyDoi = async () => {
+    const values = form.getFieldsValue();
+    const danhSachMaDoiTuong: string[] = record?.gioiHanDoiTuong
+      ? [values?.maDoiTuong]
+      : values?.maDoiTuong;
+    if (
+      values?.maDoiTuong &&
+      record?.danhSachDoiTuongTuyenSinh?.find(
+        (item) => danhSachMaDoiTuong?.includes(item.maDoiTuong) && item.hienThiPreviewDiemQuyDoi,
+      )
+    ) {
+      thiSinhGetPreviewQuyDoiDiemModel({
+        danhSachMaDoiTuong,
+        hoSoXetTuyen: { ...recordHoSo, ...values },
+        idDotTuyenSinh: record?._id ?? '',
+      });
+    }
+  };
+
   const handleChangeDoiTuong = (val: string | string[]) => {
     if (!record?._id) return;
     let cauHinh: any = {};
@@ -107,9 +130,11 @@ const QuaTrinhHocTap = () => {
       cauHinh = record?.danhSachDoiTuongTuyenSinh?.find(
         (item) => item?.maDoiTuong === val,
       )?.cauHinhDoiTuong;
+      setMaDoiTuong([val]);
     } else if (typeof val === 'object') {
+      setMaDoiTuong(val);
       cauHinh = mergeCauHinhDoiTuongXetTuyen(val, record);
-    }
+    } else setMaDoiTuong([]);
     setCauHinhDoiTuong(cauHinh);
     if (cauHinh?.danhSach?.thongTinChungChiNgoaiNgu) {
       // neu chi co 1 ngon ngu thi ko hien ra select chon ngon ngu nua, tu dong chon luon
@@ -147,6 +172,7 @@ const QuaTrinhHocTap = () => {
         });
       }
     }
+    previewDiemQuyDoi();
   };
 
   useEffect(() => {
@@ -207,6 +233,8 @@ const QuaTrinhHocTap = () => {
         }
       }
     }
+
+    previewDiemQuyDoi();
   }, [record?._id]);
 
   const [namTotNghiep, setNamTotNghiep] = useState<number | undefined>(
@@ -959,6 +987,20 @@ const QuaTrinhHocTap = () => {
               </>
             )}
             <Col />
+            {maDoiTuong.length > 0 &&
+              record?.danhSachDoiTuongTuyenSinh?.find(
+                (item) =>
+                  maDoiTuong.includes(item.maDoiTuong) && item.hienThiPreviewDiemQuyDoi === true,
+              ) && (
+                <>
+                  <Divider plain>
+                    <b>Điểm quy đổi</b>
+                  </Divider>
+                  <Col span={24}>
+                    <TablePreviewDiemQuyDoi />
+                  </Col>
+                </>
+              )}
             <Divider plain>
               <b>Giấy tờ cần nộp</b>
             </Divider>

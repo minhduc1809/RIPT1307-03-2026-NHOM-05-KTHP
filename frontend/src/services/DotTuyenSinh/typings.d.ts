@@ -39,6 +39,8 @@ declare module DotTuyenSinh {
     yeuCauLuaChonToHop: boolean;
     phuongThucTuyenSinh: string;
     hienThiDiemQuyDoi: boolean;
+    hienThiPreviewDiemQuyDoi: boolean;
+    congThucPreviewQuyDoi: string;
   }
 
   export interface CauHinhDoiTuong {

@@ -5,7 +5,11 @@ import { Modal } from 'antd';
 import { useModel } from 'umi';
 import ViewHoSoTrungTuyen from './ViewKetQua';
 
-const TableDanhSachTrungTuyen = (props: { idCoSo?: string }) => {
+const TableDanhSachTrungTuyen = (props: {
+  idCoSo?: string;
+  children?: any;
+  paramCondition?: any;
+}) => {
   const {
     page,
     limit,
@@ -82,7 +86,13 @@ const TableDanhSachTrungTuyen = (props: { idCoSo?: string }) => {
   return (
     <TableBase
       hideCard
-      getData={() => getKetQuaXetTuyenPageableModel(recordDotTuyenSinh?._id ?? '', props?.idCoSo)}
+      getData={() =>
+        getKetQuaXetTuyenPageableModel(
+          recordDotTuyenSinh?._id ?? '',
+          props?.idCoSo,
+          props?.paramCondition,
+        )
+      }
       modelName="ketquaxettuyen"
       loading={loading}
       columns={columns}
@@ -105,6 +115,7 @@ const TableDanhSachTrungTuyen = (props: { idCoSo?: string }) => {
       >
         <ViewHoSoTrungTuyen idCoSo={props.idCoSo} />
       </Modal>
+      {props?.children}
     </TableBase>
   );
 };

@@ -112,3 +112,11 @@ export function adminTiepNhanHoSoByIdHoSo(
 ) {
   return axios.put(`${ip3}/${url}/admin/tiep-nhan/${idHoSoXetTuyen}`, payload);
 }
+
+export function thiSinhGetPreviewQuyDoiDiem(payload: {
+  danhSachMaDoiTuong: string[];
+  hoSoXetTuyen: HoSoXetTuyen.Record;
+  idDotTuyenSinh: string;
+}) {
+  return axios.put(`${ip3}/${url}/thi-sinh/preview-quy-doi`, payload);
+}
