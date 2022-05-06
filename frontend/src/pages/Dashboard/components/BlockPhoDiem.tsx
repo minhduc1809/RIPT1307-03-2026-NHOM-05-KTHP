@@ -35,7 +35,7 @@ const BlockPhoDiem = () => {
 
   useEffect(() => {
     getPhoDiem();
-  }, [record?._id, idCoSo, trangThai, thuTuNguyenVong, range]);
+  }, [record?._id, idCoSo, trangThai, thuTuNguyenVong, range, idNganh]);
 
   const danhSachNganh = idCoSo
     ? record?.danhSachNganhTuyenSinh?.filter((item) =>
@@ -101,7 +101,7 @@ const BlockPhoDiem = () => {
             allowClear
           />
           <InputNumber
-            min={0.1}
+            min={0.25}
             max={10000}
             onChange={(val) => setRange(val ? +val : undefined)}
             style={{ width: 200, marginLeft: 8 }}

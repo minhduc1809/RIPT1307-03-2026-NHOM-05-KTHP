@@ -8,6 +8,7 @@ import {
   putMyKetQuaXetTuyenLyLich,
   xacNhanKhongNhapHoc,
   xacNhanNhapHoc,
+  thiSinhKhoaHoSoNhapHoc,
 } from '@/services/KetQuaXetTuyen/ketquaxettuyen';
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
 import type { ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
@@ -112,7 +113,19 @@ export default () => {
     }
   };
 
+  const thiSinhKhoaHoSoNhapHocModel = async (
+    idKetQuaXetTuyen?: string,
+    payload?: KetQuaXetTuyen.Record,
+  ) => {
+    if (!idKetQuaXetTuyen || !payload) return;
+    setLoading(true);
+    await thiSinhKhoaHoSoNhapHoc(idKetQuaXetTuyen, payload);
+    message.success('Khóa thành công');
+    setLoading(false);
+  };
+
   return {
+    thiSinhKhoaHoSoNhapHocModel,
     putMyKetQuaXetTuyenLyLichModel,
     recordGiaDinh,
     setRecordGiaDinh,

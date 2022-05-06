@@ -40,7 +40,19 @@ const NhapHoc = () => {
         </Col>
         <Col xs={24} lg={18} xl={19}>
           <div id="content">
-            <Timeline record={record} />
+            <Timeline
+              record={record}
+              dataTimeline={[
+                {
+                  title: record?.ngayBatDau ?? 'Chưa xác định',
+                  description: 'Ngày bắt đầu nhập học',
+                },
+                {
+                  title: record?.ngayKetThuc ?? 'Chưa xác định',
+                  description: 'Ngày kết thúc nhập học',
+                },
+              ]}
+            />
             <Content />
           </div>
         </Col>

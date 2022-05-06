@@ -12,7 +12,6 @@ const useInitTimeline = () => {
     recordDot?: any,
     dataTimeLine?: { title: string; description: string }[],
   ) => {
-    debugger;
     const type = window.location.pathname;
     const dataTemp =
       dataTimeLine ||

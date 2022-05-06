@@ -27,6 +27,7 @@ const ChucNang = () => {
         const arrChucNang = danhSachChucNang?.filter((chucNang) => chucNang.loai === item);
         return {
           tenChucNang: item,
+          key: item,
           children: arrChucNang,
         };
       });

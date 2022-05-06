@@ -4,6 +4,7 @@ import { Button, Checkbox, Popconfirm, Select, Table } from 'antd';
 import { useModel } from 'umi';
 import { useState, useEffect } from 'react';
 import { SaveOutlined } from '@ant-design/icons';
+import ButtonScrollToTop from '@/components/ButtonScrollToTop';
 
 const TableChucNang = (props: {
   data: { tenChucNang: string; children: PhanQuyen.ChucNang[] }[];
@@ -28,7 +29,7 @@ const TableChucNang = (props: {
       align: 'center',
       render: (record) => (
         <div style={{ textAlign: 'left' }}>
-          {record?.tenChucNang || record?.ten} <b>({record?._id})</b>
+          {record?.tenChucNang || record?.ten} {record?._id && <b>({record._id})</b>}
         </div>
       ),
     },
@@ -129,6 +130,7 @@ const TableChucNang = (props: {
         dataSource={props.data}
         columns={columns}
       />
+      <ButtonScrollToTop />
     </>
   );
 };

@@ -1,7 +1,7 @@
 import logo from '@/assets/logo.png';
 import { TableGiayToXacNhanNhapHoc } from '@/pages/KetQuaXetTuyen/components/TableGiayToXacNhanNhapHoc';
 import { TableThongTinKhaiXacNhanNhapHoc } from '@/pages/KetQuaXetTuyen/components/TableThongTinKhaiXacNhanNhapHoc';
-import { ETrangThaiXacNhanNhapHoc, MapKeyTrangThaiXacNhanNhapHoc } from '@/utils/constants';
+import { ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Modal, Popconfirm, Row } from 'antd';
 import moment from 'moment';
@@ -73,13 +73,7 @@ const TrungTuyen = () => {
           </Col>
           <Col xl={12} sm={12} xs={24}>
             Trạng thái:{' '}
-            <b style={{ color: 'red' }}>
-              {
-                MapKeyTrangThaiXacNhanNhapHoc[
-                  record?.thongTinXacNhanNhapHoc?.trangThaiXacNhan ?? ''
-                ]
-              }
-            </b>
+            <b style={{ color: 'red' }}>{record?.thongTinXacNhanNhapHoc?.trangThaiXacNhan ?? ''}</b>
           </Col>
         </Row>
         <br />

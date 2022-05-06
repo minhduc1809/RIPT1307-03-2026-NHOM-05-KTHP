@@ -29,6 +29,12 @@ const TableTaiKhoan = (props: {
       width: 80,
       align: 'center',
     },
+    // {
+    //   title: 'Trạng thái kích hoạt',
+    //   dataIndex: 'index',
+    //   width: 80,
+    //   align: 'center',
+    // },
     {
       title: 'Họ đệm',
       dataIndex: 'hoDem',

@@ -27,7 +27,7 @@ const FormNhomVaiTro = () => {
         <Form.Item
           name="_id"
           label="Tên nhóm vai trò"
-          rules={[...rules.required, ...rules.ten, ...rules.length(50)]}
+          rules={[...rules.required, ...rules.ten]}
           initialValue={record?._id}
         >
           <Input disabled={edit} placeholder="Tên nhóm vai trò" />

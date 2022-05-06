@@ -1,8 +1,20 @@
 import RaSoatHoSo from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo';
 import BlockNguyenVong from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo/components/BlockNguyenVong';
 import BlockRaSoatThongTinCaNhan from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo/components/BlockThongTinCaNhan';
-import { ETrangThaiTrungTuyen, ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
-import { CheckOutlined, CloseOutlined, EyeOutlined, StopOutlined } from '@ant-design/icons';
+import {
+  ETrangThaiNhapHoc,
+  ETrangThaiTrungTuyen,
+  ETrangThaiXacNhanNhapHoc,
+} from '@/utils/constants';
+import {
+  CheckOutlined,
+  CloseOutlined,
+  EditOutlined,
+  EyeOutlined,
+  LockOutlined,
+  PrinterOutlined,
+  StopOutlined,
+} from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
 import { Button, Card, Col, Descriptions, Divider, Modal, Row } from 'antd';
 import moment from 'moment';
@@ -14,11 +26,21 @@ const { Item } = Descriptions;
 const ViewHoSoTrungTuyen = () => {
   const access = useAccess();
   const { record } = useModel('dottuyensinh');
-  const { record: recordKetQua, setVisibleForm: setVisibleFormKetQua } = useModel('ketquaxettuyen');
-  const { visibleForm, setVisibleForm } = useModel('hosoxettuyen');
+  const {
+    record: recordKetQua,
+    setVisibleForm: setVisibleFormKetQua,
+    loading,
+    thiSinhKhoaHoSoNhapHocModel,
+  } = useModel('ketquaxettuyen');
+  const [visible, setVisible] = useState<boolean>(false);
+  const { visibleForm, setVisibleForm, setCurrent } = useModel('hosoxettuyen');
+  const { record: recordDotNhapHoc } = useModel('dotnhaphoc');
   const [typeXuLy, setTypeXuLy] = useState<ETrangThaiXacNhanNhapHoc>();
   const [visibleFormXuLy, setVisibleFormXuLy] = useState<boolean>(false);
   const phuongThuc = localStorage.getItem('phuongThuc');
+  const isTrongThoiGianNhapHoc =
+    moment(recordDotNhapHoc?.ngayBatDau).isBefore(moment(new Date())) &&
+    moment(recordDotNhapHoc?.ngayKetThuc).isAfter(moment(new Date()));
   return (
     <>
       <div className="box">
@@ -122,7 +144,8 @@ const ViewHoSoTrungTuyen = () => {
                 <div style={{ textAlign: 'center', marginTop: 10 }}>
                   {recordKetQua?.trangThai === ETrangThaiTrungTuyen.TRUNG_TUYEN &&
                     recordKetQua?.thongTinXacNhanNhapHoc?.trangThaiXacNhan ===
-                      ETrangThaiXacNhanNhapHoc.XAC_NHAN && (
+                      ETrangThaiXacNhanNhapHoc.XAC_NHAN &&
+                    recordKetQua?.trangThaiNhapHoc === ETrangThaiNhapHoc.DA_KHOA && (
                       <>
                         <Button
                           onClick={() => {
@@ -179,10 +202,97 @@ const ViewHoSoTrungTuyen = () => {
                 </Modal> */}
               </>
             ) : (
-              <div />
+              <div
+                style={{
+                  display: 'flex',
+                  textAlign: 'center',
+                  marginTop: 10,
+                  justifyContent: 'space-around',
+                }}
+              >
+                {recordKetQua?.trangThaiNhapHoc === ETrangThaiNhapHoc.CHUA_KHOA &&
+                isTrongThoiGianNhapHoc ? (
+                  <>
+                    <Button
+                      onClick={() => {
+                        setCurrent(0);
+                        window.scrollTo({
+                          top: 0,
+                          behavior: 'smooth',
+                        });
+                      }}
+                      icon={<EditOutlined />}
+                    >
+                      Chỉnh sửa hồ sơ
+                    </Button>
+
+                    <Button
+                      onClick={() => {
+                        setVisible(true);
+                      }}
+                      loading={loading}
+                      type="primary"
+                      icon={<LockOutlined />}
+                    >
+                      Khóa hồ sơ
+                    </Button>
+                    {/* </Popconfirm> */}
+                  </>
+                ) : (
+                  <Button
+                    type="primary"
+                    loading={loading}
+                    // onClick={() => {
+                    //   exportMyPhieuDangKyModel(recordHoSo?._id ?? '');
+                    // }}
+                    icon={<PrinterOutlined />}
+                  >
+                    In phiếu
+                  </Button>
+                )}
+              </div>
             )}
           </GridContent>
         </Card>
+        <Modal
+          onCancel={() => {
+            setVisible(false);
+          }}
+          visible={visible}
+          title="Khóa hồ sơ"
+          footer={
+            <>
+              <Button
+                loading={loading}
+                onClick={async () => {
+                  await thiSinhKhoaHoSoNhapHocModel(recordKetQua?._id ?? '', recordKetQua);
+                  setVisible(false);
+                }}
+                type="primary"
+              >
+                Xác nhận
+              </Button>
+
+              <Button
+                onClick={() => {
+                  setVisible(false);
+                }}
+              >
+                Hủy
+              </Button>
+            </>
+          }
+        >
+          <div>
+            Bạn sẽ không thể chỉnh sửa lại hồ sơ sau khi khóa, bạn có chắc chắn muốn khóa hồ sơ?
+          </div>
+          <br />
+          <div>
+            <b>Lưu ý:</b> Thí sinh chưa bắt buộc Khóa hồ sơ ngay lập tức mà có thể thực hiện cập
+            nhật thông tin hồ sơ, và Khóa hồ sơ trước hạn{' '}
+            {moment(recordDotNhapHoc?.ngayKetThuc).format('HH:mm DD/MM/YYYY')}
+          </div>
+        </Modal>
         <Modal
           bodyStyle={{ padding: 0 }}
           footer={false}

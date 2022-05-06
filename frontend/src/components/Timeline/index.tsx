@@ -10,7 +10,10 @@ mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const { Countdown } = Statistic;
 
-const Timeline = (props: { record: any }) => {
+const Timeline = (props: {
+  record: any;
+  dataTimeline?: { title: string; description: string }[];
+}) => {
   const isMediumScreen = useMediaQuery({
     query: '(min-width: 1261px)',
   });
@@ -49,17 +52,7 @@ const Timeline = (props: { record: any }) => {
   );
 
   useEffect(() => {
-    if (props?.record?._id)
-      setupTimeline(props.record, [
-        {
-          title: props?.record?.ngayBatDau ?? 'Chưa xác định',
-          description: 'Ngày bắt đầu nhập học',
-        },
-        {
-          title: props?.record?.ngayKetThuc ?? 'Chưa xác định',
-          description: 'Ngày kết thúc nhập học',
-        },
-      ]);
+    if (props?.record?._id) setupTimeline(props.record, props?.dataTimeline);
   }, [props?.record?._id]);
 
   return (

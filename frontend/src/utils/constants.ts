@@ -221,14 +221,6 @@ export enum ETrangThaiNhapHoc {
   DA_TIEP_NHAN = 'Đã tiếp nhận hồ sơ nhập học',
 }
 
-export const MapKeyTrangThaiXacNhanNhapHoc = {
-  'Xác nhận': 'Đã xác nhận nhập học',
-  'Chưa xác nhận': 'Chưa xác nhận nhập học',
-  'Không xác nhận': 'Không xác nhận nhập học',
-  'Đã tiếp nhận': 'Đã tiếp nhận',
-  'Không tiếp nhận': 'Không tiếp nhận',
-};
-
 export enum EModeKhoiTao {
   SO_LUONG = 'SO_LUONG',
   DIEM_SAN = 'DIEM_SAN',

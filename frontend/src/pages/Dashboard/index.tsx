@@ -73,11 +73,7 @@ const Dashboard = () => {
             <br />
             <br />
             <br />
-            <div>
-              <ArrowUpOutlined /> Tăng{' '}
-              {((soLuongHoSoTheoNgay / (tongSoLuongHoSo - soLuongHoSoTheoNgay)) * 100).toFixed(2)} %
-              {/* {(((tongSoLuongHoSo - soLuongHoSoTheoNgay) / soLuongHoSoTheoNgay) * 100).toFixed(2)}%) */}
-            </div>
+            <br />
           </Card>
         </Col>
         <Col xs={24} md={12} xl={6}>
@@ -92,7 +88,13 @@ const Dashboard = () => {
             <br />
             <br />
             <br />
-            <br />
+            <div>
+              <ArrowUpOutlined /> Tăng{' '}
+              {tongSoLuongHoSo
+                ? ((soLuongHoSoTheoNgay / (tongSoLuongHoSo - soLuongHoSoTheoNgay)) * 100).toFixed(2)
+                : 0}{' '}
+              %
+            </div>
           </Card>
         </Col>
         <Col xs={24} md={12} xl={6}>

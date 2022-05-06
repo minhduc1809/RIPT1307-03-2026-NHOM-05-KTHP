@@ -83,7 +83,7 @@ const ResultHoSoNhapHoc = () => {
                 {recordHoSo?.trangThaiNhapHoc === ETrangThaiNhapHoc.DA_KHOA
                   ? titleByTrangThai?.[recordHoSo?.trangThai ?? '']?.[
                       recordHoSo?.trangThaiThanhToan ?? ''
-                    ]
+                    ] ?? 'Thí sinh đã hoàn thành thủ tục nhập học'
                   : titleByTrangThai?.[recordHoSo?.trangThai ?? ''] ?? ''}
               </div>
               {recordHoSo?.trangThaiNhapHoc !== ETrangThaiNhapHoc.CHUA_KHOA && (

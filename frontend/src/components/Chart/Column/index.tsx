@@ -7,16 +7,26 @@ const Basiccolumn = (props: {
 }) => {
   const cols = {
     y: {
-      tickInterval: 100,
+      tickInterval: (Math.max(...props.data.map((o) => o.y)) / 10).toFixed(0),
       alias: props?.yLabel ?? 'y',
     },
     x: {
       alias: props?.xLabel ?? 'x',
     },
   };
+  let name = ' ';
+  const dataFinal = [...props.data];
+  for (let i = props.data.length; i <= 8; i += 1) {
+    dataFinal.push({
+      x: name,
+      y: 0,
+    });
+    name += ' ';
+  }
+
   return (
     <div>
-      <Chart height={500} data={props?.data ?? []} scale={cols} forceFit>
+      <Chart height={500} data={dataFinal} scale={cols} forceFit>
         <Axis name="x" />
         <Axis name="y" />
         <Tooltip />

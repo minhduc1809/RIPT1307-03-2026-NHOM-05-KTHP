@@ -20,7 +20,7 @@ const PhanQuyen = () => {
   }, [vaiTro]);
 
   return (
-    <Card title="Phân chức năng">
+    <Card title="Chức năng">
       <ChucNang />
     </Card>
   );
