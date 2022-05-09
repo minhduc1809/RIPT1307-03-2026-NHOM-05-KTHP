@@ -8,7 +8,13 @@ import axios from 'axios';
 import moment from 'moment';
 import { parse } from 'path';
 import { useModel } from 'umi';
-import { arrKhuVucUuTien, EKhuVucUuTien, EMonHoc, ESystemRole } from './constants';
+import {
+  arrKhuVucUuTien,
+  EKhuVucUuTien,
+  EMonHoc,
+  ESystemRole,
+  ETenThanhPhanUuTien,
+} from './constants';
 import { ip3 } from './ip';
 import _ from 'lodash';
 
@@ -428,4 +434,19 @@ export const buildFormData = (payload: any) => {
     }
   });
   return form;
+};
+
+export const filterDiemUuTien = (thanhPhanDiemQuyDoi: HoSoXetTuyen.ThanhPhanDiemQuyDoi[]) => {
+  return thanhPhanDiemQuyDoi.filter((thanhPhan) =>
+    Object.values(ETenThanhPhanUuTien).includes(thanhPhan.tenThanhPhan as ETenThanhPhanUuTien),
+  );
+};
+
+export const tongDiemUuTien = (thanhPhanDiemQuyDoi: HoSoXetTuyen.ThanhPhanDiemQuyDoi[]) => {
+  return filterDiemUuTien(thanhPhanDiemQuyDoi).reduce(
+    (sum: number, thanhPhan: HoSoXetTuyen.ThanhPhanDiemQuyDoi) => {
+      return sum + thanhPhan.diem ?? 0;
+    },
+    0,
+  );
 };

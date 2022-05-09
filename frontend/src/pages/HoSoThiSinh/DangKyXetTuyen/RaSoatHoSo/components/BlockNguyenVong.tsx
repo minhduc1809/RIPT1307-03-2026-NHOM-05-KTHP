@@ -1,5 +1,6 @@
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import type { IColumn } from '@/utils/interfaces';
+import { tongDiemUuTien } from '@/utils/utils';
 import { Descriptions, Table } from 'antd';
 import { useModel } from 'umi';
 const { Item } = Descriptions;
@@ -83,11 +84,9 @@ const BlockNguyenVong = (props: {
         const hienThiDiemQuyDoi = recordDot?.danhSachDoiTuongTuyenSinh?.find(
           (item) => item.maDoiTuong === record?.maDoiTuong,
         )?.hienThiDiemQuyDoi;
-        let diem = 0;
+        const diem = record?.diemQuyDoi?.tongDiem ?? 0 - tongDiemUuTien(val);
+        debugger;
         if (hienThiDiemQuyDoi) {
-          val
-            ?.filter((item) => !item?.tenThanhPhan?.includes('Điểm'))
-            ?.map((item) => (diem += item?.diem ?? 0));
           return (
             <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{diem?.toFixed(2)}</div>
           );

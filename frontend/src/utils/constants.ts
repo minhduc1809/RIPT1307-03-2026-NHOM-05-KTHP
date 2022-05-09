@@ -340,6 +340,11 @@ export enum ELoaiThanhVien {
   EM_GAI = 'Em gái',
 }
 
+export enum ETenThanhPhanUuTien {
+  DOI_TUONG_UU_TIEN = 'Điểm ưu tiên đối tượng',
+  KHU_VUC_UU_TIEN = 'Điểm ưu tiên khu vực',
+}
+
 export const Setting = {
   navTheme: 'dark',
   primaryColor: '#CC0D00',

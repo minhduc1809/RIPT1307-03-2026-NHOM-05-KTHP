@@ -1,6 +1,6 @@
 import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
 import type { IColumn } from '@/utils/interfaces';
-import { calculateLuaChonToHopVaHienThiDiemQuyDoi } from '@/utils/utils';
+import { calculateLuaChonToHopVaHienThiDiemQuyDoi, tongDiemUuTien } from '@/utils/utils';
 import {
   CaretDownOutlined,
   CaretUpOutlined,
@@ -221,11 +221,8 @@ const TableNguyenVong = () => {
         const hienThiDiemQuyDoiTemp = recordDot?.danhSachDoiTuongTuyenSinh?.find(
           (item) => item.maDoiTuong === record?.maDoiTuong,
         )?.hienThiDiemQuyDoi;
-        let diem = 0;
+        const diem = record?.diemQuyDoi?.tongDiem ?? 0 - tongDiemUuTien(val);
         if (hienThiDiemQuyDoiTemp) {
-          val
-            ?.filter((item) => !item?.tenThanhPhan?.includes('ưu tiên'))
-            ?.map((item) => (diem += item?.diem ?? 0));
           return (
             <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{diem?.toFixed(2)}</div>
           );
