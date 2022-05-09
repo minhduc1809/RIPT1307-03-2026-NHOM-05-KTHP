@@ -221,7 +221,9 @@ const TableNguyenVong = () => {
         const hienThiDiemQuyDoiTemp = recordDot?.danhSachDoiTuongTuyenSinh?.find(
           (item) => item.maDoiTuong === record?.maDoiTuong,
         )?.hienThiDiemQuyDoi;
-        const diem = record?.diemQuyDoi?.tongDiem ?? 0 - tongDiemUuTien(val);
+        const diem = record?.diemQuyDoi?.tongDiem
+          ? record.diemQuyDoi.tongDiem - tongDiemUuTien(val)
+          : 0;
         if (hienThiDiemQuyDoiTemp) {
           return (
             <div style={{ color: record?.wrong ? 'red' : '#000000D9' }}>{diem?.toFixed(2)}</div>
