@@ -2,12 +2,9 @@ import axios from '@/utils/axios';
 import { ip3 } from '@/utils/ip';
 
 const useInitService = (url: string) => {
-  const getPageableService = (payload: { page: number; limit: number; condition?: any }) => {
-    return axios.get(`${ip3}/${url}/pageable`, { params: payload });
-  };
-
-  const getService = (payload: { page: number; limit: number; condition?: any }) => {
-    return axios.get(`${ip3}/${url}`, { params: payload });
+  const getService = (payload: { page: number; limit: number; condition?: any }, path?: string) => {
+    const finalPath = path ? `${ip3}/${url}/${path}` : `${ip3}/${url}`;
+    return axios.get(finalPath, { params: payload });
   };
 
   const postService = (payload: any) => {
@@ -33,7 +30,6 @@ const useInitService = (url: string) => {
   return {
     getService,
     getByIdService,
-    getPageableService,
     postService,
     putService,
     deleteService,

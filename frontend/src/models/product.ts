@@ -11,12 +11,12 @@ export default () => {
     'metaData.loai': 'Tuyển sinh',
   });
 
-  const { setLoading, getPageableModel } = objectInit;
+  const { setLoading, getModel } = objectInit;
   const archiveProductModel = async (idProduct: string) => {
     setLoading(true);
     await archiveProduct(idProduct);
     message.success('Lưu trữ thành công');
-    getPageableModel();
+    getModel(undefined, 'pageable');
     setLoading(false);
   };
 
@@ -24,7 +24,7 @@ export default () => {
     setLoading(true);
     await unarchiveProduct(idProduct);
     message.success('Bỏ lưu trữ thành công');
-    getPageableModel();
+    getModel(undefined, 'pageable');
     setLoading(false);
   };
 

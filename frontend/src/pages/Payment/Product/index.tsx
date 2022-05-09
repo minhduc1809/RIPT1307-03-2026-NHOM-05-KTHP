@@ -10,7 +10,7 @@ import Form from './components/Form';
 
 const ProductComponent = () => {
   const {
-    getPageableModel,
+    getModel,
     loading,
     page,
     limit,
@@ -102,7 +102,7 @@ const ProductComponent = () => {
         loading={loading}
         modelName="product"
         Form={Form}
-        getData={() => getPageableModel({ 'metaData.loai': 'Tuyển sinh' })}
+        getData={() => getModel({ 'metaData.loai': 'Tuyển sinh' }, 'pageable')}
       />
       <Modal
         footer={false}

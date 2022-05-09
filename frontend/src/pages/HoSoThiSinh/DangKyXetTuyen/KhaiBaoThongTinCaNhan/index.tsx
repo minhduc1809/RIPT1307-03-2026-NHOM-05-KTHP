@@ -64,6 +64,7 @@ const KhaiBaoThongTinCaNhan = () => {
             tenXaPhuong: tenPhuongXaDiaChiLienHe,
           };
           values.ngaySinh = toISOString(values?.ngaySinh);
+          values.ngayCapCmtCccd = toISOString(values?.ngayCapCmtCccd);
           putMyThongTinThiSinhModel(recordHoSo?._id ?? '', { thongTinThiSinh: values });
         }}
       >

@@ -18,30 +18,16 @@ const useInitModel = (
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
 
-  const { getAllService, getPageableService, postService, putService, deleteService, getService } =
-    useInitService(url);
+  const { getAllService, postService, putService, deleteService, getService } = useInitService(url);
 
-  const getPageableModel = async (paramCondition?: any) => {
+  const getModel = async (paramCondition?: any, path?: string) => {
     setLoading(true);
     const payload = {
       page,
       limit,
     };
     payload[fieldNameCondtion] = { ...condition, ...paramCondition };
-    const response = await getPageableService(payload);
-    if (setDanhSach) setDanhSach(response?.data?.data?.result ?? []);
-    setTotal(response?.data?.data?.total ?? 0);
-    setLoading(false);
-  };
-
-  const getModel = async (paramCondition?: any) => {
-    setLoading(true);
-    const payload = {
-      page,
-      limit,
-    };
-    payload[fieldNameCondtion] = { ...condition, ...paramCondition };
-    const response = await getService(payload);
+    const response = await getService(payload, path);
     if (setDanhSach) setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);
@@ -55,25 +41,26 @@ const useInitModel = (
     setLoading(false);
   };
 
-  const postModel = async (payload: any) => {
+  const postModel = async (payload: any, getData?: any) => {
     try {
       setLoading(true);
       await postService(payload);
       message.success('Thêm mới thành công');
-      getPageableModel();
+      if (getData) getData();
+      else getModel();
       setVisibleForm(false);
     } catch (err) {
       setLoading(false);
     }
   };
 
-  const putModel = async (id: string | number, payload: any) => {
+  const putModel = async (id: string | number, payload: any, getData?: any) => {
     try {
       setLoading(true);
       await putService(id, payload);
       message.success('Lưu thành công');
-      setVisibleForm(false);
-      getPageableModel();
+      if (getData) getData();
+      else getModel();
       setVisibleForm(false);
     } catch (err) {
       setLoading(false);
@@ -84,7 +71,7 @@ const useInitModel = (
     setLoading(true);
     await deleteService(id);
     message.success('Xóa thành công');
-    getPageableModel();
+    getModel();
   };
 
   return {
@@ -93,7 +80,6 @@ const useInitModel = (
     putModel,
     postModel,
     getAllModel,
-    getPageableModel,
     page,
     setPage,
     limit,

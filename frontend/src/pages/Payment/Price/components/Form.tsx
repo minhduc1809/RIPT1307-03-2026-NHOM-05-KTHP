@@ -4,17 +4,24 @@ import { useModel } from 'umi';
 
 const FormPrice = () => {
   const [form] = Form.useForm();
-  const { setVisibleForm, loading, postModel } = useModel('price');
+  const { setVisibleForm, loading, postModel, getModel } = useModel('price');
+  const { record } = useModel('product');
   return (
     <Card title="Thêm mới">
       <Form
         labelCol={{ span: 24 }}
         form={form}
         onFinish={(values) => {
-          postModel({
-            ...values,
-            metaData: {},
-          });
+          postModel(
+            {
+              ...values,
+              metaData: {},
+              product: record?._id,
+            },
+            () => {
+              getModel({ product: record?._id }, 'pageable');
+            },
+          );
         }}
       >
         <Row gutter={[10, 0]}>

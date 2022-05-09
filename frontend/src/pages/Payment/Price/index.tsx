@@ -7,15 +7,8 @@ import { useModel } from 'umi';
 import Form from './components/Form';
 
 const PriceComponent = () => {
-  const {
-    getPageableModel,
-    loading,
-    page,
-    limit,
-    condition,
-    archivePriceModel,
-    unarchivePriceModel,
-  } = useModel('price');
+  const { getModel, loading, page, limit, condition, archivePriceModel, unarchivePriceModel } =
+    useModel('price');
 
   const { record: recordProduct } = useModel('product');
 
@@ -87,11 +80,11 @@ const PriceComponent = () => {
       hascreate
       title="Danh sách mức giá"
       columns={columns}
-      dependencies={[page, limit, condition]}
+      dependencies={[page, limit, condition, recordProduct?._id]}
       loading={loading}
       modelName="price"
       Form={Form}
-      getData={() => getPageableModel({ product: recordProduct?._id })}
+      getData={() => getModel({ product: recordProduct?._id }, 'pageable')}
     />
   );
 };
