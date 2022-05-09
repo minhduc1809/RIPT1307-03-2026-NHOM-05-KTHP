@@ -7,6 +7,7 @@ const DaTiepNhanHoSoNhapHoc = () => {
   return (
     <Card title="Danh sách đã tiếp nhận hồ sơ nhập học">
       <TableDanhSachTrungTuyen
+        hideTrangThai
         paramCondition={{
           trangThaiNhapHoc: ETrangThaiNhapHoc.DA_TIEP_NHAN,
         }}

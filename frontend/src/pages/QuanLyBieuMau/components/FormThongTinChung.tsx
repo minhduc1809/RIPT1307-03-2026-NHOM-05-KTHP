@@ -118,6 +118,7 @@ const FormThongTinChungKhaoSat = () => {
                 name="danhSachDotTuyenSinh"
                 label="Danh sách đợt tuyển sinh"
                 initialValue={record?.danhSachDotTuyenSinh}
+                rules={[...rules.required]}
               >
                 <Select
                   mode="multiple"
@@ -135,6 +136,7 @@ const FormThongTinChungKhaoSat = () => {
                 name="danhSachTrangThai"
                 label="Danh sách trạng thái"
                 initialValue={record?.danhSachTrangThai}
+                rules={[...rules.required]}
               >
                 <Select
                   mode="multiple"

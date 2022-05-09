@@ -1,7 +1,7 @@
 import { ETrangThaiHoSo, Setting } from '@/utils/constants';
 import { useEffect, useState } from 'react';
 import { Card, Select, Spin } from 'antd';
-import { useModel } from 'umi';
+import { useModel, useAccess } from 'umi';
 import { getSoLuongNguyenVongByIdDot } from '@/services/Dashboard/dashboard';
 import Donut from '@/components/Chart/Pie';
 import _ from 'lodash';
@@ -11,7 +11,9 @@ const BlockNguyenVong = (props: {
   title: string;
 }) => {
   const { getAllCoSoDaoTaoModel, danhSach, record: recordCoSo } = useModel('cosodaotao');
+  const access = useAccess();
   const { record } = useModel('dottuyensinh');
+  const { initialState } = useModel('@@initialState');
   const [recordSoLuongNguyenVongTheoNganh, setRecordSoLuongNguyenVongTheoNganh] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [trangThai, setTrangThai] = useState<ETrangThaiHoSo | undefined>();
@@ -49,19 +51,21 @@ const BlockNguyenVong = (props: {
           <div style={{ fontWeight: 'bold', color: Setting.primaryColor, marginBottom: 8 }}>
             {props?.title ?? ''}
           </div>
-          <Select
-            allowClear
-            onChange={(val) => {
-              setIdCoSo(val);
-            }}
-            value={idCoSo}
-            placeholder="Chọn cơ sở đào tạo"
-            style={{ width: 400, marginRight: 8 }}
-            options={danhSach?.map((item) => ({
-              value: item._id,
-              label: `${item.tenVietTat} - ${item.ten}`,
-            }))}
-          />
+          {(access.admin || (access.quanTriVien && !initialState?.currentUser?.idCoSoDaoTao)) && (
+            <Select
+              allowClear
+              onChange={(val) => {
+                setIdCoSo(val);
+              }}
+              value={idCoSo}
+              placeholder="Chọn cơ sở đào tạo"
+              style={{ width: 400, marginRight: 8 }}
+              options={danhSach?.map((item) => ({
+                value: item._id,
+                label: `${item.tenVietTat} - ${item.ten}`,
+              }))}
+            />
+          )}
           <Select
             value={trangThai}
             onChange={(val) => setTrangThai(val)}

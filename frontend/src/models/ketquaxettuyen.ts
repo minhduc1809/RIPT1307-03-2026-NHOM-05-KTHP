@@ -9,16 +9,17 @@ import {
   xacNhanKhongNhapHoc,
   xacNhanNhapHoc,
   thiSinhKhoaHoSoNhapHoc,
+  adminTiepNhanHoSoNhapHoc,
 } from '@/services/KetQuaXetTuyen/ketquaxettuyen';
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
-import type { ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
+import type { ETrangThaiNhapHoc, ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
 import { message } from 'antd';
 import { useState } from 'react';
 
 export default () => {
   const [record, setRecord] = useState<KetQuaXetTuyen.Record>();
   const [danhSach, setDanhSach] = useState<KetQuaXetTuyen.Record[]>([]);
-  const objInitModel = useInitModel('ket-qua-xet-tuyen');
+  const objInitModel = useInitModel('ket-qua-xet-tuyen', 'condition');
   const { setLoading, condition, page, limit, setTotal, setVisibleForm } = objInitModel;
   const [recordGiaDinh, setRecordGiaDinh] = useState<KetQuaXetTuyen.ThanhVienGiaDinh>();
 
@@ -132,7 +133,30 @@ export default () => {
     setLoading(false);
   };
 
+  const adminTiepNhanHoSoNhapHocModel = async (
+    idDotTuyenSinh: string,
+    idKetQuaXetTuyen: string,
+    payload: {
+      trangThaiNhapHoc: ETrangThaiNhapHoc;
+      ghiChuTiepNhan?: string;
+    },
+  ) => {
+    if (!idKetQuaXetTuyen || !idDotTuyenSinh) return;
+    try {
+      setLoading(true);
+      await adminTiepNhanHoSoNhapHoc(idKetQuaXetTuyen, payload);
+      message.success('Xử lý thành công');
+      setVisibleForm(false);
+      getKetQuaXetTuyenPageableModel(idDotTuyenSinh, undefined, {
+        trangThaiNhapHoc: 'Đã khóa hồ sơ nhập học',
+      });
+    } catch (err) {
+      setLoading(false);
+    }
+  };
+
   return {
+    adminTiepNhanHoSoNhapHocModel,
     thiSinhKhoaHoSoNhapHocModel,
     putMyKetQuaXetTuyenLyLichModel,
     recordGiaDinh,

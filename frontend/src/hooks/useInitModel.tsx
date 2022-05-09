@@ -2,22 +2,46 @@ import { message } from 'antd';
 import { useState } from 'react';
 import useInitService from './useInitService';
 
-const useInitModel = (url: string, setDanhSach?: any, setRecord?: any) => {
+const useInitModel = (
+  url: string,
+  fieldNameCondtion: string,
+  setDanhSach?: any,
+  setRecord?: any,
+  initCondition?: any,
+) => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [loading, setLoading] = useState<boolean>(false);
   const [filterInfo, setFilterInfo] = useState<any>({});
-  const [condition, setCondition] = useState<any>({});
+  const [condition, setCondition] = useState<any>(initCondition || {});
   const [edit, setEdit] = useState<boolean>(false);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
 
-  const { getAllService, getPageableService, postService, putService, deleteService } =
+  const { getAllService, getPageableService, postService, putService, deleteService, getService } =
     useInitService(url);
 
-  const getPageableModel = async () => {
+  const getPageableModel = async (paramCondition?: any) => {
     setLoading(true);
-    const response = await getPageableService({ page, limit, condition });
+    const payload = {
+      page,
+      limit,
+    };
+    payload[fieldNameCondtion] = { ...condition, ...paramCondition };
+    const response = await getPageableService(payload);
+    if (setDanhSach) setDanhSach(response?.data?.data?.result ?? []);
+    setTotal(response?.data?.data?.total ?? 0);
+    setLoading(false);
+  };
+
+  const getModel = async (paramCondition?: any) => {
+    setLoading(true);
+    const payload = {
+      page,
+      limit,
+    };
+    payload[fieldNameCondtion] = { ...condition, ...paramCondition };
+    const response = await getService(payload);
     if (setDanhSach) setDanhSach(response?.data?.data?.result ?? []);
     setTotal(response?.data?.data?.total ?? 0);
     setLoading(false);
@@ -37,6 +61,7 @@ const useInitModel = (url: string, setDanhSach?: any, setRecord?: any) => {
       await postService(payload);
       message.success('Thêm mới thành công');
       getPageableModel();
+      setVisibleForm(false);
     } catch (err) {
       setLoading(false);
     }
@@ -49,6 +74,7 @@ const useInitModel = (url: string, setDanhSach?: any, setRecord?: any) => {
       message.success('Lưu thành công');
       setVisibleForm(false);
       getPageableModel();
+      setVisibleForm(false);
     } catch (err) {
       setLoading(false);
     }
@@ -62,6 +88,7 @@ const useInitModel = (url: string, setDanhSach?: any, setRecord?: any) => {
   };
 
   return {
+    getModel,
     deleteModel,
     putModel,
     postModel,

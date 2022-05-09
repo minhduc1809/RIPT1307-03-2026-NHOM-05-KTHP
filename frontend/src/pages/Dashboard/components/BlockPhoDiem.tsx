@@ -4,9 +4,11 @@ import { ETrangThaiHoSo, Setting } from '@/utils/constants';
 import { Card, InputNumber, Select, Spin } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useAccess, useModel } from 'umi';
 
 const BlockPhoDiem = () => {
+  const access = useAccess();
+  const { initialState } = useModel('@@initialState');
   const { danhSach, record: recordCoSo } = useModel('cosodaotao');
   const { record } = useModel('dottuyensinh');
   const [dataPhoDiem, setDataPhoDiem] = useState<{ diem: string; tong: number }[]>([]);
@@ -51,19 +53,21 @@ const BlockPhoDiem = () => {
           <div style={{ fontWeight: 'bold', color: Setting.primaryColor, marginBottom: 8 }}>
             Thống kê phổ điểm theo ngành
           </div>
-          <Select
-            allowClear
-            onChange={(val) => {
-              setIdCoSo(val);
-            }}
-            value={idCoSo}
-            placeholder="Lọc theo cơ sở đào tạo"
-            style={{ width: 350, marginRight: 8 }}
-            options={danhSach?.map((item) => ({
-              value: item._id,
-              label: `${item.tenVietTat} - ${item.ten}`,
-            }))}
-          />
+          {(access.admin || (access.quanTriVien && !initialState?.currentUser?.idCoSoDaoTao)) && (
+            <Select
+              allowClear
+              onChange={(val) => {
+                setIdCoSo(val);
+              }}
+              value={idCoSo}
+              placeholder="Lọc theo cơ sở đào tạo"
+              style={{ width: 350, marginRight: 8 }}
+              options={danhSach?.map((item) => ({
+                value: item._id,
+                label: `${item.tenVietTat} - ${item.ten}`,
+              }))}
+            />
+          )}
           <Select
             value={trangThai}
             onChange={(val) => setTrangThai(val)}
@@ -79,7 +83,7 @@ const BlockPhoDiem = () => {
             onChange={(val) => setThuTuNguyenVong(val)}
             placeholder="Lọc theo thứ tự nguyện vọng"
             allowClear
-            style={{ width: 200, marginRight: 8 }}
+            style={{ width: 230, marginRight: 8 }}
             options={_.range(
               1,
               record?.soLuongNguyenVongToiDa ? record.soLuongNguyenVongToiDa + 1 : 6,

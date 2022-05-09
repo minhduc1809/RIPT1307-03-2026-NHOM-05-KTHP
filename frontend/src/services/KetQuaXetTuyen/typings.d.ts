@@ -60,7 +60,7 @@ declare module KetQuaXetTuyen {
     };
     thongTinGiaDinh: ThanhVienGiaDinh[];
     trangThaiThanhToan: ETrangThaiThanhToan;
-    ghiChuTiepNhan: string;
+    ghiChuTiepNhan?: string;
     trangThaiNhapHoc: ETrangThaiNhapHoc;
     identityCode: string;
   }

@@ -30,7 +30,7 @@ const FormCauHinhBieuMau = () => {
         onFinish={async (values) => {
           if (edit)
             putBieuMauModel({
-              id: record._id,
+              id: record?._id ?? '',
               data: { ...record, ...values },
             });
           else

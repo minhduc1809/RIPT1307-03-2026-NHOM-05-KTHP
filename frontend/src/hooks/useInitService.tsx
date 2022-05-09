@@ -3,8 +3,13 @@ import { ip3 } from '@/utils/ip';
 
 const useInitService = (url: string) => {
   const getPageableService = (payload: { page: number; limit: number; condition?: any }) => {
+    return axios.get(`${ip3}/${url}/pageable`, { params: payload });
+  };
+
+  const getService = (payload: { page: number; limit: number; condition?: any }) => {
     return axios.get(`${ip3}/${url}`, { params: payload });
   };
+
   const postService = (payload: any) => {
     return axios.post(`${ip3}/${url}`, payload);
   };
@@ -21,7 +26,13 @@ const useInitService = (url: string) => {
     return axios.get(`${ip3}/${url}/all`);
   };
 
+  const getByIdService = (id: string) => {
+    return axios.get(`${ip3}/${url}/${id}`);
+  };
+
   return {
+    getService,
+    getByIdService,
     getPageableService,
     postService,
     putService,

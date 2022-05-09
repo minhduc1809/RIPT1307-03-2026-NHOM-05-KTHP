@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { message } from 'antd';
 
 export default () => {
-  const objInitModel = useInitModel('mailer');
+  const objInitModel = useInitModel('mailer', 'condition');
   const [recordPost, setRecordPost] = useState<any>([]);
   const {
     setLoading,

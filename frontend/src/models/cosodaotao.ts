@@ -12,7 +12,7 @@ import { useState } from 'react';
 export default () => {
   const [record, setRecord] = useState<CoSoDaoTao.Record>();
   const [danhSach, setDanhSach] = useState<CoSoDaoTao.Record[]>([]);
-  const objInitModel = useInitModel('co-so-dao-tao');
+  const objInitModel = useInitModel('co-so-dao-tao', 'condition');
   const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
 
   const getAllCoSoDaoTaoModel = async (isNotSetRecord?: boolean) => {

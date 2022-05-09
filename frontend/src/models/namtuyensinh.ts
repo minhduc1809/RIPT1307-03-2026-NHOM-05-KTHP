@@ -13,7 +13,7 @@ import { useState } from 'react';
 export default () => {
   const [record, setRecord] = useState<NamTuyenSinh.Record>();
   const [danhSach, setDanhSach] = useState<NamTuyenSinh.Record[]>([]);
-  const objInitModel = useInitModel('nam-tuyen-sinh');
+  const objInitModel = useInitModel('nam-tuyen-sinh', 'condition');
   const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
 
   const getAllNamTuyenSinhModel = async (hinhThucDaoTao?: string) => {

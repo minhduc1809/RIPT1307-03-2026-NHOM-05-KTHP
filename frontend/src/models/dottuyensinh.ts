@@ -15,7 +15,7 @@ import { useState } from 'react';
 export default () => {
   const [record, setRecord] = useState<DotTuyenSinh.Record>();
   const [danhSach, setDanhSach] = useState<DotTuyenSinh.Record[]>([]);
-  const objInitModel = useInitModel('dot-tuyen-sinh');
+  const objInitModel = useInitModel('dot-tuyen-sinh', 'condition');
   const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
   const [danhSachGiayToNopHoSo, setdanhSachGiayToNopHoSo] = useState<DotTuyenSinh.GiayTo[]>([]);
   const [danhSachHDSD, setDanhSachHDSD] = useState<HuongDanSuDung.Record[]>([]);

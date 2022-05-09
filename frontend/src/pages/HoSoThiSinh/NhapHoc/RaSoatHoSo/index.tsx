@@ -1,6 +1,8 @@
 import RaSoatHoSo from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo';
 import BlockNguyenVong from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo/components/BlockNguyenVong';
 import BlockRaSoatThongTinCaNhan from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo/components/BlockThongTinCaNhan';
+import { TableGiayToXacNhanNhapHoc } from '@/pages/KetQuaXetTuyen/components/TableGiayToXacNhanNhapHoc';
+import { TableThongTinKhaiXacNhanNhapHoc } from '@/pages/KetQuaXetTuyen/components/TableThongTinKhaiXacNhanNhapHoc';
 import {
   ETrangThaiNhapHoc,
   ETrangThaiTrungTuyen,
@@ -20,10 +22,11 @@ import { Button, Card, Col, Descriptions, Divider, Modal, Row } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useAccess, useModel } from 'umi';
+import FormTiepNhanHoSoNhapHoc from '../components/FormTiepNhanHoSoNhapHoc';
 import TableThongTinGiaDinh from '../LyLichSinhVien.tsx/components/TableThongTinGiaDinh';
 const { Item } = Descriptions;
 
-const ViewHoSoTrungTuyen = () => {
+const RaSoatHoSoNhapHoc = () => {
   const access = useAccess();
   const { record } = useModel('dottuyensinh');
   const {
@@ -35,7 +38,7 @@ const ViewHoSoTrungTuyen = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const { visibleForm, setVisibleForm, setCurrent } = useModel('hosoxettuyen');
   const { record: recordDotNhapHoc } = useModel('dotnhaphoc');
-  const [typeXuLy, setTypeXuLy] = useState<ETrangThaiXacNhanNhapHoc>();
+  const [typeXuLy, setTypeXuLy] = useState<ETrangThaiNhapHoc>();
   const [visibleFormXuLy, setVisibleFormXuLy] = useState<boolean>(false);
   const phuongThuc = localStorage.getItem('phuongThuc');
   const isTrongThoiGianNhapHoc =
@@ -128,17 +131,25 @@ const ViewHoSoTrungTuyen = () => {
             />
             <br />
             <h2 style={{ fontWeight: 'bold' }}>C. THÔNG TIN XÁC NHẬN NHẬP HỌC:</h2>
-            {/* <TableThongTinKhaiXacNhanNhapHoc index={1} />
-            <TableGiayToXacNhanNhapHoc index={2} /> */}
+            <TableThongTinKhaiXacNhanNhapHoc index={1} />
+            <TableGiayToXacNhanNhapHoc index={2} />
             <Descriptions>
               <Descriptions.Item
                 span={3}
                 label={<span style={{ fontWeight: 'bold' }}>3. Ghi chú chuyên viên</span>}
               >
-                {recordKetQua?.thongTinXacNhanNhapHoc?.ghiChuTiepNhan ?? ''}
+                {recordKetQua?.thongTinXacNhanNhapHoc?.ghiChuTiepNhan ?? 'Không có'}
               </Descriptions.Item>
             </Descriptions>
-
+            <h2 style={{ fontWeight: 'bold' }}>D. THÔNG TIN HỒ SƠ NHẬP HỌC:</h2>
+            <Descriptions>
+              <Descriptions.Item
+                span={3}
+                label={<span style={{ fontWeight: 'bold' }}>1. Ghi chú chuyên viên</span>}
+              >
+                {recordKetQua?.ghiChuTiepNhan ?? 'Không có'}
+              </Descriptions.Item>
+            </Descriptions>
             {!access.thiSinh ? (
               <>
                 <div style={{ textAlign: 'center', marginTop: 10 }}>
@@ -150,7 +161,7 @@ const ViewHoSoTrungTuyen = () => {
                         <Button
                           onClick={() => {
                             setVisibleFormXuLy(true);
-                            setTypeXuLy(ETrangThaiXacNhanNhapHoc.DA_TIEP_NHAN);
+                            setTypeXuLy(ETrangThaiNhapHoc.DA_TIEP_NHAN);
                           }}
                           style={{ marginRight: 8 }}
                           icon={<CheckOutlined />}
@@ -161,13 +172,13 @@ const ViewHoSoTrungTuyen = () => {
                         <Button
                           onClick={() => {
                             setVisibleFormXuLy(true);
-                            setTypeXuLy(ETrangThaiXacNhanNhapHoc.KHONG_TIEP_NHAN);
+                            setTypeXuLy(ETrangThaiNhapHoc.YEU_CAU_CHINH_SUA);
                           }}
                           style={{ marginRight: 8 }}
                           icon={<StopOutlined />}
                           type="primary"
                         >
-                          Không tiếp nhận
+                          Yêu cầu chỉnh sửa
                         </Button>
                       </>
                     )}
@@ -180,26 +191,25 @@ const ViewHoSoTrungTuyen = () => {
                     Đóng
                   </Button>
                 </div>
-                {/* <Modal
+                <Modal
                   destroyOnClose
                   footer={false}
                   width="1000px"
                   title={
-                    typeXuLy === ETrangThaiXacNhanNhapHoc.DA_TIEP_NHAN
+                    typeXuLy === ETrangThaiNhapHoc.DA_TIEP_NHAN
                       ? 'Tiếp nhận hồ sơ'
-                      : 'Không tiếp nhận hồ sơ'
+                      : 'Yêu cầu chỉnh sửa'
                   }
                   visible={visibleFormXuLy}
                   onCancel={() => setVisibleFormXuLy(false)}
                 >
-                  <FormTiepNhanXacNhanNhapHoc
-                    idCoSo={props.idCoSo}
+                  <FormTiepNhanHoSoNhapHoc
                     onCancel={() => {
                       setVisibleFormXuLy(false);
                     }}
                     type={typeXuLy}
                   />
-                </Modal> */}
+                </Modal>
               </>
             ) : (
               <div
@@ -307,4 +317,4 @@ const ViewHoSoTrungTuyen = () => {
   );
 };
 
-export default ViewHoSoTrungTuyen;
+export default RaSoatHoSoNhapHoc;

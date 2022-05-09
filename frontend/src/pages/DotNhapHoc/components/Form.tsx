@@ -1,94 +1,23 @@
-import rules from '@/utils/rules';
-import { Button, Card, DatePicker, Form, Input, Select } from 'antd';
-import moment from 'moment';
-import mm from 'moment-timezone';
 import { useModel } from 'umi';
+import FormHuongDanNhapHoc from './FormHuongDanNhapHoc';
+import FormThongTinChung from './FormThongTinChung';
+import { useEffect } from 'react';
 
-mm.tz.setDefault('Asia/Ho_Chi_Minh');
+const Form = () => {
+  const { current, setCurrent } = useModel('dotnhaphoc');
 
-const FormDotNhapHoc = () => {
-  const [form] = Form.useForm();
-  const { loading, setVisibleForm, postModel, edit, record, putModel } = useModel('dotnhaphoc');
-
-  const { danhSach } = useModel('dottuyensinh');
+  useEffect(() => {
+    setCurrent(0);
+  }, []);
 
   return (
-    <Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} đợt nhập học`}>
-      <Form
-        scrollToFirstError
-        labelCol={{ span: 24 }}
-        onFinish={async (values) => {
-          values.thongTinDotTuyenSinh = values?.thongTinDotTuyenSinh?.map((item: string) => ({
-            idDotTuyenSinh: item,
-          }));
-          const payload = {
-            ...values,
-            thoiGian: undefined,
-            ngayBatDau: values.thoiGian?.[0],
-            ngayKetThuc: values.thoiGian?.[1],
-          };
-          if (edit) {
-            putModel(record?._id ?? '', payload);
-          } else {
-            postModel(payload);
-          }
-        }}
-        form={form}
-      >
-        <Form.Item
-          initialValue={record?.tenDot}
-          rules={[...rules.required]}
-          name="tenDot"
-          label="Tên đợt"
-        >
-          <Input placeholder="Tên đợt" />
-        </Form.Item>
-
-        <Form.Item
-          rules={[...rules.required]}
-          initialValue={record?.thongTinDotTuyenSinh?.map((item) => item.idDotTuyenSinh)}
-          name="thongTinDotTuyenSinh"
-          label="Thông tin đợt tuyển sinh"
-        >
-          <Select
-            mode="multiple"
-            placeholder="Chọn đợt"
-            options={danhSach.map((item) => ({ label: item.tenDotTuyenSinh, value: item._id }))}
-          />
-        </Form.Item>
-
-        <Form.Item initialValue={record?.moTa} name="moTa" label="Mô tả">
-          <Input.TextArea placeholder="Mô tả" rows={2} />
-        </Form.Item>
-
-        <Form.Item
-          rules={[...rules.required]}
-          name="thoiGian"
-          label="Thời gian bắt đầu - Thời gian kết thúc"
-          initialValue={[
-            record?.ngayBatDau ? moment(record?.ngayBatDau) : undefined,
-            record?.ngayKetThuc ? moment(record?.ngayKetThuc) : undefined,
-          ]}
-          style={{ marginBottom: 8 }}
-        >
-          <DatePicker.RangePicker
-            format="HH:mm DD-MM-YYYY"
-            style={{ width: '100%' }}
-            placeholder={['Thời gian bắt đầu', 'Thời gian kết thúc']}
-            showTime
-          />
-        </Form.Item>
-        <br />
-        <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
-          <Button loading={loading} style={{ marginRight: 8 }} htmlType="submit" type="primary">
-            Lưu
-          </Button>
-
-          <Button onClick={() => setVisibleForm(false)}>Đóng</Button>
-        </Form.Item>
-      </Form>
-    </Card>
+    <>
+      <div>
+        {current === 0 && <FormThongTinChung />}
+        {current === 1 && <FormHuongDanNhapHoc />}
+      </div>
+    </>
   );
 };
 
-export default FormDotNhapHoc;
+export default Form;

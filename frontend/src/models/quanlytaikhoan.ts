@@ -11,7 +11,7 @@ import { message } from 'antd';
 import { useState } from 'react';
 
 export default () => {
-  const objInitModel = useInitModel('user');
+  const objInitModel = useInitModel('user', 'condition');
   const [record, setRecord] = useState<Login.Profile>();
   const [danhSach, setDanhSach] = useState<Login.Profile[]>([]);
   const {

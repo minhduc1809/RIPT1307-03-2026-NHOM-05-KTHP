@@ -5,9 +5,10 @@ const Basiccolumn = (props: {
   xLabel?: string;
   data: { x: string; y: number }[];
 }) => {
+  const maxDiem = Math.max(...props.data.map((o) => o.y));
   const cols = {
     y: {
-      tickInterval: (Math.max(...props.data.map((o) => o.y)) / 10).toFixed(0),
+      tickInterval: maxDiem < 10 ? 1 : (maxDiem / 10).toFixed(0),
       alias: props?.yLabel ?? 'y',
     },
     x: {

@@ -1,4 +1,5 @@
 import TableBase from '@/components/Table';
+import type { DotNhapHoc } from '@/services/DotNhapHoc/typings';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Divider, Popconfirm, Tooltip } from 'antd';
@@ -9,7 +10,7 @@ import Form from './components/Form';
 
 const DotNhapHocComponent = () => {
   const {
-    getPageableModel,
+    getModel,
     page,
     loading,
     limit,
@@ -18,6 +19,7 @@ const DotNhapHocComponent = () => {
     setVisibleForm,
     setRecord,
     deleteModel,
+    setdanhSachGiayToCanNop,
   } = useModel('dotnhaphoc');
 
   const { getAllDotTuyenSinhModel } = useModel('dottuyensinh');
@@ -73,6 +75,7 @@ const DotNhapHocComponent = () => {
                 setEdit(true);
                 setRecord(record);
                 setVisibleForm(true);
+                setdanhSachGiayToCanNop(record?.danhSachGiayToCanNop ?? []);
               }}
               type="default"
               shape="circle"
@@ -98,10 +101,10 @@ const DotNhapHocComponent = () => {
 
   return (
     <TableBase
-      widthDrawer="700px"
+      widthDrawer="900px"
       hascreate
       formType="Drawer"
-      getData={getPageableModel}
+      getData={getModel}
       modelName="dotnhaphoc"
       title="Quản lý đợt nhập học"
       loading={loading}

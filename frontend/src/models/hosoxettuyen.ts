@@ -30,7 +30,7 @@ import { useModel } from 'umi';
 
 export default () => {
   const [danhSach, setDanhSach] = useState<HoSoXetTuyen.Record[]>([]);
-  const objInitModel = useInitModel('ho-so-xet-tuyen');
+  const objInitModel = useInitModel('ho-so-xet-tuyen', 'condition');
   const { page, limit, setLoading, condition, setTotal, setVisibleForm } = objInitModel;
   const [current, setCurrent] = useState<number>(0);
   const [danhSachNguyenVong, setDanhSachNguyenVong] = useState<HoSoXetTuyen.NguyenVong[]>([]);

@@ -59,9 +59,10 @@ export const adminTiepNhanHoSoNhapHoc = (
   idKetQuaXetTuyen: string,
   payload: {
     trangThaiNhapHoc: ETrangThaiNhapHoc;
+    ghiChuTiepNhan?: string;
   },
 ) => {
-  return axios.put(`${ip3}/${url}/tiep-nhan-trung-tuyen/${idKetQuaXetTuyen}`, payload);
+  return axios.put(`${ip3}/${url}/admin/tiep-nhan-trung-tuyen/${idKetQuaXetTuyen}`, payload);
 };
 
 export const thiSinhKhoaHoSoNhapHoc = (

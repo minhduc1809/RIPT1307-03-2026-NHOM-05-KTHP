@@ -18,7 +18,7 @@ import FileDownload from 'js-file-download';
 import moment from 'moment';
 
 export default () => {
-  const objInit = useInitModel('chi-tieu');
+  const objInit = useInitModel('chi-tieu', 'condition');
   const [danhSach, setDanhSach] = useState<ChiTieu.Record[]>([]);
   const [record, setRecord] = useState<ChiTieu.Record>();
   const [recordChiTieuChiTiet, setRecordChiTieuChiTiet] = useState<ChiTieu.ChiTieuChiTiet>();

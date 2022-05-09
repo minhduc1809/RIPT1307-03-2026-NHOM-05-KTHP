@@ -1,5 +1,7 @@
 import TableBase from '@/components/Table';
+import RaSoatHoSoNhapHoc from '@/pages/HoSoThiSinh/NhapHoc/RaSoatHoSo';
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
+import { ETrangThaiNhapHoc } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { Modal } from 'antd';
 import { useModel } from 'umi';
@@ -9,6 +11,7 @@ const TableDanhSachTrungTuyen = (props: {
   idCoSo?: string;
   children?: any;
   paramCondition?: any;
+  hideTrangThai?: boolean;
 }) => {
   const {
     page,
@@ -19,6 +22,7 @@ const TableDanhSachTrungTuyen = (props: {
     setVisibleForm,
     setRecord: setRecordKetQuaXetTuyen,
     visibleForm,
+    record: recordKetQuaXetTuyen,
   } = useModel('ketquaxettuyen');
 
   // const { KhoiTaoKetQuaXetTuyenModel, loading: loadingChiTieu } = useModel('chitieu');
@@ -78,6 +82,14 @@ const TableDanhSachTrungTuyen = (props: {
       search: 'filterString',
       notRegex: true,
       onCell,
+      hide: props.hideTrangThai,
+    },
+    {
+      title: 'Cơ sở đào tạo',
+      dataIndex: ['nguyenVongTrungTuyen', 'tenCoSoDaoTao'],
+      width: 200,
+      align: 'center',
+      search: 'search',
     },
   ];
 
@@ -113,7 +125,11 @@ const TableDanhSachTrungTuyen = (props: {
         bodyStyle={{ padding: 0 }}
         footer={false}
       >
-        <ViewHoSoTrungTuyen idCoSo={props.idCoSo} />
+        {recordKetQuaXetTuyen?.trangThaiNhapHoc !== ETrangThaiNhapHoc.CHUA_KHOA ? (
+          <RaSoatHoSoNhapHoc />
+        ) : (
+          <ViewHoSoTrungTuyen idCoSo={props.idCoSo} />
+        )}
       </Modal>
       {props?.children}
     </TableBase>
