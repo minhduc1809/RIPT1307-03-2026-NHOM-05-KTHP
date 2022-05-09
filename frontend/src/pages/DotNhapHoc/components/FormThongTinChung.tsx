@@ -82,6 +82,7 @@ const FormDotNhapHoc = () => {
         <Form.Item name="danhSachGiayToCanNop" label="Danh sách giấy tờ cần nộp">
           <TableGiayTo fieldName="danhSachGiayToCanNop" />
         </Form.Item>
+        <Form.Item name="danhSachMaLePhiCanNop" label="Danh sách lệ phí cần nộp" />
         <Form.Item
           style={{ textAlign: 'center', marginBottom: 0, position: 'fixed', top: 14, right: 48 }}
         >
