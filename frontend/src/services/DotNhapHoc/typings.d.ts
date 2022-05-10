@@ -8,18 +8,19 @@ declare module DotNhapHoc {
   }
 
   export interface LePhi {
-    ten: string;
     maLePhi: string;
-    isOptional: boolean;
-    gia: number;
+    required: boolean;
+    ghiChu: number;
   }
 
   export interface LePhiTheoDoiTuong {
+    index: number;
     loaiDoiTuong: string;
     danhSachLePhiCanNop: LePhi[];
   }
 
   export interface GiayToTheoDoiTuong {
+    index: number;
     loaiDoiTuong: string;
     danhSachGiayToCanNop: DotTuyenSinh.GiayTo[];
   }

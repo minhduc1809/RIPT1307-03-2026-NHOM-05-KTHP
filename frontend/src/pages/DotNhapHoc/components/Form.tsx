@@ -1,5 +1,5 @@
 import { useModel } from 'umi';
-import FormHuongDanNhapHoc from './FormHuongDanNhapHoc';
+import FormHuongDanNhapHoc from './FormThongTinHuongDanNhapHoc';
 import FormThongTinChung from './FormThongTinChung';
 import { useEffect } from 'react';
 

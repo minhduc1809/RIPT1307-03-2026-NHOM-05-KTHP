@@ -7,16 +7,19 @@ export default () => {
   const [danhSach, setDanhSach] = useState<ThanhToan.Product[]>([]);
   const [record, setRecord] = useState<ThanhToan.Product>();
 
-  const objectInit = useInitModel('payment/product/external', 'cond', setDanhSach, setRecord, {
-    'metaData.loai': 'Tuyển sinh',
-  });
+  const objectInit = useInitModel('payment/product-external', 'cond', setDanhSach, setRecord);
 
   const { setLoading, getModel } = objectInit;
   const archiveProductModel = async (idProduct: string) => {
     setLoading(true);
     await archiveProduct(idProduct);
     message.success('Lưu trữ thành công');
-    getModel(undefined, 'pageable');
+    getModel(
+      {
+        'metaData.loai': 'Tuyển sinh',
+      },
+      'pageable',
+    );
     setLoading(false);
   };
 
@@ -24,7 +27,12 @@ export default () => {
     setLoading(true);
     await unarchiveProduct(idProduct);
     message.success('Bỏ lưu trữ thành công');
-    getModel(undefined, 'pageable');
+    getModel(
+      {
+        'metaData.loai': 'Tuyển sinh',
+      },
+      'pageable',
+    );
     setLoading(false);
   };
 

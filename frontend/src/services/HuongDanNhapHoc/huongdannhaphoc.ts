@@ -12,6 +12,13 @@ export const thiSinhGetHuongDanNhapHocByDotTuyenSinhAndDotNhapHoc = async (
   );
 };
 
-export const getHuongDanNhapHocByDotNhapHoc = async (idDotNhapHoc: string) => {
-  return axios.get(`${ip3}/${url}/dot-nhap-hoc/${idDotNhapHoc}`);
+export const getHuongDanNhapHocByDotNhapHoc = async (
+  idDotNhapHoc: string,
+  payload: {
+    page: number;
+    limit: number;
+    condition?: any;
+  },
+) => {
+  return axios.get(`${ip3}/${url}/dot-nhap-hoc/${idDotNhapHoc}`, { params: payload });
 };

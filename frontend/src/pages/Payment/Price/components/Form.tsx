@@ -33,6 +33,7 @@ const FormPrice = () => {
           <Col span={12}>
             <Form.Item rules={[...rules.required]} name="unitAmount" label="Mức giá">
               <InputNumber
+                formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                 style={{ width: '100%' }}
                 min={0}
                 max={100000000}

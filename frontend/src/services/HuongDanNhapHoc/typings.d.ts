@@ -5,10 +5,10 @@ declare module HuongDanNhapHoc {
   export interface Record {
     danhSachGiayToCanNop: DotTuyenSinh.GiayTo[];
     danhSachGiayToCanNopTheoDoiTuong: DotNhapHoc.GiayToTheoDoiTuong[];
-    // danhSachLePhiCanNop: DotNhapHoc.LePhi[];
-    // danhSachLePhiCanNopTheoDoiTuong: DotNhapHoc.LePhiTheoDoiTuong[];
+    danhSachLePhiCanNop: DotNhapHoc.LePhi[];
+    danhSachLePhiCanNopTheoDoiTuong: DotNhapHoc.LePhiTheoDoiTuong[];
     diaDiem: string;
-    id: string;
+    _id: string;
     idDotNhapHoc: string;
     danhSachNganhChuyenNganh: NganhChuyenNganh.Record[];
     thoiGianBatDau: string;

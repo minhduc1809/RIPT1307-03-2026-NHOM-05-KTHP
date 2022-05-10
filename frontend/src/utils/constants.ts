@@ -345,6 +345,11 @@ export enum ETenThanhPhanUuTien {
   KHU_VUC_UU_TIEN = 'Điểm ưu tiên khu vực',
 }
 
+export enum EHinhThucLePhiTuyenSinh {
+  XET_TUYEN = 'Xét tuyển',
+  NHAP_HOC = 'Nhập học',
+}
+
 export const Setting = {
   navTheme: 'dark',
   primaryColor: '#CC0D00',

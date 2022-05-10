@@ -20,11 +20,16 @@ const useInitModel = (
 
   const { getAllService, postService, putService, deleteService, getService } = useInitService(url);
 
-  const getModel = async (paramCondition?: any, path?: string) => {
+  const getModel = async (
+    paramCondition?: any,
+    path?: string,
+    paramPage?: number,
+    paramLimit?: number,
+  ) => {
     setLoading(true);
     const payload = {
-      page,
-      limit,
+      page: paramPage || page,
+      limit: paramLimit || limit,
     };
     payload[fieldNameCondtion] = { ...condition, ...paramCondition };
     const response = await getService(payload, path);

@@ -7,7 +7,7 @@ export default () => {
   const [danhSach, setDanhSach] = useState<ThanhToan.Price[]>([]);
   const [record, setRecord] = useState<ThanhToan.Price>();
   const { record: recordProduct } = useModel('product');
-  const objectInit = useInitModel('payment/price/external', 'cond', setDanhSach, setRecord, {
+  const objectInit = useInitModel('payment/price-external', 'cond', setDanhSach, setRecord, {
     product: recordProduct?._id,
   });
   const { setLoading, getModel } = objectInit;

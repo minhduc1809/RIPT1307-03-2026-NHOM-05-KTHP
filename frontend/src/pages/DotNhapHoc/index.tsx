@@ -1,5 +1,6 @@
 import TableBase from '@/components/Table';
 import type { DotNhapHoc } from '@/services/DotNhapHoc/typings';
+import { EHinhThucLePhiTuyenSinh } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Divider, Popconfirm, Tooltip } from 'antd';
@@ -23,9 +24,23 @@ const DotNhapHocComponent = () => {
   } = useModel('dotnhaphoc');
 
   const { getAllDotTuyenSinhModel } = useModel('dottuyensinh');
+  const { getAllNganhChuyenNganhModel } = useModel('nganhchuyennganh');
+
+  const { getModel: getProduct } = useModel('product');
 
   useEffect(() => {
     getAllDotTuyenSinhModel();
+    getAllNganhChuyenNganhModel();
+    getProduct(
+      {
+        'metaData.loai': 'Tuyển sinh',
+        'metaData.hinhThuc': EHinhThucLePhiTuyenSinh.NHAP_HOC,
+        active: true,
+      },
+      'pageable',
+      1,
+      100,
+    );
   }, []);
 
   const columns: IColumn<DotNhapHoc.Record>[] = [
@@ -101,7 +116,7 @@ const DotNhapHocComponent = () => {
 
   return (
     <TableBase
-      widthDrawer="900px"
+      widthDrawer="1100px"
       hascreate
       formType="Drawer"
       getData={getModel}

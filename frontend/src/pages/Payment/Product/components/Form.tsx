@@ -1,24 +1,35 @@
+import { EHinhThucLePhiTuyenSinh } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { Button, Card, Form, Input, Select } from 'antd';
 import { useModel } from 'umi';
 
 const FormProduct = () => {
   const [form] = Form.useForm();
-  const { setVisibleForm, loading, postModel } = useModel('product');
+  const { setVisibleForm, loading, postModel, getModel } = useModel('product');
   return (
     <Card title="Thêm mới">
       <Form
         labelCol={{ span: 24 }}
         form={form}
         onFinish={(values) => {
-          postModel({
-            ...values,
-            unitLabel: '',
-            metaData: {
-              ...values.metaData,
-              loai: 'Tuyển sinh',
+          postModel(
+            {
+              ...values,
+              unitLabel: '',
+              metaData: {
+                ...values.metaData,
+                loai: 'Tuyển sinh',
+              },
             },
-          });
+            () => {
+              getModel(
+                {
+                  'metaData.loai': 'Tuyển sinh',
+                },
+                'pageable',
+              );
+            },
+          );
         }}
       >
         <Form.Item rules={[...rules.required]} name="code" label="Mã lệ phí">
@@ -31,7 +42,10 @@ const FormProduct = () => {
         <Form.Item name={['metaData', 'hinhThuc']} label="Hình thức">
           <Select
             placeholder="Hình thức"
-            options={['Xét tuyển', 'Nhập học'].map((item) => ({ label: item, value: item }))}
+            options={Object.values(EHinhThucLePhiTuyenSinh).map((item) => ({
+              label: item,
+              value: item,
+            }))}
           />
         </Form.Item>
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>

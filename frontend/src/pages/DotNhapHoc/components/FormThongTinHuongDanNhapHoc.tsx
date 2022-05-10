@@ -1,8 +1,9 @@
 import { useModel } from 'umi';
 import { ArrowLeftOutlined, PlusOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Card, Form } from 'antd';
+import HuongDanNhapHocComponent from '@/pages/HuongDanNhapHoc';
 
-const FormHuongDanNhapHoc = () => {
+const FormThongTinHuongDanNhapHoc = () => {
   const [form] = Form.useForm();
 
   const { edit, setRecord, setCurrent, record, putModel, postModel } = useModel('dotnhaphoc');
@@ -19,6 +20,10 @@ const FormHuongDanNhapHoc = () => {
           }
         }}
       >
+        <Form.Item name="huongdannhaphoc" label="Hướng dẫn nhập học">
+          <HuongDanNhapHocComponent />
+        </Form.Item>
+
         <Form.Item
           style={{ textAlign: 'center', marginBottom: 0, position: 'fixed', top: 14, right: 48 }}
         >
@@ -49,4 +54,4 @@ const FormHuongDanNhapHoc = () => {
   );
 };
 
-export default FormHuongDanNhapHoc;
+export default FormThongTinHuongDanNhapHoc;

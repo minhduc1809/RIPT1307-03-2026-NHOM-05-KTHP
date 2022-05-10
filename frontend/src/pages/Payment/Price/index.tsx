@@ -1,5 +1,6 @@
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
+import { currencyFormat } from '@/utils/utils';
 import { DownloadOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu, Tag } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
@@ -37,6 +38,7 @@ const PriceComponent = () => {
       dataIndex: 'unitAmount',
       width: 200,
       align: 'center',
+      render: (val) => <div>{currencyFormat(val)}</div>,
     },
     {
       title: 'Đơn vị',

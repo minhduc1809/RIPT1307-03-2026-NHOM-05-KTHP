@@ -51,6 +51,12 @@ const ProductComponent = () => {
       align: 'center',
     },
     {
+      title: 'Hình thức',
+      dataIndex: ['metaData', 'hinhThuc'],
+      width: 200,
+      align: 'center',
+    },
+    {
       title: 'Trạng thái',
       dataIndex: 'active',
       width: 200,
