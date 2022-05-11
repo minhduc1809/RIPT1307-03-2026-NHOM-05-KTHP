@@ -19,10 +19,10 @@ const loaiCauHoi = [
   { value: 'GridMultipleChoice', name: 'Dạng bảng (chọn nhiều)' },
   { value: 'NumericRange', name: 'Đánh giá (dạng số)' },
   { value: 'Text', name: 'Câu trả lời Text' },
-  {
-    value: 'UploadFile',
-    name: 'Tải lên file',
-  },
+  // {
+  //   value: 'UploadFile',
+  //   name: 'Tải lên file',
+  // },
 ];
 
 const BlockQuestion = (props: { index: number; block: number }) => {

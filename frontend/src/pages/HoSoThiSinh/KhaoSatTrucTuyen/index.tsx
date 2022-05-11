@@ -123,7 +123,11 @@ const KhaoSat = () => {
                     title="Bạn đã thực hiện khảo sát này, bạn có muốn thực hiện lại ?"
                     onConfirm={() => handleEdit(record)}
                   >
-                    <Button disabled={checkHetThoiGianThucHien} type="primary" shape="circle">
+                    <Button
+                      disabled={checkHetThoiGianThucHien || record.kichHoat === false}
+                      type="primary"
+                      shape="circle"
+                    >
                       <EditOutlined />
                     </Button>
                   </Popconfirm>
@@ -134,7 +138,7 @@ const KhaoSat = () => {
                 title={checkHetThoiGianThucHien ? 'Ngoài thời gian cho phép' : 'Thực hiện khảo sát'}
               >
                 <Button
-                  disabled={checkHetThoiGianThucHien}
+                  disabled={checkHetThoiGianThucHien || record.kichHoat === false}
                   onClick={() => handleEdit(record)}
                   type="primary"
                   shape="circle"

@@ -119,7 +119,7 @@ const Content = () => {
         // case 2:
         //   contentComponent = <DangKyNguyenVong />;
         //   break;
-        case 3:
+        case 2:
           contentComponent = <RaSoatHoSo />;
           break;
       }
@@ -136,7 +136,7 @@ const Content = () => {
 
   return (
     <Spin spinning={loading || loadingDot}>
-      <div
+      {/* <div
         style={{
           backgroundColor: '#fff',
           height: recordDotNhapHoc?._id ? 425 : 510,
@@ -144,9 +144,9 @@ const Content = () => {
           flexDirection: 'column',
           justifyContent: 'center',
         }}
-      >
-        {contentComponent}
-      </div>
+      > */}
+      {contentComponent}
+      {/* </div> */}
     </Spin>
   );
 };

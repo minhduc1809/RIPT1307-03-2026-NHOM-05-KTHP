@@ -42,7 +42,7 @@ const FormHuongDanSuDung = () => {
         <Form.Item
           name="tenHuongDan"
           label="Tên hướng dẫn"
-          rules={[...rules.required, ...rules.text]}
+          rules={[...rules.required, ...rules.text, ...rules.length(100)]}
           initialValue={recordHDSD?.tenHuongDan}
         >
           <Input placeholder="Tên hướng dẫn" />

@@ -140,12 +140,16 @@ export default () => {
     bieuMauId: string;
     danhSachTraLoi: BieuMau.TraLoiRecord[];
   }) => {
-    setLoading(true);
-    await traLoiBieuMau(payload);
-    message.success('Gửi câu trả lời thành công');
-    getIdBieuMauDaTraLoiModel();
-    setLoading(false);
-    setVisibleForm(false);
+    try {
+      setLoading(true);
+      await traLoiBieuMau(payload);
+      message.success('Gửi câu trả lời thành công');
+      getIdBieuMauDaTraLoiModel();
+      setLoading(false);
+      setVisibleForm(false);
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   const exportKetQuaKhaoSatModel = async (payload: { idKhaoSat: string }) => {

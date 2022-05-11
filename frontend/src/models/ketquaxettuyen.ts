@@ -140,6 +140,7 @@ export default () => {
       trangThaiNhapHoc: ETrangThaiNhapHoc;
       ghiChuTiepNhan?: string;
     },
+    getData?: any,
   ) => {
     if (!idKetQuaXetTuyen || !idDotTuyenSinh) return;
     try {
@@ -147,9 +148,11 @@ export default () => {
       await adminTiepNhanHoSoNhapHoc(idKetQuaXetTuyen, payload);
       message.success('Xử lý thành công');
       setVisibleForm(false);
-      getKetQuaXetTuyenPageableModel(idDotTuyenSinh, undefined, {
-        trangThaiNhapHoc: 'Đã khóa hồ sơ nhập học',
-      });
+      if (getData) getData();
+      else
+        getKetQuaXetTuyenPageableModel(idDotTuyenSinh, undefined, {
+          trangThaiNhapHoc: 'Đã khóa hồ sơ nhập học',
+        });
     } catch (err) {
       setLoading(false);
     }

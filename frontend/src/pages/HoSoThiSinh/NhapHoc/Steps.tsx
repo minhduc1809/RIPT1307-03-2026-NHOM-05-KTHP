@@ -19,9 +19,8 @@ const StepperNhapHoc = () => {
     <Card title="Quy trình nhập học">
       <Steps current={current} onChange={onChangeStep} direction="vertical">
         <Step title="Bước 1" description="Lý lịch sinh viên" />
-        <Step title="Bước 2" description="Upload giấy tờ liên quan" />
-        <Step title="Bước 3" description="Hướng dẫn thủ tục nhập học" />
-        <Step title="Bước 4" description="Rà soát và nộp hồ sơ" />
+        <Step title="Bước 2" description="Hướng dẫn thủ tục nhập học" />
+        <Step title="Bước 3" description="Rà soát và nộp hồ sơ" />
       </Steps>
     </Card>
   );
