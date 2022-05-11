@@ -21,6 +21,7 @@ const HuongDanNhapHocComponent = () => {
     setDanhSachDoiTuongLePhi,
     setDanhSachGiayTo,
     setDanhSachLePhi,
+    deleteModel,
   } = useModel('huongdannhaphoc');
 
   const { getModel } = useModel('price');
@@ -143,7 +144,7 @@ const HuongDanNhapHocComponent = () => {
           <Divider type="vertical" />
           <Tooltip title="Xóa">
             <Popconfirm
-              // onConfirm={() => deleteHuongDanNhapHocModel(record._id)}
+              onConfirm={() => deleteModel(record._id)}
               title="Bạn có chắc chắn muốn xóa?"
             >
               <Button type="primary" shape="circle">

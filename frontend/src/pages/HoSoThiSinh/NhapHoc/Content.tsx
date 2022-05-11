@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { history, useModel } from 'umi';
 import ResultHoSo from './components/ResultKhoaHoSo';
 // import DangKyNguyenVong from './DangKyNguyenVong';
-import LyLichSinhVien from './LyLichSinhVien.tsx';
+import LyLichSinhVien from './LyLichSinhVien';
 import RaSoatHoSo from './RaSoatHoSo';
 // import QuaTrinhHocTap from './ThongTinHocTap';
 
@@ -62,14 +62,12 @@ const Content = () => {
       />
     );
   } else if (
+    recordHoSo?._id &&
     [
       ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
       ETrangThaiXacNhanNhapHoc.KHONG_TIEP_NHAN,
       ETrangThaiXacNhanNhapHoc.KHONG_XAC_NHAN,
-    ].includes(
-      recordHoSo?.thongTinXacNhanNhapHoc?.trangThaiXacNhan ??
-        ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
-    )
+    ].includes(recordHoSo?.thongTinXacNhanNhapHoc?.trangThaiXacNhan)
   ) {
     let title = 'Thí sinh chưa thực hiện xác nhận nhập học.';
     if (
@@ -136,7 +134,21 @@ const Content = () => {
     );
   }
 
-  return <Spin spinning={loading || loadingDot}>{contentComponent}</Spin>;
+  return (
+    <Spin spinning={loading || loadingDot}>
+      <div
+        style={{
+          backgroundColor: '#fff',
+          height: recordDotNhapHoc?._id ? 425 : 510,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
+        {contentComponent}
+      </div>
+    </Spin>
+  );
 };
 
 export default Content;

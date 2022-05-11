@@ -57,7 +57,10 @@ const Timeline = (props: {
 
   return (
     <>
-      <Card bodyStyle={{ padding: '13px 24px' }}>
+      <Card
+        style={{ border: 'none', borderBottom: '1px solid #f0f0f0' }}
+        bodyStyle={{ padding: '13px 24px' }}
+      >
         <div>
           {/* <b style={{ fontSize: 16 }}>Các mốc thời gian đợt {idDot} năm 2022</b>
           <br /> */}

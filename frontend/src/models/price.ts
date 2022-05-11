@@ -1,5 +1,6 @@
 import useInitModel from '@/hooks/useInitModel';
 import { archivePrice, unarchivePrice } from '@/services/Payment/Price/price';
+import { message } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
 
@@ -15,6 +16,7 @@ export default () => {
   const archivePriceModel = async (idPrice: string) => {
     setLoading(true);
     await archivePrice(idPrice);
+    message.success('Lưu trữ thành công');
     getModel({ product: recordProduct?._id }, 'pageable');
     setLoading(false);
   };
@@ -22,6 +24,7 @@ export default () => {
   const unarchivePriceModel = async (idPrice: string) => {
     setLoading(true);
     await unarchivePrice(idPrice);
+    message.success('Bỏ lưu trữ thành công');
     getModel({ product: recordProduct?._id }, 'pageable');
     setLoading(false);
   };

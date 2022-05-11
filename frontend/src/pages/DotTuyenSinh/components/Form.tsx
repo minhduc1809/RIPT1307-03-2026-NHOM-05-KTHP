@@ -323,7 +323,7 @@ const FormDotTuyenSinh = () => {
             </Form.Item>
           </Col>
           <Col span={24}>
-            <Form.Item label="Danh sách thông tin khai nhập học">
+            <Form.Item label="Danh sách thông tin khai xác nhận nhập học">
               <TableKhaiThongTinNhapHoc />
             </Form.Item>
           </Col>

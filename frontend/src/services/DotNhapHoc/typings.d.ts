@@ -33,5 +33,6 @@ declare module DotNhapHoc {
     ngayKetThuc: string;
     thongTinDotTuyenSinh: ThongTinDotTuyenSinh[];
     danhSachGiayToCanNop: DotTuyenSinh.GiayTo[];
+    hinhThucDaoTao: HinhThucDaoTao.Record;
   }
 }

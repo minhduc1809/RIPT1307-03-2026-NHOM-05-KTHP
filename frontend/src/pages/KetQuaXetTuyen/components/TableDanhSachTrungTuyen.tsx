@@ -90,6 +90,7 @@ const TableDanhSachTrungTuyen = (props: {
       width: 200,
       align: 'center',
       search: 'search',
+      onCell,
     },
   ];
 

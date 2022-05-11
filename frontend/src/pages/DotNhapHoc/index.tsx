@@ -2,11 +2,12 @@ import TableBase from '@/components/Table';
 import type { DotNhapHoc } from '@/services/DotNhapHoc/typings';
 import { EHinhThucLePhiTuyenSinh } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Divider, Popconfirm, Tooltip } from 'antd';
+import { DeleteOutlined, EditOutlined, SettingOutlined } from '@ant-design/icons';
+import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
 import moment from 'moment';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
+import HuongDanNhapHocComponent from '../HuongDanNhapHoc';
 import Form from './components/Form';
 
 const DotNhapHocComponent = () => {
@@ -25,11 +26,13 @@ const DotNhapHocComponent = () => {
 
   const { getAllDotTuyenSinhModel } = useModel('dottuyensinh');
   const { getAllNganhChuyenNganhModel } = useModel('nganhchuyennganh');
-
+  const { getAllHinhThucDaoTaoModel } = useModel('hinhthucdaotao');
   const { getModel: getProduct } = useModel('product');
+  const [visibleHuongDan, setVisibleHuongDan] = useState<boolean>(false);
 
   useEffect(() => {
     getAllDotTuyenSinhModel();
+    getAllHinhThucDaoTaoModel();
     getAllNganhChuyenNganhModel();
     getProduct(
       {
@@ -42,6 +45,10 @@ const DotNhapHocComponent = () => {
       100,
     );
   }, []);
+
+  const closeHuongDan = () => {
+    setVisibleHuongDan(false);
+  };
 
   const columns: IColumn<DotNhapHoc.Record>[] = [
     {
@@ -92,10 +99,24 @@ const DotNhapHocComponent = () => {
                 setVisibleForm(true);
                 setdanhSachGiayToCanNop(record?.danhSachGiayToCanNop ?? []);
               }}
-              type="default"
+              type="primary"
               shape="circle"
             >
               <EditOutlined />
+            </Button>
+          </Tooltip>
+          <Divider type="vertical" />
+          <Tooltip title="Hướng dẫn nhập học">
+            <Button
+              onClick={() => {
+                setRecord(record);
+                setdanhSachGiayToCanNop(record?.danhSachGiayToCanNop ?? []);
+                setVisibleHuongDan(true);
+              }}
+              type="default"
+              shape="circle"
+            >
+              <SettingOutlined />
             </Button>
           </Tooltip>
           <Divider type="vertical" />
@@ -115,18 +136,30 @@ const DotNhapHocComponent = () => {
   ];
 
   return (
-    <TableBase
-      widthDrawer="1100px"
-      hascreate
-      formType="Drawer"
-      getData={getModel}
-      modelName="dotnhaphoc"
-      title="Quản lý đợt nhập học"
-      loading={loading}
-      columns={columns}
-      dependencies={[page, limit, condition]}
-      Form={Form}
-    />
+    <>
+      <TableBase
+        widthDrawer="900px"
+        hascreate
+        formType="Drawer"
+        getData={getModel}
+        modelName="dotnhaphoc"
+        title="Quản lý đợt nhập học"
+        loading={loading}
+        columns={columns}
+        dependencies={[page, limit, condition]}
+        Form={Form}
+      />
+      <Modal
+        width={1100}
+        footer={false}
+        title="Hướng dẫn nhập học"
+        destroyOnClose
+        visible={visibleHuongDan}
+        onCancel={closeHuongDan}
+      >
+        <HuongDanNhapHocComponent />
+      </Modal>
+    </>
   );
 };
 

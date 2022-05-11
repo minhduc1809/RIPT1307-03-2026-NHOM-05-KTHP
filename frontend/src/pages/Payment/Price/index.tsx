@@ -1,9 +1,7 @@
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
 import { currencyFormat } from '@/utils/utils';
-import { DownloadOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Menu, Tag } from 'antd';
-import type { MenuInfo } from 'rc-menu/lib/interface';
+import { Switch } from 'antd';
 import { useModel } from 'umi';
 import Form from './components/Form';
 
@@ -12,13 +10,6 @@ const PriceComponent = () => {
     useModel('price');
 
   const { record: recordProduct } = useModel('product');
-
-  const onMenuClick = (event: MenuInfo, id: string) => {
-    const { key } = event;
-    if (key === 'archive') {
-      archivePriceModel(id);
-    } else unarchivePriceModel(id);
-  };
 
   const columns: IColumn<ThanhToan.Price>[] = [
     {
@@ -51,29 +42,17 @@ const PriceComponent = () => {
       dataIndex: 'active',
       width: 200,
       align: 'center',
-      render: (val) => (
-        <Tag color={val ? 'green' : 'red'}>{val ? 'Kích hoạt' : 'Không kích hoạt'}</Tag>
-      ),
-    },
-    {
-      title: 'Thao tác',
-      width: 80,
-      align: 'center',
-      render: (record: ThanhToan.Price) => (
-        <>
-          <Dropdown
-            overlay={
-              <Menu selectedKeys={[]} onClick={(event) => onMenuClick(event, record._id)}>
-                <Menu.Item key="archive">Lưu trữ</Menu.Item>
-                <Menu.Divider />
-
-                <Menu.Item key="unarchive">Bỏ lưu trữ</Menu.Item>
-              </Menu>
-            }
-          >
-            <Button type="primary" icon={<DownloadOutlined />} shape="circle" />
-          </Dropdown>
-        </>
+      render: (val, record) => (
+        <Switch
+          onChange={(checked: boolean) => {
+            if (checked) unarchivePriceModel(record._id);
+            else archivePriceModel(record._id);
+          }}
+          checked={val}
+          checkedChildren={'Kích hoạt'}
+          unCheckedChildren={'Kích hoạt'}
+          defaultChecked
+        />
       ),
     },
   ];

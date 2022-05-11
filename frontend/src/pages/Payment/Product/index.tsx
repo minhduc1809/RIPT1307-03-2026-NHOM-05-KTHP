@@ -1,8 +1,7 @@
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/utils/interfaces';
-import { DownloadOutlined, EyeOutlined } from '@ant-design/icons';
-import { Button, Divider, Dropdown, Menu, Modal, Tag, Tooltip } from 'antd';
-import type { MenuInfo } from 'rc-menu/lib/interface';
+import { EyeOutlined } from '@ant-design/icons';
+import { Button, Modal, Switch, Tooltip } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import PriceComponent from '../Price';
@@ -21,13 +20,6 @@ const ProductComponent = () => {
   } = useModel('product');
 
   const [visible, setVisible] = useState<boolean>(false);
-
-  const onMenuClick = (event: MenuInfo, id: string) => {
-    const { key } = event;
-    if (key === 'archive') {
-      archiveProductModel(id);
-    } else unarchiveProductModel(id);
-  };
 
   const cancelModalPrice = () => setVisible(false);
 
@@ -61,8 +53,17 @@ const ProductComponent = () => {
       dataIndex: 'active',
       width: 200,
       align: 'center',
-      render: (val) => (
-        <Tag color={val ? 'green' : 'red'}>{val ? 'Kích hoạt' : 'Không kích hoạt'}</Tag>
+      render: (val, record) => (
+        <Switch
+          onChange={(checked: boolean) => {
+            if (checked) unarchiveProductModel(record._id);
+            else archiveProductModel(record._id);
+          }}
+          checked={val}
+          checkedChildren={'Kích hoạt'}
+          unCheckedChildren={'Kích hoạt'}
+          defaultChecked
+        />
       ),
     },
     {
@@ -81,19 +82,6 @@ const ProductComponent = () => {
               icon={<EyeOutlined />}
             />
           </Tooltip>
-          <Divider type="vertical" />
-          <Dropdown
-            overlay={
-              <Menu selectedKeys={[]} onClick={(event) => onMenuClick(event, record._id)}>
-                <Menu.Item key="archive">Lưu trữ</Menu.Item>
-                <Menu.Divider />
-
-                <Menu.Item key="unarchive">Bỏ lưu trữ</Menu.Item>
-              </Menu>
-            }
-          >
-            <Button type="primary" icon={<DownloadOutlined />} shape="circle" />
-          </Dropdown>
         </>
       ),
     },

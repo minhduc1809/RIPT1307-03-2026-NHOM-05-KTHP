@@ -2,7 +2,12 @@ import Table from '@/components/Table/Table';
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import { Setting } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import { DeleteOutlined, EditOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusCircleFilled,
+  QuestionCircleOutlined,
+} from '@ant-design/icons';
 import { Button, Divider, Modal, Popconfirm, Tag, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import FormGiayTo from './FormGiayTo';
@@ -117,6 +122,7 @@ const TableGiayTo = (props: { fieldName: 'danhSachGiayToCanNop' }) => {
         columns={columns?.filter((item) => item.hide !== true)}
       >
         <Button
+          icon={<PlusCircleFilled />}
           style={{ marginBottom: 8 }}
           type="primary"
           onClick={() => {

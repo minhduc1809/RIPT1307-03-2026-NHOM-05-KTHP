@@ -23,7 +23,7 @@ import moment from 'moment';
 import { useState } from 'react';
 import { useAccess, useModel } from 'umi';
 import FormTiepNhanHoSoNhapHoc from '../components/FormTiepNhanHoSoNhapHoc';
-import TableThongTinGiaDinh from '../LyLichSinhVien.tsx/components/TableThongTinGiaDinh';
+import TableThongTinGiaDinh from '../LyLichSinhVien/components/TableThongTinGiaDinh';
 const { Item } = Descriptions;
 
 const RaSoatHoSoNhapHoc = () => {
