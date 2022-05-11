@@ -75,6 +75,7 @@ const TableDoiTuongGiayTo = () => {
           setVisibleFormDoiTuongGiayTo(true);
           setEditDoiTuongGiayTo(false);
           setRecordDoiTuongGiayTo(undefined);
+          setDanhSachGiayToTheoDoiTuong([]);
         }}
       >
         Thêm mới

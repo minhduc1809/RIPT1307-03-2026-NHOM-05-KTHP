@@ -75,6 +75,7 @@ const TableDoiTuongLePhi = () => {
           setVisibleFormDoiTuongLePhi(true);
           setEditDoiTuongLePhi(false);
           setRecordDoiTuongLePhi(undefined);
+          setDanhSachLePhiTheoDoiTuong([]);
         }}
       >
         Thêm mới

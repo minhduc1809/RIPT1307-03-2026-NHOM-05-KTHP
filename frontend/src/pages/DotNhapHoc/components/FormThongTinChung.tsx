@@ -1,6 +1,6 @@
 import rules from '@/utils/rules';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import { Button, Card, DatePicker, Form, Input, Select } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import moment from 'moment';
 import mm from 'moment-timezone';
 import { useModel } from 'umi';
@@ -35,14 +35,37 @@ const FormDotNhapHoc = () => {
         }}
         form={form}
       >
-        <Form.Item
-          initialValue={record?.tenDot}
-          rules={[...rules.required]}
-          name="tenDot"
-          label="Tên đợt"
-        >
-          <Input placeholder="Tên đợt" />
-        </Form.Item>
+        <Row gutter={[10, 0]}>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              initialValue={record?.tenDot}
+              rules={[...rules.required]}
+              name="tenDot"
+              label="Tên đợt"
+            >
+              <Input placeholder="Tên đợt" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={12}>
+            <Form.Item
+              rules={[...rules.required]}
+              name="thoiGian"
+              label="Thời gian bắt đầu - Thời gian kết thúc"
+              initialValue={[
+                record?.ngayBatDau ? moment(record?.ngayBatDau) : undefined,
+                record?.ngayKetThuc ? moment(record?.ngayKetThuc) : undefined,
+              ]}
+              style={{ marginBottom: 8 }}
+            >
+              <DatePicker.RangePicker
+                format="HH:mm DD-MM-YYYY"
+                style={{ width: '100%' }}
+                placeholder={['Thời gian bắt đầu', 'Thời gian kết thúc']}
+                showTime
+              />
+            </Form.Item>
+          </Col>
+        </Row>
 
         <Form.Item
           rules={[...rules.required]}
@@ -59,24 +82,6 @@ const FormDotNhapHoc = () => {
 
         <Form.Item initialValue={record?.moTa} name="moTa" label="Mô tả">
           <Input.TextArea placeholder="Mô tả" rows={2} />
-        </Form.Item>
-
-        <Form.Item
-          rules={[...rules.required]}
-          name="thoiGian"
-          label="Thời gian bắt đầu - Thời gian kết thúc"
-          initialValue={[
-            record?.ngayBatDau ? moment(record?.ngayBatDau) : undefined,
-            record?.ngayKetThuc ? moment(record?.ngayKetThuc) : undefined,
-          ]}
-          style={{ marginBottom: 8 }}
-        >
-          <DatePicker.RangePicker
-            format="HH:mm DD-MM-YYYY"
-            style={{ width: '100%' }}
-            placeholder={['Thời gian bắt đầu', 'Thời gian kết thúc']}
-            showTime
-          />
         </Form.Item>
 
         <Form.Item name="danhSachGiayToCanNop" label="Danh sách giấy tờ cần nộp">
