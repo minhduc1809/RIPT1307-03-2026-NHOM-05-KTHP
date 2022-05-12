@@ -1,5 +1,5 @@
 import useInitModel from '@/hooks/useInitModel';
-import { getDotNhapHocById, getDotNhapHocByIdDotTuyenSinh } from '@/services/DotNhapHoc/dotnhaphoc';
+import { getDotNhapHocById, getDotNhapHocByKetQuaXetTuyen } from '@/services/DotNhapHoc/dotnhaphoc';
 import type { DotNhapHoc } from '@/services/DotNhapHoc/typings';
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import { useState } from 'react';
@@ -22,10 +22,10 @@ export default () => {
     setLoading(false);
   };
 
-  const getDotNhapHocByIdDotTuyenSinhModel = async (idDotTuyenSinh: string) => {
-    if (!idDotTuyenSinh) return;
+  const getDotNhapHocByKetQuaXetTuyenModel = async (idKetQuaXetTuyen: string) => {
+    if (!idKetQuaXetTuyen) return;
     setLoading(true);
-    const response = await getDotNhapHocByIdDotTuyenSinh(idDotTuyenSinh);
+    const response = await getDotNhapHocByKetQuaXetTuyen(idKetQuaXetTuyen);
     setRecord(response?.data?.data ?? null);
     setLoading(false);
   };
@@ -41,7 +41,7 @@ export default () => {
     setRecordGiayTo,
     danhSachGiayToCanNop,
     setdanhSachGiayToCanNop,
-    getDotNhapHocByIdDotTuyenSinhModel,
+    getDotNhapHocByKetQuaXetTuyenModel,
     getDotNhapHocByIdModel,
     record,
     setRecord,

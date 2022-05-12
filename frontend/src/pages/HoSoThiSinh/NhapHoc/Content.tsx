@@ -8,10 +8,8 @@ import { useEffect } from 'react';
 import { history, useModel } from 'umi';
 import ResultHoSo from './components/ResultKhoaHoSo';
 import HuongDanThuTucNhapHoc from './HuongDanThuTucNhapHoc';
-// import DangKyNguyenVong from './DangKyNguyenVong';
 import LyLichSinhVien from './LyLichSinhVien';
 import RaSoatHoSo from './RaSoatHoSo';
-// import QuaTrinhHocTap from './ThongTinHocTap';
 
 const Content = () => {
   const { current, loading, getMyHoSoXetTuyenModel, setRecordHoSo } = useModel('hosoxettuyen');
@@ -26,10 +24,10 @@ const Content = () => {
   const {
     record: recordDotNhapHoc,
     setRecord: setRecordDotNhapHoc,
-    getDotNhapHocByIdDotTuyenSinhModel,
+    getDotNhapHocByKetQuaXetTuyenModel,
   } = useModel('dotnhaphoc');
 
-  const { thiSinhGetHuongDanNhapHocByDotTuyenSinhAndDotNhapHocModel } = useModel('huongdannhaphoc');
+  const { thiSinhGetHuongDanNhapHocByKetQuaXetTuyenModel } = useModel('huongdannhaphoc');
 
   useEffect(() => {
     if (idDot && !record?._id) getDotTuyenSinhByIdModel(idDot);
@@ -40,15 +38,17 @@ const Content = () => {
     if (record?._id) {
       setupTimeline(recordDotNhapHoc);
       getMyHoSoXetTuyenModel(record?._id);
-      getDotNhapHocByIdDotTuyenSinhModel(record?._id);
       getMyKetQuaXetTuyenModel(record?._id);
     }
   }, [record?._id]);
 
   useEffect(() => {
-    if (record?._id && recordDotNhapHoc?._id)
-      thiSinhGetHuongDanNhapHocByDotTuyenSinhAndDotNhapHocModel(record._id, recordDotNhapHoc._id);
-  }, [record?._id, recordDotNhapHoc?._id]);
+    getDotNhapHocByKetQuaXetTuyenModel(recordHoSo?._id ?? '');
+  }, [recordHoSo?._id]);
+
+  useEffect(() => {
+    thiSinhGetHuongDanNhapHocByKetQuaXetTuyenModel(recordHoSo?._id ?? '');
+  }, [recordHoSo?._id]);
 
   useEffect(() => {
     return () => {

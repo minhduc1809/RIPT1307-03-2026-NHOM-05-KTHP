@@ -1,8 +1,7 @@
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { useEffect } from 'react';
-import { Badge, Menu, Spin } from 'antd';
+import { Menu, Spin } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useAccess, useModel } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
@@ -72,9 +71,7 @@ const HuongDanDropdown: React.FC = () => {
     <>
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
-          <Badge style={{ fontSize: 12, boxShadow: 'none' }} count={2}>
-            <QuestionCircleOutlined style={{ fontSize: 20, color: '#fff' }} />
-          </Badge>
+          <QuestionCircleOutlined style={{ fontSize: 20, color: '#fff' }} />
         </span>
       </HeaderDropdown>
     </>

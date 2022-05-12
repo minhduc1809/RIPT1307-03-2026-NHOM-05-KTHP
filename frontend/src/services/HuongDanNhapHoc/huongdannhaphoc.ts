@@ -3,13 +3,8 @@ import { ip3 } from '@/utils/ip';
 
 const url = 'huong-dan-nhap-hoc';
 
-export const thiSinhGetHuongDanNhapHocByDotTuyenSinhAndDotNhapHoc = async (
-  idDotTuyenSinh: string,
-  idDotNhapHoc: string,
-) => {
-  return axios.get(
-    `${ip3}/${url}/thi-sinh/dot-tuyen-sinh/${idDotTuyenSinh}/dot-nhap-hoc/${idDotNhapHoc}`,
-  );
+export const thiSinhGetHuongDanNhapHocByKetQuaXetTuyen = async (idKetQuaXetTuyen: string) => {
+  return axios.get(`${ip3}/${url}/thi-sinh/ket-qua-xet-tuyen/${idKetQuaXetTuyen}`);
 };
 
 export const adminGetHuongDanNhapHocByKetQuaXetTuyen = async (idKetQua: string) => {

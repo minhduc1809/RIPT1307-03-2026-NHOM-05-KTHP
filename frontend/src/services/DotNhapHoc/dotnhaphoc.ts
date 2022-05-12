@@ -1,10 +1,11 @@
 import axios from '@/utils/axios';
 import { ip3 } from '@/utils/ip';
+import type { DotNhapHoc } from './typings';
 
 const url = 'dot-nhap-hoc';
 
-export function getDotNhapHocByIdDotTuyenSinh(idDotTuyenSinh: string) {
-  return axios.get(`${ip3}/${url}/thi-sinh/dot-tuyen-sinh/${idDotTuyenSinh}`);
+export function getDotNhapHocByKetQuaXetTuyen(idKetQuaXetTuyen: string) {
+  return axios.get(`${ip3}/${url}/thi-sinh/ket-qua-trung-tuyen/${idKetQuaXetTuyen}`);
 }
 
 export function getDotNhapHocPageable(payload: { page: number; limit: number; condition?: any }) {

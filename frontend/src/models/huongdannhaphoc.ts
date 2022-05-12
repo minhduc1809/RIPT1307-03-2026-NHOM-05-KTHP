@@ -4,7 +4,7 @@ import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import {
   adminGetHuongDanNhapHocByKetQuaXetTuyen,
   getHuongDanNhapHocByDotNhapHoc,
-  thiSinhGetHuongDanNhapHocByDotTuyenSinhAndDotNhapHoc,
+  thiSinhGetHuongDanNhapHocByKetQuaXetTuyen,
 } from '@/services/HuongDanNhapHoc/huongdannhaphoc';
 import type { HuongDanNhapHoc } from '@/services/HuongDanNhapHoc/typings';
 import { useState } from 'react';
@@ -47,15 +47,10 @@ export default () => {
   const [editLePhiTheoDoiTuong, setEditLePhiTheoDoiTuong] = useState<boolean>(false);
   const [recordLePhiTheoDoiTuong, setRecordLePhiTheoDoiTuong] = useState<DotNhapHoc.LePhi>();
   const [visibleFormLePhiTheoDoiTuong, setVisibleFormLePhiTheoDoiTuong] = useState<boolean>(false);
-  const thiSinhGetHuongDanNhapHocByDotTuyenSinhAndDotNhapHocModel = async (
-    idDotTuyenSinh: string,
-    idDotNhapHoc: string,
-  ) => {
+  const thiSinhGetHuongDanNhapHocByKetQuaXetTuyenModel = async (idKetQuaXetTuyen: string) => {
+    if (!idKetQuaXetTuyen) return;
     setLoading(true);
-    const response = await thiSinhGetHuongDanNhapHocByDotTuyenSinhAndDotNhapHoc(
-      idDotTuyenSinh,
-      idDotNhapHoc,
-    );
+    const response = await thiSinhGetHuongDanNhapHocByKetQuaXetTuyen(idKetQuaXetTuyen);
     setRecord(response?.data?.data ?? {});
     setLoading(false);
   };
@@ -132,6 +127,6 @@ export default () => {
     setRecord,
     setDanhSach,
     ...objInitModel,
-    thiSinhGetHuongDanNhapHocByDotTuyenSinhAndDotNhapHocModel,
+    thiSinhGetHuongDanNhapHocByKetQuaXetTuyenModel,
   };
 };

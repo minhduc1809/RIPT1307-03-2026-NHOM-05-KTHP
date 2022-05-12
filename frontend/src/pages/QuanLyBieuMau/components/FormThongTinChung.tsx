@@ -5,6 +5,7 @@ import {
   ETrangThaiXacNhanNhapHoc,
 } from '@/utils/constants';
 import rules from '@/utils/rules';
+import { includes } from '@/utils/utils';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Button, Card, Col, DatePicker, Form, Input, Radio, Row, Select } from 'antd';
 import moment from 'moment';
@@ -121,6 +122,8 @@ const FormThongTinChungKhaoSat = () => {
                 rules={[...rules.required]}
               >
                 <Select
+                  showSearch
+                  filterOption={(value, option) => includes(option?.label ?? '', value)}
                   mode="multiple"
                   placeholder="Chọn đợt tuyển sinh"
                   options={danhSach?.map((item) => ({

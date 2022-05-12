@@ -37,8 +37,8 @@ const TableDanhSachTrungTuyen = (props: {
 
   const onCell = (recordKetQua: KetQuaXetTuyen.Record) => ({
     onClick: async () => {
-      if (recordKetQua.trangThaiNhapHoc !== ETrangThaiNhapHoc.CHUA_KHOA)
-        await adminGetHuongDanNhapHocByKetQuaXetTuyenModel(recordKetQua._id);
+      // if (recordKetQua.trangThaiNhapHoc !== ETrangThaiNhapHoc.CHUA_KHOA)
+      await adminGetHuongDanNhapHocByKetQuaXetTuyenModel(recordKetQua._id);
       setVisibleForm(true);
       setRecordKetQuaXetTuyen(recordKetQua);
     },

@@ -1,4 +1,5 @@
 import rules from '@/utils/rules';
+import { includes } from '@/utils/utils';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import moment from 'moment';
 import { useModel } from 'umi';
@@ -21,6 +22,10 @@ const FormHuongDanNhapHoc = () => {
     getHuongDanNhapHocByDotNhapHocModel,
     danhSachLePhi,
     danhSachDoiTuongLePhi,
+    setDanhSachLePhi,
+    setDanhSachGiayTo,
+    setDanhSachDoiTuongLePhi,
+    setDanhSachDoiTuongGiayTo,
   } = useModel('huongdannhaphoc');
 
   const { record: recordDotNhapHoc } = useModel('dotnhaphoc');
@@ -98,6 +103,8 @@ const FormHuongDanNhapHoc = () => {
           label="Danh sách ngành"
         >
           <Select
+            showSearch
+            filterOption={(value, option) => includes(option?.label ?? '', value)}
             placeholder="Chọn ngành"
             mode="multiple"
             options={danhSach.map((item) => ({
@@ -133,7 +140,17 @@ const FormHuongDanNhapHoc = () => {
             Lưu
           </Button>
 
-          <Button onClick={() => setVisibleForm(false)}>Đóng</Button>
+          <Button
+            onClick={() => {
+              setDanhSachDoiTuongGiayTo([]);
+              setDanhSachDoiTuongLePhi([]);
+              setDanhSachGiayTo([]);
+              setDanhSachLePhi([]);
+              setVisibleForm(false);
+            }}
+          >
+            Đóng
+          </Button>
         </Form.Item>
       </Form>
     </Card>
