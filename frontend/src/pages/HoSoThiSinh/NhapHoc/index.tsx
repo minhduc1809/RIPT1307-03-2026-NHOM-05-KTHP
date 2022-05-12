@@ -12,13 +12,14 @@ const NhapHoc = () => {
   const isMdScreen = useMediaQuery({
     query: '(min-width: 992px)',
   });
-  const { getAllDanToc, getAllTonGiao } = useModel('dantoctongiao');
+  const { getAllDanToc, getAllTonGiao, danhSachDanToc, danhSachTonGiao } =
+    useModel('dantoctongiao');
 
   const { record } = useModel('dotnhaphoc');
 
   useEffect(() => {
-    getAllDanToc();
-    getAllTonGiao();
+    if (danhSachDanToc.length === 0) getAllDanToc();
+    if (danhSachTonGiao.length === 0) getAllTonGiao();
   }, []);
   return (
     <div style={{ maxWidth: 1500, margin: '0 auto' }}>

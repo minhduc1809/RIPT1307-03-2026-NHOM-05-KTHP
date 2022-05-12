@@ -63,5 +63,7 @@ declare module KetQuaXetTuyen {
     ghiChuTiepNhan?: string;
     trangThaiNhapHoc: ETrangThaiNhapHoc;
     identityCode: string;
+    danhSachGiayToNop: DotTuyenSinh.GiayTo[];
+    danhSachLePhiNop: string[];
   }
 }

@@ -52,22 +52,42 @@ const FormGiayTo = (props: { modelName: any; fieldName: string }) => {
             </FormItem>
           </Col>
 
-          <Col span={12}>
+          <Col span={8}>
             <FormItem
               name="soLuong"
               label="Số lượng"
               initialValue={recordGiayTo?.soLuong ?? 1}
               rules={[...rules.required]}
             >
-              <InputNumber min={1} max={100} placeholder="Số lượng" />
+              <InputNumber style={{ width: '100%' }} min={1} max={100} placeholder="Số lượng" />
             </FormItem>
           </Col>
 
-          <Col span={12}>
+          <Col span={8}>
             <FormItem
               name="required"
               label="Bắt buộc nộp"
               initialValue={recordGiayTo?.required ?? false}
+              rules={[...rules.required]}
+              style={{ marginBottom: 6 }}
+            >
+              <Radio.Group
+                options={[
+                  { value: true, label: 'Có' },
+                  { value: false, label: 'Không' },
+                ].map((item) => ({
+                  value: item.value,
+                  label: item.label,
+                }))}
+              />
+            </FormItem>
+          </Col>
+
+          <Col span={8}>
+            <FormItem
+              name="requiredOnline"
+              label="Nộp Online"
+              initialValue={recordGiayTo?.requiredOnline ?? false}
               rules={[...rules.required]}
               style={{ marginBottom: 6 }}
             >

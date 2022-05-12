@@ -1,5 +1,6 @@
 import useInitModel from '@/hooks/useInitModel';
 import type { Login } from '@/services/ant-design-pro/typings';
+import type { DotNhapHoc } from '@/services/DotNhapHoc/typings';
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import {
   adminTiepNhanXacNhanNhapHoc,
@@ -10,6 +11,8 @@ import {
   xacNhanNhapHoc,
   thiSinhKhoaHoSoNhapHoc,
   adminTiepNhanHoSoNhapHoc,
+  putMyKetQuaXetTuyenGiayToLePhi,
+  adminTiepNhanGiayToNopNhapHoc,
 } from '@/services/KetQuaXetTuyen/ketquaxettuyen';
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
 import type { ETrangThaiNhapHoc, ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
@@ -122,6 +125,25 @@ export default () => {
     }
   };
 
+  const putMyKetQuaXetTuyenGiayToLePhiModel = async (
+    idKetQuaXetTuyen: string,
+    payload: {
+      danhSachGiayToNop: DotTuyenSinh.GiayTo[];
+      danhSachLePhiNop: DotNhapHoc.LePhi[];
+    },
+  ) => {
+    if (!idKetQuaXetTuyen) return;
+    try {
+      setLoading(true);
+      const response = await putMyKetQuaXetTuyenGiayToLePhi(idKetQuaXetTuyen, payload);
+      setRecord(response?.data?.data ?? {});
+      message.success('Lưu thành công');
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
+  };
+
   const thiSinhKhoaHoSoNhapHocModel = async (
     idKetQuaXetTuyen?: string,
     payload?: KetQuaXetTuyen.Record,
@@ -158,10 +180,23 @@ export default () => {
     }
   };
 
+  const adminTiepNhanGiayToNopNhapHocModel = async (
+    idKetQuaXetTuyen: string,
+    payload: {
+      danhSachGiayToNop: DotTuyenSinh.GiayTo[];
+    },
+  ) => {
+    if (!idKetQuaXetTuyen) return;
+    setLoading(true);
+    await adminTiepNhanGiayToNopNhapHoc(idKetQuaXetTuyen, payload);
+  };
+
   return {
+    adminTiepNhanGiayToNopNhapHocModel,
     adminTiepNhanHoSoNhapHocModel,
     thiSinhKhoaHoSoNhapHocModel,
     putMyKetQuaXetTuyenLyLichModel,
+    putMyKetQuaXetTuyenGiayToLePhiModel,
     recordGiaDinh,
     setRecordGiaDinh,
     adminTiepNhanXacNhanNhapHocModel,

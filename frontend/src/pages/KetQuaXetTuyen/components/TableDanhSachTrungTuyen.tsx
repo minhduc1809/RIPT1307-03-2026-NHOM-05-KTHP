@@ -33,9 +33,12 @@ const TableDanhSachTrungTuyen = (props: {
 
   const { record } = useModel('hinhthucdaotao');
   const { record: recordNamTuyenSinh } = useModel('namtuyensinh');
+  const { adminGetHuongDanNhapHocByKetQuaXetTuyenModel } = useModel('huongdannhaphoc');
 
   const onCell = (recordKetQua: KetQuaXetTuyen.Record) => ({
-    onClick: () => {
+    onClick: async () => {
+      if (recordKetQua.trangThaiNhapHoc !== ETrangThaiNhapHoc.CHUA_KHOA)
+        await adminGetHuongDanNhapHocByKetQuaXetTuyenModel(recordKetQua._id);
       setVisibleForm(true);
       setRecordKetQuaXetTuyen(recordKetQua);
     },

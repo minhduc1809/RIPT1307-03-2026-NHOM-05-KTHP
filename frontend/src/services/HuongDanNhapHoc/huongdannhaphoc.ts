@@ -12,6 +12,10 @@ export const thiSinhGetHuongDanNhapHocByDotTuyenSinhAndDotNhapHoc = async (
   );
 };
 
+export const adminGetHuongDanNhapHocByKetQuaXetTuyen = async (idKetQua: string) => {
+  return axios.get(`${ip3}/${url}/admin/ket-qua-xet-tuyen/${idKetQua}`);
+};
+
 export const getHuongDanNhapHocByDotNhapHoc = async (
   idDotNhapHoc: string,
   payload: {

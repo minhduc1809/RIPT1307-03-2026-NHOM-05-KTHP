@@ -11,6 +11,7 @@ declare module DotNhapHoc {
     maLePhi: string;
     required: boolean;
     ghiChu: number;
+    accept: boolean;
   }
 
   export interface LePhiTheoDoiTuong {

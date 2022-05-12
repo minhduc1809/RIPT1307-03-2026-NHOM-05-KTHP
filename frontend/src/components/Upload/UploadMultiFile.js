@@ -23,9 +23,9 @@ class PicturesWall extends React.Component {
     const arr = fileList;
     let { limit } = this.props;
     limit = limit || 10;
-    const findLargeFile = fileList?.find((file) => file.size / 1024 / 1024 > 20);
+    const findLargeFile = fileList?.find((file) => file.size / 1024 / 1024 > 8);
     if (findLargeFile) {
-      message.error('Tập tin phải nhỏ hơn 20MB!');
+      message.error('Tập tin phải nhỏ hơn 8MB!');
       return;
     }
 

@@ -2,6 +2,7 @@ import useInitModel from '@/hooks/useInitModel';
 import type { DotNhapHoc } from '@/services/DotNhapHoc/typings';
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import {
+  adminGetHuongDanNhapHocByKetQuaXetTuyen,
   getHuongDanNhapHocByDotNhapHoc,
   thiSinhGetHuongDanNhapHocByDotTuyenSinhAndDotNhapHoc,
 } from '@/services/HuongDanNhapHoc/huongdannhaphoc';
@@ -55,7 +56,14 @@ export default () => {
       idDotTuyenSinh,
       idDotNhapHoc,
     );
-    setRecord(response?.data?.data ?? null);
+    setRecord(response?.data?.data ?? {});
+    setLoading(false);
+  };
+
+  const adminGetHuongDanNhapHocByKetQuaXetTuyenModel = async (idKetQuaXetTuyen: string) => {
+    setLoading(true);
+    const response = await adminGetHuongDanNhapHocByKetQuaXetTuyen(idKetQuaXetTuyen);
+    setRecord(response?.data?.data ?? {});
     setLoading(false);
   };
 
@@ -69,6 +77,7 @@ export default () => {
   };
 
   return {
+    adminGetHuongDanNhapHocByKetQuaXetTuyenModel,
     danhSachLePhiTheoDoiTuong,
     setDanhSachLePhiTheoDoiTuong,
     editLePhiTheoDoiTuong,

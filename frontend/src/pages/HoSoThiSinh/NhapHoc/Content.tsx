@@ -7,6 +7,7 @@ import moment from 'moment';
 import { useEffect } from 'react';
 import { history, useModel } from 'umi';
 import ResultHoSo from './components/ResultKhoaHoSo';
+import HuongDanThuTucNhapHoc from './HuongDanThuTucNhapHoc';
 // import DangKyNguyenVong from './DangKyNguyenVong';
 import LyLichSinhVien from './LyLichSinhVien';
 import RaSoatHoSo from './RaSoatHoSo';
@@ -28,6 +29,8 @@ const Content = () => {
     getDotNhapHocByIdDotTuyenSinhModel,
   } = useModel('dotnhaphoc');
 
+  const { thiSinhGetHuongDanNhapHocByDotTuyenSinhAndDotNhapHocModel } = useModel('huongdannhaphoc');
+
   useEffect(() => {
     if (idDot && !record?._id) getDotTuyenSinhByIdModel(idDot);
     else if (!idDot) history.push('/phuongthucxettuyen');
@@ -41,6 +44,11 @@ const Content = () => {
       getMyKetQuaXetTuyenModel(record?._id);
     }
   }, [record?._id]);
+
+  useEffect(() => {
+    if (record?._id && recordDotNhapHoc?._id)
+      thiSinhGetHuongDanNhapHocByDotTuyenSinhAndDotNhapHocModel(record._id, recordDotNhapHoc._id);
+  }, [record?._id, recordDotNhapHoc?._id]);
 
   useEffect(() => {
     return () => {
@@ -112,13 +120,9 @@ const Content = () => {
         case 0:
           contentComponent = <LyLichSinhVien />;
           break;
-        // case 1:
-        //   contentComponent = <QuaTrinhHocTap />;
-
-        //   break;
-        // case 2:
-        //   contentComponent = <DangKyNguyenVong />;
-        //   break;
+        case 1:
+          contentComponent = <HuongDanThuTucNhapHoc />;
+          break;
         case 2:
           contentComponent = <RaSoatHoSo />;
           break;

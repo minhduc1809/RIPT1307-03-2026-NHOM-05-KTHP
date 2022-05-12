@@ -27,7 +27,7 @@ const HuongDanNhapHocComponent = () => {
   const { getModel } = useModel('price');
 
   const { record: recordDotNhapHoc } = useModel('dotnhaphoc');
-
+  const getData = () => getHuongDanNhapHocByDotNhapHocModel(recordDotNhapHoc?._id ?? '');
   const columns: IColumn<HuongDanNhapHoc.Record>[] = [
     {
       title: 'STT',
@@ -144,7 +144,7 @@ const HuongDanNhapHocComponent = () => {
           <Divider type="vertical" />
           <Tooltip title="Xóa">
             <Popconfirm
-              onConfirm={() => deleteModel(record._id)}
+              onConfirm={() => deleteModel(record._id, getData)}
               title="Bạn có chắc chắn muốn xóa?"
             >
               <Button type="primary" shape="circle">
@@ -162,9 +162,7 @@ const HuongDanNhapHocComponent = () => {
       hideCard
       widthDrawer="1000px"
       hascreate
-      getData={() => {
-        getHuongDanNhapHocByDotNhapHocModel(recordDotNhapHoc?._id ?? '');
-      }}
+      getData={getData}
       modelName="huongdannhaphoc"
       loading={loading}
       columns={columns}

@@ -2,6 +2,7 @@ import axios from '@/utils/axios';
 import type { ETrangThaiNhapHoc, ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
 import { ip3 } from '@/utils/ip';
 import type { Login } from '../ant-design-pro/typings';
+import type { DotNhapHoc } from '../DotNhapHoc/typings';
 import type { DotTuyenSinh } from '../DotTuyenSinh/typings';
 import type { KetQuaXetTuyen } from './typings';
 
@@ -19,6 +20,16 @@ export function putMyKetQuaXetTuyenLyLich(
   },
 ) {
   return axios.put(`${ip3}/${url}/thi-sinh/my/ly-lich/${idKetQuaXetTuyen}`, payload);
+}
+
+export function putMyKetQuaXetTuyenGiayToLePhi(
+  idKetQuaXetTuyen: string,
+  payload: {
+    danhSachGiayToNop: DotTuyenSinh.GiayTo[];
+    danhSachLePhiNop: DotNhapHoc.LePhi[];
+  },
+) {
+  return axios.put(`${ip3}/${url}/thi-sinh/my/giay-to-le-phi/${idKetQuaXetTuyen}`, payload);
 }
 
 export function getKetQuaXetTuyenPageable(
@@ -70,4 +81,13 @@ export const thiSinhKhoaHoSoNhapHoc = (
   payload: KetQuaXetTuyen.Record,
 ) => {
   return axios.put(`${ip3}/${url}/thi-sinh/my/khoa/${idKetQuaXetTuyen}`, payload);
+};
+
+export const adminTiepNhanGiayToNopNhapHoc = (
+  idKetQuaXetTuyen: string,
+  payload: {
+    danhSachGiayToNop: DotTuyenSinh.GiayTo[];
+  },
+) => {
+  return axios.put(`${ip3}/${url}/admin/giay-to-nop/${idKetQuaXetTuyen}`, payload);
 };

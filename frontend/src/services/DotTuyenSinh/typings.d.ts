@@ -19,6 +19,7 @@ declare module DotTuyenSinh {
     textHuongDan: string;
     urlHuongDan: string[];
     urlGiayTo: string[];
+    requiredOnline: boolean;
   }
   export interface NganhTuyenSinh {
     index: number;

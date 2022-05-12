@@ -24,6 +24,8 @@ import { useState } from 'react';
 import { useAccess, useModel } from 'umi';
 import FormTiepNhanHoSoNhapHoc from '../components/FormTiepNhanHoSoNhapHoc';
 import TableThongTinGiaDinh from '../LyLichSinhVien/components/TableThongTinGiaDinh';
+import TableGiayTo from '@/pages/HoSoThiSinh/NhapHoc/HuongDanThuTucNhapHoc/components/TableGiayTo';
+import TableLePhi from '@/pages/HoSoThiSinh/NhapHoc/HuongDanThuTucNhapHoc/components/TableLePhi';
 const { Item } = Descriptions;
 
 const RaSoatHoSoNhapHoc = () => {
@@ -132,7 +134,9 @@ const RaSoatHoSoNhapHoc = () => {
             <br />
             <h2 style={{ fontWeight: 'bold' }}>C. THÔNG TIN XÁC NHẬN NHẬP HỌC:</h2>
             <TableThongTinKhaiXacNhanNhapHoc index={1} />
+            <br />
             <TableGiayToXacNhanNhapHoc index={2} />
+            <br />
             <Descriptions>
               <Descriptions.Item
                 span={3}
@@ -145,11 +149,36 @@ const RaSoatHoSoNhapHoc = () => {
             <Descriptions>
               <Descriptions.Item
                 span={3}
-                label={<span style={{ fontWeight: 'bold' }}>1. Ghi chú chuyên viên</span>}
+                label={<span style={{ fontWeight: 'bold' }}>1. Danh sách giấy tờ cần nộp</span>}
+              >
+                {' '}
+              </Descriptions.Item>
+            </Descriptions>
+            <TableGiayTo
+              fieldName="danhSachGiayToNop"
+              fieldData="danhSachGiayToCanNop"
+              mode="view"
+            />
+            <br />
+            <Descriptions>
+              <Descriptions.Item
+                span={3}
+                label={<span style={{ fontWeight: 'bold' }}>2. Danh sách lệ phí cần nộp</span>}
+              >
+                {' '}
+              </Descriptions.Item>
+            </Descriptions>
+            <TableLePhi mode="view" />
+            <br />
+            <Descriptions>
+              <Descriptions.Item
+                span={3}
+                label={<span style={{ fontWeight: 'bold' }}>3. Ghi chú chuyên viên</span>}
               >
                 {recordKetQua?.ghiChuTiepNhan ?? 'Không có'}
               </Descriptions.Item>
             </Descriptions>
+
             {!access.thiSinh ? (
               <>
                 <div style={{ textAlign: 'center', marginTop: 10 }}>
@@ -194,7 +223,7 @@ const RaSoatHoSoNhapHoc = () => {
                 <Modal
                   destroyOnClose
                   footer={false}
-                  width="1000px"
+                  width="1300px"
                   title={
                     typeXuLy === ETrangThaiNhapHoc.DA_TIEP_NHAN
                       ? 'Tiếp nhận hồ sơ'

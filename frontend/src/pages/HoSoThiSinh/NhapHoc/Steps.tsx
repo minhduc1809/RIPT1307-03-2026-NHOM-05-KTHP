@@ -14,6 +14,7 @@ const StepperNhapHoc = () => {
 
   const onChangeStep = (step: number) => {
     setCurrent(step);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   return (
     <Card title="Quy trình nhập học">

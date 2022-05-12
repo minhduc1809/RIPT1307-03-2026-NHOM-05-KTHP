@@ -72,11 +72,12 @@ const useInitModel = (
     }
   };
 
-  const deleteModel = async (id: string | number) => {
+  const deleteModel = async (id: string | number, getData?: any) => {
     setLoading(true);
     await deleteService(id);
     message.success('Xóa thành công');
-    getModel();
+    if (getData) getData();
+    else getModel();
   };
 
   return {

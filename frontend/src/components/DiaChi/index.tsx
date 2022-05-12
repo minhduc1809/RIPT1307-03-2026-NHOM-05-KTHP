@@ -57,7 +57,7 @@ const DiaChi = (props: Props) => {
   const [maQuanHuyen, setMaQuanHuyen] = useState<string>('');
   const [maTinh, setMaTinh] = useState<string>('');
   useEffect(() => {
-    getDanhSachTinhModel();
+    if (danhSachTinh.length === 0) getDanhSachTinhModel();
     setMaTinh(props?.initialValue?.maTP ?? '');
     setMaQuanHuyen(props?.initialValue?.maQH ?? '');
   }, [props?.initialValue?.maTP]);

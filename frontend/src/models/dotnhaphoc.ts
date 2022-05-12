@@ -26,7 +26,6 @@ export default () => {
     if (!idDotTuyenSinh) return;
     setLoading(true);
     const response = await getDotNhapHocByIdDotTuyenSinh(idDotTuyenSinh);
-    debugger;
     setRecord(response?.data?.data ?? null);
     setLoading(false);
   };

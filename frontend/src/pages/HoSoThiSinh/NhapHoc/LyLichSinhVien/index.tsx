@@ -15,6 +15,7 @@ mm.tz.setDefault('Asia/Ho_Chi_Minh');
 const LyLichSinhVien = () => {
   const [form] = Form.useForm();
   const { putMyKetQuaXetTuyenLyLichModel, loading } = useModel('ketquaxettuyen');
+  const { setCurrent } = useModel('hosoxettuyen');
   const { record: recordHoSo } = useModel('ketquaxettuyen');
   const { danhSachDanToc, danhSachTonGiao } = useModel('dantoctongiao');
   const { danhSachTinh } = useModel('donvihanhchinh');
@@ -67,7 +68,12 @@ const LyLichSinhVien = () => {
             tenXaPhuong: tenPhuongXaDiaChiLienHe,
           };
           values.thongTinThiSinh.ngaySinh = toISOString(values?.thongTinThiSinh?.ngaySinh);
-          putMyKetQuaXetTuyenLyLichModel(recordHoSo?._id ?? '', { ...recordHoSo, ...values });
+          await putMyKetQuaXetTuyenLyLichModel(recordHoSo?._id ?? '', { ...recordHoSo, ...values });
+          setCurrent(1);
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
         }}
       >
         <Divider plain>
