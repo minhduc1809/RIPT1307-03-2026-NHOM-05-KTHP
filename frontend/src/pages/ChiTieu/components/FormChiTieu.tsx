@@ -83,7 +83,7 @@ const FormChiTieu = (props: { idCoSo: string }) => {
           />
         </Form.Item>
         <Form.Item
-          rules={[...rules.required]}
+          // rules={[...rules.required]}
           label="Danh sách tổ hợp"
           name="danhSachToHopXetTuyen"
           initialValue={recordChiTieuChiTiet?.danhSachToHopXetTuyen}
@@ -100,7 +100,7 @@ const FormChiTieu = (props: { idCoSo: string }) => {
               initialValue={recordChiTieuChiTiet?.chiTieuSoLuong}
               name="chiTieuSoLuong"
               label="Chỉ tiêu số lượng"
-              rules={[...rules.required]}
+              // rules={[...rules.required]}
             >
               <InputNumber
                 min={0}
@@ -115,7 +115,7 @@ const FormChiTieu = (props: { idCoSo: string }) => {
               initialValue={recordChiTieuChiTiet?.phanTramTroi}
               name="phanTramTroi"
               label="Phần trăm trội"
-              rules={[...rules.required]}
+              // rules={[...rules.required]}
             >
               <InputNumber
                 min={0}
@@ -130,7 +130,7 @@ const FormChiTieu = (props: { idCoSo: string }) => {
               initialValue={recordChiTieuChiTiet?.chiTieuDiem}
               name="chiTieuDiem"
               label="Chỉ tiêu điểm"
-              rules={[...rules.required]}
+              // rules={[...rules.required]}
             >
               <InputNumber
                 min={0}

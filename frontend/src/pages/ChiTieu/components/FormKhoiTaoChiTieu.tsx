@@ -25,7 +25,7 @@ const FormKhoiTaoChiTieu = (props: { idCoSo: string; onCancel: any }) => {
       >
         <Row gutter={[10, 0]}>
           <Col xs={24} lg={8}>
-            <Form.Item name="chiTieuSoLuong" label="Chỉ tiêu số lượng" rules={[...rules.required]}>
+            <Form.Item name="chiTieuSoLuong" label="Chỉ tiêu số lượng">
               <InputNumber
                 min={0}
                 max={1000000}
@@ -35,7 +35,7 @@ const FormKhoiTaoChiTieu = (props: { idCoSo: string; onCancel: any }) => {
             </Form.Item>
           </Col>
           <Col xs={24} lg={8}>
-            <Form.Item name="phanTramTroi" label="Phần trăm trội" rules={[...rules.required]}>
+            <Form.Item name="phanTramTroi" label="Phần trăm trội">
               <InputNumber
                 min={0}
                 max={10000}
@@ -45,7 +45,7 @@ const FormKhoiTaoChiTieu = (props: { idCoSo: string; onCancel: any }) => {
             </Form.Item>
           </Col>
           <Col xs={24} lg={8}>
-            <Form.Item name="chiTieuDiem" label="Chỉ tiêu điểm" rules={[...rules.required]}>
+            <Form.Item name="chiTieuDiem" label="Chỉ tiêu điểm">
               <InputNumber
                 min={0}
                 max={1000000}

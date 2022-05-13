@@ -201,19 +201,19 @@ const TableDanhSachTrungTuyen = (props: {
             ETrangThaiXacNhanNhapHoc.KHONG_TIEP_NHAN,
           ].includes(recordHoSo?.thongTinXacNhanNhapHoc?.trangThaiXacNhan) && (
             <Popconfirm
-              title="Bạn có chắc chắc muốn khóa hồ sơ này"
+              title="Bạn có chắc chắc xác nhận không nhập học cho hồ sơ này"
               onConfirm={() =>
                 adminTiepNhanXacNhanNhapHocModel(
                   recordHoSo?._id ?? '',
                   {
-                    trangThaiXacNhan: ETrangThaiXacNhanNhapHoc.XAC_NHAN,
+                    trangThaiXacNhan: ETrangThaiXacNhanNhapHoc.KHONG_XAC_NHAN,
                   },
                   recordDotTuyenSinh?._id ?? '',
                   props?.idCoSo,
                 )
               }
             >
-              <Tooltip title="Khóa">
+              <Tooltip title="Xác nhận không nhập học">
                 <Button type="primary" icon={<LockOutlined />} shape="circle" />
               </Tooltip>
             </Popconfirm>
@@ -223,7 +223,7 @@ const TableDanhSachTrungTuyen = (props: {
             recordHoSo?.thongTinXacNhanNhapHoc?.trangThaiXacNhan,
           ) && (
             <Popconfirm
-              title="Bạn có chắc chắc muốn mở khóa hồ sơ này"
+              title="Bạn có chắc chắc muốn chuyển trạng thái chưa xác nhận nhập học cho hồ sơ này"
               onConfirm={() =>
                 adminTiepNhanXacNhanNhapHocModel(
                   recordHoSo?._id ?? '',
@@ -235,7 +235,7 @@ const TableDanhSachTrungTuyen = (props: {
                 )
               }
             >
-              <Tooltip title="Mở khóa">
+              <Tooltip title="Chuyển về chưa xác nhận nhập học">
                 <Button icon={<UnlockOutlined />} shape="circle" />
               </Tooltip>
             </Popconfirm>
