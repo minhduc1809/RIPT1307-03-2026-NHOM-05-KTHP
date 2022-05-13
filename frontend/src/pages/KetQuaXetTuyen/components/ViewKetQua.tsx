@@ -2,15 +2,9 @@ import RaSoatHoSo from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo';
 import BlockNguyenVong from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo/components/BlockNguyenVong';
 import BlockRaSoatThongTinCaNhan from '@/pages/HoSoThiSinh/DangKyXetTuyen/RaSoatHoSo/components/BlockThongTinCaNhan';
 import { ETrangThaiTrungTuyen, ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
-import {
-  CheckOutlined,
-  CloseOutlined,
-  EyeOutlined,
-  StopOutlined,
-  UnlockOutlined,
-} from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, EyeOutlined, StopOutlined } from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
-import { Button, Card, Col, Descriptions, Divider, Modal, Popconfirm, Row } from 'antd';
+import { Button, Card, Col, Descriptions, Divider, Modal, Row } from 'antd';
 import { useState } from 'react';
 import { useAccess, useModel } from 'umi';
 import FormTiepNhanXacNhanNhapHoc from './FormTiepNhanXacNhanNhapHoc';
@@ -20,11 +14,7 @@ import { TableThongTinKhaiXacNhanNhapHoc } from './TableThongTinKhaiXacNhanNhapH
 const ViewHoSoTrungTuyen = (props: { idCoSo?: string }) => {
   const access = useAccess();
   const { record } = useModel('dottuyensinh');
-  const {
-    record: recordKetQua,
-    setVisibleForm: setVisibleFormKetQua,
-    adminTiepNhanXacNhanNhapHocModel,
-  } = useModel('ketquaxettuyen');
+  const { record: recordKetQua, setVisibleForm: setVisibleFormKetQua } = useModel('ketquaxettuyen');
   const { visibleForm, setVisibleForm, adminGetHoSoByIdHoSoModel } = useModel('hosoxettuyen');
   const [typeXuLy, setTypeXuLy] = useState<ETrangThaiXacNhanNhapHoc>();
   const [visibleFormXuLy, setVisibleFormXuLy] = useState<boolean>(false);
@@ -126,27 +116,6 @@ const ViewHoSoTrungTuyen = (props: { idCoSo?: string }) => {
                           Không tiếp nhận
                         </Button>
                       </>
-                    )}
-                  {recordKetQua?.trangThai === ETrangThaiTrungTuyen.TRUNG_TUYEN &&
-                    recordKetQua?.thongTinXacNhanNhapHoc?.trangThaiXacNhan !==
-                      ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN && (
-                      <Popconfirm
-                        onConfirm={() => {
-                          adminTiepNhanXacNhanNhapHocModel(
-                            recordKetQua?._id ?? '',
-                            {
-                              trangThaiXacNhan: ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
-                            },
-                            record?._id ?? '',
-                            props?.idCoSo,
-                          );
-                        }}
-                        title="Bạn có chắc chắn mở khóa xác nhận nhập học của hồ sơ này?"
-                      >
-                        <Button style={{ marginRight: 8 }} icon={<UnlockOutlined />} type="primary">
-                          Mở khóa xác nhận nhập học
-                        </Button>
-                      </Popconfirm>
                     )}
                   <Button
                     onClick={() => {

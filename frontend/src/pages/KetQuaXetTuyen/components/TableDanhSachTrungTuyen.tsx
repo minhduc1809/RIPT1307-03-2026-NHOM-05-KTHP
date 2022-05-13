@@ -1,7 +1,7 @@
 import TableBase from '@/components/Table';
 import RaSoatHoSoNhapHoc from '@/pages/HoSoThiSinh/NhapHoc/RaSoatHoSo';
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
-import { ETrangThaiNhapHoc } from '@/utils/constants';
+import { ETrangThaiNhapHoc, ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { DollarOutlined, LockOutlined, PrinterOutlined, UnlockOutlined } from '@ant-design/icons';
 import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
@@ -13,7 +13,6 @@ const TableDanhSachTrungTuyen = (props: {
   children?: any;
   paramCondition?: any;
   hideTrangThai?: boolean;
-  hideThaoTac?: boolean;
   type: 'nhaphoc' | 'xacnhannhaphoc';
 }) => {
   const {
@@ -26,6 +25,7 @@ const TableDanhSachTrungTuyen = (props: {
     setRecord: setRecordKetQuaXetTuyen,
     visibleForm,
     adminTiepNhanHoSoNhapHocModel,
+    adminTiepNhanXacNhanNhapHocModel,
   } = useModel('ketquaxettuyen');
 
   const { record: recordDotTuyenSinh } = useModel('dottuyensinh');
@@ -36,8 +36,8 @@ const TableDanhSachTrungTuyen = (props: {
 
   const onCell = (recordKetQua: KetQuaXetTuyen.Record) => ({
     onClick: async () => {
-      // if (recordKetQua.trangThaiNhapHoc !== ETrangThaiNhapHoc.CHUA_KHOA)
-      await adminGetHuongDanNhapHocByKetQuaXetTuyenModel(recordKetQua._id);
+      if (props.type === 'nhaphoc')
+        await adminGetHuongDanNhapHocByKetQuaXetTuyenModel(recordKetQua._id);
       setVisibleForm(true);
       setRecordKetQuaXetTuyen(recordKetQua);
     },
@@ -108,7 +108,7 @@ const TableDanhSachTrungTuyen = (props: {
       align: 'center',
       width: 150,
       fixed: 'right',
-      hide: props.hideThaoTac,
+      hide: props.type === 'xacnhannhaphoc',
       render: (recordHoSo: KetQuaXetTuyen.Record) => (
         <>
           {[
@@ -184,6 +184,62 @@ const TableDanhSachTrungTuyen = (props: {
               shape="circle"
             />
           </Tooltip>
+        </>
+      ),
+    },
+    {
+      title: 'Thao tác',
+      align: 'center',
+      width: 100,
+      fixed: 'right',
+      hide: props.type === 'nhaphoc',
+      render: (recordHoSo: KetQuaXetTuyen.Record) => (
+        <>
+          {[
+            ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
+            ETrangThaiXacNhanNhapHoc.DA_TIEP_NHAN,
+            ETrangThaiXacNhanNhapHoc.KHONG_TIEP_NHAN,
+          ].includes(recordHoSo?.thongTinXacNhanNhapHoc?.trangThaiXacNhan) && (
+            <Popconfirm
+              title="Bạn có chắc chắc muốn khóa hồ sơ này"
+              onConfirm={() =>
+                adminTiepNhanXacNhanNhapHocModel(
+                  recordHoSo?._id ?? '',
+                  {
+                    trangThaiXacNhan: ETrangThaiXacNhanNhapHoc.XAC_NHAN,
+                  },
+                  recordDotTuyenSinh?._id ?? '',
+                  props?.idCoSo,
+                )
+              }
+            >
+              <Tooltip title="Khóa">
+                <Button type="primary" icon={<LockOutlined />} shape="circle" />
+              </Tooltip>
+            </Popconfirm>
+          )}
+
+          {[ETrangThaiXacNhanNhapHoc.XAC_NHAN, ETrangThaiXacNhanNhapHoc.KHONG_XAC_NHAN].includes(
+            recordHoSo?.thongTinXacNhanNhapHoc?.trangThaiXacNhan,
+          ) && (
+            <Popconfirm
+              title="Bạn có chắc chắc muốn mở khóa hồ sơ này"
+              onConfirm={() =>
+                adminTiepNhanXacNhanNhapHocModel(
+                  recordHoSo?._id ?? '',
+                  {
+                    trangThaiXacNhan: ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
+                  },
+                  recordDotTuyenSinh?._id ?? '',
+                  props?.idCoSo,
+                )
+              }
+            >
+              <Tooltip title="Mở khóa">
+                <Button icon={<UnlockOutlined />} shape="circle" />
+              </Tooltip>
+            </Popconfirm>
+          )}
         </>
       ),
     },
