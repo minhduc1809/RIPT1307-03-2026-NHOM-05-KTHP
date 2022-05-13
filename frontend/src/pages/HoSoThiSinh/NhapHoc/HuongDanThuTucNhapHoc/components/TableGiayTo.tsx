@@ -195,7 +195,7 @@ const TableGiayTo = (props: {
       title: 'File đính kèm',
       width: 200,
       align: 'center',
-      hide: props.mode === 'submit',
+      hide: props.mode === 'submit' || props.mode === 'handle',
       fixed: 'right',
       render: (recordGiayTo: DotTuyenSinh.GiayTo) => {
         const urlGiayTo: string[] =

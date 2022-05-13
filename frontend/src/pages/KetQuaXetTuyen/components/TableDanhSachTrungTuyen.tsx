@@ -13,6 +13,8 @@ const TableDanhSachTrungTuyen = (props: {
   children?: any;
   paramCondition?: any;
   hideTrangThai?: boolean;
+  hideThaoTac?: boolean;
+  type: 'nhaphoc' | 'xacnhannhaphoc';
 }) => {
   const {
     page,
@@ -23,11 +25,8 @@ const TableDanhSachTrungTuyen = (props: {
     setVisibleForm,
     setRecord: setRecordKetQuaXetTuyen,
     visibleForm,
-    record: recordKetQuaXetTuyen,
     adminTiepNhanHoSoNhapHocModel,
   } = useModel('ketquaxettuyen');
-
-  // const { KhoiTaoKetQuaXetTuyenModel, loading: loadingChiTieu } = useModel('chitieu');
 
   const { record: recordDotTuyenSinh } = useModel('dottuyensinh');
 
@@ -109,6 +108,7 @@ const TableDanhSachTrungTuyen = (props: {
       align: 'center',
       width: 150,
       fixed: 'right',
+      hide: props.hideThaoTac,
       render: (recordHoSo: KetQuaXetTuyen.Record) => (
         <>
           {[
@@ -215,7 +215,7 @@ const TableDanhSachTrungTuyen = (props: {
         bodyStyle={{ padding: 0 }}
         footer={false}
       >
-        {recordKetQuaXetTuyen?.trangThaiNhapHoc !== ETrangThaiNhapHoc.CHUA_KHOA ? (
+        {props.type === 'nhaphoc' ? (
           <RaSoatHoSoNhapHoc />
         ) : (
           <ViewHoSoTrungTuyen idCoSo={props.idCoSo} />

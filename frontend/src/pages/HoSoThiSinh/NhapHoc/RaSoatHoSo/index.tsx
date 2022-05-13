@@ -133,9 +133,9 @@ const RaSoatHoSoNhapHoc = () => {
             />
             <br />
             <h2 style={{ fontWeight: 'bold' }}>C. THÔNG TIN XÁC NHẬN NHẬP HỌC:</h2>
-            <TableThongTinKhaiXacNhanNhapHoc index={1} />
+            <TableThongTinKhaiXacNhanNhapHoc mode="view" index={1} />
             <br />
-            <TableGiayToXacNhanNhapHoc index={2} />
+            <TableGiayToXacNhanNhapHoc mode="view" index={2} />
             <br />
             <Descriptions>
               <Descriptions.Item
@@ -184,7 +184,7 @@ const RaSoatHoSoNhapHoc = () => {
                 <div style={{ textAlign: 'center', marginTop: 10 }}>
                   {recordKetQua?.trangThai === ETrangThaiTrungTuyen.TRUNG_TUYEN &&
                     recordKetQua?.thongTinXacNhanNhapHoc?.trangThaiXacNhan ===
-                      ETrangThaiXacNhanNhapHoc.XAC_NHAN &&
+                      ETrangThaiXacNhanNhapHoc.DA_TIEP_NHAN &&
                     recordKetQua?.trangThaiNhapHoc === ETrangThaiNhapHoc.DA_KHOA && (
                       <>
                         <Button

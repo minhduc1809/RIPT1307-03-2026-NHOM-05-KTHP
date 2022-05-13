@@ -24,7 +24,7 @@ const DanhSachTrungTuyen = () => {
           <Tabs.TabPane tab={item?.ten} tabKey={item?._id} key={item._id} />
         ))}
       </Tabs>
-      <TableDanhSachTrungTuyen idCoSo={idCoSo} />
+      <TableDanhSachTrungTuyen type="xacnhannhaphoc" hideThaoTac idCoSo={idCoSo} />
     </Card>
   );
 };

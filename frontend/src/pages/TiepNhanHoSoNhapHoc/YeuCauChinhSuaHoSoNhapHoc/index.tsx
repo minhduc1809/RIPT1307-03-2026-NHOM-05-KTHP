@@ -5,14 +5,13 @@ import { Card } from 'antd';
 
 const DaXacNhanNhapHoc = () => {
   return (
-    <Card title="Danh sách đã xác nhận nhập học">
+    <Card title="Yêu cầu chỉnh sửa hồ sơ nhập học">
       <TableDanhSachTrungTuyen
+        type="nhaphoc"
         hideTrangThai
         paramCondition={{
-          'thongTinXacNhanNhapHoc.trangThaiXacNhan': ETrangThaiXacNhanNhapHoc.XAC_NHAN,
-          trangThaiNhapHoc: {
-            $in: [ETrangThaiNhapHoc.CHUA_KHOA, ETrangThaiNhapHoc.YEU_CAU_CHINH_SUA],
-          },
+          'thongTinXacNhanNhapHoc.trangThaiXacNhan': ETrangThaiXacNhanNhapHoc.DA_TIEP_NHAN,
+          trangThaiNhapHoc: ETrangThaiNhapHoc.YEU_CAU_CHINH_SUA,
         }}
       >
         <FilterDotTuyenSinh />

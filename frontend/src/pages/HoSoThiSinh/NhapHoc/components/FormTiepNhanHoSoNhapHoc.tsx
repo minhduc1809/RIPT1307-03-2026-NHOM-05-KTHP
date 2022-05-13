@@ -53,7 +53,11 @@ const FormTiepNhanHoSoNhapHoc = (props: {
       }}
     >
       <div>Danh sách giấy tờ cần nộp</div>
-      <TableGiayTo mode="submit" fieldData="danhSachGiayToCanNop" fieldName="danhSachGiayToNop" />
+      <TableGiayTo
+        mode={props.type === ETrangThaiNhapHoc.YEU_CAU_CHINH_SUA ? 'view' : 'handle'}
+        fieldData="danhSachGiayToCanNop"
+        fieldName="danhSachGiayToNop"
+      />
       <br />
       <div>Danh sách lệ phí cần nộp</div>
       <TableLePhi mode="view" />

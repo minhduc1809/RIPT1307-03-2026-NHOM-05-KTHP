@@ -56,10 +56,10 @@ export const xacNhanKhongNhapHoc = (idKetQua: string) => {
 export const adminTiepNhanXacNhanNhapHoc = (
   idKetQuaXetTuyen: string,
   payload: {
-    danhSachGiayToXacNhanNhapHoc: DotTuyenSinh.GiayTo[];
-    danhSachThongTinKhaiXacNhan: KetQuaXetTuyen.ThongTinKhaiXacNhan[];
+    danhSachGiayToXacNhanNhapHoc?: DotTuyenSinh.GiayTo[];
+    danhSachThongTinKhaiXacNhan?: KetQuaXetTuyen.ThongTinKhaiXacNhan[];
     ghiChuTiepNhan?: string;
-    ngayTiepNhan: string;
+    ngayTiepNhan?: string;
     trangThaiXacNhan: ETrangThaiXacNhanNhapHoc;
   },
 ) => {

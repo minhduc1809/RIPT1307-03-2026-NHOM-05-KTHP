@@ -34,6 +34,7 @@ const TablePreviewDiemQuyDoi = () => {
 
   return (
     <Table
+      pagination={false}
       dataSource={danhSachPreviewDiemQuyDoi.map((item, index) => ({ ...item, index: index + 1 }))}
       columns={columns}
     />

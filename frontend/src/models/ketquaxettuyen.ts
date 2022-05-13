@@ -89,10 +89,10 @@ export default () => {
   const adminTiepNhanXacNhanNhapHocModel = async (
     idKetQuaXetTuyen: string,
     payload: {
-      danhSachGiayToXacNhanNhapHoc: DotTuyenSinh.GiayTo[];
-      danhSachThongTinKhaiXacNhan: KetQuaXetTuyen.ThongTinKhaiXacNhan[];
+      danhSachGiayToXacNhanNhapHoc?: DotTuyenSinh.GiayTo[];
+      danhSachThongTinKhaiXacNhan?: KetQuaXetTuyen.ThongTinKhaiXacNhan[];
       ghiChuTiepNhan?: string;
-      ngayTiepNhan: string;
+      ngayTiepNhan?: string;
       trangThaiXacNhan: ETrangThaiXacNhanNhapHoc;
     },
     idDotTuyenSinh: string,

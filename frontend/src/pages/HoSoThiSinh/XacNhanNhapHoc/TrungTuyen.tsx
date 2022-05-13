@@ -189,9 +189,9 @@ const TrungTuyen = () => {
         onCancel={onCancelViewThongTinNhapHoc}
         title="Thông tin xác nhận nhập học"
       >
-        <TableThongTinKhaiXacNhanNhapHoc />
+        <TableThongTinKhaiXacNhanNhapHoc mode="view" />
         <br />
-        <TableGiayToXacNhanNhapHoc />
+        <TableGiayToXacNhanNhapHoc mode="view" />
         <br />
         <b>Ghi chú chuyên viên: {record?.thongTinXacNhanNhapHoc?.ghiChuTiepNhan ?? ''}</b>
       </Modal>

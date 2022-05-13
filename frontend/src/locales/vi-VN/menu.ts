@@ -60,14 +60,10 @@ export default {
   'menu.QuanTriNhapHoc': 'Quản trị nhập học',
   'menu.QuanTriNhapHoc.DotNhapHoc': 'Đợt nhập học',
   'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc': 'Tiếp nhận hồ sơ nhập học',
-  'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc.DanhSachChuaXacNhanNhapHoc':
-    'Danh sách chưa xác nhận nhập học',
-  'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc.DanhSachDaXacNhanNhapHoc':
-    'Danh sách đã xác nhận nhập học',
-  'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc.DanhSachHoanThienHoSoNhapHoc':
-    'Danh sách hoàn thiện hồ sơ nhập học',
-  'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc.DanhSachDuDieuKienNhapHoc':
-    'Danh sách đủ điều kiện nhập học',
+  'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc.ChuaKhoaHoSoNhapHoc': 'Hồ sơ chưa khóa',
+  'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc.DaKhoaHoSoNhapHoc': 'Hồ sơ đã khóa',
+  'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc.DaTiepNhanHoSoNhapHoc': 'Hồ sơ đã tiếp nhận',
+  'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc.YeuCauChinhSuaHoSoNhapHoc': 'Hồ sơ yêu cầu chỉnh sửa',
   'menu.CauHinhHeThong': 'Cấu hình hệ thống',
   'menu.QuanTriTaiKhoan': 'Tài khoản',
   'menu.QuanTriTaiKhoan.TaiKhoanThiSinh': 'Tài khoản thí sinh',

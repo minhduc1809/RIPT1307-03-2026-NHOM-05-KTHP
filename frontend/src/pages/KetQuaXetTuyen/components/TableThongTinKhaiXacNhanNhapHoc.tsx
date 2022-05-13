@@ -1,13 +1,98 @@
+import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
 import { Setting } from '@/utils/constants';
+import type { IColumn } from '@/utils/interfaces';
+import rules from '@/utils/rules';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { Descriptions, Modal, Table, Tag, Tooltip } from 'antd';
+import { Descriptions, Modal, Table, Tag, Tooltip, Form, Input } from 'antd';
+
 import { useModel } from 'umi';
 
 const { Item } = Descriptions;
 
-export const TableThongTinKhaiXacNhanNhapHoc = (props: { index?: number }) => {
+export const TableThongTinKhaiXacNhanNhapHoc = (props: {
+  mode: 'view' | 'handle';
+  index?: number;
+}) => {
   const { record } = useModel('ketquaxettuyen');
-
+  const columns: IColumn<KetQuaXetTuyen.ThongTinKhaiXacNhan>[] = [
+    {
+      title: 'STT',
+      dataIndex: 'index',
+      width: 80,
+      align: 'center',
+      render: (val) => <div>{val + 1}</div>,
+    },
+    {
+      title: 'Tên',
+      dataIndex: 'tieuDe',
+      width: 200,
+      align: 'center',
+      render: (val, recordThongTin) => (
+        <div>
+          {val}
+          {recordThongTin?.textHuongDan?.length || recordThongTin?.urlHuongDan?.length ? (
+            <Tooltip placement="bottom" title="Xem hướng dẫn">
+              <QuestionCircleOutlined
+                style={{ marginLeft: '5px' }}
+                onClick={() => {
+                  Modal.info({
+                    title: (
+                      <div>
+                        <div>{recordThongTin?.textHuongDan ?? ''}</div>
+                        {recordThongTin?.urlHuongDan?.length ? (
+                          <div>File hướng dẫn đính kèm:</div>
+                        ) : (
+                          <div />
+                        )}
+                        {recordThongTin?.urlHuongDan?.length ? (
+                          recordThongTin?.urlHuongDan?.map((item, indexChungChi) => (
+                            <a key={item} href={item} target="_blank" rel="noreferrer">
+                              <Tag
+                                style={{ marginTop: 8 }}
+                                color={Setting.primaryColor}
+                              >{`Xem tập tin ${indexChungChi + 1}  `}</Tag>
+                            </a>
+                          ))
+                        ) : (
+                          <div />
+                        )}
+                      </div>
+                    ),
+                  });
+                }}
+              />
+            </Tooltip>
+          ) : (
+            <div />
+          )}
+        </div>
+      ),
+    },
+    {
+      title: 'Nội dung',
+      dataIndex: 'noiDung',
+      width: 300,
+      align: 'center',
+      hide: props.mode === 'handle',
+    },
+    {
+      title: 'Nội dung',
+      dataIndex: 'noiDung',
+      width: 300,
+      align: 'center',
+      hide: props.mode === 'view',
+      render: (val, recordThongTin) => (
+        <Form.Item
+          style={{ marginBottom: 0 }}
+          rules={recordThongTin.required ? [...rules.required, ...rules.text] : [...rules.text]}
+          initialValue={val}
+          name={['danhSachThongTinKhaiXacNhan', recordThongTin.index, 'noiDung']}
+        >
+          <Input placeholder="Nhập thông tin" />
+        </Form.Item>
+      ),
+    },
+  ];
   return (
     <>
       <Descriptions>
@@ -25,61 +110,9 @@ export const TableThongTinKhaiXacNhanNhapHoc = (props: { index?: number }) => {
       <Table
         size="small"
         pagination={false}
-        columns={[
-          { title: 'STT', dataIndex: 'index', width: 80, align: 'center' },
-          {
-            title: 'Tên',
-            dataIndex: 'tieuDe',
-            width: 200,
-            align: 'center',
-            render: (val, recordThongTin) => (
-              <div>
-                {val}
-                {recordThongTin?.textHuongDan?.length || recordThongTin?.urlHuongDan?.length ? (
-                  <Tooltip placement="bottom" title="Xem hướng dẫn">
-                    <QuestionCircleOutlined
-                      style={{ marginLeft: '5px' }}
-                      onClick={() => {
-                        Modal.info({
-                          title: (
-                            <div>
-                              <div>{recordThongTin?.textHuongDan ?? ''}</div>
-                              {recordThongTin?.urlHuongDan?.length && (
-                                <div>File hướng dẫn đính kèm:</div>
-                              )}
-                              {recordThongTin?.urlHuongDan?.length ? (
-                                recordThongTin?.urlHuongDan?.map((item, indexChungChi) => (
-                                  <a key={item} href={item} target="_blank" rel="noreferrer">
-                                    <Tag
-                                      style={{ marginTop: 8 }}
-                                      color={Setting.primaryColor}
-                                    >{`Xem tập tin ${indexChungChi + 1}  `}</Tag>
-                                  </a>
-                                ))
-                              ) : (
-                                <div />
-                              )}
-                            </div>
-                          ),
-                        });
-                      }}
-                    />
-                  </Tooltip>
-                ) : (
-                  <div />
-                )}
-              </div>
-            ),
-          },
-          {
-            title: 'Nội dung',
-            dataIndex: 'noiDung',
-            width: 300,
-            align: 'center',
-          },
-        ]}
+        columns={columns.filter((item) => item.hide !== true)}
         dataSource={record?.thongTinXacNhanNhapHoc?.danhSachThongTinKhaiXacNhan?.map(
-          (item, index) => ({ ...item, index: index + 1 }),
+          (item, index) => ({ ...item, index }),
         )}
       />
     </>
