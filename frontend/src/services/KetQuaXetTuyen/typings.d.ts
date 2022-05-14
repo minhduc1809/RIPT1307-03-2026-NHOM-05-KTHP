@@ -44,6 +44,7 @@ declare module KetQuaXetTuyen {
     nguyenVongTrungTuyen: HoSoXetTuyen.NguyenVong;
     namTuyenSinh: number;
     idDotTuyenSinh: string;
+    idDotNhapHoc: string;
     idHoSoXetTuyen: string;
     maHoSo: string;
     thongTinThiSinh: Login.Profile;

@@ -24,7 +24,7 @@ const Content = () => {
   const {
     record: recordDotNhapHoc,
     setRecord: setRecordDotNhapHoc,
-    getDotNhapHocByKetQuaXetTuyenModel,
+    getDotNhapHocByIdModel,
   } = useModel('dotnhaphoc');
 
   const { thiSinhGetHuongDanNhapHocByKetQuaXetTuyenModel } = useModel('huongdannhaphoc');
@@ -43,8 +43,8 @@ const Content = () => {
   }, [record?._id]);
 
   useEffect(() => {
-    getDotNhapHocByKetQuaXetTuyenModel(recordHoSo?._id ?? '');
-  }, [recordHoSo?._id]);
+    getDotNhapHocByIdModel(recordHoSo?.idDotNhapHoc ?? '');
+  }, [recordHoSo?.idDotNhapHoc]);
 
   useEffect(() => {
     thiSinhGetHuongDanNhapHocByKetQuaXetTuyenModel(recordHoSo?._id ?? '');
