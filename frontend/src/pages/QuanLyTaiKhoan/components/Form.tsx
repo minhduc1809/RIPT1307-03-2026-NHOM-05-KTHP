@@ -22,7 +22,12 @@ const FormTaiKhoan = (props: { systemRole: ESystemRole }) => {
         labelCol={{ span: 24 }}
         onFinish={async (values) => {
           if (edit) {
-            putUserModel(record?._id ?? '', { ...record, ...values });
+            putUserModel(record?._id ?? '', {
+              ...record,
+              ...values,
+              idHinhThucDaoTao: values?.idHinhThucDaoTao ?? null,
+              idCoSoDaoTao: values?.idCoSoDaoTao ?? null,
+            });
           } else {
             postUserModel({
               ...values,
