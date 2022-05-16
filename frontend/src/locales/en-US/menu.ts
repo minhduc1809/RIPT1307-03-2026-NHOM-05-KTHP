@@ -60,6 +60,7 @@ export default {
   'menu.QuanTriNhapHoc': 'Quản trị nhập học',
   'menu.QuanTriNhapHoc.DotNhapHoc': 'Đợt nhập học',
   'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc': 'Tiếp nhận hồ sơ nhập học',
+  'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc.TatCaHoSoNhapHoc': 'Tất cả hồ sơ',
   'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc.ChuaKhoaHoSoNhapHoc': 'Chưa khóa hồ sơ',
   'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc.DaKhoaHoSoNhapHoc': 'Đã khóa hồ sơ',
   'menu.QuanTriNhapHoc.TiepNhanHoSoNhapHoc.DaTiepNhanHoSoNhapHoc': 'Đã tiếp nhận hồ sơ',

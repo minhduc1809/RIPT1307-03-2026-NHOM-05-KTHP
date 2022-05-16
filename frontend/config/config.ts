@@ -254,6 +254,13 @@ export default defineConfig({
 
           routes: [
             {
+              name: 'TatCaHoSoNhapHoc',
+              path: './tatcahosonhaphoc',
+              access: 'routeFilter',
+              maChucNang: 'ho-so-nhap-hoc-tat-ca:read-all',
+              component: './TiepNhanHoSoNhapHoc/TatCaHoSoNhapHoc',
+            },
+            {
               name: 'ChuaKhoaHoSoNhapHoc',
               path: './chuakhoahosonhaphoc',
               access: 'routeFilter',
