@@ -107,7 +107,13 @@ const BlockQuestion = (props: { index: number; block: number }) => {
           <Checkbox>Câu trả lời khác</Checkbox>
         </Form.Item>
       )} */}
-      <Form.Item valuePropName="checked" name={[props.index, 'batBuoc']}>
+      <Form.Item
+        initialValue={
+          record?.danhSachKhoi?.[props.block]?.danhSachCauHoi?.[props.index]?.batBuoc ?? false
+        }
+        valuePropName="checked"
+        name={[props.index, 'batBuoc']}
+      >
         <Checkbox>Bắt buộc</Checkbox>
       </Form.Item>
 
