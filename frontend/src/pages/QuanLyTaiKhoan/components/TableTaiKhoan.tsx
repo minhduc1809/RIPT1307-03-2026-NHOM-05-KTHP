@@ -21,6 +21,8 @@ const TableTaiKhoan = (props: {
 }) => {
   const { loading, page, limit, condition, setEdit, setVisibleForm, setRecord, deleteUserModel } =
     useModel('quanlytaikhoan');
+  const { danhSach: danhSachCoSoDaoTao } = useModel('cosodaotao');
+  const { danhSach: danhSachHinhThucDaoTao } = useModel('hinhthucdaotao');
   const [visibleFormCapLaiMatKhau, setVisibleFormCapLaiMatKhau] = useState<boolean>(false);
   const columns: IColumn<Login.Profile>[] = [
     {
@@ -29,12 +31,6 @@ const TableTaiKhoan = (props: {
       width: 80,
       align: 'center',
     },
-    // {
-    //   title: 'Trạng thái kích hoạt',
-    //   dataIndex: 'index',
-    //   width: 80,
-    //   align: 'center',
-    // },
     {
       title: 'Họ đệm',
       dataIndex: 'hoDem',
@@ -52,7 +48,7 @@ const TableTaiKhoan = (props: {
     {
       title: 'Email',
       dataIndex: 'email',
-      width: 200,
+      width: 150,
       align: 'center',
       search: 'search',
     },
@@ -70,6 +66,22 @@ const TableTaiKhoan = (props: {
       align: 'center',
       search: 'search',
       hide: props.type === ESystemRole.QuanTriVien,
+    },
+    {
+      title: 'Hình thức đào tạo',
+      dataIndex: 'idHinhThucDaoTao',
+      width: 150,
+      align: 'center',
+      hide: props.type === ESystemRole.ThiSinh,
+      render: (val) => <div>{danhSachHinhThucDaoTao.find((item) => item._id === val)?.ten}</div>,
+    },
+    {
+      title: 'Cơ sở đào tạo',
+      dataIndex: 'idCoSoDaoTao',
+      width: 200,
+      align: 'center',
+      hide: props.type === ESystemRole.ThiSinh,
+      render: (val) => <div>{danhSachCoSoDaoTao.find((item) => item._id === val)?.ten}</div>,
     },
     {
       title: 'Giới tính',
@@ -144,7 +156,18 @@ const TableTaiKhoan = (props: {
         columns={columns}
         dependencies={[page, limit, condition]}
         Form={props?.Form}
-      />
+      >
+        {/* <Select
+          onChange={(val) => setCondition({ ...condition, idCoSoDaoTao: val })}
+          value={condition?.idCoSoDaoTao}
+          placeholder="Lọc theo cơ sở đào tạo"
+          style={{ width: 300, marginRight: 8 }}
+          options={danhSachCoSoDaoTao.map((item) => ({
+            label: item.ten,
+            value: item._id,
+          }))}
+        /> */}
+      </TableBase>
       <Modal
         destroyOnClose
         footer={false}

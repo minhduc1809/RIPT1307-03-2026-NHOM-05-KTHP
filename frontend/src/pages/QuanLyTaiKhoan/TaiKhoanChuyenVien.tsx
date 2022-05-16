@@ -12,7 +12,7 @@ const TaiKhoanChuyenVien = () => {
   const { getAllHinhThucDaoTaoModel } = useModel('hinhthucdaotao');
 
   useEffect(() => {
-    if (access.admin) {
+    if (access.adminVaQuanTriVien) {
       getAllCoSoDaoTaoModel(true);
       getAllHinhThucDaoTaoModel();
     }
