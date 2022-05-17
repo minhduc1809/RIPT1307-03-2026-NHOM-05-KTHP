@@ -8,7 +8,6 @@ const TatCaHoSoNhapHoc = () => {
     <Card title="Tất cả hồ sơ nhập học">
       <TableDanhSachTrungTuyen
         type="nhaphoc"
-        hideTrangThai
         paramCondition={{
           'thongTinXacNhanNhapHoc.trangThaiXacNhan': ETrangThaiXacNhanNhapHoc.DA_TIEP_NHAN,
         }}

@@ -18,8 +18,12 @@ import { useModel } from 'umi';
 import Form from './components/Form';
 import FormViewDetail from './components/FormViewDetail';
 import ThongKe from './components/ThongKe';
+import { useMediaQuery } from 'react-responsive';
 
 const KhaoSat = () => {
+  const isMediumScreen = useMediaQuery({
+    query: '(min-width: 800px)',
+  });
   const createAll = useCheckAccess('khao-sat:create-all');
   const updateAll = useCheckAccess('khao-sat:update-all');
   const deleteAll = useCheckAccess('khao-sat:delete-all');
@@ -226,7 +230,7 @@ const KhaoSat = () => {
       title="Quản lý biểu mẫu"
       hascreate={createAll}
       formType="Drawer"
-      widthDrawer="60%"
+      widthDrawer={isMediumScreen ? 800 : '100%'}
       Form={formTable}
     />
   );

@@ -61,7 +61,7 @@ const TableChiTieu = (props: { idCoSo?: string }) => {
       render: (val: NganhChuyenNganh.Record[]) => (
         <div style={{ textAlign: 'left' }}>
           {val?.map((item) => (
-            <div key={item._id}>
+            <div key={item.ma}>
               - {item?.ten} ({item?.ma})
             </div>
           ))}
@@ -76,7 +76,7 @@ const TableChiTieu = (props: { idCoSo?: string }) => {
       render: (val: DoiTuongTuyenSinh.Record[]) => (
         <div style={{ textAlign: 'left' }}>
           {val?.map((item) => (
-            <div key={item._id}>- {item?.tenDoiTuong}</div>
+            <div key={item.maDoiTuong}>- {item?.tenDoiTuong}</div>
           ))}
         </div>
       ),
@@ -168,7 +168,7 @@ const TableChiTieu = (props: { idCoSo?: string }) => {
       </Button>
       <Button
         disabled={record?.danhSachCoSoDaoTao?.length === 0}
-        style={{ marginRight: 8 }}
+        style={{ marginRight: 8, marginBottom: 8 }}
         onClick={() => setVisibleFormKhoiTao(true)}
         icon={<PlayCircleOutlined />}
       >
@@ -192,7 +192,12 @@ const TableChiTieu = (props: { idCoSo?: string }) => {
             }
             key="ellipsis"
           >
-            <Button icon={<SlidersOutlined />} loading={loading} type="primary">
+            <Button
+              style={{ marginBottom: 8, marginRight: 8 }}
+              icon={<SlidersOutlined />}
+              loading={loading}
+              type="primary"
+            >
               Giả lập điểm
             </Button>
           </Dropdown>
@@ -211,10 +216,9 @@ const TableChiTieu = (props: { idCoSo?: string }) => {
                   <Menu.Item key={EModeKhoiTao.DIEM_SAN}>Sử dụng chỉ tiêu điểm sàn</Menu.Item>
                 </Menu>
               }
-              key="ellipsis"
             >
               <Button
-                style={{ marginLeft: 8 }}
+                style={{ marginBottom: 8 }}
                 icon={<CheckSquareOutlined />}
                 loading={loading}
                 type="primary"

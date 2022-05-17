@@ -59,7 +59,6 @@ const ChiTieu = () => {
                   <Menu.Item key={EModeKhoiTao.DIEM_SAN}>Sử dụng chỉ tiêu điểm sàn</Menu.Item>
                 </Menu>
               }
-              key="ellipsis"
             >
               <Button
                 style={{ marginLeft: 8 }}

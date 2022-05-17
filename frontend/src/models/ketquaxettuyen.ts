@@ -150,9 +150,14 @@ export default () => {
   ) => {
     if (!idKetQuaXetTuyen || !payload) return;
     setLoading(true);
-    await thiSinhKhoaHoSoNhapHoc(idKetQuaXetTuyen, payload);
+    const response = await thiSinhKhoaHoSoNhapHoc(idKetQuaXetTuyen, payload);
+    setRecord(response?.data?.data ?? null);
     message.success('Khóa thành công');
     setLoading(false);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
   const adminTiepNhanHoSoNhapHocModel = async (

@@ -121,7 +121,7 @@ const RaSoatHoSoNhapHoc = () => {
             </Descriptions>
             <TableThongTinGiaDinh mode="view" />
 
-            <h2 style={{ fontWeight: 'bold' }}>B. THÔNG TIN ĐĂNG KÝ XÉT TUYỂN:</h2>
+            <h2 style={{ fontWeight: 'bold' }}>B. THÔNG TIN NGÀNH TRÚNG TUYỂN:</h2>
 
             <BlockNguyenVong
               title="Nguyện vọng trúng tuyển"
@@ -145,7 +145,7 @@ const RaSoatHoSoNhapHoc = () => {
                 {recordKetQua?.thongTinXacNhanNhapHoc?.ghiChuTiepNhan ?? 'Không có'}
               </Descriptions.Item>
             </Descriptions>
-            <h2 style={{ fontWeight: 'bold' }}>D. THÔNG TIN HỒ SƠ NHẬP HỌC:</h2>
+            <h2 style={{ fontWeight: 'bold' }}>D. THÔNG TIN THỦ TỤC NHẬP HỌC:</h2>
             <Descriptions>
               <Descriptions.Item
                 span={3}

@@ -3,7 +3,7 @@ import { ip3 } from '@/utils/ip';
 import type { Login } from '../ant-design-pro/typings';
 
 export function getUserPageable(payload: { page: number; limit: number; condition: any }) {
-  return axios.get(`${ip3}/user/pageable`, { params: payload });
+  return axios.get(`${ip3}/user/pageable`, { params: { ...payload, sort: { created: -1 } } });
 }
 
 export async function adminChangePassword(userId: string, payload: { password: string }) {

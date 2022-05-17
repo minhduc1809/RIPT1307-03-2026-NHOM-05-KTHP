@@ -82,20 +82,20 @@ const ResultHoSoNhapHoc = () => {
               <div>
                 {recordHoSo?.trangThaiNhapHoc === ETrangThaiNhapHoc.DA_KHOA
                   ? titleByTrangThai?.[recordHoSo?.trangThai ?? '']?.[
-                      recordHoSo?.trangThaiThanhToan ?? ''
+                      recordHoSo?.trangThaiThanhToanNhapHoc ?? ''
                     ] ?? 'Thí sinh đã hoàn thành thủ tục nhập học'
                   : titleByTrangThai?.[recordHoSo?.trangThai ?? ''] ?? ''}
               </div>
               {recordHoSo?.trangThaiNhapHoc !== ETrangThaiNhapHoc.CHUA_KHOA && (
                 <div>
-                  Trạng thái thanh toán: <b>{recordHoSo?.trangThaiThanhToan}</b>
+                  Trạng thái thanh toán: <b>{recordHoSo?.trangThaiThanhToanNhapHoc}</b>
                 </div>
               )}
             </div>
           }
           subTitle={
             subTitleByTrangThai?.[recordHoSo?.trangThai ?? '']?.[
-              recordHoSo?.trangThaiThanhToan ?? ''
+              recordHoSo?.trangThaiThanhToanNhapHoc ?? ''
             ]
           }
           extra={
@@ -186,8 +186,8 @@ const ResultHoSoNhapHoc = () => {
       >
         <ThanhToan
           record={{
-            identityCode: recordHoSo?.identityCode ?? '',
-            trangThaiThanhToan: recordHoSo?.trangThaiThanhToan,
+            identityCode: recordHoSo?.identityCodeNhapHoc ?? '',
+            trangThaiThanhToan: recordHoSo?.trangThaiThanhToanNhapHoc,
           }}
         />
       </Modal>

@@ -11,20 +11,27 @@ import {
 import { Button, Divider, Modal, Popconfirm, Tag, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import FormGiayTo from './FormGiayTo';
+import { useEffect } from 'react';
 
 const TableGiayTo = (props: { fieldName: 'danhSachGiayToCanNop' }) => {
   const modelDotTuyenSinh = useModel('dotnhaphoc');
   const {
     visibleFormGiayTo,
     setVisibleFormGiayTo,
-
     setEditGiayTo,
     setRecordGiayTo,
+    setdanhSachGiayToCanNop,
   } = modelDotTuyenSinh;
 
   const visibleForm = (show: boolean) => {
     setVisibleFormGiayTo(show);
   };
+
+  useEffect(() => {
+    return () => {
+      setdanhSachGiayToCanNop([]);
+    };
+  }, []);
 
   const columns: IColumn<DotTuyenSinh.GiayTo>[] = [
     {

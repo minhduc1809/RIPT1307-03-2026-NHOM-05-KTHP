@@ -1,4 +1,4 @@
-import type { ESystemRole } from '@/utils/constants';
+import { ESystemRole } from '@/utils/constants';
 import rules from '@/utils/rules';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import moment from 'moment';
@@ -71,15 +71,15 @@ const FormTaiKhoan = (props: { systemRole: ESystemRole }) => {
         )}
         {!edit && (
           <Form.Item
-            extra={
-              <div>
-                Nếu không nhập mật khẩu, hệ thống sẽ tự động cấp mật khẩu mặc định cho tài khoản
-              </div>
-            }
+            // extra={
+            //   <div>
+            //     Nếu không nhập mật khẩu, hệ thống sẽ tự động cấp mật khẩu mặc định cho tài khoản
+            //   </div>
+            // }
             style={{ marginBottom: 8 }}
             name="password"
             label="Mật khẩu"
-            rules={[...rules.password]}
+            rules={[...rules.password, ...rules.required]}
           >
             <Input placeholder="Nhập mật khẩu" />
           </Form.Item>
@@ -154,7 +154,7 @@ const FormTaiKhoan = (props: { systemRole: ESystemRole }) => {
             </Form.Item>
           </Col>
 
-          {access.admin && (
+          {access.admin && props.systemRole === ESystemRole.QuanTriVien && (
             <>
               <Col md={8}>
                 <Form.Item
@@ -190,6 +190,7 @@ const FormTaiKhoan = (props: { systemRole: ESystemRole }) => {
             </>
           )}
         </Row>
+        <br />
 
         <Form.Item style={{ textAlign: 'center', marginBottom: 0 }}>
           <Button loading={loading} style={{ marginRight: 8 }} htmlType="submit" type="primary">

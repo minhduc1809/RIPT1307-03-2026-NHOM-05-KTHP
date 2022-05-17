@@ -1,5 +1,5 @@
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
-import { Setting } from '@/utils/constants';
+import { ETrangThaiXacNhanNhapHoc, Setting } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import rules from '@/utils/rules';
 import { QuestionCircleOutlined } from '@ant-design/icons';
@@ -14,6 +14,7 @@ export const TableThongTinKhaiXacNhanNhapHoc = (props: {
   index?: number;
 }) => {
   const { record } = useModel('ketquaxettuyen');
+  const { record: recordDotTuyenSinh } = useModel('dottuyensinh');
   const columns: IColumn<KetQuaXetTuyen.ThongTinKhaiXacNhan>[] = [
     {
       title: 'STT',
@@ -111,9 +112,23 @@ export const TableThongTinKhaiXacNhanNhapHoc = (props: {
         size="small"
         pagination={false}
         columns={columns.filter((item) => item.hide !== true)}
-        dataSource={record?.thongTinXacNhanNhapHoc?.danhSachThongTinKhaiXacNhan?.map(
-          (item, index) => ({ ...item, index }),
-        )}
+        dataSource={
+          [
+            ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
+            ETrangThaiXacNhanNhapHoc.KHONG_XAC_NHAN,
+          ].includes(
+            record?.thongTinXacNhanNhapHoc?.trangThaiXacNhan ??
+              ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
+          )
+            ? recordDotTuyenSinh?.danhSachThongTinKhaiXacNhan?.map((item, index) => ({
+                ...item,
+                index,
+              }))
+            : record?.thongTinXacNhanNhapHoc?.danhSachThongTinKhaiXacNhan?.map((item, index) => ({
+                ...item,
+                index,
+              }))
+        }
       />
     </>
   );

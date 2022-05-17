@@ -90,8 +90,8 @@ const ViewHoSoTrungTuyen = (props: { idCoSo?: string }) => {
               <>
                 <div style={{ textAlign: 'center', marginTop: 10 }}>
                   {recordKetQua?.trangThai === ETrangThaiTrungTuyen.TRUNG_TUYEN &&
-                    recordKetQua?.thongTinXacNhanNhapHoc?.trangThaiXacNhan ===
-                      ETrangThaiXacNhanNhapHoc.XAC_NHAN && (
+                    recordKetQua?.thongTinXacNhanNhapHoc?.trangThaiXacNhan !==
+                      ETrangThaiXacNhanNhapHoc.DA_TIEP_NHAN && (
                       <>
                         <Button
                           onClick={() => {

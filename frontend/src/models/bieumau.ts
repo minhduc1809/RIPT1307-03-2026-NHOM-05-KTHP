@@ -51,9 +51,8 @@ export default () => {
   };
   const getBieuMauAdminModel = async () => {
     setLoading(true);
-    console.log('hi');
     const response = await getBieuMauAdmin({
-      page,
+      page: page * 10 > total ? page - 1 : page,
       limit,
       condition: { ...condition },
     });
@@ -83,9 +82,7 @@ export default () => {
       await addBieuMau(payload);
       message.success('Thêm thành công');
       setLoading(false);
-
       getBieuMauAdminModel();
-
       setVisibleForm(false);
     } catch (error) {
       setLoading(false);

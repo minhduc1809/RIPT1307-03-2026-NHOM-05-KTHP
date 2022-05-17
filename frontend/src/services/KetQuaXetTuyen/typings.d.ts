@@ -60,10 +60,10 @@ declare module KetQuaXetTuyen {
       ngayTiepNhan: string;
     };
     thongTinGiaDinh: ThanhVienGiaDinh[];
-    trangThaiThanhToan: ETrangThaiThanhToan;
+    trangThaiThanhToanNhapHoc: ETrangThaiThanhToan;
     ghiChuTiepNhan?: string;
     trangThaiNhapHoc: ETrangThaiNhapHoc;
-    identityCode: string;
+    identityCodeNhapHoc: string;
     danhSachGiayToNop: DotTuyenSinh.GiayTo[];
     danhSachLePhiNop: string[];
   }

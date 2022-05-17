@@ -63,7 +63,7 @@ const FilterDotTuyenSinh = () => {
           value: item._id,
           label: item.ten,
         }))}
-        style={{ width: 120, marginRight: 8 }}
+        style={{ width: 120, marginRight: 8, marginBottom: 8 }}
       />
       <Select
         placeholder="Năm tuyển sinh"
@@ -76,7 +76,7 @@ const FilterDotTuyenSinh = () => {
           value: item.nam,
           label: `Năm ${item.nam}`,
         }))}
-        style={{ width: 120, marginRight: 8 }}
+        style={{ width: 120, marginRight: 8, marginBottom: 8 }}
       />
       <Select
         placeholder="Đợt tuyển sinh"
@@ -86,7 +86,7 @@ const FilterDotTuyenSinh = () => {
           value: item?._id,
           label: item?.tenDotTuyenSinh,
         }))}
-        style={{ width: 300, marginRight: 8 }}
+        style={{ width: 300, marginRight: 8, marginBottom: 8 }}
       />
     </>
   );

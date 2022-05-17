@@ -1,3 +1,4 @@
+import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
 import { ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
 import rules from '@/utils/rules';
@@ -38,11 +39,29 @@ const FormTiepNhanXacNhanNhapHoc = (props: {
           }
           index += 1;
         }
+        const checkChuyenVienXacNhanChoThiSinh = [
+          ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
+          ETrangThaiXacNhanNhapHoc.KHONG_XAC_NHAN,
+        ].includes(
+          record?.thongTinXacNhanNhapHoc?.trangThaiXacNhan ??
+            ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
+        );
+        const danhSachGiayTo = checkChuyenVienXacNhanChoThiSinh
+          ? recordDot?.danhSachGiayToXacNhanNhapHoc ?? []
+          : record?.thongTinXacNhanNhapHoc?.danhSachGiayToXacNhanNhapHoc ?? [];
+        const danhSachThongTinKhai = checkChuyenVienXacNhanChoThiSinh
+          ? recordDot?.danhSachThongTinKhaiXacNhan ?? []
+          : record?.thongTinXacNhanNhapHoc?.danhSachThongTinKhaiXacNhan ?? [];
         const payload = {
-          danhSachGiayToXacNhanNhapHoc: values?.danhSachGiayToXacNhanNhapHoc ?? [],
+          danhSachGiayToXacNhanNhapHoc: values?.danhSachGiayToXacNhanNhapHoc?.map(
+            (item: DotTuyenSinh.GiayTo, indexTemp: number) => ({
+              ...danhSachGiayTo?.[indexTemp],
+              ...item,
+            }),
+          ),
           danhSachThongTinKhaiXacNhan: values?.danhSachThongTinKhaiXacNhan?.map(
             (item: KetQuaXetTuyen.ThongTinKhaiXacNhan, indexTemp: number) => ({
-              ...record?.thongTinXacNhanNhapHoc?.danhSachThongTinKhaiXacNhan?.[indexTemp],
+              ...danhSachThongTinKhai?.[indexTemp],
               ...item,
             }),
           ),

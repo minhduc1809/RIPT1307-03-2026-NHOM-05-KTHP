@@ -82,6 +82,8 @@ const TableBase = (props: Props) => {
       if (noCleanUp !== true) {
         setCondition({});
         setFilterInfo({});
+        setPage(1);
+        setLimit(10);
       }
     };
   }, []);

@@ -1,5 +1,5 @@
 import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
-import { Setting } from '@/utils/constants';
+import { ETrangThaiXacNhanNhapHoc, Setting } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import rules from '@/utils/rules';
 import { renderFileList } from '@/utils/utils';
@@ -11,6 +11,7 @@ const { Item } = Descriptions;
 
 export const TableGiayToXacNhanNhapHoc = (props: { mode: 'view' | 'handle'; index?: number }) => {
   const { record } = useModel('ketquaxettuyen');
+  const { record: recordDotTuyenSinh } = useModel('dottuyensinh');
   const columns: IColumn<DotTuyenSinh.GiayTo>[] = [
     {
       title: 'STT',
@@ -123,9 +124,23 @@ export const TableGiayToXacNhanNhapHoc = (props: { mode: 'view' | 'handle'; inde
         size="small"
         pagination={false}
         columns={columns.filter((item) => item.hide !== true)}
-        dataSource={record?.thongTinXacNhanNhapHoc?.danhSachGiayToXacNhanNhapHoc?.map(
-          (item, index) => ({ ...item, index }),
-        )}
+        dataSource={
+          [
+            ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
+            ETrangThaiXacNhanNhapHoc.KHONG_XAC_NHAN,
+          ].includes(
+            record?.thongTinXacNhanNhapHoc?.trangThaiXacNhan ??
+              ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
+          )
+            ? recordDotTuyenSinh?.danhSachGiayToXacNhanNhapHoc?.map((item, index) => ({
+                ...item,
+                index,
+              }))
+            : record?.thongTinXacNhanNhapHoc?.danhSachGiayToXacNhanNhapHoc?.map((item, index) => ({
+                ...item,
+                index,
+              }))
+        }
       />
     </>
   );

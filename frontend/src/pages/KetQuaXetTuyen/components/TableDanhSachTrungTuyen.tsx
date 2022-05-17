@@ -1,10 +1,14 @@
 import TableBase from '@/components/Table';
 import RaSoatHoSoNhapHoc from '@/pages/HoSoThiSinh/NhapHoc/RaSoatHoSo';
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
-import { ETrangThaiNhapHoc, ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
+import {
+  ETrangThaiNhapHoc,
+  ETrangThaiXacNhanNhapHoc,
+  MapKeyColorTrangThaiXacNhanNhapHoc,
+} from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
 import { DollarOutlined, LockOutlined, PrinterOutlined, UnlockOutlined } from '@ant-design/icons';
-import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
+import { Button, Divider, Modal, Popconfirm, Tag, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import ViewHoSoTrungTuyen from './ViewKetQua';
 
@@ -86,7 +90,7 @@ const TableDanhSachTrungTuyen = (props: {
     {
       title: 'Trạng thái',
       dataIndex: ['thongTinXacNhanNhapHoc', 'trangThaiXacNhan'],
-      width: 150,
+      width: 200,
       columnKey: 'thongTinXacNhanNhapHoc.trangThaiXacNhan',
       key: 'thongTinXacNhanNhapHoc.trangThaiXacNhan',
       align: 'center',
@@ -94,6 +98,7 @@ const TableDanhSachTrungTuyen = (props: {
       notRegex: true,
       onCell,
       hide: props.hideTrangThai,
+      render: (val) => <Tag color={MapKeyColorTrangThaiXacNhanNhapHoc[val]}>{val}</Tag>,
     },
     {
       title: 'Cơ sở đào tạo',
