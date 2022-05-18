@@ -6,6 +6,7 @@ import type {
   ETrangThaiXacNhanNhapHoc,
 } from '@/utils/constants';
 import type { Login } from '../ant-design-pro/typings';
+import type { DotNhapHoc } from '../DotNhapHoc/typings';
 import type { DotTuyenSinh } from '../DotTuyenSinh/typings';
 import type { HoSoXetTuyen } from '../HoSoXetTuyen/typings';
 
@@ -44,7 +45,8 @@ declare module KetQuaXetTuyen {
     nguyenVongTrungTuyen: HoSoXetTuyen.NguyenVong;
     namTuyenSinh: number;
     idDotTuyenSinh: string;
-    idDotNhapHoc: string;
+    idDotNhapHoc: DotNhapHoc.Record;
+    loaiDoiTuong: string[];
     idHoSoXetTuyen: string;
     maHoSo: string;
     thongTinThiSinh: Login.Profile;

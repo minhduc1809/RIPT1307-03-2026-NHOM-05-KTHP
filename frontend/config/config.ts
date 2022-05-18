@@ -154,7 +154,11 @@ export default defineConfig({
       component: './HoSoThiSinh/KhaoSatTrucTuyen',
       access: 'thiSinh',
     },
-
+    // {
+    //   name: 'TestLocale',
+    //   path: '/testlocale',
+    //   component: './TestLocale',
+    // },
     {
       name: 'QuanTriXetTuyen',
       path: '/quantrixettuyen',

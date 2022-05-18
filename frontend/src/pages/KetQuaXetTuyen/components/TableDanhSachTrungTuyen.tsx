@@ -4,13 +4,22 @@ import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
 import {
   ETrangThaiNhapHoc,
   ETrangThaiXacNhanNhapHoc,
+  MapKeyColorTrangThaiNhapHoc,
   MapKeyColorTrangThaiXacNhanNhapHoc,
 } from '@/utils/constants';
 import type { IColumn } from '@/utils/interfaces';
-import { DollarOutlined, LockOutlined, PrinterOutlined, UnlockOutlined } from '@ant-design/icons';
+import {
+  DollarOutlined,
+  LockOutlined,
+  PrinterOutlined,
+  SwapOutlined,
+  UnlockOutlined,
+} from '@ant-design/icons';
 import { Button, Divider, Modal, Popconfirm, Tag, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import ViewHoSoTrungTuyen from './ViewKetQua';
+import { useEffect, useState } from 'react';
+import FormChuyenDotNhapHoc from './FormChuyenDotNhapHoc';
 
 const TableDanhSachTrungTuyen = (props: {
   idCoSo?: string;
@@ -32,6 +41,15 @@ const TableDanhSachTrungTuyen = (props: {
     adminTiepNhanXacNhanNhapHocModel,
   } = useModel('ketquaxettuyen');
 
+  const { getAllModel } = useModel('dotnhaphoc');
+  useEffect(() => {
+    if (props.type === 'nhaphoc') {
+      getAllModel();
+    }
+  }, []);
+
+  const [visibleFormChuyenDot, setVisibleFormChuyenDot] = useState<boolean>(false);
+
   const { record: recordDotTuyenSinh } = useModel('dottuyensinh');
 
   const { record } = useModel('hinhthucdaotao');
@@ -47,6 +65,10 @@ const TableDanhSachTrungTuyen = (props: {
     },
     style: { cursor: 'pointer' },
   });
+
+  const onCancelFormChuyenDot = () => {
+    setVisibleFormChuyenDot(false);
+  };
 
   const getData = () =>
     getKetQuaXetTuyenPageableModel(
@@ -66,15 +88,39 @@ const TableDanhSachTrungTuyen = (props: {
     {
       title: 'Mã hồ sơ',
       dataIndex: 'maHoSo',
-      width: 100,
+      width: 120,
       align: 'center',
       search: 'search',
       onCell,
     },
     {
+      title: 'Trạng thái',
+      dataIndex: ['thongTinXacNhanNhapHoc', 'trangThaiXacNhan'],
+      width: 220,
+      columnKey: 'thongTinXacNhanNhapHoc.trangThaiXacNhan',
+      key: 'thongTinXacNhanNhapHoc.trangThaiXacNhan',
+      align: 'center',
+      search: 'filterString',
+      notRegex: true,
+      onCell,
+      hide: props.hideTrangThai || props.type === 'nhaphoc',
+      render: (val) => <Tag color={MapKeyColorTrangThaiXacNhanNhapHoc[val]}>{val}</Tag>,
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'trangThaiNhapHoc',
+      width: 220,
+      align: 'center',
+      search: 'filterString',
+      notRegex: true,
+      onCell,
+      hide: props.hideTrangThai || props.type === 'xacnhannhaphoc',
+      render: (val) => <Tag color={MapKeyColorTrangThaiNhapHoc[val]}>{val}</Tag>,
+    },
+    {
       title: 'Họ đệm',
       dataIndex: ['thongTinThiSinh', 'hoDem'],
-      width: 100,
+      width: 120,
       align: 'center',
       search: 'search',
       onCell,
@@ -88,17 +134,77 @@ const TableDanhSachTrungTuyen = (props: {
       onCell,
     },
     {
-      title: 'Trạng thái',
-      dataIndex: ['thongTinXacNhanNhapHoc', 'trangThaiXacNhan'],
+      title: 'Đợt nhập học',
+      dataIndex: ['idDotNhapHoc', 'tenDot'],
       width: 200,
-      columnKey: 'thongTinXacNhanNhapHoc.trangThaiXacNhan',
-      key: 'thongTinXacNhanNhapHoc.trangThaiXacNhan',
+      align: 'center',
+      search: 'search',
+      onCell,
+    },
+    {
+      title: 'Loại đối tượng',
+      dataIndex: 'loaiDoiTuong',
+      width: 200,
+      align: 'center',
+      render: (val: string[]) => (
+        <div>
+          {val.map((item) => (
+            <Tag key={item}>{item}</Tag>
+          ))}
+        </div>
+      ),
+      onCell,
+    },
+    {
+      title: 'Số CMND/CCCD',
+      dataIndex: ['thongTinThiSinh', 'cmtCccd'],
+      width: 200,
+      align: 'center',
+      search: 'search',
+      onCell,
+    },
+    {
+      title: 'Email',
+      dataIndex: ['thongTinThiSinh', 'email'],
+      width: 200,
+      align: 'center',
+      search: 'search',
+      onCell,
+    },
+    {
+      title: 'Mã thanh toán',
+      dataIndex: 'identityCodeNhapHoc',
+      width: 200,
+      align: 'center',
+      search: 'search',
+      hide: props?.paramCondition?.trangThaiNhapHoc === ETrangThaiNhapHoc.CHUA_KHOA,
+      onCell,
+    },
+    {
+      title: 'Trạng thái thanh toán',
+      dataIndex: 'trangThaiThanhToanNhapHoc',
+      width: 200,
       align: 'center',
       search: 'filterString',
       notRegex: true,
+      hide: props?.paramCondition?.trangThaiNhapHoc === ETrangThaiNhapHoc.CHUA_KHOA,
       onCell,
-      hide: props.hideTrangThai,
-      render: (val) => <Tag color={MapKeyColorTrangThaiXacNhanNhapHoc[val]}>{val}</Tag>,
+    },
+    {
+      title: 'Địa chỉ liên hệ',
+      dataIndex: ['thongTinThiSinh', 'diaChiLienHe'],
+      width: 200,
+      align: 'center',
+      render: (val: DonViHanhChinh.Record) => {
+        return (
+          <div>
+            {[val?.diaChi, val?.tenXaPhuong, val?.tenQH, val?.tenTP]
+              ?.filter((item) => item !== undefined && item !== '')
+              ?.join(', ')}
+          </div>
+        );
+      },
+      onCell,
     },
     {
       title: 'Cơ sở đào tạo',
@@ -111,11 +217,28 @@ const TableDanhSachTrungTuyen = (props: {
     {
       title: 'Thao tác',
       align: 'center',
-      width: 150,
+      width: 170,
       fixed: 'right',
       hide: props.type === 'xacnhannhaphoc',
       render: (recordHoSo: KetQuaXetTuyen.Record) => (
         <>
+          {recordHoSo?.trangThaiNhapHoc === ETrangThaiNhapHoc.CHUA_KHOA &&
+            props.type === 'nhaphoc' && (
+              <>
+                <Tooltip title="Chuyển đợt nhập học">
+                  <Button
+                    onClick={() => {
+                      setRecordKetQuaXetTuyen(recordHoSo);
+                      setVisibleFormChuyenDot(true);
+                    }}
+                    shape="circle"
+                    icon={<SwapOutlined />}
+                  />
+                </Tooltip>
+
+                <Divider type="vertical" />
+              </>
+            )}
           {[
             ETrangThaiNhapHoc.CHUA_KHOA,
             ETrangThaiNhapHoc.DA_TIEP_NHAN,
@@ -254,6 +377,7 @@ const TableDanhSachTrungTuyen = (props: {
 
   return (
     <TableBase
+      otherProps={{ scroll: { x: 1200 } }}
       hideCard
       getData={getData}
       modelName="ketquaxettuyen"
@@ -281,6 +405,18 @@ const TableDanhSachTrungTuyen = (props: {
         ) : (
           <ViewHoSoTrungTuyen idCoSo={props.idCoSo} />
         )}
+      </Modal>
+      <Modal
+        destroyOnClose
+        footer={false}
+        visible={visibleFormChuyenDot}
+        onCancel={onCancelFormChuyenDot}
+        bodyStyle={{ padding: 0 }}
+      >
+        <FormChuyenDotNhapHoc
+          onCancel={onCancelFormChuyenDot}
+          paramCondition={props?.paramCondition}
+        />
       </Modal>
       {props?.children}
     </TableBase>

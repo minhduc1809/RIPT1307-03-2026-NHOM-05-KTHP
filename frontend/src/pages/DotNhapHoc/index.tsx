@@ -1,3 +1,4 @@
+import Paragraph from '@/components/Paragraph';
 import TableBase from '@/components/Table';
 import type { DotNhapHoc } from '@/services/DotNhapHoc/typings';
 import { EHinhThucLePhiTuyenSinh } from '@/utils/constants';
@@ -6,11 +7,15 @@ import { DeleteOutlined, EditOutlined, SettingOutlined } from '@ant-design/icons
 import { Button, Divider, Modal, Popconfirm, Tooltip } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import { useModel } from 'umi';
 import HuongDanNhapHocComponent from '../HuongDanNhapHoc';
 import Form from './components/Form';
 
 const DotNhapHocComponent = () => {
+  const isMediumScreen = useMediaQuery({
+    query: '(min-width: 900px)',
+  });
   const {
     getModel,
     page,
@@ -69,6 +74,7 @@ const DotNhapHocComponent = () => {
       dataIndex: 'moTa',
       width: 150,
       align: 'center',
+      render: (val) => Paragraph(val, 2, { marginBottom: 0 }),
     },
     {
       title: 'Ngày bắt đầu',
@@ -138,7 +144,7 @@ const DotNhapHocComponent = () => {
   return (
     <>
       <TableBase
-        widthDrawer="900px"
+        widthDrawer={isMediumScreen ? 900 : '100%'}
         hascreate
         formType="Drawer"
         getData={getModel}

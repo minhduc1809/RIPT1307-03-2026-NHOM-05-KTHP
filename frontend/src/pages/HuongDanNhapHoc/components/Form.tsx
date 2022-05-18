@@ -2,11 +2,14 @@ import rules from '@/utils/rules';
 import { includes } from '@/utils/utils';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select } from 'antd';
 import moment from 'moment';
+import mm from 'moment-timezone';
 import { useModel } from 'umi';
 import TableGiayTo from './TableGiayTo';
 import TableGiayToTheoDoiTuong from './TableGiayToTheoDoiTuong';
 import TableLePhi from './TableLePhi';
 import TableDoiTuongLePhi from './TableLePhiTheoDoiTuong';
+
+mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
 const FormHuongDanNhapHoc = () => {
   const [form] = Form.useForm();

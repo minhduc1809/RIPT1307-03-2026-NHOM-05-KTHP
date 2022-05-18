@@ -43,8 +43,8 @@ const Content = () => {
   }, [record?._id]);
 
   useEffect(() => {
-    getDotNhapHocByIdModel(recordHoSo?.idDotNhapHoc ?? '');
-  }, [recordHoSo?.idDotNhapHoc]);
+    getDotNhapHocByIdModel(recordHoSo?.idDotNhapHoc?._id ?? '');
+  }, [recordHoSo?.idDotNhapHoc?._id]);
 
   useEffect(() => {
     thiSinhGetHuongDanNhapHocByKetQuaXetTuyenModel(recordHoSo?._id ?? '');

@@ -91,3 +91,10 @@ export const adminTiepNhanGiayToNopNhapHoc = (
 ) => {
   return axios.put(`${ip3}/${url}/admin/giay-to-nop/${idKetQuaXetTuyen}`, payload);
 };
+
+export const adminChuyenDotNhapHoc = (
+  idKetQuaXetTuyen: string,
+  payload: { idDotNhapHoc: string },
+) => {
+  return axios.put(`${ip3}/${url}/admin/chuyen-dot-nhap-hoc/${idKetQuaXetTuyen}`, payload);
+};

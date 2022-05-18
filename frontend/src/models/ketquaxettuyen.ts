@@ -1,3 +1,4 @@
+import { adminChuyenDotNhapHoc } from './../services/KetQuaXetTuyen/ketquaxettuyen';
 import useInitModel from '@/hooks/useInitModel';
 import type { Login } from '@/services/ant-design-pro/typings';
 import type { DotNhapHoc } from '@/services/DotNhapHoc/typings';
@@ -15,7 +16,8 @@ import {
   adminTiepNhanGiayToNopNhapHoc,
 } from '@/services/KetQuaXetTuyen/ketquaxettuyen';
 import type { KetQuaXetTuyen } from '@/services/KetQuaXetTuyen/typings';
-import type { ETrangThaiNhapHoc, ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
+import { ETrangThaiXacNhanNhapHoc } from '@/utils/constants';
+import { ETrangThaiNhapHoc } from '@/utils/constants';
 import { message } from 'antd';
 import { useState } from 'react';
 
@@ -178,7 +180,7 @@ export default () => {
       if (getData) getData();
       else
         getKetQuaXetTuyenPageableModel(idDotTuyenSinh, undefined, {
-          trangThaiNhapHoc: 'Đã khóa hồ sơ nhập học',
+          trangThaiNhapHoc: ETrangThaiNhapHoc.DA_KHOA,
         });
     } catch (err) {
       setLoading(false);
@@ -196,7 +198,27 @@ export default () => {
     await adminTiepNhanGiayToNopNhapHoc(idKetQuaXetTuyen, payload);
   };
 
+  const adminChuyenDotNhapHocModel = async (
+    idKetQuaXetTuyen: string,
+    payload: { idDotNhapHoc: string },
+    idDotTuyenSinh: string,
+    getData?: any,
+  ) => {
+    if (!idKetQuaXetTuyen) return;
+    setLoading(true);
+    await adminChuyenDotNhapHoc(idKetQuaXetTuyen, payload);
+    message.success('Xử lý thành công');
+    setLoading(false);
+    if (getData) getData();
+    else
+      getKetQuaXetTuyenPageableModel(idDotTuyenSinh, undefined, {
+        trangThaiNhapHoc: ETrangThaiNhapHoc.CHUA_KHOA,
+        'thongTinXacNhanNhapHoc.trangThaiXacNhan': ETrangThaiXacNhanNhapHoc.DA_TIEP_NHAN,
+      });
+  };
+
   return {
+    adminChuyenDotNhapHocModel,
     adminTiepNhanGiayToNopNhapHocModel,
     adminTiepNhanHoSoNhapHocModel,
     thiSinhKhoaHoSoNhapHocModel,

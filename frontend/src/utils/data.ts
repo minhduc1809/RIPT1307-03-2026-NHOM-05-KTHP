@@ -1,3 +1,4 @@
+import { ETrangThaiNhapHoc } from '@/utils/constants';
 import { ETrangThaiHoSo, ETrangThaiThanhToan, ETrangThaiXacNhanNhapHoc } from './constants';
 
 const data: any = {
@@ -40,8 +41,19 @@ const data: any = {
     ETrangThaiXacNhanNhapHoc.KHONG_TIEP_NHAN,
   ],
 
+  trangThaiNhapHoc: [
+    ETrangThaiNhapHoc.CHUA_KHOA,
+    ETrangThaiNhapHoc.DA_KHOA,
+    ETrangThaiNhapHoc.DA_TIEP_NHAN,
+    ETrangThaiNhapHoc.YEU_CAU_CHINH_SUA,
+  ],
+
   'thongTinThiSinh.gioiTinh': ['Nam', 'Nữ', 'Khác'],
   trangThaiThanhToan: [
+    ETrangThaiThanhToan.CHUA_THANH_TOAN_DU,
+    ETrangThaiThanhToan.DA_THANH_TOAN_DU,
+  ],
+  trangThaiThanhToanNhapHoc: [
     ETrangThaiThanhToan.CHUA_THANH_TOAN_DU,
     ETrangThaiThanhToan.DA_THANH_TOAN_DU,
   ],

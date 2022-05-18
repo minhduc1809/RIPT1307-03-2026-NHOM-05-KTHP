@@ -215,11 +215,18 @@ export enum ETrangThaiXacNhanNhapHoc {
 }
 
 export const MapKeyColorTrangThaiXacNhanNhapHoc = {
-  'Chưa xác nhận nhập học': 'blue',
-  'Xác nhận nhập học': 'yellow',
+  'Chưa xác nhận nhập học': 'yellow',
+  'Xác nhận nhập học': 'blue',
   'Không xác nhận nhập học': 'gray',
   'Đã tiếp nhận xác nhận nhập học': 'green',
   'Không tiếp nhận xác nhận nhập học': 'red',
+};
+
+export const MapKeyColorTrangThaiNhapHoc = {
+  'Chưa khóa hồ sơ nhập học': 'yellow',
+  'Đã khóa hồ sơ nhập học': 'blue',
+  'Yêu cầu chỉnh sửa hồ sơ nhập học': 'red',
+  'Đã tiếp nhận hồ sơ nhập học': 'green',
 };
 
 export enum ETrangThaiNhapHoc {

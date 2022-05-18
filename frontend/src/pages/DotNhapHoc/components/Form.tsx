@@ -42,7 +42,7 @@ const FormDotNhapHoc = () => {
       >
         <Form.Item
           initialValue={record?.tenDot}
-          rules={[...rules.required]}
+          rules={[...rules.required, ...rules.length(200)]}
           name="tenDot"
           label="Tên đợt"
         >
@@ -94,7 +94,7 @@ const FormDotNhapHoc = () => {
         </Row>
 
         <Form.Item
-          rules={[...rules.required]}
+          // rules={[...rules.required]}
           initialValue={record?.thongTinDotTuyenSinh?.map((item) => item.idDotTuyenSinh)}
           name="thongTinDotTuyenSinh"
           label="Thông tin đợt tuyển sinh"
@@ -111,8 +111,13 @@ const FormDotNhapHoc = () => {
           />
         </Form.Item>
 
-        <Form.Item initialValue={record?.moTa} name="moTa" label="Mô tả">
-          <Input.TextArea placeholder="Mô tả" rows={2} />
+        <Form.Item
+          initialValue={record?.moTa}
+          rules={[...rules.length(350)]}
+          name="moTa"
+          label="Mô tả"
+        >
+          <Input.TextArea placeholder="Mô tả" rows={3} />
         </Form.Item>
 
         <Form.Item name="danhSachGiayToCanNop" label="Danh sách giấy tờ cần nộp">
