@@ -3,15 +3,11 @@ import React from 'react';
 import { useAccess, useModel } from 'umi';
 import NoticeIcon from '../NoticeIcon';
 import Avatar from './AvatarDropdown';
-import GioiThieuChung from './GioiThieuChung';
-import HuongDanDropdown from './HuongDanDropdown';
 import styles from './index.less';
 
 export type SiderTheme = 'light' | 'dark';
 
-const GlobalHeaderRight: React.FC<{ marginTopGioiThieuChung: number }> = (props: {
-  marginTopGioiThieuChung: number;
-}) => {
+const GlobalHeaderRight: React.FC<{ marginTopGioiThieuChung: number }> = () => {
   const access = useAccess();
   const { initialState } = useModel('@@initialState');
 
@@ -31,8 +27,8 @@ const GlobalHeaderRight: React.FC<{ marginTopGioiThieuChung: number }> = (props:
       {!access.adminVaQuanTriVien && (
         <>
           <NoticeIcon />
-          <HuongDanDropdown />
-          <GioiThieuChung marginTop={props.marginTopGioiThieuChung} />
+          {/* <HuongDanDropdown /> */}
+          {/* <GioiThieuChung marginTop={props.marginTopGioiThieuChung} /> */}
         </>
       )}
       <Avatar menu />

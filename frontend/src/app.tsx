@@ -135,7 +135,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
     // headerRender: (props, dom) => <div style={{ backgroundColor: '#CC0D00' }}>{dom}</div>,
     isMobile: true,
-    footerRender: () => <GlobalFooter />,
+    // footerRender: () => <GlobalFooter />,
     onPageChange: () => {
       const { location } = history;
       const token = localStorage.getItem('token');
