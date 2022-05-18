@@ -1,22 +1,15 @@
 /* eslint-disable no-return-assign */
-import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
-import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
-import { getPhanNhomUserCurrent } from '@/services/PhanQuyen/phanquyen';
+// import type { DotTuyenSinh } from '@/services/DotTuyenSinh/typings';
+// import type { HoSoXetTuyen } from '@/services/HoSoXetTuyen/typings';
+// import { getPhanNhomUserCurrent } from '@/services/PhanQuyen/phanquyen';
 import { uploadFile } from '@/services/uploadFile';
 import { message } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import { parse } from 'path';
 import { useModel } from 'umi';
-import {
-  arrKhuVucUuTien,
-  EKhuVucUuTien,
-  EMonHoc,
-  ESystemRole,
-  ETenThanhPhanUuTien,
-} from './constants';
+import { arrKhuVucUuTien, EKhuVucUuTien, ESystemRole } from './constants';
 import { ip3 } from './ip';
-import _ from 'lodash';
 
 const reg =
   /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -212,15 +205,15 @@ export function includes(str1: string, str2: string) {
   return Format(str1).includes(Format(str2));
 }
 
-export async function getPhanNhom() {
-  const vaiTro = localStorage.getItem('vaiTro');
-  const token = localStorage.getItem('token');
-  let response: any = {};
-  if (token && vaiTro) {
-    response = await getPhanNhomUserCurrent();
-  }
-  return response?.data?.data ?? {};
-}
+// export async function getPhanNhom() {
+//   const vaiTro = localStorage.getItem('vaiTro');
+//   const token = localStorage.getItem('token');
+//   let response: any = {};
+//   if (token && vaiTro) {
+//     response = await getPhanNhomUserCurrent();
+//   }
+//   return response?.data?.data ?? {};
+// }
 
 export function handlePhanNhom(initialState: any, code: string): boolean {
   if (initialState?.currentUser?.systemRole === ESystemRole.Admin) return true;
@@ -302,54 +295,54 @@ export async function getURLImg(payload: any) {
   return axios.post(`${ip3}/file/image/single`, form);
 }
 
-export function calculateChuyen(thongTinHocTapTHPT: HoSoXetTuyen.ThongTinHocTapTHPT): {
-  truongChuyen: boolean;
-  monChuyen: EMonHoc;
-} {
-  let truongChuyen = false;
-  let monChuyen = EMonHoc.EMPTY;
+// export function calculateChuyen(thongTinHocTapTHPT: HoSoXetTuyen.ThongTinHocTapTHPT): {
+//   truongChuyen: boolean;
+//   monChuyen: EMonHoc;
+// } {
+//   let truongChuyen = false;
+//   let monChuyen = EMonHoc.EMPTY;
 
-  const dicTruongChuyen: Record<string, number> = {
-    'Không chuyên': 0,
-    Chuyên: 0,
-  };
+//   const dicTruongChuyen: Record<string, number> = {
+//     'Không chuyên': 0,
+//     Chuyên: 0,
+//   };
 
-  const dicMonChuyen: Record<string, number> = {};
+//   const dicMonChuyen: Record<string, number> = {};
 
-  if (!thongTinHocTapTHPT.truongLop10.truongChuyen) {
-    dicTruongChuyen['Không chuyên'] += 1;
-  } else {
-    dicTruongChuyen['Chuyên'] += 1;
-    dicMonChuyen[thongTinHocTapTHPT.truongLop10.monChuyen ?? EMonHoc.EMPTY] =
-      (dicMonChuyen[thongTinHocTapTHPT.truongLop10.monChuyen ?? EMonHoc.EMPTY] ?? 0) + 1;
-  }
+//   if (!thongTinHocTapTHPT.truongLop10.truongChuyen) {
+//     dicTruongChuyen['Không chuyên'] += 1;
+//   } else {
+//     dicTruongChuyen['Chuyên'] += 1;
+//     dicMonChuyen[thongTinHocTapTHPT.truongLop10.monChuyen ?? EMonHoc.EMPTY] =
+//       (dicMonChuyen[thongTinHocTapTHPT.truongLop10.monChuyen ?? EMonHoc.EMPTY] ?? 0) + 1;
+//   }
 
-  if (!thongTinHocTapTHPT.truongLop11.truongChuyen) {
-    dicTruongChuyen['Không chuyên'] += 1;
-  } else {
-    dicTruongChuyen['Chuyên'] += 1;
-    dicMonChuyen[thongTinHocTapTHPT.truongLop11.monChuyen ?? EMonHoc.EMPTY] =
-      (dicMonChuyen[thongTinHocTapTHPT.truongLop11.monChuyen ?? EMonHoc.EMPTY] ?? 0) + 1;
-  }
+//   if (!thongTinHocTapTHPT.truongLop11.truongChuyen) {
+//     dicTruongChuyen['Không chuyên'] += 1;
+//   } else {
+//     dicTruongChuyen['Chuyên'] += 1;
+//     dicMonChuyen[thongTinHocTapTHPT.truongLop11.monChuyen ?? EMonHoc.EMPTY] =
+//       (dicMonChuyen[thongTinHocTapTHPT.truongLop11.monChuyen ?? EMonHoc.EMPTY] ?? 0) + 1;
+//   }
 
-  if (!thongTinHocTapTHPT.truongLop12.truongChuyen) {
-    dicTruongChuyen['Không chuyên'] += 1;
-  } else {
-    dicTruongChuyen['Chuyên'] += 1;
-    dicMonChuyen[thongTinHocTapTHPT.truongLop12.monChuyen ?? EMonHoc.EMPTY] =
-      (dicMonChuyen[thongTinHocTapTHPT.truongLop12.monChuyen ?? EMonHoc.EMPTY] ?? 0) + 1;
-  }
-  if (dicTruongChuyen['Chuyên'] > dicTruongChuyen['Không chuyên']) {
-    truongChuyen = true;
-    monChuyen = Object.keys(dicMonChuyen).reduce((mon1, mon2) =>
-      dicMonChuyen[mon1] >= dicMonChuyen[mon2] ? mon1 : mon2,
-    ) as EMonHoc;
-  }
-  return {
-    truongChuyen,
-    monChuyen,
-  };
-}
+//   if (!thongTinHocTapTHPT.truongLop12.truongChuyen) {
+//     dicTruongChuyen['Không chuyên'] += 1;
+//   } else {
+//     dicTruongChuyen['Chuyên'] += 1;
+//     dicMonChuyen[thongTinHocTapTHPT.truongLop12.monChuyen ?? EMonHoc.EMPTY] =
+//       (dicMonChuyen[thongTinHocTapTHPT.truongLop12.monChuyen ?? EMonHoc.EMPTY] ?? 0) + 1;
+//   }
+//   if (dicTruongChuyen['Chuyên'] > dicTruongChuyen['Không chuyên']) {
+//     truongChuyen = true;
+//     monChuyen = Object.keys(dicMonChuyen).reduce((mon1, mon2) =>
+//       dicMonChuyen[mon1] >= dicMonChuyen[mon2] ? mon1 : mon2,
+//     ) as EMonHoc;
+//   }
+//   return {
+//     truongChuyen,
+//     monChuyen,
+//   };
+// }
 
 export function calculateKhuVuc(arrKhuVuc: [string, string, string]) {
   const countKhuVuc = {
@@ -383,42 +376,42 @@ export const mergeCauHinh = (value1: any, value2: any, key: string) => {
   }
 };
 
-export const mergeCauHinhDoiTuongXetTuyen = (
-  maDoiTuong: string[],
-  recordDot: DotTuyenSinh.Record,
-) => {
-  const cauHinh = {};
-  for (let i = 0; i < maDoiTuong?.length; i += 1) {
-    const cauHinhEle = recordDot?.danhSachDoiTuongTuyenSinh?.find(
-      (item) => item.maDoiTuong === maDoiTuong?.[i],
-    )?.cauHinhDoiTuong;
-    _.mergeWith(cauHinh, cauHinhEle, mergeCauHinh);
-  }
-  return cauHinh;
-};
+// export const mergeCauHinhDoiTuongXetTuyen = (
+//   maDoiTuong: string[],
+//   recordDot: DotTuyenSinh.Record,
+// ) => {
+//   const cauHinh = {};
+//   for (let i = 0; i < maDoiTuong?.length; i += 1) {
+//     const cauHinhEle = recordDot?.danhSachDoiTuongTuyenSinh?.find(
+//       (item) => item.maDoiTuong === maDoiTuong?.[i],
+//     )?.cauHinhDoiTuong;
+//     _.mergeWith(cauHinh, cauHinhEle, mergeCauHinh);
+//   }
+//   return cauHinh;
+// };
 
-export const calculateLuaChonToHopVaHienThiDiemQuyDoi = (
-  arrMaDoiTuong: string[],
-  arrDoiTuong: DotTuyenSinh.DoiTuongTuyenSinh[],
-): {
-  luaChonToHop: boolean;
-  hienThiDiemQuyDoi: boolean;
-} => {
-  let luaChonToHop = false;
-  let hienThiDiemQuyDoi = false;
+// export const calculateLuaChonToHopVaHienThiDiemQuyDoi = (
+//   arrMaDoiTuong: string[],
+//   arrDoiTuong: DotTuyenSinh.DoiTuongTuyenSinh[],
+// ): {
+//   luaChonToHop: boolean;
+//   hienThiDiemQuyDoi: boolean;
+// } => {
+//   let luaChonToHop = false;
+//   let hienThiDiemQuyDoi = false;
 
-  arrDoiTuong
-    ?.filter((item) => arrMaDoiTuong?.includes(item?.maDoiTuong))
-    ?.map((item) => {
-      luaChonToHop = luaChonToHop || item?.yeuCauLuaChonToHop;
-      hienThiDiemQuyDoi = hienThiDiemQuyDoi || item?.hienThiDiemQuyDoi;
-    });
+//   arrDoiTuong
+//     ?.filter((item) => arrMaDoiTuong?.includes(item?.maDoiTuong))
+//     ?.map((item) => {
+//       luaChonToHop = luaChonToHop || item?.yeuCauLuaChonToHop;
+//       hienThiDiemQuyDoi = hienThiDiemQuyDoi || item?.hienThiDiemQuyDoi;
+//     });
 
-  return {
-    luaChonToHop,
-    hienThiDiemQuyDoi,
-  };
-};
+//   return {
+//     luaChonToHop,
+//     hienThiDiemQuyDoi,
+//   };
+// };
 
 export const buildFormData = (payload: any) => {
   const form = new FormData();
@@ -436,20 +429,20 @@ export const buildFormData = (payload: any) => {
   return form;
 };
 
-export const filterDiemUuTien = (thanhPhanDiemQuyDoi: HoSoXetTuyen.ThanhPhanDiemQuyDoi[]) => {
-  return thanhPhanDiemQuyDoi.filter((thanhPhan) =>
-    Object.values(ETenThanhPhanUuTien).includes(thanhPhan.tenThanhPhan as ETenThanhPhanUuTien),
-  );
-};
+// export const filterDiemUuTien = (thanhPhanDiemQuyDoi: HoSoXetTuyen.ThanhPhanDiemQuyDoi[]) => {
+//   return thanhPhanDiemQuyDoi.filter((thanhPhan) =>
+//     Object.values(ETenThanhPhanUuTien).includes(thanhPhan.tenThanhPhan as ETenThanhPhanUuTien),
+//   );
+// };
 
-export const tongDiemUuTien = (thanhPhanDiemQuyDoi: HoSoXetTuyen.ThanhPhanDiemQuyDoi[]) => {
-  return filterDiemUuTien(thanhPhanDiemQuyDoi).reduce(
-    (sum: number, thanhPhan: HoSoXetTuyen.ThanhPhanDiemQuyDoi) => {
-      return sum + thanhPhan.diem ?? 0;
-    },
-    0,
-  );
-};
+// export const tongDiemUuTien = (thanhPhanDiemQuyDoi: HoSoXetTuyen.ThanhPhanDiemQuyDoi[]) => {
+//   return filterDiemUuTien(thanhPhanDiemQuyDoi).reduce(
+//     (sum: number, thanhPhan: HoSoXetTuyen.ThanhPhanDiemQuyDoi) => {
+//       return sum + thanhPhan.diem ?? 0;
+//     },
+//     0,
+//   );
+// };
 
 export const makeId = (length: number) => {
   let text = '';

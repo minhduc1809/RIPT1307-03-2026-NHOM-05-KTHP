@@ -6,7 +6,7 @@ import type { Login } from '@/services/ant-design-pro/typings';
 import { ESystemRole, Setting } from '@/utils/constants';
 import data from '@/utils/data';
 import rules from '@/utils/rules';
-import { getPhanNhom } from '@/utils/utils';
+// import { getPhanNhom } from '@/utils/utils';
 import {
   FileExcelOutlined,
   FileTextOutlined,
@@ -67,7 +67,7 @@ const LoginGlobal: React.FC = () => {
     localStorage.setItem('token', role?.accessToken);
     localStorage.setItem('vaiTro', role?.user?.systemRole);
     const info = await getInfo();
-    const phanNhom = await getPhanNhom();
+    // const phanNhom = await getPhanNhom();
     setInitialState({
       ...initialState,
       currentUser: info?.data?.data ?? {},
@@ -77,7 +77,7 @@ const LoginGlobal: React.FC = () => {
           ? 'side'
           : 'top',
       },
-      phanNhom,
+      // phanNhom,
     });
     message.success(defaultloginSuccessMessage);
     history.push(data?.path?.[role?.user?.systemRole || 'guest'] ?? '/');
