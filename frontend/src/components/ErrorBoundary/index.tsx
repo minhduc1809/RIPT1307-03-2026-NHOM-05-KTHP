@@ -1,6 +1,7 @@
+import { HomeOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Button, Result } from 'antd';
 import React from 'react';
-import { Link } from 'umi';
+import { history } from 'umi';
 import './style.less';
 
 class ErrorBoundary extends React.Component<MyProps, MyState> {
@@ -34,18 +35,32 @@ class ErrorBoundary extends React.Component<MyProps, MyState> {
               </p>
             }
             extra={[
-              <Link to="/" key="home">
-                <Button>Về trang chủ</Button>
-              </Link>,
-              <Button key="buy" onClick={() => window.location.reload()} type="primary">
+              <Button
+                onClick={() => {
+                  history.push('/');
+                  window.location.reload();
+                }}
+                key="1"
+                icon={<HomeOutlined />}
+              >
+                Về trang chủ
+              </Button>,
+              <Button
+                key="buy"
+                onClick={() => window.location.reload()}
+                type="primary"
+                icon={<ReloadOutlined />}
+              >
                 Tải lại trang
               </Button>,
             ]}
           >
             <div className="desc">
-              Thông tin lỗi: {this.state.error ? this.state.error.toString() : ''}
+              <b>Thông tin lỗi:</b>
               <br />
               <details style={{ whiteSpace: 'pre-wrap' }}>
+                {this.state.error ? this.state.error.toString() : ''}
+                <br />
                 {this.state.errorInfo.componentStack}
               </details>
             </div>
