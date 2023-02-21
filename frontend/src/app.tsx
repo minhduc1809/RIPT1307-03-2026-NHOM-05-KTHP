@@ -6,7 +6,7 @@ import 'moment/locale/vi';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
-import GlobalFooter from './components/GlobalFooter';
+import ErrorBoundary from './components/ErrorBoundary';
 import NotAccessible from './pages/exception/403';
 import NotFoundContent from './pages/exception/404';
 import { getInfo, getInfoAdmin } from './services/ant-design-pro/api';
@@ -178,7 +178,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         </Tooltip>
       );
     },
-
+    childrenRender: (dom) => {
+      return <ErrorBoundary>{dom}</ErrorBoundary>;
+    },
     menuHeaderRender: undefined,
     ...initialState?.settings,
     title: 'Xét tuyển PTIT',
