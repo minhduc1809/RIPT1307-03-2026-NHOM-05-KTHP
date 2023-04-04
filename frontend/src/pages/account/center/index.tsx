@@ -1,12 +1,10 @@
 import avatar from '@/assets/logo.png';
-import type { Login } from '@/services/ant-design-pro/typings';
 import {
   CalendarOutlined,
-  ClusterOutlined,
   ContactsOutlined,
+  MailOutlined,
   ManOutlined,
   UserOutlined,
-  WomanOutlined,
 } from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
 import type { Input } from 'antd';
@@ -18,24 +16,18 @@ import type { Dispatch } from 'umi';
 import { connect } from 'umi';
 import styles from './Center.less';
 import Profile from './components/Profile';
-import EditCCCD from './components/Profile/EditCCCD';
 import ChangePassword from './components/Profile/ChangePassword';
-
 import type { ModalState } from './model';
 
 const operationTabList = [
   {
-    key: 'editCCCD',
-    tab: 'Thông tin cá nhân',
+    key: 'editProfile',
+    tab: 'Thông tin tài khoản',
   },
   // {
-  //   key: 'editProfile',
-  //   tab: <span>Thông tin cá nhân</span>,
+  //   key: 'changePassword',
+  //   tab: <span>Đổi mật khẩu</span>,
   // },
-  {
-    key: 'changePassword',
-    tab: 'Đổi mật khẩu',
-  },
 ];
 
 interface CenterProps extends RouteChildrenProps {
@@ -44,12 +36,12 @@ interface CenterProps extends RouteChildrenProps {
   currentUserLoading: boolean;
 }
 interface CenterState {
-  tabKey?: 'editProfile' | 'editCCCD';
+  tabKey?: 'editProfile' | 'changePassword';
 }
 
 class Center extends Component<CenterProps, CenterState> {
   state: CenterState = {
-    tabKey: 'editCCCD',
+    tabKey: 'editProfile',
   };
 
   public input: Input | null | undefined = undefined;
@@ -71,21 +63,17 @@ class Center extends Component<CenterProps, CenterState> {
     if (tabKey === 'editProfile') {
       return <Profile />;
     }
-    if (tabKey === 'editCCCD') {
-      return <EditCCCD />;
-    }
-    if (tabKey === 'changePassword') {
-      return <ChangePassword />;
-    }
+    // if (tabKey === 'changePassword') {
+    //   return <ChangePassword />;
+    // }
 
     return null;
   };
 
   renderUserInfo = (currentUser: Partial<Login.Profile>) => {
-    const role = currentUser?.systemRole;
-    let roleText = 'Chưa xác định';
-    if (role === 'ThiSinh') roleText = 'Thí sinh';
-    else if (role === 'QuanTriVien') roleText = 'Quản trị viên';
+    let gioiTinhText = 'Chưa xác định';
+    if (currentUser?.gioi_tinh === '0') gioiTinhText = 'Nam';
+    else if (currentUser.gioi_tinh === '1') gioiTinhText = 'Nữ';
     return (
       <div className={styles.detail}>
         <p>
@@ -94,7 +82,7 @@ class Center extends Component<CenterProps, CenterState> {
               marginRight: 8,
             }}
           />
-          {roleText}
+          {currentUser?.so_dien_thoai || 'Chưa cập nhật'}
         </p>
         <p>
           <UserOutlined
@@ -102,7 +90,7 @@ class Center extends Component<CenterProps, CenterState> {
               marginRight: 8,
             }}
           />
-          {currentUser?.ten || ''}
+          {currentUser?.ma_dinh_danh || 'Chưa cập nhật'}
         </p>
         <p>
           <CalendarOutlined
@@ -110,27 +98,25 @@ class Center extends Component<CenterProps, CenterState> {
               marginRight: 8,
             }}
           />
-          {currentUser?.ngaySinh ? moment(currentUser?.ngaySinh).format('DD/MM/YYYY') : ''}
+          {currentUser?.ngay_sinh
+            ? moment(currentUser?.ngay_sinh).format('DD/MM/YYYY')
+            : 'Chưa cập nhật'}
         </p>
         <p>
-          {currentUser?.gioiTinh === 'Nam' ? (
-            <ManOutlined
-              style={{
-                marginRight: 8,
-              }}
-            />
-          ) : (
-            <WomanOutlined />
-          )}
-          {currentUser?.gioiTinh ?? ''}
-        </p>
-        <p>
-          <ClusterOutlined
+          <ManOutlined
             style={{
               marginRight: 8,
             }}
           />
-          {currentUser?.email || ''}
+          {gioiTinhText}
+        </p>
+        <p>
+          <MailOutlined
+            style={{
+              marginRight: 8,
+            }}
+          />
+          {currentUser?.email || 'Chưa cập nhật'}
         </p>
       </div>
     );
@@ -142,39 +128,32 @@ class Center extends Component<CenterProps, CenterState> {
     const dataLoading = false;
     return (
       <GridContent>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <div style={{ width: 1000 }}>
-            <Row gutter={24}>
-              <Col lg={8} md={24}>
-                <Card bordered={false} style={{ marginBottom: 24 }} loading={dataLoading}>
-                  {!dataLoading && (
-                    <div>
-                      <div className={styles.avatarHolder}>
-                        <img style={{ width: 70 }} alt="" src={currentUser?.anhDaiDien || avatar} />
-                        <div className={styles.name}>{currentUser?.ten || 'Chưa cập nhật'}</div>
-                        <div>{currentUser?.email || currentUser?.email || 'Chưa cập nhật'}</div>
-                      </div>
-                      {this.renderUserInfo(currentUser)}
-                    </div>
-                  )}
-                </Card>
-              </Col>
-              <Col lg={14} md={24}>
-                <Card
-                  className={styles.tabsCard}
-                  bordered={false}
-                  tabList={operationTabList}
-                  activeTabKey={tabKey}
-                  onTabChange={this.onTabChange}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    {this.renderChildrenByTabKey(tabKey)}
+        <Row gutter={24}>
+          <Col lg={7} md={24}>
+            <Card bordered={false} style={{ marginBottom: 24 }} loading={dataLoading}>
+              {!dataLoading && (
+                <div>
+                  <div className={styles.avatarHolder}>
+                    <img alt="" src={currentUser?.avatar_path || avatar} />
+                    <div className={styles.name}>{currentUser?.name || 'Chưa cập nhật'}</div>
                   </div>
-                </Card>
-              </Col>
-            </Row>
-          </div>
-        </div>
+                  {this.renderUserInfo(currentUser)}
+                </div>
+              )}
+            </Card>
+          </Col>
+          <Col lg={17} md={24}>
+            <Card
+              className={styles.tabsCard}
+              bordered={false}
+              tabList={operationTabList}
+              activeTabKey={tabKey}
+              onTabChange={this.onTabChange}
+            >
+              {this.renderChildrenByTabKey(tabKey)}
+            </Card>
+          </Col>
+        </Row>
       </GridContent>
     );
   }

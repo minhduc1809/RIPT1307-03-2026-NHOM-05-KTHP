@@ -11,7 +11,7 @@ export type NoticeIconTabProps = {
   showViewMore?: boolean;
   style?: React.CSSProperties;
   title: string;
-  tabKey: API.NoticeIconItemType;
+  tabKey: string;
   onClick?: (item: ThongBao.Record) => void;
   onClear?: () => void;
   emptyText?: string;
@@ -31,7 +31,7 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
   viewMoreText,
   showViewMore = false,
 }) => {
-  const { total, limit, setLimit, loading } = useModel('thongbao');
+  const { totalNoticeIcon, limitNoticeIcon, setLimitNoticeIcon, loading } = useModel('thongbao');
   if (!list || list.length === 0) {
     return (
       <div className={styles.notFound}>
@@ -45,7 +45,7 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
   }
   const loadMoreData = () => {
     if (loading) return;
-    setLimit(limit + 5);
+    setLimitNoticeIcon(limitNoticeIcon + 5);
   };
   return (
     <div>
@@ -68,7 +68,7 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
           }}
           dataLength={list.length}
           next={loadMoreData}
-          hasMore={list.length < total}
+          hasMore={list.length < totalNoticeIcon}
           loader={
             <div style={{ padding: '12px 24px' }}>
               <Skeleton paragraph={{ rows: 1 }} active />

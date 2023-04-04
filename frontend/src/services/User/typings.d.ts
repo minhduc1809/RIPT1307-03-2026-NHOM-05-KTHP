@@ -5,8 +5,11 @@ declare module User {
     gender: string;
     name: string;
     role: string;
-    hoDem: string;
-    ten: string;
-    _id: string;
+  }
+
+  export interface XepHangUser {
+    viTri: number;
+    diem: number;
+    tongSo: number
   }
 }

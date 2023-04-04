@@ -1,32 +1,15 @@
-import logoGoogle from '@/assets/googleicon.png';
-import logo from '@/assets/logo.png';
 import Footer from '@/components/Footer';
-import { getInfo, login } from '@/services/ant-design-pro/api';
-import type { Login } from '@/services/ant-design-pro/typings';
-import { ESystemRole, Setting } from '@/utils/constants';
+import LoginWithKeycloak from '@/pages/user/Login/KeycloakLogin';
+import { adminlogin, getInfo } from '@/services/ant-design-pro/api';
 import data from '@/utils/data';
 import rules from '@/utils/rules';
-// import { getPhanNhom } from '@/utils/utils';
-import {
-  FileExcelOutlined,
-  FileTextOutlined,
-  LockOutlined,
-  NotificationOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
-import ProForm, { ProFormText } from '@ant-design/pro-form';
-import { Button, Col, ConfigProvider, Divider, message, Modal, Row, Tabs, Tooltip } from 'antd';
-import viVN from 'antd/lib/locale/vi_VN';
-import React, { useEffect, useState } from 'react';
-import FacebookLogin from 'react-facebook-login';
-import GoogleLogin from 'react-google-login';
-import { useMediaQuery } from 'react-responsive';
-import { FormattedMessage, history, useIntl, useModel } from 'umi';
-import Register from '../register';
-import FormForgetPassword from './FormForgetPassword';
-import styles from './index.less';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Tabs, message } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import OneSignal from 'react-onesignal';
+import Recaptcha from 'react-recaptcha';
+import { history, useIntl, useModel } from 'umi';
+import styles from './index.less';
 
 const goto = () => {
   if (!history) return;
@@ -37,60 +20,87 @@ const goto = () => {
   }, 2000);
 };
 
-const LoginGlobal: React.FC = () => {
-  const isMediumScreen = useMediaQuery({
-    query: '(min-width: 768px)',
-  });
-  const isNotSmallScreen = useMediaQuery({
-    query: '(min-width: 411px)',
-  });
+const Login: React.FC = () => {
+  const [count, setCount] = useState<number>(Number(localStorage?.getItem('failed')) || 0);
   const [submitting, setSubmitting] = useState(false);
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
-  const { isLogin, setIsLogin } = useModel('user');
-  const intl = useIntl();
-  const [visibile, setVisible] = useState<boolean>(false);
+  const [isVerified, setIsverified] = useState<boolean>(true);
+  const [visibleCaptcha, setVisibleCaptcha] = useState<boolean>(false);
+  const [visibleCaptcha2, setVisibleCaptcha2] = useState<boolean>(false);
   const [oneSignalId, setOneSignalId] = useState<string | null | undefined>();
+  const recaptchaRef = useRef(null);
+  const intl = useIntl();
+  const [form] = Form.useForm();
+
   const getUserIdOnesignal = async () => {
     const id = await OneSignal.getUserId();
     setOneSignalId(id);
   };
+
   useEffect(() => {
     getUserIdOnesignal();
   }, []);
 
-  const handleRole = async (role: { accessToken: string; user: Login.Profile }) => {
+  /**
+   * Xử lý token, get info sau khi đăng nhập
+   */
+  const handleRole = async (
+    role: {
+      accessToken: string;
+      refreshToken: string;
+      idToken: string;
+    },
+    vaiTro?: string,
+  ) => {
     const defaultloginSuccessMessage = intl.formatMessage({
       id: 'pages.login.success',
       defaultMessage: 'success',
     });
     localStorage.setItem('token', role?.accessToken);
-    localStorage.setItem('vaiTro', role?.user?.systemRole);
+    localStorage.setItem('refreshToken', role?.refreshToken);
+    localStorage.setItem('id_token', role?.idToken);
+    localStorage.setItem('vaiTro', vaiTro ?? 'guest');
+
     const info = await getInfo();
-    // const phanNhom = await getPhanNhom();
     setInitialState({
       ...initialState,
       currentUser: info?.data?.data ?? {},
-      settings: {
-        primaryColor: 'daybreak',
-        layout: [ESystemRole.Admin, ESystemRole.QuanTriVien].includes(role?.user?.systemRole)
-          ? 'side'
-          : 'top',
-      },
-      // phanNhom,
     });
     message.success(defaultloginSuccessMessage);
-    history.push(data?.path?.[role?.user?.systemRole || 'guest'] ?? '/');
+    history.push(data?.path?.[vaiTro ?? 'guest'] ?? '/');
   };
 
-  const handleSubmit = async (values: { username: string; password: string }) => {
-    setSubmitting(true);
+  // Callback after login with KeyCloak
+  const handleLoginWithKeycloak = async (
+    accessToken: string,
+    refreshToken: string,
+    idToken: string,
+    oneId: string,
+  ) => {
+    handleRole({ accessToken, refreshToken, idToken });
+  };
+
+  const handleSubmit = async (values: { login: string; password: string }) => {
     try {
-      const msg = await login({ ...values, deviceId: 'deviceId', oneSignalId: oneSignalId || '' });
-      if (msg.status === 201) {
-        handleRole(msg?.data?.data);
+      if (!isVerified) {
+        message.error('Vui lòng xác thực Captcha');
+        return;
+      }
+      setSubmitting(true);
+      const msg = await adminlogin({ ...values, username: values?.login ?? '' });
+      if (msg.status === 200 && msg?.data?.data?.accessToken) {
+        handleRole(msg?.data?.data, 'Admin');
+        localStorage.removeItem('failed');
       }
     } catch (error) {
+      if (count >= 4) {
+        setIsverified(false);
+        setVisibleCaptcha(!visibleCaptcha);
+        setVisibleCaptcha2(true);
+      }
+      setCount(count + 1);
+      localStorage.setItem('failed', (count + 1).toString());
       const defaultloginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
         defaultMessage: 'failure',
@@ -100,294 +110,129 @@ const LoginGlobal: React.FC = () => {
     setSubmitting(false);
   };
 
-  const responseFacebook = (response: any) => {
-    // this.props.dispatch({
-    //   type: 'login/loginFacebook',
-    //   payload: {
-    //     accessToken: response.accessToken,
-    //   },
-    // });
-    console.log('error', response);
-  };
-
-  const responseGoogle = (response: any) => {
-    // this.props.dispatch({
-    //   type: 'login/loginGoogle',
-    //   payload: {
-    //     accessToken: response.accessToken,
-    //   },
-    // });
-    console.log('error', response);
-  };
-
-  const responseGoogleFail = (response: any) => {
-    console.log('error', response);
-  };
-
-  const responseFacebookFail = (response: any) => {
-    console.log('error', response);
+  const verifyCallback = (response: any) => {
+    if (response) setIsverified(true);
+    else setIsverified(false);
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {isLogin ? (
-          <ConfigProvider locale={viVN}>
-            <div className={styles.main}>
-              <div
-                style={{
-                  textAlign: 'center',
-                  fontSize: 30,
-                  color: Setting.primaryColor,
-                }}
-              >
-                <img style={{ width: 25, height: 35 }} src={logo} /> HỆ THỐNG
-                <div style={{ fontSize: isNotSmallScreen ? 25 : 22 }}>XÉT TUYỂN TRỰC TUYẾN</div>
-              </div>
-              <ProForm
-                initialValues={{
-                  autoLogin: true,
-                }}
-                submitter={{
-                  searchConfig: {
-                    submitText: intl.formatMessage({
-                      id: 'pages.login.submit',
-                      defaultMessage: 'submit',
-                    }),
-                  },
-
-                  render: (_, dom) => {
-                    return (
-                      <>
-                        {dom.pop()}
-                        <div style={{ width: '100%', textAlign: 'center', marginTop: '15px' }}>
-                          <Button onClick={() => setVisible(true)} type="link">
-                            <FormattedMessage id="pages.login.forgotPassword" />
-                          </Button>
-                        </div>
-                        <Divider style={{ margin: '13px 0px' }} />
-                        <div style={{ textAlign: 'center' }}>
-                          <Button
-                            type="primary"
-                            onClick={() => {
-                              setIsLogin(false);
-                            }}
-                            style={{
-                              height: 40,
-                              padding: '0px 15px',
-                              fontSize: 16,
-                              borderRadius: 4,
-                              // width: '100%',
-                            }}
-                          >
-                            Đăng ký tài khoản
-                          </Button>
-                        </div>
-                        <br />
-                        <Row>
-                          <Col style={{ marginTop: 8 }} xs={24} md={24}>
-                            <FacebookLogin
-                              appId="529724911787253"
-                              autoLoad={false}
-                              fields="name,email,picture"
-                              callback={responseFacebook}
-                              cssClass={styles.facebookButton}
-                              onFailure={responseFacebookFail}
-                              icon="fa fa-facebook fa-fw"
-                              textButton="Đăng nhập với facebook"
-                              size="small"
-                              disableMobileRedirect
-                            />
-                          </Col>
-
-                          <Col style={{ marginTop: 8 }} xs={24} md={24}>
-                            <GoogleLogin
-                              clientId="912230541378-6b2qhkl6g93bfc8nukkjq1qg2h9jognf.apps.googleusercontent.com"
-                              icon={false}
-                              // isSignedIn={true}
-                              onSuccess={responseGoogle}
-                              onFailure={responseGoogleFail}
-                              cookiePolicy="single_host_origin"
-                              render={(renderProps) => (
-                                <Button
-                                  className={styles.googleButton}
-                                  onClick={renderProps.onClick}
-                                >
-                                  <img
-                                    style={{
-                                      height: '1rem',
-                                      margin: '0px 4px 3px -10px',
-                                      width: '1rem',
-                                    }}
-                                    src={logoGoogle}
-                                  />
-                                  Đăng nhập với Google
-                                </Button>
-                              )}
-                            />
-                          </Col>
-                        </Row>
-                      </>
-                    );
-                  },
-
-                  submitButtonProps: {
-                    loading: submitting,
-                    size: 'large',
-                    style: {
-                      width: '100%',
-                      borderRadius: 5,
-                    },
-                  },
-                }}
-                onFinish={async (values) => {
-                  handleSubmit(values as { username: string; password: string });
-                }}
-              >
-                <Tabs activeKey={type} onChange={setType}>
-                  <Tabs.TabPane
-                    key="account"
-                    tab={intl.formatMessage({
-                      id: 'pages.login.accountLogin.tab',
-                      defaultMessage: 'tab',
-                    })}
-                  />
-                </Tabs>
-
-                {type === 'account' && (
-                  <>
-                    <ProFormText
-                      name="username"
-                      fieldProps={{
-                        style: { borderRadius: 5 },
-                        size: 'large',
-                        prefix: <UserOutlined className={styles.prefixIcon} />,
-                      }}
-                      placeholder={intl.formatMessage({
-                        id: 'pages.login.username.placeholder',
-                        defaultMessage: 'Nhập tên đăng nhập',
-                      })}
-                      rules={[
-                        {
-                          required: true,
-                          message: (
-                            <FormattedMessage
-                              id="pages.login.username.required"
-                              defaultMessage="required!"
-                            />
-                          ),
-                        },
-                        ...rules.length(50),
-                      ]}
-                    />
-                    <ProFormText.Password
-                      name="password"
-                      fieldProps={{
-                        style: { borderRadius: 5 },
-                        size: 'large',
-                        prefix: <LockOutlined className={styles.prefixIcon} />,
-                      }}
-                      placeholder={intl.formatMessage({
-                        id: 'pages.login.password.placeholder',
-                        defaultMessage: 'placeholder: ant.design',
-                      })}
-                      rules={[
-                        {
-                          required: true,
-                          message: (
-                            <FormattedMessage
-                              id="pages.login.password.required"
-                              defaultMessage="required"
-                            />
-                          ),
-                        },
-                        // ...rules.password,
-                      ]}
-                    />
-                  </>
-                )}
-              </ProForm>
-              {isNotSmallScreen ? (
-                <div style={{ width: '100%', position: 'absolute', bottom: 0, left: 0 }}>
-                  <Footer />
-                </div>
-              ) : (
-                <br />
-              )}
+        <div className={styles.top}>
+          <div className={styles.header}>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <img alt="logo" className={styles.logo} src="/logo-full-white.svg" />
             </div>
-          </ConfigProvider>
-        ) : (
-          <Register
-            back={() => {
-              setIsLogin(true);
-            }}
-          />
-        )}
-      </div>
-      <Modal
-        destroyOnClose
-        visible={visibile}
-        footer={false}
-        title="Quên mật khẩu"
-        onCancel={() => {
-          setVisible(false);
-        }}
-      >
-        <FormForgetPassword
-          onCancel={() => {
-            setVisible(false);
-          }}
-        />
-      </Modal>
-      <div className={styles.image}>
-        {isMediumScreen && (
-          <div className={styles.containericonhuongdan}>
-            <Tooltip title="Đề án tuyển sinh">
-              <Button
-                onClick={() => window.open('https://tuyensinh.ptit.edu.vn/deantuyensinh')}
-                className={styles.iconhuongdan}
-                icon={<NotificationOutlined />}
-                shape="circle"
-              />
-            </Tooltip>
-            <Tooltip title="Tài liệu HDSD">
-              <Button
-                onClick={() =>
-                  window.open(
-                    'https://drive.google.com/drive/folders/1iD7GxppVjBIkT_ZqAFFeDRkgg7s8iTMp',
-                  )
-                }
-                className={styles.iconhuongdan}
-                icon={<FileTextOutlined />}
-                shape="circle"
-              />
-            </Tooltip>
-            <Tooltip title="Video HDSD">
-              <Button
-                className={styles.iconhuongdan}
-                icon={<VideoCameraOutlined />}
-                shape="circle"
-              />
-            </Tooltip>
-            <Tooltip title="Danh mục trường THPT chuyên">
-              <Button
-                onClick={() =>
-                  window.open(
-                    'https://docs.google.com/spreadsheets/d/1duPQykk4uM6tqdKy6ZAj59zocxadDBNmrUJAsblPk2M/edit?usp=sharing',
-                  )
-                }
-                className={styles.iconhuongdan}
-                icon={<FileExcelOutlined />}
-                shape="circle"
-              />
-            </Tooltip>
           </div>
-        )}
+        </div>
+
+        <div className={styles.main}>
+          <Tabs activeKey={type} onChange={setType}>
+            <Tabs.TabPane
+              key="account"
+              tab={intl.formatMessage({
+                id: 'pages.login.accountLogin.tab',
+                defaultMessage: 'tab',
+              })}
+            />
+            <Tabs.TabPane
+              key="accountAdmin"
+              tab={intl.formatMessage({
+                id: 'pages.login.accountLoginAdmin.tab',
+                defaultMessage: 'tab',
+              })}
+            />
+          </Tabs>
+
+          {type === 'account' ? (
+            <LoginWithKeycloak
+              title="Đăng nhập với SSO"
+              oneSignalId={oneSignalId}
+              onLoginSuccess={handleLoginWithKeycloak}
+            />
+          ) : type === 'accountAdmin' ? (
+            <Form
+              form={form}
+              onFinish={async (values) =>
+                handleSubmit(values as { login: string; password: string })
+              }
+              layout="vertical"
+            >
+              <Form.Item label="" name="login" rules={[...rules.required]}>
+                <Input
+                  placeholder={intl.formatMessage({
+                    id: 'pages.login.username.placeholder',
+                    defaultMessage: 'Nhập tên đăng nhập',
+                  })}
+                  prefix={<UserOutlined className={styles.prefixIcon} />}
+                  size="large"
+                />
+              </Form.Item>
+              <Form.Item label="" name="password" rules={[...rules.required]}>
+                <Input.Password
+                  placeholder={intl.formatMessage({
+                    id: 'pages.login.password.placeholder',
+                    defaultMessage: 'Nhập mật khẩu',
+                  })}
+                  prefix={<LockOutlined className={styles.prefixIcon} />}
+                  size="large"
+                />
+              </Form.Item>
+
+              <Button type="primary" block size="large" loading={submitting}>
+                {intl.formatMessage({
+                  id: 'pages.login.submit',
+                  defaultMessage: 'submit',
+                })}
+              </Button>
+            </Form>
+          ) : null}
+
+          <br />
+          <div style={{ textAlign: 'center' }}>
+            <Button
+              onClick={() => {
+                window.open(
+                  'https://slinkid.ptit.edu.vn/auth/realms/master/login-actions/reset-credentials',
+                );
+              }}
+              type="link"
+            >
+              Quên mật khẩu?
+            </Button>
+            {type === 'accountAdmin' && visibleCaptcha && count >= 5 && (
+              <Recaptcha
+                ref={recaptchaRef}
+                size="normal"
+                sitekey="6LelHsEeAAAAAJmsVdeC2EPNCAVEtfRBUGSKireh"
+                render="explicit"
+                hl="vi"
+                // onloadCallback={callback}
+                verifyCallback={verifyCallback}
+              />
+            )}
+            {type === 'accountAdmin' && !visibleCaptcha && visibleCaptcha2 && count >= 5 && (
+              <Recaptcha
+                ref={recaptchaRef}
+                size="normal"
+                sitekey="6LelHsEeAAAAAJmsVdeC2EPNCAVEtfRBUGSKireh"
+                render="explicit"
+                hl="vi"
+                // onloadCallback={callback}
+                verifyCallback={verifyCallback}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="login-footer">
+        <Footer />
       </div>
     </div>
   );
 };
 
-export default LoginGlobal;
+export default Login;
 
 export { goto };

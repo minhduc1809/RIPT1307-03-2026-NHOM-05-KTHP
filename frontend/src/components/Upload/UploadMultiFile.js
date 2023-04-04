@@ -1,6 +1,6 @@
-import React from 'react';
-import { Upload, Icon, message, Button } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { Button, message, Upload } from 'antd';
+import React from 'react';
 /**
  * @param
  */
@@ -23,15 +23,32 @@ class PicturesWall extends React.Component {
     const arr = fileList;
     let { limit } = this.props;
     limit = limit || 10;
-    const findLargeFile = fileList?.find((file) => file.size / 1024 / 1024 > 8);
+    const findLargeFile = fileList?.find((file) => file.size / 1024 / 1024 > 25);
+    const findWrongTypeFile = fileList?.find((file) => {
+      const arrFileName = file.name.split('.');
+      return (
+        file?.remote !== true &&
+        !this.props?.otherProps?.accept?.includes(arrFileName?.[arrFileName.length - 1])
+      );
+    });
+
     if (findLargeFile) {
-      message.error('Tập tin phải nhỏ hơn 8MB!');
+      message.error('Tập tin phải nhỏ hơn 25MB!', 5);
+      return;
+    }
+    if (findWrongTypeFile && this.props?.otherProps?.accept) {
+      message.error(`Chỉ được chọn các định dạng file sau ${this.props.otherProps.accept}`, 5);
       return;
     }
 
     if (fileList.length > limit) arr.splice(0, fileList.length - limit);
     this.setState({ fileList: arr });
     this.triggerChange({ fileList: arr });
+    if (this.props.handleChoseFile) {
+      fileList[0]?.originFileObj
+        ? this.props.handleChoseFile(fileList[0].originFileObj)
+        : this.props.handleChoseFile(undefined);
+    }
   };
 
   // componentWillUnmount() {
@@ -42,7 +59,11 @@ class PicturesWall extends React.Component {
     const { otherProps, value } = this.props;
     let initialList = fileList;
     if (fileList.length === 0 && Array.isArray(value?.fileList)) initialList = value?.fileList;
-    const uploadButton = <Button icon={<UploadOutlined />}>Chọn tệp</Button>;
+    const uploadButton = (
+      <Button size="small" icon={<UploadOutlined />}>
+        Chọn tệp
+      </Button>
+    );
     // if (this.props.){
     // }
     return (

@@ -1,12 +1,21 @@
-const ip3 = 'https://tssv3.aisenote.com'; // ip dev
-const ip = 'https://tssv3.aisenote.com'; // ip dev
+// const ip3 = 'https://dhs.ptit.edu.vn/odoo-user-service'; // ip prod
+// const ip = 'https://dhs.ptit.edu.vn'; // ip prod
 
-const ipPayment = 'https://tssv3.aisenote.com/payment'; // ip dev
+const ip3 = 'https://ais.aisenote.com/tcns'; // ip dev
+const ipGlobal = 'https://ais2.aisenote.com/qldt-internal-api'; // ip dev
 
-// const ip3 = 'https://dkxt.apd.edu.vn/api-v3'; // ip dev
-// const ip = 'https://dkxt.apd.edu.vn/api-v3'; // ip dev
+const keycloakLogoutEndpoint =
+  'https://ais.aisenote.com/keycloak/realms/master/protocol/openid-connect/logout';
+const keycloakUrl = 'https://ais.aisenote.com/keycloak';
+const keycloakClientID = 'sso-web-client';
+const keycloakTokenEndpoint =
+  'https://ais.aisenote.com/keycloak/realms/master/protocol/openid-connect/token';
 
-// const ip3 = 'https://xettuyen.hvpnvn.edu.vn/api'; // ip vwa
-// const ip = 'https://xettuyen.hvpnvn.edu.vn/api'; // ip vwa
-
-export { ip3, ip, ipPayment };
+export {
+  ip3,
+  ipGlobal,
+  keycloakLogoutEndpoint,
+  keycloakUrl,
+  keycloakClientID,
+  keycloakTokenEndpoint,
+};

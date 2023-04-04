@@ -5,4 +5,11 @@ module.exports = {
     page: true,
     REACT_APP_ENV: true,
   },
+  rules: {
+    '@typescript-eslint/no-namespace': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    'react-hooks/exhaustive-deps': 'off',
+    quotes: ['warn', 'single'],
+    semi: ['warn', 'always'],
+  },
 };

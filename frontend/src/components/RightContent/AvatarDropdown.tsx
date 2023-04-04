@@ -1,10 +1,10 @@
 import logo from '@/assets/logo.png';
-import { logout } from '@/services/ant-design-pro/api';
+import { keycloakLogoutEndpoint } from '@/utils/ip';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
-import { history, useAccess, useModel } from 'umi';
+import { history, useModel } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
@@ -16,27 +16,22 @@ const loginOut = async () => {
   const { query = {} } = history.location;
   const { redirect } = query;
   if (window.location.pathname !== '/user/login' && !redirect) {
-    history.replace({
-      pathname: '/user/login',
-    });
-    localStorage.removeItem('vaiTro');
-    localStorage.removeItem('token');
-    localStorage.removeItem('accessTokens');
-    localStorage.removeItem('phuongThuc');
-    localStorage.removeItem('dot');
-    localStorage.removeItem('nam');
+    const uri = `${window.location.origin}/user/login`;
+    const id_token = localStorage.getItem('id_token');
+    window.location.href = `${keycloakLogoutEndpoint}?post_logout_redirect_uri=${uri}&id_token_hint=${id_token}`;
   }
 };
+
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
-  const access = useAccess();
+
   const onMenuClick = useCallback(
     async (event: MenuInfo) => {
       const { key } = event;
       if (key === 'logout' && initialState) {
-        await logout();
-        setInitialState({ ...initialState, currentUser: undefined });
         loginOut();
+        localStorage.clear();
+        setInitialState({ ...initialState, currentUser: undefined });
         return;
       }
       history.push(`/account/${key}`);
@@ -71,16 +66,14 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
   const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-      {menu && access.thiSinh && (
-        <>
-          <Menu.Item key="center">
-            <UserOutlined />
-            Trang cá nhân
-          </Menu.Item>
-          <Menu.Divider />
-        </>
+      {menu && localStorage.getItem('vaiTro') !== 'Admin' && (
+        <Menu.Item key="center">
+          <UserOutlined />
+          Trang cá nhân
+        </Menu.Item>
       )}
 
+      {menu && localStorage.getItem('vaiTro') !== 'Admin' && <Menu.Divider />}
       {accessTokens?.length > 1 && (
         <>
           <Menu.Item key="settings">
@@ -101,13 +94,17 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
           <Avatar
-            size="small"
             className={styles.avatar}
-            src={<img style={{ objectFit: 'contain', maxWidth: 18, maxHeight: 22 }} src={logo} />}
+            src={
+              <img
+                style={currentUser?.avatar_path ? {} : { objectFit: 'cover' }}
+                src={currentUser.avatar_path || logo}
+              />
+            }
             alt="avatar"
           />
           <span className={`${styles.name} anticon`}>
-            {`${currentUser?.hoDem ?? ''} ${currentUser?.ten ?? ''}`}
+            {currentUser?.fullname || currentUser?.profile?.lastname || ''}
           </span>
         </span>
       </HeaderDropdown>

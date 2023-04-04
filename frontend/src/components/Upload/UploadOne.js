@@ -1,4 +1,5 @@
-import { Button, Icon, Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Button, Upload } from 'antd';
 import React from 'react';
 /**
  * @param
@@ -38,11 +39,11 @@ class PicturesWall extends React.Component {
           }}
           fileList={fileList}
           onChange={this.handleChange}
-          accept="application/pdf"
+          // accept="application/pdf"
           {...(this.props.otherProps || {})}
         >
           <Button>
-            <Icon type="upload" />
+            <UploadOutlined />
             Tải lên
           </Button>
         </Upload>

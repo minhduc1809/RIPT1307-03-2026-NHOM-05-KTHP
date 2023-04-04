@@ -2,6 +2,7 @@ import React from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 // import lang from './vi';
 import { uploadFile } from '@/services/uploadFile';
+import './style.css';
 
 class App extends React.Component {
   constructor(props) {
@@ -56,31 +57,103 @@ class App extends React.Component {
         <Editor
           apiKey="ihu6rlypska4k9h96g5x752rocpj133f20q41afy85shcrc5"
           value={this.state.text}
+          menubar={['file', 'edit', 'view', 'insert', 'format', 'tools', 'table', 'help']}
+          plugins={[
+            // 'advlist',
+            'autolink',
+            'lists',
+            'link',
+            'image',
+            'charmap',
+            'anchor',
+            'searchreplace',
+            'visualblocks',
+            'code',
+            'fullscreen',
+            'insertdatetime',
+            'media',
+            'table',
+            'preview',
+            // 'help',
+            'wordcount',
+            'print',
+            'paste',
+            'importcss',
+            // 'autosave',
+            // 'save',
+            'directionality',
+            'visualchars',
+            // 'template',
+            // 'codesample',
+            'hr',
+            // 'pagebreak',
+            'nonbreaking',
+            // 'toc',
+            'imagetools',
+            'textpattern',
+            'noneditable',
+            'quickbars',
+            'emoticons',
+            // "editimage"
+          ]}
           init={{
             language_url: '/lang/vi_VN.js',
             language: 'vi_VN',
             height: this?.props?.height ?? 500,
-            menubar: 'file edit view insert format tools table help',
+            menubar: this.props.notMenubar
+              ? false
+              : 'file edit view insert format tools table help',
             plugins: [
-              'print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
+              // 'advlist',
+              'autolink',
+              'lists',
+              'link',
+              'image',
+              'charmap',
+              'anchor',
+              'searchreplace',
+              'visualblocks',
+              'code',
+              'fullscreen',
+              'insertdatetime',
+              'media',
+              'table',
+              'preview',
+              // 'help',
+              'wordcount',
+              'print',
+              'paste',
+              'importcss',
+              // 'autosave',
+              // 'save',
+              'directionality',
+              'visualchars',
+              // 'template',
+              // 'codesample',
+              'hr',
+              // 'pagebreak',
+              'nonbreaking',
+              // 'toc',
+              'imagetools',
+              'textpattern',
+              'noneditable',
+              'quickbars',
+              'emoticons',
+              // "editimage"
             ],
             toolbar:
               'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
             // toolbar_sticky: true,
             autosave_ask_before_unload: true,
-            autosave_interval: '30s',
-            autosave_prefix: '{path}{query}-{id}-',
-            autosave_restore_when_empty: false,
-            autosave_retention: '2m',
             image_advtab: true,
             image_caption: true,
             quickbars_selection_toolbar:
-              'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+              'bold italic forecolor backcolor | quicklink h2 h3 blockquote',
+            quickbars_insert_toolbar: false,
             noneditable_noneditable_class: 'mceNonEditable',
             toolbar_mode: 'sliding',
             // content_css: '//www.tinymce.com/css/codepen.min.css',
             contextmenu: 'link image imagetools table',
-
             file_picker_callback: this.imageHandler,
             paste_data_images: true,
           }}

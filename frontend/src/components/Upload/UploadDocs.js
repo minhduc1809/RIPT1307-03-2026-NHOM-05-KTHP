@@ -1,4 +1,5 @@
-import { Icon, Upload } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
+import { Upload } from 'antd';
 
 const { Dragger } = Upload;
 
@@ -35,7 +36,7 @@ const UploadDocs = (props) => {
     <div>
       <Dragger {...props}>
         <p className="ant-upload-drag-icon">
-          <Icon type="inbox" />
+          <InboxOutlined />
         </p>
         <p className="ant-upload-text">Click chuột hoặc kéo thả tài liệu để tải lên</p>
         <p className="ant-upload-hint">{props.message}</p>

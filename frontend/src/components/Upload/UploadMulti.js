@@ -1,5 +1,6 @@
+import { UploadOutlined } from '@ant-design/icons';
+import { Button, Modal, Upload } from 'antd';
 import React from 'react';
-import { Upload, Icon, Modal, Button } from 'antd';
 /**
  * @param
  */
@@ -50,7 +51,7 @@ class PicturesWall extends React.Component {
     const { previewVisible, previewImage, fileList } = this.state;
     const uploadButton = (
       <Button>
-        <Icon type="upload" /> Upload
+        <UploadOutlined /> Upload
       </Button>
     );
     const disabled = !!uploadProps?.disabled;

@@ -1,16 +1,17 @@
-# Xét tuyển PTIT
+# WEB BASE V3
 
-This project is initialized with [Xét tuyển PTIT](https://pro.ant.design). Follow is the quick guide for how to use.
+## Web base v3 based on:
+
+- React 17, umijs, antd v4
+- TypeScript
+- SSO with Keycloak
+- Back-end: NestJS, PostgreSQL
+
+This project is initialized with [Web Base](https://pro.ant.design). Follow is the quick guide for how to use.
 
 ## Environment Prepare
 
 Install `node_modules`:
-
-```bash
-npm install
-```
-
-or
 
 ```bash
 yarn
@@ -18,40 +19,18 @@ yarn
 
 ## Provided Scripts
 
-Xét tuyển PTIT provides some useful script to help you quick start and build with web project, code style check and test.
+VWA S-Link provides some useful script to help you quick start and build with web project, code style check and test.
 
 Scripts provided in `package.json`. It's safe to modify or add additional script:
 
 ### Start project
 
 ```bash
-npm start
+yarn start
 ```
 
 ### Build project
 
 ```bash
-npm run build
+yarn build
 ```
-
-### Check code style
-
-```bash
-npm run lint
-```
-
-You can also use script to auto fix some lint error:
-
-```bash
-npm run lint:fix
-```
-
-### Test code
-
-```bash
-npm test
-```
-
-## More
-
-You can view full document on our [official website](https://pro.ant.design). And welcome any feedback in our [github](https://github.com/ant-design/ant-design-pro).

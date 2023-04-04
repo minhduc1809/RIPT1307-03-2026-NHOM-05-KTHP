@@ -4,50 +4,89 @@
     layout: false,
     routes: [
       {
+        path: '/user/login',
+        layout: false,
+        name: 'login',
+        component: './user/Login',
+      },
+      {
         path: '/user',
-        routes: [
-          {
-            name: 'login',
-            path: '/user/login',
-            component: './user/Login',
-          },
-        ],
+        redirect: '/user/login',
+      },
+      {
+        component: '404',
       },
     ],
   },
   {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './Welcome',
-  },
-  {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
-    component: './Admin',
+    hideInMenu: true,
+    name: 'account',
+    icon: 'user',
+    path: '/account',
     routes: [
       {
-        path: '/admin/sub-page',
-        name: 'sub-page',
+        name: 'center',
         icon: 'smile',
-        component: './Welcome',
+        path: '/account/center',
+        component: './account/center',
       },
+      // {
+      //   name: 'settings',
+      //   icon: 'smile',
+      //   path: '/account/settings',
+      //   component: './account/settings',
+      // },
     ],
   },
+
+  ///////////////////////////////////
+  // DEFAULT MENU
   {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: './TrangChu',
+    icon: 'HomeOutlined',
   },
+
+  // DANH MUC HE THONG
   {
-    path: '/',
-    redirect: '/welcome',
+    name: 'DanhMuc',
+    path: '/danh-muc',
+    icon: 'copy',
+    routes: [
+      {
+        name: 'VanBanQuyDinh',
+        path: 'van-ban-quy-dinh',
+        component: './DanhMuc/VanBanQuyDinh',
+      },
+      {
+        name: 'ChucVu',
+        path: 'chuc-vu',
+        component: './DanhMuc/ChucVu',
+      },
+      {
+        name: 'LoaiPhongBan',
+        path: 'loai-phong-ban',
+        component: './DanhMuc/LoaiPhongBan',
+      },
+      {
+        name: 'DonVi',
+        path: 'don-vi',
+        component: './DanhMuc/DonVi',
+      },
+      {
+        name: 'DonViViTri',
+        path: 'don-vi-vi-tri',
+        component: './DanhMuc/DonViViTri',
+      },
+    ],
   },
 
   {
-    component: './404',
+    path: '/',
+    redirect: '/user/login',
+  },
+  {
+    component: './exception/404',
   },
 ];

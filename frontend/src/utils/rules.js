@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import moment from 'moment';
 import _ from 'lodash';
-import { chuanHoa } from '@/utils/utils';
+import { chuanHoa, removeHtmlTags } from '@/utils/utils';
 
 const allCharacters =
   'a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹýếẾ';
@@ -43,20 +42,24 @@ const rules = {
       message: 'Toàn kí tự trắng không hợp lệ',
     },
   ],
+
   sotaikhoan: [
     {
       pattern: new RegExp('^[0-9-]+$'),
       message: 'Chỉ được nhập số',
     },
   ],
-  number: (max, min = 0) => [
+
+  number: (max, min = 0, hasDecimal = true) => [
     {
-      pattern: new RegExp('^[0-9-]+$'),
-      message: 'Chỉ được nhập số',
+      pattern: hasDecimal ? new RegExp('^[0-9-.]+$') : new RegExp('^[0-9-]+$'),
+      message: hasDecimal
+        ? 'Chỉ được nhập số, ngăn cách giữa phần nguyên và phần thập phân bởi dấu chấm'
+        : 'Chỉ được nhập số nguyên',
     },
     {
       validator: (__, value, callback) => {
-        if (parseInt(value, 10) > max) callback('');
+        if (parseFloat(value) > max) callback('');
         callback();
       },
       message: `Giá trị tối đa: ${max}`,
@@ -75,7 +78,7 @@ const rules = {
         if (!Number.isInteger(value / 0.5)) callback('');
         callback();
       },
-      message: `Điểm thi chỉ được lẻ tới 0.5`,
+      message: 'Điểm thi chỉ được lẻ tới 0.5',
     },
   ],
   diemToeic: [
@@ -84,18 +87,23 @@ const rules = {
         if (!Number.isInteger(value / 5)) callback('');
         callback();
       },
-      message: `Điểm thi là số chia hết cho 5`,
+      message: 'Điểm thi là số chia hết cho 5',
     },
   ],
   email: [
     {
-      validator: (__, email, callback) => {
-        const re =
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if (!re.test(String(email).toLowerCase())) callback('');
-        callback();
-      },
+      pattern: new RegExp(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      ),
       message: 'Email chưa đúng định dạng',
+    },
+  ],
+  httpLink: [
+    {
+      pattern: new RegExp(
+        /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
+      ),
+      message: 'Đường dẫn chưa đúng định dạng',
     },
   ],
   soDienThoai: [
@@ -122,6 +130,15 @@ const rules = {
       message: 'Không được trước thời điểm hiện tại',
     },
   ],
+  sauNgay: (mo, label) => [
+    {
+      validator: (_, value, callback) => {
+        if (moment(value).isBefore(moment(mo).set({ hour: 0, minute: 0, second: 0 }))) callback('');
+        callback();
+      },
+      message: 'Không được trước ' + label,
+    },
+  ],
   truocHomNay: [
     {
       validator: (_, value, callback) => {
@@ -131,10 +148,35 @@ const rules = {
       message: 'Không được sau thời điểm hiện tại',
     },
   ],
+  truocNgay: (mo, label) => [
+    {
+      validator: (_, value, callback) => {
+        if (moment(value).isAfter(moment(mo).set({ hour: 0, minute: 0, second: 0 }))) callback('');
+        callback();
+      },
+      message: 'Không được sau ' + label,
+    },
+  ],
   required: [
     {
       required: true,
       message: 'Bắt buộc',
+    },
+  ],
+  requiredHtml: [
+    {
+      validator: (__, value, callback) => {
+        if (
+          removeHtmlTags(value.text) === '' &&
+          !value.text.includes('<img') &&
+          !value.text.includes('<video') &&
+          !value.text.includes('<iframe')
+        )
+          callback('');
+
+        callback();
+      },
+      message: 'Toàn kí tự trắng không hợp lệ',
     },
   ],
   username: [
@@ -169,6 +211,13 @@ const rules = {
       message: `Không quá ${len} kí tự`,
     },
   ],
+  fixKiTu: (len) => [
+    {
+      max: len,
+      min: len,
+      message: `Text phải có ${len} kí tự`,
+    },
+  ],
   textEditor: [
     {
       validator: (_, value, callback) => {
@@ -186,8 +235,8 @@ const rules = {
   fileRequired: [
     {
       validator: (__, value, callback) => {
-        if (_.get(value, 'fileList', []).length === 0) return Promise.reject();
-        return Promise.resolve();
+        if (_.get(value, 'fileList', []).length === 0) callback('');
+        callback();
       },
       message: 'Hãy chọn file',
     },
@@ -233,6 +282,39 @@ const rules = {
         callback();
       },
       message: `Số lượng không quá ${len} file`,
+    },
+  ],
+
+  float: (max = undefined, min = 0, sauDauPhay = 2) => [
+    {
+      pattern: new RegExp('^[0-9.]+$'),
+      message: 'Số hoặc dấu chấm',
+    },
+    {
+      validator: (__, value, callback) => {
+        if (!max) {
+          callback();
+          return;
+        }
+        if (max && parseFloat(value) > max) callback('');
+        callback();
+      },
+      message: `Giá trị tối đa: ${max}`,
+    },
+    {
+      validator: (__, value, callback) => {
+        if (parseFloat(value) < min) callback('');
+        callback();
+      },
+      message: `Giá trị nhỏ nhất: ${min}`,
+    },
+    {
+      validator: (__, value, callback) => {
+        const string = `${value}`.split('.');
+        if (string.length === 2 && string[1].length > sauDauPhay) callback('');
+        callback();
+      },
+      message: `Chỉ được ${sauDauPhay} số sau dấu phẩy`,
     },
   ],
 };

@@ -1,5 +1,8 @@
 declare module ThongBao {
   export interface Record {
+    urlFile: string[];
+    phamVi: string;
+    hinhThucDaoTaoId: number;
     roles: string[];
     donViIds: number[];
     userIds: string[];
@@ -29,6 +32,12 @@ declare module ThongBao {
     datetime?: string;
     description?: string;
     type?: NoticeIconItemType;
+    oneSignalData?: {
+      id: string | number;
+      notifType: string;
+      idLopTinChi?: number;
+      idLopHanhChinh?: number;
+    };
   }
 
   export interface PostRecord {

@@ -1,8 +1,10 @@
 // https://umijs.org/config/
 import { defineConfig } from 'umi';
 import defaultSettings from './defaultSettings';
-import proxy from './proxy';
-const { REACT_APP_ENV } = process.env;
+import routes from './routes';
+// import proxy from './proxy';
+// const { REACT_APP_ENV } = process.env;
+
 export default defineConfig({
   hash: true,
   antd: {},
@@ -12,7 +14,6 @@ export default defineConfig({
   layout: {
     // https://umijs.org/zh-CN/plugins/plugin-layout
     locale: true,
-    siderWidth: 220,
     ...defaultSettings,
   },
   // https://umijs.org/zh-CN/plugins/plugin-locale
@@ -30,89 +31,18 @@ export default defineConfig({
   targets: {
     ie: 11,
   },
-  // umi routes: https://umijs.org/docs/routing
-  routes: [
-    {
-      path: '/admin/login',
-      layout: false,
-      hideInMenu: true,
-      name: 'login',
-      component: './user/Login/adminlogin',
-    },
-    {
-      path: '/user',
-      layout: false,
-      routes: [
-        {
-          path: '/user/login',
-          layout: false,
-          name: 'login',
-          component: './user/Login',
-        },
-
-        {
-          path: '/user',
-          redirect: '/user/login',
-        },
-        {
-          name: 'register',
-          icon: 'smile',
-          path: '/user/register',
-          component: './user/register',
-        },
-        {
-          component: '404',
-        },
-      ],
-    },
-    {
-      hideInMenu: true,
-      name: 'account',
-      icon: 'user',
-      path: '/account',
-      routes: [
-        {
-          name: 'center',
-          icon: 'smile',
-          path: '/account/center',
-          component: './account/center',
-        },
-      ],
-    },
-
-    {
-      layout: false,
-      path: '/kichhoattaikhoan',
-      component: './KichHoatTaiKhoan',
-      hideInMenu: true,
-      access: 'thiSinhChuaKichHoat',
-    },
-    {
-      layout: false,
-      path: '/verifycccd',
-      component: './VerifyCCCD',
-      hideInMenu: true,
-      access: 'thiSinhChuaKichHoat',
-    },
-
-    {
-      path: '/',
-      redirect: '/user/login',
-    },
-    {
-      component: '404',
-    },
-  ],
+  routes,
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {
     'primary-color': defaultSettings.primaryColor,
+    'border-radius-base': defaultSettings.borderRadiusBase,
   },
   // esbuild is father build tools
   // https://umijs.org/plugins/plugin-esbuild
   esbuild: {},
   title: false,
   ignoreMomentLocale: true,
-  proxy: proxy[REACT_APP_ENV || 'dev'],
+  // proxy: proxy[REACT_APP_ENV || 'dev'],
   manifest: {
     basePath: '/',
   },

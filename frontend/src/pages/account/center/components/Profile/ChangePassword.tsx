@@ -26,7 +26,7 @@ const ChangePassword = () => {
           }
         }}
         labelCol={{ span: 24 }}
-        style={{ width: 350, textAlign: 'center' }}
+        style={{ width: '50%', textAlign: 'center' }}
         form={form}
       >
         <Form.Item rules={[...rules.required]} name="oldPassword" label="Mật khẩu cũ">

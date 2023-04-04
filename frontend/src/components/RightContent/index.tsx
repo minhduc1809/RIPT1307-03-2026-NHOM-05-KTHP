@@ -1,13 +1,14 @@
+import { InfoCircleOutlined } from '@ant-design/icons';
 import { Space } from 'antd';
 import React from 'react';
-import { useAccess, useModel } from 'umi';
+import { history, useAccess, useModel } from 'umi';
 import NoticeIcon from '../NoticeIcon';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
 
 export type SiderTheme = 'light' | 'dark';
 
-const GlobalHeaderRight: React.FC<{ marginTopGioiThieuChung: number }> = () => {
+const GlobalHeaderRight: React.FC = () => {
   const access = useAccess();
   const { initialState } = useModel('@@initialState');
 
@@ -24,13 +25,11 @@ const GlobalHeaderRight: React.FC<{ marginTopGioiThieuChung: number }> = () => {
 
   return (
     <Space className={className}>
-      {!access.adminVaQuanTriVien && (
-        <>
-          <NoticeIcon />
-          {/* <HuongDanDropdown /> */}
-          {/* <GioiThieuChung marginTop={props.marginTopGioiThieuChung} /> */}
-        </>
-      )}
+      <a onClick={() => history.push('/tienichkhac/gioithieu')} title="Giới thiệu học viện">
+        <InfoCircleOutlined />
+      </a>
+
+      {!access.admin && !access.guest && <NoticeIcon />}
       <Avatar menu />
     </Space>
   );

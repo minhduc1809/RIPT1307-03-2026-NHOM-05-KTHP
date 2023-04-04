@@ -3,19 +3,24 @@ import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 const Settings: LayoutSettings & {
   pwa?: boolean;
   logo?: string;
+  borderRadiusBase: string;
+  siderWidth: number;
 } = {
-  navTheme: 'dark',
-  primaryColor: '#CC0D00',
-  layout: 'top',
+  navTheme: 'light',
+  primaryColor: '#007EB9',
+  borderRadiusBase: '8px',
+  layout: 'mix',
   contentWidth: 'Fluid',
-  fixedHeader: true,
+  fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  headerTheme: 'dark',
-  title: 'Xét tuyển PTIT',
+  title: 'Tổ chức nhân sự VWA',
   pwa: false,
-  logo: '/favicon.ico',
+  logo: '/logo-full-white.svg',
   iconfontUrl: '',
+  headerTheme: 'dark',
+  headerHeight: 60,
+  siderWidth: 220,
 };
 
 export default Settings;

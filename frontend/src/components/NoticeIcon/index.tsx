@@ -1,10 +1,10 @@
 /* eslint-disable no-underscore-dangle */
-import ViewThongBao from '@/pages/QuanLyThongBao/components/ViewThongBao';
+import ViewThongBao from '@/pages/ThongBao/components/ViewThongBao';
 import { readAllNotification, readOneNotification } from '@/services/ThongBao/thongbao';
 import { Button, message, Modal } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { useAccess, useModel } from 'umi';
+import { useModel } from 'umi';
 import NoticeIcon from './NoticeIcon';
 
 export type GlobalHeaderRightProps = {
@@ -22,7 +22,9 @@ const getNoticeData = (notices: ThongBao.Record[]): ThongBao.Record[] => {
     const newNotice = { ...notice };
 
     if (newNotice.createdAt) {
-      newNotice.datetime = moment(notice.createdAt as string).fromNow();
+      newNotice.datetime = moment(notice.createdAt as string)
+        .fromNow()
+        .replace('một', '1');
     }
 
     if (newNotice.id) {
@@ -36,10 +38,15 @@ const getNoticeData = (notices: ThongBao.Record[]): ThongBao.Record[] => {
 };
 
 const NoticeIconView = () => {
-  const access = useAccess();
   const { initialState } = useModel('@@initialState');
-  const { danhSachNoticeIcon, getThongBaoModel, totalNoticeIcon, pageNoticeIcon, limitNoticeIcon } =
-    useModel('thongbao');
+  const {
+    danhSachNoticeIcon,
+    getThongBaoModel,
+    totalNoticeIcon,
+    pageNoticeIcon,
+    limitNoticeIcon,
+    loading,
+  } = useModel('thongbao');
   const { currentUser } = initialState || {};
   const [notices, setNotices] = useState<ThongBao.Record[]>([]);
   const [view, setView] = useState<boolean>(false);
@@ -47,7 +54,7 @@ const NoticeIconView = () => {
   const [record, setRecord] = useState<ThongBao.Record>();
 
   useEffect(() => {
-    if (access.thiSinh || access.thiSinhChuaKichHoat) getThongBaoModel();
+    getThongBaoModel();
   }, [pageNoticeIcon, limitNoticeIcon]);
 
   useEffect(() => {
@@ -75,8 +82,8 @@ const NoticeIconView = () => {
           await readOneNotification({ notificationId: item?._id });
           getThongBaoModel();
         }}
+        loading={loading}
         onClear={() => clearReadState()}
-        loading={false}
         clearText="Đánh dấu tất cả là đã đọc"
         popupVisible={visiblePopup}
         clearClose
@@ -92,20 +99,19 @@ const NoticeIconView = () => {
           emptyText="Bạn đã xem tất cả thông báo"
         />
       </NoticeIcon>
+
       <Modal
         footer={
           <Button
-            type="primary"
             onClick={() => {
               setView(false);
               setVisiblePopup(true);
             }}
           >
-            OK
+            Đóng
           </Button>
         }
-        width="70%"
-        // maskClosable={false}
+        width={800}
         bodyStyle={{ padding: 0 }}
         destroyOnClose
         onCancel={() => {
@@ -114,7 +120,12 @@ const NoticeIconView = () => {
         }}
         visible={view}
       >
-        <ViewThongBao record={record} />
+        <ViewThongBao
+          record={record}
+          afterViewDetail={() => {
+            setView(false);
+          }}
+        />
       </Modal>
     </>
   );

@@ -10,13 +10,12 @@ export default () => {
 
   return (
     <DefaultFooter
-      style={{ backgroundColor: '#fff' }}
-      copyright={`2021 ${defaultMessage}`}
+      copyright={`2023 ${defaultMessage}`}
       links={[
         {
           key: 'github',
-          title: 'Học viện Công nghệ Bưu chính Viễn thông',
-          href: 'https://portal.ptit.edu.vn/',
+          title: 'Học viện Phụ nữ Việt Nam',
+          href: 'http://hvpnvn.edu.vn/',
           blankTarget: true,
         },
       ]}

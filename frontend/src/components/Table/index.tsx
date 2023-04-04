@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { Setting } from '@/utils/constants';
 import data from '@/utils/data';
 import type { IColumn } from '@/utils/interfaces';
 import { toRegex } from '@/utils/utils';
-import { CloseOutlined, PlusCircleFilled, SearchOutlined } from '@ant-design/icons';
+import { CloseOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import type { TableProps } from 'antd';
-import { Button, Card, Drawer, Input, Modal, Table } from 'antd';
+import { Button, Card, ConfigProvider, Drawer, Empty, Input, Modal, Table } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import type { FilterValue } from 'antd/lib/table/interface';
 import _ from 'lodash';
@@ -21,7 +20,7 @@ type Props = {
   widthDrawer?: string | number;
   getData: Function;
   dependencies?: any[];
-  loading: boolean;
+  loading?: boolean;
   params?: any;
   children?: React.ReactNode;
   border?: boolean;
@@ -30,7 +29,19 @@ type Props = {
   otherProps?: TableProps<any>;
   maskCloseableForm?: boolean;
   noCleanUp?: boolean;
+  rowSelection?: boolean;
+  detailRow?: any;
+  total?: number;
+  newName?: string;
+  hideTotal?: boolean;
+  otherButtons?: any;
+  pageable?: boolean;
   hideCard?: boolean;
+  emptyText?: string;
+  scroll?: { x?: number; y?: number };
+  formProps?: any;
+  destroyModal?: boolean;
+  addStt?: boolean;
 };
 
 const TableBase = (props: Props) => {
@@ -41,7 +52,6 @@ const TableBase = (props: Props) => {
     getData,
     dependencies = [],
     formType,
-    loading,
     children,
     params,
     border,
@@ -50,29 +60,52 @@ const TableBase = (props: Props) => {
     dataState,
     otherProps,
     maskCloseableForm,
-    noCleanUp,
     hideCard,
+    noCleanUp,
+    newName,
+    pageable,
+    scroll,
+    destroyModal,
+    addStt,
   } = props;
   let { columns } = props;
   const {
     visibleForm,
     setVisibleForm,
-    total,
-    page,
-    limit,
-    setPage,
-    setLimit,
+    total: totalTmp,
+    loading: loadingTmp,
+    page: pageTmp,
+    limit: limitTmp,
+    setPage: setPageTmp,
+    setLimit: setLimitTmp,
     setEdit,
     setRecord,
-    filterInfo,
-    condition,
-    setFilterInfo,
-    setCondition,
+    filterInfo: filterInfoTmp,
+    condition: conditionTmp,
+    sort: sortTmp,
+    setSort: setSortTmp,
+    setFilterInfo: setFilterInfoTmp,
+    setCondition: setConditionTmp,
     query,
     setQuery,
   } = useModel(modelName);
   const model = useModel(modelName);
+
+  const page = newName ? model?.[`page${newName}`] : pageTmp;
+  const limit = newName ? model?.[`limit${newName}`] : limitTmp;
+  const total = newName ? model?.[`total${newName}`] : totalTmp;
+  const setPage = newName ? model?.[`setPage${newName}`] : setPageTmp;
+  const setLimit = newName ? model?.[`setLimit${newName}`] : setLimitTmp;
+  const condition = newName ? model?.[`condition${newName}`] : conditionTmp;
+  const filterInfo = newName ? model?.[`filterInfo${newName}`] : filterInfoTmp;
+  const setCondition = newName ? model?.[`setCondition${newName}`] : setConditionTmp;
+  const setFilterInfo = newName ? model?.[`setFilterInfo${newName}`] : setFilterInfoTmp;
+  const sort = newName ? model?.[`sort${newName}`] : sortTmp;
+  const setSort = newName ? model?.[`setSort${newName}`] : setSortTmp;
+  const loading = newName ? model?.[`loading${newName}`] : loadingTmp;
+
   const totalRef = useRef<any>();
+
   useEffect(() => {
     getData(params);
   }, [...dependencies]);
@@ -82,13 +115,11 @@ const TableBase = (props: Props) => {
       if (noCleanUp !== true) {
         setCondition({});
         setFilterInfo({});
-        setPage(1);
-        setLimit(10);
       }
     };
   }, []);
 
-  let searchInput: Input | null = null;
+  let searchInput: any = null;
 
   const getCondValue = (dataIndex: any) => {
     const type = typeof dataIndex;
@@ -123,7 +154,7 @@ const TableBase = (props: Props) => {
             width: 188,
             marginBottom: 8,
             display: 'block',
-            outlineColor: 'red',
+            outlineColor: '#007EB9',
           }}
         />
         <Button
@@ -165,7 +196,7 @@ const TableBase = (props: Props) => {
     filterIcon: (filtered: any) => (
       <SearchOutlined
         style={{
-          color: filtered || haveCond(dataIndex) ? Setting.primaryColor : undefined,
+          color: filtered || haveCond(dataIndex) ? '#007EB9' : undefined,
         }}
         title="Tìm kiếm"
       />
@@ -194,27 +225,25 @@ const TableBase = (props: Props) => {
     };
   };
 
-  const getFilterS = (dataIndex: any, columnKey: any) => {
-    return {
-      // cần đảm bảo trong file data.js đã có dữ liệu
-      // trangThaiDon  = [ 'Đang xử lý', 'Đã xử lý']
-      // dataIndex : 'trangThaiHienThi'
-      // columnKey :'trangThaiDon'
-      filters: (data?.[columnKey || dataIndex] ?? []).map((item: any) => {
-        const type = typeof item;
-        return {
-          text: type === 'string' ? item : item?.text ?? '', // cai hien thi ở ô lọc
-          value: type === 'string' ? item : item?.value,
-        };
-      }),
+  const getFilterS = (dataIndex: any, columnKey: any, dataFilter?: any[]) => ({
+    // cần đảm bảo trong file data.js đã có dữ liệu
+    // trangThaiDon  = [ 'Đang xử lý', 'Đã xử lý']
+    // dataIndex : 'trangThaiHienThi'
+    // columnKey :'trangThaiDon'
+    filters: (dataFilter ?? data?.[columnKey || dataIndex] ?? []).map((item: any) => {
+      const type = typeof item;
+      return {
+        text: type === 'string' ? item : item?.text ?? '', // cai hien thi ở ô lọc
+        value: type === 'string' ? item : item?.value,
+      };
+    }),
 
-      onFilter: () => true,
-      // đồng bộ với cond đang search
-      filteredValue: getCondValue(dataIndex),
-      filterMultiple: false,
-      // render: (item: string | number) => item ?? 'Chưa xác định',
-    };
-  };
+    onFilter: () => true,
+    // đồng bộ với cond đang search
+    filteredValue: getCondValue(dataIndex),
+    filterMultiple: false,
+    // render: (item: string | number) => item ?? 'Chưa xác định',
+  });
 
   const getSortValue = (dataIndex: any) => {
     if (getCondValue('sort') !== dataIndex) {
@@ -248,7 +277,7 @@ const TableBase = (props: Props) => {
     if (item.search === 'filterString') {
       return {
         ...item,
-        ...getFilterS(item.dataIndex, item?.columnKey),
+        ...getFilterS(item.dataIndex, item?.columnKey, item?.dataFilter),
       };
     }
     if (item.search === 'search') {
@@ -270,19 +299,21 @@ const TableBase = (props: Props) => {
     filters: Record<string, FilterValue | null>,
     sorter: any,
   ) => {
+    // console.log('this.tableBaseRef :>> ', this.tableBaseRef);
     // this.tableBaseRef.current.focus();
     // this.focusTableBase();
     // thay đổi từ phân trang || filter
     const { current, pageSize } = pagination;
-    const { columnKey, order } = sorter;
+    const { columnKey, order, field } = sorter;
     let orderValue;
     if (order === 'ascend') orderValue = 1;
     else if (order === 'descend') orderValue = -1;
 
     //  giữ lại thông tin của cond.
 
-    const tmpCond = _.clone(condition);
-    setFilterInfo({ ...filterInfo, ...filters, sort: columnKey, order: orderValue });
+    const tmpCond = _.clone(condition || {});
+    const tmpSort = _.clone(sort || {});
+    setFilterInfo({ ...filterInfo, ...filters, sort: columnKey || field, order: orderValue });
     Object.keys(filters).forEach((key) => {
       // if (!filters?.[key]?.length) {
       //   return;
@@ -296,80 +327,128 @@ const TableBase = (props: Props) => {
         return;
       }
 
-      const notRegex = columns?.find(
-        (item) => item.dataIndex === key || item.key === key,
-      )?.notRegex;
+      const column = columns?.find((item) => item.dataIndex === key || item.key === key);
+      const notRegex = column?.notRegex;
+      const typeDataSearch = column?.typeDataSearch;
       const isSearch = typeof value === 'string';
       tmpCond[key] = isSearch && notRegex !== true ? toRegex(value) : value;
+      if (typeDataSearch === 'number' && value) tmpCond[key] = Number(value);
       // return 0;
     });
+    if (sorter && setSort) {
+      tmpSort[columnKey || field] = orderValue;
+      setSort(tmpSort);
+    }
     totalRef?.current?.focus();
     setPage(current);
     setLimit(pageSize);
     setCondition(tmpCond);
   };
 
+  const finalColumns = columns?.filter((item) => item?.hide !== true);
+  if (addStt !== false)
+    finalColumns.unshift({
+      title: 'STT',
+      dataIndex: 'index',
+      align: 'center',
+      width: 60,
+    });
+
   const mainContent = (
-    <div>
-      {children}
+    <>
       {hascreate && (
         <Button
+          style={{ marginRight: 8 }}
+          size={props?.otherProps?.size}
           onClick={() => {
-            setVisibleForm(true);
-            setEdit(false);
             setRecord({});
+            setEdit(false);
+            setVisibleForm(true);
           }}
-          icon={<PlusCircleFilled />}
+          icon={<PlusCircleOutlined />}
           type="primary"
         >
           Thêm mới
         </Button>
       )}
-      <h4 style={{ display: 'inline-block', margin: '0 0px 8px 50px', float: 'right' }}>
-        Tổng số:
-        <Input
-          ref={totalRef}
-          style={{ width: '90px', fontWeight: 600, fontSize: 14, marginLeft: 10 }}
-          value={total}
-          readOnly
+      {children}
+      {props.otherButtons}
+      {!props?.hideTotal && (
+        <h4 style={{ display: 'inline-block', margin: '0 0px 8px 50px', float: 'right' }}>
+          Tổng số:
+          <Input
+            size={props?.otherProps?.size}
+            style={{
+              width: '90px',
+              fontWeight: 700,
+              fontSize: 16,
+              marginLeft: 10,
+              color: '#007EB9',
+            }}
+            value={props?.total || total || 0}
+            readOnly
+            ref={totalRef}
+          />
+        </h4>
+      )}
+
+      <ConfigProvider
+        renderEmpty={() => (
+          <Empty
+            style={{ marginTop: 32, marginBottom: 32 }}
+            description={props.emptyText ?? 'Không có dữ liệu'}
+          />
+        )}
+      >
+        <Table
+          scroll={scroll ?? { x: _.sum(finalColumns.map((item) => item.width ?? 80)) }}
+          rowSelection={
+            props?.rowSelection
+              ? {
+                  type: 'checkbox',
+                  ...props?.detailRow,
+                }
+              : undefined
+          }
+          loading={loading}
+          bordered={border || false}
+          pagination={{
+            current: page,
+            pageSize: limit,
+            position: ['bottomRight'],
+            total: props?.total ?? total,
+            showSizeChanger: true,
+            pageSizeOptions: ['5', '10', '25', '50', '100'],
+            showTotal: (tongSo: number) => {
+              return <div>Tổng số: {tongSo}</div>;
+            },
+          }}
+          // onChange={handleTableChange}
+          onChange={onChange}
+          dataSource={model?.[dataState || 'danhSach']?.map((item: any, index: number) => {
+            return {
+              ...item,
+              index: index + 1 + (page - 1) * limit * (pageable === false ? 0 : 1),
+              key: index,
+            };
+          })}
+          columns={finalColumns as any[]}
+          {...otherProps}
         />
-      </h4>
-      <Table
-        scroll={{ x: 1000 }}
-        loading={loading}
-        bordered={border || false}
-        pagination={{
-          current: page,
-          pageSize: limit,
-          position: ['bottomRight'],
-          total,
-          showSizeChanger: true,
-          pageSizeOptions: ['10', '25', '50', '100'],
-          showTotal: (tongSo: number) => {
-            return <div>Tổng số: {tongSo}</div>;
-          },
-        }}
-        // onChange={handleTableChange}
-        onChange={onChange}
-        dataSource={model?.[dataState || 'danhSach']?.map((item: any, index: number) => {
-          return { ...item, index: index + 1 + (page - 1) * limit, key: index };
-        })}
-        columns={columns?.filter((item) => item?.hide !== true)}
-        {...otherProps}
-      />
+      </ConfigProvider>
+
       {Form && (
         <>
           {formType === 'Drawer' ? (
             <Drawer
-              closeIcon={false}
-              maskClosable={maskCloseableForm || false}
+              maskClosable={maskCloseableForm || true}
               width={widthDrawer}
-              destroyOnClose
               footer={false}
               bodyStyle={{ padding: 0 }}
               visible={visibleForm}
+              destroyOnClose={destroyModal}
             >
-              <Form />
+              <Form title={title} {...props.formProps} />
               <CloseOutlined
                 onClick={() => {
                   setVisibleForm(false);
@@ -379,25 +458,33 @@ const TableBase = (props: Props) => {
             </Drawer>
           ) : (
             <Modal
-              maskClosable={maskCloseableForm || false}
+              maskClosable={maskCloseableForm || true}
               width={widthDrawer}
-              onCancel={() => {
-                setVisibleForm(false);
-              }}
-              destroyOnClose
+              onCancel={() => setVisibleForm(false)}
               footer={false}
               bodyStyle={{ padding: 0 }}
               visible={visibleForm}
+              destroyOnClose={destroyModal}
             >
-              <Form />
+              <Form title={title} {...props.formProps} />
             </Modal>
           )}
         </>
       )}
-    </div>
+    </>
   );
 
-  return hideCard ? mainContent : <Card title={title || false}>{mainContent}</Card>;
+  return (
+    <>
+      {hideCard ? (
+        mainContent
+      ) : (
+        <Card title={title || false} bordered={border || false}>
+          {mainContent}
+        </Card>
+      )}
+    </>
+  );
 };
 
 export default TableBase;

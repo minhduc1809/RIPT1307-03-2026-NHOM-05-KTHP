@@ -19,11 +19,11 @@ const useInitService = (url: string) => {
     return axios.delete(`${ip3}/${url}/${id}`);
   };
 
-  const getAllService = () => {
-    return axios.get(`${ip3}/${url}/all`);
+  const getAllService = (payload?: { condition?: any }) => {
+    return axios.get(`${ip3}/${url}/many`, { params: payload });
   };
 
-  const getByIdService = (id: string) => {
+  const getByIdService = (id: string | number) => {
     return axios.get(`${ip3}/${url}/${id}`);
   };
 

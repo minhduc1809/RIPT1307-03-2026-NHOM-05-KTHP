@@ -8,3 +8,18 @@ export async function uploadFile(payload: { file: string | Blob; filename: strin
   form.append('public', payload?.public);
   return axios.post(`${ip3}/file/data/single`, form);
 }
+export async function uploadFileAndExportPdf(payload: {
+  file: string | Blob;
+  filename: string;
+  public: any;
+  exportPdf: '0' | '1';
+  loai: string;
+}) {
+  const form = new FormData();
+  form.append('file', payload?.file);
+  form.append('exportPdf', payload?.exportPdf);
+  form.append('filename', payload?.filename);
+  form.append('public', payload?.public);
+  form.append('loai', payload?.loai);
+  return axios.post(`${ip3}/file-object`, form);
+}

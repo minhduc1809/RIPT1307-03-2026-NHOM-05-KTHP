@@ -1,6 +1,6 @@
 {
-  "name": "Xét tuyển PTIT",
-  "short_name": "Xét tuyển PTIT",
+  "name": "VWA S-Link",
+  "short_name": "VWA S-Link",
   "display": "standalone",
   "start_url": "./?utm_source=homescreen",
   "theme_color": "#002140",

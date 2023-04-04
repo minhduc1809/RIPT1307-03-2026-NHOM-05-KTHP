@@ -1,26 +1,12 @@
-import { ETrangThaiNhapHoc } from '@/utils/constants';
-import { ETrangThaiHoSo, ETrangThaiThanhToan, ETrangThaiXacNhanNhapHoc } from './constants';
-
 const data: any = {
-  status: [
-    { value: 'open', text: 'Chưa thanh toán' },
-    {
-      value: {
-        $in: ['paid', 'overpaid'],
-      },
-      text: 'Đã thanh toán',
-    },
-  ],
-  trangThai: [
-    ETrangThaiHoSo.CHUA_KHOA,
-    ETrangThaiHoSo.DA_KHOA,
-    ETrangThaiHoSo.DA_TIEP_NHAN,
-    ETrangThaiHoSo.KHONG_TIEP_NHAN,
-  ],
   path: {
-    ThiSinh: '/phuongthucxettuyen',
-    QuanTriVien: '/thongkebaocao/tuyensinh',
-    Admin: '/quantrixettuyen/dottuyensinh',
+    sinh_vien: '/dashboard',
+    nhan_vien: '/dashboard',
+    Admin: '/dashboard',
+    quan_tri: '/dashboard',
+    can_bo_qlkh: '/dashboard',
+    guest: '/dashboard',
+    ke_toan: '/dashboard',
   },
   doiTuong: ['Vai trò', 'Tất cả'],
   vaiTro: [
@@ -28,57 +14,6 @@ const data: any = {
     { value: 'nhan_vien', text: 'Cán bộ, giảng viên' },
   ],
   gioiTinh: ['Nam', 'Nữ'],
-  'info.anToan': [
-    { value: false, text: 'Không an toàn' },
-    { value: true, text: 'An toàn' },
-  ],
-
-  'thongTinXacNhanNhapHoc.trangThaiXacNhan': [
-    ETrangThaiXacNhanNhapHoc.CHUA_XAC_NHAN,
-    ETrangThaiXacNhanNhapHoc.XAC_NHAN,
-    ETrangThaiXacNhanNhapHoc.KHONG_XAC_NHAN,
-    ETrangThaiXacNhanNhapHoc.DA_TIEP_NHAN,
-    ETrangThaiXacNhanNhapHoc.KHONG_TIEP_NHAN,
-  ],
-
-  trangThaiNhapHoc: [
-    ETrangThaiNhapHoc.CHUA_KHOA,
-    ETrangThaiNhapHoc.DA_KHOA,
-    ETrangThaiNhapHoc.DA_TIEP_NHAN,
-    ETrangThaiNhapHoc.YEU_CAU_CHINH_SUA,
-  ],
-
-  'thongTinThiSinh.gioiTinh': ['Nam', 'Nữ', 'Khác'],
-  trangThaiThanhToan: [
-    ETrangThaiThanhToan.CHUA_THANH_TOAN_DU,
-    ETrangThaiThanhToan.DA_THANH_TOAN_DU,
-  ],
-  trangThaiThanhToanNhapHoc: [
-    ETrangThaiThanhToan.CHUA_THANH_TOAN_DU,
-    ETrangThaiThanhToan.DA_THANH_TOAN_DU,
-  ],
-  loaiHinhDaoTao: ['Đại học Chính quy', 'Đại học Phi chính quy', 'Sau Đại học', 'Liên kết quốc tế'],
-
-  loaiDonVi: ['Đơn vị cứng', 'Đơn vị mềm'],
-
-  CapDonVi: {
-    'Bộ môn': { Trưởng: 'Trưởng bộ môn', Phó: 'Phó trưởng bộ môn', 'Cán bộ': 'Cán bộ' },
-    Phòng: { Trưởng: 'Trưởng phòng', Phó: 'Phó trưởng phòng', 'Cán bộ': 'Cán bộ' },
-    Khoa: { Trưởng: 'Trưởng khoa', Phó: 'Phó trưởng khoa', 'Cán bộ': 'Cán bộ' },
-    'Trung tâm': {
-      Trưởng: 'Giám đốc trung tâm',
-      Phó: 'Phó giám đốc trung tâm',
-      'Cán bộ': 'Cán bộ',
-    },
-    Viện: { Trưởng: 'Viện trưởng', Phó: 'Phó viện trưởng', 'Cán bộ': 'Cán bộ' },
-    'Học viện': { Trưởng: 'Giám đốc', Phó: 'Phó giám đốc', 'Cán bộ': 'Cán bộ' },
-    'Hội đồng trường': { Trưởng: 'Chủ tịch', Phó: 'Phó chủ tịch', 'Cán bộ': 'Cán bộ' },
-    'Trung tâm nhỏ': {
-      Trưởng: 'Trưởng trung tâm',
-      Phó: 'Phó trưởng trung tâm',
-      'Cán bộ': 'Cán bộ',
-    },
-  },
 
   error: {
     BAD_REQUEST_DEVICE_IDENDIFIED: 'BAD_REQUEST_DEVICE_IDENDIFIED',
@@ -91,8 +26,15 @@ const data: any = {
     UNAUTHORIZED_WRONG_PASSWORD: 'Tên tài khoản hoặc mật khẩu chưa chính xác',
     UNAUTHORIZED_USERNAME_NOT_FOUND: 'Tên tài khoản hoặc mật khẩu chưa chính xác',
     BAD_REQUEST_ID_EXISTED: 'Mã đã tồn tại',
+    BAD_REQUEST_DA_KHAI_BAO: 'Đã khai báo đánh giá',
     BAD_REQUEST_STILL_PROCESSING:
       'Đơn của bạn đang được xử lý. Vui lòng không tạo thêm yêu cầu mới.',
+    NOT_DGGV: 'Bạn cần đánh giá giảng viên!',
+    NO_DIEM: 'Hiện tại điểm của bạn chưa được cập nhật!',
+    BAD_REQUEST_NO_ACCESS_DOT: 'Không có đợt đánh giá hợp lệ!',
+    BAD_REQUEST_CHUA_CO_DIEM: 'Hiện tại điểm của bạn chưa được cập nhật!',
+    BAD_REQUEST_NO_ACCESS_KY_HOC: 'Kỳ học không hợp lệ!',
+    BAD_REQUEST_NO_ACCESS_LOP_TIN_CHI: 'Lớp tín chỉ không hợp lệ!',
   },
 };
 

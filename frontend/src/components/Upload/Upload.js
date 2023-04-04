@@ -1,6 +1,7 @@
-import React from 'react';
-import { Upload, Icon, Modal, message } from 'antd';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { message, Modal, Upload } from 'antd';
 import _ from 'lodash';
+import React from 'react';
 /**
  * @param
  */
@@ -18,7 +19,7 @@ class PicturesWall extends React.Component {
     this.state = {
       previewVisible: '',
       previewImage: '',
-      fileList: props.value.fileList || [],
+      fileList: props.value ? props.value.fileList : [],
       imageUrl: _.get(props, 'value.fileList[0].url', undefined),
     };
   }
@@ -75,7 +76,7 @@ class PicturesWall extends React.Component {
     const { previewVisible, previewImage, imageUrl } = this.state;
     const uploadButton = (
       <div>
-        <Icon type={this.state.loading ? 'loading' : 'plus'} />
+        {this.state.loading ? <LoadingOutlined /> : <PlusOutlined />}
         <div className="ant-upload-text">Tải ảnh</div>
       </div>
     );

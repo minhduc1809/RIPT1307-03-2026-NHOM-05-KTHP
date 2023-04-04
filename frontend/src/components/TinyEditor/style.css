@@ -1,0 +1,16 @@
+.tox-statusbar__branding {
+  display: none !important;
+}
+
+.tox-tinymce {
+  border: 1px solid #d9d9d9 !important;
+  border-radius: 2px !important;
+}
+
+.tox .tox-mbtn:hover,
+.tox .tox-tbtn:hover,
+.tox .tox-tbtn--enabled,
+.tox .tox-tbtn--enabled:hover,
+.tox .tox-split-button:focus {
+  background: #007eb929 !important;
+}

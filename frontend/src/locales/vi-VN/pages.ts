@@ -1,5 +1,5 @@
 export default {
-  'pages.layouts.userLayout.title': 'HỆ THỐNG XÉT TUYỂN TRỰC TUYẾN',
+  'pages.layouts.userLayout.title': 'HỆ THỐNG ĐÀO TẠO TRỰC TUYẾN',
   'pages.login.accountLogin.tab': 'Tài khoản người dùng',
   'pages.login.accountLoginAdmin.tab': 'Tài khoản quản trị viên',
   'pages.login.accountRegister.tab': 'Đăng ký tài khoản',
@@ -24,7 +24,7 @@ export default {
   'pages.login.forgotPassword': 'Quên mật khẩu ?',
   'pages.login.submit': 'Đăng nhập',
   'pages.login.loginWith': 'Login with :',
-  'pages.login.registerAccount': 'Đăng ký tài khoản',
+  'pages.login.registerAccount': 'Đăng ký',
   'pages.welcome.advancedComponent': 'Advanced Component',
   'pages.welcome.link': 'Welcome',
   'pages.welcome.advancedLayout': 'Advanced Layout',

@@ -1,7 +1,7 @@
 import { Link } from 'umi';
 import { Result, Button } from 'antd';
 
-export default () => (
+const NotAccessible = () => (
   <Result
     status="403"
     title="403"
@@ -16,3 +16,5 @@ export default () => (
     }
   />
 );
+
+export default NotAccessible;

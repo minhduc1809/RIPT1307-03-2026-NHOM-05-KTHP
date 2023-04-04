@@ -1,18 +1,20 @@
-import { Button, Result } from 'antd';
-import React from 'react';
-import { history } from 'umi';
+import { Link } from 'umi';
+import { Result, Button } from 'antd';
 
-const NoFoundPage: React.FC = () => (
+const NotFoundContent = () => (
   <Result
     status="404"
     title="404"
-    subTitle="Xin lỗi, trang không tồn tại."
+    style={{
+      background: 'none',
+    }}
+    subTitle="Xin lỗi, trang bạn yêu cầu không tồn tại."
     extra={
-      <Button type="primary" onClick={() => history.push('/')}>
-        Về trang chủ
-      </Button>
+      <Link to="/">
+        <Button type="primary">Về trang chủ</Button>
+      </Link>
     }
   />
 );
 
-export default NoFoundPage;
+export default NotFoundContent;

@@ -1,10 +1,12 @@
 import {
+  deleteThongBao,
   getThongBao,
   getThongBaoAdmin,
   postThongBaoAll,
   postThongBaoByDonVi,
   postThongBaoByVaiTro,
   postThongBaoGeneral,
+  putThongBao,
 } from '@/services/ThongBao/thongbao';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -24,7 +26,8 @@ export default () => {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [pageNoticeIcon, setPageNoticeIcon] = useState<number>(1);
-  const [limitNoticeIcon, setLimitNoticeIcon] = useState<number>(5);
+  const [limitNoticeIcon, setLimitNoticeIcon] = useState<number>(10);
+  const [phamVi, setPhamVi] = useState<'Tất cả' | 'Hình thức đào tạo'>('Tất cả');
 
   const getThongBaoAdminModel = async (hinhThucDaoTaoId?: number) => {
     setLoading(true);
@@ -33,9 +36,8 @@ export default () => {
       limit,
       condition: {
         ...condition,
-        hinhThucDaoTaoId:
-          hinhThucDaoTaoId ||
-          (condition?.hinhThucDaoTaoId !== -1 ? condition?.hinhThucDaoTaoId : undefined),
+        hinhThucDaoTaoId: hinhThucDaoTaoId || condition?.hinhThucDaoTaoId,
+        phamVi,
       },
     });
     setDanhSach(response?.data?.data?.result ?? []);
@@ -84,15 +86,41 @@ export default () => {
   };
 
   const postThongBaoGeneralModel = async (payload: ThongBao.PostRecord) => {
+    try {
+      setLoading(true);
+      await postThongBaoGeneral(payload);
+      message.success('Gửi thành công');
+      getThongBaoAdminModel();
+      setLoading(false);
+      setVisibleForm(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  const putThongBaoModel = async (payload: ThongBao.Record, idThongBao?: string) => {
+    if (!idThongBao) return;
     setLoading(true);
-    await postThongBaoGeneral(payload);
-    message.success('Gửi thành công');
+    await putThongBao(idThongBao, payload);
+    message.success('Lưu thành công');
     getThongBaoAdminModel();
     setLoading(false);
     setVisibleForm(false);
   };
 
+  const deleteThongBaoModel = async (idThongBao: string) => {
+    setLoading(true);
+    await deleteThongBao(idThongBao);
+    message.success('Xóa thành công');
+    setLoading(false);
+    getThongBaoAdminModel();
+  };
+
   return {
+    putThongBaoModel,
+    deleteThongBaoModel,
+    phamVi,
+    setPhamVi,
     totalNoticeIcon,
     setTotalNoticeIcon,
     danhSachNoticeIcon,

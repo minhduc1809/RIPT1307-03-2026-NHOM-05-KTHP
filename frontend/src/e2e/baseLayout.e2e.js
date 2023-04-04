@@ -29,7 +29,7 @@ beforeEach(async () => {
   });
 });
 
-describe('Xét tuyển PTIT E2E test', () => {
+describe('VWA S-Link E2E test', () => {
   const testPage = (path) => async () => {
     await page.goto(`${BASE_URL}${path}`);
     await page.waitForSelector('footer', {

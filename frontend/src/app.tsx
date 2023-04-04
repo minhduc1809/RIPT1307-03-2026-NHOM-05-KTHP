@@ -1,61 +1,46 @@
+import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
+import keycloak from '@/keycloak';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
-import { PageLoading } from '@ant-design/pro-layout';
-import { notification, Tooltip } from 'antd';
+import PageLoading from '@ant-design/pro-layout/es/PageLoading';
+import { ReactKeycloakProvider } from '@react-keycloak/web';
+import { notification } from 'antd';
 import 'moment/locale/vi';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
 import ErrorBoundary from './components/ErrorBoundary';
+import TechnicalSupportBounder from './components/TechnicalSupportBounder';
 import NotAccessible from './pages/exception/403';
 import NotFoundContent from './pages/exception/404';
-import { getInfo, getInfoAdmin } from './services/ant-design-pro/api';
-import type { Login } from './services/ant-design-pro/typings';
-import { ESystemRole } from './utils/constants';
+import { getInfo } from './services/ant-design-pro/api';
 import data from './utils/data';
-// import { getPhanNhom } from './utils/utils';
 
 const loginPath = '/user/login';
-const pathAuth = ['/admin/login', '/user/quenMatKhau'];
+const pathAuth = ['/admin/login'];
 /**  loading */
 export const initialStateConfig = {
   loading: <PageLoading />,
 };
 
-/**
- * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
- * */
-export async function getInitialState(): Promise<{
+export interface IInitialState {
   settings?: Partial<LayoutSettings>;
-  currentUser?: Login.Profile & Login.ProfileAdmin;
+  currentUser?: (Login.Profile & Login.ProfileAdmin) | any;
   partner_id?: number;
   fetchUserInfo?: () => Promise<{ data: { data: Login.Profile & Login.ProfileAdmin } } | undefined>;
   authorizedRoles?: any[];
-  phanNhom?: {
-    userId: string;
-    danhSachPhanNhom: {
-      mucDo: string;
-      tenDoiTuong: string;
-      idDoiTuong: string;
-      nhomVaiTroId: {
-        _id: string;
-        danhSachChucNang: string[];
-      };
-    }[];
-    vaiTro: string;
-  };
-}> {
+}
+
+/**
+ * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
+ * */
+export async function getInitialState(): Promise<IInitialState> {
   const fetchUserInfo: () => Promise<any> = async () => {
     try {
-      const auth = localStorage.getItem('vaiTro') as ESystemRole;
+      const auth = localStorage.getItem('vaiTro');
       const token = localStorage.getItem('token');
       let currentUser;
-
-      if (auth && token) {
-        if ([ESystemRole.Admin, ESystemRole.QuanTriVien].includes(auth))
-          currentUser = (await getInfoAdmin())?.data?.data;
-        else currentUser = (await getInfo())?.data?.data;
-      }
+      if (auth && token) currentUser = (await getInfo())?.data?.data;
       return currentUser;
     } catch (error) {
       const { location } = history;
@@ -63,18 +48,17 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
+
   if (history.location.pathname !== loginPath) {
-    const currentUser: Login.Profile & Login.ProfileAdmin = await fetchUserInfo();
-    // const phanNhom = await getPhanNhom();
+    const currentUser = await fetchUserInfo();
+
     return {
       fetchUserInfo,
       currentUser,
       settings: {
         primaryColor: 'daybreak',
-        layout: currentUser?.systemRole === ESystemRole.ThiSinh ? 'top' : 'side',
       },
       authorizedRoles: [],
-      // phanNhom,
     };
   }
 
@@ -128,61 +112,49 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     unAccessible: <NotAccessible />,
     noFound: <NotFoundContent />,
-    rightContentRender: () => <RightContent marginTopGioiThieuChung={17} />,
+    rightContentRender: () => <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
-      content: initialState?.currentUser?.ten,
+      content: initialState?.currentUser?.name,
     },
-    // headerRender: (props, dom) => <div style={{ backgroundColor: '#CC0D00' }}>{dom}</div>,
-    isMobile: true,
-    // footerRender: () => <GlobalFooter />,
+
+    footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
       const token = localStorage.getItem('token');
-      const vaiTro = initialState?.currentUser?.systemRole;
-      const verifiedEmail = initialState?.currentUser?.emailVerify?.verified === true;
-      const verifiedCCCD = initialState?.currentUser?.cmtCccd !== undefined;
-      if (!token && location.pathname !== loginPath && !pathAuth.includes(location.pathname)) {
+      const vaiTro = localStorage.getItem('vaiTro');
+      let checkPathAuth = false;
+      pathAuth.map((item) => {
+        if (location.pathname.includes(item)) checkPathAuth = true;
+      });
+      if (!token && location.pathname !== loginPath && !checkPathAuth) {
         history.push(loginPath);
-      } else if (initialState?.currentUser && token) {
-        if (
-          vaiTro !== ESystemRole.ThiSinh ||
-          (vaiTro === ESystemRole.ThiSinh && verifiedCCCD && verifiedEmail)
-        ) {
-          history.push(
-            location.pathname === loginPath
-              ? data.path[`${vaiTro || initialState?.currentUser?.systemRole}`]
-              : location.pathname,
-          );
-        } else if (!verifiedEmail) history.push('/kichhoattaikhoan');
-        else history.push('/verifycccd');
+      } else if (initialState?.currentUser && token && location.pathname === loginPath) {
+        history.push(data.path[`${vaiTro || initialState?.currentUser?.systemRole}`]);
       }
     },
-    logo: <img src="/favicon.ico" onClick={() => history.push('/')} />,
-    menuItemRender: (item, dom) => {
+    menuItemRender: (item: any, dom: any) => {
       return (
-        <Tooltip
-          placement={
-            initialState?.currentUser?.systemRole === ESystemRole.ThiSinh ? 'bottom' : 'right'
-          }
-          title={item.name}
+        <div
+          style={{ flex: 'auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
+          onClick={() => {
+            history.push(item?.path ?? '/');
+          }}
         >
-          <div
-            style={{ flex: 'auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
-            onClick={() => {
-              history.push(item?.path ?? '/');
-            }}
-          >
-            {dom}
-          </div>
-        </Tooltip>
+          {dom}
+        </div>
       );
     },
     childrenRender: (dom) => {
-      return <ErrorBoundary>{dom}</ErrorBoundary>;
+      return (
+        <ErrorBoundary>
+          <TechnicalSupportBounder>
+            <ReactKeycloakProvider authClient={keycloak}>{dom}</ReactKeycloakProvider>
+          </TechnicalSupportBounder>
+        </ErrorBoundary>
+      );
     },
     menuHeaderRender: undefined,
     ...initialState?.settings,
-    title: 'Xét tuyển PTIT',
   };
 };
