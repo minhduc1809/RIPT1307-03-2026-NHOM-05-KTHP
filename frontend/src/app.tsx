@@ -29,6 +29,7 @@ export interface IInitialState {
   partner_id?: number;
   fetchUserInfo?: () => Promise<{ data: { data: Login.Profile & Login.ProfileAdmin } } | undefined>;
   authorizedRoles?: any[];
+  phanNhom?: any;
 }
 
 /**

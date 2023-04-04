@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { forgotPassword } from '@/services/ant-design-pro/api';
+// import { forgotPassword } from '@/services/ant-design-pro/api';
 import rules from '@/utils/rules';
 import { Button, Card, Form, Input, message } from 'antd';
 
@@ -11,10 +11,10 @@ const FormForgotPassword = (props: { onCancel: any }) => {
       <Form
         onFinish={async (values) => {
           try {
-            await forgotPassword(values);
-            message.success(
-              'Vui lòng kiểm tra hòm thư điện tử để nhận được hướng dẫn tạo mật khẩu mới',
-            );
+            // await forgotPassword(values);
+            // message.success(
+            //   'Vui lòng kiểm tra hòm thư điện tử để nhận được hướng dẫn tạo mật khẩu mới',
+            // );
             props.onCancel();
           } catch (err) {
             message.error('Email không tồn tại trong hệ thống');

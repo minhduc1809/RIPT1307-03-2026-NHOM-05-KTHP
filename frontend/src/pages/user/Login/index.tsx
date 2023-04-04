@@ -135,13 +135,13 @@ const Login: React.FC = () => {
                 defaultMessage: 'tab',
               })}
             />
-            <Tabs.TabPane
+            {/* <Tabs.TabPane
               key="accountAdmin"
               tab={intl.formatMessage({
                 id: 'pages.login.accountLoginAdmin.tab',
                 defaultMessage: 'tab',
               })}
-            />
+            /> */}
           </Tabs>
 
           {type === 'account' ? (

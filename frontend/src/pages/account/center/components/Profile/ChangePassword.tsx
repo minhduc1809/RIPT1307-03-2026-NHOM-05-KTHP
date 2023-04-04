@@ -1,4 +1,4 @@
-import { changePassword } from '@/services/ant-design-pro/api';
+// import { changePassword } from '@/services/ant-design-pro/api';
 import data from '@/utils/data';
 import rules from '@/utils/rules';
 import { Button, Form, Input, message } from 'antd';
@@ -15,10 +15,10 @@ const ChangePassword = () => {
             return;
           }
           try {
-            const res = await changePassword(values);
-            if (res.status === 201) {
-              message.success('Đổi mật khẩu thành công');
-            }
+            // const res = await changePassword(values);
+            // if (res.status === 201) {
+            //   message.success('Đổi mật khẩu thành công');
+            // }
             form.resetFields();
           } catch (error: any) {
             const { response } = error;

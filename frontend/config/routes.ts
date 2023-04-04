@@ -55,11 +55,6 @@
     icon: 'copy',
     routes: [
       {
-        name: 'VanBanQuyDinh',
-        path: 'van-ban-quy-dinh',
-        component: './DanhMuc/VanBanQuyDinh',
-      },
-      {
         name: 'ChucVu',
         path: 'chuc-vu',
         component: './DanhMuc/ChucVu',
@@ -68,16 +63,6 @@
         name: 'LoaiPhongBan',
         path: 'loai-phong-ban',
         component: './DanhMuc/LoaiPhongBan',
-      },
-      {
-        name: 'DonVi',
-        path: 'don-vi',
-        component: './DanhMuc/DonVi',
-      },
-      {
-        name: 'DonViViTri',
-        path: 'don-vi-vi-tri',
-        component: './DanhMuc/DonViViTri',
       },
     ],
   },

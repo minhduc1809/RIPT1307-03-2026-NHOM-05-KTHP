@@ -4,7 +4,6 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { history, useAccess } from 'umi';
 import './style.less';
-import { MaDichVuVps } from '@/utils/constants';
 
 export const OneSignalDataToPath = (oneSignalData: any, sinhVien: boolean, nhanVien: boolean) => {
   let path = '';
@@ -31,15 +30,15 @@ export const OneSignalDataToPath = (oneSignalData: any, sinhVien: boolean, nhanV
     case 'THAC_MAC_DIEM':
       path = '/hoctap/gochoctap';
       break;
-    case 'DICH_VU_MOT_CUA':
-      // path = sinhVien ? '/dichvumotcuasv' : '/vanphongsonhanvien/lichsu';
-      path = sinhVien
-        ? '/dichvumotcuasv'
-        : oneSignalData?.maDichVu === MaDichVuVps.BAO_CAO_SU_CO
-        ? '/vanphongso/baocaosuco'
-        : oneSignalData?.maDichVu === MaDichVuVps.MUON_PHONG_HOC
-        ? '/vanphongso/phonghop/dondangky'
-        : '/vanphongso/xecong/dondangky';
+      // case 'DICH_VU_MOT_CUA':
+      //   // path = sinhVien ? '/dichvumotcuasv' : '/vanphongsonhanvien/lichsu';
+      //   path = sinhVien
+      //     ? '/dichvumotcuasv'
+      //     : oneSignalData?.maDichVu === MaDichVuVps.BAO_CAO_SU_CO
+      //     ? '/vanphongso/baocaosuco'
+      //     : oneSignalData?.maDichVu === MaDichVuVps.MUON_PHONG_HOC
+      //     ? '/vanphongso/phonghop/dondangky'
+      //     : '/vanphongso/xecong/dondangky';
 
       break;
     default:

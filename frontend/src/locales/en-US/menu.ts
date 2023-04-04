@@ -8,7 +8,4 @@ export default {
   'menu.DanhMuc': 'Danh mục',
   'menu.DanhMuc.ChucVu': 'Chức vụ',
   'menu.DanhMuc.LoaiPhongBan': 'Loại phòng ban',
-  'menu.DanhMuc.DonVi': 'Đơn vị',
-  'menu.DanhMuc.DonViViTri': 'Đơn vị - Vị trí',
-  'menu.DanhMuc.VanBanQuyDinh': 'Căn cứ pháp lý',
 };
