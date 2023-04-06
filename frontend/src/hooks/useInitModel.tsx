@@ -2,6 +2,7 @@ import { chuanHoaObject } from '@/utils/utils';
 import { message } from 'antd';
 import { useState } from 'react';
 import useInitService from './useInitService';
+import { type TFilter } from '@/components/Table/typing';
 
 /**
  *
@@ -21,9 +22,9 @@ const useInitModel = <T,>(
   const [limit, setLimit] = useState<number>(10);
   const [loading, setLoading] = useState<boolean>(false);
   const [formSubmiting, setFormSubmiting] = useState<boolean>(false);
-  const [filterInfo, setFilterInfo] = useState<{ [k in keyof T]: any }>();
+  const [filters, setFilters] = useState<TFilter<T>[]>();
   const [condition, setCondition] = useState<{ [k in keyof T]: any } | undefined>(initCondition);
-  const [sort, setSort] = useState<{ [k in keyof T]: any }>();
+  const [sort, setSort] = useState<{ [k in keyof T]: 1 | -1 }>();
   const [edit, setEdit] = useState<boolean>(false);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
@@ -31,48 +32,85 @@ const useInitModel = <T,>(
   const { getAllService, postService, putService, deleteService, getService, getByIdService } =
     useInitService(url);
 
+  /**
+   * Get Pageable Model
+   * @date 2023-04-05
+   * @param {any} paramCondition?:any
+   * @param {any} path?:string
+   * @param {any} paramPage?:number
+   * @param {any} paramLimit?:number
+   * @param {any} sortParam?:{[k in key of T]: 1 | -1 }
+   * @param {any} queryParam?:any
+   * @returns {any}
+   */
   const getModel = async (
     paramCondition?: any,
     path?: string,
     paramPage?: number,
     paramLimit?: number,
-    sortParam?: any,
+    sortParam?: { [k in keyof T]: 1 | -1 },
     queryParam?: any,
-  ) => {
+  ): Promise<T[]> => {
     setLoading(true);
     const payload = {
       page: paramPage || page,
       limit: paramLimit || limit,
-      sort: { ...sort, ...sortParam },
-      [fieldNameCondtion ?? 'condition']: { ...condition, ...paramCondition },
+      sort: sortParam || sort,
+      [fieldNameCondtion ?? 'condition']: {
+        ...condition,
+        ...paramCondition,
+        filters: filters?.filter((item) => item.active)?.map(({ active, ...item }) => item),
+      },
     };
 
-    const response = await getService({ ...payload, ...queryParam }, path ?? 'page');
-    if (page > 1 && response?.data?.data?.result?.length === 0) setPage(page - 1);
-    else {
-      if (setDanhSach) setDanhSach(response?.data?.data?.result ?? []);
-      setTotal(response?.data?.data?.total ?? 0);
+    try {
+      const response = await getService({ ...payload, ...queryParam }, path ?? 'page');
+      if (page > 1 && response?.data?.data?.result?.length === 0) setPage(page - 1);
+      else {
+        if (setDanhSach) setDanhSach(response?.data?.data?.result ?? []);
+        setTotal(response?.data?.data?.total ?? 0);
+      }
+      return response?.data?.data?.result;
+    } catch (er) {
+      return Promise.reject(er);
+    } finally {
       setLoading(false);
     }
   };
 
-  const getAllModel = async (isSetRecord?: boolean, sortParam?: any, conditionParam?: any) => {
+  const getAllModel = async (
+    isSetRecord?: boolean,
+    sortParam?: any,
+    conditionParam?: any,
+  ): Promise<T[]> => {
     setLoading(true);
-    const response = await getAllService({ condition: conditionParam });
-    const data: any[] = response?.data?.data ?? [];
-    if (sortParam) data.sort(sortParam);
-    setDanhSach(data);
-    if (isSetRecord) setRecord(data?.[0]);
-    setLoading(false);
+    try {
+      const response = await getAllService({ condition: conditionParam });
+      const data: T[] = response?.data?.data ?? [];
+      if (sortParam) data.sort(sortParam);
+      setDanhSach(data);
+      if (isSetRecord) setRecord(data?.[0]);
+
+      return data;
+    } catch (er) {
+      return Promise.reject(er);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const getByIdModel = async (id: string | number): Promise<T> => {
+  const getByIdModel = async (id: string | number, isSetRecord?: boolean): Promise<T> => {
     if (!id) return Promise.reject();
     setLoading(true);
-    const response = await getByIdService(id);
-    if (setRecord) setRecord(response?.data?.data ?? null);
-    setLoading(false);
-    return response?.data?.data ?? null;
+    try {
+      const response = await getByIdService(id);
+      if (isSetRecord !== false) setRecord(response?.data?.data ?? null);
+      return response?.data?.data;
+    } catch (er) {
+      return Promise.reject(er);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const postModel = async (payload: T, getData?: any): Promise<T> => {
@@ -157,8 +195,8 @@ const useInitModel = <T,>(
     setLimit,
     loading,
     setLoading,
-    filterInfo,
-    setFilterInfo,
+    filters,
+    setFilters,
     condition,
     setCondition,
     edit,

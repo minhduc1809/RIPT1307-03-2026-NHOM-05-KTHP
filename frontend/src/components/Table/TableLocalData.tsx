@@ -1,8 +1,8 @@
-import type { IColumn } from '@/utils/interfaces';
 import { PlusOutlined } from '@ant-design/icons';
 import type { TableProps } from 'antd';
 import { Button, Modal, Table } from 'antd';
 import { useModel } from 'umi';
+import { type IColumn } from './typing';
 
 const TableLocalData = (props: {
   otherProps?: TableProps<any>;

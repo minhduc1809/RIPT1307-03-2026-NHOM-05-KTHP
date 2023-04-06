@@ -15,6 +15,7 @@ import NotAccessible from './pages/exception/403';
 import NotFoundContent from './pages/exception/404';
 import { getInfo } from './services/ant-design-pro/api';
 import data from './utils/data';
+import './styles/global.less';
 
 const loginPath = '/user/login';
 const pathAuth = ['/admin/login'];

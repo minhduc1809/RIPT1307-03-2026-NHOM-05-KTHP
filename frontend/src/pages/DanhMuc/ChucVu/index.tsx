@@ -1,12 +1,12 @@
 import TableBase from '@/components/Table';
-import type { IColumn } from '@/utils/interfaces';
+import { type IColumn } from '@/components/Table/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Divider, Popconfirm, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import Form from './components/Form';
 
 const ChucVuPage = () => {
-  const { setEdit, setVisibleForm, setRecord, getModel, page, limit, condition, deleteModel } =
+  const { setEdit, setVisibleForm, setRecord, getModel, page, limit, deleteModel } =
     useModel('danhmuc.chucvu');
 
   const handleEdit = (record: ChucVu.IRecord) => {
@@ -21,14 +21,17 @@ const ChucVuPage = () => {
       dataIndex: 'ma',
       align: 'center',
       width: 80,
-      search: 'search',
+      filterType: 'select',
+      filterData: ['ád', 'drger', 'hgf', 'werwfdf'],
+      sortable: true,
     },
     {
       title: 'Tên chức vụ',
       dataIndex: 'ten',
       align: 'center',
       width: 250,
-      search: 'search',
+      filterType: 'string',
+      sortable: true,
     },
     {
       title: 'Thao tác',
@@ -60,9 +63,7 @@ const ChucVuPage = () => {
   return (
     <TableBase
       columns={columns}
-      getData={getModel}
-      hascreate
-      dependencies={[page, limit, condition]}
+      dependencies={[page, limit]}
       modelName="danhmuc.chucvu"
       title="Chức vụ"
       Form={Form}

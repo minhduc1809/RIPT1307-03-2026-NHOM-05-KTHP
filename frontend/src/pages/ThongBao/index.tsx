@@ -1,25 +1,14 @@
 import TableBase from '@/components/Table';
-import type { IColumn } from '@/utils/interfaces';
-import { useCheckAccess } from '@/utils/utils';
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
-import { Button, Divider, Modal, Popconfirm, Tooltip, Typography } from 'antd';
+import { type IColumn } from '@/components/Table/typing';
+import { EyeOutlined } from '@ant-design/icons';
+import { Button, Divider, Modal, Tooltip, Typography } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import ViewThongBao from './components/ViewThongBao';
 
 const ThongBao = () => {
-  const {
-    getThongBaoAdminModel,
-    page,
-    limit,
-    condition,
-    setEdit,
-    setVisibleForm,
-    deleteThongBaoModel,
-    setRecord,
-    record,
-    phamVi,
-  } = useModel('thongbao');
+  const { getThongBaoAdminModel, page, limit, condition, setRecord, record, phamVi } =
+    useModel('thongbao');
   const [visible, setVisible] = useState<boolean>(false);
 
   const onCell = (recordThongBao: ThongBao.Record) => ({
@@ -36,7 +25,7 @@ const ThongBao = () => {
       dataIndex: 'senderName',
       align: 'center',
       width: 150,
-      search: 'search',
+      filterType: 'string',
       onCell,
     },
     {
@@ -44,7 +33,7 @@ const ThongBao = () => {
       dataIndex: 'title',
       align: 'center',
       width: 200,
-      search: 'search',
+      filterType: 'string',
       onCell,
       render: (val) => (
         <Typography.Paragraph

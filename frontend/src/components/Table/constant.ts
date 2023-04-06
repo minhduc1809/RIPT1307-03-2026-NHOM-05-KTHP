@@ -1,0 +1,31 @@
+export enum EOperatorType {
+  EQUAL = 'eq',
+  NOT_EQUAL = 'ne',
+  CONTAIN = 'contain',
+  NOT_CONTAIN = 'notcon',
+  START_WITH = 'start',
+  END_WITH = 'end',
+  LESS_EQUAL = 'lte',
+  GREAT_EQUAL = 'gte',
+  LESS_THAN = 'lt',
+  GREAT_THAN = 'gt',
+  BETWEEN = 'between',
+  INCLUDE = 'include',
+  NOT_INCLUDE = 'notinc',
+}
+
+export const OperatorLabel = {
+  [EOperatorType.EQUAL]: 'Bằng',
+  [EOperatorType.NOT_EQUAL]: 'Không bằng',
+  [EOperatorType.CONTAIN]: 'Chứa',
+  [EOperatorType.NOT_CONTAIN]: 'Không chứa',
+  [EOperatorType.START_WITH]: 'Bắt đầu bằng',
+  [EOperatorType.END_WITH]: 'Kết thúc bằng',
+  [EOperatorType.LESS_EQUAL]: 'Nhỏ hơn hoặc bằng',
+  [EOperatorType.LESS_THAN]: 'Nhỏ hơn',
+  [EOperatorType.GREAT_EQUAL]: 'Lớn hơn hoặc bằng',
+  [EOperatorType.GREAT_THAN]: 'Lớn hơn',
+  [EOperatorType.BETWEEN]: 'Trong khoảng',
+  [EOperatorType.INCLUDE]: 'Nằm trong',
+  [EOperatorType.NOT_INCLUDE]: 'Không nằm trong',
+};
