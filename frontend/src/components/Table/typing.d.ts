@@ -9,7 +9,8 @@ export interface IColumn<T> extends Omit<ICol<T>, 'dataIndex' | 'width'> {
   children?: IColumn[];
   sortable?: boolean;
   filterData?: string[] | TDataOption[];
-  filterType?: 'string' | 'number' | 'date' | 'datetime' | 'select';
+  filterType?: 'string' | 'number' | 'date' | 'datetime' | 'select' | 'customselect';
+  filterCustomSelect?: JSX.Element;
   dataIndex?: keyof T | 'index' | string[];
   width: number;
 }

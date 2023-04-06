@@ -45,6 +45,7 @@ const RowFilter = (props: {
         ];
         break;
       case 'select':
+      case 'customselect':
         opers = [EOperatorType.INCLUDE, EOperatorType.NOT_INCLUDE];
         break;
 
@@ -80,6 +81,8 @@ const RowFilter = (props: {
             showSearch
           />
         );
+      case 'customselect':
+        return filterColumn?.filterCustomSelect;
 
       default:
         return <></>;
