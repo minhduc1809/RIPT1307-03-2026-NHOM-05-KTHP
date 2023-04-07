@@ -4,6 +4,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Divider, Popconfirm, Tooltip } from 'antd';
 import { useModel } from 'umi';
 import Form from './components/Form';
+import moment from 'moment';
 
 const ChucVuPage = () => {
   const { setEdit, setVisibleForm, setRecord, getModel, page, limit, deleteModel } =
@@ -22,7 +23,7 @@ const ChucVuPage = () => {
       align: 'center',
       width: 80,
       filterType: 'select',
-      filterData: ['ád', 'drger', 'hgf', 'werwfdf'],
+      filterData: ['M01', 'M02', 'M03'],
       sortable: true,
     },
     {
@@ -32,6 +33,15 @@ const ChucVuPage = () => {
       width: 250,
       filterType: 'string',
       sortable: true,
+    },
+    {
+      title: 'Ngày tạo',
+      dataIndex: 'createdAt',
+      align: 'center',
+      width: 120,
+      filterType: 'datetime',
+      sortable: true,
+      render: (val) => moment(val).format('HH:mm DD/MM/YYYY'),
     },
     {
       title: 'Thao tác',
