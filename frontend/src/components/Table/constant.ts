@@ -10,6 +10,7 @@ export enum EOperatorType {
   LESS_THAN = 'lt',
   GREAT_THAN = 'gt',
   BETWEEN = 'between',
+  NOT_BETWEEN = 'notbet',
   INCLUDE = 'include',
   NOT_INCLUDE = 'notinc',
 }
@@ -26,6 +27,7 @@ export const OperatorLabel = {
   [EOperatorType.GREAT_EQUAL]: 'Lớn hơn hoặc bằng',
   [EOperatorType.GREAT_THAN]: 'Lớn hơn',
   [EOperatorType.BETWEEN]: 'Trong khoảng',
+  [EOperatorType.NOT_BETWEEN]: 'Ngoài khoảng',
   [EOperatorType.INCLUDE]: 'Nằm trong',
   [EOperatorType.NOT_INCLUDE]: 'Không nằm trong',
 };

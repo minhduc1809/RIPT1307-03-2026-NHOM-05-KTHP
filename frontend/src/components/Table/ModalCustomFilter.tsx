@@ -26,7 +26,12 @@ const ModalCustomFilter = (props: {
     .map((item) => item.dataIndex);
 
   const onFinish = (values: any) => {
-    setFilters(values.filters);
+    const filtered = values.filters
+      ?.filter((filter: TFilter<any>) => filter.values && Array.isArray(filter.values))
+      ?.map((filter: TFilter<any>) =>
+        Array.isArray(filter.values[0]) ? { ...filter, values: filter.values[0] } : filter,
+      );
+    setFilters(filtered);
     setVisible(false);
   };
 

@@ -59,8 +59,8 @@ const useInitModel = <T,>(
       [fieldNameCondtion ?? 'condition']: {
         ...condition,
         ...paramCondition,
-        filters: filters?.filter((item) => item.active)?.map(({ active, ...item }) => item),
       },
+      filters: filters?.filter((item) => item.active)?.map(({ active, ...item }) => item),
     };
 
     try {

@@ -119,8 +119,6 @@ const TableBase = (props: TableBaseProps) => {
       width: 60,
     });
 
-  console.log(filters?.length);
-
   const mainContent = (
     <div className="table-base">
       <div className="header">

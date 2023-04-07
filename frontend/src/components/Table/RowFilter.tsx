@@ -42,6 +42,7 @@ const RowFilter = (props: {
           EOperatorType.GREAT_THAN,
           EOperatorType.GREAT_EQUAL,
           EOperatorType.BETWEEN,
+          EOperatorType.NOT_BETWEEN,
         ];
         break;
       case 'select':
@@ -139,14 +140,23 @@ const RowFilter = (props: {
           </Form.Item>
         </Col>
 
-        <Col span={24} md={operatorSelected === EOperatorType.BETWEEN ? 12 : 24}>
-          <Form.Item name={['filters', index, 'data', 0]} rules={[...rules.required]}>
+        <Col
+          span={24}
+          md={
+            operatorSelected === EOperatorType.BETWEEN ||
+            operatorSelected === EOperatorType.NOT_BETWEEN
+              ? 12
+              : 24
+          }
+        >
+          <Form.Item name={['filters', index, 'values', 0]} rules={[...rules.required]}>
             {renderDataComponent()}
           </Form.Item>
         </Col>
-        {operatorSelected === EOperatorType.BETWEEN ? (
+        {operatorSelected === EOperatorType.BETWEEN ||
+        operatorSelected === EOperatorType.NOT_BETWEEN ? (
           <Col span={24} md={12}>
-            <Form.Item name={['filters', index, 'data', 1]} rules={[...rules.required]}>
+            <Form.Item name={['filters', index, 'values', 1]} rules={[...rules.required]}>
               {renderDataComponent()}
             </Form.Item>
           </Col>
