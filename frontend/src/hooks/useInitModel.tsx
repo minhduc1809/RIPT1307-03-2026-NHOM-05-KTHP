@@ -14,7 +14,7 @@ import { type TFilter } from '@/components/Table/typing';
 const useInitModel = <T,>(
   url: string,
   fieldNameCondtion?: 'condition' | 'cond',
-  initCondition?: { [k in keyof T]: any },
+  initCondition?: { [k in keyof T]?: any },
 ) => {
   const [danhSach, setDanhSach] = useState<T[]>([]);
   const [record, setRecord] = useState<T>();
@@ -23,8 +23,8 @@ const useInitModel = <T,>(
   const [loading, setLoading] = useState<boolean>(false);
   const [formSubmiting, setFormSubmiting] = useState<boolean>(false);
   const [filters, setFilters] = useState<TFilter<T>[]>();
-  const [condition, setCondition] = useState<{ [k in keyof T]: any } | undefined>(initCondition);
-  const [sort, setSort] = useState<{ [k in keyof T]: 1 | -1 }>();
+  const [condition, setCondition] = useState<{ [k in keyof T]?: any } | undefined>(initCondition);
+  const [sort, setSort] = useState<{ [k in keyof T]?: 1 | -1 }>();
   const [edit, setEdit] = useState<boolean>(false);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
