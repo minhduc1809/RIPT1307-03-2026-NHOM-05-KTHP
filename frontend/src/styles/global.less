@@ -26,11 +26,11 @@ body,
 }
 
 .ant-menu-light.ant-pro-sider-menu {
-  padding: 24px 16px;
+  padding: 24px 12px;
   font-weight: 500;
 
   .ant-menu-item {
-    padding-left: 20px !important;
+    padding-left: 12px !important;
     border-radius: 12px;
 
     &::after {
@@ -39,22 +39,30 @@ body,
   }
 
   li.ant-menu-item-selected {
-    padding-left: 20px !important;
+    padding-left: 12px !important;
     color: white;
     background-color: @primary-color;
   }
 
   .ant-menu-submenu {
     & > .ant-menu-submenu-title {
-      padding-left: 20px !important;
+      padding-right: 24px !important;
+      padding-left: 12px !important;
       border-radius: 12px;
+
+      .ant-menu-submenu-arrow {
+        right: 10px;
+      }
     }
 
     .ant-menu-sub {
+      padding-left: 12px;
+      background-color: #f8f8fa;
       border-radius: 12px;
+
       .ant-menu-sub {
         .ant-menu-item-only-child {
-          padding-left: 40px !important;
+          padding-left: 12px !important;
         }
       }
     }
@@ -84,6 +92,8 @@ body,
 }
 
 .ant-layout-content {
+  margin: 18px !important;
+
   @media (max-width: @screen-xs) {
     margin: 12px !important;
   }

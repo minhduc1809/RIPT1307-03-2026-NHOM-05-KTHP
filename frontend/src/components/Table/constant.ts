@@ -2,7 +2,7 @@ export enum EOperatorType {
   EQUAL = 'eq',
   NOT_EQUAL = 'ne',
   CONTAIN = 'contain',
-  NOT_CONTAIN = 'notcon',
+  NOT_CONTAIN = 'not_contain',
   START_WITH = 'start',
   END_WITH = 'end',
   LESS_EQUAL = 'lte',
@@ -10,9 +10,9 @@ export enum EOperatorType {
   LESS_THAN = 'lt',
   GREAT_THAN = 'gt',
   BETWEEN = 'between',
-  NOT_BETWEEN = 'notbet',
-  INCLUDE = 'include',
-  NOT_INCLUDE = 'notinc',
+  NOT_BETWEEN = 'not_between',
+  INCLUDE = 'in',
+  NOT_INCLUDE = 'not_in',
 }
 
 export const OperatorLabel = {
