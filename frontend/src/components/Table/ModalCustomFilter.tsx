@@ -1,6 +1,6 @@
 import { CloseOutlined, FilterFilled, PlusOutlined } from '@ant-design/icons';
 import { Button, Form, Modal, Space } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RowFilter from './RowFilter';
 import { type IColumn, type TFilter } from './typing';
 
@@ -24,6 +24,10 @@ const ModalCustomFilter = (props: {
         !fieldsFiltered.includes(item.dataIndex),
     )
     .map((item) => item.dataIndex);
+
+  useEffect(() => {
+    setFiltersTemp(filters ?? []);
+  }, [filters]);
 
   const onFinish = (values: any) => {
     const filtered = values.filters
