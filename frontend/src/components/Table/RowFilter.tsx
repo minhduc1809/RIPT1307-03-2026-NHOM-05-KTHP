@@ -149,9 +149,16 @@ const RowFilter = (props: {
               : 24
           }
         >
-          <Form.Item name={['filters', index, 'values', 0]} rules={[...rules.required]}>
-            {renderDataComponent()}
-          </Form.Item>
+          {operatorSelected === EOperatorType.INCLUDE ||
+          operatorSelected === EOperatorType.NOT_INCLUDE ? (
+            <Form.Item name={['filters', index, 'values']} rules={[...rules.required]}>
+              {renderDataComponent()}
+            </Form.Item>
+          ) : (
+            <Form.Item name={['filters', index, 'values', 0]} rules={[...rules.required]}>
+              {renderDataComponent()}
+            </Form.Item>
+          )}
         </Col>
         {operatorSelected === EOperatorType.BETWEEN ||
         operatorSelected === EOperatorType.NOT_BETWEEN ? (

@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import ModalCustomFilter from './ModalCustomFilter';
 import './style.less';
-import type { TFilter, TableBaseProps } from './typing';
+import type { TDataOption, TFilter, TableBaseProps } from './typing';
 import { EOperatorType } from './constant';
 
 const TableBase = (props: TableBaseProps) => {
@@ -76,20 +76,17 @@ const TableBase = (props: TableBaseProps) => {
     };
   }, []);
 
-  const onChange = (
-    pagination: PaginationProps,
-    fil: Record<string, FilterValue | null>,
-    sorter: any,
-  ) => {
-    const { order, field } = sorter;
-    const orderValue = order === 'ascend' ? 1 : order === 'descend' ? -1 : undefined;
-    if (sorter && setSort) setSort({ [field]: orderValue });
-
-    // thay đổi từ phân trang || filter
-    const { current, pageSize } = pagination;
-    setPage(current);
-    setLimit(pageSize);
-  };
+  /**
+   * Get current filter rule in column
+   * @date 2023-04-13
+   */
+  const getFilterColumn = (fieldName: any, operator?: EOperatorType, active?: boolean) =>
+    filters?.find(
+      (item) =>
+        item.field === fieldName &&
+        (operator === undefined || item.operator === operator) &&
+        (active === undefined || item.active === active),
+    );
 
   //#region Get Sort Column Props
   const getCondValue = (dataIndex: any) => {
@@ -109,14 +106,6 @@ const TableBase = (props: TableBaseProps) => {
   });
   //#endregion
 
-  const getFilterColumn = (fieldName: any, operator?: EOperatorType.CONTAIN, active?: boolean) =>
-    filters?.find(
-      (item) =>
-        item.field === fieldName &&
-        (operator === undefined || item.operator === operator) &&
-        (active === undefined || item.active === active),
-    );
-
   //#region Get Search Column Props
   const handleSearch = (dataIndex: any, value: string) => {
     if (!value) {
@@ -129,7 +118,9 @@ const TableBase = (props: TableBaseProps) => {
       if (filter)
         // Udpate current filter
         tempFilters = tempFilters.map((item) =>
-          item.field === dataIndex ? { ...item, active: true, values: [value] } : item,
+          item.field === dataIndex
+            ? { ...item, active: true, operator: EOperatorType.CONTAIN, values: [value] }
+            : item,
         );
       // Add new filter rule for this column
       else
@@ -163,12 +154,59 @@ const TableBase = (props: TableBaseProps) => {
   });
   //#endregion
 
+  //#region Get Filter Column Props
+
+  const handleFilter = (dataIndex: any, values: string[]) => {
+    if (!values || !values.length) {
+      // Remove filter of this column
+      const tempFilters = filters?.filter((item) => item.field !== dataIndex);
+      setFilters(tempFilters);
+    } else {
+      const filter = getFilterColumn(dataIndex);
+      let tempFilters: TFilter<any>[] = [...(filters ?? [])];
+      if (filter)
+        // Udpate current filter
+        tempFilters = tempFilters.map((item) =>
+          item.field === dataIndex
+            ? { ...item, active: true, operator: EOperatorType.INCLUDE, values }
+            : item,
+        );
+      // Add new filter rule for this column
+      else
+        tempFilters.push({
+          active: true,
+          field: dataIndex,
+          operator: EOperatorType.INCLUDE,
+          values,
+        });
+      setFilters(tempFilters);
+    }
+  };
+
+  const getFilterColumnProps = (dataIndex: any, filterData?: any[]) => {
+    const filterColumn = getFilterColumn(dataIndex, EOperatorType.INCLUDE, true);
+    return {
+      ...{
+        filters: filterData?.map((item: string | TDataOption) =>
+          typeof item === 'string'
+            ? { key: item, value: item, text: item }
+            : { key: item.value, value: item.value, text: item.label },
+        ),
+        filteredValue: filterColumn?.values ?? [],
+      },
+    };
+  };
+  //#endregion
+
   //#region Get Table Columns
   columns = columns.map((item) => ({
     ...item,
     ...(item.sortable ? getSort(item.dataIndex) : {}),
     ...(item.filterType === 'string'
       ? getColumnSearchProps(item.dataIndex, item.title)
+      : undefined),
+    ...(item.filterType === 'select'
+      ? getFilterColumnProps(item.dataIndex, item.filterData)
       : undefined),
   }));
 
@@ -181,6 +219,28 @@ const TableBase = (props: TableBaseProps) => {
       width: 60,
     });
   //#endregion
+
+  /**
+   * On Table Changed
+   * @date 2023-04-13
+   */
+  const onChange = (
+    pagination: PaginationProps,
+    fil: Record<string, FilterValue | null>,
+    sorter: any,
+  ) => {
+    // Handle Filter in columns
+    Object.entries(fil).map(([field, values]) => handleFilter(field, values as any));
+
+    const { order, field } = sorter;
+    const orderValue = order === 'ascend' ? 1 : order === 'descend' ? -1 : undefined;
+    if (sorter && setSort) setSort({ [field]: orderValue });
+
+    // thay đổi từ phân trang || filter
+    const { current, pageSize } = pagination;
+    setPage(current);
+    setLimit(pageSize);
+  };
 
   const mainContent = (
     <div className="table-base">
