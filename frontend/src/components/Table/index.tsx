@@ -4,8 +4,9 @@ import {
   FilterTwoTone,
   PlusCircleOutlined,
   ReloadOutlined,
+  SearchOutlined,
 } from '@ant-design/icons';
-import { Button, Card, ConfigProvider, Drawer, Empty, Modal, Table } from 'antd';
+import { Button, Card, ConfigProvider, Drawer, Empty, Input, Modal, Table } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import Tooltip from 'antd/es/tooltip';
 import type { FilterValue } from 'antd/lib/table/interface';
@@ -14,7 +15,8 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import ModalCustomFilter from './ModalCustomFilter';
 import './style.less';
-import type { TableBaseProps } from './typing';
+import type { TFilter, TableBaseProps } from './typing';
+import { EOperatorType } from './constant';
 
 const TableBase = (props: TableBaseProps) => {
   const {
@@ -49,7 +51,7 @@ const TableBase = (props: TableBaseProps) => {
   const setPage = model?.[`setPage${newName ?? ''}`];
   const setLimit = model?.[`setLimit${newName ?? ''}`];
   const condition = model?.[`condition${newName ?? ''}`];
-  const filters = model?.[`filters${newName ?? ''}`];
+  const filters: TFilter<any>[] = model?.[`filters${newName ?? ''}`];
   const setCondition = model?.[`setCondition${newName ?? ''}`];
   const setFilters = model?.[`setFilters${newName ?? ''}`];
   const sort = model?.[`sort${newName ?? ''}`];
@@ -74,22 +76,6 @@ const TableBase = (props: TableBaseProps) => {
     };
   }, []);
 
-  const getCondValue = (dataIndex: any) => {
-    const type = typeof dataIndex;
-    return _.get(sort, type === 'string' ? dataIndex : dataIndex?.join('.'), []);
-  };
-
-  const getSortValue = (dataIndex: any) => {
-    const value = getCondValue(dataIndex);
-    return value === 1 ? 'ascend' : value === -1 ? 'descend' : false;
-  };
-
-  const getSort = (dataIndex: any) => ({
-    sorter: true,
-    sortDirections: ['ascend', 'descend'],
-    sortOrder: getSortValue(dataIndex),
-  });
-
   const onChange = (
     pagination: PaginationProps,
     fil: Record<string, FilterValue | null>,
@@ -105,10 +91,86 @@ const TableBase = (props: TableBaseProps) => {
     setLimit(pageSize);
   };
 
-  columns = columns.map((item) => {
-    if (item.sortable) return { ...item, ...getSort(item.dataIndex) };
-    return item;
+  //#region Get Sort Column Props
+  const getCondValue = (dataIndex: any) => {
+    const type = typeof dataIndex;
+    return _.get(sort, type === 'string' ? dataIndex : dataIndex?.join('.'), []);
+  };
+
+  const getSortValue = (dataIndex: any) => {
+    const value = getCondValue(dataIndex);
+    return value === 1 ? 'ascend' : value === -1 ? 'descend' : false;
+  };
+
+  const getSort = (dataIndex: any) => ({
+    sorter: true,
+    sortDirections: ['ascend', 'descend'],
+    sortOrder: getSortValue(dataIndex),
   });
+  //#endregion
+
+  const getFilterColumn = (fieldName: any, operator?: EOperatorType.CONTAIN, active?: boolean) =>
+    filters?.find(
+      (item) =>
+        item.field === fieldName &&
+        (operator === undefined || item.operator === operator) &&
+        (active === undefined || item.active === active),
+    );
+
+  //#region Get Search Column Props
+  const handleSearch = (dataIndex: any, value: string) => {
+    if (!value) {
+      // Remove filter of this column
+      const tempFilters = filters?.filter((item) => item.field !== dataIndex);
+      setFilters(tempFilters);
+    } else {
+      const filter = getFilterColumn(dataIndex);
+      let tempFilters: TFilter<any>[] = [...(filters ?? [])];
+      if (filter)
+        // Udpate current filter
+        tempFilters = tempFilters.map((item) =>
+          item.field === dataIndex ? { ...item, active: true, values: [value] } : item,
+        );
+      // Add new filter rule for this column
+      else
+        tempFilters.push({
+          active: true,
+          field: dataIndex,
+          operator: EOperatorType.CONTAIN,
+          values: [value],
+        });
+      setFilters(tempFilters);
+    }
+  };
+
+  const getColumnSearchProps = (dataIndex: any, columnTitle: any) => ({
+    filterDropdown: () => (
+      <div className="column-search-box" onKeyDown={(e) => e.stopPropagation()}>
+        <Input.Search
+          placeholder={`Tìm ${columnTitle}`}
+          allowClear
+          enterButton
+          value={getFilterColumn(dataIndex, EOperatorType.CONTAIN, true)?.values?.[0]}
+          onSearch={(value) => handleSearch(dataIndex, value)}
+        />
+      </div>
+    ),
+    filterIcon: () => {
+      const values = getFilterColumn(dataIndex, undefined, true)?.values;
+      const filtered = values && values[0];
+      return <SearchOutlined className={filtered ? 'text-primary' : undefined} />;
+    },
+  });
+  //#endregion
+
+  //#region Get Table Columns
+  columns = columns.map((item) => ({
+    ...item,
+    ...(item.sortable ? getSort(item.dataIndex) : {}),
+    ...(item.filterType === 'string'
+      ? getColumnSearchProps(item.dataIndex, item.title)
+      : undefined),
+  }));
 
   const finalColumns = columns?.filter((item) => item?.hide !== true);
   if (addStt !== false)
@@ -118,6 +180,7 @@ const TableBase = (props: TableBaseProps) => {
       align: 'center',
       width: 60,
     });
+  //#endregion
 
   const mainContent = (
     <div className="table-base">
@@ -194,7 +257,7 @@ const TableBase = (props: TableBaseProps) => {
               : undefined
           }
           loading={loading}
-          bordered={border || false}
+          bordered={border || true}
           pagination={{
             current: page,
             pageSize: limit,
@@ -206,7 +269,6 @@ const TableBase = (props: TableBaseProps) => {
               return <div>Tổng số: {tongSo}</div>;
             },
           }}
-          // onChange={handleTableChange}
           onChange={onChange}
           dataSource={model?.[dataState || 'danhSach']?.map((item: any, index: number) => {
             return {

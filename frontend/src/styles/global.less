@@ -30,12 +30,20 @@ body,
   font-weight: 500;
 
   .ant-menu-item {
+    height: auto;
+    min-height: 40px;
+    padding: 5px 12px;
     padding-left: 12px !important;
+    line-height: 1.5;
     border-radius: 12px;
 
     &::after {
       border: none;
     }
+  }
+
+  .ant-pro-menu-item {
+    white-space: break-spaces;
   }
 
   li.ant-menu-item-selected {
@@ -85,6 +93,10 @@ body,
       }
     }
   }
+}
+
+.ant-descriptions-item-label {
+  font-weight: 500 !important;
 }
 
 .login-footer .ant-layout-footer {
@@ -215,10 +227,6 @@ ol {
   margin: 4px 0 !important;
 }
 
-.ant-card-head-title {
-  white-space: pre-wrap;
-}
-
 .ant-form-vertical {
   .ant-form-item {
     margin-bottom: 10px !important;
@@ -229,13 +237,41 @@ ol {
   }
 }
 
-.ant-drawer .ant-card-body,
-.ant-modal .ant-card-body {
-  padding-top: 12px;
+.ant-card {
+  height: 100%;
+
+  .ant-card-head-title {
+    white-space: pre-wrap;
+  }
+
+  .ant-card-head {
+    padding: 0 18px;
+
+    @media (max-width: @screen-xs) {
+      padding: 0 12px;
+    }
+  }
+
+  .ant-card-body {
+    padding: 18px;
+    @media (max-width: @screen-xs) {
+      padding: 12px;
+    }
+  }
+
+  .ant-drawer .ant-card-body,
+  .ant-modal .ant-card-body {
+    padding-top: 12px;
+  }
 }
 
-.ant-table-cell .ant-typography {
-  margin-bottom: 0 !important;
+.ant-table-cell {
+  padding: 12px !important;
+
+  p,
+  .ant-typography {
+    margin-bottom: 0 !important;
+  }
 }
 
 .li-hinh-thuc {
@@ -253,6 +289,10 @@ ol {
     background-color: rgba(160, 160, 160, 0.2);
     border: 1px solid @primary-color;
   }
+}
+
+.text-primary {
+  color: @primary-color;
 }
 
 @media (max-width: @screen-xs) {

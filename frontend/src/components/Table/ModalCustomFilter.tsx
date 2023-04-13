@@ -27,6 +27,7 @@ const ModalCustomFilter = (props: {
 
   useEffect(() => {
     setFiltersTemp(filters ?? []);
+    form.setFieldsValue({ filters });
   }, [filters]);
 
   const onFinish = (values: any) => {
