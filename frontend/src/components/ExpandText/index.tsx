@@ -14,7 +14,7 @@ interface EllipsisProps {
 interface IProps {
   children: any;
   style?: React.CSSProperties;
-  ellipsis: EllipsisProps;
+  ellipsis?: EllipsisProps;
 }
 
 const ExpandText = (props: IProps) => {
@@ -25,7 +25,6 @@ const ExpandText = (props: IProps) => {
     setExpand(true);
     setCounter(!expand ? counter + 0 : counter + 1);
   };
-
   const typoClose = () => {
     setExpand(false);
     setCounter(!expand ? counter + 0 : counter + 1);
@@ -36,6 +35,9 @@ const ExpandText = (props: IProps) => {
       <Typography.Paragraph
         style={{ ...props.style }}
         ellipsis={{
+          rows: 3,
+          symbol: 'Xem tiếp',
+          expandable: true,
           ...props.ellipsis,
           onExpand: typoExpand,
         }}

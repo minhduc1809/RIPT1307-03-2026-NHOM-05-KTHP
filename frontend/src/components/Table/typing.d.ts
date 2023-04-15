@@ -40,7 +40,7 @@ export type TableBaseProps = {
     filter?: boolean;
     reload?: boolean;
   };
-  otherButtons?: React.FC[];
+  otherButtons?: JSX.Element[];
   dataState?: string;
   otherProps?: TableProps<any>;
   maskCloseableForm?: boolean;

@@ -23,12 +23,12 @@ const RowFilter = (props: {
     switch (filterType) {
       case 'string':
         opers = [
-          EOperatorType.EQUAL,
-          EOperatorType.NOT_EQUAL,
           EOperatorType.CONTAIN,
           EOperatorType.NOT_CONTAIN,
           EOperatorType.START_WITH,
           EOperatorType.END_WITH,
+          EOperatorType.EQUAL,
+          EOperatorType.NOT_EQUAL,
         ];
         break;
       case 'number':

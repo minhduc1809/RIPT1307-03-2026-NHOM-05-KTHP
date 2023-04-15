@@ -28,6 +28,6 @@ export const OperatorLabel = {
   [EOperatorType.GREAT_THAN]: 'Lớn hơn',
   [EOperatorType.BETWEEN]: 'Trong khoảng',
   [EOperatorType.NOT_BETWEEN]: 'Ngoài khoảng',
-  [EOperatorType.INCLUDE]: 'Nằm trong',
-  [EOperatorType.NOT_INCLUDE]: 'Không nằm trong',
+  [EOperatorType.INCLUDE]: 'Thuộc',
+  [EOperatorType.NOT_INCLUDE]: 'Không thuộc',
 };
