@@ -5,19 +5,16 @@ import FormPostIssue from './Form';
 
 const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
   const [visible, setVisible] = useState<boolean>(false);
-  const onCancel = () => {
-    setVisible(false);
-  };
 
-  const onOpen = () => {
-    setVisible(true);
-  };
+  const onCancel = () => setVisible(false);
+
+  const onOpen = () => setVisible(true);
 
   return (
-    <div>
+    <>
       {props.children}
       {window.location.pathname !== '/user/login' && (
-        <Tooltip title="Phản hồi kĩ thuật">
+        <Tooltip title="Phản hồi kĩ thuật" placement="topLeft">
           <Button
             onClick={onOpen}
             style={{
@@ -34,10 +31,11 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
           </Button>
         </Tooltip>
       )}
+
       <Modal bodyStyle={{ padding: 0 }} footer={false} visible={visible} onCancel={onCancel}>
         <FormPostIssue onCancel={onCancel} />
       </Modal>
-    </div>
+    </>
   );
 };
 
