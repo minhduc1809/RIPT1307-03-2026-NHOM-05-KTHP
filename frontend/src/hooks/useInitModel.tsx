@@ -23,7 +23,7 @@ const useInitModel = <T,>(
   const [loading, setLoading] = useState<boolean>(false);
   const [formSubmiting, setFormSubmiting] = useState<boolean>(false);
   const [filters, setFilters] = useState<TFilter<T>[]>();
-  const [condition, setCondition] = useState<{ [k in keyof T]?: any } | undefined>(initCondition);
+  const [condition, setCondition] = useState<{ [k in keyof T]?: any } | any>(initCondition);
   const [sort, setSort] = useState<{ [k in keyof T]?: 1 | -1 }>();
   const [edit, setEdit] = useState<boolean>(false);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
@@ -113,7 +113,7 @@ const useInitModel = <T,>(
     }
   };
 
-  const postModel = async (payload: T, getData?: any): Promise<T> => {
+  const postModel = async (payload: T, getData?: any, closeModal?: boolean): Promise<T> => {
     if (formSubmiting) Promise.reject('form submiting');
     setFormSubmiting(true);
     try {
@@ -122,7 +122,7 @@ const useInitModel = <T,>(
       setLoading(false);
       if (getData) getData();
       else getModel();
-      setVisibleForm(false);
+      if (closeModal !== false) setVisibleForm(false);
 
       return res.data?.data;
     } catch (err) {
@@ -137,6 +137,7 @@ const useInitModel = <T,>(
     payload: T,
     getData?: any,
     notGet?: boolean,
+    closeModal?: boolean,
   ): Promise<T> => {
     if (formSubmiting) return Promise.reject('form submiting');
     setFormSubmiting(true);
@@ -146,7 +147,7 @@ const useInitModel = <T,>(
       setLoading(false);
       if (getData) getData();
       else if (!notGet) getModel();
-      setVisibleForm(false);
+      if (closeModal !== false) setVisibleForm(false);
 
       return res.data?.data;
     } catch (err) {

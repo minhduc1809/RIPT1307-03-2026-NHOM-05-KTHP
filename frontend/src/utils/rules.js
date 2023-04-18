@@ -238,11 +238,8 @@ const rules = {
         if (_.get(value, 'fileList', []).length === 0) callback('');
         callback();
       },
-      message: 'Hãy chọn file',
-    },
-    {
       required: true,
-      message: 'Bắt buộc',
+      message: 'Hãy chọn file',
     },
   ],
 
