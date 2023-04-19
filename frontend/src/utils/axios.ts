@@ -53,14 +53,16 @@ axios.interceptors.response.use(
     // Do something with response data
     response,
   (error) => {
-    const descriptionError =
-      data.error[error?.response?.data?.detail?.errorCode || error?.response?.data?.errorCode] ||
-      (Array.isArray(error?.response?.data?.detail?.exception?.response?.message) &&
-        error?.response?.data?.detail?.exception?.response?.message?.join(', ')) ||
-      error?.response?.data?.message ||
-      error?.response?.data?.errorDescription ||
-      error?.data?.detail?.message ||
-      error?.message;
+    const er = error?.response?.data;
+    const descriptionError = Array.isArray(er?.detail?.exception?.response?.message)
+      ? er?.detail?.exception?.response?.message?.join(', ')
+      : // Sequelize validation Errors
+      Array.isArray(er?.detail?.exception?.errors)
+      ? er?.detail?.exception?.errors?.map((e: any) => e?.message)?.join(', ')
+      : data.error[er?.detail?.errorCode || er?.errorCode] ||
+        er?.detail?.message ||
+        er?.message ||
+        er?.errorDescription;
 
     const originalRequest = error.config;
     switch (error?.response?.status) {
@@ -149,7 +151,7 @@ axios.interceptors.response.use(
       case 502:
         notification.error({
           message: 'Server gặp lỗi',
-          description: error?.response?.data?.detail?.message || error?.message,
+          description: descriptionError,
         });
         break;
 
