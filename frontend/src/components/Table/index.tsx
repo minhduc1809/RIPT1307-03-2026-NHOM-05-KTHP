@@ -358,24 +358,22 @@ const TableBase = (props: TableBaseProps) => {
         <>
           {formType === 'Drawer' ? (
             <Drawer
-              maskClosable={maskCloseableForm || true}
+              maskClosable={maskCloseableForm || false}
               width={widthDrawer}
               footer={false}
               bodyStyle={{ padding: 0 }}
               visible={visibleForm}
               destroyOnClose={destroyModal}
             >
-              <Form title={title} {...props.formProps} />
+              <Form title={title ?? ''} {...props.formProps} />
               <CloseOutlined
-                onClick={() => {
-                  setVisibleForm(false);
-                }}
+                onClick={() => setVisibleForm(false)}
                 style={{ position: 'absolute', top: 24, right: 24, cursor: 'pointer' }}
               />
             </Drawer>
           ) : (
             <Modal
-              maskClosable={maskCloseableForm || true}
+              maskClosable={maskCloseableForm || false}
               width={widthDrawer}
               onCancel={() => setVisibleForm(false)}
               footer={false}
@@ -383,19 +381,21 @@ const TableBase = (props: TableBaseProps) => {
               visible={visibleForm}
               destroyOnClose={destroyModal}
             >
-              <Form title={title} {...props.formProps} />
+              <Form title={title ?? ''} {...props.formProps} />
             </Modal>
           )}
         </>
       )}
 
-      <ModalCustomFilter
-        visible={visibleFilter}
-        setVisible={setVisibleFilter}
-        columns={finalColumns}
-        filters={filters}
-        setFilters={setFilters}
-      />
+      {buttonOptions?.filter !== false && hasFilter ? (
+        <ModalCustomFilter
+          visible={visibleFilter}
+          setVisible={setVisibleFilter}
+          columns={finalColumns}
+          filters={filters}
+          setFilters={setFilters}
+        />
+      ) : null}
     </>
   );
 };
