@@ -85,9 +85,9 @@ const useInitModel = <T,>(
   ): Promise<T[]> => {
     setLoading(true);
     try {
-      const response = await getAllService({ condition: conditionParam });
+      const response = await getAllService({ condition: conditionParam, sort: sortParam });
       const data: T[] = response?.data?.data ?? [];
-      if (sortParam) data.sort(sortParam);
+      // if (sortParam) data.sort(sortParam);
       setDanhSach(data);
       if (isSetRecord) setRecord(data?.[0]);
 

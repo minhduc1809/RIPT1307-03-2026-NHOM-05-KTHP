@@ -19,7 +19,7 @@ const useInitService = (url: string) => {
     return axios.delete(`${ip3}/${url}/${id}`);
   };
 
-  const getAllService = (payload?: { condition?: any }) => {
+  const getAllService = (payload?: { condition?: any; sort?: any }) => {
     return axios.get(`${ip3}/${url}/many`, { params: payload });
   };
 
