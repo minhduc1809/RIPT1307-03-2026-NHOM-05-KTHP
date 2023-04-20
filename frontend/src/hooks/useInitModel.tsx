@@ -82,10 +82,16 @@ const useInitModel = <T,>(
     isSetRecord?: boolean,
     sortParam?: any,
     conditionParam?: any,
+    filterParam?: TFilter<T>[],
   ): Promise<T[]> => {
     setLoading(true);
     try {
-      const response = await getAllService({ condition: conditionParam, sort: sortParam });
+      const payload = {
+        [fieldNameCondtion ?? 'condition']: conditionParam,
+        sort: sortParam,
+        filters: filterParam,
+      };
+      const response = await getAllService(payload);
       const data: T[] = response?.data?.data ?? [];
       // if (sortParam) data.sort(sortParam);
       setDanhSach(data);

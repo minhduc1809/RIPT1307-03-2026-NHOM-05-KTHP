@@ -13,6 +13,8 @@ export enum EOperatorType {
   NOT_BETWEEN = 'not_between',
   INCLUDE = 'in',
   NOT_INCLUDE = 'not_in',
+  NULL = 'null',
+  NOT_NULL = 'not_null',
 }
 
 export const OperatorLabel = {
