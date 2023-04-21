@@ -42,6 +42,7 @@ const TableBase = (props: TableBaseProps) => {
     scroll,
     destroyModal,
     addStt,
+    fullScreen,
   } = props;
   let { columns } = props;
   const { visibleForm, setVisibleForm, setEdit, setRecord } = useModel(modelName);
@@ -381,6 +382,7 @@ const TableBase = (props: TableBaseProps) => {
             </Drawer>
           ) : (
             <Modal
+              className={fullScreen ? 'modal-ho-so-nhan-su' : ''}
               maskClosable={maskCloseableForm || false}
               width={widthDrawer}
               onCancel={() => setVisibleForm(false)}

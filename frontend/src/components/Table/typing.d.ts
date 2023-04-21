@@ -111,6 +111,9 @@ export type TableBaseProps = {
 
   /** Có thêm cột STT ko? Mặc định: Có */
   addStt?: boolean;
+
+  /** Modal có toàn màn hình ko? Mặc định: Không */
+  fullScreen?: boolean;
 };
 
 export type TFilter<T> = {
