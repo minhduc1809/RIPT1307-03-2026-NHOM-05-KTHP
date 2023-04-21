@@ -2,6 +2,7 @@ import {
   CloseOutlined,
   FilterOutlined,
   FilterTwoTone,
+  ImportOutlined,
   PlusCircleOutlined,
   ReloadOutlined,
   SearchOutlined,
@@ -17,6 +18,7 @@ import ModalCustomFilter from './ModalCustomFilter';
 import './style.less';
 import type { TDataOption, TFilter, TableBaseProps } from './typing';
 import { EOperatorType } from './constant';
+import ModalImport from './Import';
 
 const TableBase = (props: TableBaseProps) => {
   const {
@@ -61,6 +63,7 @@ const TableBase = (props: TableBaseProps) => {
 
   const [visibleFilter, setVisibleFilter] = useState(false);
   const hasFilter = columns?.filter((item) => item.filterType)?.length;
+  const [visibleImport, setVisibleImport] = useState(false);
 
   useEffect(() => {
     getData(params);
@@ -262,6 +265,11 @@ const TableBase = (props: TableBaseProps) => {
               </Button>
             </Tooltip>
           ) : null}
+          {buttonOptions?.import !== false ? (
+            <Button icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
+              Nhập dữ liệu
+            </Button>
+          ) : null}
           {props.otherButtons}
 
           {children}
@@ -395,6 +403,10 @@ const TableBase = (props: TableBaseProps) => {
           filters={filters}
           setFilters={setFilters}
         />
+      ) : null}
+
+      {buttonOptions?.import !== false ? (
+        <ModalImport visible={visibleImport} setVisible={setVisibleImport} />
       ) : null}
     </>
   );
