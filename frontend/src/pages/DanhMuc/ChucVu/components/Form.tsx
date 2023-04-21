@@ -26,7 +26,7 @@ const FormChucVu = (props: any) => {
   };
 
   return (
-    <Card title={edit ? 'Chỉnh sửa' : 'Thêm mới'}>
+    <Card title={(edit ? 'Chỉnh sửa ' : 'Thêm mới ') + title?.toLowerCase()}>
       <Form onFinish={onFinish} form={form} layout="vertical">
         <Form.Item
           name="ma"
@@ -44,17 +44,12 @@ const FormChucVu = (props: any) => {
           <Input placeholder="Tên chức vụ" />
         </Form.Item>
 
-        <Form.Item style={{ textAlign: 'center', marginTop: 24 }}>
-          <Button
-            loading={formSubmiting}
-            style={{ marginRight: 8 }}
-            htmlType="submit"
-            type="primary"
-          >
-            {!edit ? 'Thêm mới ' + title?.toLowerCase() : 'Lưu lại'}
+        <div className="form-footer">
+          <Button loading={formSubmiting} htmlType="submit" type="primary">
+            {!edit ? 'Thêm mới' : 'Lưu lại'}
           </Button>
           <Button onClick={() => setVisibleForm(false)}>Đóng</Button>
-        </Form.Item>
+        </div>
       </Form>
     </Card>
   );

@@ -24,29 +24,34 @@ const SelectChucVu = (props: any) => {
 
   return (
     <div style={{ display: 'flex', gap: 8 }}>
-      <Select
-        value={value}
-        onChange={onChange}
-        options={danhSach.map((item) => ({
-          key: item._id,
-          value: item._id,
-          label: `${item.ten} (${item.ma})`,
-        }))}
-        showSearch
-        optionFilterProp="label"
-        placeholder="Chọn chức vụ"
-      />
+      <div className={hasCreate !== false ? 'width-select-custom' : 'fullWidth'}>
+        <Select
+          value={value}
+          onChange={onChange}
+          options={danhSach.map((item) => ({
+            key: item._id,
+            value: item._id,
+            label: `${item.ten} (${item.ma})`,
+          }))}
+          showSearch
+          optionFilterProp="label"
+          placeholder="Chọn chức vụ"
+        />
+      </div>
 
-      {hasCreate !== false ? <Button icon={<PlusOutlined />} onClick={onAddNew} /> : null}
-
-      <Modal
-        visible={visibleForm}
-        bodyStyle={{ padding: 0 }}
-        footer={null}
-        onCancel={() => setVisibleForm(false)}
-      >
-        <FormChucVu title="chức vụ" />
-      </Modal>
+      {hasCreate !== false ? (
+        <>
+          <Button icon={<PlusOutlined />} onClick={onAddNew} />
+          <Modal
+            visible={visibleForm}
+            bodyStyle={{ padding: 0 }}
+            footer={null}
+            onCancel={() => setVisibleForm(false)}
+          >
+            <FormChucVu title="chức vụ" />
+          </Modal>
+        </>
+      ) : null}
     </div>
   );
 };

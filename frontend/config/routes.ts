@@ -59,11 +59,6 @@
         path: 'chuc-vu',
         component: './DanhMuc/ChucVu',
       },
-      {
-        name: 'LoaiPhongBan',
-        path: 'loai-phong-ban',
-        component: './DanhMuc/LoaiPhongBan',
-      },
     ],
   },
 

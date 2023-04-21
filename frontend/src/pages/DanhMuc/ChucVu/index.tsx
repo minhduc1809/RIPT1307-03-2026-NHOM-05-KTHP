@@ -20,7 +20,6 @@ const ChucVuPage = () => {
     {
       title: 'Mã',
       dataIndex: 'ma',
-      align: 'center',
       width: 80,
       filterType: 'select',
       filterData: ['M01', 'M02', 'M03'],
@@ -29,7 +28,6 @@ const ChucVuPage = () => {
     {
       title: 'Tên chức vụ',
       dataIndex: 'ten',
-      align: 'center',
       width: 250,
       filterType: 'string',
       sortable: true,

@@ -7,5 +7,4 @@ export default {
 
   'menu.DanhMuc': 'Danh mục',
   'menu.DanhMuc.ChucVu': 'Chức vụ',
-  'menu.DanhMuc.LoaiPhongBan': 'Loại phòng ban',
 };
