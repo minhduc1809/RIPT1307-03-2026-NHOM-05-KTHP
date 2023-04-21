@@ -18,7 +18,7 @@ import ModalCustomFilter from './ModalCustomFilter';
 import './style.less';
 import type { TDataOption, TFilter, TableBaseProps } from './typing';
 import { EOperatorType } from './constant';
-import ModalImport from './Import';
+// import ModalImport from './Import';
 
 const TableBase = (props: TableBaseProps) => {
   const {
@@ -63,7 +63,7 @@ const TableBase = (props: TableBaseProps) => {
 
   const [visibleFilter, setVisibleFilter] = useState(false);
   const hasFilter = columns?.filter((item) => item.filterType)?.length;
-  const [visibleImport, setVisibleImport] = useState(false);
+  // const [visibleImport, setVisibleImport] = useState(false);
 
   useEffect(() => {
     getData(params);
@@ -265,11 +265,11 @@ const TableBase = (props: TableBaseProps) => {
               </Button>
             </Tooltip>
           ) : null}
-          {buttonOptions?.import !== false ? (
+          {/* {buttonOptions?.import !== false ? (
             <Button icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
               Nhập dữ liệu
             </Button>
-          ) : null}
+          ) : null} */}
           {props.otherButtons}
 
           {children}
@@ -405,9 +405,9 @@ const TableBase = (props: TableBaseProps) => {
         />
       ) : null}
 
-      {buttonOptions?.import !== false ? (
+      {/* {buttonOptions?.import !== false ? (
         <ModalImport visible={visibleImport} setVisible={setVisibleImport} />
-      ) : null}
+      ) : null} */}
     </>
   );
 };
