@@ -9,12 +9,14 @@ import { type TFilter } from '@/components/Table/typing';
  * @param url path api
  * @param fieldNameCondtion condition | cond
  * @param initCondition initConditionValue
+ * @param upService Ip của dịch vụ bên thứ 3
  * @returns
  */
 const useInitModel = <T,>(
   url: string,
   fieldNameCondtion?: 'condition' | 'cond',
   initCondition?: { [k in keyof T]?: any },
+  ipService?: string,
 ) => {
   const [danhSach, setDanhSach] = useState<T[]>([]);
   const [record, setRecord] = useState<T>();
@@ -30,7 +32,7 @@ const useInitModel = <T,>(
   const [total, setTotal] = useState<number>(0);
 
   const { getAllService, postService, putService, deleteService, getService, getByIdService } =
-    useInitService(url);
+    useInitService(url, ipService);
 
   /**
    * Get Pageable Model
