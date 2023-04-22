@@ -22,6 +22,7 @@ export interface IColumn<T> extends Omit<ICol<T>, 'dataIndex' | 'width'> {
   /** JSX Element trả về 1 mảng value, thường là id */
   filterCustomSelect?: JSX.Element;
 
+  /** Bắt buộc phải có để dùng custom Filter hoặc Import dữ liệu */
   dataIndex?: keyof T | 'index' | string[];
 
   /** Bắt buộc phải có
@@ -29,6 +30,9 @@ export interface IColumn<T> extends Omit<ICol<T>, 'dataIndex' | 'width'> {
    * Phải check cả ở mobile view
    */
   width: number;
+
+  /** Có bắt buộc khi import dữ liệu không? */
+  importRequired?: boolean;
 }
 
 export type TDataOption = {
@@ -64,9 +68,9 @@ export type TableBaseProps = {
   buttons?: {
     /** Được thêm mới ko? Mặc định: Có */
     create?: boolean;
-    /** Được nhập dữ liệu ko? Mặc định: Có */
+    /** Được nhập dữ liệu ko? Mặc định: Không */
     import?: boolean;
-    /** Được xuất dữ liệu ko? Mặc định: Có */
+    /** Được xuất dữ liệu ko? Mặc định: Không */
     export?: boolean;
     /** Được lọc tùy chỉnh ko? Mặc định: Có */
     filter?: boolean;

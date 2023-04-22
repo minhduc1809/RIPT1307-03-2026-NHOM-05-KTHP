@@ -98,7 +98,7 @@
     "umi": "~3.5.0",
     "umi-serve": "~1.9.10",
     "uuid": "^8.3.2",
-    "xlsx": "^0.17.4"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
