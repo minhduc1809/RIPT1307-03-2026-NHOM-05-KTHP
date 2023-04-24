@@ -5,7 +5,7 @@ import { keycloakClientID, keycloakUrl } from './utils/ip';
 // Pass initialization options as required or leave blank to load from 'keycloak.json'
 const keycloak = Keycloak({
   url: keycloakUrl,
-  realm: 'master',
+  realm: 'vwa',
   clientId: keycloakClientID,
 });
 

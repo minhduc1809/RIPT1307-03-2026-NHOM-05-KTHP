@@ -5,11 +5,11 @@ const ip3 = 'https://ais.aisenote.com/tcns'; // ip dev
 const ipGlobal = 'https://ais2.aisenote.com/qldt-internal-api'; // ip dev
 
 const keycloakLogoutEndpoint =
-  'https://ais.aisenote.com/keycloak/realms/master/protocol/openid-connect/logout';
+  'https://ais.aisenote.com/keycloak/realms/vwa/protocol/openid-connect/logout';
 const keycloakUrl = 'https://ais.aisenote.com/keycloak';
-const keycloakClientID = 'sso-web-client';
+const keycloakClientID = 'web-qldt';
 const keycloakTokenEndpoint =
-  'https://ais.aisenote.com/keycloak/realms/master/protocol/openid-connect/token';
+  'https://ais.aisenote.com/keycloak/realms/vwa/protocol/openid-connect/token';
 
 export {
   ip3,
