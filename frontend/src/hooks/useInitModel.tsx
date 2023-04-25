@@ -17,6 +17,7 @@ const useInitModel = <T,>(
   fieldNameCondtion?: 'condition' | 'cond',
   initCondition?: { [k in keyof T]?: any },
   ipService?: string,
+  initSort?: { [k in keyof T]?: 1 | -1 },
 ) => {
   const [danhSach, setDanhSach] = useState<T[]>([]);
   const [record, setRecord] = useState<T>();
@@ -26,7 +27,7 @@ const useInitModel = <T,>(
   const [formSubmiting, setFormSubmiting] = useState<boolean>(false);
   const [filters, setFilters] = useState<TFilter<T>[]>();
   const [condition, setCondition] = useState<{ [k in keyof T]?: any } | any>(initCondition);
-  const [sort, setSort] = useState<{ [k in keyof T]?: 1 | -1 }>();
+  const [sort, setSort] = useState<{ [k in keyof T]?: 1 | -1 } | undefined>(initSort);
   const [edit, setEdit] = useState<boolean>(false);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);

@@ -14,11 +14,11 @@ import type { FilterValue } from 'antd/lib/table/interface';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
+import ModalImport from './Import';
 import ModalCustomFilter from './ModalCustomFilter';
+import { EOperatorType } from './constant';
 import './style.less';
 import type { TDataOption, TFilter, TableBaseProps } from './typing';
-import { EOperatorType } from './constant';
-import ModalImport from './Import';
 
 const TableBase = (props: TableBaseProps) => {
   const {
@@ -55,7 +55,7 @@ const TableBase = (props: TableBaseProps) => {
   const setLimit = model?.[`setLimit${newName ?? ''}`];
   const condition = model?.[`condition${newName ?? ''}`];
   const filters: TFilter<any>[] = model?.[`filters${newName ?? ''}`];
-  const setCondition = model?.[`setCondition${newName ?? ''}`];
+  // const setCondition = model?.[`setCondition${newName ?? ''}`];
   const setFilters = model?.[`setFilters${newName ?? ''}`];
   const sort = model?.[`sort${newName ?? ''}`];
   const setSort = model?.[`setSort${newName ?? ''}`];
@@ -73,9 +73,9 @@ const TableBase = (props: TableBaseProps) => {
   useEffect(() => {
     return () => {
       if (noCleanUp !== true) {
-        setCondition(undefined);
+        // setCondition(undefined);
         setFilters(undefined);
-        setSort(undefined);
+        // setSort(undefined);
       }
     };
   }, []);
