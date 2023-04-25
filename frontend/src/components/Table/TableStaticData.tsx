@@ -46,7 +46,6 @@ const TableStaticData = (props: TableStaticProps) => {
           type="primary"
           onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
           icon={<SearchOutlined />}
-          size="small"
           style={{ width: 90 }}
         >
           Tìm
@@ -57,7 +56,6 @@ const TableStaticData = (props: TableStaticProps) => {
             handleSearch(selectedKeys, confirm, dataIndex);
             setSearchText('');
           }}
-          size="small"
           style={{ width: 90 }}
         >
           Xóa
