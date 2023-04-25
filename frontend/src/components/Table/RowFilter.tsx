@@ -118,6 +118,7 @@ const RowFilter = (props: {
               onChange={(val) => {
                 const temp = { ...filter };
                 temp.field = val?.toString() ?? '';
+                temp.operator = undefined;
                 onChange(temp);
               }}
               placeholder="Thuộc tính"

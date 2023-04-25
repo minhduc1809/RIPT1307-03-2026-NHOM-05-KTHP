@@ -32,4 +32,6 @@ export const OperatorLabel = {
   [EOperatorType.NOT_BETWEEN]: 'Ngoài khoảng',
   [EOperatorType.INCLUDE]: 'Thuộc',
   [EOperatorType.NOT_INCLUDE]: 'Không thuộc',
+  [EOperatorType.NULL]: 'Trống',
+  [EOperatorType.NOT_NULL]: 'Không trống',
 };

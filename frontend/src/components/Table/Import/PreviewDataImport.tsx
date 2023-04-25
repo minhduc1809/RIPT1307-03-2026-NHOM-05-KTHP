@@ -2,7 +2,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Button, Col, Popconfirm, Row, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import TableBaseStatic from '../Table';
+import TableStaticData from '../TableStaticData';
 
 const PreviewDataImport = (props: { onChange: () => void; onBack: any; modelName: any }) => {
   const { onChange, onBack, modelName } = props;
@@ -54,7 +54,7 @@ const PreviewDataImport = (props: { onChange: () => void; onBack: any; modelName
       </Col>
 
       <Col span={24}>
-        <TableBaseStatic columns={columns} addStt data={dataImport} loading={loading} />
+        <TableStaticData columns={columns} addStt data={dataImport ?? []} loading={loading} />
       </Col>
 
       <Col span={24}>
