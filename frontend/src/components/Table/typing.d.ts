@@ -126,3 +126,22 @@ export type TFilter<T> = {
   values: (string | number)[];
   active: boolean;
 };
+
+export type TableStaticProps = {
+  data: any[];
+  columns: IColumn<any>[];
+
+  title?: string;
+  Form?: any;
+  showEdit?: boolean;
+  setShowEdit?: (vi: boolean) => void;
+  addStt?: boolean;
+  children?: any;
+  hasCreate?: boolean;
+  hasTotal?: boolean;
+  size?: 'small' | 'middle';
+  otherProps?: TableProps<any>;
+  loading?: boolean;
+  formType?: 'Modal' | 'Drawer';
+  widthDrawer?: number;
+};
