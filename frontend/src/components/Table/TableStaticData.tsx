@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import { type TableStaticProps } from './typing';
 import './style.less';
-import _ from '@umijs/deps/compiled/lodash';
+import _ from 'lodash';
 
 const TableStaticData = (props: TableStaticProps) => {
   const { Form, showEdit, setShowEdit, addStt, data, children, hasCreate, hasTotal } = props;
@@ -149,7 +149,7 @@ const TableStaticData = (props: TableStaticProps) => {
         }}
         loading={props?.loading}
         size={props.size}
-        scroll={scroll ?? { x: _.sum(columns.map((item) => item.width ?? 80)) }}
+        scroll={{ x: _.sum(columns.map((item) => item.width ?? 80)) }}
         {...props?.otherProps}
       />
       {Form && (

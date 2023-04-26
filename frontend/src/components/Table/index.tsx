@@ -408,7 +408,15 @@ const TableBase = (props: TableBaseProps) => {
       ) : null}
 
       {buttonOptions?.import ? (
-        <ModalImport visible={visibleImport} setVisible={setVisibleImport} tableOption={props} />
+        <ModalImport
+          visible={visibleImport}
+          modelName={modelName}
+          onCancel={() => setVisibleImport(false)}
+          onOk={() => {
+            getData(params);
+            setVisibleImport(false);
+          }}
+        />
       ) : null}
     </>
   );

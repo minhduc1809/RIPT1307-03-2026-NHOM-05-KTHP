@@ -1,32 +1,45 @@
-import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Button, Col, Popconfirm, Row, Space } from 'antd';
+import { ArrowLeftOutlined, QuestionOutlined } from '@ant-design/icons';
+import { Button, Col, Row, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import TableStaticData from '../TableStaticData';
+import { type IColumn } from '../typing';
 
-const PreviewDataImport = (props: { onChange: () => void; onBack: any; modelName: any }) => {
-  const { onChange, onBack, modelName } = props;
-  const { columns, matchedColumns, fileData } = useModel('import');
-  const model = useModel(modelName);
-  const [dataImport, setDataImport] = useState<any[]>();
+const PreviewDataImport = (props: { onChange: () => void; onBack: any }) => {
+  const { onChange, onBack } = props;
+  const { importHeaders, matchedColumns, fileData, setDataImport, dataImport, startLine } =
+    useModel('import');
   const [loading, setLoading] = useState(false);
+  const columns: IColumn<any>[] = [
+    {
+      dataIndex: 'row',
+      title: 'Thứ tự hàng',
+      width: 80,
+      align: 'center',
+    },
+    ...importHeaders?.map((item) => ({
+      dataIndex: item.field,
+      title: item.title,
+      width: 120,
+    })),
+  ];
 
   const getData = () => {
     if (matchedColumns) {
       setLoading(true);
       const tempData: any = [];
 
-      fileData?.forEach((row) => {
-        const temp: any = {};
+      fileData?.forEach((row, index) => {
+        const temp: any = { row: index + startLine };
         let valid = true;
 
-        columns.every((col) => {
-          const content = row[matchedColumns[col.dataIndex as string]];
-          if (col.importRequired && !content) {
+        importHeaders?.every((col) => {
+          const content = row[matchedColumns[col.field]];
+          if (col.required && !content) {
             valid = false;
             return false;
           }
-          temp[col.dataIndex as string] = content;
+          temp[col.field] = content;
           return true;
         });
 
@@ -41,20 +54,22 @@ const PreviewDataImport = (props: { onChange: () => void; onBack: any; modelName
     getData();
   }, []);
 
-  const handleImport = () => {
-    // Do Import
-    if (onChange) onChange();
-  };
-
   return (
     <Row gutter={[12, 12]}>
       <Col span={24}>
-        <div className="fw500">Danh sách dữ liệu hợp lệ</div>
-        <i>Các dòng dữ liệu trống hoặc không hợp lệ đã bị loại bỏ</i>
+        <div className="fw500">Danh sách dữ liệu từ tập tin</div>
+        <i>Các dòng dữ liệu trống hoặc không thỏa mản yêu cầu bắt buộc đã bị loại bỏ</i>
       </Col>
 
       <Col span={24}>
-        <TableStaticData columns={columns} addStt data={dataImport ?? []} loading={loading} />
+        <TableStaticData
+          columns={columns}
+          data={dataImport ?? []}
+          loading={loading}
+          size="small"
+          otherProps={{ bordered: true }}
+          hasTotal
+        />
       </Col>
 
       <Col span={24}>
@@ -62,11 +77,15 @@ const PreviewDataImport = (props: { onChange: () => void; onBack: any; modelName
           <Button onClick={() => onBack()} icon={<ArrowLeftOutlined />}>
             Quay lại
           </Button>
-          <Popconfirm title="Xác nhận lưu dữ liệu đã xử lý?" onConfirm={handleImport}>
-            <Button htmlType="submit" type="primary">
-              Lưu dữ liệu
-            </Button>
-          </Popconfirm>
+          <Button
+            htmlType="submit"
+            type="primary"
+            onClick={() => onChange()}
+            icon={<QuestionOutlined />}
+            disabled={!dataImport?.length}
+          >
+            Kiểm tra dữ liệu
+          </Button>
         </Space>
       </Col>
     </Row>

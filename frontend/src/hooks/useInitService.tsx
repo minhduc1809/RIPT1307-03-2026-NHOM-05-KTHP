@@ -27,6 +27,18 @@ const useInitService = (url: string, ip?: string) => {
     return axios.get(`${ip ?? ip3}/${url}/${id}`);
   };
 
+  const getImportHeaders = () => {
+    return axios.get(`${ip ?? ip3}/${url}/import-header`);
+  };
+
+  const postValidateImport = (payload: any) => {
+    return axios.post(`${ip ?? ip3}/${url}/validate-import`, payload);
+  };
+
+  const postExecuteImport = (payload: any) => {
+    return axios.post(`${ip ?? ip3}/${url}/execute-import`, payload);
+  };
+
   return {
     getService,
     getByIdService,
@@ -34,6 +46,9 @@ const useInitService = (url: string, ip?: string) => {
     putService,
     deleteService,
     getAllService,
+    getImportHeaders,
+    postValidateImport,
+    postExecuteImport,
   };
 };
 

@@ -30,9 +30,6 @@ export interface IColumn<T> extends Omit<ICol<T>, 'dataIndex' | 'width'> {
    * Phải check cả ở mobile view
    */
   width: number;
-
-  /** Có bắt buộc khi import dữ liệu không? */
-  importRequired?: boolean;
 }
 
 export type TDataOption = {
@@ -144,4 +141,16 @@ export type TableStaticProps = {
   loading?: boolean;
   formType?: 'Modal' | 'Drawer';
   widthDrawer?: number;
+};
+
+export type TImportHeader = {
+  field: string;
+  title: string;
+  required: boolean;
+};
+
+export type TImportResponse = {
+  errorMess: string; // 'Mã đơn vị cấp trên không đúng';
+  importStatus: 'fail' | 'success';
+  row: number;
 };

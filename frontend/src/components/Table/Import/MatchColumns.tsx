@@ -6,9 +6,9 @@ import { useModel } from 'umi';
 
 const MatchColumns = (props: { onChange: () => void; onBack: any }) => {
   const { onChange, onBack } = props;
-  const { headLine, columns, matchedColumns, setMatchedColumns } = useModel('import');
+  const { headLine, importHeaders, matchedColumns, setMatchedColumns } = useModel('import');
   const [form] = Form.useForm();
-  const fileTitles = Object.values(headLine ?? {});
+  const fileTitles = Object.values(headLine ?? {}); // Các tiêu đề cột lấy từ file
 
   useEffect(() => {
     if (matchedColumns) form.setFieldsValue(matchedColumns);
@@ -21,17 +21,17 @@ const MatchColumns = (props: { onChange: () => void; onBack: any }) => {
 
   return (
     <Form layout="vertical" form={form} onFinish={onFinish}>
-      <Row gutter={[12, 12]}>
+      <Row gutter={[12, 0]}>
         <Col span={24} className="fw500">
           Ghép cột thông tin với cột dữ liệu tương ứng
         </Col>
-        {columns.map((col) => (
-          <Col span={24} md={12} key={col.dataIndex as string}>
+        {importHeaders?.map((col) => (
+          <Col span={24} md={12} key={col.field}>
             <Form.Item
-              name={col.dataIndex as string}
+              name={col.field}
               label={col.title}
-              rules={[...(col.importRequired ? rules.required : [])]}
-              initialValue={fileTitles.includes(col.title as string) ? col.title : undefined}
+              rules={[...(col.required ? rules.required : [])]}
+              initialValue={fileTitles.includes(col.title) ? col.title : undefined}
             >
               <Select
                 options={Object.entries(headLine ?? {}).map(([colName, title]) => ({
@@ -40,12 +40,15 @@ const MatchColumns = (props: { onChange: () => void; onBack: any }) => {
                   label: `Cột ${colName}: ${title}`,
                 }))}
                 style={{ width: '100%' }}
-                allowClear={!col.importRequired}
+                allowClear={!col.required}
                 placeholder="Cột thông tin trên tập dữ liệu"
               />
             </Form.Item>
           </Col>
         ))}
+        <Col span={24}>
+          <i style={{ color: 'red' }}>Các trường có đánh dấu * là bắt buộc</i>
+        </Col>
 
         <Col span={24}>
           <Space style={{ marginTop: 12, justifyContent: 'space-between', width: '100%' }}>

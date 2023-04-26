@@ -9,7 +9,7 @@ import * as XLSX from 'xlsx';
 
 const ChooseFileImport = (props: { onChange: () => void; onCancel: any }) => {
   const { onChange, onCancel } = props;
-  const { setHeadLine, setFileData } = useModel('import');
+  const { setHeadLine, setFileData, setStartLine } = useModel('import');
   const [workbook, setWorkbook] = useState<XLSX.WorkBook>();
   const [sheetNames, setSheetNames] = useState<string[]>();
   const [form] = Form.useForm();
@@ -29,7 +29,7 @@ const ChooseFileImport = (props: { onChange: () => void; onCancel: any }) => {
     setWorkbook(wb);
     const sheets = wb.SheetNames;
     setSheetNames(sheets);
-    form.setFieldsValue({ sheet: sheets[0] });
+    form.setFieldsValue({ sheet: sheets[0], line: 1 });
   };
 
   const onChangeUpload = (value: { fileList: any[] }) => {
@@ -69,6 +69,7 @@ const ChooseFileImport = (props: { onChange: () => void; onCancel: any }) => {
         .map((item) => pick(item, cols)); // Chỉ lấy từ data những trường cần lấy
 
       if (data.length > 0 && cols.length > 0) {
+        setStartLine(line + 1);
         setHeadLine(hline);
         setFileData(data);
         onChange();

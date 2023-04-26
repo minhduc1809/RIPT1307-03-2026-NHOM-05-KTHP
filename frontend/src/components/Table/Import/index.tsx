@@ -1,35 +1,39 @@
-import { Modal, Steps } from 'antd';
+import { Empty, Modal, Steps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import { type TableBaseProps } from '../typing';
+import { type TImportHeader } from '../typing';
 import ChooseFileImport from './ChooseFileImport';
 import MatchColumns from './MatchColumns';
 import PreviewDataImport from './PreviewDataImport';
+import ValidateDataImport from './ValidateDataImport';
 
-const ModalImport = (props: { visible: boolean; setVisible: any; tableOption: TableBaseProps }) => {
-  const { visible, setVisible, tableOption } = props;
-  const { setFileData, setMatchedColumns, setColumns } = useModel('import');
+const ModalImport = (props: {
+  visible: boolean;
+  onCancel: () => void;
+  onOk: () => void;
+  modelName: any;
+  maskCloseableForm?: boolean;
+}) => {
+  const { visible, onCancel, onOk, modelName, maskCloseableForm } = props;
+  const { setFileData, setMatchedColumns, setImportHeaders, setDataImport, importHeaders } =
+    useModel('import');
+  const { getImportHeaderModel } = useModel(modelName);
   const [currentStep, setCurrentStep] = useState(0);
 
-  const reduceColumns = () => {
-    const columnsHasDataIndex = tableOption.columns
-      .filter(
-        (item) =>
-          typeof item.dataIndex === 'string' &&
-          !['createdAt', 'updatedAt'].includes(item.dataIndex),
-      )
-      .map(({ filterType, sortable, ...val }) => val); // Bỏ filter, search, sort
-    setColumns(columnsHasDataIndex);
+  const getHeaders = () => {
+    if (getImportHeaderModel)
+      getImportHeaderModel().then((data: TImportHeader[]) => setImportHeaders(data));
   };
 
   useEffect(() => {
-    reduceColumns();
-  }, [tableOption.columns]);
+    getHeaders();
+  }, [modelName]);
 
-  const onCancel = () => {
-    setVisible(false);
+  const onCancelModal = () => {
+    onCancel();
     setMatchedColumns(undefined);
     setFileData(undefined);
+    setDataImport(undefined);
     setCurrentStep(0);
   };
 
@@ -37,36 +41,47 @@ const ModalImport = (props: { visible: boolean; setVisible: any; tableOption: Ta
     <Modal
       title="Nhập dữ liệu"
       visible={visible}
-      onCancel={() => onCancel()}
+      onCancel={() => onCancelModal()}
       footer={null}
       width={800}
       destroyOnClose
-      maskClosable={tableOption.maskCloseableForm || false}
+      maskClosable={maskCloseableForm || false}
     >
-      <Steps current={currentStep} style={{ marginBottom: 18 }}>
-        <Steps.Step title="Chọn tập tin" />
-        <Steps.Step title="Ghép cột dữ liệu" />
-        <Steps.Step title="Xem trước dữ liệu" />
-        <Steps.Step title="Kết quả" />
-      </Steps>
+      {!!importHeaders.length ? (
+        <>
+          <Steps current={currentStep} style={{ marginBottom: 18 }}>
+            <Steps.Step title="Chọn tập tin" />
+            <Steps.Step title="Ghép cột dữ liệu" />
+            <Steps.Step title="Xem trước dữ liệu" />
+            <Steps.Step title="Kết quả xử lý" />
+          </Steps>
 
-      {currentStep === 0 ? (
-        <ChooseFileImport onChange={() => setCurrentStep(1)} onCancel={onCancel} />
-      ) : currentStep === 1 ? (
-        <MatchColumns
-          onChange={() => setCurrentStep(2)}
-          onBack={() => {
-            setCurrentStep(0);
-            setMatchedColumns(undefined);
-          }}
-        />
-      ) : currentStep === 2 ? (
-        <PreviewDataImport
-          onChange={() => setCurrentStep(3)}
-          onBack={() => setCurrentStep(1)}
-          modelName={tableOption.modelName}
-        />
-      ) : null}
+          {currentStep === 0 ? (
+            <ChooseFileImport onChange={() => setCurrentStep(1)} onCancel={onCancelModal} />
+          ) : currentStep === 1 ? (
+            <MatchColumns
+              onChange={() => setCurrentStep(2)}
+              onBack={() => {
+                setCurrentStep(0);
+                setMatchedColumns(undefined);
+              }}
+            />
+          ) : currentStep === 2 ? (
+            <PreviewDataImport
+              onChange={() => setCurrentStep(3)}
+              onBack={() => setCurrentStep(1)}
+            />
+          ) : (
+            <ValidateDataImport
+              onChange={() => onOk()}
+              onBack={() => setCurrentStep(2)}
+              modelName={modelName}
+            />
+          )}
+        </>
+      ) : (
+        <Empty description="Chức năng chưa được hỗ trợ" />
+      )}
     </Modal>
   );
 };
