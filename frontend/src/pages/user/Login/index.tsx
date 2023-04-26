@@ -1,15 +1,17 @@
 import Footer from '@/components/Footer';
 import LoginWithKeycloak from '@/pages/user/Login/KeycloakLogin';
 import { adminlogin, getInfo } from '@/services/ant-design-pro/api';
-import data from '@/utils/data';
 import rules from '@/utils/rules';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Tabs, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import OneSignal from 'react-onesignal';
+// import OneSignal from 'react-onesignal';
 import Recaptcha from 'react-recaptcha';
 import { history, useIntl, useModel } from 'umi';
 import styles from './index.less';
+import { useAuth } from 'react-oidc-context';
+import { keycloakAuthority } from '@/utils/ip';
+import jwt_decode from 'jwt-decode';
 
 const goto = () => {
   if (!history) return;
@@ -28,58 +30,55 @@ const Login: React.FC = () => {
   const [isVerified, setIsverified] = useState<boolean>(true);
   const [visibleCaptcha, setVisibleCaptcha] = useState<boolean>(false);
   const [visibleCaptcha2, setVisibleCaptcha2] = useState<boolean>(false);
-  const [oneSignalId, setOneSignalId] = useState<string | null | undefined>();
+  // const [oneSignalId, setOneSignalId] = useState<string | null | undefined>();
   const recaptchaRef = useRef(null);
   const intl = useIntl();
   const [form] = Form.useForm();
+  const auth = useAuth();
 
-  const getUserIdOnesignal = async () => {
-    const id = await OneSignal.getUserId();
-    setOneSignalId(id);
-  };
-
-  useEffect(() => {
-    getUserIdOnesignal();
-  }, []);
+  // const getUserIdOnesignal = async () => {
+  //   const id = await OneSignal.getUserId();
+  //   setOneSignalId(id);
+  // };
 
   /**
    * Xử lý token, get info sau khi đăng nhập
    */
-  const handleRole = async (
-    role: {
-      accessToken: string;
-      refreshToken: string;
-      idToken: string;
-    },
-    vaiTro?: string,
-  ) => {
+  const handleRole = async (role: { access_token: string; refresh_token: string }) => {
     const defaultloginSuccessMessage = intl.formatMessage({
       id: 'pages.login.success',
       defaultMessage: 'success',
     });
-    localStorage.setItem('token', role?.accessToken);
-    localStorage.setItem('refreshToken', role?.refreshToken);
-    localStorage.setItem('id_token', role?.idToken);
-    localStorage.setItem('vaiTro', vaiTro ?? 'guest');
+    localStorage.setItem('token', role?.access_token);
+    localStorage.setItem('refreshToken', role?.refresh_token);
 
+    const decoded = jwt_decode(role?.access_token) as any;
     const info = await getInfo();
     setInitialState({
       ...initialState,
-      currentUser: info?.data?.data ?? {},
+      currentUser: { ...(info?.data?.data ?? {}), roles: decoded?.resource_access?.account?.roles },
     });
     message.success(defaultloginSuccessMessage);
-    history.push(data?.path?.[vaiTro ?? 'guest'] ?? '/');
+    history.push('/dashboard');
   };
 
   // Callback after login with KeyCloak
-  const handleLoginWithKeycloak = async (
-    accessToken: string,
-    refreshToken: string,
-    idToken: string,
-    oneId: string,
-  ) => {
-    handleRole({ accessToken, refreshToken, idToken });
-  };
+  // const handleLoginWithKeycloak = async (
+  //   accessToken: string,
+  //   refreshToken: string,
+  //   idToken: string,
+  //   oneId: string,
+  // ) => {
+  //   handleRole({ accessToken, refreshToken, idToken });
+  // };
+
+  // useEffect(() => {
+  //   getUserIdOnesignal();
+  // }, []);
+
+  useEffect(() => {
+    if (auth.isAuthenticated) handleRole(auth.user as any);
+  }, [auth.isAuthenticated]);
 
   const handleSubmit = async (values: { login: string; password: string }) => {
     try {
@@ -90,7 +89,7 @@ const Login: React.FC = () => {
       setSubmitting(true);
       const msg = await adminlogin({ ...values, username: values?.login ?? '' });
       if (msg.status === 200 && msg?.data?.data?.accessToken) {
-        handleRole(msg?.data?.data, 'Admin');
+        handleRole(msg?.data?.data);
         localStorage.removeItem('failed');
       }
     } catch (error) {
@@ -145,11 +144,7 @@ const Login: React.FC = () => {
           </Tabs>
 
           {type === 'account' ? (
-            <LoginWithKeycloak
-              title="Đăng nhập với SSO"
-              oneSignalId={oneSignalId}
-              onLoginSuccess={handleLoginWithKeycloak}
-            />
+            <LoginWithKeycloak />
           ) : type === 'accountAdmin' ? (
             <Form
               form={form}
@@ -192,9 +187,7 @@ const Login: React.FC = () => {
           <div style={{ textAlign: 'center' }}>
             <Button
               onClick={() => {
-                window.open(
-                  'https://slinkid.ptit.edu.vn/auth/realms/master/login-actions/reset-credentials',
-                );
+                window.open(keycloakAuthority + '/login-actions/reset-credentials');
               }}
               type="link"
             >

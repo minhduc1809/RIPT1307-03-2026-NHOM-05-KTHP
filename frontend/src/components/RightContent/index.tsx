@@ -1,35 +1,27 @@
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { Space } from 'antd';
 import React from 'react';
-import { history, useAccess, useModel } from 'umi';
-import NoticeIcon from '../NoticeIcon';
+import { history, useModel } from 'umi';
+// import NoticeIcon from '../NoticeIcon';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
 
 export type SiderTheme = 'light' | 'dark';
 
 const GlobalHeaderRight: React.FC = () => {
-  const access = useAccess();
   const { initialState } = useModel('@@initialState');
 
-  if (!initialState || !initialState.settings) {
+  if (!initialState || !initialState.currentUser) {
     return null;
   }
 
-  const { navTheme, layout } = initialState.settings;
-  let className = styles.right;
-
-  if ((navTheme === 'dark' && layout === 'top') || layout === 'mix') {
-    className = `${styles.right}  ${styles.dark}`;
-  }
-
   return (
-    <Space className={className}>
+    <Space className={styles.right}>
       <a onClick={() => history.push('/tienichkhac/gioithieu')} title="Giới thiệu học viện">
         <InfoCircleOutlined />
       </a>
 
-      {!access.admin && !access.guest && <NoticeIcon />}
+      {/* {!access.admin && !access.guest && <NoticeIcon />} */}
       <Avatar menu />
     </Space>
   );

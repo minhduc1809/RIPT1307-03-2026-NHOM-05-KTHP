@@ -1,11 +1,10 @@
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
-import keycloak from '@/keycloak';
-import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import PageLoading from '@ant-design/pro-layout/es/PageLoading';
-import { ReactKeycloakProvider } from '@react-keycloak/web';
 import { notification } from 'antd';
+import jwt_decode from 'jwt-decode';
 import 'moment/locale/vi';
+import { AuthProvider } from 'react-oidc-context';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
@@ -14,8 +13,9 @@ import TechnicalSupportBounder from './components/TechnicalSupportBounder';
 import NotAccessible from './pages/exception/403';
 import NotFoundContent from './pages/exception/404';
 import { getInfo } from './services/ant-design-pro/api';
-import data from './utils/data';
 import './styles/global.less';
+import { oidcConfig } from './utils/oidcConfig';
+import { type IInitialState } from './utils/typing';
 
 const loginPath = '/user/login';
 const pathAuth = ['/admin/login'];
@@ -24,25 +24,19 @@ export const initialStateConfig = {
   loading: <PageLoading />,
 };
 
-export interface IInitialState {
-  settings?: Partial<LayoutSettings>;
-  currentUser?: (Login.Profile & Login.ProfileAdmin) | any;
-  partner_id?: number;
-  fetchUserInfo?: () => Promise<{ data: { data: Login.Profile & Login.ProfileAdmin } } | undefined>;
-  authorizedRoles?: any[];
-  phanNhom?: any;
-}
-
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
 export async function getInitialState(): Promise<IInitialState> {
-  const fetchUserInfo: () => Promise<any> = async () => {
+  const fetchUserInfo: () => Promise<Login.User> = async () => {
     try {
-      const auth = localStorage.getItem('vaiTro');
       const token = localStorage.getItem('token');
       let currentUser;
-      if (auth && token) currentUser = (await getInfo())?.data?.data;
+      if (token) {
+        const decoded = jwt_decode(token) as any;
+        currentUser = (await getInfo())?.data?.data;
+        currentUser.roles = decoded?.resource_access?.account?.roles;
+      }
       return currentUser;
     } catch (error) {
       const { location } = history;
@@ -57,16 +51,11 @@ export async function getInitialState(): Promise<IInitialState> {
     return {
       fetchUserInfo,
       currentUser,
-      settings: {
-        primaryColor: 'daybreak',
-      },
-      authorizedRoles: [],
     };
   }
 
   return {
     fetchUserInfo,
-    settings: { primaryColor: 'daybreak' },
   };
 }
 
@@ -111,20 +100,31 @@ export const request: RequestConfig = {
 
 // ProLayout  https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
+  /**
+   * Xử lý token, get info sau khi đăng nhập
+   */
+  const handleRole = async (role: { access_token: string; refresh_token: string }) => {
+    localStorage.setItem('token', role?.access_token);
+    localStorage.setItem('refreshToken', role?.refresh_token);
+  };
+
   return {
     unAccessible: <NotAccessible />,
     noFound: <NotFoundContent />,
-    rightContentRender: () => <RightContent />,
+    rightContentRender: () => (
+      <AuthProvider {...oidcConfig} redirect_uri={window.location.href}>
+        <RightContent />
+      </AuthProvider>
+    ),
     disableContentMargin: false,
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.fullName,
     },
 
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
       const token = localStorage.getItem('token');
-      const vaiTro = localStorage.getItem('vaiTro');
       let checkPathAuth = false;
       pathAuth.map((item) => {
         if (location.pathname.includes(item)) checkPathAuth = true;
@@ -132,7 +132,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       if (!token && location.pathname !== loginPath && !checkPathAuth) {
         history.push(loginPath);
       } else if (initialState?.currentUser && token && location.pathname === loginPath) {
-        history.push(data.path[`${vaiTro || initialState?.currentUser?.systemRole}`]);
+        history.push('/dashboard');
       }
     },
     menuItemRender: (item: any, dom: any) => {
@@ -151,7 +151,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       return (
         <ErrorBoundary>
           <TechnicalSupportBounder>
-            <ReactKeycloakProvider authClient={keycloak}>{dom}</ReactKeycloakProvider>
+            <AuthProvider
+              {...oidcConfig}
+              redirect_uri={window.location.href}
+              onSigninCallback={(user) => handleRole(user as any)}
+            >
+              {dom}
+            </AuthProvider>
+            {/* <ReactKeycloakProvider authClient={keycloak}>{dom}</ReactKeycloakProvider> */}
           </TechnicalSupportBounder>
         </ErrorBoundary>
       );

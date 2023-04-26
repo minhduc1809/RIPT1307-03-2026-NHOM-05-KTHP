@@ -1,18 +1,4 @@
 const data: any = {
-  path: {
-    sinh_vien: '/dashboard',
-    nhan_vien: '/dashboard',
-    Admin: '/dashboard',
-    quan_tri: '/dashboard',
-    can_bo_qlkh: '/dashboard',
-    guest: '/dashboard',
-    ke_toan: '/dashboard',
-  },
-  doiTuong: ['Vai trò', 'Tất cả'],
-  vaiTro: [
-    { value: 'sinh_vien', text: 'Sinh viên' },
-    { value: 'nhan_vien', text: 'Cán bộ, giảng viên' },
-  ],
   gioiTinh: ['Nam', 'Nữ'],
 
   error: {

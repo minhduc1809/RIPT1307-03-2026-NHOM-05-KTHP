@@ -1,12 +1,18 @@
 declare module Login {
   export interface User {
-    uid: number;
-    partner_id: 27381;
-    ho_ten: string;
-    ma_dinh_danh: string;
-    email: string;
-    gioi_tinh: string;
-    vai_tro: string;
+    createdAt: string; //'2023-04-18T07:59:56.850Z';
+    dob: string; // null;
+    email: string; // 'admin@administrator.com';
+    firstname: string; //null;
+    fullname: string; // 'Administrator';
+    gender: string; // null;
+    lastname: string; // null;
+    ssoId: string; // null;
+    systemRole: string; // 'Admin';
+    updatedAt: string; //'2023-04-18T07:59:56.850Z';
+    username: string; // 'admin';
+    roles?: string[];
+    _id: string; // '643e4dfc013057d9f766d613';
   }
 
   export interface Profile {
@@ -65,21 +71,18 @@ declare module Login {
   }
 
   export interface ProfileAdmin {
-    _id: string;
-    username: string;
-    systemRole: string;
-    profile: {
-      _id: string;
-      firstname: string;
-      lastname: string;
-      dateOfBirth: string;
-    };
-    odooProfile?: {
-      _id?: string;
-      maDinhDanh: string;
-      userId: number;
-      partnerId: number;
-    };
+    exp: number; // 1682582215;
+    iat: number; //1682495816;
+    iss: string; //'https://ais.aisenote.com/keycloak/realms/vwa';
+    aud: string; // 'vwa-auth';
+    sub: string; // '5ff45518-a2aa-4a19-ab9e-ab7a902482da';
+    typ: string; //'ID';
+    session_state: string; //'973838b2-582b-4dc9-8fe2-803c04b7022e';
+    sid: string; // '973838b2-582b-4dc9-8fe2-803c04b7022e';
+    email_verified: boolean; // false;
+    preferred_username: string; // 'admin';
+    given_name: string; // '';
+    family_name: string; //'';
   }
 
   export interface Record {

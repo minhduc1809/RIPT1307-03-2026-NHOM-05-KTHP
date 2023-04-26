@@ -105,7 +105,6 @@ axios.interceptors.response.use(
             .then((response) => {
               // Lưu token mới vào localStorage
               localStorage.setItem('token', response?.data?.access_token);
-              localStorage.setItem('id_token', response?.data?.id_token);
               localStorage.setItem('refreshToken', response?.data?.refresh_token);
               // Set lại token cho axios
               axios.defaults.headers.common.Authorization = `Bearer ${response?.data?.access_token}`;

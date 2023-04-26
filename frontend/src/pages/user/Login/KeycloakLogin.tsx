@@ -1,44 +1,21 @@
-import { useKeycloak } from '@react-keycloak/web';
 import { Button } from 'antd';
-import * as React from 'react';
-import { useCallback, useEffect } from 'react';
+import { useAuth } from 'react-oidc-context';
 
-interface LoginWithKeycloakProps {
-  title: string;
-  oneSignalId: any;
-  onLoginSuccess: (
-    token: string,
-    refreshToken: string,
-    idToken: string,
-    oneSignalId: string,
-  ) => void;
-}
+const LoginWithKeycloak = () => {
+  const auth = useAuth();
 
-const LoginWithKeycloak: React.FC<LoginWithKeycloakProps> = ({
-  title,
-  oneSignalId,
-  onLoginSuccess,
-}) => {
-  const { keycloak } = useKeycloak();
+  if (auth.isLoading) {
+    return <div>Đang chuyển tới trang đăng nhập...</div>;
+  }
 
-  const login = useCallback(() => {
-    keycloak?.login();
-  }, [keycloak]);
-
-  useEffect(() => {
-    if (keycloak.authenticated)
-      onLoginSuccess(
-        keycloak?.token ?? '',
-        keycloak?.refreshToken ?? '',
-        keycloak?.idToken ?? '',
-        oneSignalId,
-      );
-  }, [keycloak.authenticated]);
+  if (auth.error) {
+    return <div>Có lỗi xảy ra... {auth.error.message}</div>;
+  }
 
   return (
     <div>
       <Button
-        onClick={login}
+        onClick={() => void auth.signinPopup()}
         type="primary"
         style={{
           marginTop: 8,
@@ -46,7 +23,7 @@ const LoginWithKeycloak: React.FC<LoginWithKeycloakProps> = ({
         }}
         size="large"
       >
-        {title}
+        Đăng nhập bằng VWA Connect
       </Button>
     </div>
   );
