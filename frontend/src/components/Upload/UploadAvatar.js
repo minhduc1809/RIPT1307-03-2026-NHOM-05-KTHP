@@ -2,6 +2,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import _ from 'lodash';
 import React from 'react';
+import './UploadAvatar.less';
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -85,7 +86,7 @@ class UploadAvatar extends React.Component {
     const uploadButton = (
       <div>
         <PlusOutlined />
-        <div className="ant-upload-text">Tải lên</div>
+        <div className="ant-upload-text">Thêm ảnh đại diện</div>
       </div>
     );
     const { imageUrl } = this.state;
