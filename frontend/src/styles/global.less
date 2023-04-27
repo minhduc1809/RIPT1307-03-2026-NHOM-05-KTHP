@@ -277,14 +277,20 @@ ol {
   }
 }
 
-.ant-tabs > .ant-tabs-nav .ant-tabs-nav-list,
-.ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-list {
+.ant-tabs-tab.ant-tabs-tab-active {
+  font-weight: 600;
+}
+
+.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-nav-list,
+.ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-nav-list {
   display: block;
 }
-.ant-tabs > .ant-tabs-nav .ant-tabs-nav-wrap,
-.ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-wrap {
+
+.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-nav-wrap,
+.ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-nav-wrap {
   white-space: inherit;
 }
+
 .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab,
 .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab {
   margin-bottom: 4px;
