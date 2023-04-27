@@ -5,7 +5,7 @@ import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
 import { useAuth } from 'react-oidc-context';
 import { history, useModel } from 'umi';
-import HeaderDropdown from '../HeaderDropdown';
+import HeaderDropdown from './HeaderDropdown';
 import styles from './index.less';
 
 export type GlobalHeaderRightProps = {
@@ -92,7 +92,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
             }
             alt="avatar"
           />
-          <span className={`${styles.name} anticon`}>
+          <span className={`${styles.name}`}>
             {currentUser?.fullname || currentUser?.profile?.lastname || ''}
           </span>
         </span>

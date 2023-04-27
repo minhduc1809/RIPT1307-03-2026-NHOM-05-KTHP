@@ -1,11 +1,10 @@
 import { BellOutlined } from '@ant-design/icons';
-import { Badge, Spin, Tabs } from 'antd';
+import { Badge, Spin, Tabs, Tooltip } from 'antd';
 import useMergedState from 'rc-util/es/hooks/useMergedState';
 import React from 'react';
-import classNames from 'classnames';
+import HeaderDropdown from '../HeaderDropdown';
 import type { NoticeIconTabProps } from './NoticeList';
 import NoticeList from './NoticeList';
-import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
 const { TabPane } = Tabs;
@@ -83,29 +82,25 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
     );
   };
 
-  const { className, count, bell } = props;
+  const { count, bell } = props;
 
   const [visible, setVisible] = useMergedState<boolean>(false, {
     value: props.popupVisible,
     onChange: props.onPopupVisibleChange,
   });
-  const noticeButtonClass = classNames(className, styles.noticeButton);
-  const notificationBox = getNotificationBox();
-  const NoticeBellIcon = bell || <BellOutlined className={styles.icon} />;
+
   const trigger = (
-    <span className={classNames(noticeButtonClass, { opened: visible })}>
-      <Badge
-        count={count ? (count < 100 ? '99' : '99+') : undefined}
-        style={{ boxShadow: 'none' }}
-        className={styles.badge}
-      >
-        {NoticeBellIcon}
-      </Badge>
-    </span>
+    <Badge
+      count={count ? (count < 100 ? '99' : '99+') : undefined}
+      style={{ boxShadow: 'none' }}
+      className={styles.badge}
+    >
+      {bell || <BellOutlined />}
+    </Badge>
   );
-  if (!notificationBox) {
-    return trigger;
-  }
+
+  const notificationBox = getNotificationBox();
+  if (!notificationBox) return <></>;
 
   return (
     <HeaderDropdown
@@ -116,7 +111,9 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
       visible={visible}
       onVisibleChange={setVisible}
     >
-      {trigger}
+      <Tooltip title="Thông báo" placement="bottom">
+        {trigger}
+      </Tooltip>
     </HeaderDropdown>
   );
 };
