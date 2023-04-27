@@ -253,25 +253,43 @@ ol {
   width: calc(100% - 40px) !important;
 }
 
-.fullWidth {
+.width-full {
   width: 100%;
 }
 
-.ant-divider-horizontal.ant-divider-with-text-left::before {
-  width: 0px;
+.full-screen {
+  top: 0;
+  width: 100vw !important;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
 }
 
-.ant-divider-inner-text {
-  padding: 0px;
+.ant-divider-horizontal.ant-divider-with-text-left {
+  margin: 0;
+
+  &::before {
+    width: 0;
+  }
+
+  .ant-divider-inner-text {
+    padding: 0px;
+  }
 }
 
-// .ant-collapse-content > .ant-collapse-content-box {
-//   padding: 0 !important;
-// }
-
-// .ant-collapse > .ant-collapse-item > .ant-collapse-header {
-//   padding: 0 !important;
-// }
+.ant-tabs > .ant-tabs-nav .ant-tabs-nav-list,
+.ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-list {
+  display: block;
+}
+.ant-tabs > .ant-tabs-nav .ant-tabs-nav-wrap,
+.ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-wrap {
+  white-space: inherit;
+}
+.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab,
+.ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab {
+  margin-bottom: 4px;
+  border-radius: 4px 4px 0 0;
+}
 
 .react-pdf__Page__canvas {
   margin: auto;

@@ -45,7 +45,7 @@ export type TableBaseProps = {
   formType?: 'Modal' | 'Drawer';
   columns: IColumn<any>[];
   title?: React.ReactNode;
-  widthDrawer?: string | number;
+  widthDrawer?: number | 'full';
 
   /** Hàm getData tùy chỉnh, nếu ko có thì 'getModel' của model sẽ là mặc định */
   getData?: Function;
@@ -112,9 +112,6 @@ export type TableBaseProps = {
 
   /** Có thêm cột STT ko? Mặc định: Có */
   addStt?: boolean;
-
-  /** Modal có toàn màn hình ko? Mặc định: Không */
-  fullScreen?: boolean;
 };
 
 export type TFilter<T> = {

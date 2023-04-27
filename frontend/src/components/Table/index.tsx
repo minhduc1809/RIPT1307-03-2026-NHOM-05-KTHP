@@ -42,7 +42,6 @@ const TableBase = (props: TableBaseProps) => {
     scroll,
     destroyModal,
     addStt,
-    fullScreen,
   } = props;
   let { columns } = props;
   const { visibleForm, setVisibleForm, setEdit, setRecord } = useModel(modelName);
@@ -367,8 +366,9 @@ const TableBase = (props: TableBaseProps) => {
         <>
           {formType === 'Drawer' ? (
             <Drawer
+              className={widthDrawer === 'full' ? 'width-full' : ''}
               maskClosable={maskCloseableForm || false}
-              width={widthDrawer}
+              width={widthDrawer !== 'full' ? widthDrawer : undefined}
               footer={false}
               bodyStyle={{ padding: 0 }}
               visible={visibleForm}
@@ -382,9 +382,9 @@ const TableBase = (props: TableBaseProps) => {
             </Drawer>
           ) : (
             <Modal
-              className={fullScreen ? 'modal-ho-so-nhan-su' : ''}
+              className={widthDrawer === 'full' ? 'full-screen' : ''}
               maskClosable={maskCloseableForm || false}
-              width={widthDrawer}
+              width={widthDrawer !== 'full' ? widthDrawer : undefined}
               onCancel={() => setVisibleForm(false)}
               footer={false}
               bodyStyle={{ padding: 0 }}
