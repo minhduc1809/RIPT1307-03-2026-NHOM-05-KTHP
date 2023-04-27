@@ -366,7 +366,7 @@ const TableBase = (props: TableBaseProps) => {
         <>
           {formType === 'Drawer' ? (
             <Drawer
-              className={widthDrawer === 'full' ? 'width-full' : ''}
+              className={widthDrawer === 'full' ? 'drawer-full' : ''}
               maskClosable={maskCloseableForm || false}
               width={widthDrawer !== 'full' ? widthDrawer : undefined}
               footer={false}
@@ -382,7 +382,7 @@ const TableBase = (props: TableBaseProps) => {
             </Drawer>
           ) : (
             <Modal
-              className={widthDrawer === 'full' ? 'full-screen' : ''}
+              className={widthDrawer === 'full' ? 'modal-full' : ''}
               maskClosable={maskCloseableForm || false}
               width={widthDrawer !== 'full' ? widthDrawer : undefined}
               onCancel={() => setVisibleForm(false)}

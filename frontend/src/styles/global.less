@@ -253,16 +253,22 @@ ol {
   width: calc(100% - 40px) !important;
 }
 
-.width-full {
-  width: 100%;
+.drawer-full {
+  .ant-drawer-content-wrapper {
+    width: 100% !important;
+  }
 }
 
-.full-screen {
+.modal-full {
   top: 0;
   width: 100vw !important;
+  max-width: 100vw;
   height: 100vh;
-  margin: 0;
   overflow: hidden;
+
+  > .ant-modal-content {
+    border-radius: 0;
+  }
 }
 
 .ant-divider-horizontal.ant-divider-with-text-left {
