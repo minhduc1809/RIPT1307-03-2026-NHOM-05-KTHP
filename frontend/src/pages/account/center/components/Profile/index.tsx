@@ -1,13 +1,13 @@
-import UploadAvatar from '@/components/Upload/UploadAvatar';
+import UploadFile from '@/components/Upload/UploadFile';
 import { getInfo } from '@/services/ant-design-pro/api';
 import rules from '@/utils/rules';
 import { renderFileListUrl } from '@/utils/utils';
-import { Button, Col, DatePicker, Form, Input, message, Row, Select } from 'antd';
+import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd';
+import moment from 'moment';
+import mm from 'moment-timezone';
 import { Component } from 'react';
 import type { Dispatch } from 'umi';
 import { connect } from 'umi';
-import mm from 'moment-timezone';
-import moment from 'moment';
 
 mm.tz.setDefault('Asia/Ho_Chi_Minh');
 
@@ -159,14 +159,7 @@ class BaseView extends Component<BaseViewProps> {
                 initialValue={renderFileListUrl(currentUser?.avatar_path ?? '')}
                 rules={[...rules.fileRequired]}
               >
-                <UploadAvatar
-                  style={{
-                    width: 102,
-                    maxWidth: 102,
-                    height: 102,
-                    maxHeight: 102,
-                  }}
-                />
+                <UploadFile isAvatar />
               </Form.Item>
             </Col>
           </Row>
