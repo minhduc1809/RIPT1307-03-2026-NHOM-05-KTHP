@@ -24,3 +24,20 @@ export async function refreshAccesssToken(payload: { refreshToken: string }) {
     data: queryString.stringify(data),
   });
 }
+
+export async function swapToken(payload: { access_token: string }) {
+  const data = {
+    audience: keycloakClientID,
+    grant_type: 'urn:ietf:params:oauth:grant-type:uma-ticket',
+  };
+
+  return axios({
+    url: keycloakTokenEndpoint,
+    method: 'POST',
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      Authorization: `Bearer ${payload.access_token}`,
+    },
+    data: queryString.stringify(data),
+  });
+}

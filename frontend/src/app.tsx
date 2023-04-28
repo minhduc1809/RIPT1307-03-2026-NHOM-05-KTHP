@@ -16,6 +16,7 @@ import { getInfo } from './services/ant-design-pro/api';
 import './styles/global.less';
 import { oidcConfig } from './utils/oidcConfig';
 import { type IInitialState } from './utils/typing';
+import { type Login } from './services/ant-design-pro/typings';
 
 const loginPath = '/user/login';
 const pathAuth = ['/admin/login'];
@@ -35,10 +36,11 @@ export async function getInitialState(): Promise<IInitialState> {
       if (token) {
         const decoded = jwt_decode(token) as any;
         currentUser = (await getInfo())?.data?.data;
-        currentUser.roles = decoded?.resource_access?.account?.roles;
+        currentUser.permissions = decoded?.authorization?.permissions;
       }
       return currentUser;
     } catch (error) {
+      console.log('🚀 ~ file: app.tsx:43 ~ constfetchUserInfo: ~ error:', error);
       const { location } = history;
       if (!pathAuth.includes(location.pathname)) history.push(loginPath);
     }
@@ -112,13 +114,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     unAccessible: <NotAccessible />,
     noFound: <NotFoundContent />,
     rightContentRender: () => (
-      <AuthProvider {...oidcConfig} redirect_uri={window.location.href}>
+      <AuthProvider {...oidcConfig} redirect_uri={window.location.href} automaticSilentRenew>
         <RightContent />
       </AuthProvider>
     ),
     disableContentMargin: false,
     waterMarkProps: {
-      content: initialState?.currentUser?.fullName,
+      content: initialState?.currentUser?.fullname,
     },
 
     footerRender: () => <Footer />,

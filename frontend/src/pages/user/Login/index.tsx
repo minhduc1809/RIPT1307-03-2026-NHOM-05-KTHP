@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
 import LoginWithKeycloak from '@/pages/user/Login/KeycloakLogin';
-import { adminlogin, getInfo } from '@/services/ant-design-pro/api';
+import { adminlogin, getInfo, swapToken } from '@/services/ant-design-pro/api';
 import rules from '@/utils/rules';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Tabs, message } from 'antd';
@@ -56,7 +56,10 @@ const Login: React.FC = () => {
     const info = await getInfo();
     setInitialState({
       ...initialState,
-      currentUser: { ...(info?.data?.data ?? {}), roles: decoded?.resource_access?.account?.roles },
+      currentUser: {
+        ...(info?.data?.data ?? {}),
+        permissions: decoded?.authorization?.permissions,
+      },
     });
     message.success(defaultloginSuccessMessage);
     history.push('/dashboard');
@@ -76,8 +79,14 @@ const Login: React.FC = () => {
   //   getUserIdOnesignal();
   // }, []);
 
+  const getSwapToken = async (token: { access_token: string }) => {
+    const res = await swapToken(token);
+    return res.data;
+  };
+
   useEffect(() => {
-    if (auth.isAuthenticated) handleRole(auth.user as any);
+    if (auth.isAuthenticated)
+      getSwapToken(auth.user as any).then((newToken) => handleRole(newToken));
   }, [auth.isAuthenticated]);
 
   const handleSubmit = async (values: { login: string; password: string }) => {
