@@ -1,6 +1,24 @@
 import { ip3 } from '@/utils/ip';
 import axios from 'axios';
 
+export const buildUpLoadFile = async (values: any, name: string) => {
+  if (values?.[name]?.fileList?.[0]) {
+    if (values?.[name]?.fileList?.[0]?.originFileObj) {
+      const response = await uploadFile({
+        file: values?.[name]?.fileList?.[0]?.originFileObj,
+        public: '1',
+      });
+      return response?.data?.data?.url;
+      // return {
+      //   ...response?.data?.data?.file,
+      //   url: response?.data?.data?.url,
+      //   _id: response?.data?.data?.file?.id,
+      // };
+    } else return values?.[name]?.fileList?.[0]?.url;
+  }
+  return null;
+};
+
 export async function uploadFile(payload: { file: string | Blob; public: '1' | '0' }) {
   const form = new FormData();
   form.append('file', payload?.file);

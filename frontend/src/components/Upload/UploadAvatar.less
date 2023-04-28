@@ -1,8 +1,30 @@
 .avatar-uploader {
-  text-align: center;
+  display: flex;
+  justify-content: center;
 
-  > .ant-upload {
-    width: 140px;
-    height: 180px;
+  .ant-upload-select-picture-card {
+    width: 140px !important;
+    height: 180px !important;
+  }
+
+  .ant-upload-list-picture-card-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .ant-upload-list-picture-card-container {
+    width: 100%;
+    height: 100%;
+
+    .ant-upload-list-item-list-type-picture-card {
+      width: 140px;
+      height: 180px;
+      padding: 0;
+      border: none;
+
+      .ant-upload-list-item-image {
+        object-fit: cover;
+      }
+    }
   }
 }

@@ -1,7 +1,8 @@
-import { UploadOutlined } from '@ant-design/icons';
-import { Button, message, Upload, type UploadProps } from 'antd';
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Upload, message, type UploadProps } from 'antd';
 import { type SizeType } from 'antd/lib/config-provider/SizeContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import './UploadAvatar.less';
 
 const UploadFile = (props: {
   fileList?: any[];
@@ -13,10 +14,17 @@ const UploadFile = (props: {
   draggerDescription?: string;
   buttonSize?: SizeType;
   otherProps?: UploadProps;
+  isAvatar?: boolean;
 }) => {
-  const { value, onChange, otherProps, drag, buttonSize, draggerDescription, accept } = props;
+  const { value, onChange, otherProps, drag, buttonSize, draggerDescription, accept, isAvatar } =
+    props;
   const limit = props.maxCount || 1;
-  const [fileList, setFileList] = useState(props.fileList || (value && value.fileList) || []);
+  const [fileList, setFileList] = useState<any[]>();
+
+  useEffect(() => {
+    if (typeof value === 'string') setFileList([{ url: value }]);
+    else setFileList(props.fileList || (value && value.fileList) || []);
+  }, [value, props.fileList]);
 
   const handleChange = (val: any) => {
     const fil = val.fileList;
@@ -67,6 +75,38 @@ const UploadFile = (props: {
           </>
         ) : null}
       </Upload.Dragger>
+    );
+  else if (isAvatar)
+    return (
+      <Upload
+        customRequest={({ onSuccess }) => {
+          setTimeout(() => onSuccess && onSuccess('ok'), 0);
+        }}
+        listType="picture-card"
+        className="avatar-uploader"
+        fileList={fileList}
+        onChange={handleChange}
+        style={{ width: '100%' }}
+        multiple={false}
+        accept="image/*"
+        {...otherProps}
+      >
+        {(!otherProps || !otherProps.disabled) && !fileList?.length ? (
+          <div
+            style={{
+              width: '140px',
+              height: '180px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'column',
+            }}
+          >
+            <PlusOutlined />
+            <div className="ant-upload-text">Thêm ảnh đại diện</div>
+          </div>
+        ) : null}
+      </Upload>
     );
 
   // UPLOAD BUTTON
