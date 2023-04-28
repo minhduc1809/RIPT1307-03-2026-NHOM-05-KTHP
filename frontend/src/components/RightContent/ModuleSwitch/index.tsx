@@ -1,4 +1,3 @@
-import { AppstoreOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from '../NoticeIcon/index.less';
@@ -13,7 +12,10 @@ const ModuleSwitch = () => {
       trigger={['click']}
     >
       <Tooltip title="Danh sách chức năng" placement="bottom">
-        <AppstoreOutlined />
+        <a className="module-switch-link">
+          <img src="/icon-tien-ich.svg" alt="apps" />
+        </a>
+        {/* <AppstoreOutlined /> */}
       </Tooltip>
     </HeaderDropdown>
   );

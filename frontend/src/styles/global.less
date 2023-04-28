@@ -25,18 +25,27 @@ body,
   }
 }
 
+.ant-pro-header-dark {
+  .ant-pro-global-header-layout-mix {
+    .ant-pro-global-header-logo a img {
+      height: 100%;
+      padding: 8px 0;
+    }
+  }
+}
+
 .ant-menu-light.ant-pro-sider-menu {
-  padding: 24px 12px;
-  font-weight: 600;
+  padding: 18px 0px;
+  // font-weight: 600;
 
   .ant-menu-item,
   .ant-menu-submenu-title {
     height: auto;
-    min-height: 40px;
+    min-height: 36px;
     padding: 5px 12px;
     padding-left: 12px !important;
     line-height: 1.5;
-    border-radius: 12px;
+    border-radius: 2px;
 
     &::after {
       border: none;
@@ -57,7 +66,7 @@ body,
     & > .ant-menu-submenu-title {
       padding-right: 24px !important;
       padding-left: 12px !important;
-      border-radius: 12px;
+      border-radius: 2px;
 
       .ant-menu-submenu-arrow {
         right: 10px;
@@ -67,7 +76,7 @@ body,
     .ant-menu-sub {
       padding-left: 12px;
       background-color: #f8f8fa;
-      border-radius: 12px;
+      border-radius: 2px;
 
       .ant-menu-sub {
         .ant-menu-item-only-child {
@@ -296,6 +305,13 @@ ol {
   margin-bottom: 4px;
   font-weight: 600;
   border-radius: 4px 4px 0 0;
+}
+
+.ant-divider-with-text-center {
+  .ant-divider-inner-text {
+    font-weight: 600;
+    font-size: 14px;
+  }
 }
 
 .react-pdf__Page__canvas {

@@ -1,6 +1,6 @@
 @import '~antd/es/style/themes/default.less';
 
-@pro-header-hover-bg: rgba(0, 0, 0, 0.05);
+@pro-header-hover-bg: rgba(122, 127, 141, 0.1);
 
 .menu {
   :global(.anticon) {
@@ -19,16 +19,22 @@
   margin-left: auto;
   overflow: hidden;
 
-  :global(.anticon) {
+  :global(.anticon),
+  a > img {
     display: flex;
     align-items: center;
     height: 48px;
     padding: 0 8px;
-    font-size: 18px;
+    font-size: 20px;
 
-    &:hover {
+    &:hover,
+    &:focus {
       background: @pro-header-hover-bg;
     }
+  }
+
+  a > img {
+    padding: 12px 8px;
   }
 
   .action {

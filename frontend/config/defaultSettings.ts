@@ -6,17 +6,17 @@ const Settings: LayoutSettings & {
   borderRadiusBase: string;
   siderWidth: number;
 } = {
-  navTheme: 'light',
+  navTheme: 'dark',
   primaryColor: '#007EB9',
-  borderRadiusBase: '8px',
+  borderRadiusBase: '2px',
   layout: 'mix',
   contentWidth: 'Fluid',
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'Tổ chức nhân sự VWA',
+  title: 'Tổ chức nhân sự',
   pwa: false,
-  logo: '/logo-full-white.svg',
+  logo: '/logo.png',
   iconfontUrl: '',
   headerTheme: 'dark',
   headerHeight: 60,
