@@ -9,9 +9,23 @@ export enum EModuleKey {
   CTSV = 'cong-tac-sinh-vien',
 }
 
-export const Modules: Record<string, Login.TModule> = {
-  [EModuleKey.QLDT]: { title: 'Quản lý đào tạo', url: 'https://qldt-vwa.vercel.app/' },
-  [EModuleKey.TCNS]: { title: 'Tổ chức nhân sự', url: 'https://tcns-vwa.vercel.app/' },
-  [EModuleKey.CORE]: { title: 'Danh mục chung', url: 'https://core-vwa.vercel.app/' },
+export const AppModules: Record<string, Login.TModule> = {
   [EModuleKey.CONNECT]: { title: 'Cổng học viên', url: 'https://vwa-connect.vercel.app/' },
+  [EModuleKey.CONG_CAN_BO]: { title: 'Cổng cán bộ', url: 'https://vwa-connect.vercel.app/' },
+  [EModuleKey.QLDT]: {
+    title: 'Quản lý đào tạo',
+    url: 'https://qldt-vwa.vercel.app/',
+    icon: EModuleKey.QLDT + '.svg',
+  },
+  [EModuleKey.CORE]: { title: 'Danh mục chung', url: 'https://core-vwa.vercel.app/' },
+  [EModuleKey.TCNS]: {
+    title: 'Tổ chức nhân sự',
+    url: 'https://tcns-vwa.vercel.app/',
+    icon: EModuleKey.TCNS + '.svg',
+  },
+  [EModuleKey.CTSV]: {
+    title: 'Công tác sinh viên',
+    url: 'https://tcns-vwa.vercel.app/',
+    icon: EModuleKey.CTSV + '.svg',
+  },
 };

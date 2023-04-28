@@ -2,7 +2,7 @@ import { UserSwitchOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
 import { useModel } from 'umi';
 import './style.less';
-import { Modules } from '@/services/ant-design-pro/constant';
+import { AppModules } from '@/services/ant-design-pro/constant';
 
 const ModuleView = () => {
   const { initialState } = useModel('@@initialState');
@@ -15,10 +15,16 @@ const ModuleView = () => {
       <Row gutter={[5, 5]}>
         {user?.permissions?.map((item) => (
           <Col span={8} key={item.rsid}>
-            <a href={Modules?.[item.rsname]?.url} target="_blank" rel="noreferrer">
+            <a href={AppModules?.[item.rsname]?.url} target="_blank" rel="noreferrer">
               <div className="module-item">
-                <UserSwitchOutlined />
-                <span className="module-name">{Modules?.[item.rsname]?.title ?? item.rsname}</span>
+                {AppModules?.[item.rsname]?.icon ? (
+                  <img src={`/modules/${AppModules?.[item.rsname].icon}`} />
+                ) : (
+                  <UserSwitchOutlined />
+                )}
+                <span className="module-name">
+                  {AppModules?.[item.rsname]?.title ?? item.rsname}
+                </span>
               </div>
             </a>
           </Col>
