@@ -11,7 +11,7 @@ export enum EModuleKey {
 
 export const AppModules: Record<string, Login.TModule> = {
   [EModuleKey.CONNECT]: {
-    title: 'Cổng học viên',
+    title: 'Cổng người học',
     url: 'https://vwa-connect.vercel.app/',
     icon: EModuleKey.CONNECT + '.svg',
   },

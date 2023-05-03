@@ -89,13 +89,13 @@ const TableStaticData = (props: TableStaticProps) => {
   });
 
   const columns = props.columns
-    ?.filter((item: any) => !item.hide)
-    ?.map((item: any) => ({
+    ?.filter((item) => !item.hide)
+    ?.map((item) => ({
       ...item,
-      ...(item?.search === 'search'
+      ...(item?.filterType === 'string'
         ? getColumnSearchProps(item.dataIndex)
-        : item?.search === 'sort'
-        ? { sorter: (a: any, b: any) => a[item.dataIndex] - b[item.dataIndex] }
+        : item?.sortable
+        ? { sorter: (a: any, b: any) => a[item.dataIndex as string] - b[item.dataIndex as string] }
         : {}),
     }));
 
