@@ -86,15 +86,13 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
             className={styles.avatar}
             src={
               <img
-                style={currentUser?.avatar_path ? {} : { objectFit: 'cover' }}
-                src={currentUser.avatar_path || logo}
+                // style={currentUser?.avatar_path ? {} : { objectFit: 'cover' }}
+                src={logo}
               />
             }
             alt="avatar"
           />
-          <span className={`${styles.name}`}>
-            {currentUser?.fullname || currentUser?.profile?.lastname || ''}
-          </span>
+          <span className={`${styles.name}`}>{currentUser?.fullname || ''}</span>
         </span>
       </HeaderDropdown>
     </>

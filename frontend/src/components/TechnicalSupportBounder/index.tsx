@@ -1,10 +1,19 @@
 import { ToolOutlined } from '@ant-design/icons';
 import { Button, Modal, Tooltip } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormPostIssue from './Form';
+import { hasAuthParams, useAuth } from 'react-oidc-context';
 
 const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
   const [visible, setVisible] = useState<boolean>(false);
+  const auth = useAuth();
+
+  // automatically sign-in
+  useEffect(() => {
+    if (!hasAuthParams() && !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
+      auth.signinRedirect();
+    }
+  }, [auth.isAuthenticated, auth.activeNavigator, auth.isLoading, auth.signinRedirect]);
 
   const onCancel = () => setVisible(false);
 

@@ -1,20 +1,15 @@
-import type { IInitialState } from './app';
+import { type IInitialState } from './utils/typing';
 import { handlePhanNhom } from './utils/utils';
 
 /**
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
 export default function access(initialState: IInitialState) {
-  const vaiTro = initialState?.currentUser?.vai_tro || initialState?.currentUser?.systemRole;
+  const vaiTro = initialState?.currentUser?.systemRole;
   const token = localStorage.getItem('token');
-  const isCanBoQLKHDonVi = handlePhanNhom(initialState, 'de-tai-khcn:ql-khoa-vien');
-  const isCanBoPhongQLKH = handlePhanNhom(initialState, 'de-tai-khcn:ql-phong');
   // role can_bo_qlkh dành cho những người có trong hội đồng xét duyệt đề tài nhưng ko có tài khoản trong hệ thống
   return {
     canBoQLKH: token && vaiTro && vaiTro === 'can_bo_qlkh',
-    canBoQLKHDonVi: isCanBoQLKHDonVi,
-    canBoPhongQLKH: isCanBoPhongQLKH,
-    canBoQLKHPhongVaCanBoQLKHDonVi: isCanBoPhongQLKH || isCanBoQLKHDonVi,
     lanhDao: token && vaiTro && vaiTro === 'lanh_dao',
     sinhVienVaNhanVien: token && vaiTro && ['nhan_vien', 'sinh_vien'].includes(vaiTro),
     adminVaCanBoQLKH: token && vaiTro && ['Admin', 'can_bo_qlkh'].includes(vaiTro),
@@ -32,33 +27,33 @@ export default function access(initialState: IInitialState) {
         (vaiTro === 'Admin' || vaiTro === 'quan_tri' || vaiTro === 'nhan_vien')) ||
       false,
     guest: (token && ((vaiTro && vaiTro === 'Guest') || !vaiTro)) || false,
-    accessFilter: (route: any) =>
-      initialState?.phanNhom?.nhom_vai_tro?.includes(route?.maChucNang) || false,
-    adminAccessFilter: (route: any) =>
-      (token && vaiTro && vaiTro === 'Admin') ||
-      initialState?.phanNhom?.nhom_vai_tro?.includes(route?.maChucNang) ||
-      false,
-    adminManyAccessFilter: (route: any) =>
-      (token && vaiTro && vaiTro === 'Admin') ||
-      route?.listChucNang?.filter((role: string) =>
-        initialState?.phanNhom?.nhom_vai_tro?.includes(role),
-      )?.length ||
-      false,
-    nhanVienAccessFilter: (route: any) =>
-      (token && vaiTro && vaiTro === 'nhan_vien') ||
-      (token && vaiTro && vaiTro === 'Admin') ||
-      initialState?.phanNhom?.nhom_vai_tro?.includes(route?.maChucNang) ||
-      false,
-    routeFilter: (route: any) =>
-      (token && vaiTro && vaiTro === 'Admin') ||
-      (token && vaiTro && initialState?.phanNhom?.nhom_vai_tro?.includes(route?.maChucNang)) ||
-      false,
-    routeFilterCanBoQLKHDonVi: (route: any) => {
-      return handlePhanNhom(initialState, route?.maChucNang) && isCanBoQLKHDonVi;
-    },
-    routeFilterCanBoPhongQLKH: (route: any) => {
-      return handlePhanNhom(initialState, route?.maChucNang) && isCanBoPhongQLKH;
-    },
+    // accessFilter: (route: any) =>
+    //   initialState?.phanNhom?.nhom_vai_tro?.includes(route?.maChucNang) || false,
+    // adminAccessFilter: (route: any) =>
+    //   (token && vaiTro && vaiTro === 'Admin') ||
+    //   initialState?.phanNhom?.nhom_vai_tro?.includes(route?.maChucNang) ||
+    //   false,
+    // adminManyAccessFilter: (route: any) =>
+    //   (token && vaiTro && vaiTro === 'Admin') ||
+    //   route?.listChucNang?.filter((role: string) =>
+    //     initialState?.phanNhom?.nhom_vai_tro?.includes(role),
+    //   )?.length ||
+    //   false,
+    // nhanVienAccessFilter: (route: any) =>
+    //   (token && vaiTro && vaiTro === 'nhan_vien') ||
+    //   (token && vaiTro && vaiTro === 'Admin') ||
+    //   initialState?.phanNhom?.nhom_vai_tro?.includes(route?.maChucNang) ||
+    //   false,
+    // routeFilter: (route: any) =>
+    //   (token && vaiTro && vaiTro === 'Admin') ||
+    //   (token && vaiTro && initialState?.phanNhom?.nhom_vai_tro?.includes(route?.maChucNang)) ||
+    //   false,
+    // routeFilterCanBoQLKHDonVi: (route: any) => {
+    //   return handlePhanNhom(initialState, route?.maChucNang) && isCanBoQLKHDonVi;
+    // },
+    // routeFilterCanBoPhongQLKH: (route: any) => {
+    //   return handlePhanNhom(initialState, route?.maChucNang) && isCanBoPhongQLKH;
+    // },
     sinhVienRouteFilter:
       vaiTro === 'sinh_vien'
         ? true

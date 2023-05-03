@@ -40,7 +40,6 @@ export async function getInitialState(): Promise<IInitialState> {
       }
       return currentUser;
     } catch (error) {
-      console.log('🚀 ~ file: app.tsx:43 ~ constfetchUserInfo: ~ error:', error);
       const { location } = history;
       if (!pathAuth.includes(location.pathname)) history.push(loginPath);
     }
@@ -151,18 +150,18 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
     childrenRender: (dom) => {
       return (
-        <ErrorBoundary>
-          <TechnicalSupportBounder>
-            <AuthProvider
-              {...oidcConfig}
-              redirect_uri={window.location.href}
-              onSigninCallback={(user) => handleRole(user as any)}
-            >
+        <AuthProvider
+          {...oidcConfig}
+          redirect_uri={window.location.href}
+          onSigninCallback={(user) => handleRole(user as any)}
+        >
+          <ErrorBoundary>
+            <TechnicalSupportBounder>
               {dom}
-            </AuthProvider>
-            {/* <ReactKeycloakProvider authClient={keycloak}>{dom}</ReactKeycloakProvider> */}
-          </TechnicalSupportBounder>
-        </ErrorBoundary>
+              {/* <ReactKeycloakProvider authClient={keycloak}>{dom}</ReactKeycloakProvider> */}
+            </TechnicalSupportBounder>
+          </ErrorBoundary>
+        </AuthProvider>
       );
     },
     menuHeaderRender: undefined,

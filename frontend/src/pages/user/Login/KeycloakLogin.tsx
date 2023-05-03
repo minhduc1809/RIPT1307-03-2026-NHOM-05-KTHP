@@ -15,7 +15,7 @@ const LoginWithKeycloak = () => {
   return (
     <div>
       <Button
-        onClick={() => void auth.signinPopup()}
+        onClick={() => void auth.signinRedirect()}
         type="primary"
         style={{
           marginTop: 8,
