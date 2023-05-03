@@ -10,14 +10,26 @@ export enum EModuleKey {
 }
 
 export const AppModules: Record<string, Login.TModule> = {
-  [EModuleKey.CONNECT]: { title: 'Cổng học viên', url: 'https://vwa-connect.vercel.app/' },
-  [EModuleKey.CONG_CAN_BO]: { title: 'Cổng cán bộ', url: 'https://vwa-connect.vercel.app/' },
+  [EModuleKey.CONNECT]: {
+    title: 'Cổng học viên',
+    url: 'https://vwa-connect.vercel.app/',
+    icon: EModuleKey.CONNECT + '.svg',
+  },
+  [EModuleKey.CONG_CAN_BO]: {
+    title: 'Cổng cán bộ',
+    url: 'https://vwa-connect.vercel.app/',
+    icon: EModuleKey.CONG_CAN_BO + '.svg',
+  },
   [EModuleKey.QLDT]: {
     title: 'Quản lý đào tạo',
     url: 'https://qldt-vwa.vercel.app/',
     icon: EModuleKey.QLDT + '.svg',
   },
-  [EModuleKey.CORE]: { title: 'Danh mục chung', url: 'https://core-vwa.vercel.app/' },
+  [EModuleKey.CORE]: {
+    title: 'Danh mục chung',
+    url: 'https://core-vwa.vercel.app/',
+    icon: EModuleKey.CORE + '.svg',
+  },
   [EModuleKey.TCNS]: {
     title: 'Tổ chức nhân sự',
     url: 'https://tcns-vwa.vercel.app/',
