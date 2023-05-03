@@ -37,7 +37,7 @@ export const AppModules: Record<string, Login.TModule> = {
   },
   [EModuleKey.CTSV]: {
     title: 'Công tác sinh viên',
-    url: 'https://tcns-vwa.vercel.app/',
+    url: 'https://congtacsinhvien-vwa-aisoft.vercel.app/',
     icon: EModuleKey.CTSV + '.svg',
   },
 };
