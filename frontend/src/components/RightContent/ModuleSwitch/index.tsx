@@ -10,12 +10,12 @@ const ModuleSwitch = () => {
       overlayClassName={styles.popover}
       overlay={<ModuleView />}
       trigger={['click']}
+      arrow
     >
       <Tooltip title="Danh sách chức năng" placement="bottom">
         <a className="module-switch-link">
           <img src="/icon-tien-ich.svg" alt="apps" />
         </a>
-        {/* <AppstoreOutlined /> */}
       </Tooltip>
     </HeaderDropdown>
   );

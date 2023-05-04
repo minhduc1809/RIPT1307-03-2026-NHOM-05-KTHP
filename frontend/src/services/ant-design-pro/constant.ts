@@ -20,15 +20,15 @@ export const AppModules: Record<string, Login.TModule> = {
     url: 'https://vwa-connect.vercel.app/',
     icon: EModuleKey.CONG_CAN_BO + '.svg',
   },
-  [EModuleKey.QLDT]: {
-    title: 'Quản lý đào tạo',
-    url: 'https://qldt-vwa.vercel.app/',
-    icon: EModuleKey.QLDT + '.svg',
-  },
   [EModuleKey.CORE]: {
     title: 'Danh mục chung',
     url: 'https://core-vwa.vercel.app/',
     icon: EModuleKey.CORE + '.svg',
+  },
+  [EModuleKey.QLDT]: {
+    title: 'Quản lý đào tạo',
+    url: 'https://qldt-vwa.vercel.app/',
+    icon: EModuleKey.QLDT + '.svg',
   },
   [EModuleKey.TCNS]: {
     title: 'Tổ chức nhân sự',
