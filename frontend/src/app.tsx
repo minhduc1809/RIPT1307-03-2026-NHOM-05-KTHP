@@ -2,7 +2,6 @@ import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import PageLoading from '@ant-design/pro-layout/es/PageLoading';
 import { notification } from 'antd';
-import jwt_decode from 'jwt-decode';
 import 'moment/locale/vi';
 import { AuthProvider } from 'react-oidc-context';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
@@ -12,61 +11,64 @@ import ErrorBoundary from './components/ErrorBoundary';
 import TechnicalSupportBounder from './components/TechnicalSupportBounder';
 import NotAccessible from './pages/exception/403';
 import NotFoundContent from './pages/exception/404';
-import { getInfo } from './services/ant-design-pro/api';
 import './styles/global.less';
 import { oidcConfig } from './utils/oidcConfig';
 import { type IInitialState } from './utils/typing';
-import { type Login } from './services/ant-design-pro/typings';
 
-const loginPath = '/user/login';
-const pathAuth = ['/admin/login'];
+// const loginPath = '/user/login';
+// const pathAuth = ['/admin/login'];
+
 /**  loading */
 export const initialStateConfig = {
-  loading: <PageLoading />,
+  loading: <PageLoading tip="Loading..." />,
 };
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
+ * // Tobe removed
  * */
 export async function getInitialState(): Promise<IInitialState> {
-  const fetchUserInfo: () => Promise<Login.User> = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      let currentUser;
-      if (token) {
-        const decoded = jwt_decode(token) as any;
-        currentUser = (await getInfo())?.data?.data;
-        currentUser.permissions = decoded?.authorization?.permissions;
-      }
-      return currentUser;
-    } catch (error) {
-      const { location } = history;
-      if (!pathAuth.includes(location.pathname)) history.push(loginPath);
-    }
-    return undefined;
-  };
+  // const fetchUserInfo: () => Promise<Login.User> = async () => {
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     let currentUser;
+  //     if (token) {
+  //       const decoded = jwt_decode(token) as any;
+  //       currentUser = (await getInfo())?.data?.data;
+  //       currentUser.permissions = decoded?.authorization?.permissions;
+  //     }
+  //     return currentUser;
+  //   } catch (error) {
+  //     const { location } = history;
+  //     if (!pathAuth.includes(location.pathname)) history.push(loginPath);
+  //   }
+  //   return undefined;
+  // };
 
-  if (history.location.pathname !== loginPath) {
-    const currentUser = await fetchUserInfo();
+  // if (history.location.pathname !== loginPath) {
+  //   const currentUser = await fetchUserInfo();
 
-    return {
-      fetchUserInfo,
-      currentUser,
-    };
-  }
+  //   return {
+  //     fetchUserInfo,
+  //     currentUser,
+  //   };
+  // }
 
-  return {
-    fetchUserInfo,
-  };
+  // return {
+  //   fetchUserInfo,
+  // };
+  return {};
 }
 
+// Tobe removed
 const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
-  const token = localStorage.getItem('token');
-  const authHeader = { ...(token && { Authorization: `Bearer ${token}` }) };
-  return {
-    url: `${url}`,
-    options: { ...options, interceptors: true, headers: authHeader },
-  };
+  // const token = localStorage.getItem('token');
+  // const authHeader = { ...(token && { Authorization: `Bearer ${token}` }) };
+  // return {
+  //   url: `${url}`,
+  //   options: { ...options, interceptors: true, headers: authHeader },
+  // };
+  return {};
 };
 
 /**
@@ -101,19 +103,11 @@ export const request: RequestConfig = {
 
 // ProLayout  https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
-  /**
-   * Xử lý token, get info sau khi đăng nhập
-   */
-  const handleRole = async (role: { access_token: string; refresh_token: string }) => {
-    localStorage.setItem('token', role?.access_token);
-    localStorage.setItem('refreshToken', role?.refresh_token);
-  };
-
   return {
     unAccessible: <NotAccessible />,
     noFound: <NotFoundContent />,
     rightContentRender: () => (
-      <AuthProvider {...oidcConfig} redirect_uri={window.location.href} automaticSilentRenew>
+      <AuthProvider {...oidcConfig} redirect_uri={window.location.href}>
         <RightContent />
       </AuthProvider>
     ),
@@ -123,19 +117,21 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
 
     footerRender: () => <Footer />,
-    onPageChange: () => {
-      const { location } = history;
-      const token = localStorage.getItem('token');
-      let checkPathAuth = false;
-      pathAuth.map((item) => {
-        if (location.pathname.includes(item)) checkPathAuth = true;
-      });
-      if (!token && location.pathname !== loginPath && !checkPathAuth) {
-        history.push(loginPath);
-      } else if (initialState?.currentUser && token && location.pathname === loginPath) {
-        history.push('/dashboard');
-      }
-    },
+    // Tobe removed
+    // onPageChange: () => {
+    //   const { location } = history;
+    //   const token = localStorage.getItem('token');
+    //   let checkPathAuth = false;
+    //   pathAuth.map((item) => {
+    //     if (location.pathname.includes(item)) checkPathAuth = true;
+    //   });
+    //   if (!token && location.pathname !== loginPath && !checkPathAuth) {
+    //     history.push(loginPath);
+    //   } else if (initialState?.currentUser && token && location.pathname === loginPath) {
+    //     history.push('/dashboard');
+    //   }
+    // },
+
     menuItemRender: (item: any, dom: any) => {
       return (
         <div
@@ -148,12 +144,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         </div>
       );
     },
+
     childrenRender: (dom) => {
       return (
         <AuthProvider
           {...oidcConfig}
-          redirect_uri={window.location.href}
-          onSigninCallback={(user) => handleRole(user as any)}
+          redirect_uri={window.location.origin + window.location.pathname}
         >
           <ErrorBoundary>
             <TechnicalSupportBounder>

@@ -14,7 +14,6 @@ declare module Login {
     updatedAt: string; //'2023-04-18T07:59:56.850Z';
     username: string; // 'admin';
     roles?: string[];
-    permissions?: IPermission[];
     _id: string; // '643e4dfc013057d9f766d613';
   }
 

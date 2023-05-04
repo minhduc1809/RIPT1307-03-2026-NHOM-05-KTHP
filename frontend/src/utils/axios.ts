@@ -5,11 +5,11 @@ import { history } from 'umi';
 import data from './data';
 
 function routeLogin(errorCode: string) {
-  notification.warning({
-    message: 'Vui lòng đăng nhập lại',
-    description: data.error[errorCode],
-  });
-  localStorage.clear();
+  // notification.warning({
+  //   message: 'Vui lòng đăng nhập lại',
+  //   description: data.error[errorCode],
+  // });
+  // localStorage.clear();
   history.replace({
     pathname: '/user/login',
   });
@@ -29,13 +29,13 @@ const processQueue = (error: any, token: any = null) => {
   failedQueue = [];
 };
 
+/**
+ * Chuyển sang xử lý access_token with OIDC auth ở Technical Support
+ */
 // Add a request interceptor
 axios.interceptors.request.use(
   (config) => {
-    if (
-      // config.baseURL === baseApiAddress &&
-      !config.headers.Authorization
-    ) {
+    if (!config.headers.Authorization) {
       const token = localStorage.getItem('token');
       if (token) {
         // eslint-disable-next-line no-param-reassign
@@ -79,11 +79,13 @@ axios.interceptors.response.use(
       case 401:
         if (originalRequest._retry) break;
         const refreshToken = localStorage.getItem('refreshToken');
-        if (!refreshToken || error?.request?.responseURL?.includes('refresh')) {
+        if (!refreshToken || error?.response?.config?.data?.includes('refresh')) {
           return routeLogin(error?.response?.data?.errorCode);
         }
-        // Nếu đang có 1 cái refresh thì thêm request này vào queue;
+        if (error?.response?.config?.data?.includes('grant_type')) return;
+
         if (isRefreshing) {
+          // Nếu đang có 1 cái refresh thì thêm request này vào queue;
           return new Promise((resolve, reject) => {
             failedQueue.push({ resolve, reject });
           })

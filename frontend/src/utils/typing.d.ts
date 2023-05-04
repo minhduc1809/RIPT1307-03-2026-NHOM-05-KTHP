@@ -4,6 +4,6 @@ import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 export interface IInitialState {
   settings?: Partial<LayoutSettings>;
   currentUser?: Login.User;
-  fetchUserInfo?: () => Promise<Login.User | undefined>;
-  authorizedRoles?: any[];
+  // fetchUserInfo?: () => Promise<Login.User | undefined>;
+  authorizedPermissions?: Login.IPermission[];
 }

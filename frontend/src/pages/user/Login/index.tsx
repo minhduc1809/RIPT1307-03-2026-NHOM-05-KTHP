@@ -1,26 +1,16 @@
 import Footer from '@/components/Footer';
 import LoginWithKeycloak from '@/pages/user/Login/KeycloakLogin';
-import { adminlogin, getInfo, swapToken } from '@/services/ant-design-pro/api';
+import { adminlogin, getInfo } from '@/services/ant-design-pro/api';
 import rules from '@/utils/rules';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Tabs, message } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 // import OneSignal from 'react-onesignal';
+import { keycloakAuthority } from '@/utils/ip';
+import jwt_decode from 'jwt-decode';
 import Recaptcha from 'react-recaptcha';
 import { history, useIntl, useModel } from 'umi';
 import styles from './index.less';
-import { useAuth } from 'react-oidc-context';
-import { keycloakAuthority } from '@/utils/ip';
-import jwt_decode from 'jwt-decode';
-
-const goto = () => {
-  if (!history) return;
-  setTimeout(() => {
-    const { query } = history.location;
-    const { redirect } = query as { redirect: string };
-    history.push(redirect || '/');
-  }, 2000);
-};
 
 const Login: React.FC = () => {
   const [count, setCount] = useState<number>(Number(localStorage?.getItem('failed')) || 0);
@@ -34,7 +24,6 @@ const Login: React.FC = () => {
   const recaptchaRef = useRef(null);
   const intl = useIntl();
   const [form] = Form.useForm();
-  const auth = useAuth();
 
   // const getUserIdOnesignal = async () => {
   //   const id = await OneSignal.getUserId();
@@ -45,10 +34,7 @@ const Login: React.FC = () => {
    * Xử lý token, get info sau khi đăng nhập
    */
   const handleRole = async (role: { access_token: string; refresh_token: string }) => {
-    const defaultloginSuccessMessage = intl.formatMessage({
-      id: 'pages.login.success',
-      defaultMessage: 'success',
-    });
+    // Tobe removed
     localStorage.setItem('token', role?.access_token);
     localStorage.setItem('refreshToken', role?.refresh_token);
 
@@ -56,38 +42,21 @@ const Login: React.FC = () => {
     const info = await getInfo();
     setInitialState({
       ...initialState,
-      currentUser: {
-        ...(info?.data?.data ?? {}),
-        permissions: decoded?.authorization?.permissions,
-      },
+      currentUser: info?.data?.data,
+      authorizedPermissions: decoded?.authorization?.permissions,
+    });
+
+    const defaultloginSuccessMessage = intl.formatMessage({
+      id: 'pages.login.success',
+      defaultMessage: 'success',
     });
     message.success(defaultloginSuccessMessage);
     history.push('/dashboard');
   };
 
-  // Callback after login with KeyCloak
-  // const handleLoginWithKeycloak = async (
-  //   accessToken: string,
-  //   refreshToken: string,
-  //   idToken: string,
-  //   oneId: string,
-  // ) => {
-  //   handleRole({ accessToken, refreshToken, idToken });
-  // };
-
   // useEffect(() => {
   //   getUserIdOnesignal();
   // }, []);
-
-  const getSwapToken = async (token: { access_token: string }) => {
-    const res = await swapToken(token);
-    return res.data;
-  };
-
-  useEffect(() => {
-    if (auth.isAuthenticated)
-      getSwapToken(auth.user as any).then((newToken) => handleRole(newToken));
-  }, [auth.isAuthenticated]);
 
   const handleSubmit = async (values: { login: string; password: string }) => {
     try {
@@ -202,6 +171,7 @@ const Login: React.FC = () => {
             >
               Quên mật khẩu?
             </Button>
+
             {type === 'accountAdmin' && visibleCaptcha && count >= 5 && (
               <Recaptcha
                 ref={recaptchaRef}
@@ -213,6 +183,7 @@ const Login: React.FC = () => {
                 verifyCallback={verifyCallback}
               />
             )}
+
             {type === 'accountAdmin' && !visibleCaptcha && visibleCaptcha2 && count >= 5 && (
               <Recaptcha
                 ref={recaptchaRef}
@@ -236,5 +207,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-
-export { goto };

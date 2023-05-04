@@ -36,7 +36,7 @@ export async function swapToken(payload: { access_token: string }) {
     method: 'POST',
     headers: {
       'content-type': 'application/x-www-form-urlencoded',
-      Authorization: `Bearer ${payload.access_token}`,
+      Authorization: `Bearer ${payload?.access_token}`,
     },
     data: queryString.stringify(data),
   });
