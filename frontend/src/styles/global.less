@@ -393,6 +393,53 @@ ol {
   }
 }
 
+.ant-modal .ant-card-body,
+.ant-drawer .ant-card-body {
+  @media (min-width: @screen-xl) {
+    .ant-tabs-left {
+      .ant-tabs-tab + .ant-tabs-tab {
+        margin: 10px 0 0 0;
+      }
+    }
+
+    .ant-tabs-top {
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+
+      .ant-tabs-nav {
+        margin-bottom: 0;
+      }
+    }
+
+    .ant-tabs-left > .ant-tabs-content-holder > .ant-tabs-content > .ant-tabs-tabpane {
+      padding-left: 18px;
+    }
+  }
+
+  .button-section {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .ant-collapse-header {
+    font-weight: 600;
+  }
+
+  .ant-divider-horizontal.ant-divider-with-text-left {
+    margin: 12px 0 4px 0;
+    font-weight: 600;
+    font-size: 14px;
+
+    &::before {
+      width: 0;
+    }
+
+    .ant-divider-inner-text {
+      padding: 0px;
+    }
+  }
+}
+
 .ant-table-cell {
   padding: 8px !important;
 
