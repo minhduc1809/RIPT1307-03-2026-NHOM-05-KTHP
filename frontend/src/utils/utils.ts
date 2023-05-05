@@ -5,7 +5,7 @@ import moment from 'moment';
 const reg =
   /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
 
-const charMap = {
+const charMap: any = {
   a: '[aàáâãăăạảấầẩẫậắằẳẵặ]',
   e: '[eèéẹẻẽêềềểễệế]',
   i: '[iìíĩỉị]',
@@ -124,13 +124,22 @@ export function trim(str: string) {
   // nếu là moment thì cho sang string
   if (moment.isMoment(str)) return str?.toISOString() ?? '';
   // xóa tất cả dấu cách thừa
-  if (typeof str !== 'string') return str;
-  return str.replace(/[ ]{2,}/g, ' ').trim();
+  if (typeof str === 'string') return str.replace(/[ ]{2,}/g, ' ').trim();
+  return str;
 }
 
 export function currencyFormat(num?: number) {
   if (!num) return '';
   return num?.toFixed(0)?.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.') ?? '';
+}
+
+export function formatPhoneNumber(num: any) {
+  let phone = num.replace(/\D/g, '');
+  const match = phone.match(/^(\d{1,3})(\d{0,3})(\d{0,4})$/);
+  if (match) {
+    phone = `${match[1]}${match[2] ? ' ' : ''}${match[2]}${match[3] ? '-' : ''}${match[3]}`;
+  }
+  return phone;
 }
 
 export function chuanHoaTen(ten: any) {
