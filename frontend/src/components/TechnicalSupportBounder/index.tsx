@@ -88,7 +88,7 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
     <>
       {props.children}
 
-      {window.location.pathname !== '/user/login' && (
+      {window.location.pathname !== '/user/login' && window.location.pathname !== '/403' && (
         <Tooltip title="Phản hồi kĩ thuật" placement="topLeft">
           <Button
             onClick={() => setVisible(true)}

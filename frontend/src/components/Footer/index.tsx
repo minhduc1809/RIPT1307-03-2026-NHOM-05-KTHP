@@ -19,6 +19,7 @@ export default () => {
           blankTarget: true,
         },
       ]}
+      style={{ width: '100%' }}
     />
   );
 };

@@ -41,3 +41,5 @@ export const AppModules: Record<string, Login.TModule> = {
     icon: EModuleKey.CTSV + '.svg',
   },
 };
+
+export const landingUrl = 'https://landing-vwa-keycloak.vercel.app/';

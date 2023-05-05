@@ -12,6 +12,7 @@ import TechnicalSupportBounder from './components/TechnicalSupportBounder';
 import NotAccessible from './pages/exception/403';
 import NotFoundContent from './pages/exception/404';
 import './styles/global.less';
+import { currentRole } from './utils/ip';
 import { oidcConfig } from './utils/oidcConfig';
 import { type IInitialState } from './utils/typing';
 
@@ -117,20 +118,19 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
 
     footerRender: () => <Footer />,
-    // Tobe removed
-    // onPageChange: () => {
-    //   const { location } = history;
-    //   const token = localStorage.getItem('token');
-    //   let checkPathAuth = false;
-    //   pathAuth.map((item) => {
-    //     if (location.pathname.includes(item)) checkPathAuth = true;
-    //   });
-    //   if (!token && location.pathname !== loginPath && !checkPathAuth) {
-    //     history.push(loginPath);
-    //   } else if (initialState?.currentUser && token && location.pathname === loginPath) {
-    //     history.push('/dashboard');
-    //   }
-    // },
+
+    onPageChange: () => {
+      const { location } = history;
+      if (initialState?.currentUser)
+        if (location.pathname === '/') {
+          history.replace('/dashboard');
+        } else if (
+          currentRole &&
+          initialState?.authorizedPermissions?.length &&
+          !initialState?.authorizedPermissions?.find((item) => item.rsname === currentRole)
+        )
+          history.replace('/403');
+    },
 
     menuItemRender: (item: any, dom: any) => {
       return (

@@ -1,9 +1,6 @@
-import { uploadFile } from '@/services/uploadFile';
 import { message } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
-import { parse } from 'path';
-import { useModel } from 'umi';
 
 const reg =
   /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -135,7 +132,8 @@ export function currencyFormat(num?: number) {
   if (!num) return '';
   return num?.toFixed(0)?.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.') ?? '';
 }
-export function chuanHoa(ten: any) {
+
+export function chuanHoaTen(ten: any) {
   return trim(ten)
     .split(' ')
     .map((t: string) => t.charAt(0).toUpperCase() + t.slice(1))
@@ -183,6 +181,7 @@ export function renderFileListUrlWithName(url: string, fileName?: string) {
     ],
   };
 }
+
 export function renderFileList(arr: string[]) {
   if (!arr || !Array.isArray(arr)) return { fileList: [] };
   return {
@@ -202,82 +201,11 @@ export function includes(str1: string, str2: string) {
   return Format(str1).includes(Format(str2));
 }
 
-export function handlePhanNhom(initialState: any, code: string, idDoiTuong?: string) {
-  if (
-    initialState?.currentUser?.systemRole === 'Admin' ||
-    initialState?.currentUser?.vai_tro === 'quan_tri'
-  )
-    return true;
-  let flag = false;
-  if (
-    !initialState?.phanNhom?.danhSachPhanNhom ||
-    initialState?.phanNhom?.danhSachPhanNhom?.length === 0
-  ) {
-    return false;
-  }
-
-  initialState?.phanNhom?.danhSachPhanNhom?.forEach((item: any) => {
-    const mucDo = item?.mucDo;
-    item?.nhomVaiTroId?.danhSachChucNang?.forEach((idChucNang: string) => {
-      if (mucDo === 'Tất cả' && idChucNang === code) {
-        flag = true;
-      }
-      if (mucDo !== 'Tất cả' && idChucNang === code) {
-        if (idDoiTuong === undefined) {
-          flag = true;
-          return;
-        }
-        flag = item?.idDoiTuong === idDoiTuong;
-      }
-    });
-  });
-  return flag;
-}
-
-export function useCheckAccess(code: string, idDoiTuong?: string) {
-  const { initialState } = useModel('@@initialState');
-  return (
-    initialState?.currentUser?.systemRole === 'Admin' ||
-    initialState?.currentUser?.vai_tro === 'quan_tri' ||
-    initialState?.phanNhom?.nhom_vai_tro?.includes(code) ||
-    false
-  );
-  //return handlePhanNhom(initialState, code, idDoiTuong);
-}
-
 export const toISOString = (date: moment.MomentInput) => {
   if (date) {
     return moment(date).startOf('day').toISOString();
   }
   return undefined;
-};
-
-export const uploadMultiFile = async (
-  arrFile: any[],
-  returnFileType?: boolean,
-  returnAllResponse?: boolean,
-) => {
-  const url: any[] = arrFile
-    ?.filter((item) => item?.remote === true)
-    ?.map((item) =>
-      returnFileType === true ? { url: item?.url ?? '', type: item?.type } : item?.url ?? '',
-    );
-  if (!arrFile) return [];
-  let arrUrl: any[] = [];
-  const arrUpload = arrFile
-    ?.filter((item) => item?.remote !== true)
-    ?.map(async (file: { originFileObj: any; type: string; name: string }) => {
-      const response = await uploadFile({
-        file: file?.originFileObj,
-        filename: parse(file?.name).name,
-        public: true,
-      });
-      if (returnFileType) return { url: response?.data?.data?.url, type: file.type };
-      else if (returnAllResponse) return response?.data?.data;
-      else return response?.data?.data?.url;
-    });
-  arrUrl = await Promise.all(arrUpload);
-  return [...url, ...arrUrl];
 };
 
 export const checkFileSize = (arrFile: any[]) => {
@@ -345,18 +273,6 @@ export const buildFormData = (payload: any) => {
   return form;
 };
 
-const _checkTrungLich = (
-  lop: { start: number; end: number; idLop: number; maLop: string },
-  danhSachLop: { start: number; end: number; idLop: number; maLop: string }[],
-): boolean => {
-  for (const x of danhSachLop.filter((l) => l.idLop !== lop.idLop)) {
-    if ((x.start >= lop.start && x.start < lop.end) || (x.end > lop.start && x.end <= lop.end)) {
-      return true;
-    }
-  }
-  return false;
-};
-
 export const makeId = (length: number) => {
   let text = '';
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -364,32 +280,6 @@ export const makeId = (length: number) => {
   for (let i = 0; i < length; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   return text;
-};
-
-export const checkTrungLich = async (
-  allowP: number,
-  danhSachLop: { start: number; end: number; idLop: number; maLop: string; title: string }[],
-): Promise<boolean> => {
-  const mapSoBuoiHoc: Record<string, number> = {};
-
-  const mapBuoiTrung: Record<string, number> = {};
-  for (const lop of danhSachLop) {
-    mapBuoiTrung[`${lop.maLop}||${lop.title}`] = mapBuoiTrung[`${lop.maLop}||${lop.title}`] || 0;
-    mapSoBuoiHoc[`${lop.maLop}||${lop.title}`] = mapSoBuoiHoc[`${lop.maLop}||${lop.title}`] || 0;
-    if (_checkTrungLich(lop, danhSachLop) === true) {
-      ++mapBuoiTrung[`${lop.maLop}||${lop.title}`];
-    }
-    ++mapSoBuoiHoc[`${lop.maLop}||${lop.title}`];
-  }
-  let result = true;
-  for (const lop of Object.keys(mapBuoiTrung)) {
-    mapBuoiTrung[lop] = mapBuoiTrung[lop] / mapSoBuoiHoc[lop];
-    if (mapBuoiTrung[lop] > allowP / 100) {
-      message.error(`${lop?.split('||')?.[1]} bị trùng lịch, vui lòng kiểm tra lại`, 10);
-      result = false;
-    }
-  }
-  return result;
 };
 
 export const range = (start: number, end: number) => {
