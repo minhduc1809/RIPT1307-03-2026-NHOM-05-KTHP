@@ -217,14 +217,15 @@ export const toISOString = (date: moment.MomentInput) => {
   return undefined;
 };
 
-export const checkFileSize = (arrFile: any[]) => {
+export const checkFileSize = (arrFile: any[], fileSize?: number) => {
   let check = true;
+  const size = fileSize ?? 8;
   arrFile
     ?.filter((item) => item?.remote !== true)
     ?.forEach((item) => {
-      if (item?.size / 1024 / 1024 > 8) {
+      if (item?.size / 1024 / 1024 > size) {
         check = false;
-        message.error(`file ${item?.name} có dung lượng > 25Mb`);
+        message.error(`file ${item?.name} có dung lượng > ${size}Mb`);
       }
     });
   return check;

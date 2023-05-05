@@ -1,20 +1,33 @@
-import { Button, Card, Form, Input, message } from 'antd';
 import Upload from '@/components/Upload/UploadFile';
-import rules from '@/utils/rules';
-import { checkFileSize, uploadMultiFile } from '@/utils/utils';
 import { postIssue } from '@/services/TechnicalSupport/technicalsupport';
-import { useState } from 'react';
+import { uploadFile } from '@/services/uploadFile';
 import { Setting } from '@/utils/constants';
+import rules from '@/utils/rules';
+import { checkFileSize } from '@/utils/utils';
+import { Button, Card, Form, Input, message } from 'antd';
+import { useState } from 'react';
 
 const FormPostIssue = (props: { onCancel: any }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
 
   const onFinish = async (values: any) => {
+    if (loading) return;
     setLoading(true);
+
     const checkSize = checkFileSize(values?.urlFile?.fileList ?? []);
     if (!checkSize) return;
-    const urlFileDinhKem = await uploadMultiFile(values?.urlFile?.fileList);
+
+    const urlFileDinhKem = await Promise.all(
+      values?.urlFile?.fileList?.map(async (file: any) => {
+        const res = await uploadFile({
+          file: file?.originFileObj,
+          public: '1',
+        });
+        return res?.data?.data?.url;
+      }),
+    );
+
     try {
       await postIssue({
         ...values,
@@ -40,7 +53,7 @@ const FormPostIssue = (props: { onCancel: any }) => {
         </Form.Item>
 
         <Form.Item
-          extra={<div>Tối đa 3 ảnh, dung lượng mỗi ảnh không quá 25Mb.</div>}
+          extra={<div>Tối đa 3 ảnh, dung lượng mỗi ảnh không quá 8Mb.</div>}
           name="imageUrlList"
           label="Ảnh đính kèm"
         >
