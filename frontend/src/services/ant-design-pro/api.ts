@@ -25,7 +25,7 @@ export async function refreshAccesssToken(payload: { refreshToken: string }) {
   });
 }
 
-export async function swapToken(payload: { access_token: string }) {
+export async function swapToken() {
   const data = {
     audience: keycloakClientID,
     grant_type: 'urn:ietf:params:oauth:grant-type:uma-ticket',
@@ -34,10 +34,7 @@ export async function swapToken(payload: { access_token: string }) {
   return axios({
     url: keycloakTokenEndpoint,
     method: 'POST',
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      Authorization: `Bearer ${payload?.access_token}`,
-    },
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
     data: queryString.stringify(data),
   });
 }

@@ -16,13 +16,14 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
 
   const handleAxios = (access_token: string) => {
     // Add a request interceptor
-    axios.interceptors.request.use(
-      (config) => {
-        config.headers.Authorization = `Bearer ${access_token}`;
-        return config;
-      },
-      (error) => Promise.reject(error),
-    );
+    // axios.interceptors.request.use(
+    //   (config) => {
+    //     config.headers.Authorization = `Bearer ${access_token}`;
+    //     return config;
+    //   },
+    //   (error) => Promise.reject(error),
+    // );
+    axios.defaults.headers.common.Authorization = `Bearer ${access_token}`;
   };
 
   /**
@@ -32,14 +33,15 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
     if (!role || !role.access_token || !role.refresh_token) return;
     // Set localStorage for axios configurations
     // localStorage.setItem('token', role?.access_token);
-    localStorage.setItem('refreshToken', role?.refresh_token);
+    // localStorage.setItem('refreshToken', role?.refresh_token);
     handleAxios(role?.access_token);
 
     const decoded = jwt_decode(role?.access_token) as any;
-    const info = await getInfo();
+    let curUser = initialState?.currentUser;
+    if (!curUser) curUser = (await getInfo())?.data?.data;
     setInitialState({
       ...initialState,
-      currentUser: info?.data?.data,
+      currentUser: curUser,
       authorizedPermissions: decoded?.authorization?.permissions,
     });
 
@@ -54,35 +56,47 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
     }
   };
 
+  /**
+   * Swap token để lấy token mới, bao gồm cả thông tin permissions
+   * @param token
+   * @returns
+   */
   const getSwapToken = async (token: { access_token: string }) => {
     if (token?.access_token) {
-      const res = await swapToken(token);
+      handleAxios(token.access_token);
+      const res = await swapToken();
       if (res && res?.data) return res.data;
     }
     return Promise.reject('Invalid token');
   };
 
-  // automatically sign-in
+  /**
+   * Automatically sign-in
+   */
   useEffect(() => {
-    if (!auth.activeNavigator && !auth.isLoading) {
-      if (!hasAuthParams() && !auth.isAuthenticated) {
-        // Nếu chưa đăng nhập thì chuyển đến màn đăng nhập của keyloak luôn
-        localStorage.removeItem('refreshToken');
-        auth.signinRedirect();
-      } else
-        getSwapToken(auth.user as any)
-          .then((newToken) => handleRole(newToken))
-          .catch(() => {
-            // Nếu ko thể swap token, có thể do token đã hết hạn, hoặc bị đăng xuất rồi
-            if (window.location.pathname === '/user/login')
-              notification.warn({
-                message: 'Phiên đăng nhập đã hết hạn',
-                description: 'Vui lòng đăng nhập lại!',
-              });
-            else history.push('/user/login');
-          });
+    if (!auth.activeNavigator && !auth.isLoading && !hasAuthParams() && !auth.isAuthenticated) {
+      // Nếu chưa đăng nhập thì chuyển đến màn đăng nhập của keyloak luôn
+      auth.signinRedirect();
     }
   }, [auth.isAuthenticated, auth.activeNavigator, auth.isLoading, auth.signinRedirect]);
+
+  useEffect(() => {
+    if (!auth.activeNavigator && !auth.isLoading && auth.isAuthenticated)
+      getSwapToken({ access_token: auth.user?.access_token ?? '' })
+        .then((newToken) => handleRole(newToken))
+        .catch(() => {
+          // Nếu ko thể swap token, có thể do token đã hết hạn, hoặc bị đăng xuất rồi
+          if (window.location.pathname !== '/user/login') {
+            notification.warn({
+              message: 'Phiên đăng nhập đã hết hạn',
+              description: 'Vui lòng đăng nhập lại!',
+            });
+            history.replace('/user/login');
+          }
+          // Chỗ này mặc định sẽ về trang đăng nhập của web để thông báo Phiên đã hết hạn
+          // Nếu muốn vào trang đăng nhập SSO luôn thì dùng auth.removeUser()
+        });
+  }, [auth.user?.access_token]);
 
   return (
     <>
@@ -97,6 +111,7 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
               bottom: 100,
               right: 34,
               zIndex: 10,
+              boxShadow: 'rgba(0, 0, 0, 0.2) 1px 1px 8px 3px',
             }}
             shape="circle"
             size="large"

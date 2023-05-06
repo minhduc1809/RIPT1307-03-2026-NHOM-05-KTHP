@@ -108,7 +108,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     unAccessible: <NotAccessible />,
     noFound: <NotFoundContent />,
     rightContentRender: () => (
-      <AuthProvider {...oidcConfig} redirect_uri={window.location.href}>
+      // OIDC Auth Provider for user Logout
+      <AuthProvider
+        {...oidcConfig}
+        redirect_uri={window.location.href}
+        automaticSilentRenew={false}
+      >
         <RightContent />
       </AuthProvider>
     ),
