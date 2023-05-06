@@ -74,29 +74,27 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
    * Automatically sign-in
    */
   useEffect(() => {
-    if (!auth.activeNavigator && !auth.isLoading && !hasAuthParams() && !auth.isAuthenticated) {
-      // Nếu chưa đăng nhập thì chuyển đến màn đăng nhập của keyloak luôn
-      auth.signinRedirect();
+    if (!auth.activeNavigator && !auth.isLoading) {
+      if (!hasAuthParams() && !auth.isAuthenticated)
+        // Nếu chưa đăng nhập thì chuyển đến màn đăng nhập của keyloak luôn
+        auth.signinRedirect();
+      else
+        getSwapToken({ access_token: auth.user?.access_token ?? '' })
+          .then((newToken) => handleRole(newToken))
+          .catch(() => {
+            // Nếu ko thể swap token, có thể do token đã hết hạn, hoặc bị đăng xuất rồi
+            if (window.location.pathname === '/user/login') {
+              notification.warn({
+                message: 'Phiên đăng nhập đã hết hạn',
+                description: 'Vui lòng đăng nhập lại!',
+              });
+              // auth.removeUser();
+            } else history.replace('/user/login');
+            // Chỗ này mặc định sẽ về trang đăng nhập của web để thông báo Phiên đã hết hạn
+            // Nếu muốn vào trang đăng nhập SSO luôn thì dùng auth.removeUser()
+          });
     }
-  }, [auth.isAuthenticated, auth.activeNavigator, auth.isLoading, auth.signinRedirect]);
-
-  useEffect(() => {
-    if (!auth.activeNavigator && !auth.isLoading && auth.isAuthenticated)
-      getSwapToken({ access_token: auth.user?.access_token ?? '' })
-        .then((newToken) => handleRole(newToken))
-        .catch(() => {
-          // Nếu ko thể swap token, có thể do token đã hết hạn, hoặc bị đăng xuất rồi
-          if (window.location.pathname !== '/user/login') {
-            notification.warn({
-              message: 'Phiên đăng nhập đã hết hạn',
-              description: 'Vui lòng đăng nhập lại!',
-            });
-            history.replace('/user/login');
-          }
-          // Chỗ này mặc định sẽ về trang đăng nhập của web để thông báo Phiên đã hết hạn
-          // Nếu muốn vào trang đăng nhập SSO luôn thì dùng auth.removeUser()
-        });
-  }, [auth.user?.access_token]);
+  }, [auth.isAuthenticated, auth.activeNavigator, auth.isLoading, auth.user?.access_token]);
 
   return (
     <>

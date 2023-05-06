@@ -1,19 +1,19 @@
 // import { refreshAccesssToken } from '@/services/ant-design-pro/api';
 import { message, notification } from 'antd';
 import axios from 'axios';
-import { history } from 'umi';
+// import { history } from 'umi';
 import data from './data';
 
-function routeLogin(errorCode: string) {
-  // notification.warning({
-  //   message: 'Vui lòng đăng nhập lại',
-  //   description: data.error[errorCode],
-  // });
-  // localStorage.clear();
-  history.replace({
-    pathname: '/user/login',
-  });
-}
+// function routeLogin(errorCode: string) {
+//   // notification.warning({
+//   //   message: 'Vui lòng đăng nhập lại',
+//   //   description: data.error[errorCode],
+//   // });
+//   // localStorage.clear();
+//   history.replace({
+//     pathname: '/user/login',
+//   });
+// }
 
 // for multiple request
 // let isRefreshing = false;
@@ -78,7 +78,8 @@ axios.interceptors.response.use(
 
       case 401:
         if (originalRequest._retry) break;
-        return routeLogin('Unauthorize');
+        break;
+      // return routeLogin('Unauthorize');
 
       ///////////////////////////////////////////////////////////////////
       // Tobe removed, token refreshing is handled by OIDC context
