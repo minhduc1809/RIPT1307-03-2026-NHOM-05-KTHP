@@ -1,11 +1,23 @@
 import Footer from '@/components/Footer';
 import { landingUrl } from '@/services/ant-design-pro/constant';
+import { currentRole } from '@/utils/ip';
 import { GlobalOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Button, Result } from 'antd';
+import { useEffect } from 'react';
 import { useAuth } from 'react-oidc-context';
+import { history, useModel } from 'umi';
 
 const NotAccessible = () => {
   const auth = useAuth();
+  const { initialState } = useModel('@@initialState');
+
+  useEffect(() => {
+    if (
+      currentRole &&
+      initialState?.authorizedPermissions?.find((item) => item.rsname === currentRole)
+    )
+      history.replace('/dashboard');
+  }, [initialState?.authorizedPermissions]);
 
   const onLogout = (): void => {
     auth.signoutRedirect({
