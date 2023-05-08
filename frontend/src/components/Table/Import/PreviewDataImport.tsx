@@ -39,7 +39,17 @@ const PreviewDataImport = (props: { onChange: () => void; onBack: any }) => {
             valid = false;
             return false;
           }
-          temp[col.field] = content;
+          switch (col.type) {
+            case 'Boolean':
+              temp[col.field] = content === 'Có';
+              break;
+            case 'Number':
+              temp[col.field] = Number.parseFloat(content);
+              break;
+            default:
+              temp[col.field] = content;
+              break;
+          }
           return true;
         });
 
