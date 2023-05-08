@@ -1,5 +1,5 @@
 import { Typography } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { type TooltipProps } from 'antd/lib/tooltip';
 
 interface EllipsisProps {
@@ -20,6 +20,10 @@ interface IProps {
 const ExpandText = (props: IProps) => {
   const [expand, setExpand] = useState<boolean>(false);
   const [counter, setCounter] = useState<number>(0);
+
+  useEffect(() => {
+    setExpand(false);
+  }, [props.children]);
 
   const typoExpand = () => {
     setExpand(true);
