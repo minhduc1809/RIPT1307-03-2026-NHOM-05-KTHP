@@ -142,12 +142,20 @@ export type TableStaticProps = {
 
 export type TImportHeader = {
   field: string;
-  title: string;
+  label: string;
   required: boolean;
+  type: TImportDataType;
 };
 
+export type TImportDataType = 'String' | 'Number' | 'Boolean';
+
 export type TImportResponse = {
-  errorMess: string; // 'Mã đơn vị cấp trên không đúng';
-  importStatus: 'fail' | 'success';
-  row: number;
+  error: boolean;
+  validate?: TImportRowResponse[];
+};
+
+export type TImportRowResponse = {
+  index: number;
+  dataError?: string[];
+  typeError?: string[];
 };

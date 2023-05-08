@@ -4,48 +4,60 @@ import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import TableStaticData from '../TableStaticData';
-import { type IColumn, type TImportResponse } from '../typing';
+import { type TImportRowResponse, type IColumn, type TImportResponse } from '../typing';
 
 const ValidateDataImport = (props: { onChange: () => void; onBack: any; modelName: any }) => {
   const { onChange, onBack, modelName } = props;
-  const { dataImport } = useModel('import');
+  const { dataImport, startLine } = useModel('import');
   const { postValidateModel, postExecuteImpotModel, formSubmiting } = useModel(modelName);
-  const [importResponses, setImportResponses] = useState<TImportResponse[]>([]);
+  const [importResponses, setImportResponses] = useState<TImportRowResponse[]>([]);
+  const [errorCount, setErrorCount] = useState<number>();
+  const [isError, setIsError] = useState<boolean>();
   const [step, setStep] = useState(0);
-  const columns: IColumn<TImportResponse>[] = [
+
+  const columns: IColumn<TImportRowResponse>[] = [
     {
-      dataIndex: 'row',
+      dataIndex: 'index',
       title: 'Thứ tự hàng',
       width: 80,
       align: 'center',
     },
     {
-      dataIndex: 'importStatus',
       title: 'Trạng thái',
       width: 120,
       align: 'center',
-      render: (val) =>
-        val === 'fail' ? (
+      render: (val, rec) =>
+        !!rec.dataError?.length || !!rec.typeError?.length ? (
           <Tag color="red">{step === 0 ? 'Không hợp lệ' : 'Không thành công'}</Tag>
         ) : (
           <Tag color="green">{step === 0 ? 'Hợp lệ' : 'Thành công'}</Tag>
         ),
     },
     {
-      dataIndex: 'errorMess',
-      title: 'Ghi chú',
+      dataIndex: 'typeError',
+      title: 'Lỗi kiểu dữ liệu',
       width: 200,
+      render: (val) => val?.join(', '),
+    },
+    {
+      dataIndex: 'dataError',
+      title: 'Lỗi dữ liệu',
+      width: 200,
+      render: (val) => val?.join(', '),
     },
   ];
-  const errorCount = importResponses?.filter((item) => item.importStatus === 'fail')?.length;
-  const successCount = importResponses?.filter((item) => item.importStatus !== 'fail')?.length;
 
   const validateData = async () => {
     if (postValidateModel)
       postValidateModel(dataImport)
-        .then((res: TImportResponse[]) => {
-          const temp = _.sortBy(res, (item) => item.row);
-          setImportResponses(temp);
+        .then((res: TImportResponse) => {
+          setErrorCount(
+            res.validate?.filter((item) => !!item.dataError?.length || !!item.typeError?.length)
+              .length,
+          );
+          setIsError(res.error);
+          const temp = res.validate?.map((item) => ({ ...item, index: item.index + startLine }));
+          setImportResponses(temp ?? []);
         })
         .catch((err: any) => console.log(err));
   };
@@ -56,10 +68,15 @@ const ValidateDataImport = (props: { onChange: () => void; onBack: any; modelNam
 
   const onExecute = () => {
     postExecuteImpotModel(dataImport)
-      .then((res: TImportResponse[]) => {
-        const temp = _.sortBy(res, (item) => item.row);
-        setImportResponses(temp);
+      .then((res: TImportResponse) => {
         setStep(1);
+        setErrorCount(
+          res.validate?.filter((item) => !!item.dataError?.length || !!item.typeError?.length)
+            .length,
+        );
+        setIsError(res.error);
+        const temp = res.validate?.map((item) => ({ ...item, index: item.index + startLine }));
+        setImportResponses(temp ?? []);
       })
       .catch((err: any) => console.log(err));
   };
@@ -90,7 +107,7 @@ const ValidateDataImport = (props: { onChange: () => void; onBack: any; modelNam
               </>
             )}
           </Col>
-        ) : successCount ? (
+        ) : !isError ? (
           <Col span={24}>
             <Space
               style={{ marginTop: 12, marginBottom: 12, justifyContent: 'center', width: '100%' }}
@@ -129,14 +146,14 @@ const ValidateDataImport = (props: { onChange: () => void; onBack: any; modelNam
               )
             }
             onConfirm={onExecute}
-            disabled={!successCount || !!errorCount}
+            disabled={isError || !!errorCount}
           >
             <Button
               htmlType="submit"
               type="primary"
               loading={formSubmiting}
               icon={<SaveOutlined />}
-              disabled={!successCount || !!errorCount}
+              disabled={isError || !!errorCount}
             >
               Lưu dữ liệu
             </Button>

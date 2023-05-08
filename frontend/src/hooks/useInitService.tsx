@@ -28,15 +28,21 @@ const useInitService = (url: string, ip?: string) => {
   };
 
   const getImportHeaders = () => {
-    return axios.get(`${ip ?? ip3}/${url}/import-header`);
+    return axios.get(`${ip ?? ip3}/${url}/import/definition`);
+  };
+
+  const getImportTemplate = () => {
+    return axios.get(`${ip ?? ip3}/${url}/import/template/xlsx`, {
+      responseType: 'arraybuffer',
+    });
   };
 
   const postValidateImport = (payload: any) => {
-    return axios.post(`${ip ?? ip3}/${url}/validate-import`, payload);
+    return axios.post(`${ip ?? ip3}/${url}/import/validate`, payload);
   };
 
   const postExecuteImport = (payload: any) => {
-    return axios.post(`${ip ?? ip3}/${url}/execute-import`, payload);
+    return axios.post(`${ip ?? ip3}/${url}/import/insert`, payload);
   };
 
   return {
@@ -47,6 +53,7 @@ const useInitService = (url: string, ip?: string) => {
     deleteService,
     getAllService,
     getImportHeaders,
+    getImportTemplate,
     postValidateImport,
     postExecuteImport,
   };

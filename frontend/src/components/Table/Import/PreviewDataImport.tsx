@@ -19,7 +19,7 @@ const PreviewDataImport = (props: { onChange: () => void; onBack: any }) => {
     },
     ...importHeaders?.map((item) => ({
       dataIndex: item.field,
-      title: item.title,
+      title: item.label,
       width: 120,
     })),
   ];

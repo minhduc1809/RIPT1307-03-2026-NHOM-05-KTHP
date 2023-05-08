@@ -22,16 +22,16 @@ const MatchColumns = (props: { onChange: () => void; onBack: any }) => {
   return (
     <Form layout="vertical" form={form} onFinish={onFinish}>
       <Row gutter={[12, 0]}>
-        <Col span={24} className="fw500">
+        <Col span={24} className="fw500" style={{ marginBottom: 12 }}>
           Ghép cột thông tin với cột dữ liệu tương ứng
         </Col>
         {importHeaders?.map((col) => (
           <Col span={24} md={12} key={col.field}>
             <Form.Item
               name={col.field}
-              label={col.title}
+              label={col.label}
               rules={[...(col.required ? rules.required : [])]}
-              initialValue={fileTitles.includes(col.title) ? col.title : undefined}
+              initialValue={fileTitles.includes(col.label) ? col.label : undefined}
             >
               <Select
                 options={Object.entries(headLine ?? {}).map(([colName, title]) => ({

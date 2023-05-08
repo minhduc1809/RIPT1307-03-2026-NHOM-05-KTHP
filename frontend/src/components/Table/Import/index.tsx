@@ -17,7 +17,7 @@ const ModalImport = (props: {
   const { visible, onCancel, onOk, modelName, maskCloseableForm } = props;
   const { setFileData, setMatchedColumns, setImportHeaders, setDataImport, importHeaders } =
     useModel('import');
-  const { getImportHeaderModel } = useModel(modelName);
+  const { getImportHeaderModel, getImportTemplateModel } = useModel(modelName);
   const [currentStep, setCurrentStep] = useState(0);
 
   const getHeaders = () => {
@@ -57,7 +57,11 @@ const ModalImport = (props: {
           </Steps>
 
           {currentStep === 0 ? (
-            <ChooseFileImport onChange={() => setCurrentStep(1)} onCancel={onCancelModal} />
+            <ChooseFileImport
+              onChange={() => setCurrentStep(1)}
+              onCancel={onCancelModal}
+              getTemplate={getImportTemplateModel}
+            />
           ) : currentStep === 1 ? (
             <MatchColumns
               onChange={() => setCurrentStep(2)}

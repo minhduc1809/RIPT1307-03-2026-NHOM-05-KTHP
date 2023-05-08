@@ -2,7 +2,7 @@ import { chuanHoaObject } from '@/utils/utils';
 import { message } from 'antd';
 import { useState } from 'react';
 import useInitService from './useInitService';
-import { type TImportHeader, type TFilter } from '@/components/Table/typing';
+import { type TImportHeader, type TFilter, type TImportResponse } from '@/components/Table/typing';
 
 /**
  *
@@ -40,6 +40,7 @@ const useInitModel = <T,>(
     getService,
     getByIdService,
     getImportHeaders,
+    getImportTemplate,
     postExecuteImport,
     postValidateImport,
   } = useInitService(url, ipService);
@@ -216,14 +217,27 @@ const useInitModel = <T,>(
   };
 
   /**
+   * Lấy file excel mẫu cho chức năng import
+   * @returns {any}
+   */
+  const getImportTemplateModel = async (): Promise<any> => {
+    try {
+      const res = await getImportTemplate();
+      return res.data;
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  };
+
+  /**
    * Lấy header cho chức năng import
    * @returns {any}
    */
-  const postValidateModel = async (payload: any[]): Promise<any[]> => {
+  const postValidateModel = async (payload: any[]): Promise<TImportResponse> => {
     if (formSubmiting) return Promise.reject('form submiting');
     setFormSubmiting(true);
     try {
-      const res = await postValidateImport(payload);
+      const res = await postValidateImport({ rows: payload });
       message.success('Đã kiểm tra dữ liệu');
       return res.data?.data ?? [];
     } catch (err) {
@@ -237,11 +251,11 @@ const useInitModel = <T,>(
    * Lấy header cho chức năng import
    * @returns {any}
    */
-  const postExecuteImpotModel = async (payload: any[]): Promise<any[]> => {
+  const postExecuteImpotModel = async (payload: any[]): Promise<TImportResponse> => {
     if (formSubmiting) return Promise.reject('form submiting');
     setFormSubmiting(true);
     try {
-      const res = await postExecuteImport(payload);
+      const res = await postExecuteImport({ rows: payload });
       message.success('Đã nhập dữ liệu');
       return res.data?.data ?? [];
     } catch (err) {
@@ -283,6 +297,7 @@ const useInitModel = <T,>(
     record,
     setRecord,
     getImportHeaderModel,
+    getImportTemplateModel,
     postExecuteImpotModel,
     postValidateModel,
   };
