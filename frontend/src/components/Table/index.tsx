@@ -1,5 +1,6 @@
 import {
   CloseOutlined,
+  ExportOutlined,
   FilterOutlined,
   FilterTwoTone,
   ImportOutlined,
@@ -247,6 +248,8 @@ const TableBase = (props: TableBaseProps) => {
 
   const mainContent = (
     <div className="table-base">
+      {children}
+
       <div className="header">
         <div className="action">
           {buttonOptions?.create !== false ? (
@@ -265,14 +268,15 @@ const TableBase = (props: TableBaseProps) => {
               </Button>
             </Tooltip>
           ) : null}
+
           {buttonOptions?.import ? (
             <Button icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
               Nhập dữ liệu
             </Button>
           ) : null}
-          {props.otherButtons}
+          {buttonOptions?.export ? <Button icon={<ExportOutlined />}>Xuất dữ liệu</Button> : null}
 
-          {children}
+          {props.otherButtons}
         </div>
 
         <div className="extra">
