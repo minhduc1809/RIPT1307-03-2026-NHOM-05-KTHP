@@ -28,7 +28,7 @@ const useInitService = (url: string, ip?: string) => {
   };
 
   const getImportHeaders = () => {
-    return axios.get(`${ip ?? ip3}/${url}/import/definition`);
+    return axios.get(`${ip ?? ip3}/${url}/import/definition`, { data: { silent: true } });
   };
 
   const getImportTemplate = () => {
