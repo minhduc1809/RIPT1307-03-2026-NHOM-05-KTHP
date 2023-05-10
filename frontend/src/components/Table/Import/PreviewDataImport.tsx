@@ -46,6 +46,9 @@ const PreviewDataImport = (props: { onChange: () => void; onBack: any }) => {
             case 'Number':
               temp[col.field] = Number.parseFloat(content);
               break;
+            case 'String':
+              temp[col.field] = content.toString();
+              break;
             default:
               temp[col.field] = content;
               break;
