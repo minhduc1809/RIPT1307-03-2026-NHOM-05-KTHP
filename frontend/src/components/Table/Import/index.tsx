@@ -37,6 +37,14 @@ const ModalImport = (props: {
     setCurrentStep(0);
   };
 
+  const onFinish = () => {
+    onOk();
+    setMatchedColumns(undefined);
+    setFileData(undefined);
+    setDataImport(undefined);
+    setCurrentStep(0);
+  };
+
   return (
     <Modal
       title="Nhập dữ liệu"
@@ -77,7 +85,7 @@ const ModalImport = (props: {
             />
           ) : (
             <ValidateDataImport
-              onChange={() => onOk()}
+              onChange={() => onFinish()}
               onBack={() => setCurrentStep(2)}
               modelName={modelName}
             />
