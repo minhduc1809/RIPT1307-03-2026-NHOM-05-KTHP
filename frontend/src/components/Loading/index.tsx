@@ -6,6 +6,7 @@ const LoadingPage = () => {
   const onClearCache = () => {
     localStorage.clear();
     sessionStorage.clear();
+    window.location.href = '/';
     window.location.reload();
   };
 

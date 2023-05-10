@@ -9,6 +9,7 @@ const LoginWithKeycloak = () => {
     localStorage.clear();
     sessionStorage.clear();
     auth.removeUser();
+    window.location.href = '/';
     window.location.reload();
   };
 
@@ -20,7 +21,6 @@ const LoginWithKeycloak = () => {
     return (
       <div>
         Có lỗi xảy ra... <pre>{auth.error.message}</pre>
-        <br />
         <Button icon={<DeleteOutlined />} onClick={onClearCache} type="link">
           Xóa bộ nhớ đệm
         </Button>
