@@ -23,6 +23,7 @@ const UploadFile = (props: {
 
   useEffect(() => {
     if (typeof value === 'string') setFileList([{ url: value }]);
+    else if (Array.isArray(value)) setFileList(value.map((url) => ({ url })));
     else setFileList(props.fileList || (value && value.fileList) || []);
   }, [value, props.fileList]);
 
