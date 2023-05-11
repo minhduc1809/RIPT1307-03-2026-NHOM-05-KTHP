@@ -14,7 +14,6 @@ const RowFilter = (props: {
 }) => {
   const { index, columns, filter, onChange, fieldsFilterable } = props;
   const [operators, setOperators] = useState<EOperatorType[]>([]);
-  const [operatorSelected, setOperatorSelected] = useState<EOperatorType>();
   const filterColumn = columns.find((item) => item.dataIndex === filter.field);
   const filterType = filterColumn?.filterType;
 
@@ -55,7 +54,9 @@ const RowFilter = (props: {
         break;
     }
     setOperators(opers);
-    setOperatorSelected(opers.length ? opers[0] : undefined);
+    const temp = { ...filter };
+    temp.operator = opers?.[0];
+    onChange(temp);
   }, [filterType]);
 
   const renderDataComponent = () => {
@@ -78,6 +79,7 @@ const RowFilter = (props: {
             )}
             mode="multiple"
             optionFilterProp="label"
+            placeholder="Chọn giá trị"
             showArrow
             showSearch
           />
@@ -98,11 +100,7 @@ const RowFilter = (props: {
 
       <Row gutter={[8, 0]}>
         <Col span={24} md={12}>
-          <Form.Item
-            name={['filters', index, 'field']}
-            rules={[...rules.required]}
-            initialValue={filter.field}
-          >
+          <Form.Item rules={[...rules.required]}>
             <Select
               options={columns
                 .filter(
@@ -111,14 +109,15 @@ const RowFilter = (props: {
                 )
                 .map((item) => ({
                   key: item.dataIndex?.toString() ?? '',
-                  value: item.dataIndex?.toString() ?? '',
+                  value: Array.isArray(item.dataIndex)
+                    ? item.dataIndex.join('.')
+                    : item.dataIndex?.toString() ?? '',
                   label: item.title,
                 }))}
               value={filter.field?.toString()}
               onChange={(val) => {
                 const temp = { ...filter };
-                temp.field = val?.toString() ?? '';
-                temp.operator = undefined;
+                temp.field = val as string;
                 onChange(temp);
               }}
               placeholder="Thuộc tính"
@@ -127,47 +126,57 @@ const RowFilter = (props: {
         </Col>
 
         <Col span={24} md={12}>
-          <Form.Item name={['filters', index, 'operator']} rules={[...rules.required]}>
+          <Form.Item rules={[...rules.required]}>
             <Select
               options={operators.map((item) => ({
                 key: item,
                 value: item,
                 label: OperatorLabel[item],
               }))}
-              value={operatorSelected}
-              onChange={(val) => setOperatorSelected(val)}
+              value={filter.operator}
+              onChange={(val) => {
+                const temp = { ...filter };
+                temp.operator = val;
+                onChange(temp);
+              }}
               placeholder="Điều kiện"
             />
           </Form.Item>
         </Col>
 
-        <Col
-          span={24}
-          md={
-            operatorSelected === EOperatorType.BETWEEN ||
-            operatorSelected === EOperatorType.NOT_BETWEEN
-              ? 12
-              : 24
-          }
-        >
-          {operatorSelected === EOperatorType.INCLUDE ||
-          operatorSelected === EOperatorType.NOT_INCLUDE ? (
-            <Form.Item name={['filters', index, 'values']} rules={[...rules.required]}>
-              {renderDataComponent()}
-            </Form.Item>
-          ) : (
-            <Form.Item name={['filters', index, 'values', 0]} rules={[...rules.required]}>
-              {renderDataComponent()}
-            </Form.Item>
-          )}
-        </Col>
-        {operatorSelected === EOperatorType.BETWEEN ||
-        operatorSelected === EOperatorType.NOT_BETWEEN ? (
-          <Col span={24} md={12}>
-            <Form.Item name={['filters', index, 'values', 1]} rules={[...rules.required]}>
-              {renderDataComponent()}
-            </Form.Item>
-          </Col>
+        {!!filter.operator ? (
+          <>
+            <Col
+              span={24}
+              md={
+                filter.operator === EOperatorType.BETWEEN ||
+                filter.operator === EOperatorType.NOT_BETWEEN
+                  ? 12
+                  : 24
+              }
+            >
+              <Form.Item
+                name={
+                  filter.operator === EOperatorType.INCLUDE ||
+                  filter.operator === EOperatorType.NOT_INCLUDE
+                    ? ['filters', index, 'values']
+                    : ['filters', index, 'values', 0]
+                }
+                rules={[...rules.required]}
+              >
+                {renderDataComponent()}
+              </Form.Item>
+            </Col>
+
+            {filter.operator === EOperatorType.BETWEEN ||
+            filter.operator === EOperatorType.NOT_BETWEEN ? (
+              <Col span={24} md={12}>
+                <Form.Item name={['filters', index, 'values', 1]} rules={[...rules.required]}>
+                  {renderDataComponent()}
+                </Form.Item>
+              </Col>
+            ) : null}
+          </>
         ) : null}
       </Row>
     </Space>

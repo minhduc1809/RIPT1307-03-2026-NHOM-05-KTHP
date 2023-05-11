@@ -27,15 +27,17 @@ const ModalCustomFilter = (props: {
 
   useEffect(() => {
     setFiltersTemp(filters ?? []);
-    form.setFieldsValue({ filters });
-  }, [filters]);
+    if (visible) form.setFieldsValue({ filters });
+  }, [filters, visible]);
 
   const onFinish = (values: any) => {
     const filtered = values.filters
-      ?.filter((filter: TFilter<any>) => filter.values && Array.isArray(filter.values))
-      ?.map((filter: TFilter<any>) =>
-        Array.isArray(filter.values[0]) ? { ...filter, values: filter.values[0] } : filter,
-      );
+      ?.map((filter: TFilter<any>, index: number) => ({
+        ...filter,
+        ...filtersTemp[index],
+        values: Array.isArray(filter.values[0]) ? filter.values[0] : filter.values,
+      }))
+      ?.filter((filter: TFilter<any>) => filter.values && Array.isArray(filter.values));
     setFilters(filtered);
     setVisible(false);
   };
@@ -93,10 +95,10 @@ const ModalCustomFilter = (props: {
             danger
             icon={<CloseOutlined />}
             onClick={() => {
-              setFilters(undefined);
-              setFiltersTemp([]);
-              setVisible(false);
               form.resetFields();
+              setFiltersTemp([]);
+              setFilters(undefined);
+              setVisible(false);
             }}
           >
             Bỏ lọc
