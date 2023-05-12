@@ -84,12 +84,14 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
           .catch(() => {
             // Nếu ko thể swap token, có thể do token đã hết hạn, hoặc bị đăng xuất rồi
             if (window.location.pathname === '/user/login') {
+              auth.removeUser();
+            } else {
+              history.replace('/user/login');
               notification.warn({
                 message: 'Phiên đăng nhập đã hết hạn',
                 description: 'Vui lòng đăng nhập lại!',
               });
-              // auth.removeUser();
-            } else history.replace('/user/login');
+            }
             // Chỗ này mặc định sẽ về trang đăng nhập của web để thông báo Phiên đã hết hạn
             // Nếu muốn vào trang đăng nhập SSO luôn thì dùng auth.removeUser()
           });
