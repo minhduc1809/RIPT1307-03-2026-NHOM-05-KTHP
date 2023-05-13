@@ -1,7 +1,7 @@
 import { getInfo, swapToken } from '@/services/ant-design-pro/api';
 import axios from '@/utils/axios';
 import { ToolOutlined } from '@ant-design/icons';
-import { Button, Modal, Tooltip, message } from 'antd';
+import { Button, Modal, Tooltip, message, notification } from 'antd';
 import jwt_decode from 'jwt-decode';
 import { useEffect, useState } from 'react';
 import { hasAuthParams, useAuth } from 'react-oidc-context';
@@ -83,16 +83,15 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
           .then((newToken) => handleRole(newToken))
           .catch(() => {
             // Nếu ko thể swap token, có thể do token đã hết hạn, hoặc bị đăng xuất rồi
-            auth.signinRedirect();
-            // if (window.location.pathname === '/user/login') {
-            //   // auth.removeUser();
-            // } else {
-            //   // notification.warn({
-            //   //   message: 'Phiên đăng nhập đã hết hạn',
-            //   //   description: 'Vui lòng đăng nhập lại!',
-            //   // });
-            //   setTimeout(() => history.replace('/user/login'), 0);
-            // }
+            if (window.location.pathname === '/user/login') {
+              notification.warn({
+                message: 'Phiên đăng nhập đã hết hạn',
+                description: 'Đang chuyển hướng tới trang đăng nhập...',
+              });
+              setTimeout(() => auth.signinRedirect(), 1500);
+            } else {
+              history.replace('/user/login');
+            }
             // Chỗ này mặc định sẽ về trang đăng nhập của web để thông báo Phiên đã hết hạn
             // Nếu muốn vào trang đăng nhập SSO luôn thì dùng auth.removeUser()
           });
