@@ -3,6 +3,7 @@ import { Button, Upload, message, type UploadProps } from 'antd';
 import { type SizeType } from 'antd/lib/config-provider/SizeContext';
 import { useEffect, useState } from 'react';
 import './UploadAvatar.less';
+import { getNameFile } from '@/utils/utils';
 
 const UploadFile = (props: {
   fileList?: any[];
@@ -22,8 +23,12 @@ const UploadFile = (props: {
   const [fileList, setFileList] = useState<any[]>();
 
   useEffect(() => {
-    if (typeof value === 'string') setFileList([{ url: value }]);
-    else if (Array.isArray(value)) setFileList(value.map((url) => ({ url })));
+    // Single URL
+    if (typeof value === 'string') setFileList([{ url: value, name: getNameFile(value) }]);
+    // Array of URLs
+    else if (Array.isArray(value))
+      setFileList(value.map((url) => ({ url, name: getNameFile(url) })));
+    // Object of antd file upload
     else setFileList(props.fileList || (value && value.fileList) || []);
   }, [value, props.fileList]);
 
