@@ -300,6 +300,9 @@ const useInitModel = <T,>(
     getImportTemplateModel,
     postExecuteImpotModel,
     postValidateModel,
+    getByIdService,
+    getService,
+    getAllService,
   };
 };
 
