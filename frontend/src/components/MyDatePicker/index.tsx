@@ -6,17 +6,23 @@ import 'antd/es/date-picker/style/index.less';
 import type { PickerProps } from 'antd/lib/date-picker/generatePicker';
 
 const MyDatePicker = (
-  props: PickerProps<Moment> & {
+  props: Omit<PickerProps<Moment>, 'onChange'> & {
+    /**
+     * Format hiển thị, mặc định: DD/MM/YYYY
+     */
     format?: string;
     pickerStyle?: 'time' | 'date' | 'week' | 'month' | 'quarter' | 'year' | undefined;
+
+    /**
+     * Format lưu lại, mặc định: ISOString
+     */
     saveFormat?: string;
-    allowClear?: boolean;
     disabledDate?: (cur: string) => any;
     onChange?: (arg: string | null) => any;
   },
 ) => {
   const format = props?.format ?? 'DD/MM/YYYY';
-  const { saveFormat, pickerStyle, allowClear } = props;
+  const { saveFormat, pickerStyle, disabledDate } = props;
 
   const handleChange = (value: Moment | null) => {
     if (props.onChange)
@@ -37,9 +43,8 @@ const MyDatePicker = (
       picker={pickerStyle}
       locale={locale}
       value={objMoment}
-      allowClear={allowClear}
       onChange={handleChange}
-      disabledDate={props?.disabledDate}
+      disabledDate={disabledDate}
     />
   );
 };
