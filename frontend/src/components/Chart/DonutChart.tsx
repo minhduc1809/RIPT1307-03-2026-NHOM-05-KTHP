@@ -4,7 +4,7 @@ import { type DataChartType } from '.';
 import vi from './vi.json';
 
 const DonutChart = (props: DataChartType) => {
-  const { title, xAxis, yAxis, yLabel, height, colors } = props;
+  const { title, xAxis, yAxis, yLabel, height, colors, formatY } = props;
 
   const options = {
     chart: {
@@ -27,7 +27,7 @@ const DonutChart = (props: DataChartType) => {
     ],
     tooltip: {
       y: {
-        formatter: (val: number) => tienVietNam(val),
+        formatter: (val: number) => (formatY ? formatY(val) : tienVietNam(val)),
       },
     },
     colors,

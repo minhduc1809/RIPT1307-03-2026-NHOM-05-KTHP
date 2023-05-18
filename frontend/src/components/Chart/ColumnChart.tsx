@@ -4,7 +4,7 @@ import { type DataChartType } from '.';
 import vi from './vi.json';
 
 const ColumnChart = (props: DataChartType) => {
-  const { title, xAxis, yAxis: yAsis, yLabel, height, type } = props;
+  const { title, xAxis, yAxis, yLabel, height, type, formatY } = props;
 
   const options = {
     chart: {
@@ -46,7 +46,7 @@ const ColumnChart = (props: DataChartType) => {
     },
     yaxis: {
       labels: {
-        formatter: (val: number) => tienVietNam(val),
+        formatter: (val: number) => (formatY ? formatY(val) : tienVietNam(val)),
       },
     },
     xaxis: {
@@ -54,15 +54,15 @@ const ColumnChart = (props: DataChartType) => {
     },
     tooltip: {
       y: {
-        formatter: (val: number) => tienVietNam(val),
+        formatter: (val: number) => (formatY ? formatY(val) : tienVietNam(val)),
       },
     },
   };
 
   const series = [
     {
-      name: yLabel,
-      data: yAsis || [],
+      name: yLabel ?? 'mục',
+      data: yAxis || [],
       color: '#007EB9',
     },
   ];
