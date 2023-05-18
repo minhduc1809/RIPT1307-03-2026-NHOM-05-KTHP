@@ -20,7 +20,7 @@ export const AppModules: Record<string, Login.TModule> = {
   },
   [EModuleKey.CONG_CAN_BO]: {
     title: 'Cổng cán bộ',
-    url: 'https://vwa-connect.vercel.app/',
+    url: 'https://cong-can-bo-vwa.vercel.app/',
     icon: EModuleKey.CONG_CAN_BO + '.svg',
   },
   [EModuleKey.CORE]: {
@@ -45,7 +45,7 @@ export const AppModules: Record<string, Login.TModule> = {
   },
   [EModuleKey.VPS]: {
     title: 'Văn phòng số',
-    url: 'https://congtacsinhvien-vwa-aisoft.vercel.app/',
+    url: 'https://van-phong-so-vwa.vercel.app/',
     icon: EModuleKey.VPS + '.svg',
   },
   [EModuleKey.QLKH]: {
