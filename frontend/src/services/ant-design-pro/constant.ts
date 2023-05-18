@@ -12,7 +12,7 @@ export enum EModuleKey {
   QLKH = 'quan-ly-khoa-hoc',
 }
 
-export const AppModules: Record<string, Login.TModule> = {
+export const AppModules: Record<EModuleKey, Login.TModule> = {
   [EModuleKey.CONNECT]: {
     title: 'Cổng người học',
     url: 'https://vwa-connect.vercel.app/',
