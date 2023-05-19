@@ -208,13 +208,21 @@ const TableBase = (props: TableBaseProps) => {
   //#region Get Table Columns
   columns = columns.map((item) => ({
     ...item,
-    ...(item.sortable ? getSort(item.dataIndex) : {}),
+    ...(item.sortable && getSort(item.dataIndex)),
     ...(item.filterType === 'string'
       ? getColumnSearchProps(item.dataIndex, item.title)
-      : undefined),
-    ...(item.filterType === 'select'
+      : item.filterType === 'select'
       ? getFilterColumnProps(item.dataIndex, item.filterData)
       : undefined),
+    children: item.children?.map((child) => ({
+      ...child,
+      ...(child.sortable && getSort(child.dataIndex)),
+      ...(child.filterType === 'string'
+        ? getColumnSearchProps(child.dataIndex, child.title)
+        : child.filterType === 'select'
+        ? getFilterColumnProps(child.dataIndex, child.filterData)
+        : undefined),
+    })),
   }));
 
   const finalColumns = columns?.filter((item) => item?.hide !== true);

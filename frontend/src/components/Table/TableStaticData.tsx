@@ -92,11 +92,19 @@ const TableStaticData = (props: TableStaticProps) => {
     ?.filter((item) => !item.hide)
     ?.map((item) => ({
       ...item,
-      ...(item?.filterType === 'string'
-        ? getColumnSearchProps(item.dataIndex)
-        : item?.sortable
-        ? { sorter: (a: any, b: any) => a[item.dataIndex as string] - b[item.dataIndex as string] }
-        : {}),
+      ...(item?.filterType === 'string' && getColumnSearchProps(item.dataIndex)),
+      ...(item?.sortable && {
+        sorter: (a: any, b: any) =>
+          a[item.dataIndex as string] > b[item.dataIndex as string] ? 1 : -1,
+      }),
+      children: item.children?.map((child) => ({
+        ...child,
+        ...(child?.filterType === 'string' && getColumnSearchProps(child.dataIndex)),
+        ...(child?.sortable && {
+          sorter: (a: any, b: any) =>
+            a[child.dataIndex as string] > b[child.dataIndex as string] ? 1 : -1,
+        }),
+      })),
     }));
 
   if (addStt)
@@ -105,6 +113,7 @@ const TableStaticData = (props: TableStaticProps) => {
       render: (s: any, r: any, index: any) => index + 1 + (page - 1) * limit,
       align: 'center',
       width: 60,
+      children: undefined,
     });
 
   return (
