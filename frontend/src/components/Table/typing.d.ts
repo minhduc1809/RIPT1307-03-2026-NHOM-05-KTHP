@@ -2,11 +2,11 @@
 import type { ColumnType as ICol } from 'rc-table/lib/interface';
 import { type EOperatorType } from './constant';
 
-export interface IColumn<T> extends Omit<ICol<T>, 'dataIndex' | 'width'> {
+export interface IColumn<T> extends Omit<ICol<T>, 'dataIndex' | 'width' | 'children'> {
   /** Ẩn cột khi hiển thị trên table, nhưng vẫn có trong filter, import, export */
   hide?: boolean;
 
-  children?: IColumn[];
+  children?: IColumn<T>[];
 
   /** Cho phép sắp xếp hay ko, thường chỉ nên cho sắp xêp các trường: Mã, tên (ngắn), số lượng, ngày */
   sortable?: boolean;
