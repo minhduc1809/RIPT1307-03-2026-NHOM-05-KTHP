@@ -11,4 +11,5 @@ export type DataChartType = {
   type?: 'bar' | 'area';
   colors?: string[];
   formatY?: (val: number) => string;
+  showTotal?: boolean;
 };
