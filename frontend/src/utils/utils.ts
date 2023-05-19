@@ -1,6 +1,7 @@
 import { message } from 'antd';
 import type { Moment } from 'moment';
 import moment from 'moment';
+import * as XLSX from 'xlsx';
 
 const reg =
   /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -387,4 +388,22 @@ export const chuanHoaObject = (obj: any) => {
   if (typeof obj !== 'object') return trim(obj);
   Object.keys(obj).forEach((key) => (obj[key] = chuanHoaObject(obj[key])));
   return obj;
+};
+
+/**
+ * Tạo và tài về file dữ liệu Excel
+ * @param data Mảng của mảng dữ liệu. Ví dụ: [ ["Mã", "Tên"] , ["M01", "T01"] , ["M02", "T02"] ]
+ * @param fileName File name bao gồm cả .xlsx
+ * @param sheetName Mặc định Sheet1
+ */
+export const genExcelFile = (
+  data: (string | number | null | undefined)[][],
+  fileName: string,
+  sheetName?: string,
+) => {
+  const workbook = XLSX.utils.book_new();
+  const worksheet = XLSX.utils.aoa_to_sheet(data);
+  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName ?? 'Sheet1');
+
+  XLSX.writeFile(workbook, fileName || 'Danh sách.xlsx');
 };
