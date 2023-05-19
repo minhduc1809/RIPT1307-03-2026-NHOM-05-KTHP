@@ -43,6 +43,10 @@ const DonutChart = (props: DataChartType) => {
             total: {
               show: showTotal,
               label: 'Tổng số',
+              formatter: (w: any) => {
+                const val = w.globals.seriesTotals.reduce((a: number, b: number) => a + b, 0);
+                return formatY ? formatY(val) : tienVietNam(val);
+              },
             },
           },
         },
