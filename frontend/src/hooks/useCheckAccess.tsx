@@ -1,7 +1,7 @@
 import { currentRole } from '@/utils/ip';
 import { useModel } from 'umi';
 
-const useCheckAccess = (code: string) => {
+const useCheckAccess = (code: string): boolean => {
   const { initialState } = useModel('@@initialState');
   const scopes = initialState?.authorizedPermissions?.find(
     (item) => item.rsname === currentRole,

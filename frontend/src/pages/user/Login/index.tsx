@@ -7,7 +7,6 @@ import { Button, Form, Input, Tabs, message } from 'antd';
 import React, { useRef, useState } from 'react';
 // import OneSignal from 'react-onesignal';
 import { keycloakAuthority } from '@/utils/ip';
-import jwt_decode from 'jwt-decode';
 import Recaptcha from 'react-recaptcha';
 import { history, useIntl, useModel } from 'umi';
 import styles from './index.less';
@@ -38,12 +37,12 @@ const Login: React.FC = () => {
     localStorage.setItem('token', role?.access_token);
     localStorage.setItem('refreshToken', role?.refresh_token);
 
-    const decoded = jwt_decode(role?.access_token) as any;
+    // const decoded = jwt_decode(role?.access_token) as any;
     const info = await getInfo();
     setInitialState({
       ...initialState,
       currentUser: info?.data?.data,
-      authorizedPermissions: decoded?.authorization?.permissions,
+      // authorizedPermissions: decoded?.authorization?.permissions,
     });
 
     const defaultloginSuccessMessage = intl.formatMessage({

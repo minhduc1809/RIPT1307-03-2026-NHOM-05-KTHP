@@ -1,12 +1,13 @@
-import { getInfo, swapToken } from '@/services/ant-design-pro/api';
+import { getInfo, getPermission } from '@/services/ant-design-pro/api';
+import { type Login } from '@/services/ant-design-pro/typings';
 import axios from '@/utils/axios';
 import { ToolOutlined } from '@ant-design/icons';
 import { Button, Modal, Tooltip, message, notification } from 'antd';
-import jwt_decode from 'jwt-decode';
 import { useEffect, useState } from 'react';
 import { hasAuthParams, useAuth } from 'react-oidc-context';
 import { history, useIntl, useModel } from 'umi';
 import FormPostIssue from './Form';
+import { currentRole } from '@/utils/ip';
 
 const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
   const { setInitialState, initialState } = useModel('@@initialState');
@@ -29,59 +30,68 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
   /**
    * Xử lý token, get info sau khi đăng nhập
    */
-  const handleRole = async (role: { access_token: string; refresh_token: string }) => {
-    if (!role || !role.access_token || !role.refresh_token) return;
-    // Set localStorage for axios configurations
-    // localStorage.setItem('token', role?.access_token);
-    // localStorage.setItem('refreshToken', role?.refresh_token);
+  const handleRole = async (role: { access_token?: string; permissions: Login.IPermission[] }) => {
+    if (!role || !role.access_token) return;
+    localStorage.removeItem('failed');
     handleAxios(role?.access_token);
 
-    const decoded = jwt_decode(role?.access_token) as any;
     let curUser = initialState?.currentUser;
     if (!curUser) curUser = (await getInfo())?.data?.data;
     setInitialState({
       ...initialState,
       currentUser: curUser,
-      authorizedPermissions: decoded?.authorization?.permissions,
+      authorizedPermissions: role.permissions,
     });
+    console.log('🚀 ~ 45 ~ permissions:', role.permissions);
 
+    if (
+      currentRole &&
+      role.permissions.length &&
+      !role.permissions.find((item) => item.rsname === currentRole)
+    )
+      history.replace('/403');
     // Callback Đăng nhập từ Trang chủ hoặc từ Login
-    if (window.location.pathname === '/' || window.location.pathname === '/user/login') {
+    else if (window.location.pathname === '/' || window.location.pathname === '/user/login') {
       const defaultloginSuccessMessage = intl.formatMessage({
         id: 'pages.login.success',
         defaultMessage: 'success',
       });
       message.success(defaultloginSuccessMessage);
-      history.push('/dashboard');
-    }
+      history.replace('/dashboard');
+    } else if (hasAuthParams())
+      // Tới trang không có query để load lại dữ liệu
+      history.replace(window.location.pathname);
   };
 
   /**
-   * Swap token để lấy token mới, bao gồm cả thông tin permissions
+   * Lấy thông tin permissions
    * @param token
    * @returns
    */
-  const getSwapToken = async (token: { access_token: string }) => {
+  const getSwapToken = async (token: { access_token: string }): Promise<Login.IPermission[]> => {
     if (token?.access_token) {
       handleAxios(token.access_token);
-      const res = await swapToken();
+      const res = await getPermission();
       if (res && res?.data) return res.data;
     }
     return Promise.reject('Invalid token');
   };
 
   /**
-   * Automatically sign-in
+   * Automatically sign-in in first load
    */
   useEffect(() => {
     if (!auth.activeNavigator && !auth.isLoading) {
-      if (!hasAuthParams() && !auth.isAuthenticated)
-        // Nếu chưa đăng nhập thì chuyển đến màn đăng nhập của keyloak luôn
-        auth.signinRedirect();
-      else
-        getSwapToken({ access_token: auth.user?.access_token ?? '' })
-          .then((newToken) => handleRole(newToken))
+      // Nếu chưa đăng nhập thì chuyển đến màn đăng nhập của keyloak luôn
+      if (!hasAuthParams() && !auth.isAuthenticated) {
+        const autoFailed = localStorage.getItem('failed');
+        if (!autoFailed || window.location.pathname !== '/user/login') auth.signinRedirect(); // Tránh load nhiều lần
+        console.log('1');
+      } else if (auth.user?.access_token) {
+        getSwapToken({ access_token: auth.user.access_token })
+          .then((permissions) => handleRole({ access_token: auth.user?.access_token, permissions }))
           .catch(() => {
+            localStorage.setItem('failed', '1');
             // Nếu ko thể swap token, có thể do token đã hết hạn, hoặc bị đăng xuất rồi
             if (window.location.pathname === '/user/login') {
               notification.warn({
@@ -92,11 +102,11 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
             } else {
               history.replace('/user/login');
             }
-            // Chỗ này mặc định sẽ về trang đăng nhập của web để thông báo Phiên đã hết hạn
-            // Nếu muốn vào trang đăng nhập SSO luôn thì dùng auth.removeUser()
           });
+      } else if (window.location.pathname === '/') history.replace('/user/login');
     }
-  }, [auth.isAuthenticated, auth.activeNavigator, auth.isLoading, auth.user?.access_token]);
+    console.log(auth.isAuthenticated, auth.activeNavigator, auth.isLoading); // Đừng bỏ đi
+  }, [auth.isAuthenticated, auth.activeNavigator, auth.isLoading]);
 
   return (
     <>
