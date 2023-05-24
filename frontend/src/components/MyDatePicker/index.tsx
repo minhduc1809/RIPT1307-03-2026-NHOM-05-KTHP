@@ -1,9 +1,9 @@
-import DatePicker from 'antd/lib/date-picker/index';
-import moment from 'moment';
-import type { Moment } from 'moment';
+import { DatePicker } from 'antd';
 import locale from 'antd/es/date-picker/locale/vi_VN';
 import 'antd/es/date-picker/style/index.less';
 import type { PickerProps } from 'antd/lib/date-picker/generatePicker';
+import type { Moment } from 'moment';
+import moment from 'moment';
 
 const MyDatePicker = (
   props: Omit<PickerProps<Moment>, 'onChange'> & {
@@ -12,6 +12,21 @@ const MyDatePicker = (
      */
     format?: string;
     pickerStyle?: 'time' | 'date' | 'week' | 'month' | 'quarter' | 'year' | undefined;
+    showTime?:
+      | boolean
+      | {
+          format?: string;
+          showNow?: boolean;
+          showHour?: boolean;
+          showMinute?: boolean;
+          showSecond?: boolean;
+          use12Hours?: boolean;
+          hourStep?: number;
+          minuteStep?: number;
+          secondStep?: number;
+        };
+    allowClear?: boolean;
+    disabled?: boolean;
 
     /**
      * Format lưu lại, mặc định: ISOString
@@ -22,7 +37,7 @@ const MyDatePicker = (
   },
 ) => {
   const format = props?.format ?? 'DD/MM/YYYY';
-  const { saveFormat, pickerStyle, disabledDate } = props;
+  const { saveFormat, pickerStyle, disabledDate, showTime, allowClear, disabled } = props;
 
   const handleChange = (value: Moment | null) => {
     if (props.onChange)
@@ -45,6 +60,9 @@ const MyDatePicker = (
       value={objMoment}
       onChange={handleChange}
       disabledDate={disabledDate}
+      showTime={showTime}
+      allowClear={allowClear}
+      disabled={disabled}
     />
   );
 };
