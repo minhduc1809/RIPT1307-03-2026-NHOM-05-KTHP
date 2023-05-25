@@ -5,7 +5,7 @@ import vi from './vi.json';
 import _ from 'lodash';
 
 const DonutChart = (props: DataChartType) => {
-  const { xAxis, yAxis, height, colors, formatY, showTotal } = props;
+  const { xAxis, yAxis, height, colors, formatY, showTotal, width } = props;
 
   const options = {
     chart: {
@@ -57,7 +57,13 @@ const DonutChart = (props: DataChartType) => {
   const series = yAxis || [];
 
   return (
-    <Chart options={options} series={series} type="donut" height={height ?? 350} width={600} />
+    <Chart
+      options={options}
+      series={series}
+      type="donut"
+      height={height ?? 350}
+      width={width ?? 500}
+    />
   );
 };
 

@@ -190,9 +190,7 @@ const useInitModel = <T,>(
       if (newPage > maxPage) {
         newPage = maxPage || 1;
         setPage(newPage);
-      }
-
-      if (getData) getData();
+      } else if (getData) getData();
       else getModel(undefined, undefined, undefined, newPage);
 
       return res.data;
