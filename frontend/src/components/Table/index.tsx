@@ -357,13 +357,15 @@ const TableBase = (props: TableBaseProps) => {
             },
           }}
           onChange={onChange}
-          dataSource={model?.[dataState || 'danhSach']?.map((item: any, index: number) => {
-            return {
-              ...item,
-              index: index + 1 + (page - 1) * limit * (pageable === false ? 0 : 1),
-              key: index,
-            };
-          })}
+          dataSource={model?.[dataState || 'danhSach']?.map((item: any, index: number) => ({
+            ...item,
+            index: index + 1 + (page - 1) * limit * (pageable === false ? 0 : 1),
+            key: index,
+            children:
+              item?.children && Array.isArray(item.children) && item.children.length
+                ? item.children
+                : undefined,
+          }))}
           columns={finalColumns as any[]}
           {...otherProps}
         />
