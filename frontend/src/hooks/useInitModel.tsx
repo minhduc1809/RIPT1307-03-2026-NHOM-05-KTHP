@@ -185,10 +185,10 @@ const useInitModel = <T,>(
       const res = await deleteService(id);
       message.success('Xóa thành công');
 
-      const maxPage = Math.ceil((total - 1) / limit);
+      const maxPage = Math.ceil((total - 1) / limit) || 1;
       let newPage = page;
       if (newPage > maxPage) {
-        newPage = maxPage || 1;
+        newPage = maxPage;
         setPage(newPage);
       } else if (getData) getData();
       else getModel(undefined, undefined, undefined, newPage);
