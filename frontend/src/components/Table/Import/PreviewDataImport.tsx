@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import TableStaticData from '../TableStaticData';
 import { type IColumn } from '../typing';
+import moment from 'moment';
 
 const PreviewDataImport = (props: { onChange: () => void; onBack: any }) => {
   const { onChange, onBack } = props;
@@ -48,6 +49,9 @@ const PreviewDataImport = (props: { onChange: () => void; onBack: any }) => {
               break;
             case 'String':
               temp[col.field] = content?.toString();
+              break;
+            case 'Date':
+              temp[col.field] = content ? moment(content, 'DD/MM/YYYY').toISOString() : undefined;
               break;
             default:
               temp[col.field] = content;

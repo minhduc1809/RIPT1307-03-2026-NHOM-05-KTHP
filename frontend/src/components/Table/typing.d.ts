@@ -147,7 +147,7 @@ export type TImportHeader = {
   type: TImportDataType;
 };
 
-export type TImportDataType = 'String' | 'Number' | 'Boolean';
+export type TImportDataType = 'String' | 'Number' | 'Boolean' | 'Date';
 
 export type TImportResponse = {
   error: boolean;
