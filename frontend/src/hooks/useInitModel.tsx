@@ -201,6 +201,12 @@ const useInitModel = <T,>(
     }
   };
 
+  const handleEdit = (rec: T) => {
+    setRecord(rec);
+    setVisibleForm(true);
+    setEdit(true);
+  };
+
   /**
    * Lấy header cho chức năng import
    * @returns {any}
@@ -294,6 +300,7 @@ const useInitModel = <T,>(
     setDanhSach,
     record,
     setRecord,
+    handleEdit,
     getImportHeaderModel,
     getImportTemplateModel,
     postExecuteImpotModel,
