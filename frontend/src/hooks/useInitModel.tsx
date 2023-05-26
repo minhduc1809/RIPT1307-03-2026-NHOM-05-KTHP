@@ -57,7 +57,7 @@ const useInitModel = <T,>(
    * @returns {any}
    */
   const getModel = async (
-    paramCondition?: any,
+    paramCondition?: Partial<T>,
     filterParams?: TFilter<T>[],
     sortParam?: { [k in keyof T]: 1 | -1 },
     paramPage?: number,
@@ -96,8 +96,8 @@ const useInitModel = <T,>(
 
   const getAllModel = async (
     isSetRecord?: boolean,
-    sortParam?: any,
-    conditionParam?: any,
+    sortParam?: { [k in keyof T]: 1 | -1 },
+    conditionParam?: Partial<T>,
     filterParam?: TFilter<T>[],
   ): Promise<T[]> => {
     setLoading(true);
