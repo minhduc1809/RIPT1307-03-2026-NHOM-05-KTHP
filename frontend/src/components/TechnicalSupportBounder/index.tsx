@@ -32,7 +32,6 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
    */
   const handleRole = async (role: { access_token?: string; permissions: Login.IPermission[] }) => {
     if (!role || !role.access_token) return;
-    localStorage.removeItem('failed');
     handleAxios(role?.access_token);
 
     let curUser = initialState?.currentUser;
@@ -42,8 +41,8 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
       currentUser: curUser,
       authorizedPermissions: role.permissions,
     });
-    console.log('🚀 ~ 45 ~ permissions:', role.permissions);
 
+    localStorage.removeItem('failed');
     if (
       currentRole &&
       role.permissions.length &&
@@ -82,26 +81,29 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
    */
   useEffect(() => {
     if (!auth.activeNavigator && !auth.isLoading) {
+      const autoFailed = localStorage.getItem('failed');
       // Nếu chưa đăng nhập thì chuyển đến màn đăng nhập của keyloak luôn
       if (!hasAuthParams() && !auth.isAuthenticated) {
-        const autoFailed = localStorage.getItem('failed');
+        console.log('1', autoFailed);
         if (!autoFailed || window.location.pathname !== '/user/login') auth.signinRedirect(); // Tránh load nhiều lần
-        console.log('1');
       } else if (auth.user?.access_token) {
         getSwapToken({ access_token: auth.user.access_token })
           .then((permissions) => handleRole({ access_token: auth.user?.access_token, permissions }))
           .catch(() => {
-            localStorage.setItem('failed', '1');
             // Nếu ko thể swap token, có thể do token đã hết hạn, hoặc bị đăng xuất rồi
-            if (window.location.pathname === '/user/login') {
-              notification.warn({
-                message: 'Phiên đăng nhập đã hết hạn',
-                description: 'Đang chuyển hướng tới trang đăng nhập...',
-              });
-              setTimeout(() => auth.signinRedirect(), 1500);
-            } else {
-              history.replace('/user/login');
-            }
+            if (!autoFailed)
+              if (window.location.pathname === '/user/login') {
+                notification.warn({
+                  message: 'Phiên làm việc đã hết hạn',
+                  description: 'Đang chuyển hướng tới trang đăng nhập...',
+                });
+                setTimeout(() => {
+                  localStorage.setItem('failed', '1');
+                  auth.signinRedirect();
+                }, 1500);
+              } else {
+                history.replace('/user/login');
+              }
           });
       } else if (window.location.pathname === '/') history.replace('/user/login');
     }
