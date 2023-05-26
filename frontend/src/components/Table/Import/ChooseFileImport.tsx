@@ -97,7 +97,7 @@ const ChooseFileImport = (props: { onChange: () => void; onCancel: any; getTempl
               onChange={onChangeUpload}
               accept=".xls, .xlsx"
               drag
-              draggerDescription="Chọn tập tin dữ liệu để nhập vào hệ thống"
+              buttonDescription="Chọn tập tin dữ liệu để nhập vào hệ thống"
             />
           </Form.Item>
         </Col>

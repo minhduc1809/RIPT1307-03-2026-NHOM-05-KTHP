@@ -3,14 +3,18 @@ import { Button, Col, Row, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import TableStaticData from '../TableStaticData';
-import { type IColumn } from '../typing';
+import { type TImportHeader, type IColumn } from '../typing';
 import moment from 'moment';
 
-const PreviewDataImport = (props: { onChange: () => void; onBack: any }) => {
-  const { onChange, onBack } = props;
-  const { importHeaders, matchedColumns, fileData, setDataImport, dataImport, startLine } =
-    useModel('import');
+const PreviewDataImport = (props: {
+  onChange: () => void;
+  onBack: any;
+  importHeaders: TImportHeader[];
+}) => {
+  const { onChange, onBack, importHeaders } = props;
+  const { matchedColumns, fileData, setDataImport, dataImport, startLine } = useModel('import');
   const [loading, setLoading] = useState(false);
+
   const columns: IColumn<any>[] = [
     {
       dataIndex: 'row',

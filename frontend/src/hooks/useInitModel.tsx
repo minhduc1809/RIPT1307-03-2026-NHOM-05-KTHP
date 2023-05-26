@@ -15,7 +15,7 @@ import { type TImportHeader, type TFilter, type TImportResponse } from '@/compon
 const useInitModel = <T,>(
   url: string,
   fieldNameCondtion?: 'condition' | 'cond',
-  initCondition?: { [k in keyof T]?: any },
+  initCondition?: Partial<T>,
   ipService?: string,
   initSort?: { [k in keyof T]?: 1 | -1 },
 ) => {
@@ -31,6 +31,7 @@ const useInitModel = <T,>(
   const [edit, setEdit] = useState<boolean>(false);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
+  const [importHeaders, setImportHeaders] = useState<TImportHeader[]>([]); // Import header lấy từ API
 
   const {
     getAllService,
@@ -214,6 +215,7 @@ const useInitModel = <T,>(
   const getImportHeaderModel = async (): Promise<TImportHeader[]> => {
     try {
       const res = await getImportHeaders();
+      setImportHeaders(res.data?.data ?? []);
       return res.data?.data ?? [];
     } catch (err) {
       return Promise.reject(err);
@@ -300,6 +302,8 @@ const useInitModel = <T,>(
     setDanhSach,
     record,
     setRecord,
+    importHeaders,
+    setImportHeaders,
     handleEdit,
     getImportHeaderModel,
     getImportTemplateModel,

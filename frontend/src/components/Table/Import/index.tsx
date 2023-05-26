@@ -1,7 +1,6 @@
 import { Empty, Modal, Steps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import { type TImportHeader } from '../typing';
 import ChooseFileImport from './ChooseFileImport';
 import MatchColumns from './MatchColumns';
 import PreviewDataImport from './PreviewDataImport';
@@ -15,14 +14,12 @@ const ModalImport = (props: {
   maskCloseableForm?: boolean;
 }) => {
   const { visible, onCancel, onOk, modelName, maskCloseableForm } = props;
-  const { setFileData, setMatchedColumns, setImportHeaders, setDataImport, importHeaders } =
-    useModel('import');
-  const { getImportHeaderModel, getImportTemplateModel } = useModel(modelName);
+  const { setFileData, setMatchedColumns, setDataImport } = useModel('import');
+  const { getImportHeaderModel, getImportTemplateModel, importHeaders } = useModel(modelName);
   const [currentStep, setCurrentStep] = useState(0);
 
   const getHeaders = () => {
-    if (getImportHeaderModel)
-      getImportHeaderModel().then((data: TImportHeader[]) => setImportHeaders(data));
+    if (getImportHeaderModel) getImportHeaderModel();
   };
 
   useEffect(() => {
@@ -77,11 +74,13 @@ const ModalImport = (props: {
                 setCurrentStep(0);
                 setMatchedColumns(undefined);
               }}
+              importHeaders={importHeaders}
             />
           ) : currentStep === 2 ? (
             <PreviewDataImport
               onChange={() => setCurrentStep(3)}
               onBack={() => setCurrentStep(1)}
+              importHeaders={importHeaders}
             />
           ) : (
             <ValidateDataImport

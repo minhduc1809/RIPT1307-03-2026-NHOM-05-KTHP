@@ -3,10 +3,15 @@ import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Row, Select, Space } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
+import { type TImportHeader } from '../typing';
 
-const MatchColumns = (props: { onChange: () => void; onBack: any }) => {
-  const { onChange, onBack } = props;
-  const { headLine, importHeaders, matchedColumns, setMatchedColumns } = useModel('import');
+const MatchColumns = (props: {
+  onChange: () => void;
+  onBack: any;
+  importHeaders: TImportHeader[];
+}) => {
+  const { onChange, onBack, importHeaders } = props;
+  const { headLine, matchedColumns, setMatchedColumns } = useModel('import');
   const [form] = Form.useForm();
   const fileTitles = Object.values(headLine ?? {}); // Các tiêu đề cột lấy từ file
 
