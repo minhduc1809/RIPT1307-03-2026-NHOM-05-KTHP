@@ -63,6 +63,7 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
   [EModuleKey.TC]: {
     title: 'Tài chính',
     clientId: 'vwa-tc',
+    url: 'https://tai-chinh-vwa.vercel.app/',
     icon: EModuleKey.TC + '.svg',
   },
 };
