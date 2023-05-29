@@ -156,6 +156,5 @@ export type TImportResponse = {
 
 export type TImportRowResponse = {
   index: number;
-  dataError?: string[];
-  typeError?: string[];
+  rowErrors?: string[];
 };

@@ -27,22 +27,16 @@ const ValidateDataImport = (props: { onChange: () => void; onBack: any; modelNam
       width: 120,
       align: 'center',
       render: (val, rec) =>
-        !!rec.dataError?.length || !!rec.typeError?.length ? (
+        !!rec.rowErrors?.length ? (
           <Tag color="red">{step === 0 ? 'Không hợp lệ' : 'Không thành công'}</Tag>
         ) : (
           <Tag color="green">{step === 0 ? 'Hợp lệ' : 'Thành công'}</Tag>
         ),
     },
     {
-      dataIndex: 'typeError',
-      title: 'Lỗi kiểu dữ liệu',
-      width: 200,
-      render: (val) => val?.join(', '),
-    },
-    {
-      dataIndex: 'dataError',
-      title: 'Lỗi dữ liệu',
-      width: 200,
+      dataIndex: 'rowErrors',
+      title: 'Thông tin lỗi',
+      width: 250,
       render: (val) => val?.join(', '),
     },
   ];
@@ -51,10 +45,7 @@ const ValidateDataImport = (props: { onChange: () => void; onBack: any; modelNam
     if (postValidateModel)
       postValidateModel(dataImport)
         .then((res: TImportResponse) => {
-          setErrorCount(
-            res.validate?.filter((item) => !!item.dataError?.length || !!item.typeError?.length)
-              .length,
-          );
+          setErrorCount(res.validate?.filter((item) => !!item.rowErrors?.length).length);
           setIsError(res.error);
           const temp = res.validate?.map((item) => ({ ...item, index: item.index + startLine }));
           setImportResponses(temp ?? []);
@@ -70,10 +61,7 @@ const ValidateDataImport = (props: { onChange: () => void; onBack: any; modelNam
     postExecuteImpotModel(dataImport)
       .then((res: TImportResponse) => {
         setStep(1);
-        setErrorCount(
-          res.validate?.filter((item) => !!item.dataError?.length || !!item.typeError?.length)
-            .length,
-        );
+        setErrorCount(res.validate?.filter((item) => !!item.rowErrors?.length).length);
         setIsError(res.error);
         const temp = res.validate?.map((item) => ({ ...item, index: item.index + startLine }));
         setImportResponses(temp ?? []);
