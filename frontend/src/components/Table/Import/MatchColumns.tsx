@@ -47,6 +47,8 @@ const MatchColumns = (props: {
                 style={{ width: '100%' }}
                 allowClear={!col.required}
                 placeholder="Cột thông tin trên tập dữ liệu"
+                optionFilterProp="label"
+                showSearch
               />
             </Form.Item>
           </Col>

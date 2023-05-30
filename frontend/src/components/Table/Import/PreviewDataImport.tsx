@@ -56,24 +56,24 @@ const PreviewDataImport = (props: {
           //   valid = false;
           //   return false;
           // }
-          if (content !== undefined || content !== '')
-            switch (col.type) {
-              case 'Boolean':
-                temp[col.field] = content === 'Có' || content === '1';
-                break;
-              case 'Number':
-                temp[col.field] = Number.parseFloat(content) || 0;
-                break;
-              case 'String':
-                temp[col.field] = content.toString();
-                break;
-              case 'Date':
-                temp[col.field] = moment(content, 'DD/MM/YYYY').toISOString();
-                break;
-              default:
-                temp[col.field] = content;
-                break;
-            }
+
+          switch (col.type) {
+            case 'Boolean':
+              temp[col.field] = content === 'Có' || content === '1';
+              break;
+            case 'Number':
+              temp[col.field] = content ? Number.parseFloat(content) || 0 : undefined;
+              break;
+            case 'String':
+              temp[col.field] = content?.toString();
+              break;
+            case 'Date':
+              temp[col.field] = content ? moment(content, 'DD/MM/YYYY').toISOString() : undefined;
+              break;
+            default:
+              temp[col.field] = content;
+              break;
+          }
           return true;
         });
 
@@ -101,7 +101,7 @@ const PreviewDataImport = (props: {
           data={dataImport ?? []}
           loading={loading}
           size="small"
-          otherProps={{ bordered: true }}
+          otherProps={{ bordered: true, rowKey: (rec: any) => rec.row }}
           hasTotal
         />
       </Col>
