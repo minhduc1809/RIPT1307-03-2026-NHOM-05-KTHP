@@ -1,10 +1,11 @@
 import { ArrowLeftOutlined, QuestionOutlined } from '@ant-design/icons';
-import { Button, Col, Row, Space } from 'antd';
+import { Button, Checkbox, Col, Row, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import TableStaticData from '../TableStaticData';
 import { type TImportHeader, type IColumn } from '../typing';
 import moment from 'moment';
+import ExpandText from '@/components/ExpandText';
 
 const PreviewDataImport = (props: {
   onChange: () => void;
@@ -25,7 +26,18 @@ const PreviewDataImport = (props: {
     ...importHeaders?.map((item) => ({
       dataIndex: item.field,
       title: item.label,
-      width: 120,
+      width: item.type === 'String' ? 120 : 90,
+      align: (item.type === 'String' ? 'left' : 'center') as any,
+      render: (val: any) =>
+        item.type === 'Boolean' ? (
+          <Checkbox checked={!!val} />
+        ) : item.type === 'Date' && val ? (
+          moment(val).format('DD/MM/YYYY')
+        ) : item.type === 'String' ? (
+          <ExpandText>{val}</ExpandText>
+        ) : (
+          val
+        ),
     })),
   ];
 
