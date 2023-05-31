@@ -112,6 +112,17 @@ export type TableBaseProps = {
 
   /** Có thêm cột STT ko? Mặc định: Có */
   addStt?: boolean;
+
+  /** Có hiển thị thị kéo thả sắp xêp hàng ko? Mặc định: Không */
+  rowSortable?: boolean;
+
+  /**
+   * Sự kiện khi hàng được kéo đến vị trí mới
+   * @param record Record ứng với hàng được kéo thả
+   * @param newIndex Vị trí mới được kéo đến: 0 -> (limit-1)
+   * @returns
+   */
+  onSortEnd?: (record: any, newIndex: number) => void;
 };
 
 export type TFilter<T> = {
