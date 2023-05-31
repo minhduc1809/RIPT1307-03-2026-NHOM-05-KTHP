@@ -50,6 +50,7 @@ const PreviewDataImport = (props: {
       setLoading(true);
       const tempData: any = [];
       let tmp;
+      let invalid = false;
 
       fileData?.forEach((row, index) => {
         const temp: any = { row: index + startLine };
@@ -63,31 +64,36 @@ const PreviewDataImport = (props: {
           // }
 
           if (content) {
-            switch (col.type) {
-              case 'Boolean':
-                temp[col.field] = content === 'Có' || content === '1' || content === 'x';
-                break;
-              case 'Number':
-                tmp = Number.parseFloat(content) || invalidText;
-                temp[col.field] = tmp;
-                if (tmp === invalidText) setHasInvalid(true);
-                break;
-              // case 'String':
-              //   temp[col.field] = content?.toString();
-              //   break;
-              case 'Date':
-                tmp =
-                  moment(content, 'DD/MM/YYYY').toISOString() ||
-                  moment(content, 'D/M/YYYY').toISOString() ||
-                  moment.unix(Number.parseInt(content)).toISOString() ||
-                  moment(content).toISOString() ||
-                  invalidText;
-                temp[col.field] = tmp;
-                if (tmp === invalidText) setHasInvalid(true);
-                break;
-              default:
-                temp[col.field] = content;
-                break;
+            try {
+              switch (col.type) {
+                case 'Boolean':
+                  temp[col.field] = content === 'Có' || content === '1' || content === 'x';
+                  break;
+                case 'Number':
+                  tmp = Number.parseFloat(content) || invalidText;
+                  temp[col.field] = tmp;
+                  invalid = tmp === invalidText;
+                  break;
+                // case 'String':
+                //   temp[col.field] = content?.toString();
+                //   break;
+                case 'Date':
+                  tmp =
+                    moment(content, 'DD/MM/YYYY').toISOString() ||
+                    moment(content, 'D/M/YYYY').toISOString() ||
+                    moment.unix(Number.parseInt(content) - 25569 * 86400).toISOString() ||
+                    moment(content).toISOString() ||
+                    invalidText;
+                  temp[col.field] = tmp;
+                  invalid = tmp === invalidText;
+                  break;
+                default:
+                  temp[col.field] = content;
+                  break;
+              }
+            } catch {
+              temp[col.field] = invalidText;
+              invalid = true;
             }
           }
           return true;
@@ -96,6 +102,7 @@ const PreviewDataImport = (props: {
         if (valid) tempData.push(temp);
       });
       setDataImport(tempData);
+      setHasInvalid(invalid);
       setLoading(false);
     }
   };
