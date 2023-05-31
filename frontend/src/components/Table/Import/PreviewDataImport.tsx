@@ -134,7 +134,7 @@ const PreviewDataImport = (props: {
             type="primary"
             onClick={() => onChange()}
             icon={<QuestionOutlined />}
-            disabled={!dataImport?.length}
+            disabled={!dataImport?.length || hasInvalid}
           >
             Kiểm tra dữ liệu
           </Button>
