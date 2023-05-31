@@ -14,7 +14,9 @@ const PreviewDataImport = (props: {
 }) => {
   const { onChange, onBack, importHeaders } = props;
   const { matchedColumns, fileData, setDataImport, dataImport, startLine } = useModel('import');
+  const [hasInvalid, setHasInvalid] = useState(false);
   const [loading, setLoading] = useState(false);
+  const invalidText = 'Dữ liệu không hợp lệ';
 
   const columns: IColumn<any>[] = [
     {
@@ -29,7 +31,9 @@ const PreviewDataImport = (props: {
       width: item.type === 'String' ? 120 : 90,
       align: (item.type === 'String' ? 'left' : 'center') as any,
       render: (val: any) =>
-        item.type === 'Boolean' ? (
+        val === invalidText ? (
+          <i style={{ color: 'red' }}>{val}</i>
+        ) : item.type === 'Boolean' ? (
           <Checkbox checked={!!val} />
         ) : item.type === 'Date' && val ? (
           moment(val).format('DD/MM/YYYY')
@@ -45,6 +49,7 @@ const PreviewDataImport = (props: {
     if (matchedColumns) {
       setLoading(true);
       const tempData: any = [];
+      let tmp;
 
       fileData?.forEach((row, index) => {
         const temp: any = { row: index + startLine };
@@ -63,13 +68,22 @@ const PreviewDataImport = (props: {
                 temp[col.field] = content === 'Có' || content === '1' || content === 'x';
                 break;
               case 'Number':
-                temp[col.field] = Number.parseFloat(content) || 0;
+                tmp = Number.parseFloat(content) || invalidText;
+                temp[col.field] = tmp;
+                if (tmp === invalidText) setHasInvalid(true);
                 break;
               // case 'String':
               //   temp[col.field] = content?.toString();
               //   break;
               case 'Date':
-                temp[col.field] = moment(content, 'DD/MM/YYYY').toISOString();
+                tmp =
+                  moment(content, 'DD/MM/YYYY').toISOString() ||
+                  moment(content, 'D/M/YYYY').toISOString() ||
+                  moment.unix(Number.parseInt(content)).toISOString() ||
+                  moment(content).toISOString() ||
+                  invalidText;
+                temp[col.field] = tmp;
+                if (tmp === invalidText) setHasInvalid(true);
                 break;
               default:
                 temp[col.field] = content;
@@ -94,7 +108,9 @@ const PreviewDataImport = (props: {
     <Row gutter={[12, 12]}>
       <Col span={24}>
         <div className="fw500">Danh sách dữ liệu từ tập tin</div>
-        {/* <i>Các dòng dữ liệu trống hoặc không thỏa mản yêu cầu bắt buộc đã bị loại bỏ</i> */}
+        {hasInvalid ? (
+          <i style={{ color: 'red' }}>Có cột dữ liệu không hợp lệ, vui lòng kiểm tra lại!</i>
+        ) : null}
       </Col>
 
       <Col span={24}>
