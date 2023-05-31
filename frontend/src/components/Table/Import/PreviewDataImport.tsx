@@ -81,7 +81,7 @@ const PreviewDataImport = (props: {
                   tmp =
                     moment(content, 'DD/MM/YYYY').toISOString() ||
                     moment(content, 'D/M/YYYY').toISOString() ||
-                    moment.unix(Number.parseInt(content) - 25569 * 86400).toISOString() ||
+                    moment.unix((Number.parseInt(content) - 25569) * 86400).toISOString() ||
                     moment(content).toISOString() ||
                     invalidText;
                   temp[col.field] = tmp;
