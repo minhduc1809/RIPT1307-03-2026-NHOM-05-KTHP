@@ -24,7 +24,7 @@ const ValidateDataImport = (props: { onChange: () => void; onBack: any; modelNam
     },
     {
       title: 'Trạng thái',
-      width: 120,
+      width: 100,
       align: 'center',
       render: (val, rec) =>
         !!rec.rowErrors?.length ? (
@@ -36,7 +36,7 @@ const ValidateDataImport = (props: { onChange: () => void; onBack: any; modelNam
     {
       dataIndex: 'rowErrors',
       title: 'Thông tin lỗi',
-      width: 250,
+      width: 300,
       render: (val) => val?.join(', '),
     },
   ];

@@ -51,28 +51,30 @@ const PreviewDataImport = (props: {
         const valid = true;
 
         importHeaders?.every((col) => {
-          const content = row[matchedColumns[col.field]];
+          const content = row[matchedColumns[col.field]]?.toString()?.trim();
           // if (col.required && !content) {
           //   valid = false;
           //   return false;
           // }
 
-          switch (col.type) {
-            case 'Boolean':
-              temp[col.field] = content === 'Có' || content === '1';
-              break;
-            case 'Number':
-              temp[col.field] = content ? Number.parseFloat(content) || 0 : undefined;
-              break;
-            case 'String':
-              temp[col.field] = content?.toString();
-              break;
-            case 'Date':
-              temp[col.field] = content ? moment(content, 'DD/MM/YYYY').toISOString() : undefined;
-              break;
-            default:
-              temp[col.field] = content;
-              break;
+          if (content) {
+            switch (col.type) {
+              case 'Boolean':
+                temp[col.field] = content === 'Có' || content === '1' || content === 'x';
+                break;
+              case 'Number':
+                temp[col.field] = Number.parseFloat(content) || 0;
+                break;
+              // case 'String':
+              //   temp[col.field] = content?.toString();
+              //   break;
+              case 'Date':
+                temp[col.field] = moment(content, 'DD/MM/YYYY').toISOString();
+                break;
+              default:
+                temp[col.field] = content;
+                break;
+            }
           }
           return true;
         });
