@@ -42,6 +42,7 @@ const TableLocalData = (props: {
         scroll={{ x: 1000 }}
         columns={columns.filter((item) => item.hide !== true) as any[]}
         dataSource={danhSach.map((item, index) => ({ ...item, index: index + 1 }))}
+        bordered
         {...props?.otherProps}
       />
       {Form && (

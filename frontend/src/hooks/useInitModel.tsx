@@ -60,7 +60,7 @@ const useInitModel = <T,>(
   const getModel = async (
     paramCondition?: Partial<T>,
     filterParams?: TFilter<T>[],
-    sortParam?: { [k in keyof T]: 1 | -1 },
+    sortParam?: { [k in keyof T]?: 1 | -1 },
     paramPage?: number,
     paramLimit?: number,
     path?: string,
@@ -97,7 +97,7 @@ const useInitModel = <T,>(
 
   const getAllModel = async (
     isSetRecord?: boolean,
-    sortParam?: { [k in keyof T]: 1 | -1 },
+    sortParam?: { [k in keyof T]?: 1 | -1 },
     conditionParam?: Partial<T>,
     filterParam?: TFilter<T>[],
   ): Promise<T[]> => {

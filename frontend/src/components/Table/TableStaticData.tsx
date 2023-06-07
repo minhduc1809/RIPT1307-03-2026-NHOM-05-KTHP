@@ -159,6 +159,7 @@ const TableStaticData = (props: TableStaticProps) => {
         loading={props?.loading}
         size={props.size}
         scroll={{ x: _.sum(columns.map((item) => item.width ?? 80)) }}
+        bordered
         {...props?.otherProps}
       />
       {Form && (
