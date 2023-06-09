@@ -1,6 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import type { TableProps } from 'antd';
 import { Button, Modal, Table } from 'antd';
+import _ from 'lodash';
 import { useModel } from 'umi';
 import { type IColumn } from './typing';
 
@@ -11,15 +12,25 @@ const TableLocalData = (props: {
   columns: IColumn<any>[];
   Form?: React.FC;
   hasCreateButton?: boolean;
-  addNewButton?: string;
+  addNewTitle?: string;
+  addStt?: boolean;
+  scroll?: number;
 }) => {
-  const { modelName, fieldName, columns, Form } = props;
+  const { modelName, fieldName, columns, Form, scroll, addStt } = props;
   const model = useModel(modelName);
   const danhSach: any[] = model[`danhSach${fieldName}`];
-  const setEdit = model[`setEdit${fieldName}`];
   const visibleForm = model[`visibleForm${fieldName}`];
   const setVisibleForm = model[`setVisibleForm${fieldName}`];
-  const setRecord = model[`setRecord${fieldName}`];
+  const setIndex = model[`setIndex${fieldName}`];
+
+  const finalColumns = columns?.filter((item) => item?.hide !== true);
+  if (addStt !== false)
+    finalColumns.unshift({
+      title: 'STT',
+      dataIndex: 'index',
+      align: 'center',
+      width: 60,
+    });
 
   return (
     <div>
@@ -31,20 +42,22 @@ const TableLocalData = (props: {
           type="primary"
           onClick={() => {
             setVisibleForm(true);
-            setEdit(false);
-            setRecord(undefined);
+            setIndex(undefined);
           }}
         >
-          {props.addNewButton ?? 'Thêm mới'}
+          {props.addNewTitle ?? 'Thêm mới'}
         </Button>
       )}
+
       <Table
-        scroll={{ x: 1000 }}
-        columns={columns.filter((item) => item.hide !== true) as any[]}
-        dataSource={danhSach.map((item, index) => ({ ...item, index: index + 1 }))}
+        size="small"
+        scroll={{ x: scroll ?? _.sum(finalColumns.map((item) => item.width ?? 80)) }}
+        columns={finalColumns as any[]}
+        dataSource={danhSach?.map((item, index) => ({ ...item, index: index + 1 }))}
         bordered
         {...props?.otherProps}
       />
+
       {Form && (
         <Modal
           destroyOnClose
