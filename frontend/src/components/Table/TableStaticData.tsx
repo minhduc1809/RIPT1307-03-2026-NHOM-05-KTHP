@@ -178,6 +178,7 @@ const TableStaticData = (props: TableStaticProps) => {
                 onCancel={() => {
                   if (setShowEdit) setShowEdit(false);
                 }}
+                {...props.formProps}
               />
             </Drawer>
           ) : (
@@ -195,6 +196,7 @@ const TableStaticData = (props: TableStaticProps) => {
                 onCancel={() => {
                   if (setShowEdit) setShowEdit(false);
                 }}
+                {...props.formProps}
               />
             </Modal>
           )}

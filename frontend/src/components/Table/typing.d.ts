@@ -138,6 +138,8 @@ export type TableStaticProps = {
 
   title?: string;
   Form?: any;
+  formProps?: any;
+
   showEdit?: boolean;
   setShowEdit?: (vi: boolean) => void;
   addStt?: boolean;
