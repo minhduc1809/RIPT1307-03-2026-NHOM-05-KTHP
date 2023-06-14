@@ -65,7 +65,11 @@ axios.interceptors.response.use(
         er?.errorDescription;
 
     const originalRequest = error.config;
-    if (!originalRequest?.data?.includes('silent'))
+    if (
+      typeof originalRequest?.data !== 'object' ||
+      !Object.keys(originalRequest?.data ?? {}).includes('silent') ||
+      !originalRequest?.data?.slient
+    )
       switch (error?.response?.status) {
         case 400:
           notification.error({

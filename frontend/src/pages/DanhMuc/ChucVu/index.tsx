@@ -1,10 +1,10 @@
 import TableBase from '@/components/Table';
 import { type IColumn } from '@/components/Table/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Button, Divider, Popconfirm, Tooltip } from 'antd';
+import { Button, Popconfirm, Tooltip } from 'antd';
+import moment from 'moment';
 import { useModel } from 'umi';
 import Form from './components/Form';
-import moment from 'moment';
 
 const ChucVuPage = () => {
   const { setEdit, setVisibleForm, setRecord, getModel, page, limit, deleteModel } =
@@ -44,23 +44,20 @@ const ChucVuPage = () => {
     {
       title: 'Thao tác',
       align: 'center',
-      width: 120,
+      width: 90,
       fixed: 'right',
       render: (record: ChucVu.IRecord) => (
         <>
           <Tooltip title="Chỉnh sửa">
-            <Button onClick={() => handleEdit(record)} type="primary" shape="circle">
-              <EditOutlined />
-            </Button>
+            <Button onClick={() => handleEdit(record)} type="link" icon={<EditOutlined />} />
           </Tooltip>
-          <Divider type="vertical" />
           <Tooltip title="Xóa">
             <Popconfirm
               onConfirm={() => deleteModel(record._id, getModel)}
               title="Bạn có chắc chắn muốn xóa chức vụ này?"
               placement="topLeft"
             >
-              <Button danger shape="circle" icon={<DeleteOutlined />} />
+              <Button danger type="link" icon={<DeleteOutlined />} />
             </Popconfirm>
           </Tooltip>
         </>

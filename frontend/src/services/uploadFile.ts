@@ -1,22 +1,18 @@
 import { ip3 } from '@/utils/ip';
-import axios from 'axios';
+import axios from '@/utils/axios';
 
-export const buildUpLoadFile = async (values: any, name: string) => {
-  if (values?.[name]?.fileList?.[0]) {
-    if (values?.[name]?.fileList?.[0]?.originFileObj) {
+const handleSingleFile = async (file: any): Promise<string | null> => {
+  if (file?.originFileObj) {
+    try {
       const response = await uploadFile({
-        file: values?.[name]?.fileList?.[0]?.originFileObj,
+        file: file?.originFileObj,
         public: '1',
       });
       return response?.data?.data?.url;
-      // return {
-      //   ...response?.data?.data?.file,
-      //   url: response?.data?.data?.url,
-      //   _id: response?.data?.data?.file?.id,
-      // };
-    } else return values?.[name]?.fileList?.[0]?.url;
-  }
-  return null;
+    } catch (er) {
+      return Promise.reject(er);
+    }
+  } else return file?.url || null;
 };
 
 export async function uploadFile(payload: { file: string | Blob; public: '1' | '0' }) {
@@ -26,18 +22,32 @@ export async function uploadFile(payload: { file: string | Blob; public: '1' | '
   return axios.post(`${ip3}/file`, form);
 }
 
-export async function uploadFileAndExportPdf(payload: {
-  file: string | Blob;
-  filename: string;
-  public: any;
-  exportPdf: '0' | '1';
-  loai: string;
-}) {
-  const form = new FormData();
-  form.append('file', payload?.file);
-  form.append('exportPdf', payload?.exportPdf);
-  form.append('filename', payload?.filename);
-  form.append('public', payload?.public);
-  form.append('loai', payload?.loai);
-  return axios.post(`${ip3}/file-object`, form);
-}
+/**
+ * Build upload file from values in form
+ * @param values: get from Form
+ * @param name: fieldName in Form is Upload
+ * @returns Url of file uploaded or NULL
+ */
+export const buildUpLoadFile = async (values: any, name: string): Promise<string | null> => {
+  if (values?.[name]?.fileList?.[0]) {
+    return handleSingleFile(values?.[name]?.fileList?.[0]);
+  }
+  return null;
+};
+
+/**
+ * Build upload multiple files from values in form
+ * @param values: get from Form
+ * @param name: fieldName in Form is Upload
+ * @returns Array Url of files uploaded or NULL
+ */
+export const buildUpLoadMultiFile = async (values: any, name: string): Promise<string[] | null> => {
+  if (
+    values?.[name]?.fileList &&
+    Array.isArray(values?.[name]?.fileList) &&
+    values?.[name]?.fileList?.length
+  ) {
+    return Promise.all(values?.[name]?.fileList.map((file: any) => handleSingleFile(file)));
+  }
+  return null;
+};
