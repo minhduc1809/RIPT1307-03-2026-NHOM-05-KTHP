@@ -18,7 +18,7 @@ const handleSingleFile = async (file: any): Promise<string | null> => {
 export async function uploadFile(payload: { file: string | Blob; public: '1' | '0' }) {
   const form = new FormData();
   form.append('file', payload?.file);
-  form.append('isPublic', payload?.public);
+  form.append('public', payload?.public);
   return axios.post(`${ip3}/file`, form);
 }
 
@@ -29,7 +29,8 @@ export async function uploadFile(payload: { file: string | Blob; public: '1' | '
  * @returns Url of file uploaded or NULL
  */
 export const buildUpLoadFile = async (values: any, name: string): Promise<string | null> => {
-  if (values?.[name]?.fileList?.[0]) {
+  if (typeof values?.[name] === 'string') return values?.[name];
+  else if (values?.[name]?.fileList?.[0]) {
     return handleSingleFile(values?.[name]?.fileList?.[0]);
   }
   return null;
@@ -42,7 +43,8 @@ export const buildUpLoadFile = async (values: any, name: string): Promise<string
  * @returns Array Url of files uploaded or NULL
  */
 export const buildUpLoadMultiFile = async (values: any, name: string): Promise<string[] | null> => {
-  if (
+  if (Array.isArray(values?.[name])) return values?.[name];
+  else if (
     values?.[name]?.fileList &&
     Array.isArray(values?.[name]?.fileList) &&
     values?.[name]?.fileList?.length
