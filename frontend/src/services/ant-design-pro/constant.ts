@@ -46,7 +46,7 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
   [EModuleKey.CTSV]: {
     title: 'Công tác sinh viên',
     clientId: 'vwa-ctsv',
-    url: 'https://congtacsinhvien-vwa-aisoft.vercel.app/',
+    url: 'https://ctsv-vwa.vercel.app/',
     icon: EModuleKey.CTSV + '.svg',
   },
   [EModuleKey.VPS]: {
