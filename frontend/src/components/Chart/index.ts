@@ -5,8 +5,8 @@ export * from './DonutChart';
 export type DataChartType = {
   title?: string;
   xAxis: string[];
-  yAxis: number[];
-  yLabel: string;
+  yAxis: number[][];
+  yLabel: string[];
   height?: number;
   width?: number;
   type?: 'bar' | 'area';
