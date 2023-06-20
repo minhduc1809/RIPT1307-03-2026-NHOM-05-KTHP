@@ -49,13 +49,14 @@ const useInitModel = <T,>(
   /**
    * Get Pageable Model
    * @date 2023-04-05
-   * @param {any} paramCondition?:any
-   * @param {any} filterParams?: Mảng các filters
-   * @param {any} sortParam?:{[k in key of T]: 1 | -1 }
-   * @param {any} paramPage?:number
-   * @param {any} paramLimit?:number
-   * @param {any} path?:string
-   * @returns {any}
+   * @param {any} paramCondition Condition khác
+   * @param {any} filterParams Các filters khác
+   * @param {any} sortParam Sort khác
+   * @param {any} paramPage Page khác
+   * @param {any} paramLimit Limit khác
+   * @param {any} path Đường dẫn (mặc định là `page`)
+   * @param {any} otherQuery Truy vấn thêm vào query
+   * @returns {any} Các IRecord
    */
   const getModel = async (
     paramCondition?: Partial<T>,
@@ -64,6 +65,7 @@ const useInitModel = <T,>(
     paramPage?: number,
     paramLimit?: number,
     path?: string,
+    otherQuery?: Record<string, any>,
   ): Promise<T[]> => {
     setLoading(true);
     const payload = {
@@ -78,6 +80,7 @@ const useInitModel = <T,>(
         ...(filters?.filter((item) => item.active)?.map(({ active, ...item }) => item) || []),
         ...(filterParams || []),
       ],
+      ...(otherQuery ?? {}),
     };
 
     try {
