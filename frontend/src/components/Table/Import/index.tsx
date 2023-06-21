@@ -12,8 +12,9 @@ const ModalImport = (props: {
   onOk: () => void;
   modelName: any;
   maskCloseableForm?: boolean;
+  extendData?: Record<string, string | number>;
 }) => {
-  const { visible, onCancel, onOk, modelName, maskCloseableForm } = props;
+  const { visible, onCancel, onOk, modelName, maskCloseableForm, extendData } = props;
   const { setFileData, setMatchedColumns, setDataImport } = useModel('import');
   const { getImportHeaderModel, getImportTemplateModel, importHeaders } = useModel(modelName);
   const [currentStep, setCurrentStep] = useState(0);
@@ -81,6 +82,7 @@ const ModalImport = (props: {
               onChange={() => setCurrentStep(3)}
               onBack={() => setCurrentStep(1)}
               importHeaders={importHeaders}
+              extendData={extendData}
             />
           ) : (
             <ValidateDataImport

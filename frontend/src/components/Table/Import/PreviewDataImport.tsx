@@ -11,8 +11,9 @@ const PreviewDataImport = (props: {
   onChange: () => void;
   onBack: any;
   importHeaders: TImportHeader[];
+  extendData?: Record<string, string | number>;
 }) => {
-  const { onChange, onBack, importHeaders } = props;
+  const { onChange, onBack, importHeaders, extendData } = props;
   const { matchedColumns, fileData, setDataImport, dataImport, startLine } = useModel('import');
   const [hasInvalid, setHasInvalid] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -53,7 +54,7 @@ const PreviewDataImport = (props: {
       let invalid = false;
 
       fileData?.forEach((row, index) => {
-        const temp: any = { row: index + startLine };
+        const temp: any = { ...(extendData ?? {}), row: index + startLine };
         const valid = true;
 
         importHeaders?.every((col) => {
