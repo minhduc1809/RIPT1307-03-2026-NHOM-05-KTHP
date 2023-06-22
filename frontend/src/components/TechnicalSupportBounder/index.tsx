@@ -110,6 +110,13 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
     console.log(auth.isAuthenticated, auth.activeNavigator, auth.isLoading); // Đừng bỏ đi
   }, [auth.isAuthenticated, auth.activeNavigator, auth.isLoading]);
 
+  /**
+   * Handle token changed, auto refresh token
+   */
+  useEffect(() => {
+    if (auth.user?.access_token) handleAxios(auth.user.access_token);
+  }, [auth.user?.access_token]);
+
   return (
     <>
       {props.children}
