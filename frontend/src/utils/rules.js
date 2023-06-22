@@ -66,7 +66,7 @@ const rules = {
     },
     {
       validator: (__, value, callback) => {
-        if (parseInt(value, 10) < min) callback('');
+        if (parseFloat(value) < min) callback('');
         callback();
       },
       message: `Giá trị nhỏ nhất: ${min}`,
