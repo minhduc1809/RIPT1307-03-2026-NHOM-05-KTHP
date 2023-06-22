@@ -114,7 +114,11 @@ const TableStaticData = (props: TableStaticProps) => {
       }),
       children: item.children?.map((child) => ({
         ...child,
-        ...(child?.filterType === 'string' && getColumnSearchProps(child.dataIndex)),
+        ...(child?.filterType === 'string'
+          ? getColumnSearchProps(child.dataIndex)
+          : child?.filterType === 'select'
+          ? getFilterColumnProps(child.dataIndex, child.filterData)
+          : undefined),
         ...(child?.sortable && {
           sorter: (a: any, b: any) =>
             a[child.dataIndex as string] > b[child.dataIndex as string] ? 1 : -1,
