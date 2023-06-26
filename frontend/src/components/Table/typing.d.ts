@@ -123,6 +123,8 @@ export type TableBaseProps = {
    * @returns
    */
   onSortEnd?: (record: any, newIndex: number) => void;
+
+  hideChildrenRows?: boolean;
 };
 
 export type TFilter<T> = {

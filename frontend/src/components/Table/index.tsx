@@ -411,7 +411,10 @@ const TableBase = (props: TableBaseProps) => {
             index: index + 1 + (page - 1) * limit * (pageable === false ? 0 : 1),
             key: index,
             children:
-              item?.children && Array.isArray(item.children) && item.children.length
+              !props.hideChildrenRows &&
+              item?.children &&
+              Array.isArray(item.children) &&
+              item.children.length
                 ? item.children
                 : undefined,
           }))}
