@@ -103,6 +103,7 @@ const useInitModel = <T,>(
     sortParam?: { [k in keyof T]?: 1 | -1 },
     conditionParam?: Partial<T>,
     filterParam?: TFilter<T>[],
+    pathParam?: string,
   ): Promise<T[]> => {
     setLoading(true);
     try {
@@ -111,7 +112,7 @@ const useInitModel = <T,>(
         sort: sortParam,
         filters: filterParam,
       };
-      const response = await getAllService(payload);
+      const response = await getAllService(payload, pathParam);
       const data: T[] = response?.data?.data ?? [];
       // if (sortParam) data.sort(sortParam);
       setDanhSach(data);

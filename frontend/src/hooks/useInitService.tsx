@@ -19,8 +19,8 @@ const useInitService = (url: string, ip?: string) => {
     return axios.delete(`${ip ?? ip3}/${url}/${id}`);
   };
 
-  const getAllService = (payload?: { condition?: any; sort?: any }) => {
-    return axios.get(`${ip ?? ip3}/${url}/many`, { params: payload });
+  const getAllService = (payload?: { condition?: any; sort?: any }, path?: string) => {
+    return axios.get(`${ip ?? ip3}/${url}/${path || 'many'}`, { params: payload });
   };
 
   const getByIdService = (id: string | number) => {
