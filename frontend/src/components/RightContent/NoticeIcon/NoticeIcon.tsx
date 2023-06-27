@@ -6,7 +6,7 @@ import HeaderDropdown from '../HeaderDropdown';
 import type { NoticeIconTabProps } from './NoticeList';
 import NoticeList from './NoticeList';
 import styles from './index.less';
-
+import { type ThongBao } from '@/services/ThongBao/typing';
 const { TabPane } = Tabs;
 
 export type NoticeIconProps = {
@@ -15,7 +15,7 @@ export type NoticeIconProps = {
   className?: string;
   loading?: boolean;
   onClear?: (tabName: string, tabKey: string) => void;
-  onItemClick?: (item: ThongBao.Record, tabProps: NoticeIconTabProps) => void;
+  onItemClick?: (item: ThongBao.IRecord, tabProps: NoticeIconTabProps) => void;
   onViewMore?: (tabProps: NoticeIconTabProps, e: MouseEvent) => void;
   onTabChange?: (tabTile: string) => void;
   style?: React.CSSProperties;
@@ -83,7 +83,6 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
   };
 
   const { count, bell } = props;
-
   const [visible, setVisible] = useMergedState<boolean>(false, {
     value: props.popupVisible,
     onChange: props.onPopupVisibleChange,
@@ -91,7 +90,7 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
 
   const trigger = (
     <Badge
-      count={count ? (count < 100 ? '99' : '99+') : undefined}
+      count={count ? (count < 100 ? count : '99+') : undefined}
       style={{ boxShadow: 'none' }}
       className={styles.badge}
     >
@@ -110,6 +109,7 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
       trigger={['click']}
       visible={visible}
       onVisibleChange={setVisible}
+      arrow
     >
       <Tooltip title="Thông báo" placement="bottom">
         {trigger}

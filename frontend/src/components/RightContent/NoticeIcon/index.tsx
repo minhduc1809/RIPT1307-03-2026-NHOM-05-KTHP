@@ -1,44 +1,11 @@
-/* eslint-disable no-underscore-dangle */
 import ViewThongBao from '@/pages/ThongBao/components/ViewThongBao';
-import { readAllNotification, readOneNotification } from '@/services/ThongBao/thongbao';
-import { Button, message, Modal } from 'antd';
-import moment from 'moment';
+import { readAllNotification, readOneNotification } from '@/services/ThongBao';
+import { Modal, message } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import NoticeIcon from './NoticeIcon';
 
-export type GlobalHeaderRightProps = {
-  fetchingNotices?: boolean;
-  onNoticeVisibleChange?: (visible: boolean) => void;
-  onNoticeClear?: (tabName?: string) => void;
-};
-
-const getNoticeData = (notices: ThongBao.Record[]): ThongBao.Record[] => {
-  if (!notices || notices.length === 0 || !Array.isArray(notices)) {
-    return [];
-  }
-
-  const newNotices = notices.map((notice) => {
-    const newNotice = { ...notice };
-
-    if (newNotice.createdAt) {
-      newNotice.datetime = moment(notice.createdAt as string)
-        .fromNow()
-        .replace('một', '1');
-    }
-
-    if (newNotice.id) {
-      newNotice.key = newNotice.id;
-    }
-
-    return newNotice;
-  });
-
-  return newNotices;
-};
-
 const NoticeIconView = () => {
-  const { initialState } = useModel('@@initialState');
   const {
     danhSachNoticeIcon,
     getThongBaoModel,
@@ -46,23 +13,17 @@ const NoticeIconView = () => {
     pageNoticeIcon,
     limitNoticeIcon,
     loading,
+    record,
+    setRecord,
   } = useModel('thongbao');
-  const { currentUser } = initialState || {};
-  const [notices, setNotices] = useState<ThongBao.Record[]>([]);
-  const [view, setView] = useState<boolean>(false);
+  const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
   const [visiblePopup, setVisiblePopup] = useState<boolean>(false);
-  const [record, setRecord] = useState<ThongBao.Record>();
 
   useEffect(() => {
     getThongBaoModel();
   }, [pageNoticeIcon, limitNoticeIcon]);
 
-  useEffect(() => {
-    setNotices(danhSachNoticeIcon);
-  }, [danhSachNoticeIcon]);
-
-  const noticeData = getNoticeData(notices);
-  const unreadMsg = noticeData?.filter((item) => item.unread);
+  const unreadMsg = danhSachNoticeIcon; //?.filter((item) => item.unread);
 
   const clearReadState = async () => {
     await readAllNotification();
@@ -77,9 +38,9 @@ const NoticeIconView = () => {
         count={unreadMsg.length}
         onItemClick={async (item) => {
           setRecord(item);
-          setView(true);
+          setVisibleDetail(true);
           setVisiblePopup(false);
-          await readOneNotification({ notificationId: item?._id });
+          // await readOneNotification({ notificationId: item?._id });
           getThongBaoModel();
         }}
         loading={loading}
@@ -93,37 +54,27 @@ const NoticeIconView = () => {
       >
         <NoticeIcon.Tab
           tabKey="notification"
-          count={currentUser && totalNoticeIcon}
-          list={noticeData}
+          count={totalNoticeIcon}
+          list={danhSachNoticeIcon}
           title="Thông báo"
           emptyText="Bạn đã xem tất cả thông báo"
         />
       </NoticeIcon>
 
       <Modal
-        footer={
-          <Button
-            onClick={() => {
-              setView(false);
-              setVisiblePopup(true);
-            }}
-          >
-            Đóng
-          </Button>
-        }
         width={800}
         bodyStyle={{ padding: 0 }}
         destroyOnClose
-        onCancel={() => {
-          setView(false);
-          setVisiblePopup(true);
-        }}
-        visible={view}
+        onCancel={() => setVisibleDetail(false)}
+        visible={visibleDetail}
+        okButtonProps={{ hidden: true }}
+        cancelText="Đóng"
       >
         <ViewThongBao
           record={record}
           afterViewDetail={() => {
-            setView(false);
+            setVisibleDetail(false);
+            setVisiblePopup(false);
           }}
         />
       </Modal>

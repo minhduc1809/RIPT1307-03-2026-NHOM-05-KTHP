@@ -1,3 +1,4 @@
+import { type ThongBao } from '@/services/ThongBao/typing';
 import { getNameFile } from '@/utils/utils';
 import { Avatar, Button, Card, Col, Row } from 'antd';
 import moment from 'moment';
@@ -47,14 +48,14 @@ export const OneSignalDataToPath = (oneSignalData: any, sinhVien: boolean, nhanV
   return path;
 };
 
-const ViewThongBao = (props: { record?: ThongBao.Record; afterViewDetail?: () => void }) => {
+const ViewThongBao = (props: { record?: ThongBao.IRecord; afterViewDetail?: () => void }) => {
   const access = useAccess();
   const { record, afterViewDetail } = props;
   const [pathname, setPathname] = useState('');
 
   useEffect(() => {
-    const path = OneSignalDataToPath(record?.oneSignalData, access.sinhVien, access.nhanVien);
-    setPathname(path);
+    // const path = OneSignalDataToPath(record?.oneSignalData, access.sinhVien, access.nhanVien);
+    // setPathname(path);
   }, [record?._id]);
 
   const redirectNotif = () => {
@@ -78,12 +79,9 @@ const ViewThongBao = (props: { record?: ThongBao.Record; afterViewDetail?: () =>
         }
       />
       <br />
-      <div
-        dangerouslySetInnerHTML={{ __html: record?.htmlContent ?? record?.content ?? '' }}
-        className="notif-content"
-      />
+      <div dangerouslySetInnerHTML={{ __html: record?.content ?? '' }} className="notif-content" />
       <Row style={{ marginTop: 12 }} gutter={[12, 12]}>
-        {record?.urlFile?.length ? (
+        {/* {record?.urlFile?.length ? (
           <>
             <Col span={24}>File đính kèm: </Col>
             {record?.urlFile?.map((item) => (
@@ -92,7 +90,7 @@ const ViewThongBao = (props: { record?: ThongBao.Record; afterViewDetail?: () =>
               </Col>
             ))}
           </>
-        ) : null}
+        ) : null} */}
 
         {pathname && afterViewDetail ? (
           <Col span={24}>

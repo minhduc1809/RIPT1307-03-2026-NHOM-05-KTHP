@@ -1,11 +1,11 @@
 import { InfoCircleOutlined } from '@ant-design/icons';
+import { Tooltip } from 'antd';
 import React from 'react';
 import { history, useModel } from 'umi';
 import Avatar from './AvatarDropdown';
-import styles from './index.less';
 import ModuleSwitch from './ModuleSwitch';
-import { Tooltip } from 'antd';
-import NoticeIcon from './NoticeIcon/NoticeIcon';
+import NoticeIconView from './NoticeIcon';
+import styles from './index.less';
 
 export type SiderTheme = 'light' | 'dark';
 
@@ -20,7 +20,7 @@ const GlobalHeaderRight: React.FC = () => {
     <div className={styles.right}>
       <ModuleSwitch />
 
-      <NoticeIcon />
+      <NoticeIconView />
 
       <Tooltip title="Giới thiệu chung" placement="bottom">
         <a onClick={() => history.push('/tienichkhac/gioithieu')}>

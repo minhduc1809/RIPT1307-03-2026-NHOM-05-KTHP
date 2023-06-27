@@ -1,4 +1,4 @@
-import { readOneNotification } from '@/services/ThongBao/thongbao';
+import { readOneNotification } from '@/services/ThongBao';
 import queryString from 'query-string';
 import { history, useAccess } from 'umi';
 import { OneSignalDataToPath } from './components/ViewThongBao';

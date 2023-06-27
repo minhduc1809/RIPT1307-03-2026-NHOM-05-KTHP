@@ -1,9 +1,11 @@
+import { type ThongBao } from '@/services/ThongBao/typing';
 import { Avatar, List, Skeleton } from 'antd';
 import classNames from 'classnames';
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useModel } from 'umi';
 import styles from './NoticeList.less';
+import moment from 'moment';
 
 export type NoticeIconTabProps = {
   count?: number;
@@ -12,14 +14,15 @@ export type NoticeIconTabProps = {
   style?: React.CSSProperties;
   title: string;
   tabKey: string;
-  onClick?: (item: ThongBao.Record) => void;
+  onClick?: (item: ThongBao.IRecord) => void;
   onClear?: () => void;
   emptyText?: string;
   clearText?: string;
   viewMoreText?: string;
-  list: ThongBao.Record[];
+  list: ThongBao.IRecord[];
   onViewMore?: (e: any) => void;
 };
+
 const NoticeList: React.FC<NoticeIconTabProps> = ({
   list = [],
   onClick,
@@ -76,26 +79,26 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
           }
           scrollableTarget="scrollableDiv"
         >
-          <List<ThongBao.Record>
+          <List<ThongBao.IRecord>
             className={styles.list}
             dataSource={list}
-            renderItem={(item, i) => {
+            renderItem={(item) => {
               const itemCls = classNames(styles.item, {
-                [styles.read]: item.unread,
+                [styles.read]: false, //item.unread,
               });
               // eslint-disable-next-line no-nested-ternary
-              const leftIcon = item.avatar ? (
-                typeof item.avatar === 'string' ? (
-                  <Avatar className={styles.avatar} src={item.avatar} />
+              const leftIcon = item.imageUrl ? (
+                typeof item.imageUrl === 'string' ? (
+                  <Avatar className={styles.avatar} src={item.imageUrl} />
                 ) : (
-                  <span className={styles.iconElement}>{item.avatar}</span>
+                  <span className={styles.iconElement}>{item.imageUrl}</span>
                 )
               ) : null;
 
               return (
                 <List.Item
                   className={itemCls}
-                  key={item.key || i}
+                  key={item._id}
                   onClick={() => {
                     onClick?.(item);
                   }}
@@ -106,13 +109,13 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
                     title={
                       <div className={styles.title}>
                         {item.title}
-                        <div className={styles.extra}>{item.extra}</div>
+                        {/* <div className={styles.extra}>{item.extra}</div> */}
                       </div>
                     }
                     description={
                       <div>
                         <div className={styles.description}>{item.description}</div>
-                        <div className={styles.datetime}>{item.datetime}</div>
+                        <div className={styles.datetime}>{moment(item.createdAt).fromNow()}</div>
                       </div>
                     }
                   />

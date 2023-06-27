@@ -4,6 +4,7 @@ import { AppModules, EModuleKey } from '@/services/ant-design-pro/constant';
 // const ip = 'https://dhs.ptit.edu.vn'; // ip prod
 
 const ip3 = 'https://ais.aisenote.com/tcns'; // ip dev
+const ipNotif = 'https://ais.aisenote.com/notification'; // ip dev
 const ipGlobal = 'https://ais2.aisenote.com/qldt-internal-api'; // ip dev
 
 const currentRole = EModuleKey.TCNS;
@@ -16,6 +17,7 @@ const keycloakTokenEndpoint =
 
 export {
   ip3,
+  ipNotif,
   ipGlobal,
   currentRole,
   keycloakClientID,
