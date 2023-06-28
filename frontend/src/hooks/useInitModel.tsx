@@ -85,11 +85,9 @@ const useInitModel = <T,>(
 
     try {
       const response = await getService(payload, path ?? 'page');
-      if (page > 1 && response?.data?.data?.result?.length === 0) setPage(page - 1);
-      else {
-        if (setDanhSach) setDanhSach(response?.data?.data?.result ?? []);
-        setTotal(response?.data?.data?.total ?? 0);
-      }
+      if (setDanhSach) setDanhSach(response?.data?.data?.result ?? []);
+      setTotal(response?.data?.data?.total ?? 0);
+
       return response?.data?.data?.result;
     } catch (er) {
       return Promise.reject(er);

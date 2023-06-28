@@ -15,7 +15,7 @@ import Tooltip from 'antd/es/tooltip';
 import type { FilterValue } from 'antd/lib/table/interface';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import type { SortableContainerProps, SortEnd } from 'react-sortable-hoc';
+import type { SortEnd, SortableContainerProps } from 'react-sortable-hoc';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { useModel } from 'umi';
 import ModalImport from './Import';
@@ -69,6 +69,10 @@ const TableBase = (props: TableBaseProps) => {
   const [visibleFilter, setVisibleFilter] = useState(false);
   const hasFilter = columns?.filter((item) => item.filterType)?.length;
   const [visibleImport, setVisibleImport] = useState(false);
+
+  useEffect(() => {
+    setPage(1);
+  }, [JSON.stringify(filters ?? [])]);
 
   useEffect(() => {
     getData(params);
