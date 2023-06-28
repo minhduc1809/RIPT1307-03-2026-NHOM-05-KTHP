@@ -54,6 +54,8 @@ const NoticeIconView = () => {
           list={danhSach}
           title="Thông báo"
           emptyText="Bạn đã xem tất cả thông báo"
+          showClear={!!unread}
+          showViewMore={danhSach.length < total}
         />
       </NoticeIcon>
 
