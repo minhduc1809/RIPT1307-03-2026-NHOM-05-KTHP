@@ -41,6 +41,12 @@
     component: './TrangChu',
     icon: 'HomeOutlined',
   },
+  {
+    path: '/gioi-thieu',
+    name: 'About',
+    component: './TienIch/GioiThieu',
+    hideInMenu: true,
+  },
 
   // DANH MUC HE THONG
   {

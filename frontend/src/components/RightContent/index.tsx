@@ -23,7 +23,7 @@ const GlobalHeaderRight: React.FC = () => {
       <NoticeIconView />
 
       <Tooltip title="Giới thiệu chung" placement="bottom">
-        <a onClick={() => history.push('/tienichkhac/gioithieu')}>
+        <a onClick={() => history.push('/gioi-thieu')}>
           <InfoCircleOutlined />
         </a>
       </Tooltip>
