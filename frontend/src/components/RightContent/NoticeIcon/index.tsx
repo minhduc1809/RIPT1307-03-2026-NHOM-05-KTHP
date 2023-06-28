@@ -37,7 +37,7 @@ const NoticeIconView = () => {
           setRecord(item);
           setVisibleDetail(true);
           setVisiblePopup(false);
-          readNotificationModel('ONE', item?._id);
+          if (!item.read) readNotificationModel('ONE', item?._id);
         }}
         loading={loading}
         onClear={() => clearReadState()}
