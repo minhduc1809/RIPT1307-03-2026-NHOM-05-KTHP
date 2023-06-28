@@ -1,11 +1,11 @@
 import { type ThongBao } from '@/services/ThongBao/typing';
 import { Avatar, List, Skeleton } from 'antd';
 import classNames from 'classnames';
+import moment from 'moment';
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useModel } from 'umi';
 import styles from './NoticeList.less';
-import moment from 'moment';
 
 export type NoticeIconTabProps = {
   count?: number;
@@ -34,7 +34,8 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
   viewMoreText,
   showViewMore = false,
 }) => {
-  const { totalNoticeIcon, limitNoticeIcon, setLimitNoticeIcon, loading } = useModel('thongbao');
+  const { total, limit, setLimit, loading } = useModel('thongbao.noticeicon');
+
   if (!list || list.length === 0) {
     return (
       <div className={styles.notFound}>
@@ -46,10 +47,12 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
       </div>
     );
   }
+
   const loadMoreData = () => {
     if (loading) return;
-    setLimitNoticeIcon(limitNoticeIcon + 5);
+    setLimit(limit + 5);
   };
+
   return (
     <div>
       {/* <Scrollbars
@@ -66,12 +69,10 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
         }}
       >
         <InfiniteScroll
-          style={{
-            overflow: 'unset',
-          }}
+          style={{ overflow: 'unset' }}
           dataLength={list.length}
           next={loadMoreData}
-          hasMore={list.length < totalNoticeIcon}
+          hasMore={list.length < total}
           loader={
             <div style={{ padding: '12px 24px' }}>
               <Skeleton paragraph={{ rows: 1 }} active />
@@ -83,26 +84,13 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
             className={styles.list}
             dataSource={list}
             renderItem={(item) => {
-              const itemCls = classNames(styles.item, {
-                [styles.read]: false, //item.unread,
-              });
-              // eslint-disable-next-line no-nested-ternary
+              const itemCls = classNames(styles.item, { [styles.read]: !item.read });
               const leftIcon = item.imageUrl ? (
-                typeof item.imageUrl === 'string' ? (
-                  <Avatar className={styles.avatar} src={item.imageUrl} />
-                ) : (
-                  <span className={styles.iconElement}>{item.imageUrl}</span>
-                )
+                <Avatar className={styles.avatar} src={item.imageUrl} />
               ) : null;
 
               return (
-                <List.Item
-                  className={itemCls}
-                  key={item._id}
-                  onClick={() => {
-                    onClick?.(item);
-                  }}
-                >
+                <List.Item className={itemCls} key={item._id} onClick={() => onClick?.(item)}>
                   <List.Item.Meta
                     className={styles.meta}
                     avatar={leftIcon}
@@ -113,10 +101,10 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
                       </div>
                     }
                     description={
-                      <div>
+                      <>
                         <div className={styles.description}>{item.description}</div>
                         <div className={styles.datetime}>{moment(item.createdAt).fromNow()}</div>
-                      </div>
+                      </>
                     }
                   />
                 </List.Item>
@@ -126,19 +114,10 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
         </InfiniteScroll>
         {/* </Scrollbars> */}
       </div>
+
       <div className={styles.bottomBar}>
         {showClear ? <div onClick={onClear}>{clearText}</div> : null}
-        {showViewMore ? (
-          <div
-            onClick={(e) => {
-              if (onViewMore) {
-                onViewMore(e);
-              }
-            }}
-          >
-            {viewMoreText}
-          </div>
-        ) : null}
+        {showViewMore ? <div onClick={(e) => onViewMore?.(e)}>{viewMoreText}</div> : null}
       </div>
     </div>
   );

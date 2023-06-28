@@ -9,6 +9,7 @@ export default () => {
   const [pageNoticeIcon, setPageNoticeIcon] = useState<number>(1);
   const [limitNoticeIcon, setLimitNoticeIcon] = useState<number>(20);
   const [totalNoticeIcon, setTotalNoticeIcon] = useState<number>(0);
+  const [unreadNoticeIcon, setUnreadNoticeIcon] = useState<number>(0);
 
   // const [danhSach, setDanhSach] = useState<ThongBao.IRecord[]>([]);
   // const [filterInfo, setFilterInfo] = useState<any>({});
@@ -74,6 +75,7 @@ export default () => {
         sort: { createdAt: -1 },
       });
       setDanhSachNoticeIcon(response?.data?.data?.result ?? []);
+      setUnreadNoticeIcon(response?.data?.data?.unread ?? 0);
       setTotalNoticeIcon(response?.data?.data?.total ?? 0);
 
       return response?.data?.data?.result;
@@ -120,8 +122,8 @@ export default () => {
     // deleteThongBaoModel,
     // phamVi,
     // setPhamVi,
+    unreadNoticeIcon,
     totalNoticeIcon,
-    setTotalNoticeIcon,
     danhSachNoticeIcon,
     setDanhSachNoticeIcon,
     pageNoticeIcon,

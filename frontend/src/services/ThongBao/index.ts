@@ -30,12 +30,8 @@ export async function postThongBaoAll(payload: ThongBao.PostRecord) {
   return axios.post(`${ipNotif}/notification/type/all`, payload);
 }
 
-export async function readOneNotification(payload: { notificationId?: any }) {
-  return axios.post(`${ipNotif}/notification/me/read/one`, payload);
-}
-
-export async function readAllNotification() {
-  return axios.post(`${ipNotif}/notification/me/read/all`);
+export async function readNotification(payload: { type: 'ONE' | 'ALL'; notificationId?: any }) {
+  return axios.post(`${ipNotif}/notification/read`, payload);
 }
 
 export async function getThongBao(payload: {

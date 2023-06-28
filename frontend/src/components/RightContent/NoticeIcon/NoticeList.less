@@ -11,8 +11,7 @@
   //   display: none;
   // }
   .item {
-    padding-right: 24px;
-    padding-left: 24px;
+    padding: 12px 12px 6px 18px;
     overflow: hidden;
     cursor: pointer;
     transition: all 0.3s;
@@ -25,12 +24,9 @@
       margin-top: 4px;
       background: @component-background;
     }
-    .iconElement {
-      font-size: 32px;
-    }
 
     &.read {
-      background-color: #ffebe6;
+      background-color: #e6f6ffa6;
     }
     &:last-child {
       border-bottom: 0;
@@ -39,17 +35,19 @@
       background: @primary-1;
     }
     .title {
-      margin-bottom: 8px;
-      font-weight: normal;
+      color: @primary-9;
+      font-weight: 600;
     }
     .description {
       font-size: 12px;
-      line-height: @line-height-base;
+      line-height: 1.2;
     }
     .datetime {
-      margin-top: 4px;
+      color: rgb(211, 211, 211);
       font-size: 12px;
+      font-style: italic;
       line-height: @line-height-base;
+      text-align: right;
     }
     .extra {
       float: right;

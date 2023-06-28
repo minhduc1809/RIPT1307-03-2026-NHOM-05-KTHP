@@ -88,16 +88,6 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
     onChange: props.onPopupVisibleChange,
   });
 
-  const trigger = (
-    <Badge
-      count={count ? (count < 100 ? count : '99+') : undefined}
-      style={{ boxShadow: 'none' }}
-      className={styles.badge}
-    >
-      {bell || <BellOutlined />}
-    </Badge>
-  );
-
   const notificationBox = getNotificationBox();
   if (!notificationBox) return <></>;
 
@@ -112,7 +102,14 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
       arrow
     >
       <Tooltip title="Thông báo" placement="bottom">
-        {trigger}
+        <a className={styles.badge}>
+          <Badge
+            count={count ? (count < 100 ? count : '99+') : undefined}
+            style={{ boxShadow: 'none' }}
+          >
+            {bell || <BellOutlined />}
+          </Badge>
+        </a>
       </Tooltip>
     </HeaderDropdown>
   );

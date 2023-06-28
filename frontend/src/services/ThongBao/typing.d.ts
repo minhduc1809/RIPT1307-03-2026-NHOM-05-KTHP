@@ -14,6 +14,7 @@ declare module ThongBao {
     topics?: string[];
     users?: string[];
     createdAt: string; // '2023-06-27T07:47:29.693Z';
+    read: boolean;
   }
 
   export interface PostRecord {

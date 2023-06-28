@@ -1,47 +1,43 @@
 import ViewThongBao from '@/pages/ThongBao/components/ViewThongBao';
-import { readAllNotification, readOneNotification } from '@/services/ThongBao';
-import { Modal, message } from 'antd';
+import { Modal } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import NoticeIcon from './NoticeIcon';
 
 const NoticeIconView = () => {
   const {
-    danhSachNoticeIcon,
+    danhSach,
     getThongBaoModel,
-    totalNoticeIcon,
-    pageNoticeIcon,
-    limitNoticeIcon,
+    total,
+    page,
+    limit,
     loading,
     record,
     setRecord,
-  } = useModel('thongbao');
+    unread,
+    readNotificationModel,
+  } = useModel('thongbao.noticeicon');
   const [visibleDetail, setVisibleDetail] = useState<boolean>(false);
   const [visiblePopup, setVisiblePopup] = useState<boolean>(false);
 
   useEffect(() => {
     getThongBaoModel();
-  }, [pageNoticeIcon, limitNoticeIcon]);
-
-  const unreadMsg = danhSachNoticeIcon; //?.filter((item) => item.unread);
+  }, [page, limit]);
 
   const clearReadState = async () => {
-    await readAllNotification();
-    getThongBaoModel();
+    readNotificationModel('ALL');
     setVisiblePopup(false);
-    message.success('Đã đọc tất cả thông báo');
   };
 
   return (
     <>
       <NoticeIcon
-        count={unreadMsg.length}
+        count={unread}
         onItemClick={async (item) => {
           setRecord(item);
           setVisibleDetail(true);
           setVisiblePopup(false);
-          // await readOneNotification({ notificationId: item?._id });
-          getThongBaoModel();
+          readNotificationModel('ONE', item?._id);
         }}
         loading={loading}
         onClear={() => clearReadState()}
@@ -54,8 +50,8 @@ const NoticeIconView = () => {
       >
         <NoticeIcon.Tab
           tabKey="notification"
-          count={totalNoticeIcon}
-          list={danhSachNoticeIcon}
+          count={total}
+          list={danhSach}
           title="Thông báo"
           emptyText="Bạn đã xem tất cả thông báo"
         />
