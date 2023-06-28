@@ -115,10 +115,12 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
         {/* </Scrollbars> */}
       </div>
 
-      <div className={styles.bottomBar}>
-        {showClear ? <div onClick={onClear}>{clearText}</div> : null}
-        {showViewMore ? <div onClick={(e) => onViewMore?.(e)}>{viewMoreText}</div> : null}
-      </div>
+      {showClear || showViewMore ? (
+        <div className={styles.bottomBar}>
+          {showClear ? <div onClick={onClear}>{clearText}</div> : null}
+          {showViewMore ? <div onClick={(e) => onViewMore?.(e)}>{viewMoreText}</div> : null}
+        </div>
+      ) : null}
     </div>
   );
 };

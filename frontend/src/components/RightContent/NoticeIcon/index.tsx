@@ -42,6 +42,7 @@ const NoticeIconView = () => {
         loading={loading}
         onClear={() => clearReadState()}
         clearText="Đánh dấu tất cả là đã đọc"
+        viewMoreText="Tải thêm"
         popupVisible={visiblePopup}
         clearClose
         onPopupVisibleChange={(visible) => {
