@@ -1,18 +1,18 @@
 import { getInfo, getPermission } from '@/services/ant-design-pro/api';
 import { type Login } from '@/services/ant-design-pro/typings';
 import axios from '@/utils/axios';
+import { currentRole } from '@/utils/ip';
 import { ToolOutlined } from '@ant-design/icons';
-import { Button, Modal, Tooltip, message, notification } from 'antd';
+import { Button, Modal, Tooltip, notification } from 'antd';
 import { useEffect, useState } from 'react';
 import { hasAuthParams, useAuth } from 'react-oidc-context';
-import { history, useIntl, useModel } from 'umi';
+import { history, useModel } from 'umi';
 import FormPostIssue from './Form';
-import { currentRole } from '@/utils/ip';
 
 const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
   const { setInitialState, initialState } = useModel('@@initialState');
   const [visible, setVisible] = useState<boolean>(false);
-  const intl = useIntl();
+  // const intl = useIntl();
   const auth = useAuth();
 
   const handleAxios = (access_token: string) => {
@@ -51,15 +51,17 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
       history.replace('/403');
     // Callback Đăng nhập từ Trang chủ hoặc từ Login
     else if (window.location.pathname === '/' || window.location.pathname === '/user/login') {
-      const defaultloginSuccessMessage = intl.formatMessage({
-        id: 'pages.login.success',
-        defaultMessage: 'success',
-      });
-      message.success(defaultloginSuccessMessage);
+      // const defaultloginSuccessMessage = intl.formatMessage({
+      //   id: 'pages.login.success',
+      //   defaultMessage: 'success',
+      // });
+      // message.success(defaultloginSuccessMessage);
       history.replace('/dashboard');
-    } else if (hasAuthParams())
+    } else if (hasAuthParams()) {
       // Tới trang không có query để load lại dữ liệu
       history.replace(window.location.pathname);
+      window.location.reload();
+    }
   };
 
   /**
@@ -80,30 +82,36 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
    * Automatically sign-in in first load
    */
   useEffect(() => {
+    // Nếu đã xử lý xong check đăng nhập
     if (!auth.activeNavigator && !auth.isLoading) {
       const autoFailed = localStorage.getItem('failed');
       // Nếu chưa đăng nhập thì chuyển đến màn đăng nhập của keyloak luôn
       if (!hasAuthParams() && !auth.isAuthenticated) {
         console.log('1', autoFailed);
-        if (!autoFailed || window.location.pathname !== '/user/login') auth.signinRedirect(); // Tránh load nhiều lần
+        // Tránh load nhiều lần
+        if (!autoFailed || window.location.pathname !== '/user/login') {
+          localStorage.removeItem('failed');
+          auth.removeUser();
+          auth.signinRedirect();
+        }
       } else if (auth.user?.access_token) {
         getSwapToken({ access_token: auth.user.access_token })
           .then((permissions) => handleRole({ access_token: auth.user?.access_token, permissions }))
           .catch(() => {
             // Nếu ko thể swap token, có thể do token đã hết hạn, hoặc bị đăng xuất rồi
-            if (!autoFailed)
-              if (window.location.pathname === '/user/login') {
-                notification.warn({
-                  message: 'Phiên làm việc đã hết hạn',
-                  description: 'Đang chuyển hướng tới trang đăng nhập...',
-                });
-                setTimeout(() => {
-                  localStorage.setItem('failed', '1');
-                  auth.signinRedirect();
-                }, 1500);
-              } else {
-                history.replace('/user/login');
-              }
+            if (!autoFailed && window.location.pathname === '/user/login') {
+              notification.warn({
+                message: 'Xác thực người dùng',
+                description: 'Vui lòng đợi trong giây lát. Đang chuyển hướng ...',
+              });
+              setTimeout(() => {
+                localStorage.setItem('failed', '1');
+                auth.removeUser();
+                auth.signinRedirect();
+              }, 1500);
+            } else {
+              history.replace('/user/login');
+            }
           });
       } else if (window.location.pathname === '/') history.replace('/user/login');
     }

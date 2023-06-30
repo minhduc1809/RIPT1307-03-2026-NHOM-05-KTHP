@@ -20,6 +20,7 @@ const NotAccessible = () => {
   }, [initialState?.authorizedPermissions]);
 
   const onLogout = (): void => {
+    auth.removeUser();
     auth.signoutRedirect({
       post_logout_redirect_uri: window.location.origin,
       id_token_hint: auth.user?.id_token,

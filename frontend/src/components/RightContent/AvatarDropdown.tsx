@@ -20,7 +20,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     const { query = {} } = history.location;
     const { redirect } = query;
     if (window.location.pathname !== '/user/login' && !redirect) {
-      // auth.removeUser();
+      auth.removeUser();
       auth.signoutRedirect({
         post_logout_redirect_uri: window.location.origin,
         id_token_hint: auth.user?.id_token,
@@ -34,6 +34,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       const { key } = event;
       if (key === 'logout' && initialState) {
         loginOut();
+        sessionStorage.clear();
         localStorage.clear();
         setInitialState({ ...initialState, currentUser: undefined });
       } else history.push(`/account/${key}`);
