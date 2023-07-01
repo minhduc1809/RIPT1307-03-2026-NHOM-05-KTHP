@@ -38,7 +38,7 @@ const UploadFile = (props: {
 
   const handleChange = (val: any) => {
     const fil = val.fileList;
-    const findLargeFile = fil?.find((file: any) => file.size / 1024 / 1024 > 25);
+    const findLargeFile = fil?.find((file: any) => file.size / 1024 / 1024 > 5);
     const findWrongTypeFile = fil?.find((file: any) => {
       const arrFileName = file.name.split('.');
       return (
@@ -48,7 +48,7 @@ const UploadFile = (props: {
     });
 
     if (findLargeFile) {
-      message.error('Tập tin phải nhỏ hơn 25MB!');
+      message.error('Tập tin không được quá 5Mb');
       return;
     }
     if (findWrongTypeFile && otherProps?.accept) {
@@ -142,23 +142,28 @@ const UploadFile = (props: {
 
   // UPLOAD BUTTON
   return (
-    <Upload
-      customRequest={({ onSuccess }) => {
-        setTimeout(() => onSuccess && onSuccess('ok'), 0);
-      }}
-      fileList={fileList}
-      onChange={handleChange}
-      style={{ width: '100%' }}
-      multiple={limit > 1}
-      accept={accept}
-      {...otherProps}
-    >
-      {!otherProps || !otherProps.disabled ? (
-        <Button size={buttonSize || 'small'} icon={<UploadOutlined />}>
-          {buttonDescription || 'Chọn tệp'}
-        </Button>
-      ) : null}
-    </Upload>
+    <>
+      <Upload
+        customRequest={({ onSuccess }) => {
+          setTimeout(() => onSuccess && onSuccess('ok'), 0);
+        }}
+        fileList={fileList}
+        onChange={handleChange}
+        style={{ width: '100%' }}
+        multiple={limit > 1}
+        accept={accept}
+        {...otherProps}
+      >
+        {!otherProps || !otherProps.disabled ? (
+          <Button size={buttonSize || 'small'} icon={<UploadOutlined />}>
+            {buttonDescription || 'Chọn tệp'}
+          </Button>
+        ) : null}
+      </Upload>
+      <small style={{ color: '#999' }}>
+        <i>Dung lượng file không được quá 5Mb</i>
+      </small>
+    </>
   );
 };
 
