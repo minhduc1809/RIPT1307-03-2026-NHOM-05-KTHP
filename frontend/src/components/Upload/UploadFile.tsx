@@ -18,9 +18,19 @@ const UploadFile = (props: {
   buttonSize?: SizeType;
   otherProps?: UploadProps;
   isAvatar?: boolean;
+  isAvatarSmall?: boolean;
 }) => {
-  const { value, onChange, otherProps, drag, buttonSize, buttonDescription, accept, isAvatar } =
-    props;
+  const {
+    value,
+    onChange,
+    otherProps,
+    drag,
+    buttonSize,
+    buttonDescription,
+    accept,
+    isAvatar,
+    isAvatarSmall,
+  } = props;
   const limit = props.maxCount || 1;
   const [fileList, setFileList] = useState<any[]>();
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -68,13 +78,18 @@ const UploadFile = (props: {
     setPreviewOpen(true);
   };
 
+  const Extra = () =>
+    otherProps?.disabled ? null : (
+      <small style={{ color: '#999' }}>
+        <i>Dung lượng file không được quá 5Mb</i>
+      </small>
+    );
+
   // DRAGGER
   if (drag)
     return (
       <Upload.Dragger
-        customRequest={({ onSuccess }) => {
-          setTimeout(() => onSuccess && onSuccess('ok'), 0);
-        }}
+        customRequest={({ onSuccess }) => setTimeout(() => onSuccess && onSuccess('ok'), 0)}
         fileList={fileList}
         onChange={handleChange}
         style={{ width: '100%' }}
@@ -89,19 +104,18 @@ const UploadFile = (props: {
             </p>
             <p className="ant-upload-text">Nhấn chuột hoặc kéo thả tài liệu để tải lên</p>
             <p className="ant-upload-hint">{buttonDescription}</p>
+            <Extra />
           </>
         ) : null}
       </Upload.Dragger>
     );
-  else if (isAvatar)
+  else if (isAvatar || isAvatarSmall)
     return (
       <>
         <Upload
-          customRequest={({ onSuccess }) => {
-            setTimeout(() => onSuccess && onSuccess('ok'), 0);
-          }}
+          customRequest={({ onSuccess }) => setTimeout(() => onSuccess && onSuccess('ok'), 0)}
           listType="picture-card"
-          className="avatar-uploader"
+          className={`avatar-uploader ${isAvatarSmall ? 'avatar-small' : undefined}`}
           fileList={fileList}
           onChange={handleChange}
           style={{ width: '100%' }}
@@ -113,8 +127,6 @@ const UploadFile = (props: {
           {(!otherProps || !otherProps.disabled) && !fileList?.length ? (
             <div
               style={{
-                width: '140px',
-                height: '180px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -126,11 +138,10 @@ const UploadFile = (props: {
             </div>
           ) : null}
         </Upload>
+        <Extra />
 
         <Image
-          width={1}
           style={{ display: 'none' }}
-          // src={previewImage}
           preview={{
             visible: previewOpen,
             src: previewImage,
@@ -160,9 +171,7 @@ const UploadFile = (props: {
           </Button>
         ) : null}
       </Upload>
-      <small style={{ color: '#999' }}>
-        <i>Dung lượng file không được quá 5Mb</i>
-      </small>
+      <Extra />
     </>
   );
 };
