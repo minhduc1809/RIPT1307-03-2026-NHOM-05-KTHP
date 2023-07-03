@@ -93,7 +93,7 @@ const TinyEditor = (props: {
           ],
           toolbar: miniToolbar
             ? 'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify |  numlist bullist | forecolor backcolor removeformat'
-            : 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat |  image media link | charmap emoticons | fullscreen  preview  print',
+            : 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat |  table image media link | charmap emoticons | fullscreen  preview  print',
           // toolbar_sticky: true,
           autosave_ask_before_unload: true,
           image_advtab: true,
