@@ -115,9 +115,9 @@ const RowFilter = (props: {
                   label: item.title,
                 }))}
               value={filter.field?.toString()}
-              onChange={(val) => {
+              onChange={(val: string) => {
                 const temp = { ...filter };
-                temp.field = val as string;
+                temp.field = val;
                 onChange(temp);
               }}
               placeholder="Thuộc tính"
@@ -134,7 +134,7 @@ const RowFilter = (props: {
                 label: OperatorLabel[item],
               }))}
               value={filter.operator}
-              onChange={(val) => {
+              onChange={(val: EOperatorType) => {
                 const temp = { ...filter };
                 temp.operator = val;
                 onChange(temp);

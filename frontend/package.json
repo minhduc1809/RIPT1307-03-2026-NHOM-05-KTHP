@@ -57,7 +57,7 @@
     "@types/react-highlight-words": "^0.16.4",
     "@types/styled-components": "^5.1.26",
     "@umijs/route-utils": "^1.0.36",
-    "antd": "~4.17.2",
+    "antd": "4.21.0",
     "antd-img-crop": "^4.2.4",
     "apexcharts": "^3.37.2",
     "axios": "^0.21.1",
