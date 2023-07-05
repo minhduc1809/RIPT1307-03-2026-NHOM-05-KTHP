@@ -1,3 +1,4 @@
+import { type EVaiTroBieuMau } from '../TienIch/constant';
 import { type EReceiverType } from './constant';
 
 declare module ThongBao {
@@ -9,28 +10,26 @@ declare module ThongBao {
     description?: string;
     content?: string;
     imageUrl?: string;
-    data?: any;
+    filter?: {
+      roles: EVaiTroBieuMau[];
+      idKhoaSinhVien: string;
+      idKhoa: string;
+      idNganh: string;
+      idLopHanhChinh: string;
+      idLopTinChi: string;
+    };
     receiverType: EReceiverType;
     topics?: string[];
     users?: string[];
+    data?: any;
     createdAt: string; // '2023-06-27T07:47:29.693Z';
     read: boolean;
   }
 
-  export interface PostRecord {
-    title: string;
-    description: string;
-    content?: string;
-    htmlContent?: string;
-    imageUrl?: string;
-    hinhThucDaoTaoId?: number;
-    loaiDoiTuong: string[];
-    lopHanhChinhList?: number[];
-    lopTinChiList?: number[];
-    nganhList?: number[];
-    donViList?: number[];
-    khoaList?: number[];
-    userIds?: string[];
-    roles?: string[];
+  export interface IUser {
+    code: string;
+    firstname: string;
+    lastname: string;
+    vaiTro?: EVaiTroBieuMau;
   }
 }

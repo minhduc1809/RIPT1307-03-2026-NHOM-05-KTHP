@@ -1,10 +1,11 @@
 import { type ThongBao } from '@/services/ThongBao/typing';
 import { getNameFile } from '@/utils/utils';
-import { Avatar, Button, Card, Col, Row } from 'antd';
+import { Avatar, Button, Card, Col, Row, Divider } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { history, useAccess } from 'umi';
 import './style.less';
+import { CalendarOutlined, UserOutlined } from '@ant-design/icons';
 
 export const OneSignalDataToPath = (oneSignalData: any, sinhVien: boolean, nhanVien: boolean) => {
   let path = '';
@@ -68,14 +69,13 @@ const ViewThongBao = (props: { record?: ThongBao.IRecord; afterViewDetail?: () =
   return (
     <Card title={record?.title}>
       <Card.Meta
-        avatar={record?.imageUrl ? <Avatar src={record?.imageUrl} /> : false}
+        avatar={record?.imageUrl ? <Avatar src={record?.imageUrl} size="large" /> : false}
         description={
-          <div>
-            {record?.senderName ?? ''} đã gửi vào lúc{' '}
-            {moment(record?.createdAt).format('HH:mm DD/MM/YYYY')}
-            {/* <br />
-            {record?.description} */}
-          </div>
+          <>
+            <div>{record?.description}</div>
+            <UserOutlined /> {record?.senderName ?? ''} <Divider type="vertical" />
+            <CalendarOutlined /> {moment(record?.createdAt).format('HH:mm DD/MM/YYYY')}
+          </>
         }
       />
       <br />
