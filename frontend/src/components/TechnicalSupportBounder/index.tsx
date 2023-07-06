@@ -1,4 +1,4 @@
-import { getInfo, getPermission } from '@/services/ant-design-pro/api';
+import { getInfo, getPermission, initOneSignal } from '@/services/ant-design-pro/api';
 import { type Login } from '@/services/ant-design-pro/typings';
 import axios from '@/utils/axios';
 import { currentRole } from '@/utils/ip';
@@ -6,14 +6,22 @@ import { ToolOutlined } from '@ant-design/icons';
 import { Button, Modal, Tooltip, notification } from 'antd';
 import { useEffect, useState } from 'react';
 import { hasAuthParams, useAuth } from 'react-oidc-context';
+import OneSignal from 'react-onesignal';
 import { history, useModel } from 'umi';
 import FormPostIssue from './Form';
 
 const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
   const { setInitialState, initialState } = useModel('@@initialState');
   const [visible, setVisible] = useState<boolean>(false);
+  const [oneSignalId, setOneSignalId] = useState<string | null | undefined>();
   // const intl = useIntl();
   const auth = useAuth();
+
+  const getUserIdOnesignal = async () => {
+    const id = await OneSignal.getUserId();
+    console.log('🚀 ~ file: index.tsx:22 ~ getUserIdOnesignal ~ id:', id);
+    setOneSignalId(id);
+  };
 
   const handleAxios = (access_token: string) => {
     // Add a request interceptor
@@ -77,6 +85,17 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
     }
     return Promise.reject('Invalid token');
   };
+
+  useEffect(() => {
+    getUserIdOnesignal();
+  }, []);
+
+  /**
+   * Handle OneSignal
+   */
+  useEffect(() => {
+    if (auth.user?.access_token && oneSignalId) initOneSignal({ playerId: oneSignalId });
+  }, [auth.user?.access_token, oneSignalId]);
 
   /**
    * Automatically sign-in in first load

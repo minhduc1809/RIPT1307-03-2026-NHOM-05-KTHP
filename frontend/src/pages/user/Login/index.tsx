@@ -1,12 +1,11 @@
 import Footer from '@/components/Footer';
 import LoginWithKeycloak from '@/pages/user/Login/KeycloakLogin';
 import { adminlogin, getInfo } from '@/services/ant-design-pro/api';
+import { keycloakAuthority } from '@/utils/ip';
 import rules from '@/utils/rules';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Tabs, message } from 'antd';
 import React, { useRef, useState } from 'react';
-// import OneSignal from 'react-onesignal';
-import { keycloakAuthority } from '@/utils/ip';
 import Recaptcha from 'react-recaptcha';
 import { history, useIntl, useModel } from 'umi';
 import styles from './index.less';
@@ -19,15 +18,9 @@ const Login: React.FC = () => {
   const [isVerified, setIsverified] = useState<boolean>(true);
   const [visibleCaptcha, setVisibleCaptcha] = useState<boolean>(false);
   const [visibleCaptcha2, setVisibleCaptcha2] = useState<boolean>(false);
-  // const [oneSignalId, setOneSignalId] = useState<string | null | undefined>();
   const recaptchaRef = useRef(null);
   const intl = useIntl();
   const [form] = Form.useForm();
-
-  // const getUserIdOnesignal = async () => {
-  //   const id = await OneSignal.getUserId();
-  //   setOneSignalId(id);
-  // };
 
   /**
    * Xử lý token, get info sau khi đăng nhập
@@ -52,10 +45,6 @@ const Login: React.FC = () => {
     message.success(defaultloginSuccessMessage);
     history.push('/dashboard');
   };
-
-  // useEffect(() => {
-  //   getUserIdOnesignal();
-  // }, []);
 
   const handleSubmit = async (values: { login: string; password: string }) => {
     try {
@@ -171,7 +160,7 @@ const Login: React.FC = () => {
               Quên mật khẩu?
             </Button>
 
-            {type === 'accountAdmin' && visibleCaptcha && count >= 5 && (
+            {/* {type === 'accountAdmin' && visibleCaptcha && count >= 5 && (
               <Recaptcha
                 ref={recaptchaRef}
                 size="normal"
@@ -193,7 +182,7 @@ const Login: React.FC = () => {
                 // onloadCallback={callback}
                 verifyCallback={verifyCallback}
               />
-            )}
+            )} */}
           </div>
         </div>
       </div>

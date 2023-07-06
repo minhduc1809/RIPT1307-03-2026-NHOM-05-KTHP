@@ -1,5 +1,11 @@
 import axios from '@/utils/axios';
-import { ip3, keycloakClientID, keycloakTokenEndpoint, resourceServerClientId } from '@/utils/ip';
+import {
+  ip3,
+  ipNotif,
+  keycloakClientID,
+  keycloakTokenEndpoint,
+  resourceServerClientId,
+} from '@/utils/ip';
 import queryString from 'query-string';
 
 export async function getInfo() {
@@ -38,4 +44,8 @@ export async function getPermission() {
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     data: queryString.stringify(data),
   });
+}
+
+export async function initOneSignal(payload: { playerId: string }) {
+  return axios.put(`${ipNotif}/one-signal/user`, payload);
 }

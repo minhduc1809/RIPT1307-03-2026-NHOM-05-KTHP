@@ -10,6 +10,7 @@ declare module ThongBao {
     description?: string;
     content?: string;
     imageUrl?: string;
+
     filter?: {
       roles: EVaiTroBieuMau[];
       idKhoaSinhVien: string;
@@ -21,7 +22,10 @@ declare module ThongBao {
     receiverType: EReceiverType;
     topics?: string[];
     users?: string[];
+
     data?: any;
+    oneSignalData?: any;
+    urlFile?: string[];
     createdAt: string; // '2023-06-27T07:47:29.693Z';
     read: boolean;
   }

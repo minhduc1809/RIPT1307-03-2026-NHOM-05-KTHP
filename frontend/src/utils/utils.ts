@@ -154,10 +154,14 @@ export function fixedZero(val: number) {
   return val * 1 < 10 ? `0${val}` : val;
 }
 
-export function getNameFile(url: string) {
+/**
+ * Lấy tên file từ đường dẫn
+ * @param {any} url:string Đường dẫn
+ * @returns {any} Tên file
+ */
+export function getNameFile(url: string): string {
   if (typeof url !== 'string') return 'Đường dẫn không đúng';
-  return decodeURI(url.split('/').slice(-1)[0]);
-  // .substring(26);
+  return decodeURI(url.split('/')?.at(-1) ?? '');
 }
 
 export function renderFileListUrl(url: string) {

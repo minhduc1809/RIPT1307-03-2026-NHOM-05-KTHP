@@ -4,11 +4,11 @@ import OneSignal from 'react-onesignal';
 const OneSignalBounder = (props: { children: React.ReactNode }) => {
   useEffect(() => {
     OneSignal.init({
-      appId: '72496a32-ad38-42eb-bb70-ef67c5800f24',
+      appId: 'f3857a81-2891-49be-87a7-903a4a1a54be',
     });
-  }, [props.children]);
+  }, []);
 
-  return <div>{props.children}</div>;
+  return <>{props.children}</>;
 };
 
 export default OneSignalBounder;

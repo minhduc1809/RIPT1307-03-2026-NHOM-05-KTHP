@@ -15,6 +15,7 @@ import './styles/global.less';
 import { currentRole } from './utils/ip';
 import { oidcConfig } from './utils/oidcConfig';
 import { type IInitialState } from './utils/typing';
+import OneSignalBounder from './components/OneSignalBounder';
 
 // const loginPath = '/user/login';
 // const pathAuth = ['/admin/login'];
@@ -29,46 +30,11 @@ export const initialStateConfig = {
  * // Tobe removed
  * */
 export async function getInitialState(): Promise<IInitialState> {
-  // const fetchUserInfo: () => Promise<Login.User> = async () => {
-  //   try {
-  //     const token = localStorage.getItem('token');
-  //     let currentUser;
-  //     if (token) {
-  //       const decoded = jwt_decode(token) as any;
-  //       currentUser = (await getInfo())?.data?.data;
-  //       currentUser.permissions = decoded?.authorization?.permissions;
-  //     }
-  //     return currentUser;
-  //   } catch (error) {
-  //     const { location } = history;
-  //     if (!pathAuth.includes(location.pathname)) history.push(loginPath);
-  //   }
-  //   return undefined;
-  // };
-
-  // if (history.location.pathname !== loginPath) {
-  //   const currentUser = await fetchUserInfo();
-
-  //   return {
-  //     fetchUserInfo,
-  //     currentUser,
-  //   };
-  // }
-
-  // return {
-  //   fetchUserInfo,
-  // };
   return {};
 }
 
 // Tobe removed
 const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
-  // const token = localStorage.getItem('token');
-  // const authHeader = { ...(token && { Authorization: `Bearer ${token}` }) };
-  // return {
-  //   url: `${url}`,
-  //   options: { ...options, interceptors: true, headers: authHeader },
-  // };
   return {};
 };
 
@@ -140,7 +106,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     menuItemRender: (item: any, dom: any) => {
       return (
         <div
-          style={{ flex: 'auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
+          // style={{ flex: 'auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
           onClick={() => {
             history.push(item?.path ?? '/');
           }}
@@ -158,8 +124,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         >
           <ErrorBoundary>
             <TechnicalSupportBounder>
-              {dom}
-              {/* <ReactKeycloakProvider authClient={keycloak}>{dom}</ReactKeycloakProvider> */}
+              <OneSignalBounder>{dom}</OneSignalBounder>
             </TechnicalSupportBounder>
           </ErrorBoundary>
         </AuthProvider>

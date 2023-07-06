@@ -1,14 +1,13 @@
-import { readOneNotification } from '@/services/ThongBao';
+import { readNotification } from '@/services/ThongBao';
 import queryString from 'query-string';
-import { history, useAccess } from 'umi';
-import { OneSignalDataToPath } from './components/ViewThongBao';
+import { history } from 'umi';
+import OneSignalDataToPath from './components/OneSignalDataToPath';
 
 const NotifOneSignal = () => {
-  const access = useAccess();
   const parsed = queryString.parse(window.location.search);
-  readOneNotification({ notificationId: parsed?.id });
+  readNotification({ notificationId: parsed?.id, type: 'ONE' });
 
-  const path = OneSignalDataToPath(parsed, access.sinhVien, access.nhanVien);
+  const path = OneSignalDataToPath(parsed);
   history.push(path || '/');
   return <></>;
 };
