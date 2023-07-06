@@ -20,7 +20,7 @@ export type NoticeIconTabProps = {
   clearText?: string;
   viewMoreText?: string;
   list: ThongBao.IRecord[];
-  onViewMore?: (e: any) => void;
+  onViewMore?: () => void;
 };
 
 const NoticeList: React.FC<NoticeIconTabProps> = ({
@@ -34,7 +34,7 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
   viewMoreText,
   showViewMore = false,
 }) => {
-  const { total, limit, setLimit, loading } = useModel('thongbao.noticeicon');
+  const { total } = useModel('thongbao.noticeicon');
 
   if (!list || list.length === 0) {
     return (
@@ -47,11 +47,6 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
       </div>
     );
   }
-
-  const loadMoreData = () => {
-    if (loading) return;
-    setLimit(limit + 5);
-  };
 
   return (
     <div>
@@ -71,7 +66,7 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
         <InfiniteScroll
           style={{ overflow: 'unset' }}
           dataLength={list.length}
-          next={loadMoreData}
+          next={() => onViewMore?.()}
           hasMore={list.length < total}
           loader={
             <div style={{ padding: '12px 24px' }}>
@@ -118,7 +113,7 @@ const NoticeList: React.FC<NoticeIconTabProps> = ({
       {showClear || showViewMore ? (
         <div className={styles.bottomBar}>
           {showClear ? <div onClick={onClear}>{clearText}</div> : null}
-          {showViewMore ? <div onClick={(e) => onViewMore?.(e)}>{viewMoreText}</div> : null}
+          {showViewMore ? <div onClick={() => onViewMore?.()}>{viewMoreText}</div> : null}
         </div>
       ) : null}
     </div>

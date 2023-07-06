@@ -11,6 +11,7 @@ const NoticeIconView = () => {
     total,
     page,
     limit,
+    setLimit,
     loading,
     record,
     setRecord,
@@ -43,6 +44,10 @@ const NoticeIconView = () => {
         onClear={() => clearReadState()}
         clearText="Đánh dấu tất cả là đã đọc"
         viewMoreText="Tải thêm"
+        onViewMore={() => {
+          if (loading) return;
+          setLimit(limit + 5);
+        }}
         popupVisible={visiblePopup}
         clearClose
         onPopupVisibleChange={(visible) => {
