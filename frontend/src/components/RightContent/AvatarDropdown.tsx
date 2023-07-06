@@ -1,8 +1,9 @@
 import logo from '@/assets/logo.png';
-import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { landingUrl } from '@/services/ant-design-pro/constant';
+import { GlobalOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
-import type { MenuInfo } from 'rc-menu/lib/interface';
-import React, { useCallback } from 'react';
+import { type ItemType } from 'antd/lib/menu/hooks/useItems';
+import React from 'react';
 import { useAuth } from 'react-oidc-context';
 import { history, useModel } from 'umi';
 import HeaderDropdown from './HeaderDropdown';
@@ -26,62 +27,65 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         id_token_hint: auth.user?.id_token,
       });
       window.location.href = '/';
+    } else {
+      sessionStorage.clear();
+      localStorage.clear();
+      setInitialState({ ...initialState, currentUser: undefined });
     }
   };
 
-  const onMenuClick = useCallback(
-    async (event: MenuInfo) => {
-      const { key } = event;
-      if (key === 'logout' && initialState) {
-        loginOut();
-        sessionStorage.clear();
-        localStorage.clear();
-        setInitialState({ ...initialState, currentUser: undefined });
-      } else history.push(`/account/${key}`);
+  if (!initialState || !initialState.currentUser)
+    return (
+      <span className={`${styles.action} ${styles.account}`}>
+        <Spin
+          size="small"
+          style={{
+            marginLeft: 8,
+            marginRight: 8,
+          }}
+        />
+      </span>
+    );
+
+  const items: ItemType[] = [
+    {
+      key: 'portal',
+      icon: <GlobalOutlined />,
+      label: 'Cổng thông tin',
+      onClick: () => window.open(landingUrl),
     },
-    [initialState, setInitialState],
-  );
-
-  const loading = (
-    <span className={`${styles.action} ${styles.account}`}>
-      <Spin
-        size="small"
-        style={{
-          marginLeft: 8,
-          marginRight: 8,
-        }}
-      />
-    </span>
-  );
-
-  if (!initialState) {
-    return loading;
+    { type: 'divider', key: 'divider' },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: 'Đăng xuất',
+      onClick: loginOut,
+      danger: true,
+    },
+  ];
+  if (menu && initialState.currentUser.systemRole !== 'Admin') {
+    // items.splice(1, 0, {
+    //   key: 'password',
+    //   icon: <LockOutlined />,
+    //   label: 'Đổi mật khẩu',
+    //   onClick: () =>
+    //     window.open(
+    //       keycloakAuthority +
+    //         '/login-actions/required-action?execution=UPDATE_PASSWORD&client_id=' +
+    //         keycloakClientID,
+    //     ),
+    // });
+    items.splice(1, 0, {
+      key: 'center',
+      icon: <UserOutlined />,
+      label: 'Trang cá nhân',
+      onClick: () => history.push('/account/center'),
+    });
   }
-
-  const { currentUser } = initialState;
-  if (!currentUser) {
-    return loading;
-  }
-
-  const menuHeaderDropdown = (
-    <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-      {menu && localStorage.getItem('vaiTro') !== 'Admin' && (
-        <Menu.Item key="center">
-          <UserOutlined />
-          Trang cá nhân
-        </Menu.Item>
-      )}
-      <Menu.Divider />
-      <Menu.Item key="logout">
-        <LogoutOutlined />
-        Đăng xuất
-      </Menu.Item>
-    </Menu>
-  );
 
   return (
     <>
-      <HeaderDropdown overlay={menuHeaderDropdown}>
+      <HeaderDropdown overlay={<Menu className={styles.menu} items={items} />}>
         <span className={`${styles.action} ${styles.account}`}>
           <Avatar
             className={styles.avatar}
@@ -94,7 +98,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
             alt="avatar"
           />
           <span className={`${styles.name}`}>
-            {currentUser?.fullname || currentUser?.username || ''}
+            {initialState.currentUser?.fullname || initialState.currentUser?.username || ''}
           </span>
         </span>
       </HeaderDropdown>

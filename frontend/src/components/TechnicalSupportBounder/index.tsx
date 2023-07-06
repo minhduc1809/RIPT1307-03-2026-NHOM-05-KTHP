@@ -19,7 +19,6 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
 
   const getUserIdOnesignal = async () => {
     const id = await OneSignal.getUserId();
-    console.log('🚀 ~ file: index.tsx:22 ~ getUserIdOnesignal ~ id:', id);
     setOneSignalId(id);
   };
 

@@ -1,4 +1,4 @@
-import { AppModules, type EModuleKey } from '@/services/ant-design-pro/constant';
+import { AppModules, EModuleKey } from '@/services/ant-design-pro/constant';
 import { UserSwitchOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
 import { useModel } from 'umi';
@@ -19,7 +19,11 @@ const ModuleView = () => {
             <Col span={8} key={name}>
               <a href={value?.url} target="_blank" rel="noreferrer">
                 <div className="module-item">
-                  {value?.icon ? <img src={`/modules/${value.icon}`} /> : <UserSwitchOutlined />}
+                  {value?.icon ? (
+                    <img src={`${AppModules[EModuleKey.CORE].url}modules/${value.icon}`} />
+                  ) : (
+                    <UserSwitchOutlined />
+                  )}
                   <span className="module-name">{value?.title ?? name}</span>
                 </div>
               </a>

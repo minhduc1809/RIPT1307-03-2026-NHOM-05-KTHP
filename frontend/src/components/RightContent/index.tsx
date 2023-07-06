@@ -2,7 +2,7 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 import React from 'react';
 import { history, useModel } from 'umi';
-import Avatar from './AvatarDropdown';
+import AvatarDropdown from './AvatarDropdown';
 import ModuleSwitch from './ModuleSwitch';
 import NoticeIconView from './NoticeIcon';
 import styles from './index.less';
@@ -28,7 +28,7 @@ const GlobalHeaderRight: React.FC = () => {
         </a>
       </Tooltip>
 
-      <Avatar menu />
+      <AvatarDropdown menu />
     </div>
   );
 };

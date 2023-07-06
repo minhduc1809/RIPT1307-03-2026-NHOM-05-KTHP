@@ -8,6 +8,7 @@ import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingPage from './components/Loading';
+import OneSignalBounder from './components/OneSignalBounder';
 import TechnicalSupportBounder from './components/TechnicalSupportBounder';
 import NotAccessible from './pages/exception/403';
 import NotFoundContent from './pages/exception/404';
@@ -15,7 +16,6 @@ import './styles/global.less';
 import { currentRole } from './utils/ip';
 import { oidcConfig } from './utils/oidcConfig';
 import { type IInitialState } from './utils/typing';
-import OneSignalBounder from './components/OneSignalBounder';
 
 // const loginPath = '/user/login';
 // const pathAuth = ['/admin/login'];
@@ -103,18 +103,15 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
           history.replace('/403');
     },
 
-    menuItemRender: (item: any, dom: any) => {
-      return (
-        <div
-          // style={{ flex: 'auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
-          onClick={() => {
-            history.push(item?.path ?? '/');
-          }}
-        >
-          {dom}
-        </div>
-      );
-    },
+    menuItemRender: (item: any, dom: any) => (
+      <div
+        // style={{ flex: 'auto', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}
+        key={item?.path}
+        onClick={() => history.push(item?.path ?? '/')}
+      >
+        {dom}
+      </div>
+    ),
 
     childrenRender: (dom) => {
       return (
