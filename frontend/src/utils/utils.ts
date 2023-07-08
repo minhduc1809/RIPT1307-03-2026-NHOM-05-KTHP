@@ -370,6 +370,24 @@ export const removeHtmlTags = (html: string) =>
     ?.trim();
 
 /**
+ * Chuyển HTML Entities thành text
+ * @returns {any}
+ */
+export const decodeHtmlEntities = (str: string): string => {
+  if (str && typeof str === 'string') {
+    const element = document.createElement('div');
+    // strip script/html tags
+    let s = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gim, '');
+    s = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gim, '');
+    element.innerHTML = s;
+    s = element.textContent || '';
+    element.textContent = '';
+    return s;
+  }
+  return '';
+};
+
+/**
  * Number to currency format
  * @param number value
  */
