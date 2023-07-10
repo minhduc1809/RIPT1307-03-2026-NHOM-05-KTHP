@@ -1,10 +1,10 @@
 import { AppModules, EModuleKey } from '@/services/ant-design-pro/constant';
 
-// const ip3 = 'https://dhs.ptit.edu.vn/odoo-user-service'; // ip prod
-// const ip = 'https://dhs.ptit.edu.vn'; // ip prod
+// const ipRoot = 'https://ais.aisenote.com/'; // ip prod
+const ipRoot = 'https://ais.aisenote.com/dev/'; // ip dev
 
-const ip3 = 'https://ais.aisenote.com/tcns'; // ip dev
-const ipNotif = 'https://ais.aisenote.com/notification'; // ip dev
+const ip3 = ipRoot + 'tcns'; // ip dev
+const ipNotif = ipRoot + 'notification'; // ip dev
 const ipGlobal = 'https://ais2.aisenote.com/qldt-internal-api'; // ip dev
 
 const currentRole = EModuleKey.TCNS;

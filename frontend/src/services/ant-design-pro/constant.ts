@@ -16,43 +16,43 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
   [EModuleKey.CONNECT]: {
     title: 'Cổng người học',
     clientId: 'vwa-connect',
-    url: 'https://vwa-connect.vercel.app/',
+    url: 'https://vwa-connect-dev.vercel.app/',
     icon: EModuleKey.CONNECT + '.svg',
   },
   [EModuleKey.CONG_CAN_BO]: {
     title: 'Cổng cán bộ',
     clientId: 'vwa-connect',
-    url: 'https://cong-can-bo-vwa.vercel.app/',
+    url: 'https://cong-can-bo-vwa-dev.vercel.app/',
     icon: EModuleKey.CONG_CAN_BO + '.svg',
   },
   [EModuleKey.CORE]: {
     title: 'Danh mục chung',
     clientId: 'vwa-core',
-    url: 'https://core-vwa.vercel.app/',
+    url: 'https://core-vwa-dev.vercel.app/',
     icon: EModuleKey.CORE + '.svg',
   },
   [EModuleKey.QLDT]: {
     title: 'Quản lý đào tạo',
     clientId: 'vwa-qldt',
-    url: 'https://qldt-vwa.vercel.app/',
+    url: 'https://qldt-vwa-dev.vercel.app/',
     icon: EModuleKey.QLDT + '.svg',
   },
   [EModuleKey.TCNS]: {
     title: 'Tổ chức nhân sự',
     clientId: 'vwa-tcns',
-    url: 'https://tcns-vwa.vercel.app/',
+    url: 'https://tcns-vwa-dev.vercel.app/',
     icon: EModuleKey.TCNS + '.svg',
   },
   [EModuleKey.CTSV]: {
     title: 'Công tác sinh viên',
     clientId: 'vwa-ctsv',
-    url: 'https://ctsv-vwa.vercel.app/',
+    url: 'https://ctsv-vwa-dev.vercel.app/',
     icon: EModuleKey.CTSV + '.svg',
   },
   [EModuleKey.VPS]: {
     title: 'Văn phòng số',
     clientId: 'vwa-vps',
-    url: 'https://van-phong-so-vwa.vercel.app/',
+    url: 'https://van-phong-so-vwa-dev.vercel.app/',
     icon: EModuleKey.VPS + '.svg',
   },
   [EModuleKey.QLKH]: {
@@ -63,9 +63,9 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
   [EModuleKey.TC]: {
     title: 'Tài chính',
     clientId: 'vwa-tc',
-    url: 'https://tai-chinh-vwa.vercel.app/',
+    url: 'https://tai-chinh-vwa-dev.vercel.app/',
     icon: EModuleKey.TC + '.svg',
   },
 };
 
-export const landingUrl = 'https://landing-vwa-keycloak.vercel.app/';
+export const landingUrl = 'http://portal-vwa.aisenote.com/';
