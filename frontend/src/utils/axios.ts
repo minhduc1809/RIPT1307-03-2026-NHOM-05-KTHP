@@ -65,10 +65,12 @@ axios.interceptors.response.use(
         er?.errorDescription;
 
     const originalRequest = error.config;
+    let originData = originalRequest?.data;
+    if (typeof originData === 'string') originData = JSON.parse(originData);
     if (
-      typeof originalRequest?.data !== 'object' ||
-      !Object.keys(originalRequest?.data ?? {}).includes('silent') ||
-      !originalRequest?.data?.slient
+      typeof originData !== 'object' ||
+      !Object.keys(originData ?? {}).includes('silent') ||
+      !originData?.silent
     )
       switch (error?.response?.status) {
         case 400:
