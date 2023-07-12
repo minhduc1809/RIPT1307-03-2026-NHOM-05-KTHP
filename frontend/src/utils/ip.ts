@@ -10,10 +10,9 @@ const ipGlobal = 'https://ais2.aisenote.com/qldt-internal-api'; // ip dev
 const currentRole = EModuleKey.TCNS;
 
 const keycloakClientID = AppModules[currentRole].clientId;
-const keycloakAuthority = 'https://ais.aisenote.com/keycloak/realms/vwa';
+const keycloakAuthority = ipRoot + 'keycloak/realms/vwa';
 const resourceServerClientId = 'vwa-auth';
-const keycloakTokenEndpoint =
-  'https://ais.aisenote.com/keycloak/realms/vwa/protocol/openid-connect/token';
+const keycloakTokenEndpoint = ipRoot + 'keycloak/realms/vwa/protocol/openid-connect/token';
 
 export {
   ip3,
