@@ -1,8 +1,8 @@
+import { type TFilter, type TImportHeader, type TImportResponse } from '@/components/Table/typing';
 import { chuanHoaObject } from '@/utils/utils';
 import { message } from 'antd';
 import { useState } from 'react';
 import useInitService from './useInitService';
-import { type TImportHeader, type TFilter, type TImportResponse } from '@/components/Table/typing';
 
 /**
  *
@@ -29,6 +29,7 @@ const useInitModel = <T,>(
   const [condition, setCondition] = useState<{ [k in keyof T]?: any } | any>(initCondition);
   const [sort, setSort] = useState<{ [k in keyof T]?: 1 | -1 } | undefined>(initSort);
   const [edit, setEdit] = useState<boolean>(false);
+  const [isView, setIsView] = useState<boolean>(true);
   const [visibleForm, setVisibleForm] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [importHeaders, setImportHeaders] = useState<TImportHeader[]>([]); // Import header lấy từ API
@@ -214,10 +215,18 @@ const useInitModel = <T,>(
     }
   };
 
-  const handleEdit = (rec: T) => {
-    setRecord(rec);
-    setVisibleForm(true);
+  const handleEdit = (rec?: T) => {
+    if (rec) setRecord(rec);
     setEdit(true);
+    setIsView(false);
+    setVisibleForm(true);
+  };
+
+  const handleView = (rec?: T) => {
+    if (rec) setRecord(rec);
+    setEdit(false);
+    setIsView(true);
+    setVisibleForm(true);
   };
 
   /**
@@ -304,6 +313,8 @@ const useInitModel = <T,>(
     setCondition,
     edit,
     setEdit,
+    isView,
+    setIsView,
     visibleForm,
     setVisibleForm,
     total,
@@ -317,6 +328,7 @@ const useInitModel = <T,>(
     importHeaders,
     setImportHeaders,
     handleEdit,
+    handleView,
     getImportHeaderModel,
     getImportTemplateModel,
     postExecuteImpotModel,

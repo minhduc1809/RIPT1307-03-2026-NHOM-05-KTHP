@@ -49,7 +49,7 @@ const TableBase = (props: TableBaseProps) => {
     rowSortable,
   } = props;
   let { columns } = props;
-  const { visibleForm, setVisibleForm, setEdit, setRecord } = useModel(modelName);
+  const { visibleForm, setVisibleForm, setEdit, setRecord, setIsView } = useModel(modelName);
   const model = useModel(modelName);
 
   const page = model?.[`page${newName ?? ''}`];
@@ -327,6 +327,7 @@ const TableBase = (props: TableBaseProps) => {
                 onClick={() => {
                   setRecord({});
                   setEdit(false);
+                  setIsView(false);
                   setVisibleForm(true);
                 }}
                 icon={<PlusCircleOutlined />}
@@ -459,7 +460,7 @@ const TableBase = (props: TableBaseProps) => {
               footer={false}
               bodyStyle={{ padding: 0 }}
               visible={visibleForm}
-              destroyOnClose={destroyModal}
+              destroyOnClose={destroyModal || false}
             >
               <Form title={title ?? ''} {...props.formProps} />
               <CloseOutlined
@@ -476,7 +477,7 @@ const TableBase = (props: TableBaseProps) => {
               footer={false}
               bodyStyle={{ padding: 0 }}
               visible={visibleForm}
-              destroyOnClose={destroyModal}
+              destroyOnClose={destroyModal || false}
             >
               <Form title={title ?? ''} {...props.formProps} />
             </Modal>
