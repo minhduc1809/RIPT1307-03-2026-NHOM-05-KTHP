@@ -75,12 +75,12 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     //         keycloakClientID,
     //     ),
     // });
-    items.splice(1, 0, {
-      key: 'center',
-      icon: <UserOutlined />,
-      label: 'Trang cá nhân',
-      onClick: () => history.push('/account/center'),
-    });
+    // items.splice(1, 0, {
+    //   key: 'center',
+    //   icon: <UserOutlined />,
+    //   label: 'Trang cá nhân',
+    //   onClick: () => history.push('/account/center'),
+    // });
   }
 
   return (
