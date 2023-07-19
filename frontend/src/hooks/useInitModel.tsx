@@ -336,6 +336,8 @@ const useInitModel = <T,>(
     getByIdService,
     getService,
     getAllService,
+    postService,
+    putService,
   };
 };
 
