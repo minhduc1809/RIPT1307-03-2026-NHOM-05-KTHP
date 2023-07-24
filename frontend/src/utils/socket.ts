@@ -1,17 +1,13 @@
 import { io } from 'socket.io-client';
 
-
 const token = localStorage.getItem('token');
 
-const url = 'https://dhs.aisenote.com/';//dev
+const url = 'https://dhs.aisenote.com/'; //dev
 //const url = 'https://dhs.ptit.edu.vn/';//pro
 // const namespace = 'socket.io'
 
-
-
-
 const socket = io(url, {
-  path:'/socket.io',
+  path: '/socket.io',
   transports: ['websocket'],
   reconnectionAttempts: 30,
   reconnectionDelay: 3000,
@@ -42,4 +38,3 @@ export enum ESocketType {
 }
 
 export default socket;
-

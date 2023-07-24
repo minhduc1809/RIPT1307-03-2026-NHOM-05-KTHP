@@ -16,13 +16,13 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
   [EModuleKey.CONNECT]: {
     title: 'Cổng người học',
     clientId: 'vwa-connect',
-    url: 'https://vwa-connect-dev1.vercel.app/',
+    url: 'https://vwa-connect-dev.vercel.app/',
     icon: EModuleKey.CONNECT + '.svg',
   },
   [EModuleKey.CONG_CAN_BO]: {
     title: 'Cổng cán bộ',
     clientId: 'vwa-connect',
-    url: 'https://cong-can-bo-vwa-dev1.vercel.app/',
+    url: 'https://cong-can-bo-vwa-dev.vercel.app/',
     icon: EModuleKey.CONG_CAN_BO + '.svg',
   },
   [EModuleKey.CORE]: {

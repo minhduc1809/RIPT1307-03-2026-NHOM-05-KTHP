@@ -16,7 +16,7 @@ export type NoticeIconProps = {
   loading?: boolean;
   onClear?: (tabName: string, tabKey: string) => void;
   onItemClick?: (item: ThongBao.IRecord, tabProps: NoticeIconTabProps) => void;
-  onViewMore?: (tabProps: NoticeIconTabProps, e: MouseEvent) => void;
+  onViewMore?: (tabProps: NoticeIconTabProps) => void;
   onTabChange?: (tabTile: string) => void;
   style?: React.CSSProperties;
   onPopupVisibleChange?: (visible: boolean) => void;
@@ -61,9 +61,9 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
             viewMoreText={viewMoreText}
             list={list}
             tabKey={tabKey}
-            onClear={(): void => onClear && onClear(title, tabKey)}
-            onClick={(item): void => onItemClick && onItemClick(item, child.props)}
-            onViewMore={(event): void => onViewMore && onViewMore(child.props, event)}
+            onClear={() => onClear && onClear(title, tabKey)}
+            onClick={(item) => onItemClick && onItemClick(item, child.props)}
+            onViewMore={() => onViewMore && onViewMore(child.props)}
             showClear={showClear}
             showViewMore={showViewMore}
             title={title}

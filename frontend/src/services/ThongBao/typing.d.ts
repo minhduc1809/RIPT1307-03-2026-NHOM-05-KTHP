@@ -1,4 +1,3 @@
-import { type EVaiTroBieuMau } from '../TienIch/constant';
 import { type EReceiverType } from './constant';
 
 declare module ThongBao {
@@ -28,12 +27,5 @@ declare module ThongBao {
     urlFile?: string[];
     createdAt: string; // '2023-06-27T07:47:29.693Z';
     read: boolean;
-  }
-
-  export interface IUser {
-    code: string;
-    firstname: string;
-    lastname: string;
-    vaiTro?: EVaiTroBieuMau;
   }
 }
