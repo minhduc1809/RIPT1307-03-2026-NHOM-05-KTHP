@@ -406,6 +406,23 @@ canvas {
   }
 }
 
+.ant-modal-content {
+  .ant-modal-header {
+    padding: 16px 24px 16px 18px;
+
+    @media (max-width: @screen-xs) {
+      padding: 16px 24px 16px 12px;
+    }
+  }
+
+  .ant-modal-body {
+    padding: 18px;
+    @media (max-width: @screen-xs) {
+      padding: 12px;
+    }
+  }
+}
+
 .ant-modal .ant-card-body,
 .ant-drawer .ant-card-body {
   @media (min-width: @screen-xl) {
