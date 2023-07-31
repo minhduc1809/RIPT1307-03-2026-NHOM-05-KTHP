@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import { type AxiosResponse } from 'axios';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import * as XLSX from 'xlsx';
@@ -422,4 +423,20 @@ export const resetFieldsForm = (form: any, formDefaultValues?: Record<string, an
   const values = form.getFieldsValue();
   Object.keys(values).map((k) => (values[k] = undefined));
   form.setFieldsValue({ ...values, ...(formDefaultValues ?? {}) });
+};
+
+/**
+ * Get file name from response's header
+ * @param response Response from Export API
+ * @returns
+ */
+export const getFilenameHeader = (response: AxiosResponse<any>) => {
+  const token = String(response.headers['content-disposition'])
+    .split(';')
+    .find((a) => a.startsWith('filename='));
+  if (!token) {
+    return 'Tài liệu';
+  } else {
+    return decodeURIComponent(token.substring(10).slice(0, -1));
+  }
 };
