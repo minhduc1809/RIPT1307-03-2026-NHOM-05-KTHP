@@ -20,7 +20,7 @@ const data: any = {
     BAD_REQUEST_NO_ACCESS_DOT: 'Không có đợt đánh giá hợp lệ!',
     BAD_REQUEST_CHUA_CO_DIEM: 'Hiện tại điểm của bạn chưa được cập nhật!',
     BAD_REQUEST_NO_ACCESS_KY_HOC: 'Kỳ học không hợp lệ!',
-    BAD_REQUEST_NO_ACCESS_LOP_TIN_CHI: 'Lớp tín chỉ không hợp lệ!',
+    BAD_REQUEST_NO_ACCESS_LOP_TIN_CHI: 'Lớp học phần không hợp lệ!',
   },
 };
 

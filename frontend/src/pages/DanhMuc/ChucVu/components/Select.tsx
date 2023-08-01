@@ -7,8 +7,13 @@ import FormChucVu from './Form';
 /**
  * Secect Chức vụ để cho vào FormItem
  */
-const SelectChucVu = (props: any) => {
-  const { value, onChange, hasCreate } = props;
+const SelectChucVu = (props: {
+  value?: string | null;
+  onChange?: (val: string | null) => void;
+  multiple?: boolean;
+  hasCreate?: boolean;
+}) => {
+  const { value, onChange, multiple, hasCreate } = props;
   const { danhSach, getAllModel, setVisibleForm, visibleForm, setEdit, setRecord } =
     useModel('danhmuc.chucvu');
 
@@ -26,6 +31,7 @@ const SelectChucVu = (props: any) => {
     <div style={{ display: 'flex', gap: 8 }}>
       <div className={hasCreate !== false ? 'width-select-custom' : 'fullWidth'}>
         <Select
+          mode={multiple ? 'multiple' : undefined}
           value={value}
           onChange={onChange}
           options={danhSach.map((item) => ({

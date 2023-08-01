@@ -7,14 +7,7 @@ import { useModel } from 'umi';
 import Form from './components/Form';
 
 const ChucVuPage = () => {
-  const { setEdit, setVisibleForm, setRecord, getModel, page, limit, deleteModel } =
-    useModel('danhmuc.chucvu');
-
-  const handleEdit = (record: ChucVu.IRecord) => {
-    setRecord(record);
-    setVisibleForm(true);
-    setEdit(true);
-  };
+  const { getModel, page, limit, deleteModel, handleEdit } = useModel('danhmuc.chucvu');
 
   const columns: IColumn<ChucVu.IRecord>[] = [
     {
