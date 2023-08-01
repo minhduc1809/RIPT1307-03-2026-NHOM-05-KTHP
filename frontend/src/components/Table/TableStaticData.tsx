@@ -128,10 +128,10 @@ const TableStaticData = (props: TableStaticProps) => {
 
   if (addStt)
     columns.unshift({
-      title: 'STT',
+      title: 'TT',
       render: (s: any, r: any, index: any) => index + 1 + (page - 1) * limit,
       align: 'center',
-      width: 60,
+      width: 40,
       children: undefined,
     });
 

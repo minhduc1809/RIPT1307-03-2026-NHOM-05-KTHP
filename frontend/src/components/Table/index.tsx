@@ -41,7 +41,6 @@ const TableBase = (props: TableBaseProps) => {
     maskCloseableForm,
     hideCard,
     noCleanUp,
-    newName,
     pageable,
     scroll,
     destroyModal,
@@ -49,25 +48,25 @@ const TableBase = (props: TableBaseProps) => {
     rowSortable,
   } = props;
   let { columns } = props;
-  const { visibleForm, setVisibleForm, setEdit, setRecord, setIsView } = useModel(modelName);
   const model = useModel(modelName);
+  const { visibleForm, setVisibleForm, setEdit, setRecord, setIsView } = model;
 
-  const page = model?.[`page${newName ?? ''}`];
-  const limit = model?.[`limit${newName ?? ''}`];
-  const total = model?.[`total${newName ?? ''}`];
-  const setPage = model?.[`setPage${newName ?? ''}`];
-  const setLimit = model?.[`setLimit${newName ?? ''}`];
-  const condition = model?.[`condition${newName ?? ''}`];
-  const filters: TFilter<any>[] = model?.[`filters${newName ?? ''}`];
-  // const setCondition = model?.[`setCondition${newName ?? ''}`];
-  const setFilters = model?.[`setFilters${newName ?? ''}`];
-  const sort = model?.[`sort${newName ?? ''}`];
-  const setSort = model?.[`setSort${newName ?? ''}`];
-  const loading = model?.[`loading${newName ?? ''}`];
-  const getData = props.getData ?? model?.[`getModel${newName ?? ''}`];
+  const page = model?.page;
+  const limit = model?.limit;
+  const total = model?.total;
+  const setPage = model?.setPage;
+  const setLimit = model?.setLimit;
+  const condition = model?.condition;
+  // const setCondition = model?.['setCondition'];
+  const filters: TFilter<any>[] = model?.filters;
+  const setFilters = model?.setFilters;
+  const sort = model?.sort;
+  const setSort = model?.setSort;
+  const loading = model?.loading;
+  const getData = props.getData ?? model?.getModel;
 
-  const [visibleFilter, setVisibleFilter] = useState(false);
   const hasFilter = columns?.filter((item) => item.filterType)?.length;
+  const [visibleFilter, setVisibleFilter] = useState(false);
   const [visibleImport, setVisibleImport] = useState(false);
 
   useEffect(() => {

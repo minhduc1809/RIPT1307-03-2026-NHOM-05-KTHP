@@ -89,11 +89,8 @@ export type TableBaseProps = {
   noCleanUp?: boolean;
 
   rowSelection?: boolean;
+  /** View antd Row Selection */
   detailRow?: any;
-
-  /** Tên trường dữ liệu gắn thêm
-   * Ví dụ nếu trong model là 'danhSachNhanVien' thì cần truyền vào là 'NhanVien' */
-  newName?: string;
 
   hideTotal?: boolean;
   pageable?: boolean;
