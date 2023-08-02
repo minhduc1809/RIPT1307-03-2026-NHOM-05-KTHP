@@ -3,7 +3,7 @@ import { Button, Col, Empty, Modal, Row } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import { type TExportField } from '../typing';
+import { type TExportField, type TFilter } from '../typing';
 import CardChooseFields from './CardChooseFields';
 import CardExportFields from './CardExportFields';
 
@@ -13,8 +13,8 @@ const ModalExport = (props: {
   modelName: any;
   maskCloseableForm?: boolean;
   fileName: string;
-  condition?: any;
-  filters?: any;
+  condition?: Record<string, any>;
+  filters?: TFilter<any>[];
 }) => {
   const { visible, onCancel, modelName, maskCloseableForm, fileName, condition, filters } = props;
   const { getExportFieldsModel, postExportModel, formSubmiting } = useModel(modelName);
@@ -47,7 +47,7 @@ const ModalExport = (props: {
 
   const onFinish = () => {
     if (finalFields.length)
-      postExportModel({ definition: finalFields }, { condition, filters }).then((blob: Blob) => {
+      postExportModel({ definition: finalFields }, condition, filters).then((blob: Blob) => {
         fileDownload(blob, fileName);
         onCancel();
       });
@@ -62,11 +62,12 @@ const ModalExport = (props: {
       width={800}
       destroyOnClose
       maskClosable={maskCloseableForm || false}
-      bodyStyle={{ paddingTop: 0 }}
     >
       {!!exportFields.length ? (
         <>
           <Row gutter={[12, 12]} style={{ marginBottom: 18 }}>
+            <Col span={24}>Chọn các trường dữ liệu cần trích xuất</Col>
+
             <Col span={24} md={12}>
               <CardChooseFields
                 allFields={allFields}

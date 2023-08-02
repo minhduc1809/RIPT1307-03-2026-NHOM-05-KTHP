@@ -341,7 +341,10 @@ const useInitModel = <T,>(
     try {
       const res = await postExport(payload, {
         condition: { ...condition, ...paramCondition },
-        filters: { ...filters, ...paramFilters },
+        filters: [
+          ...(filters?.filter((item) => item.active)?.map(({ active, ...item }) => item) || []),
+          ...(paramFilters ?? []),
+        ],
       });
       return res.data;
     } catch (err) {

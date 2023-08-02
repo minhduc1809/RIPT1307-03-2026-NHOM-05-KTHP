@@ -518,6 +518,7 @@ const TableBase = (props: TableBaseProps) => {
           modelName={modelName}
           onCancel={() => setVisibleExport(false)}
           fileName={`Danh sách ${title ?? 'dữ liệu'}.xlsx`}
+          condition={params}
         />
       ) : null}
     </>
