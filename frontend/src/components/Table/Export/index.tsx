@@ -22,11 +22,18 @@ const ModalExport = (props: {
   const [exportFields, setExportFields] = useState<TExportField[]>([]);
   const finalFields = exportFields.filter((item) => item.selected);
 
-  const genFlatData = (data?: TExportField[]): TExportField[] => {
+  const genFlatData = (data?: TExportField[], disableImport?: boolean): TExportField[] => {
     if (!data?.length) return [];
     // Nếu có field con thì populate hết các field con,
     // còn ko thì trả về chính nó
-    return data.map((item) => (!item.children ? [item] : genFlatData(item.children))).flat();
+    // MẶC ĐỊNH chọn những trường KHÔNG disableImport và cha của nó cũng không disableImport
+    return data
+      .map((item) =>
+        !item.children
+          ? [{ ...item, selected: !disableImport && !item.disableImport }]
+          : genFlatData(item.children, item.disableImport || disableImport),
+      )
+      .flat();
   };
 
   const getFields = () => {

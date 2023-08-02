@@ -195,4 +195,5 @@ export type TExportField = {
   type: string;
   children?: TExportField[];
   selected?: boolean;
+  disableImport?: boolean;
 };
