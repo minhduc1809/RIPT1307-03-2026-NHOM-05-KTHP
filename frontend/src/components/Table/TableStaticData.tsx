@@ -1,22 +1,22 @@
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { MenuOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Drawer, Input, Modal, Table } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import Highlighter from 'react-highlight-words';
+import type { SortEnd, SortableContainerProps } from 'react-sortable-hoc';
+import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import './style.less';
 import { type TDataOption, type TableStaticProps } from './typing';
 
 const TableStaticData = (props: TableStaticProps) => {
-  const { Form, showEdit, setShowEdit, addStt, data, children, hasCreate, hasTotal } = props;
+  const { Form, showEdit, setShowEdit, addStt, data, children, hasCreate, hasTotal, rowSortable } =
+    props;
   const [searchText, setSearchText] = useState<string>('');
   const [searchedColumn, setSearchedColumn] = useState();
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState<number>();
 
   useEffect(() => {
     setTotal(data?.length);
-    setPage(1);
     setSearchText('');
     setSearchedColumn(undefined);
   }, [data?.length]);
@@ -129,11 +129,56 @@ const TableStaticData = (props: TableStaticProps) => {
   if (addStt)
     columns.unshift({
       title: 'TT',
-      render: (s: any, r: any, index: any) => index + 1 + (page - 1) * limit,
+      dataIndex: 'index',
       align: 'center',
       width: 40,
       children: undefined,
     });
+
+  //#region Get Drag Sortable column
+  const DragHandle = SortableHandle(() => (
+    <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />
+  ));
+
+  const SortableItem = SortableElement((props1: React.HTMLAttributes<HTMLTableRowElement>) => (
+    <tr {...props1} />
+  ));
+  const SortableBody = SortableContainer(
+    (props1: React.HTMLAttributes<HTMLTableSectionElement>) => <tbody {...props1} />,
+  );
+
+  if (rowSortable)
+    columns.unshift({
+      title: '',
+      width: 30,
+      align: 'center',
+      children: undefined,
+      render: () => <DragHandle />,
+    });
+
+  const onSortEnd = ({ oldIndex, newIndex }: SortEnd) => {
+    if (oldIndex !== newIndex) {
+      const record = props.data?.[oldIndex];
+      if (props.onSortEnd) props.onSortEnd(record, newIndex);
+    }
+  };
+
+  const DraggableContainer = (props1: SortableContainerProps) => (
+    <SortableBody
+      useDragHandle
+      disableAutoscroll
+      helperClass="row-dragging"
+      onSortEnd={onSortEnd}
+      {...props1}
+    />
+  );
+
+  const DraggableBodyRow: React.FC<any> = ({ className, style, ...restProps }) => {
+    // function findIndex base on Table rowKey props and should always be a right array index
+    const index = restProps['data-row-key'];
+    return <SortableItem index={index ?? 0} {...restProps} />;
+  };
+  //#endregion
 
   return (
     <div className="table-base">
@@ -166,19 +211,30 @@ const TableStaticData = (props: TableStaticProps) => {
       </div>
 
       <Table
-        rowKey={(rec) => rec._id}
         title={props?.title ? () => props.title : false}
         columns={columns}
-        dataSource={props?.data ?? []}
+        dataSource={(props?.data ?? []).map((item, index) => ({
+          ...item,
+          index: index + 1,
+          key: index,
+        }))}
         onChange={(pagination, filters, sorter, extra) => {
           setTotal(extra.currentDataSource.length ?? pagination.total);
-          setPage(pagination.current ?? 1);
-          setLimit(pagination.pageSize ?? 999);
         }}
         loading={props?.loading}
         size={props.size}
         scroll={{ x: _.sum(columns.map((item) => item.width ?? 80)) }}
         bordered
+        components={
+          rowSortable
+            ? {
+                body: {
+                  wrapper: DraggableContainer,
+                  row: DraggableBodyRow,
+                },
+              }
+            : undefined
+        }
         {...props?.otherProps}
       />
       {Form && (

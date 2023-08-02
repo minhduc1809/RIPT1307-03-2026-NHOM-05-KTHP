@@ -150,7 +150,20 @@ export type TableStaticProps = {
   loading?: boolean;
   formType?: 'Modal' | 'Drawer';
   widthDrawer?: number;
+
+  /** Có hiển thị thị kéo thả sắp xêp hàng ko? Mặc định: Không */
+  rowSortable?: boolean;
+
+  /**
+   * Sự kiện khi hàng được kéo đến vị trí mới
+   * @param record Record ứng với hàng được kéo thả
+   * @param newIndex Vị trí mới được kéo đến: 0 -> (limit-1)
+   * @returns
+   */
+  onSortEnd?: (record: any, newIndex: number) => void;
 };
+
+// IMPORT HEADER
 
 export type TImportHeader = {
   field: string;
@@ -169,4 +182,17 @@ export type TImportResponse = {
 export type TImportRowResponse = {
   index: number;
   rowErrors?: string[];
+};
+
+// EXPORT FIELD
+
+export type TExportField = {
+  _id: string;
+  label: string;
+  fields: string[];
+  labels: string[];
+  required: boolean;
+  type: string;
+  children?: TExportField[];
+  selected?: boolean;
 };
