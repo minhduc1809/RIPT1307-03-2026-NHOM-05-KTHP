@@ -47,7 +47,7 @@ const ModalExport = (props: {
 
   const onFinish = () => {
     if (finalFields.length)
-      postExportModel({ definition: finalFields }, condition, filters).then((blob: Blob) => {
+      postExportModel({ definitions: finalFields }, condition, filters).then((blob: Blob) => {
         fileDownload(blob, fileName);
         onCancel();
       });
