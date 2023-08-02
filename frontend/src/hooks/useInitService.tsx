@@ -51,6 +51,20 @@ const useInitService = (url: string, ip?: string) => {
     return axios.post(`${finalIp}/${url}/import/insert`, payload);
   };
 
+  const getExportFields = () => {
+    return axios.get(`${finalIp}/${url}/export/definition`, { data: { silent: true } });
+  };
+
+  const postExport = (
+    payload: { ids?: string[]; definitions: any[] },
+    params?: { condition?: any; filters?: any },
+  ) => {
+    return axios.post(`${finalIp}/${url}/export/xlsx`, payload, {
+      params,
+      responseType: 'arraybuffer',
+    });
+  };
+
   return {
     getService,
     getByIdService,
@@ -62,6 +76,8 @@ const useInitService = (url: string, ip?: string) => {
     getImportTemplate,
     postValidateImport,
     postExecuteImport,
+    getExportFields,
+    postExport,
   };
 };
 
