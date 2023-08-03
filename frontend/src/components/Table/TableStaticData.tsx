@@ -9,276 +9,258 @@ import './style.less';
 import { type TDataOption, type TableStaticProps } from './typing';
 
 const TableStaticData = (props: TableStaticProps) => {
-  const { Form, showEdit, setShowEdit, addStt, data, children, hasCreate, hasTotal, rowSortable } =
-    props;
-  const [searchText, setSearchText] = useState<string>('');
-  const [searchedColumn, setSearchedColumn] = useState();
-  const [total, setTotal] = useState<number>();
+	const { Form, showEdit, setShowEdit, addStt, data, children, hasCreate, hasTotal, rowSortable } = props;
+	const [searchText, setSearchText] = useState<string>('');
+	const [searchedColumn, setSearchedColumn] = useState();
+	const [total, setTotal] = useState<number>();
 
-  useEffect(() => {
-    setTotal(data?.length);
-    setSearchText('');
-    setSearchedColumn(undefined);
-  }, [data?.length]);
+	useEffect(() => {
+		setTotal(data?.length);
+		setSearchText('');
+		setSearchedColumn(undefined);
+	}, [data?.length]);
 
-  const handleSearch = (selectedKeys: any, confirm: any, dataIndex: any) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
+	const handleSearch = (selectedKeys: any, confirm: any, dataIndex: any) => {
+		confirm();
+		setSearchText(selectedKeys[0]);
+		setSearchedColumn(dataIndex);
+	};
 
-  const handleReset = (clearFilters: any) => {
-    clearFilters();
-    setSearchText('');
-    setSearchedColumn(undefined);
-  };
+	const handleReset = (clearFilters: any) => {
+		clearFilters();
+		setSearchText('');
+		setSearchedColumn(undefined);
+	};
 
-  const getColumnSearchProps = (dataIndex: any) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
-      <div className="column-search-box" onKeyDown={(e) => e.stopPropagation()}>
-        <Input
-          placeholder="Nhập từ khóa"
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-        />
-        <Button
-          type="primary"
-          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          icon={<SearchOutlined />}
-          style={{ width: 90 }}
-        >
-          Tìm
-        </Button>
-        <Button
-          onClick={() => {
-            handleReset(clearFilters);
-            handleSearch(selectedKeys, confirm, dataIndex);
-            setSearchText('');
-          }}
-          style={{ width: 90 }}
-        >
-          Xóa
-        </Button>
-      </div>
-    ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined className={filtered ? 'text-primary' : undefined} />
-    ),
-    onFilter: (value: any, record: any) =>
-      typeof dataIndex === 'string'
-        ? record[dataIndex]?.toString()?.toLowerCase()?.includes(value.toLowerCase())
-        : typeof dataIndex === 'object'
-        ? record[dataIndex[0]][dataIndex?.[1]]
-            ?.toString()
-            ?.toLowerCase()
-            ?.includes(value.toLowerCase())
-        : '',
+	const getColumnSearchProps = (dataIndex: any) => ({
+		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+			<div className='column-search-box' onKeyDown={(e) => e.stopPropagation()}>
+				<Input
+					placeholder='Nhập từ khóa'
+					value={selectedKeys[0]}
+					onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+					onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+				/>
+				<Button
+					type='primary'
+					onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+					icon={<SearchOutlined />}
+					style={{ width: 90 }}
+				>
+					Tìm
+				</Button>
+				<Button
+					onClick={() => {
+						handleReset(clearFilters);
+						handleSearch(selectedKeys, confirm, dataIndex);
+						setSearchText('');
+					}}
+					style={{ width: 90 }}
+				>
+					Xóa
+				</Button>
+			</div>
+		),
+		filterIcon: (filtered: boolean) => <SearchOutlined className={filtered ? 'text-primary' : undefined} />,
+		onFilter: (value: any, record: any) =>
+			typeof dataIndex === 'string'
+				? record[dataIndex]?.toString()?.toLowerCase()?.includes(value.toLowerCase())
+				: typeof dataIndex === 'object'
+				? record[dataIndex[0]][dataIndex?.[1]]?.toString()?.toLowerCase()?.includes(value.toLowerCase())
+				: '',
 
-    render: (text: any) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
-  });
+		render: (text: any) =>
+			searchedColumn === dataIndex ? (
+				<Highlighter
+					highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+					searchWords={[searchText]}
+					autoEscape
+					textToHighlight={text ? text.toString() : ''}
+				/>
+			) : (
+				text
+			),
+	});
 
-  const getFilterColumnProps = (dataIndex: any, filterData?: any[]) => {
-    return {
-      filters: filterData?.map((item: string | TDataOption) =>
-        typeof item === 'string'
-          ? { key: item, value: item, text: item }
-          : { key: item.value, value: item.value, text: item.label },
-      ),
-      onFilter: (value: string, record: any) => record[dataIndex]?.indexOf(value) === 0,
-    };
-  };
+	const getFilterColumnProps = (dataIndex: any, filterData?: any[]) => {
+		return {
+			filters: filterData?.map((item: string | TDataOption) =>
+				typeof item === 'string'
+					? { key: item, value: item, text: item }
+					: { key: item.value, value: item.value, text: item.label },
+			),
+			onFilter: (value: string, record: any) => record[dataIndex]?.indexOf(value) === 0,
+		};
+	};
 
-  const columns = props.columns
-    ?.filter((item) => !item.hide)
-    ?.map((item) => ({
-      ...item,
-      ...(item?.filterType === 'string'
-        ? getColumnSearchProps(item.dataIndex)
-        : item?.filterType === 'select'
-        ? getFilterColumnProps(item.dataIndex, item.filterData)
-        : undefined),
-      ...(item?.sortable && {
-        sorter: (a: any, b: any) =>
-          a[item.dataIndex as string] > b[item.dataIndex as string] ? 1 : -1,
-      }),
-      children: item.children?.map((child) => ({
-        ...child,
-        ...(child?.filterType === 'string'
-          ? getColumnSearchProps(child.dataIndex)
-          : child?.filterType === 'select'
-          ? getFilterColumnProps(child.dataIndex, child.filterData)
-          : undefined),
-        ...(child?.sortable && {
-          sorter: (a: any, b: any) =>
-            a[child.dataIndex as string] > b[child.dataIndex as string] ? 1 : -1,
-        }),
-      })),
-    }));
+	const columns = props.columns
+		?.filter((item) => !item.hide)
+		?.map((item) => ({
+			...item,
+			...(item?.filterType === 'string'
+				? getColumnSearchProps(item.dataIndex)
+				: item?.filterType === 'select'
+				? getFilterColumnProps(item.dataIndex, item.filterData)
+				: undefined),
+			...(item?.sortable && {
+				sorter: (a: any, b: any) => (a[item.dataIndex as string] > b[item.dataIndex as string] ? 1 : -1),
+			}),
+			children: item.children?.map((child) => ({
+				...child,
+				...(child?.filterType === 'string'
+					? getColumnSearchProps(child.dataIndex)
+					: child?.filterType === 'select'
+					? getFilterColumnProps(child.dataIndex, child.filterData)
+					: undefined),
+				...(child?.sortable && {
+					sorter: (a: any, b: any) => (a[child.dataIndex as string] > b[child.dataIndex as string] ? 1 : -1),
+				}),
+			})),
+		}));
 
-  if (addStt)
-    columns.unshift({
-      title: 'TT',
-      dataIndex: 'index',
-      align: 'center',
-      width: 40,
-      children: undefined,
-    });
+	if (addStt)
+		columns.unshift({
+			title: 'TT',
+			dataIndex: 'index',
+			align: 'center',
+			width: 40,
+			children: undefined,
+		});
 
-  //#region Get Drag Sortable column
-  const DragHandle = SortableHandle(() => (
-    <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />
-  ));
+	//#region Get Drag Sortable column
+	const DragHandle = SortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
 
-  const SortableItem = SortableElement((props1: React.HTMLAttributes<HTMLTableRowElement>) => (
-    <tr {...props1} />
-  ));
-  const SortableBody = SortableContainer(
-    (props1: React.HTMLAttributes<HTMLTableSectionElement>) => <tbody {...props1} />,
-  );
+	const SortableItem = SortableElement((props1: React.HTMLAttributes<HTMLTableRowElement>) => <tr {...props1} />);
+	const SortableBody = SortableContainer((props1: React.HTMLAttributes<HTMLTableSectionElement>) => (
+		<tbody {...props1} />
+	));
 
-  if (rowSortable)
-    columns.unshift({
-      title: '',
-      width: 30,
-      align: 'center',
-      children: undefined,
-      render: () => <DragHandle />,
-    });
+	if (rowSortable)
+		columns.unshift({
+			title: '',
+			width: 30,
+			align: 'center',
+			children: undefined,
+			render: () => <DragHandle />,
+		});
 
-  const onSortEnd = ({ oldIndex, newIndex }: SortEnd) => {
-    if (oldIndex !== newIndex) {
-      const record = props.data?.[oldIndex];
-      if (props.onSortEnd) props.onSortEnd(record, newIndex);
-    }
-  };
+	const onSortEnd = ({ oldIndex, newIndex }: SortEnd) => {
+		if (oldIndex !== newIndex) {
+			const record = props.data?.[oldIndex];
+			if (props.onSortEnd) props.onSortEnd(record, newIndex);
+		}
+	};
 
-  const DraggableContainer = (props1: SortableContainerProps) => (
-    <SortableBody
-      useDragHandle
-      disableAutoscroll
-      helperClass="row-dragging"
-      onSortEnd={onSortEnd}
-      {...props1}
-    />
-  );
+	const DraggableContainer = (props1: SortableContainerProps) => (
+		<SortableBody useDragHandle disableAutoscroll helperClass='row-dragging' onSortEnd={onSortEnd} {...props1} />
+	);
 
-  const DraggableBodyRow: React.FC<any> = ({ className, style, ...restProps }) => {
-    // function findIndex base on Table rowKey props and should always be a right array index
-    const index = restProps['data-row-key'];
-    return <SortableItem index={index ?? 0} {...restProps} />;
-  };
-  //#endregion
+	const DraggableBodyRow: React.FC<any> = ({ className, style, ...restProps }) => {
+		// function findIndex base on Table rowKey props and should always be a right array index
+		const index = restProps['data-row-key'];
+		return <SortableItem index={index ?? 0} {...restProps} />;
+	};
+	//#endregion
 
-  return (
-    <div className="table-base">
-      <div className="header">
-        {children}
-        <div className="action">
-          {hasCreate && (
-            <Button
-              onClick={() => {
-                if (setShowEdit) setShowEdit(true);
-              }}
-              icon={<PlusOutlined />}
-              type="primary"
-              style={{ marginBottom: 8 }}
-              size={props?.size ?? 'middle'}
-            >
-              Thêm mới
-            </Button>
-          )}
-        </div>
+	return (
+		<div className='table-base'>
+			<div className='header'>
+				{children}
+				<div className='action'>
+					{hasCreate && (
+						<Button
+							onClick={() => {
+								if (setShowEdit) setShowEdit(true);
+							}}
+							icon={<PlusOutlined />}
+							type='primary'
+							style={{ marginBottom: 8 }}
+							size={props?.size ?? 'middle'}
+						>
+							Thêm mới
+						</Button>
+					)}
+				</div>
 
-        <div className="extra">
-          {hasTotal ? (
-            <div className="total">
-              Tổng số:
-              <span>{total || props.data?.length || 0}</span>
-            </div>
-          ) : null}
-        </div>
-      </div>
+				<div className='extra'>
+					{hasTotal ? (
+						<div className='total'>
+							Tổng số:
+							<span>{total || props.data?.length || 0}</span>
+						</div>
+					) : null}
+				</div>
+			</div>
 
-      <Table
-        title={props?.title ? () => props.title : false}
-        columns={columns}
-        dataSource={(props?.data ?? []).map((item, index) => ({
-          ...item,
-          index: index + 1,
-          key: index,
-        }))}
-        onChange={(pagination, filters, sorter, extra) => {
-          setTotal(extra.currentDataSource.length ?? pagination.total);
-        }}
-        loading={props?.loading}
-        size={props.size}
-        scroll={{ x: _.sum(columns.map((item) => item.width ?? 80)) }}
-        bordered
-        components={
-          rowSortable
-            ? {
-                body: {
-                  wrapper: DraggableContainer,
-                  row: DraggableBodyRow,
-                },
-              }
-            : undefined
-        }
-        {...props?.otherProps}
-      />
-      {Form && (
-        <>
-          {props?.formType === 'Drawer' ? (
-            <Drawer
-              width={props?.widthDrawer}
-              onClose={() => {
-                if (setShowEdit) setShowEdit(false);
-              }}
-              destroyOnClose
-              footer={false}
-              visible={showEdit}
-            >
-              <Form
-                onCancel={() => {
-                  if (setShowEdit) setShowEdit(false);
-                }}
-                {...props.formProps}
-              />
-            </Drawer>
-          ) : (
-            <Modal
-              width={props?.widthDrawer}
-              onCancel={() => {
-                if (setShowEdit) setShowEdit(false);
-              }}
-              destroyOnClose
-              footer={false}
-              bodyStyle={{ padding: 0 }}
-              visible={showEdit}
-            >
-              <Form
-                onCancel={() => {
-                  if (setShowEdit) setShowEdit(false);
-                }}
-                {...props.formProps}
-              />
-            </Modal>
-          )}
-        </>
-      )}
-    </div>
-  );
+			<Table
+				title={props?.title ? () => props.title : false}
+				columns={columns}
+				dataSource={(props?.data ?? []).map((item, index) => ({
+					...item,
+					index: index + 1,
+					key: index,
+				}))}
+				onChange={(pagination, filters, sorter, extra) => {
+					setTotal(extra.currentDataSource.length ?? pagination.total);
+				}}
+				loading={props?.loading}
+				size={props.size}
+				scroll={{ x: _.sum(columns.map((item) => item.width ?? 80)) }}
+				bordered
+				components={
+					rowSortable
+						? {
+								body: {
+									wrapper: DraggableContainer,
+									row: DraggableBodyRow,
+								},
+						  }
+						: undefined
+				}
+				{...props?.otherProps}
+			/>
+			{Form && (
+				<>
+					{props?.formType === 'Drawer' ? (
+						<Drawer
+							width={props?.widthDrawer}
+							onClose={() => {
+								if (setShowEdit) setShowEdit(false);
+							}}
+							destroyOnClose
+							footer={false}
+							visible={showEdit}
+						>
+							<Form
+								onCancel={() => {
+									if (setShowEdit) setShowEdit(false);
+								}}
+								{...props.formProps}
+							/>
+						</Drawer>
+					) : (
+						<Modal
+							width={props?.widthDrawer}
+							onCancel={() => {
+								if (setShowEdit) setShowEdit(false);
+							}}
+							destroyOnClose
+							footer={false}
+							bodyStyle={{ padding: 0 }}
+							visible={showEdit}
+						>
+							<Form
+								onCancel={() => {
+									if (setShowEdit) setShowEdit(false);
+								}}
+								{...props.formProps}
+							/>
+						</Modal>
+					)}
+				</>
+			)}
+		</div>
+	);
 };
 
 export default TableStaticData;
