@@ -341,12 +341,12 @@ const TableBase = (props: TableBaseProps) => {
 
           {buttonOptions?.import ? (
             <Button icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
-              Nhập dữ liệu
+              <span className="extend">Nhập dữ liệu</span>
             </Button>
           ) : null}
           {buttonOptions?.export ? (
             <Button icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
-              Xuất dữ liệu
+              <span className="extend">Xuất dữ liệu</span>
             </Button>
           ) : null}
 
