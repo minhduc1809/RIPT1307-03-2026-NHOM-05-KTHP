@@ -5,7 +5,7 @@ import vi from './vi.json';
 import { type ApexOptions } from 'apexcharts';
 
 const ColumnChart = (props: DataChartType) => {
-	const { title, xAxis, yAxis, yLabel, height, type, formatY, colors } = props;
+	const { title, xAxis, yAxis, yLabel, height, type, formatY, colors, otherOptions } = props;
 
 	const options: ApexOptions = {
 		chart: {
@@ -82,7 +82,9 @@ const ColumnChart = (props: DataChartType) => {
 		color: colors?.[index] ?? '#007EB9',
 	}));
 
-	return <Chart options={options} series={series} type={type ?? 'bar'} height={height ?? 350} />;
+	return (
+		<Chart options={{ ...options, ...otherOptions }} series={series} type={type ?? 'bar'} height={height ?? 350} />
+	);
 };
 
 export default ColumnChart;

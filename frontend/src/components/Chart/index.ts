@@ -1,3 +1,5 @@
+import { type ApexOptions } from 'apexcharts';
+
 export * from './ColumnChart';
 export * from './LineChart';
 export * from './DonutChart';
@@ -16,4 +18,6 @@ export type DataChartType = {
 	colors?: string[];
 	formatY?: (val: number) => string;
 	showTotal?: boolean;
+
+	otherOptions?: ApexOptions;
 };
