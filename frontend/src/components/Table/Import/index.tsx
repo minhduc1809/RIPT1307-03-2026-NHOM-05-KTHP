@@ -19,14 +19,22 @@ const ModalImport = (props: {
 	const { setFileData, setMatchedColumns, setDataImport } = useModel('import');
 	const { getImportHeaderModel, getImportTemplateModel, importHeaders } = useModel(modelName);
 	const [currentStep, setCurrentStep] = useState(0);
+	const [isGetHeader, setIsGetHeader] = useState<boolean>(false);
 
 	const getHeaders = () => {
 		if (getImportHeaderModel) getImportHeaderModel();
 	};
 
 	useEffect(() => {
-		getHeaders();
+		setIsGetHeader(false);
 	}, [modelName]);
+
+	useEffect(() => {
+		if (visible && !isGetHeader) {
+			getHeaders();
+			setIsGetHeader(true);
+		}
+	}, [visible]);
 
 	const onCancelModal = () => {
 		onCancel();
