@@ -5,16 +5,9 @@ import ChooseFileImport from './ChooseFileImport';
 import MatchColumns from './MatchColumns';
 import PreviewDataImport from './PreviewDataImport';
 import ValidateDataImport from './ValidateDataImport';
+import { type ModalImportProps } from './typing';
 
-const ModalImport = (props: {
-	visible: boolean;
-	onCancel: () => void;
-	onOk: () => void;
-	modelName: any;
-	maskCloseableForm?: boolean;
-	extendData?: Record<string, string | number>;
-	getTemplate?: () => Promise<Blob>;
-}) => {
+const ModalImport = (props: ModalImportProps) => {
 	const { visible, onCancel, onOk, modelName, maskCloseableForm, extendData, getTemplate } = props;
 	const { setFileData, setMatchedColumns, setDataImport } = useModel('import');
 	const { getImportHeaderModel, getImportTemplateModel, importHeaders } = useModel(modelName);
@@ -38,14 +31,6 @@ const ModalImport = (props: {
 
 	const onCancelModal = () => {
 		onCancel();
-		setMatchedColumns(undefined);
-		setFileData(undefined);
-		setDataImport(undefined);
-		setCurrentStep(0);
-	};
-
-	const onFinish = () => {
-		onOk();
 		setMatchedColumns(undefined);
 		setFileData(undefined);
 		setDataImport(undefined);
@@ -94,7 +79,12 @@ const ModalImport = (props: {
 							extendData={extendData}
 						/>
 					) : (
-						<ValidateDataImport onChange={() => onFinish()} onBack={() => setCurrentStep(2)} modelName={modelName} />
+						<ValidateDataImport
+							onOk={onOk}
+							onCancel={onCancelModal}
+							onBack={() => setCurrentStep(2)}
+							modelName={modelName}
+						/>
 					)}
 				</>
 			) : (

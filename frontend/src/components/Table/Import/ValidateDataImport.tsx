@@ -6,8 +6,8 @@ import { useModel } from 'umi';
 import TableStaticData from '../TableStaticData';
 import { type TImportRowResponse, type IColumn, type TImportResponse } from '../typing';
 
-const ValidateDataImport = (props: { onChange: () => void; onBack: any; modelName: any }) => {
-	const { onChange, onBack, modelName } = props;
+const ValidateDataImport = (props: { onOk: () => void; onCancel: () => void; onBack: any; modelName: any }) => {
+	const { onOk, onCancel, onBack, modelName } = props;
 	const { dataImport, startLine } = useModel('import');
 	const { postValidateModel, postExecuteImpotModel, formSubmiting } = useModel(modelName);
 	const [importResponses, setImportResponses] = useState<TImportRowResponse[]>([]);
@@ -65,6 +65,8 @@ const ValidateDataImport = (props: { onChange: () => void; onBack: any; modelNam
 				setIsError(res.error);
 				const temp = res.validate?.map((item) => ({ ...item, index: item.index + startLine }));
 				setImportResponses(temp ?? []);
+
+				onOk(); // Get data
 			})
 			.catch((err: any) => console.log(err));
 	};
@@ -164,7 +166,7 @@ const ValidateDataImport = (props: { onChange: () => void; onBack: any; modelNam
 							</Button>
 						</Popconfirm>
 					) : (
-						<Button onClick={onChange}>Hoàn thành</Button>
+						<Button onClick={onCancel}>Hoàn thành</Button>
 					)}
 				</Space>
 			</Col>

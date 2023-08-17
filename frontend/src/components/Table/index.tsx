@@ -481,10 +481,7 @@ const TableBase = (props: TableBaseProps) => {
 					visible={visibleImport}
 					modelName={modelName}
 					onCancel={() => setVisibleImport(false)}
-					onOk={() => {
-						getData(params);
-						setVisibleImport(false);
-					}}
+					onOk={() => getData(params)}
 				/>
 			) : null}
 
