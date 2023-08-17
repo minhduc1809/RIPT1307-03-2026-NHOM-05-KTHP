@@ -1,3 +1,6 @@
+@import '~antd/es/style/themes/default.less';
+@import '../../styles/_variable.less';
+
 .tox-statusbar__branding {
 	display: none !important;
 }
@@ -7,10 +10,16 @@
 .tox .tox-tbtn--enabled,
 .tox .tox-tbtn--enabled:hover,
 .tox .tox-split-button:focus {
-	background: #007eb929 !important;
+	background: @primary-1 !important;
 }
 
 .tox-tinymce {
-	border: 1px solid #eee !important;
-	border-radius: 2px !important;
+	border: 1px solid #d9d9d9 !important;
+	border-radius: @border-radius !important;
+	transition: 0.3s;
+}
+
+.tox-tinymce:hover {
+	border-color: @primary-4 !important;
+	transition: 0.3s;
 }

@@ -1,55 +1,57 @@
-.to-print {
-	display: none;
-}
-
-@media print {
-	font-size: 14px;
-	font-family: 'Times New Roman';
-	-webkit-print-color-adjust: exact;
-
+.print-section {
 	.to-print {
-		display: block;
-
-		.title {
-			margin-bottom: 8px;
-			font-weight: bold;
-			font-size: 16px;
-			line-height: 16px;
-			text-align: center;
-			text-transform: uppercase;
-		}
-
-		.sub-title {
-			margin-bottom: 8px;
-			font-size: 13px;
-			text-align: center;
-		}
-
-		.date {
-			font-style: italic;
-			text-align: right;
-		}
-	}
-
-	.no-print {
 		display: none;
 	}
 
-	.page-break {
-		display: block;
-		margin-top: 1rem;
-		page-break-before: auto;
-	}
+	@media print {
+		font-size: 14px;
+		font-family: 'Times New Roman';
+		-webkit-print-color-adjust: exact;
 
-	.ant-table-body {
-		max-height: fit-content !important;
-	}
+		.to-print {
+			display: block;
 
-	.ant-table.ant-table-small .ant-table-filter-trigger {
-		display: none;
-	}
+			.title {
+				margin-bottom: 8px;
+				font-weight: bold;
+				font-size: 16px;
+				line-height: 16px;
+				text-align: center;
+				text-transform: uppercase;
+			}
 
-	@page {
-		margin: 15mm 15mm 15mm 20mm;
+			.sub-title {
+				margin-bottom: 8px;
+				font-size: 13px;
+				text-align: center;
+			}
+
+			.date {
+				font-style: italic;
+				text-align: right;
+			}
+		}
+
+		.no-print {
+			display: none;
+		}
+
+		.page-break {
+			display: block;
+			margin-top: 1rem;
+			page-break-before: auto;
+		}
+
+		.ant-table-body {
+			max-height: fit-content !important;
+		}
+
+		.ant-table.ant-table-small .ant-table-filter-trigger {
+			display: none;
+		}
+
+		@page {
+			margin: 15mm 15mm 15mm 20mm;
+		}
 	}
 }
