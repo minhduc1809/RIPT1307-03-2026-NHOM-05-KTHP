@@ -36,17 +36,20 @@
 			display: none;
 		}
 
-		.page-break {
-			display: block;
-			margin-top: 1rem;
-			page-break-before: auto;
+		thead {
+			display: table-header-group;
+		}
+
+		tr {
+			page-break-inside: avoid;
 		}
 
 		.ant-table-body {
 			max-height: fit-content !important;
 		}
 
-		.ant-table.ant-table-small .ant-table-filter-trigger {
+		.ant-table.ant-table-small .ant-table-filter-trigger,
+		.ant-table-column-sorter {
 			display: none;
 		}
 
