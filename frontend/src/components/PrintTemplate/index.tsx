@@ -1,6 +1,7 @@
 import { Col, Row } from 'antd';
 import moment from 'moment';
 import React from 'react';
+import './style.less';
 
 /**
  * PRINT TEMPLATE
