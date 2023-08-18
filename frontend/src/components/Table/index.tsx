@@ -9,7 +9,7 @@ import {
 	ReloadOutlined,
 	SearchOutlined,
 } from '@ant-design/icons';
-import { Button, Card, ConfigProvider, Drawer, Empty, Input, Modal, Table } from 'antd';
+import { Card, ConfigProvider, Drawer, Empty, Input, Modal, Table } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import Tooltip from 'antd/es/tooltip';
 import type { FilterValue } from 'antd/lib/table/interface';
@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react';
 import type { SortEnd, SortableContainerProps } from 'react-sortable-hoc';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { useModel } from 'umi';
+import ButtonExtend from './ButtonExtend';
 import ModalExport from './Export';
 import ModalImport from './Import';
 import ModalCustomFilter from './ModalCustomFilter';
@@ -304,32 +305,32 @@ const TableBase = (props: TableBaseProps) => {
 			<div className='header'>
 				<div className='action'>
 					{buttonOptions?.create !== false ? (
-						<Tooltip title='Thêm mới dữ liệu'>
-							<Button
-								size={props?.otherProps?.size}
-								onClick={() => {
-									setRecord({});
-									setEdit(false);
-									setIsView(false);
-									setVisibleForm(true);
-								}}
-								icon={<PlusCircleOutlined />}
-								type='primary'
-							>
-								Thêm mới
-							</Button>
-						</Tooltip>
+						<ButtonExtend
+							size={props?.otherProps?.size}
+							onClick={() => {
+								setRecord({});
+								setEdit(false);
+								setIsView(false);
+								setVisibleForm(true);
+							}}
+							icon={<PlusCircleOutlined />}
+							type='primary'
+							notHideText
+							tooltip='Thêm mới dữ liệu'
+						>
+							Thêm mới
+						</ButtonExtend>
 					) : null}
 
 					{buttonOptions?.import ? (
-						<Button icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
-							<span className='extend'>Nhập dữ liệu</span>
-						</Button>
+						<ButtonExtend icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
+							Nhập dữ liệu
+						</ButtonExtend>
 					) : null}
 					{buttonOptions?.export ? (
-						<Button icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
-							<span className='extend'>Xuất dữ liệu</span>
-						</Button>
+						<ButtonExtend icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
+							Xuất dữ liệu
+						</ButtonExtend>
 					) : null}
 
 					{props.otherButtons}
@@ -337,22 +338,24 @@ const TableBase = (props: TableBaseProps) => {
 
 				<div className='extra'>
 					{buttonOptions?.reload !== false ? (
-						<Tooltip title='Tải lại dữ liệu'>
-							<Button icon={<ReloadOutlined />} onClick={() => getData(params)} loading={loading}>
-								<span className='extend'>Tải lại</span>
-							</Button>
-						</Tooltip>
+						<ButtonExtend
+							icon={<ReloadOutlined />}
+							onClick={() => getData(params)}
+							loading={loading}
+							tooltip='Tải lại dữ liệu'
+						>
+							Tải lại
+						</ButtonExtend>
 					) : null}
 
 					{buttonOptions?.filter !== false && hasFilter ? (
-						<Tooltip title='Áp dụng bộ lọc tùy chỉnh'>
-							<Button
-								icon={filters?.length ? <FilterTwoTone /> : <FilterOutlined />}
-								onClick={() => setVisibleFilter(true)}
-							>
-								<span className='extend'>Bộ lọc tùy chỉnh</span>
-							</Button>
-						</Tooltip>
+						<ButtonExtend
+							icon={filters?.length ? <FilterTwoTone /> : <FilterOutlined />}
+							onClick={() => setVisibleFilter(true)}
+							tooltip='Áp dụng bộ lọc tùy chỉnh'
+						>
+							Bộ lọc tùy chỉnh
+						</ButtonExtend>
 					) : null}
 
 					{!props?.hideTotal ? (

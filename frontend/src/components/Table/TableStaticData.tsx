@@ -1,10 +1,11 @@
 import { MenuOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Drawer, Input, Modal, Table } from 'antd';
+import { Button, Drawer, Input, Modal, Table, Tooltip } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import type { SortEnd, SortableContainerProps } from 'react-sortable-hoc';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import ButtonExtend from './ButtonExtend';
 import './style.less';
 import { type TDataOption, type TableStaticProps } from './typing';
 
@@ -168,7 +169,7 @@ const TableStaticData = (props: TableStaticProps) => {
 				{children}
 				<div className='action'>
 					{hasCreate && (
-						<Button
+						<ButtonExtend
 							onClick={() => {
 								if (setShowEdit) setShowEdit(true);
 							}}
@@ -176,18 +177,21 @@ const TableStaticData = (props: TableStaticProps) => {
 							type='primary'
 							style={{ marginBottom: 8 }}
 							size={props?.size ?? 'middle'}
+							tooltip='Thêm mới dữ liệu'
 						>
 							Thêm mới
-						</Button>
+						</ButtonExtend>
 					)}
 				</div>
 
 				<div className='extra'>
 					{hasTotal ? (
-						<div className='total'>
-							Tổng số:
-							<span>{total || props.data?.length || 0}</span>
-						</div>
+						<Tooltip title='Tổng số dữ liệu'>
+							<div className='total'>
+								Tổng số:
+								<span>{total || props.data?.length || 0}</span>
+							</div>
+						</Tooltip>
 					) : null}
 				</div>
 			</div>
