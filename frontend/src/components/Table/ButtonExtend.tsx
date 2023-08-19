@@ -9,11 +9,11 @@ const ButtonExtend = (
 		notHideText?: boolean;
 	} & ButtonProps,
 ) => {
-	const { children, tooltip, notHideText } = props;
+	const { children, tooltip, notHideText, ...otherProps } = props;
 
 	return (
 		<Tooltip title={tooltip ?? children}>
-			<Button {...props}>{!notHideText ? <span className='extend'>{children}</span> : children}</Button>
+			<Button {...otherProps}>{!notHideText ? <span className='extend'>{children}</span> : children}</Button>
 		</Tooltip>
 	);
 };
