@@ -13,6 +13,7 @@ const ModalExport = (props: ModalExportProps) => {
 	const { getExportFieldsModel, postExportModel, formSubmiting } = useModel(modelName);
 	const [allFields, setAllFields] = useState<TExportField[]>([]); // Export Fields lấy từ API
 	const [exportFields, setExportFields] = useState<TExportField[]>([]);
+	const [isGetFields, setIsGetFields] = useState<boolean>(false);
 	const finalFields = exportFields.filter((item) => item.selected);
 
 	const genFlatData = (data?: TExportField[], disableImport?: boolean): TExportField[] => {
@@ -40,8 +41,15 @@ const ModalExport = (props: ModalExportProps) => {
 	};
 
 	useEffect(() => {
-		getFields();
+		setIsGetFields(false);
 	}, [modelName]);
+
+	useEffect(() => {
+		if (visible && !isGetFields) {
+			getFields();
+			setIsGetFields(true);
+		}
+	}, [visible]);
 
 	const onCancelModal = () => onCancel();
 
