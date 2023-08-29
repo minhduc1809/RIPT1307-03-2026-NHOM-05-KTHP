@@ -6,7 +6,6 @@ import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
 import ErrorBoundary from './components/ErrorBoundary';
-import LoadingPage from './components/Loading';
 import { OIDCBounder } from './components/OIDCBounder';
 import OneSignalBounder from './components/OneSignalBounder';
 import TechnicalSupportBounder from './components/TechnicalSupportBounder';
@@ -17,9 +16,9 @@ import { currentRole } from './utils/ip';
 import { type IInitialState } from './utils/typing';
 
 /**  loading */
-export const initialStateConfig = {
-	loading: <LoadingPage />,
-};
+// export const initialStateConfig = {
+// 	loading: <LoadingPage />,
+// };
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
