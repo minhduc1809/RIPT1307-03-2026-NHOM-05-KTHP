@@ -2,19 +2,18 @@ import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import { notification } from 'antd';
 import 'moment/locale/vi';
-import { AuthProvider } from 'react-oidc-context';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { getIntl, getLocale, history } from 'umi';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingPage from './components/Loading';
+import { OIDCBounder } from './components/OIDCBounder';
 import OneSignalBounder from './components/OneSignalBounder';
 import TechnicalSupportBounder from './components/TechnicalSupportBounder';
 import NotAccessible from './pages/exception/403';
 import NotFoundContent from './pages/exception/404';
 import './styles/global.less';
 import { currentRole } from './utils/ip';
-import { oidcConfig } from './utils/oidcConfig';
 import { type IInitialState } from './utils/typing';
 
 /**  loading */
@@ -68,12 +67,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 	return {
 		unAccessible: <NotAccessible />,
 		noFound: <NotFoundContent />,
-		rightContentRender: () => (
-			// OIDC Auth Provider for user Logout
-			<AuthProvider {...oidcConfig} redirect_uri={window.location.href} automaticSilentRenew={false}>
-				<RightContent />
-			</AuthProvider>
-		),
+		rightContentRender: () => <RightContent />,
 		disableContentMargin: false,
 		waterMarkProps: {
 			content: initialState?.currentUser?.fullname,
@@ -101,13 +95,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 		),
 
 		childrenRender: (dom) => (
-			<AuthProvider {...oidcConfig} redirect_uri={window.location.origin + window.location.pathname}>
+			<OIDCBounder>
 				<ErrorBoundary>
 					<TechnicalSupportBounder>
 						<OneSignalBounder>{dom}</OneSignalBounder>
 					</TechnicalSupportBounder>
 				</ErrorBoundary>
-			</AuthProvider>
+			</OIDCBounder>
 		),
 		menuHeaderRender: undefined,
 		...initialState?.settings,
