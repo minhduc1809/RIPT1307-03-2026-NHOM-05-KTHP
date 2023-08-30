@@ -1,4 +1,4 @@
-import { sentryDSN } from '@/utils/ip';
+import { currentRole, sentryDSN } from '@/utils/ip';
 import { HomeOutlined, ReloadOutlined } from '@ant-design/icons';
 import * as Sentry from '@sentry/react';
 import { Button, Result } from 'antd';
@@ -17,6 +17,7 @@ class ErrorBoundary extends React.Component<MyProps, MyState> {
 			dsn: sentryDSN,
 			integrations: [new Sentry.BrowserTracing()],
 			tracesSampleRate: 1.0,
+			release: currentRole,
 		});
 	}
 
