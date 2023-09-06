@@ -57,7 +57,7 @@ const DonutChart = (props: DataChartType) => {
 
 	const series = yAxis?.[0] || [];
 
-	return <Chart options={options} series={series} type='donut' height={height ?? 350} width={width ?? 500} />;
+	return <Chart options={options} series={series} type='donut' height={height ?? 350} width={width} />;
 };
 
 export default DonutChart;
