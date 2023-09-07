@@ -1,9 +1,9 @@
 import { tienVietNam } from '@/utils/utils';
+import { type ApexOptions } from 'apexcharts';
 import Chart from 'react-apexcharts';
 import { type DataChartType } from '.';
-import vi from './vi.json';
-import { type ApexOptions } from 'apexcharts';
 import './style.less';
+import vi from './vi.json';
 
 const ColumnChart = (props: DataChartType) => {
 	const { title, xAxis, yAxis, yLabel, height, type, formatY, colors, otherOptions } = props;
