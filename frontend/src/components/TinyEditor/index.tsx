@@ -1,5 +1,5 @@
-import { Editor } from '@tinymce/tinymce-react';
 import { uploadFile } from '@/services/uploadFile';
+import { Editor } from '@tinymce/tinymce-react';
 import './style.less';
 
 const TinyEditor = (props: {
