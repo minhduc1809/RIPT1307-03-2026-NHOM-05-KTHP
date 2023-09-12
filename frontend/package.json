@@ -6,10 +6,11 @@
   "scripts": {
     "analyze": "cross-env ANALYZE=1 umi build",
     "build": "umi build",
-    "deploy": "npm run build && npm run gh-pages",
     "dev": "npm run start:dev",
     "push-rsync": "rsync -avzhe ssh --delete-before dist/ ubuntu@203.162.10.113:/var/www/slink.ptit.edu.vn/",
     "push-rsync-win": "rsync -avzh --chmod=755 --no-perms --delete-before dist/ ubuntu@203.162.10.113:/var/www/slink.ptit.edu.vn/",
+    "deploy": "build && push-rsync",
+    "deploy-win": "build && push-rsync-win",
     "gh-pages": "gh-pages -d dist",
     "i18n-remove": "pro i18n-remove --locale=zh-CN --write",
     "postinstall": "umi g tmp",
