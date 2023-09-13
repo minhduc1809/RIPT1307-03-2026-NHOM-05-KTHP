@@ -13,12 +13,13 @@ class ErrorBoundary extends React.Component<MyProps, MyState> {
 	}
 
 	componentDidMount(): void {
-		Sentry.init({
-			dsn: sentryDSN,
-			integrations: [new Sentry.BrowserTracing()],
-			tracesSampleRate: 1.0,
-			release: currentRole,
-		});
+		if (process.env.NODE_ENV !== 'development')
+			Sentry.init({
+				dsn: sentryDSN,
+				integrations: [new Sentry.BrowserTracing()],
+				tracesSampleRate: 0.7,
+				release: currentRole,
+			});
 	}
 
 	componentDidCatch(error: any, errorInfo: any) {
