@@ -4,6 +4,7 @@ import Chart from 'react-apexcharts';
 import { type DataChartType } from '.';
 import './style.less';
 import vi from './vi.json';
+import { primaryColor } from '@/services/ant-design-pro/constant';
 
 const ColumnChart = (props: DataChartType) => {
 	const { title, xAxis, yAxis, yLabel, height, type, formatY, colors, otherOptions } = props;
@@ -80,7 +81,7 @@ const ColumnChart = (props: DataChartType) => {
 	const series = yLabel.map((y, index) => ({
 		name: y,
 		data: yAxis?.[index] || [],
-		color: colors?.[index] ?? '#007EB9',
+		color: colors?.[index] ?? primaryColor,
 	}));
 
 	return (
