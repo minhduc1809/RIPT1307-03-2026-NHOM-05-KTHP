@@ -16,7 +16,7 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
 	[EModuleKey.CONNECT]: {
 		title: 'Cổng người học',
 		clientId: 'ript-connect',
-		url: 'https://slink-ript.aisenote.com/',
+		url: 'https://slink.ript.vn/',
 		icon: EModuleKey.CONNECT + '.svg',
 	},
 	[EModuleKey.CONG_CAN_BO]: {
@@ -34,19 +34,19 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
 	[EModuleKey.QLDT]: {
 		title: 'Quản lý đào tạo',
 		clientId: 'ript-qldt',
-		url: 'https://daotao-ript.aisenote.com/',
+		url: 'https://daotao.ript.vn/',
 		icon: EModuleKey.QLDT + '.svg',
 	},
 	[EModuleKey.TCNS]: {
 		title: 'Tổ chức nhân sự',
 		clientId: 'ript-tcns',
-		url: 'https://nhansu-ript.aisenote.com/',
+		url: 'https://nhansu.ript.vn/',
 		icon: EModuleKey.TCNS + '.svg',
 	},
 	[EModuleKey.CTSV]: {
 		title: 'Công tác sinh viên',
 		clientId: 'ript-ctsv',
-		url: 'https://ctsv-ript.aisenote.com/',
+		url: 'https://ctsv.ript.vn/',
 		icon: EModuleKey.CTSV + '.svg',
 	},
 	[EModuleKey.VPS]: {
@@ -63,7 +63,7 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
 	[EModuleKey.TC]: {
 		title: 'Tài chính',
 		clientId: 'ript-tc',
-		url: 'https://thanhtoan-ript.aisenote.com/',
+		url: 'https://thanhtoan.ript.vn/',
 		icon: EModuleKey.TC + '.svg',
 	},
 };
