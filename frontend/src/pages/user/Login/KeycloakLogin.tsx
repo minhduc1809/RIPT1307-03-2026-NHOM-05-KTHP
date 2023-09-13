@@ -41,7 +41,7 @@ const LoginWithKeycloak = () => {
 				}}
 				size='large'
 			>
-				Đăng nhập bằng VWA Connect
+				Đăng nhập bằng RIPT Connect
 			</Button>
 		</div>
 	);

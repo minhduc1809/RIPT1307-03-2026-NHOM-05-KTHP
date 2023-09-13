@@ -51,8 +51,8 @@ const PrintTemplate = React.forwardRef(
 					{!hideTieuNgu ? (
 						<Row gutter={[5, 5]}>
 							<Col span={12} style={{ textAlign: 'center' }}>
-								<div>HỘI LIÊN HIỆP PHỤ NỮ VIỆT NAM</div>
-								<span className='tieu-ngu'>HỌC VIỆN PHỤ NỮ VIỆT NAM</span>
+								<div>HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG</div>
+								<span className='tieu-ngu'>VIỆN KHOA HỌC KỸ THUẬT BƯU ĐIỆN</span>
 							</Col>
 							<Col span={12} style={{ textAlign: 'center' }}>
 								<div className='quoc-hieu'>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
