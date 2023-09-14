@@ -22,13 +22,13 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
 	[EModuleKey.CONG_CAN_BO]: {
 		title: 'Cổng cán bộ',
 		clientId: 'ript-connect',
-		// url: 'https://cong-can-bo-vwa-dev.vercel.app/',
+		url: 'https://canbo.ript.vn/',
 		icon: EModuleKey.CONG_CAN_BO + '.svg',
 	},
 	[EModuleKey.CORE]: {
 		title: 'Danh mục chung',
 		clientId: 'ript-core',
-		// url: 'https://core-vwa-dev.vercel.app/',
+		url: 'https://core.ript.vn/',
 		icon: EModuleKey.CORE + '.svg',
 	},
 	[EModuleKey.QLDT]: {
