@@ -75,4 +75,4 @@ export const landingUrl = 'https://ript.vn/';
 export const primaryColor = '#CC0D00';
 
 /** Tên trường Học viện */
-export const unitName = 'Viện Khoa học kỹ thuật bưu điện';
+export const unitName = 'Viện Khoa học Kỹ thuật Bưu điện';
