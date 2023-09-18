@@ -18,6 +18,7 @@ const useInitModel = <T,>(
 	initCondition?: Partial<T>,
 	ipService?: string,
 	initSort?: { [k in keyof T]?: 1 | -1 },
+	initFilter?: TFilter<T>[],
 ) => {
 	const [danhSach, setDanhSach] = useState<T[]>([]);
 	const [record, setRecord] = useState<T>();
@@ -25,7 +26,7 @@ const useInitModel = <T,>(
 	const [limit, setLimit] = useState<number>(10);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [formSubmiting, setFormSubmiting] = useState<boolean>(false);
-	const [filters, setFilters] = useState<TFilter<T>[]>();
+	const [filters, setFilters] = useState<TFilter<T>[]>(initFilter ?? []);
 	const [condition, setCondition] = useState<{ [k in keyof T]?: any } | any>(initCondition);
 	const [sort, setSort] = useState<{ [k in keyof T]?: 1 | -1 } | undefined>(initSort);
 	const [edit, setEdit] = useState<boolean>(false);
