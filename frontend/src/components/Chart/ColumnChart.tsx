@@ -1,10 +1,10 @@
+import { primaryColor } from '@/services/ant-design-pro/constant';
 import { tienVietNam } from '@/utils/utils';
 import { type ApexOptions } from 'apexcharts';
 import Chart from 'react-apexcharts';
 import { type DataChartType } from '.';
 import './style.less';
 import vi from './vi.json';
-import { primaryColor } from '@/services/ant-design-pro/constant';
 
 const ColumnChart = (props: DataChartType) => {
 	const { title, xAxis, yAxis, yLabel, height, type, formatY, colors, otherOptions } = props;
