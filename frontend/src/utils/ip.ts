@@ -15,6 +15,7 @@ const keycloakAuthority = 'https://sso.ript.vn/realms/ript';
 const resourceServerClientId = 'ript-auth';
 const keycloakTokenEndpoint = 'https://sso.ript.vn/realms/ript/protocol/openid-connect/token';
 const sentryDSN = 'https://75869bc5882ff3efdc90da60fc2e9e10@sentry.aisoftech.vn/7';
+const oneSignalClient = 'f3857a81-2891-49be-87a7-903a4a1a54be';
 
 export {
 	ip3,
@@ -26,4 +27,5 @@ export {
 	keycloakTokenEndpoint,
 	keycloakAuthority,
 	sentryDSN,
+	oneSignalClient,
 };

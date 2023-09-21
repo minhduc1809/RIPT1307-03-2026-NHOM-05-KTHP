@@ -1,3 +1,4 @@
+import { primaryColor } from '@/services/ant-design-pro/constant';
 import {
 	CloseOutlined,
 	ExportOutlined,
@@ -350,7 +351,7 @@ const TableBase = (props: TableBaseProps) => {
 
 					{buttonOptions?.filter !== false && hasFilter ? (
 						<ButtonExtend
-							icon={filters?.length ? <FilterTwoTone /> : <FilterOutlined />}
+							icon={filters?.length ? <FilterTwoTone twoToneColor={primaryColor} /> : <FilterOutlined />}
 							onClick={() => setVisibleFilter(true)}
 							tooltip='Áp dụng bộ lọc tùy chỉnh'
 						>
