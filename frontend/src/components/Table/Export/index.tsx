@@ -10,7 +10,7 @@ import { type ModalExportProps } from './typing';
 
 const ModalExport = (props: ModalExportProps) => {
 	const { visible, onCancel, modelName, maskCloseableForm, fileName, condition, filters } = props;
-	const { getExportFieldsModel, postExportModel, formSubmiting } = useModel(modelName);
+	const { getExportFieldsModel, postExportModel, formSubmiting, selectedIds } = useModel(modelName);
 	const [allFields, setAllFields] = useState<TExportField[]>([]); // Export Fields lấy từ API
 	const [exportFields, setExportFields] = useState<TExportField[]>([]);
 	const [isGetFields, setIsGetFields] = useState<boolean>(false);
@@ -55,7 +55,11 @@ const ModalExport = (props: ModalExportProps) => {
 
 	const onFinish = () => {
 		if (finalFields.length)
-			postExportModel({ definitions: finalFields }, condition, filters).then((blob: Blob) => {
+			postExportModel(
+				selectedIds?.length > 0 ? { ids: selectedIds, definitions: finalFields } : { definitions: finalFields },
+				condition,
+				filters,
+			).then((blob: Blob) => {
 				fileDownload(blob, fileName);
 				onCancel();
 			});
@@ -74,6 +78,10 @@ const ModalExport = (props: ModalExportProps) => {
 			{!!exportFields.length ? (
 				<>
 					<Row gutter={[12, 12]} style={{ marginBottom: 18 }}>
+						<Col span={24}>
+							Xuất dữ liệu: {selectedIds?.length > 0 ? `${selectedIds?.length} bản bạn đã chọn` : 'Tất cả'}
+						</Col>
+
 						<Col span={24}>Chọn các trường dữ liệu cần trích xuất</Col>
 
 						<Col span={24} md={12}>
