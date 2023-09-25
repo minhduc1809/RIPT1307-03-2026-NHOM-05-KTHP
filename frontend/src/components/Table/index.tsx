@@ -163,17 +163,19 @@ const TableBase = (props: TableBaseProps) => {
 						onSearch={(value) => handleSearch(dataIndex, value, confirm)}
 						ref={searchInputRef}
 					/>
-					<div>
-						Xem thêm{' '}
-						<a
-							onClick={() => {
-								setVisibleFilter(true);
-								confirm();
-							}}
-						>
-							Bộ lọc tùy chỉnh
-						</a>
-					</div>
+					{buttonOptions?.filter !== false && hasFilter ? (
+						<div>
+							Xem thêm{' '}
+							<a
+								onClick={() => {
+									setVisibleFilter(true);
+									confirm();
+								}}
+							>
+								Bộ lọc tùy chỉnh
+							</a>
+						</div>
+					) : null}
 				</div>
 			),
 			filteredValue: filterColumn?.values ?? [],
