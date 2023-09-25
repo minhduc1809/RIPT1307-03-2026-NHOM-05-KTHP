@@ -153,7 +153,7 @@ const useInitModel = <T,>(
 		}
 	};
 
-	const postModel = async (payload: T, getData?: any, closeModal?: boolean): Promise<T> => {
+	const postModel = async (payload: Partial<T>, getData?: any, closeModal?: boolean): Promise<T> => {
 		if (formSubmiting) Promise.reject('form submiting');
 		setFormSubmiting(true);
 		try {
@@ -174,7 +174,7 @@ const useInitModel = <T,>(
 
 	const putModel = async (
 		id: string | number,
-		payload: T,
+		payload: Partial<T>,
 		getData?: any,
 		notGet?: boolean,
 		closeModal?: boolean,
