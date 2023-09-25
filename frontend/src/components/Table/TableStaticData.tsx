@@ -1,19 +1,20 @@
 import { MenuOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Drawer, Input, Modal, Table, Tooltip } from 'antd';
+import { Drawer, Input, Modal, Table, Tooltip, type InputRef } from 'antd';
 import _ from 'lodash';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import type { SortEnd, SortableContainerProps } from 'react-sortable-hoc';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import ButtonExtend from './ButtonExtend';
 import './style.less';
-import { type TDataOption, type TableStaticProps } from './typing';
+import type { IColumn, TDataOption, TableStaticProps } from './typing';
 
 const TableStaticData = (props: TableStaticProps) => {
 	const { Form, showEdit, setShowEdit, addStt, data, children, hasCreate, hasTotal, rowSortable } = props;
 	const [searchText, setSearchText] = useState<string>('');
 	const [searchedColumn, setSearchedColumn] = useState();
 	const [total, setTotal] = useState<number>();
+	const searchInputRef = useRef<InputRef>(null);
 
 	useEffect(() => {
 		setTotal(data?.length);
@@ -21,45 +22,26 @@ const TableStaticData = (props: TableStaticProps) => {
 		setSearchedColumn(undefined);
 	}, [data?.length]);
 
-	const handleSearch = (selectedKeys: any, confirm: any, dataIndex: any) => {
+	const handleSearch = (confirm: any, dataIndex: any) => {
 		confirm();
-		setSearchText(selectedKeys[0]);
 		setSearchedColumn(dataIndex);
 	};
 
-	const handleReset = (clearFilters: any) => {
-		clearFilters();
-		setSearchText('');
-		setSearchedColumn(undefined);
-	};
-
-	const getColumnSearchProps = (dataIndex: any) => ({
-		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+	const getColumnSearchProps = (dataIndex: any, columnTitle: any): Partial<IColumn<unknown>> => ({
+		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
 			<div className='column-search-box' onKeyDown={(e) => e.stopPropagation()}>
-				<Input
-					placeholder='Nhập từ khóa'
+				<Input.Search
+					placeholder={`Tìm ${columnTitle}`}
+					allowClear
+					enterButton
 					value={selectedKeys[0]}
-					onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-					onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-				/>
-				<Button
-					type='primary'
-					onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-					icon={<SearchOutlined />}
-					style={{ width: 90 }}
-				>
-					Tìm
-				</Button>
-				<Button
-					onClick={() => {
-						handleReset(clearFilters);
-						handleSearch(selectedKeys, confirm, dataIndex);
-						setSearchText('');
+					onChange={(e) => {
+						setSelectedKeys(e.target.value ? [e.target.value] : []);
+						if (!e.target.value) confirm();
 					}}
-					style={{ width: 90 }}
-				>
-					Xóa
-				</Button>
+					onSearch={() => handleSearch(confirm, dataIndex)}
+					ref={searchInputRef}
+				/>
 			</div>
 		),
 		filterIcon: (filtered: boolean) => <SearchOutlined className={filtered ? 'text-primary' : undefined} />,
@@ -69,7 +51,7 @@ const TableStaticData = (props: TableStaticProps) => {
 				: typeof dataIndex === 'object'
 				? record[dataIndex[0]][dataIndex?.[1]]?.toString()?.toLowerCase()?.includes(value.toLowerCase())
 				: '',
-
+		onFilterDropdownVisibleChange: (vis) => vis && setTimeout(() => searchInputRef?.current?.select(), 100),
 		render: (text: any) =>
 			searchedColumn === dataIndex ? (
 				<Highlighter
@@ -83,14 +65,15 @@ const TableStaticData = (props: TableStaticProps) => {
 			),
 	});
 
-	const getFilterColumnProps = (dataIndex: any, filterData?: any[]) => {
+	const getFilterColumnProps = (dataIndex: any, filterData?: any[]): Partial<IColumn<unknown>> => {
 		return {
 			filters: filterData?.map((item: string | TDataOption) =>
 				typeof item === 'string'
 					? { key: item, value: item, text: item }
 					: { key: item.value, value: item.value, text: item.label },
 			),
-			onFilter: (value: string, record: any) => record[dataIndex]?.indexOf(value) === 0,
+			onFilter: (value: any, record: any) => record[dataIndex]?.indexOf(value) === 0,
+			filterSearch: true,
 		};
 	};
 
@@ -99,7 +82,7 @@ const TableStaticData = (props: TableStaticProps) => {
 		?.map((item) => ({
 			...item,
 			...(item?.filterType === 'string'
-				? getColumnSearchProps(item.dataIndex)
+				? getColumnSearchProps(item.dataIndex, item.title)
 				: item?.filterType === 'select'
 				? getFilterColumnProps(item.dataIndex, item.filterData)
 				: undefined),
@@ -109,7 +92,7 @@ const TableStaticData = (props: TableStaticProps) => {
 			children: item.children?.map((child) => ({
 				...child,
 				...(child?.filterType === 'string'
-					? getColumnSearchProps(child.dataIndex)
+					? getColumnSearchProps(child.dataIndex, item.title)
 					: child?.filterType === 'select'
 					? getFilterColumnProps(child.dataIndex, child.filterData)
 					: undefined),
