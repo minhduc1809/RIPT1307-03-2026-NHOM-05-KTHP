@@ -410,9 +410,11 @@ const TableBase = (props: TableBaseProps) => {
 											}}
 										>
 											Đã chọn: {selectedIds !== undefined ? `${selectedIds?.length}` : '0'}
-											<Button type='link' onClick={() => setSelectedIds([])}>
-												Bỏ chọn tất cả
-											</Button>
+											{selectedIds?.length > 0 ? (
+												<Button type='link' onClick={() => setSelectedIds([])}>
+													Bỏ chọn tất cả
+												</Button>
+											) : null}
 										</div>
 									) : null}
 									Tổng số: {tongSo}

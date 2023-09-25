@@ -78,11 +78,16 @@ const ModalExport = (props: ModalExportProps) => {
 			{!!exportFields.length ? (
 				<>
 					<Row gutter={[12, 12]} style={{ marginBottom: 18 }}>
-						<Col span={24}>
-							Xuất dữ liệu: {selectedIds?.length > 0 ? `${selectedIds?.length} bản bạn đã chọn` : 'Tất cả'}
-						</Col>
+						<Col span={24}>{selectedIds?.length > 0 ? `Bạn đã chọn ${selectedIds?.length} mục` : 'Tất cả'}</Col>
 
-						<Col span={24}>Chọn các trường dữ liệu cần trích xuất</Col>
+						<Col
+							span={24}
+							style={{
+								marginBottom: '-15px',
+							}}
+						>
+							Chọn các trường dữ liệu cần trích xuất:
+						</Col>
 
 						<Col span={24} md={12}>
 							<CardChooseFields allFields={allFields} fields={exportFields} setFields={setExportFields} />
