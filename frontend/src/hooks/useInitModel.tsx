@@ -34,6 +34,7 @@ const useInitModel = <T,>(
 	const [visibleForm, setVisibleForm] = useState<boolean>(false);
 	const [total, setTotal] = useState<number>(0);
 	const [importHeaders, setImportHeaders] = useState<TImportHeader[]>([]); // Import Headers lấy từ API
+	const [selectedIds, setSelectedIds] = useState<string[]>();
 
 	const {
 		getAllService,
@@ -153,7 +154,7 @@ const useInitModel = <T,>(
 		}
 	};
 
-	const postModel = async (payload: T, getData?: any, closeModal?: boolean): Promise<T> => {
+	const postModel = async (payload: Partial<T>, getData?: any, closeModal?: boolean): Promise<T> => {
 		if (formSubmiting) Promise.reject('form submiting');
 		setFormSubmiting(true);
 		try {
@@ -174,7 +175,7 @@ const useInitModel = <T,>(
 
 	const putModel = async (
 		id: string | number,
-		payload: T,
+		payload: Partial<T>,
 		getData?: any,
 		notGet?: boolean,
 		closeModal?: boolean,
@@ -399,6 +400,8 @@ const useInitModel = <T,>(
 		putService,
 		getExportFieldsModel,
 		postExportModel,
+		selectedIds,
+		setSelectedIds,
 	};
 };
 

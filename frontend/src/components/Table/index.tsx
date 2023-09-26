@@ -10,12 +10,12 @@ import {
 	ReloadOutlined,
 	SearchOutlined,
 } from '@ant-design/icons';
-import { Card, ConfigProvider, Drawer, Empty, Input, Modal, Table } from 'antd';
+import { Card, ConfigProvider, Drawer, Empty, Input, Modal, Space, Table, type InputRef } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import Tooltip from 'antd/es/tooltip';
-import type { FilterValue } from 'antd/lib/table/interface';
+import type { FilterValue, SortOrder } from 'antd/lib/table/interface';
 import _ from 'lodash';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { SortEnd, SortableContainerProps } from 'react-sortable-hoc';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { useModel } from 'umi';
@@ -25,7 +25,7 @@ import ModalImport from './Import';
 import ModalCustomFilter from './ModalCustomFilter';
 import { EOperatorType } from './constant';
 import './style.less';
-import type { TDataOption, TFilter, TableBaseProps } from './typing';
+import type { IColumn, TDataOption, TFilter, TableBaseProps } from './typing';
 
 const TableBase = (props: TableBaseProps) => {
 	const {
@@ -52,7 +52,7 @@ const TableBase = (props: TableBaseProps) => {
 	} = props;
 	let { columns } = props;
 	const model = useModel(modelName);
-	const { visibleForm, setVisibleForm, setEdit, setRecord, setIsView } = model;
+	const { visibleForm, setVisibleForm, setEdit, setRecord, setIsView, selectedIds, setSelectedIds } = model;
 
 	const page = model?.page;
 	const limit = model?.limit;
@@ -72,6 +72,7 @@ const TableBase = (props: TableBaseProps) => {
 	const [visibleFilter, setVisibleFilter] = useState(false);
 	const [visibleImport, setVisibleImport] = useState(false);
 	const [visibleExport, setVisibleExport] = useState(false);
+	const searchInputRef = useRef<InputRef>(null);
 
 	useEffect(() => {
 		setPage(1);
@@ -86,6 +87,7 @@ const TableBase = (props: TableBaseProps) => {
 			if (noCleanUp !== true) {
 				// setCondition(undefined);
 				setFilters(undefined);
+				setSelectedIds(undefined);
 				// setSort(undefined);
 			}
 		};
@@ -109,12 +111,12 @@ const TableBase = (props: TableBaseProps) => {
 		return _.get(sort, type === 'string' ? dataIndex : dataIndex?.join('.'), []);
 	};
 
-	const getSortValue = (dataIndex: any) => {
+	const getSortValue = (dataIndex: any): SortOrder => {
 		const value = getCondValue(dataIndex);
-		return value === 1 ? 'ascend' : value === -1 ? 'descend' : false;
+		return value === 1 ? 'ascend' : value === -1 ? 'descend' : null;
 	};
 
-	const getSort = (dataIndex: any) => ({
+	const getSort = (dataIndex: any): Partial<IColumn<unknown>> => ({
 		sorter: true,
 		sortDirections: ['ascend', 'descend'],
 		sortOrder: getSortValue(dataIndex),
@@ -122,7 +124,7 @@ const TableBase = (props: TableBaseProps) => {
 	//#endregion
 
 	//#region Get Search Column Props
-	const handleSearch = (dataIndex: any, value: string) => {
+	const handleSearch = (dataIndex: any, value: string, confirm?: () => void) => {
 		if (!value) {
 			// Remove filter of this column
 			const tempFilters = filters?.filter((item) => item.field !== dataIndex);
@@ -145,12 +147,13 @@ const TableBase = (props: TableBaseProps) => {
 				});
 			setFilters(tempFilters);
 		}
+		if (confirm) confirm();
 	};
 
-	const getColumnSearchProps = (dataIndex: any, columnTitle: any) => {
+	const getColumnSearchProps = (dataIndex: any, columnTitle: any): Partial<IColumn<unknown>> => {
 		const filterColumn = getFilterColumn(dataIndex, EOperatorType.CONTAIN, true);
 		return {
-			filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+			filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
 				<div className='column-search-box' onKeyDown={(e) => e.stopPropagation()}>
 					<Input.Search
 						placeholder={`Tìm ${columnTitle}`}
@@ -158,8 +161,22 @@ const TableBase = (props: TableBaseProps) => {
 						enterButton
 						value={selectedKeys[0]}
 						onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-						onSearch={(value) => handleSearch(dataIndex, value)}
+						onSearch={(value) => handleSearch(dataIndex, value, confirm)}
+						ref={searchInputRef}
 					/>
+					{buttonOptions?.filter !== false && hasFilter ? (
+						<div>
+							Xem thêm{' '}
+							<a
+								onClick={() => {
+									setVisibleFilter(true);
+									confirm();
+								}}
+							>
+								Bộ lọc tùy chỉnh
+							</a>
+						</div>
+					) : null}
 				</div>
 			),
 			filteredValue: filterColumn?.values ?? [],
@@ -168,6 +185,7 @@ const TableBase = (props: TableBaseProps) => {
 				const filtered = values && values[0];
 				return <SearchOutlined className={filtered ? 'text-primary' : undefined} />;
 			},
+			onFilterDropdownVisibleChange: (vis) => vis && setTimeout(() => searchInputRef?.current?.select(), 100),
 		};
 	};
 	//#endregion
@@ -199,7 +217,7 @@ const TableBase = (props: TableBaseProps) => {
 		}
 	};
 
-	const getFilterColumnProps = (dataIndex: any, filterData?: any[]) => {
+	const getFilterColumnProps = (dataIndex: any, filterData?: any[]): Partial<IColumn<unknown>> => {
 		const filterColumn = getFilterColumn(dataIndex, EOperatorType.INCLUDE, true);
 		return {
 			filters: filterData?.map((item: string | TDataOption) =>
@@ -208,6 +226,7 @@ const TableBase = (props: TableBaseProps) => {
 					: { key: item.value, value: item.value, text: item.label },
 			),
 			filteredValue: filterColumn?.values ?? [],
+			filterSearch: true,
 		};
 	};
 	//#endregion
@@ -330,7 +349,7 @@ const TableBase = (props: TableBaseProps) => {
 					) : null}
 					{buttonOptions?.export ? (
 						<ButtonExtend icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
-							Xuất dữ liệu
+							Xuất dữ liệu {selectedIds?.length > 0 ? `(${selectedIds.length})` : ''}
 						</ButtonExtend>
 					) : null}
 
@@ -381,7 +400,10 @@ const TableBase = (props: TableBaseProps) => {
 						props?.rowSelection
 							? {
 									type: 'checkbox',
-									...props?.detailRow,
+									selectedRowKeys: selectedIds ?? [],
+									preserveSelectedRowKeys: true,
+									onChange: (selectedRowKeys) => setSelectedIds(selectedRowKeys),
+									...props.detailRow,
 							  }
 							: undefined
 					}
@@ -394,15 +416,31 @@ const TableBase = (props: TableBaseProps) => {
 						total,
 						showSizeChanger: true,
 						pageSizeOptions: ['5', '10', '25', '50', '100'],
-						showTotal: (tongSo: number) => {
-							return <div>Tổng số: {tongSo}</div>;
-						},
+						showTotal: (tongSo: number) => (
+							<Space>
+								{props?.rowSelection ? (
+									<>
+										<span>Đã chọn: {selectedIds?.length ?? 0}</span>
+										{selectedIds?.length > 0 ? (
+											<span>
+												(
+												<a href='#!' onClick={() => setSelectedIds(undefined)}>
+													Bỏ chọn tất cả
+												</a>
+												)
+											</span>
+										) : null}
+									</>
+								) : null}
+								<span>Tổng số: {tongSo}</span>
+							</Space>
+						),
 					}}
 					onChange={onChange}
 					dataSource={model?.[dataState || 'danhSach']?.map((item: any, index: number) => ({
 						...item,
 						index: index + 1 + (page - 1) * limit * (pageable === false ? 0 : 1),
-						key: index,
+						key: item?._id ?? index,
 						children:
 							!props.hideChildrenRows && item?.children && Array.isArray(item.children) && item.children.length
 								? item.children
