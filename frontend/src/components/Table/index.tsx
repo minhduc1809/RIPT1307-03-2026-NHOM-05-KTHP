@@ -10,7 +10,7 @@ import {
 	ReloadOutlined,
 	SearchOutlined,
 } from '@ant-design/icons';
-import { Card, ConfigProvider, Drawer, Empty, Input, Modal, Table, type InputRef } from 'antd';
+import { Button, Card, ConfigProvider, Drawer, Empty, Input, Modal, Table, type InputRef } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import Tooltip from 'antd/es/tooltip';
 import type { FilterValue, SortOrder } from 'antd/lib/table/interface';
@@ -52,7 +52,7 @@ const TableBase = (props: TableBaseProps) => {
 	} = props;
 	let { columns } = props;
 	const model = useModel(modelName);
-	const { visibleForm, setVisibleForm, setEdit, setRecord, setIsView } = model;
+	const { visibleForm, setVisibleForm, setEdit, setRecord, setIsView, selectedIds, setSelectedIds } = model;
 
 	const page = model?.page;
 	const limit = model?.limit;
@@ -348,7 +348,7 @@ const TableBase = (props: TableBaseProps) => {
 					) : null}
 					{buttonOptions?.export ? (
 						<ButtonExtend icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
-							Xuất dữ liệu
+							Xuất dữ liệu {selectedIds?.length > 0 ? `(${selectedIds.length})` : ''}
 						</ButtonExtend>
 					) : null}
 
@@ -399,7 +399,12 @@ const TableBase = (props: TableBaseProps) => {
 						props?.rowSelection
 							? {
 									type: 'checkbox',
-									...props?.detailRow,
+									selectedRowKeys: selectedIds,
+									hideSelectAll: true,
+									preserveSelectedRowKeys: true,
+									onChange: (selectedRowKeys) => {
+										setSelectedIds(selectedRowKeys);
+									},
 							  }
 							: undefined
 					}
@@ -413,14 +418,33 @@ const TableBase = (props: TableBaseProps) => {
 						showSizeChanger: true,
 						pageSizeOptions: ['5', '10', '25', '50', '100'],
 						showTotal: (tongSo: number) => {
-							return <div>Tổng số: {tongSo}</div>;
+							return (
+								<div>
+									{props?.rowSelection ? (
+										<div
+											style={{
+												position: 'absolute',
+												left: '5px',
+											}}
+										>
+											Đã chọn: {selectedIds !== undefined ? `${selectedIds?.length}` : '0'}
+											{selectedIds?.length > 0 ? (
+												<Button type='link' onClick={() => setSelectedIds([])}>
+													Bỏ chọn tất cả
+												</Button>
+											) : null}
+										</div>
+									) : null}
+									Tổng số: {tongSo}
+								</div>
+							);
 						},
 					}}
 					onChange={onChange}
 					dataSource={model?.[dataState || 'danhSach']?.map((item: any, index: number) => ({
 						...item,
 						index: index + 1 + (page - 1) * limit * (pageable === false ? 0 : 1),
-						key: index,
+						key: item?._id ?? index,
 						children:
 							!props.hideChildrenRows && item?.children && Array.isArray(item.children) && item.children.length
 								? item.children
