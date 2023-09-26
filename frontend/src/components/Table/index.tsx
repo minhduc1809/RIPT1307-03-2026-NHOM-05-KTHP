@@ -10,7 +10,7 @@ import {
 	ReloadOutlined,
 	SearchOutlined,
 } from '@ant-design/icons';
-import { Button, Card, ConfigProvider, Drawer, Empty, Input, Modal, Table, type InputRef } from 'antd';
+import { Card, ConfigProvider, Drawer, Empty, Input, Modal, Space, Table, type InputRef } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import Tooltip from 'antd/es/tooltip';
 import type { FilterValue, SortOrder } from 'antd/lib/table/interface';
@@ -87,6 +87,7 @@ const TableBase = (props: TableBaseProps) => {
 			if (noCleanUp !== true) {
 				// setCondition(undefined);
 				setFilters(undefined);
+				setSelectedIds(undefined);
 				// setSort(undefined);
 			}
 		};
@@ -399,12 +400,10 @@ const TableBase = (props: TableBaseProps) => {
 						props?.rowSelection
 							? {
 									type: 'checkbox',
-									selectedRowKeys: selectedIds,
-									hideSelectAll: true,
+									selectedRowKeys: selectedIds ?? [],
 									preserveSelectedRowKeys: true,
-									onChange: (selectedRowKeys) => {
-										setSelectedIds(selectedRowKeys);
-									},
+									onChange: (selectedRowKeys) => setSelectedIds(selectedRowKeys),
+									...props.detailRow,
 							  }
 							: undefined
 					}
@@ -417,28 +416,25 @@ const TableBase = (props: TableBaseProps) => {
 						total,
 						showSizeChanger: true,
 						pageSizeOptions: ['5', '10', '25', '50', '100'],
-						showTotal: (tongSo: number) => {
-							return (
-								<div>
-									{props?.rowSelection ? (
-										<div
-											style={{
-												position: 'absolute',
-												left: '5px',
-											}}
-										>
-											Đã chọn: {selectedIds !== undefined ? `${selectedIds?.length}` : '0'}
-											{selectedIds?.length > 0 ? (
-												<Button type='link' onClick={() => setSelectedIds([])}>
+						showTotal: (tongSo: number) => (
+							<Space>
+								{props?.rowSelection ? (
+									<>
+										<span>Đã chọn: {selectedIds?.length ?? 0}</span>
+										{selectedIds?.length > 0 ? (
+											<span>
+												(
+												<a href='#!' onClick={() => setSelectedIds(undefined)}>
 													Bỏ chọn tất cả
-												</Button>
-											) : null}
-										</div>
-									) : null}
-									Tổng số: {tongSo}
-								</div>
-							);
-						},
+												</a>
+												)
+											</span>
+										) : null}
+									</>
+								) : null}
+								<span>Tổng số: {tongSo}</span>
+							</Space>
+						),
 					}}
 					onChange={onChange}
 					dataSource={model?.[dataState || 'danhSach']?.map((item: any, index: number) => ({

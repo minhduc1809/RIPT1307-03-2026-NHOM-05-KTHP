@@ -78,7 +78,7 @@ const ModalExport = (props: ModalExportProps) => {
 			{!!exportFields.length ? (
 				<>
 					<Row gutter={[12, 12]} style={{ marginBottom: 18 }}>
-						<Col span={24}>{selectedIds?.length > 0 ? `Bạn đã chọn ${selectedIds?.length} mục` : 'Tất cả'}</Col>
+						{selectedIds?.length > 0 ? <Col span={24}>Trích xuất {selectedIds?.length} mục đã chọn</Col> : null}
 
 						<Col
 							span={24}
