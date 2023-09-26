@@ -524,6 +524,7 @@ const TableBase = (props: TableBaseProps) => {
 					modelName={modelName}
 					onCancel={() => setVisibleImport(false)}
 					onOk={() => getData(params)}
+					titleTemplate={title ? `Biểu mẫu ${title}.xlsx` : undefined}
 				/>
 			) : null}
 

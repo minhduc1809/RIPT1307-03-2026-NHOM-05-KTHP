@@ -47,7 +47,7 @@ export type TableBaseProps = {
 	widthDrawer?: number | 'full';
 
 	/** Hàm getData tùy chỉnh, nếu ko có thì 'getModel' của model sẽ là mặc định */
-	getData?: () => void;
+	getData?: (params: any) => void;
 
 	/** Tham số phụ thuộc để getData được gọi */
 	dependencies?: any[];
@@ -134,7 +134,7 @@ export type TableStaticProps = {
 	data: any[];
 	columns: IColumn<any>[];
 
-	title?: string;
+	title?: React.ReactNode;
 	Form?: any;
 	formProps?: any;
 

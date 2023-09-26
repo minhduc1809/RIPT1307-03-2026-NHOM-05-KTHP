@@ -1,4 +1,3 @@
-import logo from '@/assets/logo.png';
 import { landingUrl } from '@/services/ant-design-pro/constant';
 import { GlobalOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
@@ -76,7 +75,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 						src={
 							<img
 								// style={currentUser?.avatar_path ? {} : { objectFit: 'cover' }}
-								src={logo}
+								src={'/logo.png'}
 							/>
 						}
 						alt='avatar'
