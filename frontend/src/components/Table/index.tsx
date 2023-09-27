@@ -10,7 +10,7 @@ import {
 	ReloadOutlined,
 	SearchOutlined,
 } from '@ant-design/icons';
-import { Card, ConfigProvider, Drawer, Empty, Input, Modal, Space, Table, type InputRef } from 'antd';
+import { Card, ConfigProvider, Drawer, Empty, Input, Modal, Space, Table, type InputRef, Button } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import Tooltip from 'antd/es/tooltip';
 import type { FilterValue, SortOrder } from 'antd/lib/table/interface';
@@ -231,6 +231,50 @@ const TableBase = (props: TableBaseProps) => {
 	};
 	//#endregion
 
+	const getColumnSelectProps = (dataIndex: any, filterCustomSelect?: any): Partial<IColumn<unknown>> => {
+		const filterColumn = getFilterColumn(dataIndex, EOperatorType.INCLUDE, true);
+		return {
+			filterDropdown: ({ confirm }) => (
+				<div className='column-search-box' onKeyDown={(e) => e.stopPropagation()}>
+					<Space>
+						<div style={{ width: '250px', marginRight: '-8px' }}>{filterCustomSelect}</div>
+						<Button
+							type='primary'
+							icon={<FilterOutlined />}
+							onClick={() => {
+								handleFilter(dataIndex, filterCustomSelect);
+								console.log(
+									'🚀 ~ file: index.tsx:250 ~ getColumnSelectProps ~ filterCustomSelect:',
+									filterCustomSelect,
+								);
+							}}
+						/>
+					</Space>
+					{buttonOptions?.filter !== false && hasFilter ? (
+						<div>
+							Xem thêm{' '}
+							<a
+								onClick={() => {
+									setVisibleFilter(true);
+									confirm();
+								}}
+							>
+								Bộ lọc tùy chỉnh
+							</a>
+						</div>
+					) : null}
+				</div>
+			),
+			filteredValue: filterColumn?.values ?? [],
+			filterIcon: () => {
+				const values = getFilterColumn(dataIndex, undefined, true)?.values;
+				const filtered = values && values[0];
+				return <FilterOutlined className={filtered ? 'text-primary' : undefined} />;
+			},
+			onFilterDropdownVisibleChange: (vis) => vis && setTimeout(() => searchInputRef?.current?.select(), 100),
+		};
+	};
+
 	//#region Get Table Columns
 	columns = columns.map((item) => ({
 		...item,
@@ -239,6 +283,8 @@ const TableBase = (props: TableBaseProps) => {
 			? getColumnSearchProps(item.dataIndex, item.title)
 			: item.filterType === 'select'
 			? getFilterColumnProps(item.dataIndex, item.filterData)
+			: item.filterType === 'customselect'
+			? getColumnSelectProps(item.dataIndex, item.filterCustomSelect)
 			: undefined),
 		children: item.children?.map((child) => ({
 			...child,
