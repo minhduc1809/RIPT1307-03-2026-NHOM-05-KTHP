@@ -403,6 +403,7 @@ const TableBase = (props: TableBaseProps) => {
 									selectedRowKeys: selectedIds ?? [],
 									preserveSelectedRowKeys: true,
 									onChange: (selectedRowKeys) => setSelectedIds(selectedRowKeys),
+									columnWidth: 30,
 									...props.detailRow,
 							  }
 							: undefined
