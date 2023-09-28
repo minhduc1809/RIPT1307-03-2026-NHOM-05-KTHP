@@ -91,6 +91,9 @@ export type TableBaseProps = {
 	/** View antd Row Selection */
 	detailRow?: any;
 
+	/** Cho phép xóa nhiều, đi kèm với props `rowSelection` */
+	deleteMany?: boolean;
+
 	hideTotal?: boolean;
 	pageable?: boolean;
 	hideCard?: boolean;

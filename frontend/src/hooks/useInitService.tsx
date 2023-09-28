@@ -21,8 +21,8 @@ const useInitService = (url: string, ip?: string) => {
 		return axios.put(`${finalIp}/${url}/${id}`, payload);
 	};
 
-	const deleteService = (id: string | number) => {
-		return axios.delete(`${finalIp}/${url}/${id}`);
+	const deleteService = (id: string | number, silent?: boolean) => {
+		return axios.delete(`${finalIp}/${url}/${id}`, { data: { silent } });
 	};
 
 	const getAllService = (payload?: { condition?: any; sort?: any }, path?: string) => {
