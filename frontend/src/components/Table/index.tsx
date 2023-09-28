@@ -10,7 +10,19 @@ import {
 	ReloadOutlined,
 	SearchOutlined,
 } from '@ant-design/icons';
-import { Card, ConfigProvider, Drawer, Empty, Input, Modal, Space, Table, type InputRef, Button, Popconfirm } from 'antd';
+import {
+	Button,
+	Card,
+	ConfigProvider,
+	Drawer,
+	Empty,
+	Input,
+	Modal,
+	Popconfirm,
+	Space,
+	Table,
+	type InputRef,
+} from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import Tooltip from 'antd/es/tooltip';
 import type { FilterValue, SortOrder } from 'antd/lib/table/interface';
@@ -237,27 +249,29 @@ const TableBase = (props: TableBaseProps) => {
 	};
 	//#endregion
 
-	const getColumnSelectProps = (dataIndex: any, filterCustomSelect?: any): Partial<IColumn<unknown>> => {
-		if (!filterCustomSelect) {
-			return {};
-		}
+	const getColumnSelectProps = (dataIndex: any, filterCustomSelect?: JSX.Element): Partial<IColumn<unknown>> => {
+		if (!filterCustomSelect) return {};
 		const filterColumn = getFilterColumn(dataIndex, EOperatorType.INCLUDE, true);
 		return {
 			filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
 				<div className='column-search-box' onKeyDown={(e) => e.stopPropagation()}>
-					<div
-						style={{
-							display: 'flex',
-						}}
-					>
-						<div style={{ width: '220px' }}>
+					<Space size={0}>
+						<div style={{ width: 300 }}>
 							{React.cloneElement(filterCustomSelect, {
 								value: selectedKeys,
-								onChange: (value: React.Key[]) => setSelectedKeys(value),
+								onChange: (value: any) => setSelectedKeys(Array.isArray(value) ? value : [value]),
+								style: { width: '100%' },
 							})}
 						</div>
-						<Button type='primary' icon={<FilterOutlined />} onClick={() => handleFilter(dataIndex, selectedKeys)} />
-					</div>
+						<Button
+							type='primary'
+							icon={<FilterOutlined />}
+							onClick={() => {
+								handleFilter(dataIndex, selectedKeys as string[]);
+								confirm();
+							}}
+						/>
+					</Space>
 					{buttonOptions?.filter !== false && hasFilter ? (
 						<div>
 							Xem thêm{' '}
