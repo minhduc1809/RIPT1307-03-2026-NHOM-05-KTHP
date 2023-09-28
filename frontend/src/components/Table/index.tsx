@@ -232,18 +232,26 @@ const TableBase = (props: TableBaseProps) => {
 	//#endregion
 
 	const getColumnSelectProps = (dataIndex: any, filterCustomSelect?: any): Partial<IColumn<unknown>> => {
+		if (!filterCustomSelect) {
+			return {};
+		}
 		const filterColumn = getFilterColumn(dataIndex, EOperatorType.INCLUDE, true);
 		return {
 			filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
 				<div className='column-search-box' onKeyDown={(e) => e.stopPropagation()}>
-					<Space>
-						<div style={{ width: '220px', marginRight: '-8px' }}>
+					<div
+						style={{
+							display: 'flex',
+						}}
+					>
+						<div style={{ width: '220px' }}>
 							{React.cloneElement(filterCustomSelect, {
+								value: selectedKeys,
 								onChange: (value: React.Key[]) => setSelectedKeys(value),
 							})}
 						</div>
 						<Button type='primary' icon={<FilterOutlined />} onClick={() => handleFilter(dataIndex, selectedKeys)} />
-					</Space>
+					</div>
 					{buttonOptions?.filter !== false && hasFilter ? (
 						<div>
 							Xem thêm{' '}
@@ -260,12 +268,6 @@ const TableBase = (props: TableBaseProps) => {
 				</div>
 			),
 			filteredValue: filterColumn?.values ?? [],
-			filterIcon: () => {
-				const values = getFilterColumn(dataIndex, undefined, true)?.values;
-				const filtered = values && values[0];
-				return <FilterOutlined className={filtered ? 'text-primary' : undefined} />;
-			},
-			onFilterDropdownVisibleChange: (vis) => vis && setTimeout(() => searchInputRef?.current?.select(), 100),
 		};
 	};
 
