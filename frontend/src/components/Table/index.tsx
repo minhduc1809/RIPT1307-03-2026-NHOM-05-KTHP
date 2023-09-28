@@ -15,7 +15,7 @@ import type { PaginationProps } from 'antd/es/pagination';
 import Tooltip from 'antd/es/tooltip';
 import type { FilterValue, SortOrder } from 'antd/lib/table/interface';
 import _ from 'lodash';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { SortEnd, SortableContainerProps } from 'react-sortable-hoc';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { useModel } from 'umi';
@@ -234,21 +234,15 @@ const TableBase = (props: TableBaseProps) => {
 	const getColumnSelectProps = (dataIndex: any, filterCustomSelect?: any): Partial<IColumn<unknown>> => {
 		const filterColumn = getFilterColumn(dataIndex, EOperatorType.INCLUDE, true);
 		return {
-			filterDropdown: ({ confirm }) => (
+			filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
 				<div className='column-search-box' onKeyDown={(e) => e.stopPropagation()}>
 					<Space>
-						<div style={{ width: '250px', marginRight: '-8px' }}>{filterCustomSelect}</div>
-						<Button
-							type='primary'
-							icon={<FilterOutlined />}
-							onClick={() => {
-								handleFilter(dataIndex, filterCustomSelect);
-								console.log(
-									'🚀 ~ file: index.tsx:250 ~ getColumnSelectProps ~ filterCustomSelect:',
-									filterCustomSelect,
-								);
-							}}
-						/>
+						<div style={{ width: '220px', marginRight: '-8px' }}>
+							{React.cloneElement(filterCustomSelect, {
+								onChange: (value: React.Key[]) => setSelectedKeys(value),
+							})}
+						</div>
+						<Button type='primary' icon={<FilterOutlined />} onClick={() => handleFilter(dataIndex, selectedKeys)} />
 					</Space>
 					{buttonOptions?.filter !== false && hasFilter ? (
 						<div>
@@ -293,6 +287,8 @@ const TableBase = (props: TableBaseProps) => {
 				? getColumnSearchProps(child.dataIndex, child.title)
 				: child.filterType === 'select'
 				? getFilterColumnProps(child.dataIndex, child.filterData)
+				: item.filterType === 'customselect'
+				? getColumnSelectProps(item.dataIndex, item.filterCustomSelect)
 				: undefined),
 		})),
 	}));
@@ -352,6 +348,7 @@ const TableBase = (props: TableBaseProps) => {
 			const col = columns.find((item) => item.dataIndex === field);
 			if (col?.filterType === 'select') handleFilter(field, values as any);
 			else if (col?.filterType === 'string') handleSearch(field, values?.[0] as any);
+			else if (col?.filterType === 'customselect') handleFilter(field, values as any);
 		});
 
 		const { order, field } = sorter;
