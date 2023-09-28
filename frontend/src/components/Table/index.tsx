@@ -10,12 +10,12 @@ import {
 	ReloadOutlined,
 	SearchOutlined,
 } from '@ant-design/icons';
-import { Card, ConfigProvider, Drawer, Empty, Input, Modal, Space, Table, type InputRef, Popconfirm } from 'antd';
+import { Card, ConfigProvider, Drawer, Empty, Input, Modal, Space, Table, type InputRef, Button, Popconfirm } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import Tooltip from 'antd/es/tooltip';
 import type { FilterValue, SortOrder } from 'antd/lib/table/interface';
 import _ from 'lodash';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { SortEnd, SortableContainerProps } from 'react-sortable-hoc';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { useModel } from 'umi';
@@ -237,6 +237,46 @@ const TableBase = (props: TableBaseProps) => {
 	};
 	//#endregion
 
+	const getColumnSelectProps = (dataIndex: any, filterCustomSelect?: any): Partial<IColumn<unknown>> => {
+		if (!filterCustomSelect) {
+			return {};
+		}
+		const filterColumn = getFilterColumn(dataIndex, EOperatorType.INCLUDE, true);
+		return {
+			filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
+				<div className='column-search-box' onKeyDown={(e) => e.stopPropagation()}>
+					<div
+						style={{
+							display: 'flex',
+						}}
+					>
+						<div style={{ width: '220px' }}>
+							{React.cloneElement(filterCustomSelect, {
+								value: selectedKeys,
+								onChange: (value: React.Key[]) => setSelectedKeys(value),
+							})}
+						</div>
+						<Button type='primary' icon={<FilterOutlined />} onClick={() => handleFilter(dataIndex, selectedKeys)} />
+					</div>
+					{buttonOptions?.filter !== false && hasFilter ? (
+						<div>
+							Xem thêm{' '}
+							<a
+								onClick={() => {
+									setVisibleFilter(true);
+									confirm();
+								}}
+							>
+								Bộ lọc tùy chỉnh
+							</a>
+						</div>
+					) : null}
+				</div>
+			),
+			filteredValue: filterColumn?.values ?? [],
+		};
+	};
+
 	//#region Get Table Columns
 	columns = columns.map((item) => ({
 		...item,
@@ -245,6 +285,8 @@ const TableBase = (props: TableBaseProps) => {
 			? getColumnSearchProps(item.dataIndex, item.title)
 			: item.filterType === 'select'
 			? getFilterColumnProps(item.dataIndex, item.filterData)
+			: item.filterType === 'customselect'
+			? getColumnSelectProps(item.dataIndex, item.filterCustomSelect)
 			: undefined),
 		children: item.children?.map((child) => ({
 			...child,
@@ -253,6 +295,8 @@ const TableBase = (props: TableBaseProps) => {
 				? getColumnSearchProps(child.dataIndex, child.title)
 				: child.filterType === 'select'
 				? getFilterColumnProps(child.dataIndex, child.filterData)
+				: item.filterType === 'customselect'
+				? getColumnSelectProps(item.dataIndex, item.filterCustomSelect)
 				: undefined),
 		})),
 	}));
@@ -312,6 +356,7 @@ const TableBase = (props: TableBaseProps) => {
 			const col = columns.find((item) => item.dataIndex === field);
 			if (col?.filterType === 'select') handleFilter(field, values as any);
 			else if (col?.filterType === 'string') handleSearch(field, values?.[0] as any);
+			else if (col?.filterType === 'customselect') handleFilter(field, values as any);
 		});
 
 		const { order, field } = sorter;
