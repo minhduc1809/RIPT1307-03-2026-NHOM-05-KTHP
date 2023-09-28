@@ -11,6 +11,7 @@ const DonutChart = (props: DataChartType) => {
 		chart: {
 			defaultLocale: 'vi',
 			locales: [vi],
+			toolbar: { show: true },
 		},
 		labels: xAxis,
 		responsive: [

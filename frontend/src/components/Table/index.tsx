@@ -10,7 +10,7 @@ import {
 	ReloadOutlined,
 	SearchOutlined,
 } from '@ant-design/icons';
-import { Card, ConfigProvider, Drawer, Empty, Input, Modal, Space, Table, type InputRef, Button } from 'antd';
+import { Card, ConfigProvider, Drawer, Empty, Input, Modal, Space, Table, type InputRef, Button, Popconfirm } from 'antd';
 import type { PaginationProps } from 'antd/es/pagination';
 import Tooltip from 'antd/es/tooltip';
 import type { FilterValue, SortOrder } from 'antd/lib/table/interface';
@@ -52,22 +52,28 @@ const TableBase = (props: TableBaseProps) => {
 	} = props;
 	let { columns } = props;
 	const model = useModel(modelName);
-	const { visibleForm, setVisibleForm, setEdit, setRecord, setIsView, selectedIds, setSelectedIds } = model;
-
-	const page = model?.page;
-	const limit = model?.limit;
-	const total = model?.total;
-	const setPage = model?.setPage;
-	const setLimit = model?.setLimit;
-	const condition = model?.condition;
-	// const setCondition = model?.['setCondition'];
+	const {
+		visibleForm,
+		setVisibleForm,
+		setEdit,
+		setRecord,
+		setIsView,
+		selectedIds,
+		setSelectedIds,
+		page,
+		limit,
+		total,
+		setPage,
+		setLimit,
+		condition,
+		loading,
+		sort,
+		setSort,
+		setFilters,
+		deleteManyModel,
+	} = model;
 	const filters: TFilter<any>[] = model?.filters;
-	const setFilters = model?.setFilters;
-	const sort = model?.sort;
-	const setSort = model?.setSort;
-	const loading = model?.loading;
 	const getData = props.getData ?? model?.getModel;
-
 	const hasFilter = columns?.filter((item) => item.filterType)?.length;
 	const [visibleFilter, setVisibleFilter] = useState(false);
 	const [visibleImport, setVisibleImport] = useState(false);
@@ -363,6 +369,13 @@ const TableBase = (props: TableBaseProps) => {
 		setLimit(pageSize);
 	};
 
+	const handleDeleteMany = () => {
+		if (deleteManyModel && selectedIds?.length)
+			deleteManyModel(selectedIds, () => getData(params))
+				.then(() => setSelectedIds(undefined))
+				.catch((er: any) => console.log(er));
+	};
+
 	const mainContent = (
 		<div className='table-base'>
 			{children}
@@ -399,6 +412,14 @@ const TableBase = (props: TableBaseProps) => {
 					) : null}
 
 					{props.otherButtons}
+
+					{props.rowSelection && props.deleteMany && selectedIds?.length ? (
+						<Popconfirm title={`Xác nhận xóa ${selectedIds?.length} mục đã chọn?`} onConfirm={handleDeleteMany}>
+							<ButtonExtend type='link' danger>
+								Xóa {selectedIds?.length} mục
+							</ButtonExtend>
+						</Popconfirm>
+					) : null}
 				</div>
 
 				<div className='extra'>
@@ -448,6 +469,7 @@ const TableBase = (props: TableBaseProps) => {
 									selectedRowKeys: selectedIds ?? [],
 									preserveSelectedRowKeys: true,
 									onChange: (selectedRowKeys) => setSelectedIds(selectedRowKeys),
+									columnWidth: 30,
 									...props.detailRow,
 							  }
 							: undefined
@@ -569,6 +591,7 @@ const TableBase = (props: TableBaseProps) => {
 					modelName={modelName}
 					onCancel={() => setVisibleImport(false)}
 					onOk={() => getData(params)}
+					titleTemplate={title ? `Biểu mẫu ${title}.xlsx` : undefined}
 				/>
 			) : null}
 

@@ -8,7 +8,7 @@ import ValidateDataImport from './ValidateDataImport';
 import { type ModalImportProps } from './typing';
 
 const ModalImport = (props: ModalImportProps) => {
-	const { visible, onCancel, onOk, modelName, maskCloseableForm, extendData, getTemplate } = props;
+	const { visible, onCancel, onOk, modelName, maskCloseableForm, extendData, getTemplate, titleTemplate } = props;
 	const { setFileData, setMatchedColumns, setDataImport } = useModel('import');
 	const { getImportHeaderModel, getImportTemplateModel, importHeaders } = useModel(modelName);
 	const [currentStep, setCurrentStep] = useState(0);
@@ -61,6 +61,7 @@ const ModalImport = (props: ModalImportProps) => {
 							onChange={() => setCurrentStep(1)}
 							onCancel={onCancelModal}
 							getTemplate={getTemplate || getImportTemplateModel}
+							fileName={titleTemplate}
 						/>
 					) : currentStep === 1 ? (
 						<MatchColumns
