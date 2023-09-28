@@ -58,6 +58,7 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
 	[EModuleKey.QLKH]: {
 		title: 'Quản lý khoa học',
 		clientId: 'vwa-qlkh',
+		url: 'https://qlkh-vwa-dev.vercel.app/',
 		icon: EModuleKey.QLKH + '.svg',
 	},
 	[EModuleKey.TC]: {
