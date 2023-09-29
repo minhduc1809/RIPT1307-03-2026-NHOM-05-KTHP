@@ -18,3 +18,18 @@ declare module 'bizcharts-plugin-slider';
 declare let ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: 'site' | undefined;
 
 declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
+
+declare const APP_CONFIG_IP_ROOT: string;
+declare const APP_CONFIG_IP_GLOBAL: string;
+declare const APP_CONFIG_PRIMARY_COLOR: string;
+declare const APP_CONFIG_LANDING_URL: string;
+declare const APP_CONFIG_TEN_PHAN_HE: string;
+declare const APP_CONFIG_ONE_SIGNAL_ID: string;
+declare const APP_CONFIG_SENTRY_DSN: string;
+declare const APP_CONFIG_KEYCLOAK_AUTHORITY: string;
+declare const APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID: string;
+declare const APP_CONFIG_KEYCLOAK_TOKEN_ENDPOINT_ID: string;
+declare const APP_CONFIG_TEN_TRUONG: string;
+declare const APP_CONFIG_TIEN_TO_TRUONG: string;
+declare const APP_CONFIG_TEN_TRUONG_VIET_TAT_TIENG_ANH: string;
+declare const APP_CONFIG_VERCEL_TEAM: string;
