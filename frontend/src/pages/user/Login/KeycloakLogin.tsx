@@ -1,4 +1,5 @@
 import { useAuthActions } from '@/hooks/useAuthActions';
+import { tenTruongVietTatTiengAnh } from '@/services/ant-design-pro/constant';
 import { DeleteOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import { useAuth } from 'react-oidc-context';
@@ -41,7 +42,7 @@ const LoginWithKeycloak = () => {
 				}}
 				size='large'
 			>
-				Đăng nhập bằng VWA Connect
+				Đăng nhập bằng {tenTruongVietTatTiengAnh.toUpperCase()} Connect
 			</Button>
 		</div>
 	);

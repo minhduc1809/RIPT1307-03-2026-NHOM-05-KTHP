@@ -31,13 +31,13 @@
 				transition: 0.3s;
 
 				&:hover {
-					border-color: @primary-color;
+					border-color: var(--primary-color);
 					transition: 0.3s;
 				}
 
 				span {
 					margin-left: 8px;
-					color: @primary-color;
+					color: var(--primary-color);
 					font-weight: 700;
 					font-size: 1.1rem;
 				}
@@ -79,7 +79,7 @@
 	.ant-modal-content {
 		width: 100vw;
 		height: 100vh;
-		border-radius: 0px;
+		border-radius: 0;
 	}
 }
 
@@ -89,6 +89,7 @@
 	padding: 8px;
 }
 
+/* stylelint-disable-next-line no-duplicate-selectors */
 .ant-modal.modal-ho-so-nhan-su {
 	@media (min-width: @screen-md) {
 		top: 0;
@@ -98,7 +99,7 @@
 		.ant-modal-content {
 			width: 100vw;
 			height: 100vh;
-			border-radius: 0px;
+			border-radius: 0;
 		}
 	}
 }
@@ -117,6 +118,7 @@
 	visibility: visible;
 }
 
+/* stylelint-disable-next-line no-duplicate-selectors */
 .column-search-box {
 	flex-direction: column;
 }
