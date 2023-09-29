@@ -1,7 +1,7 @@
 import type { Login } from '@/services/ant-design-pro/typings';
 import { CalendarOutlined, ContactsOutlined, MailOutlined, ManOutlined, UserOutlined } from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-layout';
-import { Card, Col, Row } from 'antd';
+import { Card, Col, type Input, Row } from 'antd';
 import moment from 'moment';
 import { Component } from 'react';
 import type { RouteChildrenProps } from 'react-router';
@@ -36,7 +36,7 @@ class Center extends Component<CenterProps, CenterState> {
 		tabKey: 'editProfile',
 	};
 
-	public input: Input | null | undefined = undefined;
+	public input: typeof Input | null | undefined = undefined;
 
 	componentDidMount() {
 		const { dispatch } = this.props;
