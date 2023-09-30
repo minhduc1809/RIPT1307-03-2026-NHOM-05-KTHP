@@ -19,4 +19,7 @@ export type ModalImportProps = {
 
 	/** Hàm gọi API để get file import mẫu */
 	getTemplate?: () => Promise<Blob>;
+
+	/** Tên file Excel mẫu, mặc định `File biểu mẫu.xlsx` */
+	titleTemplate?: string;
 };

@@ -1,7 +1,6 @@
 import { AppModules, EModuleKey } from '@/services/ant-design-pro/constant';
 
-const ipRoot = 'https://gw.ript.vn/'; // ip prod
-// const ipRoot = 'https://ais.aisenote.com/dev/'; // ip dev
+const ipRoot = APP_CONFIG_IP_ROOT; // ip dev
 
 const ip3 = ipRoot + 'tcns'; // ip dev
 const ipNotif = ipRoot + 'notification'; // ip dev
@@ -11,11 +10,11 @@ const currentRole = EModuleKey.TCNS;
 
 // DO NOT TOUCH
 const keycloakClientID = AppModules[currentRole].clientId;
-const keycloakAuthority = 'https://sso.ript.vn/realms/ript';
-const resourceServerClientId = 'ript-auth';
-const keycloakTokenEndpoint = 'https://sso.ript.vn/realms/ript/protocol/openid-connect/token';
-const sentryDSN = 'https://75869bc5882ff3efdc90da60fc2e9e10@sentry.aisoftech.vn/7';
-const oneSignalClient = 'f3857a81-2891-49be-87a7-903a4a1a54be';
+const keycloakAuthority = APP_CONFIG_KEYCLOAK_AUTHORITY;
+const resourceServerClientId = `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}auth`;
+const keycloakTokenEndpoint = APP_CONFIG_KEYCLOAK_TOKEN_ENDPOINT_ID;
+const sentryDSN = APP_CONFIG_SENTRY_DSN;
+const oneSignalClient = APP_CONFIG_ONE_SIGNAL_ID;
 
 export {
 	ip3,

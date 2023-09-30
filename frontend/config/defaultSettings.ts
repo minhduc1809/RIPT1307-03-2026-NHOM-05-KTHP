@@ -7,14 +7,14 @@ const Settings: LayoutSettings & {
 	siderWidth: number;
 } = {
 	navTheme: 'dark',
-	primaryColor: '#CC0D00',
+	primaryColor: process.env.APP_CONFIG_PRIMARY_COLOR,
 	borderRadiusBase: '2px',
 	layout: 'mix',
 	contentWidth: 'Fluid',
 	fixedHeader: false,
 	fixSiderbar: true,
 	colorWeak: false,
-	title: 'Tổ chức nhân sự',
+	title: process.env.APP_CONFIG_TITLE_NHAN_SU ?? '',
 	pwa: false,
 	logo: '/logo.png',
 	iconfontUrl: '',

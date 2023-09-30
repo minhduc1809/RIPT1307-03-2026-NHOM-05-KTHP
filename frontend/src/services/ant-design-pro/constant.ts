@@ -14,65 +14,75 @@ export enum EModuleKey {
 
 export const AppModules: Record<EModuleKey, Login.TModule> = {
 	[EModuleKey.CONNECT]: {
-		title: 'Cổng người học',
-		clientId: 'ript-connect',
-		url: 'https://slink.ript.vn/',
+		title: APP_CONFIG_TITLE_CONNECT,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}connect`,
+		url: APP_CONFIG_URL_CONNECT,
 		icon: EModuleKey.CONNECT + '.svg',
 	},
 	[EModuleKey.CONG_CAN_BO]: {
-		title: 'Cổng cán bộ',
-		clientId: 'ript-connect',
-		url: 'https://canbo.ript.vn/',
+		title: APP_CONFIG_TITLE_CAN_BO,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}connect`,
+		url: APP_CONFIG_URL_CAN_BO,
 		icon: EModuleKey.CONG_CAN_BO + '.svg',
 	},
 	[EModuleKey.CORE]: {
-		title: 'Danh mục chung',
-		clientId: 'ript-core',
-		url: 'https://core.ript.vn/',
+		title: APP_CONFIG_TITLE_CORE,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}core`,
+		url: APP_CONFIG_URL_CORE,
 		icon: EModuleKey.CORE + '.svg',
 	},
 	[EModuleKey.QLDT]: {
-		title: 'Quản lý đào tạo',
-		clientId: 'ript-qldt',
-		url: 'https://daotao.ript.vn/',
+		title: APP_CONFIG_TITLE_DAO_TAO,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}qldt`,
+		url: APP_CONFIG_URL_DAO_TAO,
 		icon: EModuleKey.QLDT + '.svg',
 	},
 	[EModuleKey.TCNS]: {
-		title: 'Tổ chức nhân sự',
-		clientId: 'ript-tcns',
-		url: 'https://nhansu.ript.vn/',
+		title: APP_CONFIG_TITLE_NHAN_SU,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}tcns`,
+		url: APP_CONFIG_URL_NHAN_SU,
 		icon: EModuleKey.TCNS + '.svg',
 	},
 	[EModuleKey.CTSV]: {
-		title: 'Công tác sinh viên',
-		clientId: 'ript-ctsv',
-		url: 'https://ctsv.ript.vn/',
+		title: APP_CONFIG_TITLE_CTSV,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}ctsv`,
+		url: APP_CONFIG_URL_CTSV,
 		icon: EModuleKey.CTSV + '.svg',
 	},
 	[EModuleKey.VPS]: {
-		title: 'Văn phòng số',
-		clientId: 'ript-vps',
-		// url: 'https://van-phong-so-vwa-dev.vercel.app/',
+		title: APP_CONFIG_TITLE_VPS,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}vps`,
+		url: APP_CONFIG_URL_VPS,
 		icon: EModuleKey.VPS + '.svg',
 	},
 	[EModuleKey.QLKH]: {
-		title: 'Quản lý khoa học',
-		clientId: 'ript-qlkh',
+		title: APP_CONFIG_TITLE_QLKH,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}qlkh`,
+		url: APP_CONFIG_URL_QLKH,
 		icon: EModuleKey.QLKH + '.svg',
 	},
 	[EModuleKey.TC]: {
-		title: 'Tài chính',
-		clientId: 'ript-tc',
-		url: 'https://thanhtoan.ript.vn/',
+		title: APP_CONFIG_TITLE_TAI_CHINH,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}tc`,
+		url: APP_CONFIG_URL_TAI_CHINH,
 		icon: EModuleKey.TC + '.svg',
 	},
 };
 
 /** Đường link landing page */
-export const landingUrl = 'https://ript.vn/';
+export const landingUrl = APP_CONFIG_URL_LANDING;
 
 /** Màu sắc chủ đạo */
-export const primaryColor = '#CC0D00';
+export const primaryColor = APP_CONFIG_PRIMARY_COLOR;
 
 /** Tên trường Học viện */
-export const unitName = 'Viện Khoa học Kỹ thuật Bưu điện';
+export const unitName = APP_CONFIG_TEN_TRUONG;
+
+/** Cơ quan chủ quản của trường */
+export const coQuanChuQuan = APP_CONFIG_CO_QUAN_CHU_QUAN;
+
+/** Trường / Học viện */
+export const unitPrefix = APP_CONFIG_TIEN_TO_TRUONG;
+
+/** Tên tiếng anh của trường */
+export const tenTruongVietTatTiengAnh = APP_CONFIG_TEN_TRUONG_VIET_TAT_TIENG_ANH;
