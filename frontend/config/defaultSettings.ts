@@ -14,7 +14,7 @@ const Settings: LayoutSettings & {
 	fixedHeader: false,
 	fixSiderbar: true,
 	colorWeak: false,
-	title: process.env.APP_CONFIG_TEN_PHAN_HE ?? '',
+	title: process.env.APP_CONFIG_TITLE_NHAN_SU ?? '',
 	pwa: false,
 	logo: '/logo.png',
 	iconfontUrl: '',

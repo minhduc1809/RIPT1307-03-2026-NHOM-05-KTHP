@@ -14,68 +14,72 @@ export enum EModuleKey {
 
 export const AppModules: Record<EModuleKey, Login.TModule> = {
 	[EModuleKey.CONNECT]: {
-		title: 'Cổng người học',
+		title: APP_CONFIG_TITLE_CONNECT,
 		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}connect`,
-		url: `https://connect-${APP_CONFIG_VERCEL_TEAM}.vercel.app/`,
+		url: APP_CONFIG_URL_CONNECT,
 		icon: EModuleKey.CONNECT + '.svg',
 	},
 	[EModuleKey.CONG_CAN_BO]: {
-		title: 'Cổng cán bộ',
+		title: APP_CONFIG_TITLE_CAN_BO,
 		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}connect`,
-		url: `https://cong-can-bo-${APP_CONFIG_VERCEL_TEAM}.vercel.app/`,
+		url: APP_CONFIG_URL_CAN_BO,
 		icon: EModuleKey.CONG_CAN_BO + '.svg',
 	},
 	[EModuleKey.CORE]: {
-		title: 'Danh mục chung',
+		title: APP_CONFIG_TITLE_CORE,
 		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}core`,
-		url: `https://core-${APP_CONFIG_VERCEL_TEAM}.vercel.app/`,
+		url: APP_CONFIG_URL_CORE,
 		icon: EModuleKey.CORE + '.svg',
 	},
 	[EModuleKey.QLDT]: {
-		title: 'Quản lý đào tạo',
+		title: APP_CONFIG_TITLE_DAO_TAO,
 		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}qldt`,
-		url: `https://qldt-${APP_CONFIG_VERCEL_TEAM}.vercel.app/`,
+		url: APP_CONFIG_URL_DAO_TAO,
 		icon: EModuleKey.QLDT + '.svg',
 	},
 	[EModuleKey.TCNS]: {
-		title: 'Tổ chức nhân sự',
+		title: APP_CONFIG_TITLE_NHAN_SU,
 		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}tcns`,
-		url: `https://tcns-${APP_CONFIG_VERCEL_TEAM}.vercel.app/`,
+		url: APP_CONFIG_URL_NHAN_SU,
 		icon: EModuleKey.TCNS + '.svg',
 	},
 	[EModuleKey.CTSV]: {
-		title: 'Công tác sinh viên',
+		title: APP_CONFIG_TITLE_CTSV,
 		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}ctsv`,
-		url: `https://ctsv-${APP_CONFIG_VERCEL_TEAM}.vercel.app/`,
+		url: APP_CONFIG_URL_CTSV,
 		icon: EModuleKey.CTSV + '.svg',
 	},
 	[EModuleKey.VPS]: {
-		title: 'Văn phòng số',
+		title: APP_CONFIG_TITLE_VPS,
 		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}vps`,
-		url: `https://van-phong-so-${APP_CONFIG_VERCEL_TEAM}.vercel.app/`,
+		url: APP_CONFIG_URL_VPS,
 		icon: EModuleKey.VPS + '.svg',
 	},
 	[EModuleKey.QLKH]: {
-		title: 'Quản lý khoa học',
+		title: APP_CONFIG_TITLE_QLKH,
 		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}qlkh`,
+		url: APP_CONFIG_URL_QLKH,
 		icon: EModuleKey.QLKH + '.svg',
 	},
 	[EModuleKey.TC]: {
-		title: 'Tài chính',
+		title: APP_CONFIG_TITLE_TAI_CHINH,
 		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}tc`,
-		url: `https://tai-chinh-${APP_CONFIG_VERCEL_TEAM}.vercel.app/`,
+		url: APP_CONFIG_URL_TAI_CHINH,
 		icon: EModuleKey.TC + '.svg',
 	},
 };
 
 /** Đường link landing page */
-export const landingUrl = APP_CONFIG_LANDING_URL;
+export const landingUrl = APP_CONFIG_URL_LANDING;
 
 /** Màu sắc chủ đạo */
 export const primaryColor = APP_CONFIG_PRIMARY_COLOR;
 
 /** Tên trường Học viện */
 export const unitName = APP_CONFIG_TEN_TRUONG;
+
+/** Cơ quan chủ quản của trường */
+export const coQuanChuQuan = APP_CONFIG_CO_QUAN_CHU_QUAN;
 
 /** Trường / Học viện */
 export const unitPrefix = APP_CONFIG_TIEN_TO_TRUONG;

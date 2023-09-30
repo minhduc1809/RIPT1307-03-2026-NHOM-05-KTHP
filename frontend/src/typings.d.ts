@@ -22,14 +22,34 @@ declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
 declare const APP_CONFIG_IP_ROOT: string;
 declare const APP_CONFIG_IP_GLOBAL: string;
 declare const APP_CONFIG_PRIMARY_COLOR: string;
-declare const APP_CONFIG_LANDING_URL: string;
-declare const APP_CONFIG_TEN_PHAN_HE: string;
 declare const APP_CONFIG_ONE_SIGNAL_ID: string;
 declare const APP_CONFIG_SENTRY_DSN: string;
 declare const APP_CONFIG_KEYCLOAK_AUTHORITY: string;
-declare const APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID: string;
 declare const APP_CONFIG_KEYCLOAK_TOKEN_ENDPOINT_ID: string;
+declare const APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID: string;
+
+declare const APP_CONFIG_CO_QUAN_CHU_QUAN: string;
 declare const APP_CONFIG_TEN_TRUONG: string;
 declare const APP_CONFIG_TIEN_TO_TRUONG: string;
 declare const APP_CONFIG_TEN_TRUONG_VIET_TAT_TIENG_ANH: string;
-declare const APP_CONFIG_VERCEL_TEAM: string;
+
+declare const APP_CONFIG_URL_LANDING: string;
+declare const APP_CONFIG_URL_CONNECT: string;
+declare const APP_CONFIG_URL_CAN_BO: string;
+declare const APP_CONFIG_URL_DAO_TAO: string;
+declare const APP_CONFIG_URL_NHAN_SU: string;
+declare const APP_CONFIG_URL_TAI_CHINH: string;
+declare const APP_CONFIG_URL_CTSV: string;
+declare const APP_CONFIG_URL_QLKH: string;
+declare const APP_CONFIG_URL_VPS: string;
+declare const APP_CONFIG_URL_CORE: string;
+
+declare const APP_CONFIG_TITLE_CONNECT: string;
+declare const APP_CONFIG_TITLE_CAN_BO: string;
+declare const APP_CONFIG_TITLE_DAO_TAO: string;
+declare const APP_CONFIG_TITLE_NHAN_SU: string;
+declare const APP_CONFIG_TITLE_TAI_CHINH: string;
+declare const APP_CONFIG_TITLE_CTSV: string;
+declare const APP_CONFIG_TITLE_QLKH: string;
+declare const APP_CONFIG_TITLE_VPS: string;
+declare const APP_CONFIG_TITLE_CORE: string;

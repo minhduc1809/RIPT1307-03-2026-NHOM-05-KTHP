@@ -1,3 +1,4 @@
+import { coQuanChuQuan, unitName } from '@/services/ant-design-pro/constant';
 import { Col, Row } from 'antd';
 import moment from 'moment';
 import React from 'react';
@@ -51,8 +52,8 @@ const PrintTemplate = React.forwardRef(
 					{!hideTieuNgu ? (
 						<Row gutter={[5, 5]}>
 							<Col span={12} style={{ textAlign: 'center' }}>
-								<div>HỘI LIÊN HIỆP PHỤ NỮ VIỆT NAM</div>
-								<span className='tieu-ngu'>HỌC VIỆN PHỤ NỮ VIỆT NAM</span>
+								<div>{coQuanChuQuan.toUpperCase()}</div>
+								<span className='tieu-ngu'>{unitName.toUpperCase()}</span>
 							</Col>
 							<Col span={12} style={{ textAlign: 'center' }}>
 								<div className='quoc-hieu'>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
