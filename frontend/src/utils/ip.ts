@@ -4,7 +4,7 @@ const ipRoot = APP_CONFIG_IP_ROOT; // ip dev
 
 const ip3 = ipRoot + 'tcns'; // ip dev
 const ipNotif = ipRoot + 'notification'; // ip dev
-const ipGlobal = 'https://ais2.aisenote.com/qldt-internal-api'; // ip dev
+const ipGlobal = APP_CONFIG_IP_GLOBAL; // ip dev
 
 const currentRole = EModuleKey.TCNS;
 
