@@ -38,6 +38,7 @@ import ModalCustomFilter from './ModalCustomFilter';
 import { EOperatorType } from './constant';
 import './style.less';
 import type { IColumn, TDataOption, TFilter, TableBaseProps } from './typing';
+import { inputFormat } from '@/utils/utils';
 
 const TableBase = (props: TableBaseProps) => {
 	const {
@@ -321,7 +322,7 @@ const TableBase = (props: TableBaseProps) => {
 			title: 'TT',
 			dataIndex: 'index',
 			align: 'center',
-			width: 40,
+			width: 50,
 		});
 
 	//#region Get Drag Sortable column
@@ -462,7 +463,7 @@ const TableBase = (props: TableBaseProps) => {
 						<Tooltip title='Tổng số dữ liệu'>
 							<div className='total'>
 								Tổng số:
-								<span>{total || 0}</span>
+								<span>{inputFormat(total || 0)}</span>
 							</div>
 						</Tooltip>
 					) : null}
@@ -483,7 +484,7 @@ const TableBase = (props: TableBaseProps) => {
 									selectedRowKeys: selectedIds ?? [],
 									preserveSelectedRowKeys: true,
 									onChange: (selectedRowKeys) => setSelectedIds(selectedRowKeys),
-									columnWidth: 30,
+									columnWidth: 40,
 									...props.detailRow,
 							  }
 							: undefined
