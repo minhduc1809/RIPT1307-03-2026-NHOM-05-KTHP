@@ -40,6 +40,11 @@ export type TableBaseProps = {
 	/** Tên model */
 	modelName: any;
 
+	/** Import dùng model khác? */
+	modelImportName?: any;
+	/** Export dùng model khác? */
+	modelExportName?: any;
+
 	Form?: React.FC;
 	formType?: 'Modal' | 'Drawer';
 	columns: IColumn<any>[];
