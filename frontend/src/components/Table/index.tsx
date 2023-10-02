@@ -602,7 +602,7 @@ const TableBase = (props: TableBaseProps) => {
 			{buttonOptions?.import ? (
 				<ModalImport
 					visible={visibleImport}
-					modelName={modelName}
+					modelName={props.modelImportName ?? modelName}
 					onCancel={() => setVisibleImport(false)}
 					onOk={() => getData(params)}
 					titleTemplate={title ? `Biểu mẫu ${title}.xlsx` : undefined}
@@ -612,7 +612,7 @@ const TableBase = (props: TableBaseProps) => {
 			{buttonOptions?.export ? (
 				<ModalExport
 					visible={visibleExport}
-					modelName={modelName}
+					modelName={props.modelExportName ?? modelName}
 					onCancel={() => setVisibleExport(false)}
 					fileName={`Danh sách ${title ?? 'dữ liệu'}.xlsx`}
 					condition={params}

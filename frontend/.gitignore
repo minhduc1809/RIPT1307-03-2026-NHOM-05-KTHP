@@ -44,4 +44,3 @@ build
 # Sentry Auth Token
 #.sentryclirc
 
-.env
