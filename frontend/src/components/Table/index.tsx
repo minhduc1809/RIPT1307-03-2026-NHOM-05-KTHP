@@ -607,6 +607,7 @@ const TableBase = (props: TableBaseProps) => {
 					onCancel={() => setVisibleImport(false)}
 					onOk={() => getData(params)}
 					titleTemplate={title ? `Biểu mẫu ${title}.xlsx` : undefined}
+					extendData={params}
 				/>
 			) : null}
 

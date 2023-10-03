@@ -57,7 +57,7 @@ export type TableBaseProps = {
 	/** Tham số phụ thuộc để getData được gọi */
 	dependencies?: any[];
 
-	/** Tham số để truyền vào hàm getData */
+	/** Tham số để truyền vào hàm getData, ModalImport, ModalExport */
 	params?: any;
 
 	/** Các nội dung hiển thị trên header, bên cạnh button thêm mới */
