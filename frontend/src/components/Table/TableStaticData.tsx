@@ -35,7 +35,14 @@ const TableStaticData = (props: TableStaticProps) => {
 					allowClear
 					enterButton
 					value={selectedKeys[0]}
-					onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+					onChange={(e) => {
+						if (e.type === 'click') {
+							setSelectedKeys([]);
+							confirm();
+						} else {
+							setSelectedKeys(e.target.value ? [e.target.value] : []);
+						}
+					}}
 					onSearch={() => handleSearch(confirm, dataIndex)}
 					ref={searchInputRef}
 				/>
