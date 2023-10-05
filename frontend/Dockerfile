@@ -4,8 +4,6 @@ FROM node:16-alpine AS development
 
 # Set environment variables
 ENV APP_CONFIG_IP_ROOT=https://ais.aisenote.com/dev/
-ENV APP_CONFIG_IP_GLOBAL=https://ais2.aisenote.com/qldt-internal-api
-ENV APP_CONFIG_PRIMARY_COLOR=#007EB9
 ENV APP_CONFIG_ONE_SIGNAL_ID=f3857a81-2891-49be-87a7-903a4a1a54be
 ENV APP_CONFIG_SENTRY_DSN=https://ed934e521d476c44a89a42aaa8a6993a@sentry.aisoftech.vn/3
 ENV APP_CONFIG_KEYCLOAK_AUTHORITY=https://ais.aisenote.com/dev/keycloak/realms/vwa
@@ -16,6 +14,7 @@ ENV APP_CONFIG_CO_QUAN_CHU_QUAN='Hội Liên hiệp phụ nữ Việt Nam'
 ENV APP_CONFIG_TEN_TRUONG='Học viện Phụ nữ Việt Nam'
 ENV APP_CONFIG_TIEN_TO_TRUONG='Học viện'
 ENV APP_CONFIG_TEN_TRUONG_VIET_TAT_TIENG_ANH=VWA
+ENV APP_CONFIG_PRIMARY_COLOR=#007EB9
 
 ENV APP_CONFIG_URL_LANDING=http://portal-vwa.aisenote.com/
 ENV APP_CONFIG_URL_CONNECT=https://vwa-connect-dev.vercel.app/
