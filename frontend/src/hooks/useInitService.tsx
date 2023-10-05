@@ -5,7 +5,7 @@ const useInitService = (url: string, ip?: string) => {
 	const finalIp = ip ?? ip3;
 
 	const getService = (
-		payload: { page: number; limit: number; condition?: any },
+		payload: { page?: number; limit?: number; condition?: any },
 		path?: string,
 		isAbsolutePath?: boolean,
 	) => {

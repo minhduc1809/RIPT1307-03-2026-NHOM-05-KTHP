@@ -154,6 +154,20 @@ const useInitModel = <T,>(
 		}
 	};
 
+	const getOneModel = async (conditionParam: Partial<T>): Promise<T> => {
+		if (!condition) return Promise.reject();
+		setLoading(true);
+		try {
+			const response = await getService({ condition: conditionParam }, 'one');
+			setRecord(response?.data?.data ?? null);
+			return response?.data?.data;
+		} catch (er) {
+			return Promise.reject(er);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	const postModel = async (payload: Partial<T>, getData?: any, closeModal?: boolean): Promise<T> => {
 		if (formSubmiting) Promise.reject('form submiting');
 		setFormSubmiting(true);
@@ -385,6 +399,7 @@ const useInitModel = <T,>(
 		sort,
 		setSort,
 		getByIdModel,
+		getOneModel,
 		getModel,
 		deleteModel,
 		deleteManyModel,
