@@ -1,4 +1,4 @@
-import { landingUrl, unitName } from '@/services/ant-design-pro/constant';
+import { landingUrl, unitName } from '@/services/base/constant';
 import { DefaultFooter } from '@ant-design/pro-layout';
 import { useIntl } from 'umi';
 

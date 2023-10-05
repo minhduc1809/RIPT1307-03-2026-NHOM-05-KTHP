@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
 import { OIDCBounder } from '@/components/OIDCBounder';
-import { landingUrl } from '@/services/ant-design-pro/constant';
+import { landingUrl } from '@/services/base/constant';
 import { currentRole } from '@/utils/ip';
 import { GlobalOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Button, Result } from 'antd';

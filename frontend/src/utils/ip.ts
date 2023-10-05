@@ -1,4 +1,4 @@
-import { AppModules, EModuleKey } from '@/services/ant-design-pro/constant';
+import { AppModules, EModuleKey } from '@/services/base/constant';
 
 const ipRoot = APP_CONFIG_IP_ROOT; // ip dev
 

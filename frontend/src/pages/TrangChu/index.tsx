@@ -1,6 +1,6 @@
 import { Card } from 'antd';
 import './components/style.less';
-import { unitName } from '@/services/ant-design-pro/constant';
+import { unitName } from '@/services/base/constant';
 
 const TrangChu = () => {
 	return (

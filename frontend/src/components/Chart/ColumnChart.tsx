@@ -1,4 +1,4 @@
-import { primaryColor } from '@/services/ant-design-pro/constant';
+import { primaryColor } from '@/services/base/constant';
 import { tienVietNam } from '@/utils/utils';
 import { type ApexOptions } from 'apexcharts';
 import Chart from 'react-apexcharts';

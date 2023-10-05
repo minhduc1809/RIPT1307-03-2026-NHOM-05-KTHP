@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
 import LoginWithKeycloak from '@/pages/user/Login/KeycloakLogin';
-import { adminlogin, getInfo } from '@/services/ant-design-pro/api';
+import { adminlogin, getInfo } from '@/services/base/api';
 import { keycloakAuthority } from '@/utils/ip';
 import rules from '@/utils/rules';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';

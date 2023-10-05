@@ -1,4 +1,4 @@
-import { primaryColor } from '@/services/ant-design-pro/constant';
+import { primaryColor } from '@/services/base/constant';
 import { inputFormat } from '@/utils/utils';
 import {
 	CloseOutlined,
