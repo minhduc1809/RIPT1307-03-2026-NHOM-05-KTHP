@@ -132,6 +132,24 @@ a {
 	border-color: var(--primary-color);
 }
 
+.btn-success {
+	border-color: var(--ant-success-color);
+
+	&.ant-btn-primary {
+		background-color: var(--ant-success-color);
+		&:hover {
+			background-color: var(--ant-success-color-hover);
+		}
+	}
+
+	&:hover {
+		border-color: var(--ant-success-color-hover);
+		&:not(.ant-btn-primary) {
+			color: var(--ant-success-color-hover);
+		}
+	}
+}
+
 .dynamic-delete-button {
 	position: relative;
 	top: 4px;
