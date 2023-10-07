@@ -1,4 +1,4 @@
-import { coQuanChuQuan, unitName } from '@/services/ant-design-pro/constant';
+import { coQuanChuQuan, unitName } from '@/services/base/constant';
 import { Col, Row } from 'antd';
 import moment from 'moment';
 import React from 'react';

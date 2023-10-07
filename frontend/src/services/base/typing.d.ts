@@ -1,4 +1,5 @@
 import { type EModuleKey } from './constant';
+import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 
 declare module Login {
 	export interface User {
@@ -31,4 +32,11 @@ declare module Login {
 		url?: string;
 		icon?: string;
 	};
+}
+
+export interface IInitialState {
+	settings?: Partial<LayoutSettings>;
+	currentUser?: Login.User;
+	// fetchUserInfo?: () => Promise<Login.User | undefined>;
+	authorizedPermissions?: Login.IPermission[];
 }

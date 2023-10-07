@@ -1,4 +1,5 @@
 @import '~antd/es/style/themes/default.less';
+@import '~antd/dist/antd.variable.min.css';
 @import '_variable.less';
 @import 'layout.less';
 
@@ -129,6 +130,24 @@ a {
 
 .ant-input:focus {
 	border-color: var(--primary-color);
+}
+
+.btn-success {
+	border-color: var(--ant-success-color);
+
+	&.ant-btn-primary {
+		background-color: var(--ant-success-color);
+		&:hover {
+			background-color: var(--ant-success-color-hover);
+		}
+	}
+
+	&:hover {
+		border-color: var(--ant-success-color-hover);
+		&:not(.ant-btn-primary) {
+			color: var(--ant-success-color-hover);
+		}
+	}
 }
 
 .dynamic-delete-button {

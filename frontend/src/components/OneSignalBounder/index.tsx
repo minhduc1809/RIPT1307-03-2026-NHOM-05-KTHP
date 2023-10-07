@@ -1,4 +1,4 @@
-import { initOneSignal } from '@/services/ant-design-pro/api';
+import { initOneSignal } from '@/services/base/api';
 import { oneSignalClient } from '@/utils/ip';
 import { useEffect, useState } from 'react';
 import OneSignal from 'react-onesignal';

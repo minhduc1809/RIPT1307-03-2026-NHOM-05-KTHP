@@ -38,6 +38,7 @@ screenshot
 .eslintcache
 
 build
+.husky
 
 # .vercel
 

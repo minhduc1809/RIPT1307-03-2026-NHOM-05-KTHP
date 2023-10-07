@@ -1,13 +1,18 @@
 import { ToolOutlined } from '@ant-design/icons';
-import { Button, Modal, Tooltip } from 'antd';
-import { useState } from 'react';
+import { Button, ConfigProvider, Modal, Tooltip } from 'antd';
+import { useEffect, useState } from 'react';
 import FormPostIssue from './Form';
 
 const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
 	const [visible, setVisible] = useState<boolean>(false);
 
+	useEffect(() => {
+		// Đổi màu real time => Hỗ trợ đổi tenant
+		ConfigProvider.config({ theme: { primaryColor: APP_CONFIG_PRIMARY_COLOR } });
+	}, []);
+
 	return (
-		<>
+		<ConfigProvider>
 			{props.children}
 
 			{window.location.pathname !== '/user/login' && window.location.pathname !== '/403' ? (
@@ -33,7 +38,7 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
 			<Modal bodyStyle={{ padding: 0 }} footer={false} visible={visible} onCancel={() => setVisible(false)}>
 				<FormPostIssue onCancel={() => setVisible(false)} />
 			</Modal>
-		</>
+		</ConfigProvider>
 	);
 };
 

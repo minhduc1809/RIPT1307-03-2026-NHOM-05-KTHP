@@ -1,6 +1,6 @@
 import { useAuthActions } from '@/hooks/useAuthActions';
-import { getInfo, getPermission } from '@/services/ant-design-pro/api';
-import { type Login } from '@/services/ant-design-pro/typings';
+import { getInfo, getPermission } from '@/services/base/api';
+import { type Login } from '@/services/base/typing';
 import axios from '@/utils/axios';
 import { currentRole } from '@/utils/ip';
 import { oidcConfig } from '@/utils/oidcConfig';

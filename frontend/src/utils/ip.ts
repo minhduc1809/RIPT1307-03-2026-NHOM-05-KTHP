@@ -1,10 +1,9 @@
-import { AppModules, EModuleKey } from '@/services/ant-design-pro/constant';
+import { AppModules, EModuleKey } from '@/services/base/constant';
 
 const ipRoot = APP_CONFIG_IP_ROOT; // ip dev
 
 const ip3 = ipRoot + 'tcns'; // ip dev
 const ipNotif = ipRoot + 'notification'; // ip dev
-const ipGlobal = APP_CONFIG_IP_GLOBAL; // ip dev
 
 const currentRole = EModuleKey.TCNS;
 
@@ -19,7 +18,6 @@ const oneSignalClient = APP_CONFIG_ONE_SIGNAL_ID;
 export {
 	ip3,
 	ipNotif,
-	ipGlobal,
 	currentRole,
 	keycloakClientID,
 	resourceServerClientId,

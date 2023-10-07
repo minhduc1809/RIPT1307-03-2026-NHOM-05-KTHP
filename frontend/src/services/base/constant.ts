@@ -1,4 +1,4 @@
-import { type Login } from './typings';
+import { type Login } from './typing';
 
 export enum EModuleKey {
 	CONNECT = 'cong-hoc-vien',

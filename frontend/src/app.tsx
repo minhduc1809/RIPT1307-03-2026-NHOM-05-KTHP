@@ -11,9 +11,9 @@ import OneSignalBounder from './components/OneSignalBounder';
 import TechnicalSupportBounder from './components/TechnicalSupportBounder';
 import NotAccessible from './pages/exception/403';
 import NotFoundContent from './pages/exception/404';
+import type { IInitialState } from './services/base/typing';
 import './styles/global.less';
 import { currentRole } from './utils/ip';
-import { type IInitialState } from './utils/typing';
 
 /**  loading */
 // export const initialStateConfig = {

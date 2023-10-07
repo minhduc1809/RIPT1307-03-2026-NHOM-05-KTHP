@@ -1,4 +1,5 @@
-import { primaryColor } from '@/services/ant-design-pro/constant';
+import { primaryColor } from '@/services/base/constant';
+import { inputFormat } from '@/utils/utils';
 import {
 	CloseOutlined,
 	ExportOutlined,
@@ -21,10 +22,10 @@ import {
 	Popconfirm,
 	Space,
 	Table,
+	Tooltip,
 	type InputRef,
+	type PaginationProps,
 } from 'antd';
-import type { PaginationProps } from 'antd/es/pagination';
-import Tooltip from 'antd/es/tooltip';
 import type { FilterValue, SortOrder } from 'antd/lib/table/interface';
 import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
@@ -178,7 +179,14 @@ const TableBase = (props: TableBaseProps) => {
 						allowClear
 						enterButton
 						value={selectedKeys[0]}
-						onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+						onChange={(e) => {
+							if (e.type === 'click') {
+								setSelectedKeys([]);
+								confirm();
+							} else {
+								setSelectedKeys(e.target.value ? [e.target.value] : []);
+							}
+						}}
 						onSearch={(value) => handleSearch(dataIndex, value, confirm)}
 						ref={searchInputRef}
 					/>
@@ -321,7 +329,7 @@ const TableBase = (props: TableBaseProps) => {
 			title: 'TT',
 			dataIndex: 'index',
 			align: 'center',
-			width: 40,
+			width: 50,
 		});
 
 	//#region Get Drag Sortable column
@@ -462,7 +470,7 @@ const TableBase = (props: TableBaseProps) => {
 						<Tooltip title='Tổng số dữ liệu'>
 							<div className='total'>
 								Tổng số:
-								<span>{total || 0}</span>
+								<span>{inputFormat(total || 0)}</span>
 							</div>
 						</Tooltip>
 					) : null}
@@ -483,7 +491,7 @@ const TableBase = (props: TableBaseProps) => {
 									selectedRowKeys: selectedIds ?? [],
 									preserveSelectedRowKeys: true,
 									onChange: (selectedRowKeys) => setSelectedIds(selectedRowKeys),
-									columnWidth: 30,
+									columnWidth: 40,
 									...props.detailRow,
 							  }
 							: undefined
@@ -606,6 +614,7 @@ const TableBase = (props: TableBaseProps) => {
 					onCancel={() => setVisibleImport(false)}
 					onOk={() => getData(params)}
 					titleTemplate={title ? `Biểu mẫu ${title}.xlsx` : undefined}
+					extendData={params}
 				/>
 			) : null}
 

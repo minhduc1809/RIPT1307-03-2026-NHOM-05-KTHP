@@ -1,4 +1,4 @@
-import { AppModules, EModuleKey } from '@/services/ant-design-pro/constant';
+import { AppModules, EModuleKey } from '@/services/base/constant';
 import { UserSwitchOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
 import { useModel } from 'umi';
