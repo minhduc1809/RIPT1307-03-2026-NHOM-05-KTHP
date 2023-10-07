@@ -1,5 +1,5 @@
 import { ToolOutlined } from '@ant-design/icons';
-import { Button, ConfigProvider, Empty, Modal, Tooltip } from 'antd';
+import { Button, ConfigProvider, Modal, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
 import FormPostIssue from './Form';
 
@@ -12,9 +12,7 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
 	}, []);
 
 	return (
-		<ConfigProvider
-			renderEmpty={() => <Empty style={{ marginTop: 32, marginBottom: 32 }} description='Không có dữ liệu' />}
-		>
+		<ConfigProvider>
 			{props.children}
 
 			{window.location.pathname !== '/user/login' && window.location.pathname !== '/403' ? (

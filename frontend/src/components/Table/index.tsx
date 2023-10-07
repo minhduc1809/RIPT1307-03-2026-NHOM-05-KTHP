@@ -14,7 +14,9 @@ import {
 import {
 	Button,
 	Card,
+	ConfigProvider,
 	Drawer,
+	Empty,
 	Input,
 	Modal,
 	Popconfirm,
@@ -475,72 +477,78 @@ const TableBase = (props: TableBaseProps) => {
 				</div>
 			</div>
 
-			<Table
-				scroll={scroll ?? { x: _.sum(finalColumns.map((item) => item.width ?? 80)) }}
-				rowSelection={
-					props?.rowSelection
-						? {
-								type: 'checkbox',
-								selectedRowKeys: selectedIds ?? [],
-								preserveSelectedRowKeys: true,
-								onChange: (selectedRowKeys) => setSelectedIds(selectedRowKeys),
-								columnWidth: 40,
-								...props.detailRow,
-						  }
-						: undefined
-				}
-				loading={loading}
-				bordered={border || true}
-				pagination={{
-					current: page,
-					pageSize: limit,
-					position: ['bottomRight'],
-					total,
-					showSizeChanger: true,
-					pageSizeOptions: ['5', '10', '25', '50', '100'],
-					showTotal: (tongSo: number) => (
-						<Space>
-							{props?.rowSelection ? (
-								<>
-									<span>Đã chọn: {selectedIds?.length ?? 0}</span>
-									{selectedIds?.length > 0 ? (
-										<span>
-											(
-											<a href='#!' onClick={() => setSelectedIds(undefined)}>
-												Bỏ chọn tất cả
-											</a>
-											)
-										</span>
-									) : null}
-								</>
-							) : null}
-							<span>Tổng số: {tongSo}</span>
-						</Space>
-					),
-				}}
-				onChange={onChange}
-				dataSource={model?.[dataState || 'danhSach']?.map((item: any, index: number) => ({
-					...item,
-					index: index + 1 + (page - 1) * limit * (pageable === false ? 0 : 1),
-					key: item?._id ?? index,
-					children:
-						!props.hideChildrenRows && item?.children && Array.isArray(item.children) && item.children.length
-							? item.children
-							: undefined,
-				}))}
-				columns={finalColumns as any[]}
-				components={
-					rowSortable
-						? {
-								body: {
-									wrapper: DraggableContainer,
-									row: DraggableBodyRow,
-								},
-						  }
-						: undefined
-				}
-				{...otherProps}
-			/>
+			<ConfigProvider
+				renderEmpty={() => (
+					<Empty style={{ marginTop: 32, marginBottom: 32 }} description={props.emptyText ?? 'Không có dữ liệu'} />
+				)}
+			>
+				<Table
+					scroll={scroll ?? { x: _.sum(finalColumns.map((item) => item.width ?? 80)) }}
+					rowSelection={
+						props?.rowSelection
+							? {
+									type: 'checkbox',
+									selectedRowKeys: selectedIds ?? [],
+									preserveSelectedRowKeys: true,
+									onChange: (selectedRowKeys) => setSelectedIds(selectedRowKeys),
+									columnWidth: 40,
+									...props.detailRow,
+							  }
+							: undefined
+					}
+					loading={loading}
+					bordered={border || true}
+					pagination={{
+						current: page,
+						pageSize: limit,
+						position: ['bottomRight'],
+						total,
+						showSizeChanger: true,
+						pageSizeOptions: ['5', '10', '25', '50', '100'],
+						showTotal: (tongSo: number) => (
+							<Space>
+								{props?.rowSelection ? (
+									<>
+										<span>Đã chọn: {selectedIds?.length ?? 0}</span>
+										{selectedIds?.length > 0 ? (
+											<span>
+												(
+												<a href='#!' onClick={() => setSelectedIds(undefined)}>
+													Bỏ chọn tất cả
+												</a>
+												)
+											</span>
+										) : null}
+									</>
+								) : null}
+								<span>Tổng số: {tongSo}</span>
+							</Space>
+						),
+					}}
+					onChange={onChange}
+					dataSource={model?.[dataState || 'danhSach']?.map((item: any, index: number) => ({
+						...item,
+						index: index + 1 + (page - 1) * limit * (pageable === false ? 0 : 1),
+						key: item?._id ?? index,
+						children:
+							!props.hideChildrenRows && item?.children && Array.isArray(item.children) && item.children.length
+								? item.children
+								: undefined,
+					}))}
+					columns={finalColumns as any[]}
+					components={
+						rowSortable
+							? {
+									body: {
+										wrapper: DraggableContainer,
+										row: DraggableBodyRow,
+									},
+							  }
+							: undefined
+					}
+					{...otherProps}
+				/>
+			</ConfigProvider>
 		</div>
 	);
 
