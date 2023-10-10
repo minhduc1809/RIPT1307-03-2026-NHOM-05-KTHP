@@ -2,6 +2,7 @@ import { type TExportField, type TFilter, type TImportHeader, type TImportRespon
 import { chuanHoaObject } from '@/utils/utils';
 import { message } from 'antd';
 import { useState } from 'react';
+import { useIntl } from 'umi';
 import useInitService from './useInitService';
 
 /**
@@ -35,6 +36,7 @@ const useInitModel = <T,>(
 	const [total, setTotal] = useState<number>(0);
 	const [importHeaders, setImportHeaders] = useState<TImportHeader[]>([]); // Import Headers lấy từ API
 	const [selectedIds, setSelectedIds] = useState<string[]>();
+	const intl = useIntl();
 
 	const {
 		getAllService,
@@ -141,7 +143,7 @@ const useInitModel = <T,>(
 	};
 
 	const getByIdModel = async (id: string | number, isSetRecord?: boolean): Promise<T> => {
-		if (!id) return Promise.reject();
+		if (!id) return Promise.reject('Invalid id');
 		setLoading(true);
 		try {
 			const response = await getByIdService(id);
@@ -155,7 +157,7 @@ const useInitModel = <T,>(
 	};
 
 	const getOneModel = async (conditionParam: Partial<T>): Promise<T> => {
-		if (!condition) return Promise.reject();
+		if (!condition) return Promise.reject('condition is required');
 		setLoading(true);
 		try {
 			const response = await getService({ condition: conditionParam }, 'one');
@@ -168,12 +170,17 @@ const useInitModel = <T,>(
 		}
 	};
 
-	const postModel = async (payload: Partial<T>, getData?: any, closeModal?: boolean): Promise<T> => {
-		if (formSubmiting) Promise.reject('form submiting');
+	const postModel = async (
+		payload: Partial<T>,
+		getData?: any,
+		closeModal?: boolean,
+		messageText?: string,
+	): Promise<T> => {
+		if (formSubmiting) Promise.reject(intl.formatMessage({ id: 'global.message.formsubmiting' }));
 		setFormSubmiting(true);
 		try {
 			const res = await postService(chuanHoaObject(payload));
-			message.success('Thêm mới thành công');
+			message.success(messageText ?? intl.formatMessage({ id: 'global.message.themmoithanhcong' }));
 			setLoading(false);
 			if (getData) getData();
 			else getModel();
@@ -193,12 +200,13 @@ const useInitModel = <T,>(
 		getData?: any,
 		notGet?: boolean,
 		closeModal?: boolean,
+		messageText?: string,
 	): Promise<T> => {
-		if (formSubmiting) return Promise.reject('form submiting');
+		if (formSubmiting) return Promise.reject(intl.formatMessage({ id: 'global.message.formsubmiting' }));
 		setFormSubmiting(true);
 		try {
 			const res = await putService(id, chuanHoaObject(payload));
-			message.success('Lưu thành công');
+			message.success(messageText ?? intl.formatMessage({ id: 'global.message.luuthanhcong' }));
 			setLoading(false);
 			if (getData) getData();
 			else if (!notGet) getModel();
@@ -216,7 +224,7 @@ const useInitModel = <T,>(
 		setLoading(true);
 		try {
 			const res = await deleteService(id);
-			message.success('Xóa thành công');
+			message.success(intl.formatMessage({ id: 'global.message.xoathanhcong' }));
 
 			const maxPage = Math.ceil((total - 1) / limit) || 1;
 			let newPage = page;
@@ -310,11 +318,11 @@ const useInitModel = <T,>(
 	 * @returns {any}
 	 */
 	const postValidateModel = async (payload: any[]): Promise<TImportResponse> => {
-		if (formSubmiting) return Promise.reject('form submiting');
+		if (formSubmiting) return Promise.reject(intl.formatMessage({ id: 'global.message.formsubmiting' }));
 		setFormSubmiting(true);
 		try {
 			const res = await postValidateImport({ rows: payload });
-			message.success('Đã kiểm tra dữ liệu');
+			message.success(intl.formatMessage({ id: 'global.message.validated' }));
 			return res.data?.data ?? [];
 		} catch (err) {
 			return Promise.reject(err);
@@ -328,11 +336,11 @@ const useInitModel = <T,>(
 	 * @returns {any}
 	 */
 	const postExecuteImpotModel = async (payload: any[]): Promise<TImportResponse> => {
-		if (formSubmiting) return Promise.reject('form submiting');
+		if (formSubmiting) return Promise.reject(intl.formatMessage({ id: 'global.message.formsubmiting' }));
 		setFormSubmiting(true);
 		try {
 			const res = await postExecuteImport({ rows: payload });
-			message.success('Đã nhập dữ liệu');
+			message.success(intl.formatMessage({ id: 'global.message.imported' }));
 			return res.data?.data ?? [];
 		} catch (err) {
 			return Promise.reject(err);
@@ -376,7 +384,7 @@ const useInitModel = <T,>(
 		paramCondition?: Partial<T>,
 		paramFilters?: TFilter<T>[],
 	): Promise<Blob> => {
-		if (formSubmiting) return Promise.reject('form submiting');
+		if (formSubmiting) return Promise.reject(intl.formatMessage({ id: 'global.message.formsubmiting' }));
 		setFormSubmiting(true);
 		try {
 			const res = await postExport(payload, {
