@@ -157,7 +157,7 @@ const useInitModel = <T,>(
 	};
 
 	const getOneModel = async (conditionParam: Partial<T>): Promise<T> => {
-		if (!condition) return Promise.reject('condition is required');
+		if (!conditionParam) return Promise.reject('condition is required');
 		setLoading(true);
 		try {
 			const response = await getService({ condition: conditionParam }, 'one');
