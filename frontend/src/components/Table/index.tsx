@@ -383,7 +383,7 @@ const TableBase = (props: TableBaseProps) => {
 
 		const { order, field } = sorter;
 		const orderValue = order === 'ascend' ? 1 : order === 'descend' ? -1 : undefined;
-		if (sorter && setSort) setSort({ [field]: orderValue });
+		if (sorter && setSort) setSort({ [Array.isArray(field) ? field.join('.') : field]: orderValue });
 
 		// thay đổi từ phân trang || filter
 		const { current, pageSize } = pagination;

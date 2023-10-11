@@ -141,7 +141,7 @@ const useInitModel = <T,>(
 	};
 
 	const getByIdModel = async (id: string | number, isSetRecord?: boolean): Promise<T> => {
-		if (!id) return Promise.reject();
+		if (!id) return Promise.reject('Invalid id');
 		setLoading(true);
 		try {
 			const response = await getByIdService(id);
@@ -155,7 +155,7 @@ const useInitModel = <T,>(
 	};
 
 	const getOneModel = async (conditionParam: Partial<T>): Promise<T> => {
-		if (!condition) return Promise.reject();
+		if (!conditionParam) return Promise.reject('condition is required');
 		setLoading(true);
 		try {
 			const response = await getService({ condition: conditionParam }, 'one');
@@ -168,12 +168,17 @@ const useInitModel = <T,>(
 		}
 	};
 
-	const postModel = async (payload: Partial<T>, getData?: any, closeModal?: boolean): Promise<T> => {
-		if (formSubmiting) Promise.reject('form submiting');
+	const postModel = async (
+		payload: Partial<T>,
+		getData?: any,
+		closeModal?: boolean,
+		messageText?: string,
+	): Promise<T> => {
+		if (formSubmiting) Promise.reject('Form submiting');
 		setFormSubmiting(true);
 		try {
 			const res = await postService(chuanHoaObject(payload));
-			message.success('Thêm mới thành công');
+			message.success(messageText ?? 'Thêm mới thành công');
 			setLoading(false);
 			if (getData) getData();
 			else getModel();
@@ -193,12 +198,13 @@ const useInitModel = <T,>(
 		getData?: any,
 		notGet?: boolean,
 		closeModal?: boolean,
+		messageText?: string,
 	): Promise<T> => {
-		if (formSubmiting) return Promise.reject('form submiting');
+		if (formSubmiting) return Promise.reject('Form submiting');
 		setFormSubmiting(true);
 		try {
 			const res = await putService(id, chuanHoaObject(payload));
-			message.success('Lưu thành công');
+			message.success(messageText ?? 'Lưu thành công');
 			setLoading(false);
 			if (getData) getData();
 			else if (!notGet) getModel();
@@ -310,7 +316,7 @@ const useInitModel = <T,>(
 	 * @returns {any}
 	 */
 	const postValidateModel = async (payload: any[]): Promise<TImportResponse> => {
-		if (formSubmiting) return Promise.reject('form submiting');
+		if (formSubmiting) return Promise.reject('Form submiting');
 		setFormSubmiting(true);
 		try {
 			const res = await postValidateImport({ rows: payload });
@@ -328,7 +334,7 @@ const useInitModel = <T,>(
 	 * @returns {any}
 	 */
 	const postExecuteImpotModel = async (payload: any[]): Promise<TImportResponse> => {
-		if (formSubmiting) return Promise.reject('form submiting');
+		if (formSubmiting) return Promise.reject('Form submiting');
 		setFormSubmiting(true);
 		try {
 			const res = await postExecuteImport({ rows: payload });
@@ -376,7 +382,7 @@ const useInitModel = <T,>(
 		paramCondition?: Partial<T>,
 		paramFilters?: TFilter<T>[],
 	): Promise<Blob> => {
-		if (formSubmiting) return Promise.reject('form submiting');
+		if (formSubmiting) return Promise.reject('Form submiting');
 		setFormSubmiting(true);
 		try {
 			const res = await postExport(payload, {
