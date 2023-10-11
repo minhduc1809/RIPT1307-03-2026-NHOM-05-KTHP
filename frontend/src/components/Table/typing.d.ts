@@ -168,6 +168,8 @@ export type TableStaticProps = {
 	 * @returns
 	 */
 	onSortEnd?: (record: any, newIndex: number) => void;
+
+	hideChildrenRows?: boolean;
 };
 
 // IMPORT HEADER

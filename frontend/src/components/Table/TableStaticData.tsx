@@ -190,6 +190,10 @@ const TableStaticData = (props: TableStaticProps) => {
 					...item,
 					index: index + 1,
 					key: index,
+					children:
+						!props.hideChildrenRows && item?.children && Array.isArray(item.children) && item.children.length
+							? item.children
+							: undefined,
 				}))}
 				onChange={(pagination, filters, sorter, extra) => {
 					setTotal(extra.currentDataSource.length ?? pagination.total);
