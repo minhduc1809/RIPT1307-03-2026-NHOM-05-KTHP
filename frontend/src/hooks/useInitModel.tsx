@@ -73,6 +73,7 @@ const useInitModel = <T,>(
 		otherQuery?: Record<string, any>,
 		isSetDanhSach?: boolean,
 		isAbsolutePath?: boolean,
+		selectParams?: string[],
 	): Promise<T[]> => {
 		setLoading(true);
 		const payload = {
@@ -87,6 +88,7 @@ const useInitModel = <T,>(
 				...(filters?.filter((item) => item.active)?.map(({ active, ...item }) => item) || []),
 				...(filterParams || []),
 			],
+			select: selectParams?.join(' '),
 			...(otherQuery ?? {}),
 		};
 
@@ -118,6 +120,7 @@ const useInitModel = <T,>(
 		filterParam?: TFilter<T>[],
 		pathParam?: string,
 		isSetDanhSach?: boolean,
+		selectParams?: string[],
 	): Promise<T[]> => {
 		setLoading(true);
 		try {
@@ -125,6 +128,7 @@ const useInitModel = <T,>(
 				[fieldNameCondtion ?? 'condition']: conditionParam,
 				sort: sortParam,
 				filters: filterParam,
+				select: selectParams?.join(' '),
 			};
 			const response = await getAllService(payload, pathParam);
 			const data: T[] = response?.data?.data ?? [];
