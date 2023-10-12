@@ -318,7 +318,7 @@ const TableBase = (props: TableBaseProps) => {
 
 	useEffect(() => {
 		getColumns();
-	}, [JSON.stringify(filters), sort, props.columns.length, props.columns.filter((item) => item.hide).length]);
+	}, [JSON.stringify(filters), sort, ...props.columns]);
 
 	//#region Get Drag Sortable column
 	const DragHandle = SortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
