@@ -24,6 +24,7 @@ const FormItemUrlOrUpload = (props: {
 
 	useEffect(() => {
 		setTypeUpload(!!initValue ? 'URL' : 'UPLOAD');
+		form.setFieldsValue({ [field]: initValue }); // Update lại value sau khi upload file
 	}, [initValue]);
 
 	return (
