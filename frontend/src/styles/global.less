@@ -135,11 +135,16 @@ a {
 .btn-success {
 	border-color: var(--ant-success-color);
 
-	&.ant-btn-primary {
+	&.ant-btn-primary:not(:disabled) {
 		background-color: var(--ant-success-color);
 		&:hover {
 			background-color: var(--ant-success-color-hover);
 		}
+	}
+
+	&.ant-btn-link {
+		color: var(--ant-success-color);
+		border: none;
 	}
 
 	&:hover {
@@ -372,19 +377,19 @@ canvas {
 }
 
 .text-info {
-	color: @info-color;
+	color: var(--ant-info-color);
 }
 
 .text-success {
-	color: @success-color;
+	color: var(--ant-success-color);
 }
 
 .text-warning {
-	color: @warning-color;
+	color: var(--ant-warning-color);
 }
 
 .text-error {
-	color: @error-color;
+	color: var(--ant-error-color);
 }
 
 @media (max-width: @screen-xs) {

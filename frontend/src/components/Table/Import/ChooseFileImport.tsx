@@ -35,7 +35,11 @@ const ChooseFileImport = (props: { onChange: () => void; onCancel: any; getTempl
 
 	const onChangeUpload = (value: { fileList: any[] }) => {
 		const file = value.fileList?.[0]?.originFileObj;
-		if (typeof FileReader !== 'undefined' && file) {
+		if (!file) {
+			setSheetNames(undefined);
+			return;
+		}
+		if (typeof FileReader !== 'undefined') {
 			const reader = new FileReader();
 			reader.onload = (e) => getWorksheets(e.target?.result);
 			reader.readAsBinaryString(file);

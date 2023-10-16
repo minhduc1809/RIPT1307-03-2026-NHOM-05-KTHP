@@ -13,7 +13,9 @@ const ButtonExtend = (
 
 	return (
 		<Tooltip title={tooltip ?? children}>
-			<Button {...otherProps}>{!notHideText ? <span className='extend'>{children}</span> : children}</Button>
+			<Button {...otherProps}>
+				{!notHideText && !!children ? <span className='extend'>{children}</span> : children}
+			</Button>
 		</Tooltip>
 	);
 };

@@ -41,29 +41,7 @@ import './style.less';
 import type { IColumn, TDataOption, TFilter, TableBaseProps } from './typing';
 
 const TableBase = (props: TableBaseProps) => {
-	const {
-		modelName,
-		Form,
-		title,
-		dependencies = [],
-		formType,
-		children,
-		params,
-		border,
-		buttons: buttonOptions,
-		widthDrawer,
-		dataState,
-		otherProps,
-		maskCloseableForm,
-		hideCard,
-		noCleanUp,
-		pageable,
-		scroll,
-		destroyModal,
-		addStt,
-		rowSortable,
-	} = props;
-	let { columns } = props;
+	const { modelName, Form, title, dependencies = [], params, buttons, widthDrawer, destroyModal } = props;
 	const model = useModel(modelName);
 	const {
 		visibleForm,
@@ -87,7 +65,8 @@ const TableBase = (props: TableBaseProps) => {
 	} = model;
 	const filters: TFilter<any>[] = model?.filters;
 	const getData = props.getData ?? model?.getModel;
-	const hasFilter = columns?.filter((item) => item.filterType)?.length;
+	const hasFilter = props.columns?.filter((item) => item.filterType)?.length;
+	const [finalColumns, setColumns] = useState<IColumn<any>[]>([]);
 	const [visibleFilter, setVisibleFilter] = useState(false);
 	const [visibleImport, setVisibleImport] = useState(false);
 	const [visibleExport, setVisibleExport] = useState(false);
@@ -103,7 +82,7 @@ const TableBase = (props: TableBaseProps) => {
 
 	useEffect(() => {
 		return () => {
-			if (noCleanUp !== true) {
+			if (props.noCleanUp !== true) {
 				// setCondition(undefined);
 				setFilters(undefined);
 				setSelectedIds(undefined);
@@ -190,7 +169,7 @@ const TableBase = (props: TableBaseProps) => {
 						onSearch={(value) => handleSearch(dataIndex, value, confirm)}
 						ref={searchInputRef}
 					/>
-					{buttonOptions?.filter !== false && hasFilter ? (
+					{buttons?.filter !== false && hasFilter ? (
 						<div>
 							Xem thêm{' '}
 							<a
@@ -280,7 +259,7 @@ const TableBase = (props: TableBaseProps) => {
 							}}
 						/>
 					</Space>
-					{buttonOptions?.filter !== false && hasFilter ? (
+					{buttons?.filter !== false && hasFilter ? (
 						<div>
 							Xem thêm{' '}
 							<a
@@ -300,37 +279,46 @@ const TableBase = (props: TableBaseProps) => {
 	};
 
 	//#region Get Table Columns
-	columns = columns.map((item) => ({
-		...item,
-		...(item.sortable && getSort(item.dataIndex)),
-		...(item.filterType === 'string'
-			? getColumnSearchProps(item.dataIndex, item.title)
-			: item.filterType === 'select'
-			? getFilterColumnProps(item.dataIndex, item.filterData)
-			: item.filterType === 'customselect'
-			? getColumnSelectProps(item.dataIndex, item.filterCustomSelect)
-			: undefined),
-		children: item.children?.map((child) => ({
-			...child,
-			...(child.sortable && getSort(child.dataIndex)),
-			...(child.filterType === 'string'
-				? getColumnSearchProps(child.dataIndex, child.title)
-				: child.filterType === 'select'
-				? getFilterColumnProps(child.dataIndex, child.filterData)
+
+	const getColumns = () => {
+		let final: IColumn<any>[] = props.columns.map((item) => ({
+			...item,
+			...(item.sortable && getSort(item.dataIndex)),
+			...(item.filterType === 'string'
+				? getColumnSearchProps(item.dataIndex, item.title)
+				: item.filterType === 'select'
+				? getFilterColumnProps(item.dataIndex, item.filterData)
 				: item.filterType === 'customselect'
 				? getColumnSelectProps(item.dataIndex, item.filterCustomSelect)
 				: undefined),
-		})),
-	}));
+			children: item.children?.map((child) => ({
+				...child,
+				...(child.sortable && getSort(child.dataIndex)),
+				...(child.filterType === 'string'
+					? getColumnSearchProps(child.dataIndex, child.title)
+					: child.filterType === 'select'
+					? getFilterColumnProps(child.dataIndex, child.filterData)
+					: item.filterType === 'customselect'
+					? getColumnSelectProps(item.dataIndex, item.filterCustomSelect)
+					: undefined),
+			})),
+		}));
 
-	const finalColumns = columns?.filter((item) => item?.hide !== true);
-	if (addStt !== false)
-		finalColumns.unshift({
-			title: 'TT',
-			dataIndex: 'index',
-			align: 'center',
-			width: 50,
-		});
+		final = final?.filter((item) => item?.hide !== true);
+		if (props.addStt !== false)
+			final.unshift({
+				title: 'TT',
+				dataIndex: 'index',
+				align: 'center',
+				width: 50,
+			});
+
+		setColumns(final);
+	};
+
+	useEffect(() => {
+		getColumns();
+	}, [JSON.stringify(filters), sort, ...props.columns]);
 
 	//#region Get Drag Sortable column
 	const DragHandle = SortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
@@ -340,7 +328,7 @@ const TableBase = (props: TableBaseProps) => {
 		<tbody {...props1} />
 	));
 
-	if (rowSortable)
+	if (props.rowSortable)
 		finalColumns.unshift({
 			title: '',
 			width: 30,
@@ -350,7 +338,7 @@ const TableBase = (props: TableBaseProps) => {
 
 	const onSortEnd = ({ oldIndex, newIndex }: SortEnd) => {
 		if (oldIndex !== newIndex) {
-			const record = model?.[dataState || 'danhSach']?.[oldIndex];
+			const record = model?.[props.dataState || 'danhSach']?.[oldIndex];
 			if (props.onSortEnd) props.onSortEnd(record, newIndex);
 		}
 	};
@@ -375,7 +363,7 @@ const TableBase = (props: TableBaseProps) => {
 	const onChange = (pagination: PaginationProps, fil: Record<string, FilterValue | null>, sorter: any) => {
 		// Handle Filter in columns
 		Object.entries(fil).map(([field, values]) => {
-			const col = columns.find((item) => item.dataIndex === field);
+			const col = finalColumns.find((item) => item.dataIndex === field);
 			if (col?.filterType === 'select') handleFilter(field, values as any);
 			else if (col?.filterType === 'string') handleSearch(field, values?.[0] as any);
 			else if (col?.filterType === 'customselect') handleFilter(field, values as any);
@@ -400,11 +388,11 @@ const TableBase = (props: TableBaseProps) => {
 
 	const mainContent = (
 		<div className='table-base'>
-			{children}
+			{props.children}
 
 			<div className='header'>
 				<div className='action'>
-					{buttonOptions?.create !== false ? (
+					{buttons?.create !== false ? (
 						<ButtonExtend
 							size={props?.otherProps?.size}
 							onClick={() => {
@@ -422,12 +410,12 @@ const TableBase = (props: TableBaseProps) => {
 						</ButtonExtend>
 					) : null}
 
-					{buttonOptions?.import ? (
+					{buttons?.import ? (
 						<ButtonExtend icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
 							Nhập dữ liệu
 						</ButtonExtend>
 					) : null}
-					{buttonOptions?.export ? (
+					{buttons?.export ? (
 						<ButtonExtend icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
 							Xuất dữ liệu {selectedIds?.length > 0 ? `(${selectedIds.length})` : ''}
 						</ButtonExtend>
@@ -445,7 +433,7 @@ const TableBase = (props: TableBaseProps) => {
 				</div>
 
 				<div className='extra'>
-					{buttonOptions?.reload !== false ? (
+					{buttons?.reload !== false ? (
 						<ButtonExtend
 							icon={<ReloadOutlined />}
 							onClick={() => getData(params)}
@@ -456,7 +444,7 @@ const TableBase = (props: TableBaseProps) => {
 						</ButtonExtend>
 					) : null}
 
-					{buttonOptions?.filter !== false && hasFilter ? (
+					{buttons?.filter !== false && hasFilter ? (
 						<ButtonExtend
 							icon={filters?.length ? <FilterTwoTone twoToneColor={primaryColor} /> : <FilterOutlined />}
 							onClick={() => setVisibleFilter(true)}
@@ -483,7 +471,7 @@ const TableBase = (props: TableBaseProps) => {
 				)}
 			>
 				<Table
-					scroll={scroll ?? { x: _.sum(finalColumns.map((item) => item.width ?? 80)) }}
+					scroll={{ x: _.sum(finalColumns.map((item) => item.width ?? 80)), ...props.scroll }}
 					rowSelection={
 						props?.rowSelection
 							? {
@@ -497,7 +485,7 @@ const TableBase = (props: TableBaseProps) => {
 							: undefined
 					}
 					loading={loading}
-					bordered={border || true}
+					bordered={props.border || true}
 					pagination={{
 						current: page,
 						pageSize: limit,
@@ -526,9 +514,9 @@ const TableBase = (props: TableBaseProps) => {
 						),
 					}}
 					onChange={onChange}
-					dataSource={model?.[dataState || 'danhSach']?.map((item: any, index: number) => ({
+					dataSource={model?.[props.dataState || 'danhSach']?.map((item: any, index: number) => ({
 						...item,
-						index: index + 1 + (page - 1) * limit * (pageable === false ? 0 : 1),
+						index: index + 1 + (page - 1) * limit * (props.pageable === false ? 0 : 1),
 						key: item?._id ?? index,
 						children:
 							!props.hideChildrenRows && item?.children && Array.isArray(item.children) && item.children.length
@@ -537,7 +525,7 @@ const TableBase = (props: TableBaseProps) => {
 					}))}
 					columns={finalColumns as any[]}
 					components={
-						rowSortable
+						props.rowSortable
 							? {
 									body: {
 										wrapper: DraggableContainer,
@@ -546,7 +534,7 @@ const TableBase = (props: TableBaseProps) => {
 							  }
 							: undefined
 					}
-					{...otherProps}
+					{...props.otherProps}
 				/>
 			</ConfigProvider>
 		</div>
@@ -554,20 +542,20 @@ const TableBase = (props: TableBaseProps) => {
 
 	return (
 		<>
-			{hideCard ? (
+			{props.hideCard ? (
 				mainContent
 			) : (
-				<Card title={title || false} bordered={border || false}>
+				<Card title={title || false} bordered={props.border || false}>
 					{mainContent}
 				</Card>
 			)}
 
 			{Form && (
 				<>
-					{formType === 'Drawer' ? (
+					{props.formType === 'Drawer' ? (
 						<Drawer
 							className={widthDrawer === 'full' ? 'drawer-full' : ''}
-							maskClosable={maskCloseableForm || false}
+							maskClosable={props.maskCloseableForm || false}
 							width={widthDrawer !== 'full' ? widthDrawer : undefined}
 							footer={false}
 							bodyStyle={{ padding: 0 }}
@@ -583,7 +571,7 @@ const TableBase = (props: TableBaseProps) => {
 					) : (
 						<Modal
 							className={widthDrawer === 'full' ? 'modal-full' : ''}
-							maskClosable={maskCloseableForm || false}
+							maskClosable={props.maskCloseableForm || false}
 							width={widthDrawer !== 'full' ? widthDrawer : undefined}
 							onCancel={() => setVisibleForm(false)}
 							footer={false}
@@ -597,7 +585,7 @@ const TableBase = (props: TableBaseProps) => {
 				</>
 			)}
 
-			{buttonOptions?.filter !== false && hasFilter ? (
+			{buttons?.filter !== false && hasFilter ? (
 				<ModalCustomFilter
 					visible={visibleFilter}
 					setVisible={setVisibleFilter}
@@ -607,7 +595,7 @@ const TableBase = (props: TableBaseProps) => {
 				/>
 			) : null}
 
-			{buttonOptions?.import ? (
+			{buttons?.import ? (
 				<ModalImport
 					visible={visibleImport}
 					modelName={props.modelImportName ?? modelName}
@@ -618,7 +606,7 @@ const TableBase = (props: TableBaseProps) => {
 				/>
 			) : null}
 
-			{buttonOptions?.export ? (
+			{buttons?.export ? (
 				<ModalExport
 					visible={visibleExport}
 					modelName={props.modelExportName ?? modelName}
