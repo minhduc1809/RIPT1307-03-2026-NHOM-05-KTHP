@@ -75,7 +75,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 						src={
 							<img
 								// style={currentUser?.avatar_path ? {} : { objectFit: 'cover' }}
-								src={'/logo.png'}
+								src={initialState.currentUser?.avatar ?? '/logo.png'}
 							/>
 						}
 						alt='avatar'
@@ -83,8 +83,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 					<span className={`${styles.name}`}>
 						{initialState.currentUser?.fullname
 							? initialState.currentUser.fullname
-							: initialState.currentUser?.firstname
-							? `${initialState.currentUser.firstname} ${initialState.currentUser?.lastname ?? ''}`
+							: initialState.currentUser?.lastname
+							? `${initialState.currentUser.lastname} ${initialState.currentUser?.firstname ?? ''}`
 							: initialState.currentUser?.username || ''}
 					</span>
 				</span>
