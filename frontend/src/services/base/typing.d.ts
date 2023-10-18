@@ -12,6 +12,7 @@ declare module Login {
 		lastname: string; // null;
 		ssoId: string; // null;
 		systemRole: string; // 'Admin';
+		avatar?: string;
 		updatedAt: string; //'2023-04-18T07:59:56.850Z';
 		username: string; // 'admin';
 		roles?: string[];

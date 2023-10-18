@@ -1,10 +1,9 @@
 import { ArrowLeftOutlined, CheckCircleOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Col, Collapse, Popconfirm, Row, Space, Spin, Tag } from 'antd';
-import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import TableStaticData from '../TableStaticData';
-import { type TImportRowResponse, type IColumn, type TImportResponse } from '../typing';
+import { type IColumn, type TImportResponse, type TImportRowResponse } from '../typing';
 
 const ValidateDataImport = (props: { onOk: () => void; onCancel: () => void; onBack: any; modelName: any }) => {
 	const { onOk, onCancel, onBack, modelName } = props;
@@ -17,14 +16,14 @@ const ValidateDataImport = (props: { onOk: () => void; onCancel: () => void; onB
 
 	const columns: IColumn<TImportRowResponse>[] = [
 		{
-			dataIndex: 'index',
 			title: 'Thứ tự hàng',
+			dataIndex: 'rowIndex',
 			width: 80,
 			align: 'center',
 		},
 		{
 			title: 'Trạng thái',
-			width: 100,
+			width: 120,
 			align: 'center',
 			render: (val, rec) =>
 				!!rec.rowErrors?.length ? (
@@ -32,12 +31,6 @@ const ValidateDataImport = (props: { onOk: () => void; onCancel: () => void; onB
 				) : (
 					<Tag color='green'>{step === 0 ? 'Hợp lệ' : 'Thành công'}</Tag>
 				),
-		},
-		{
-			dataIndex: 'rowErrors',
-			title: 'Thông tin lỗi',
-			width: 300,
-			render: (val) => val?.join(', '),
 		},
 	];
 
@@ -47,7 +40,7 @@ const ValidateDataImport = (props: { onOk: () => void; onCancel: () => void; onB
 				.then((res: TImportResponse) => {
 					setErrorCount(res.validate?.filter((item) => !!item.rowErrors?.length).length);
 					setIsError(res.error);
-					const temp = res.validate?.map((item) => ({ ...item, index: item.index + startLine }));
+					const temp = res.validate?.map((item) => ({ ...item, rowIndex: item.index + startLine }));
 					setImportResponses(temp ?? []);
 				})
 				.catch((err: any) => console.log(err));
@@ -98,16 +91,20 @@ const ValidateDataImport = (props: { onOk: () => void; onCancel: () => void; onB
 					</Col>
 				) : !isError ? (
 					<Col span={24}>
-						<Space style={{ marginTop: 12, marginBottom: 12, justifyContent: 'center', width: '100%' }} align='center'>
-							<CheckCircleOutlined style={{ fontSize: 24, color: '#08b34f' }} />
-							<span className='fw500' style={{ fontSize: 18, color: '#08b34f' }}>
+						<Space
+							style={{ marginTop: 12, marginBottom: 12, justifyContent: 'center', width: '100%' }}
+							align='center'
+							className='text-success'
+						>
+							<CheckCircleOutlined style={{ fontSize: 24 }} />
+							<span className='fw500' style={{ fontSize: 18 }}>
 								Tất cả dữ liệu {importResponses.length} hàng đã được {step === 0 ? 'kiểm tra hợp lệ' : 'lưu thành công'}
 							</span>
 						</Space>
 					</Col>
 				) : (
 					<Col span={24}>
-						<div style={{ color: 'red' }}>Có lỗi xảy ra!</div>
+						<div className='text-error'>Có lỗi xảy ra!</div>
 					</Col>
 				)
 			) : (
@@ -118,14 +115,30 @@ const ValidateDataImport = (props: { onOk: () => void; onCancel: () => void; onB
 
 			{importResponses.length ? (
 				<Col span={24}>
-					<Collapse defaultActiveKey={errorCount ? 0 : undefined}>
-						<Collapse.Panel key={0} header='Danh sách chi tiết'>
+					<Collapse defaultActiveKey={1}>
+						<Collapse.Panel key={0} header='Thành công'>
 							<TableStaticData
 								columns={columns}
-								data={importResponses}
+								data={importResponses.filter((item) => !item?.rowErrors?.length)}
 								loading={formSubmiting}
 								size='small'
-								otherProps={{ bordered: true }}
+								hasTotal
+							/>
+						</Collapse.Panel>
+						<Collapse.Panel key={1} header='Thất bại'>
+							<TableStaticData
+								columns={[
+									...columns,
+									{
+										dataIndex: 'rowErrors',
+										title: 'Thông tin lỗi',
+										width: 350,
+										render: (val) => val?.join(', '),
+									},
+								]}
+								data={importResponses.filter((item) => item.rowErrors?.length)}
+								loading={formSubmiting}
+								size='small'
 								hasTotal
 							/>
 						</Collapse.Panel>
