@@ -9,9 +9,6 @@ declare module '*.jpeg';
 declare module '*.gif';
 declare module '*.bmp';
 declare module '*.tiff';
-declare module 'numeral';
-declare module '@antv/data-set';
-declare module 'bizcharts-plugin-slider';
 
 // preview.pro.ant.design only do not use in your production ;
 // preview.pro.ant.design Dedicated environment variable, please do not use it in your project.
@@ -24,6 +21,7 @@ declare const APP_CONFIG_ONE_SIGNAL_ID: string;
 declare const APP_CONFIG_SENTRY_DSN: string;
 declare const APP_CONFIG_KEYCLOAK_AUTHORITY: string;
 declare const APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID: string;
+declare const APP_CONFIG_APP_VERSION: string;
 
 declare const APP_CONFIG_CO_QUAN_CHU_QUAN: string;
 declare const APP_CONFIG_TEN_TRUONG: string;
