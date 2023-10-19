@@ -69,7 +69,6 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
-    "numeral": "^2.0.6",
     "oidc-client-ts": "^2.2.5",
     "path": "^0.12.7",
     "react": "^17.0.0",

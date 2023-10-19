@@ -1,5 +1,5 @@
 import { useAuthActions } from '@/hooks/useAuthActions';
-import { getInfo, getPermission } from '@/services/base/api';
+import { getPermission, getUserInfo } from '@/services/base/api';
 import { type Login } from '@/services/base/typing';
 import axios from '@/utils/axios';
 import { currentRole } from '@/utils/ip';
@@ -24,8 +24,8 @@ const OIDCBounder_: FC = ({ children }) => {
 		if (auth.user) {
 			handleAxios(auth.user.access_token);
 			try {
-				const [getPermissionsResponse, getCurrentUserInfoResponse] = await Promise.all([getPermission(), getInfo()]);
-				const userInfo = getCurrentUserInfoResponse?.data?.data;
+				const [getPermissionsResponse, getUserInfoResponse] = await Promise.all([getPermission(), getUserInfo()]);
+				const userInfo: Login.IUser = getUserInfoResponse?.data;
 				const permissions: Login.IPermission[] = getPermissionsResponse.data;
 
 				if (currentRole && permissions.length && !permissions.find((item) => item.rsname === currentRole)) {
@@ -33,7 +33,7 @@ const OIDCBounder_: FC = ({ children }) => {
 				} else {
 					setInitialState({
 						...initialState,
-						currentUser: userInfo,
+						currentUser: { ...userInfo, ssoId: userInfo.sub },
 						authorizedPermissions: permissions,
 					});
 

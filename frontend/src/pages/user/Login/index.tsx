@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
 import LoginWithKeycloak from '@/pages/user/Login/KeycloakLogin';
-import { adminlogin, getInfo } from '@/services/base/api';
+import { adminlogin, getUserInfo } from '@/services/base/api';
 import { keycloakAuthority } from '@/utils/ip';
 import rules from '@/utils/rules';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
@@ -31,7 +31,7 @@ const Login: React.FC = () => {
 		localStorage.setItem('refreshToken', role?.refresh_token);
 
 		// const decoded = jwt_decode(role?.access_token) as any;
-		const info = await getInfo();
+		const info = await getUserInfo();
 		setInitialState({
 			...initialState,
 			currentUser: info?.data?.data,

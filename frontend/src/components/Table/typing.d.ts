@@ -190,6 +190,8 @@ export type TImportResponse = {
 
 export type TImportRowResponse = {
 	index: number;
+	rowIndex: number;
+	row: { row: number };
 	rowErrors?: string[];
 };
 
