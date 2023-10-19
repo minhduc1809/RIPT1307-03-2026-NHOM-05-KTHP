@@ -1,25 +1,29 @@
-import { type EModuleKey } from './constant';
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import { type EModuleKey } from './constant';
 
 declare module Login {
-	export interface User {
-		createdAt: string; //'2023-04-18T07:59:56.850Z';
-		dob: string; // null;
-		email: string; // 'admin@administrator.com';
-		firstname: string; //null;
-		fullname: string; // 'Administrator';
-		gender: string; // null;
-		lastname: string; // null;
-		ssoId: string; // null;
-		systemRole: string; // 'Admin';
-		avatar?: string;
-		updatedAt: string; //'2023-04-18T07:59:56.850Z';
-		username: string; // 'admin';
-		roles?: string[];
-		_id: string; // '643e4dfc013057d9f766d613';
+	export interface IUser {
+		sub: string; // SsoId 'b323b6c8-2f1e-4a9b-941b-f1e466b9ba40';
+		ssoId: string;
+		email_verified: boolean; // true;
+		realm_access: {
+			roles: string[];
+			//  [
+			// 	'QUAN_TRI_VIEN',
+			// 	'strapi.super_admin',
+			// 	'strapi.Editor',
+			// 	'offline_access',
+			// 	'admin',
+			// 	'uma_authorization',
+			// 	'default-roles-vwa',
+			// ];
+		};
+		name: string; // 'Administrator';
+		preferred_username: string; // 'admin';
+		given_name: string; // 'Administrator';
+		family_name: string; // '';
+		picture: string; // 'https://images2.thanhnien.vn/528068263637045248/2023/10/14/ronaldo-1697254043939678025874.jpeg';
 	}
-
-	export type Profile = any;
 
 	export interface IPermission {
 		scopes: string[]; //['cong-tac-sinh-vien:ho-so'];
@@ -37,7 +41,6 @@ declare module Login {
 
 export interface IInitialState {
 	settings?: Partial<LayoutSettings>;
-	currentUser?: Login.User;
-	// fetchUserInfo?: () => Promise<Login.User | undefined>;
+	currentUser?: Login.IUser;
 	authorizedPermissions?: Login.IPermission[];
 }

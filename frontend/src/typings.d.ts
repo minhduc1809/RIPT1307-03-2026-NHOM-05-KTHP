@@ -23,7 +23,6 @@ declare const APP_CONFIG_IP_ROOT: string;
 declare const APP_CONFIG_ONE_SIGNAL_ID: string;
 declare const APP_CONFIG_SENTRY_DSN: string;
 declare const APP_CONFIG_KEYCLOAK_AUTHORITY: string;
-declare const APP_CONFIG_KEYCLOAK_TOKEN_ENDPOINT_ID: string;
 declare const APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID: string;
 
 declare const APP_CONFIG_CO_QUAN_CHU_QUAN: string;

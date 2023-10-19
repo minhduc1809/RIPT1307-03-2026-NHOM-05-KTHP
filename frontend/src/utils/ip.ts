@@ -11,7 +11,8 @@ const currentRole = EModuleKey.TCNS;
 const keycloakClientID = AppModules[currentRole].clientId;
 const keycloakAuthority = APP_CONFIG_KEYCLOAK_AUTHORITY;
 const resourceServerClientId = `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}auth`;
-const keycloakTokenEndpoint = APP_CONFIG_KEYCLOAK_TOKEN_ENDPOINT_ID;
+const keycloakTokenEndpoint = APP_CONFIG_KEYCLOAK_AUTHORITY + '/protocol/openid-connect/token';
+const keycloakUserInfoEndpoint = APP_CONFIG_KEYCLOAK_AUTHORITY + '/protocol/openid-connect/userinfo';
 const sentryDSN = APP_CONFIG_SENTRY_DSN;
 const oneSignalClient = APP_CONFIG_ONE_SIGNAL_ID;
 
@@ -22,6 +23,7 @@ export {
 	keycloakClientID,
 	resourceServerClientId,
 	keycloakTokenEndpoint,
+	keycloakUserInfoEndpoint,
 	keycloakAuthority,
 	sentryDSN,
 	oneSignalClient,

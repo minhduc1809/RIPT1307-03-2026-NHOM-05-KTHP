@@ -7,7 +7,6 @@ ENV APP_CONFIG_IP_ROOT=https://ais.aisenote.com/dev/
 ENV APP_CONFIG_ONE_SIGNAL_ID=f3857a81-2891-49be-87a7-903a4a1a54be
 ENV APP_CONFIG_SENTRY_DSN=https://ed934e521d476c44a89a42aaa8a6993a@sentry.aisoftech.vn/3
 ENV APP_CONFIG_KEYCLOAK_AUTHORITY=https://ais.aisenote.com/dev/keycloak/realms/vwa
-ENV APP_CONFIG_KEYCLOAK_TOKEN_ENDPOINT_ID=https://ais.aisenote.com/dev/keycloak/realms/vwa/protocol/openid-connect/token
 ENV APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID=vwa-
 
 ENV APP_CONFIG_CO_QUAN_CHU_QUAN='Hội Liên hiệp phụ nữ Việt Nam'
