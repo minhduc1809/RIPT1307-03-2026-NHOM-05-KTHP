@@ -64,10 +64,6 @@ a {
 	}
 }
 
-.login-footer .ant-layout-footer {
-	background-color: var(--primary-color);
-}
-
 .form-footer {
 	display: flex;
 	gap: 12px;
@@ -132,6 +128,29 @@ a {
 	border-color: var(--primary-color);
 }
 
+.card-stat-small {
+	.ant-card-body {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+		height: 100%;
+		padding: 8px 12px 8px 4px;
+
+		transition: 0.3s;
+
+		&:hover {
+			background-color: #fafafa;
+			transition: 0.3s;
+		}
+	}
+
+	.num {
+		color: var(--primary-color);
+		font-weight: 700;
+		font-size: 1.25rem;
+	}
+}
+
 .btn-success {
 	border-color: var(--ant-success-color);
 
@@ -153,23 +172,6 @@ a {
 			color: var(--ant-success-color-hover);
 		}
 	}
-}
-
-.dynamic-delete-button {
-	position: relative;
-	top: 4px;
-	margin: 0 8px;
-	color: #999;
-	font-size: 24px;
-	cursor: pointer;
-	transition: all 0.3s;
-}
-.dynamic-delete-button:hover {
-	color: #777;
-}
-.dynamic-delete-button[disabled] {
-	cursor: not-allowed;
-	opacity: 0.5;
 }
 
 canvas {
@@ -390,6 +392,11 @@ canvas {
 
 .text-error {
 	color: var(--ant-error-color);
+}
+
+.bg-highlight {
+	color: white;
+	background-color: #ffc069;
 }
 
 @media (max-width: @screen-xs) {
