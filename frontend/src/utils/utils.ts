@@ -1,4 +1,4 @@
-import { message } from 'antd';
+import { type FormInstance, message } from 'antd';
 import { type AxiosResponse } from 'axios';
 import type { Moment } from 'moment';
 import moment from 'moment';
@@ -385,10 +385,11 @@ export const genExcelFile = (data: (string | number | null | undefined)[][], fil
  * Clear values of component in Form
  * @param form
  */
-export const resetFieldsForm = (form: any, formDefaultValues?: Record<string, any>) => {
+export const resetFieldsForm = (form: FormInstance<any>, formDefaultValues?: Record<string, any>) => {
 	const values = form.getFieldsValue();
 	Object.keys(values).map((k) => (values[k] = undefined));
 	form.setFieldsValue({ ...values, ...(formDefaultValues ?? {}) });
+	form.setFields(form.getFieldsError().map((item) => ({ name: item.name, errors: undefined, warnings: undefined })));
 };
 
 /**
