@@ -43,16 +43,6 @@
 				}
 			}
 		}
-
-		@media (max-width: @screen-xs) {
-			.extend {
-				display: none;
-			}
-
-			.extra {
-				width: 100%;
-			}
-		}
 	}
 
 	/* Track */
@@ -121,4 +111,14 @@
 /* stylelint-disable-next-line no-duplicate-selectors */
 .column-search-box {
 	flex-direction: column;
+}
+
+@media (max-width: @screen-xs) {
+	.span-extend {
+		display: none;
+	}
+
+	// .extra {
+	// 	width: 100%;
+	// }
 }

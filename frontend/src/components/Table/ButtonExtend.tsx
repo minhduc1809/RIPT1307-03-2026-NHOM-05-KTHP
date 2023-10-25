@@ -1,5 +1,6 @@
 import { Button, Tooltip, type ButtonProps } from 'antd';
 import React from 'react';
+import './style.less';
 
 /** Button extend text with default Tooltip */
 const ButtonExtend = (
@@ -14,7 +15,7 @@ const ButtonExtend = (
 	return (
 		<Tooltip title={tooltip ?? children}>
 			<Button {...otherProps}>
-				{!notHideText && !!children ? <span className='extend'>{children}</span> : children}
+				{!notHideText && !!children ? <span className='span-extend'>{children}</span> : children}
 			</Button>
 		</Tooltip>
 	);
