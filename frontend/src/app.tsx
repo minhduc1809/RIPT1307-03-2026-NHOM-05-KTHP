@@ -65,13 +65,16 @@ export const request: RequestConfig = {
 // ProLayout  https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 	return {
-		unAccessible: <NotAccessible />,
+		unAccessible: (
+			<OIDCBounder>
+				<TechnicalSupportBounder>
+					<NotAccessible />
+				</TechnicalSupportBounder>
+			</OIDCBounder>
+		),
 		noFound: <NotFoundContent />,
 		rightContentRender: () => <RightContent />,
 		disableContentMargin: false,
-		waterMarkProps: {
-			content: initialState?.currentUser?.fullname,
-		},
 
 		footerRender: () => <Footer />,
 
