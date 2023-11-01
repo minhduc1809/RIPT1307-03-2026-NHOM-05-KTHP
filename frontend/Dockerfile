@@ -8,7 +8,7 @@ ENV APP_CONFIG_ONE_SIGNAL_ID=f3857a81-2891-49be-87a7-903a4a1a54be
 ENV APP_CONFIG_SENTRY_DSN=https://ed934e521d476c44a89a42aaa8a6993a@sentry.aisoftech.vn/3
 ENV APP_CONFIG_KEYCLOAK_AUTHORITY=https://ais.aisenote.com/dev/keycloak/realms/vwa
 ENV APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID=vwa-
-ENV APP_CONFIG_APP_VERSION=231024
+ENV APP_CONFIG_APP_VERSION=231101
 
 ENV APP_CONFIG_CO_QUAN_CHU_QUAN='Hội Liên hiệp phụ nữ Việt Nam'
 ENV APP_CONFIG_TEN_TRUONG='Học viện Phụ nữ Việt Nam'
@@ -41,7 +41,7 @@ ENV APP_CONFIG_TITLE_CORE='Danh mục chung'
 # Set working directory
 WORKDIR /app
 
-COPY package.json yarn.lock /app/
+COPY package.json /app/
 RUN yarn install
 
 COPY . /app
