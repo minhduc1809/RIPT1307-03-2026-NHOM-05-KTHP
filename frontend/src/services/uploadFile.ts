@@ -1,55 +1,73 @@
-import { ip3 } from '@/utils/ip';
 import axios from '@/utils/axios';
+import { ip3 } from '@/utils/ip';
 
-const handleSingleFile = async (file: any): Promise<string | null> => {
-  if (file?.originFileObj) {
-    try {
-      const response = await uploadFile({
-        file: file?.originFileObj,
-        public: '1',
-      });
-      return response?.data?.data?.url;
-    } catch (er) {
-      return Promise.reject(er);
-    }
-  } else return file?.url || null;
+export enum EFileScope {
+	PUBLIC = 'Public',
+	INTERNAL = 'Internal',
+	PRIVATE = 'Private',
+}
+
+const handleSingleFile = async (file: any, scope: EFileScope = EFileScope.PUBLIC): Promise<string | null> => {
+	if (file?.originFileObj) {
+		try {
+			const response = await uploadFile({
+				file: file?.originFileObj,
+				scope,
+			});
+			return response?.data?.data?.url;
+		} catch (er) {
+			return Promise.reject(er);
+		}
+	} else return file?.url || null;
 };
 
-export async function uploadFile(payload: { file: string | Blob; public: '1' | '0' }) {
-  const form = new FormData();
-  form.append('file', payload?.file);
-  form.append('public', payload?.public);
-  return axios.post(`${ip3}/file`, form);
+export async function uploadFile(payload: { file: string | Blob; scope: EFileScope }) {
+	const form = new FormData();
+	form.append('file', payload?.file);
+	form.append('scope', payload?.scope);
+	return axios.post(`${ip3}/file`, form);
 }
 
 /**
  * Build upload file from values in form
  * @param values: get from Form
- * @param name: fieldName in Form is Upload
+ * @param fieldName: fieldName in Form is Upload
+ * @param scope: Phạm vi của file : Public, Internal, Private
  * @returns Url of file uploaded or NULL
  */
-export const buildUpLoadFile = async (values: any, name: string): Promise<string | null> => {
-  if (typeof values?.[name] === 'string') return values?.[name];
-  else if (values?.[name]?.fileList?.[0]) {
-    return handleSingleFile(values?.[name]?.fileList?.[0]);
-  }
-  return null;
+export const buildUpLoadFile = async (
+	values: any,
+	fieldName: string,
+	scope: EFileScope = EFileScope.PUBLIC,
+): Promise<string | null> => {
+	// File updload chưa onChange => value vẫn là string
+	if (typeof values?.[fieldName] === 'string') return values[fieldName];
+	else if (values?.[fieldName]?.fileList?.[0]) {
+		return handleSingleFile(values?.[fieldName]?.fileList?.[0], scope);
+	}
+	return null;
 };
 
 /**
  * Build upload multiple files from values in form
  * @param values: get from Form
- * @param name: fieldName in Form is Upload
+ * @param fieldName: fieldName in Form is Upload
  * @returns Array Url of files uploaded or NULL
  */
-export const buildUpLoadMultiFile = async (values: any, name: string): Promise<string[] | null> => {
-  if (Array.isArray(values?.[name])) return values?.[name];
-  else if (
-    values?.[name]?.fileList &&
-    Array.isArray(values?.[name]?.fileList) &&
-    values?.[name]?.fileList?.length
-  ) {
-    return Promise.all(values?.[name]?.fileList.map((file: any) => handleSingleFile(file)));
-  }
-  return null;
+export const buildUpLoadMultiFile = async (
+	values: any,
+	fieldName: string,
+	scope: EFileScope = EFileScope.PUBLIC,
+): Promise<string[] | null> => {
+	// File upload chưa onChange => value vẫn là sring[]
+	if (Array.isArray(values?.[fieldName])) return values[fieldName];
+	else if (
+		values?.[fieldName]?.fileList &&
+		Array.isArray(values?.[fieldName]?.fileList) &&
+		values?.[fieldName]?.fileList?.length
+	) {
+		// Upload từng file lên
+		return Promise.all(values?.[fieldName]?.fileList.map((file: any) => handleSingleFile(file, scope)));
+	}
+	return null;
 };

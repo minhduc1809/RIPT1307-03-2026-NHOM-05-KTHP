@@ -46,25 +46,25 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 			danger: true,
 		},
 	];
-	// if (menu && initialState.currentUser.systemRole !== 'Admin') {
-	// items.splice(1, 0, {
-	//   key: 'password',
-	//   icon: <LockOutlined />,
-	//   label: 'Đổi mật khẩu',
-	//   onClick: () =>
-	//     window.open(
-	//       keycloakAuthority +
-	//         '/login-actions/required-action?execution=UPDATE_PASSWORD&client_id=' +
-	//         keycloakClientID,
-	//     ),
-	// });
-	// items.splice(1, 0, {
-	//   key: 'center',
-	//   icon: <UserOutlined />,
-	//   label: 'Trang cá nhân',
-	//   onClick: () => history.push('/account/center'),
-	// });
-	// }
+	if (menu && !initialState.currentUser.realm_access?.roles?.includes('QUAN_TRI_VIEN')) {
+		// items.splice(1, 0, {
+		//   key: 'password',
+		//   icon: <LockOutlined />,
+		//   label: 'Đổi mật khẩu',
+		//   onClick: () =>
+		//     window.open(
+		//       keycloakAuthority +
+		//         '/login-actions/required-action?execution=UPDATE_PASSWORD&client_id=' +
+		//         keycloakClientID,
+		//     ),
+		// });
+		// items.splice(1, 0, {
+		//   key: 'center',
+		//   icon: <UserOutlined />,
+		//   label: 'Trang cá nhân',
+		//   onClick: () => history.push('/account/center'),
+		// });
+	}
 
 	return (
 		<>

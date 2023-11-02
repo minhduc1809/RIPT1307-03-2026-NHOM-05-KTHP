@@ -2,6 +2,7 @@
 @import '~antd/dist/antd.variable.min.css';
 @import '_variable.less';
 @import 'layout.less';
+@import 'split-panel.less';
 
 html,
 body,
@@ -63,10 +64,6 @@ a {
 		}
 	}
 }
-
-// .login-footer .ant-layout-footer {
-// 	background-color: @primary-color;
-// }
 
 .form-footer {
 	display: flex;
@@ -153,23 +150,6 @@ a {
 			color: var(--ant-success-color-hover);
 		}
 	}
-}
-
-.dynamic-delete-button {
-	position: relative;
-	top: 4px;
-	margin: 0 8px;
-	color: #999;
-	font-size: 24px;
-	cursor: pointer;
-	transition: all 0.3s;
-}
-.dynamic-delete-button:hover {
-	color: #777;
-}
-.dynamic-delete-button[disabled] {
-	cursor: not-allowed;
-	opacity: 0.5;
 }
 
 canvas {
@@ -346,6 +326,30 @@ canvas {
 	}
 }
 
+// Card Statistics Small
+.card-stat-small {
+	.ant-card-body {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+		height: 100%;
+		padding: 8px 12px 8px 4px;
+
+		transition: 0.3s;
+
+		&:hover {
+			background-color: #fafafa;
+			transition: 0.3s;
+		}
+	}
+
+	.num {
+		color: var(--primary-color);
+		font-weight: 700;
+		font-size: 1.25rem;
+	}
+}
+
 .ant-table-cell {
 	height: 48px;
 	padding: 8px !important;
@@ -369,27 +373,32 @@ canvas {
 }
 
 .bg-primary-selected {
-	background-color: @primary-1;
+	background-color: var(--primary-1) !important;
 }
 
 .text-primary {
-	color: var(--primary-color);
+	color: var(--primary-color) !important;
 }
 
 .text-info {
-	color: var(--ant-info-color);
+	color: var(--ant-info-color) !important;
 }
 
 .text-success {
-	color: var(--ant-success-color);
+	color: var(--ant-success-color) !important;
 }
 
 .text-warning {
-	color: var(--ant-warning-color);
+	color: var(--ant-warning-color) !important;
 }
 
 .text-error {
-	color: var(--ant-error-color);
+	color: var(--ant-error-color) !important;
+}
+
+.bg-highlight {
+	color: white;
+	background-color: #ffc069;
 }
 
 @media (max-width: @screen-xs) {

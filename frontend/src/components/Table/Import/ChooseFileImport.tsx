@@ -33,7 +33,7 @@ const ChooseFileImport = (props: { onChange: () => void; onCancel: any; getTempl
 		form.setFieldsValue({ sheet: sheets[0], line: 1 });
 	};
 
-	const onChangeUpload = (value: { fileList: any[] }) => {
+	const onChangeUpload = (value: { fileList: any[] | null }) => {
 		const file = value.fileList?.[0]?.originFileObj;
 		if (!file) {
 			setSheetNames(undefined);
