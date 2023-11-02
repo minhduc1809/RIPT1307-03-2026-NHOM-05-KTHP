@@ -8,9 +8,9 @@ import { useEffect, useState } from 'react';
 import './UploadAvatar.less';
 
 const UploadFile = (props: {
-	fileList?: any[];
-	value?: any;
-	onChange?: any;
+	fileList?: any;
+	value?: string | string[] | null | { fileList: any; [key: string]: any };
+	onChange?: (val: { fileList: any[] | null }) => void;
 	maxCount?: number;
 	drag?: boolean;
 	accept?: string;
@@ -27,10 +27,21 @@ const UploadFile = (props: {
 	const [previewImage, setPreviewImage] = useState('');
 
 	useEffect(() => {
+		let temp: any[] = [];
 		// Single URL
-		if (typeof value === 'string') setFileList([{ url: value, name: getNameFile(value) }]);
+		if (typeof value === 'string') {
+			temp = [{ url: value, remote: true, name: getNameFile(value) }];
+			setFileList(temp);
+			// Callback về Form để Form Item có fileList => Phục vụ check rules fileRequired
+			if (onChange) onChange({ fileList: temp });
+		}
 		// Array of URLs
-		else if (Array.isArray(value)) setFileList(value.map((url) => ({ url, name: getNameFile(url) })));
+		else if (Array.isArray(value)) {
+			temp = value.map((url) => ({ url, remote: true, name: getNameFile(url) }));
+			setFileList(temp);
+			// Callback về Form để Form Item có fileList => Phục vụ check rules fileRequired
+			if (onChange) onChange({ fileList: temp });
+		}
 		// Object of antd file upload
 		else setFileList(props.fileList || (value && value.fileList) || []);
 	}, [value, props.fileList]);
@@ -67,7 +78,7 @@ const UploadFile = (props: {
 	const Extra = () =>
 		otherProps?.disabled ? null : (
 			<small style={{ color: '#999' }}>
-				<i>Dung lượng file không được quá 5Mb</i>
+				<i>Tối đa {limit} mục, dung lượng mỗi file không được quá 5Mb</i>
 			</small>
 		);
 
