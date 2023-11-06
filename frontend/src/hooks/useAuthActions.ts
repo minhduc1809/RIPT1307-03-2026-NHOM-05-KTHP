@@ -1,3 +1,5 @@
+import { deleteOneSignal } from '@/services/base/api';
+import { currentRole, oneSignalRole } from '@/utils/ip';
 import { useAuth } from 'react-oidc-context';
 import OneSignal from 'react-onesignal';
 import { useModel } from 'umi';
@@ -7,6 +9,11 @@ export const useAuthActions = () => {
 	const auth = useAuth();
 
 	const handleLogout = () => {
+		if (oneSignalRole.valueOf() === currentRole.valueOf()) {
+			OneSignal.getUserId((playerId) => deleteOneSignal({ playerId }));
+			OneSignal.setSubscription(false);
+		}
+
 		auth
 			.signoutRedirect({
 				post_logout_redirect_uri: window.location.origin + '/user/login',
@@ -17,7 +24,6 @@ export const useAuthActions = () => {
 				localStorage.clear();
 				setInitialState({ ...initialState, currentUser: undefined });
 			});
-		OneSignal.setSubscription(false);
 	};
 
 	const handleLogin = () => {
