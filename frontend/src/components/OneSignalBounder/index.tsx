@@ -26,7 +26,7 @@ const OneSignalBounder = (props: { children: React.ReactNode }) => {
 		const parsed = queryString.parse(window.location.search);
 		// postMessage: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
 		// && Object.values(AppModules).some((role) => role.url === parsed.source)
-		if (parsed.source) window.parent.postMessage(isEnable, parsed.source.toString());
+		if (parsed.source) window.parent.postMessage(isEnable ?? false, parsed.source.toString());
 	};
 
 	/** Nhận message từ trang handle OneSignal */
@@ -59,10 +59,10 @@ const OneSignalBounder = (props: { children: React.ReactNode }) => {
 	 * and Send message to request domain
 	 */
 	useEffect(() => {
-		if (oneSignalId && auth.user?.access_token)
-			initOneSignal({ playerId: oneSignalId }).then(() => {
-				OneSignal.isPushNotificationsEnabled(sendMessage);
-			});
+		if (oneSignalId) {
+			if (auth.user?.access_token) initOneSignal({ playerId: oneSignalId });
+			OneSignal.isPushNotificationsEnabled(sendMessage);
+		}
 	}, [oneSignalId, auth.user?.access_token]);
 
 	return <>{props.children}</>;

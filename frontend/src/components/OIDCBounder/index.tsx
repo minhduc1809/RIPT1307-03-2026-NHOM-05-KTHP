@@ -8,6 +8,7 @@ import { notification } from 'antd';
 import { useEffect, type FC } from 'react';
 import { AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
 import { history, useModel } from 'umi';
+import { unAuthPaths } from './constant';
 
 let OIDCBounderHandlers: ReturnType<typeof useAuthActions> | null = null;
 
@@ -51,9 +52,7 @@ const OIDCBounder_: FC = ({ children }) => {
 	};
 
 	useEffect(() => {
-		if (auth.isLoading) {
-			return;
-		}
+		if (unAuthPaths.includes(window.location.pathname) || auth.isLoading) return;
 
 		// Chưa login + chưa có auth params ==> Cần redirect keycloak để lấy auth params + cookie
 		if (!hasAuthParams() && !auth.isAuthenticated) {

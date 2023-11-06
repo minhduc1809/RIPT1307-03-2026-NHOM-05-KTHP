@@ -2,6 +2,7 @@ import { ToolOutlined } from '@ant-design/icons';
 import { Button, ConfigProvider, Modal, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
 import FormPostIssue from './Form';
+import { unTechnicalSupportPaths } from './constant';
 
 const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
 	const [visible, setVisible] = useState<boolean>(false);
@@ -15,29 +16,31 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
 		<ConfigProvider>
 			{props.children}
 
-			{window.location.pathname !== '/user/login' && window.location.pathname !== '/403' ? (
-				<Tooltip title='Phản hồi kĩ thuật' placement='topLeft'>
-					<Button
-						onClick={() => setVisible(true)}
-						style={{
-							position: 'fixed',
-							bottom: 100,
-							right: 34,
-							zIndex: 10,
-							boxShadow: 'rgba(0, 0, 0, 0.2) 1px 1px 8px 3px',
-						}}
-						shape='circle'
-						size='large'
-						type='primary'
-					>
-						<ToolOutlined />
-					</Button>
-				</Tooltip>
-			) : null}
+			{!unTechnicalSupportPaths.includes(window.location.pathname) ? (
+				<>
+					<Tooltip title='Phản hồi kĩ thuật' placement='topLeft'>
+						<Button
+							onClick={() => setVisible(true)}
+							style={{
+								position: 'fixed',
+								bottom: 100,
+								right: 34,
+								zIndex: 10,
+								boxShadow: 'rgba(0, 0, 0, 0.2) 1px 1px 8px 3px',
+							}}
+							shape='circle'
+							size='large'
+							type='primary'
+						>
+							<ToolOutlined />
+						</Button>
+					</Tooltip>
 
-			<Modal bodyStyle={{ padding: 0 }} footer={false} visible={visible} onCancel={() => setVisible(false)}>
-				<FormPostIssue onCancel={() => setVisible(false)} />
-			</Modal>
+					<Modal bodyStyle={{ padding: 0 }} footer={false} visible={visible} onCancel={() => setVisible(false)}>
+						<FormPostIssue onCancel={() => setVisible(false)} />
+					</Modal>
+				</>
+			) : null}
 		</ConfigProvider>
 	);
 };

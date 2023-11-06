@@ -1,4 +1,5 @@
 import { useAuth } from 'react-oidc-context';
+import OneSignal from 'react-onesignal';
 import { useModel } from 'umi';
 
 export const useAuthActions = () => {
@@ -16,6 +17,7 @@ export const useAuthActions = () => {
 				localStorage.clear();
 				setInitialState({ ...initialState, currentUser: undefined });
 			});
+		OneSignal.setSubscription(false);
 	};
 
 	const handleLogin = () => {
