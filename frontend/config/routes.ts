@@ -47,7 +47,23 @@
 
 	{
 		path: '/notification',
-		component: './ThongBao/NotifOneSignal',
+		routes: [
+			{
+				path: './subscribe',
+				exact: true,
+				component: './ThongBao/Subscribe',
+			},
+			{
+				path: './check',
+				exact: true,
+				component: './ThongBao/Check',
+			},
+			{
+				path: './',
+				exact: true,
+				component: './ThongBao/NotifOneSignal',
+			},
+		],
 		layout: false,
 		hideInMenu: true,
 	},

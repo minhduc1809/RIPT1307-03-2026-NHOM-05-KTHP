@@ -6,6 +6,7 @@ const ip3 = ipRoot + 'tcns'; // ip dev
 const ipNotif = ipRoot + 'notification'; // ip dev
 
 const currentRole = EModuleKey.TCNS;
+const oneSignalRole = EModuleKey.CONG_CAN_BO;
 
 // DO NOT TOUCH
 const keycloakClientID = AppModules[currentRole].clientId;
@@ -21,6 +22,7 @@ export {
 	ip3,
 	ipNotif,
 	currentRole,
+	oneSignalRole,
 	keycloakClientID,
 	resourceServerClientId,
 	keycloakAuthEndpoint,
