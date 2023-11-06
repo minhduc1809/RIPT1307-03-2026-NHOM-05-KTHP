@@ -26,7 +26,7 @@ const OneSignalBounder = (props: { children: React.ReactNode }) => {
 		// console.log(`2 Mainsite is Sending Message to ${parsed?.source?.toString() ?? ''} ${isEnable}`);
 		// postMessage: https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
 		// && Object.values(AppModules).some((role) => role.url === parsed.source)
-		if (parsed.source) window.parent.postMessage(isEnable ?? false, parsed.source.toString());
+		if (parsed.source) window.parent.postMessage(isEnable ? oneSignalId : false, parsed.source.toString());
 	};
 
 	/** Show Popup center screen */
@@ -68,17 +68,15 @@ const OneSignalBounder = (props: { children: React.ReactNode }) => {
 			if (e.data === false) {
 				// console.log('user not subscribed to mainsite, lets prompt');
 				showPopup(`${iframeSource}notification/subscribe`);
-			}
+			} else if (e.data) setOneSignalId(e.data);
 		}
 		if (iframe) iframe.remove();
 	};
 
 	useEffect(() => {
-		getUserIdOnesignal();
-
-		// Nếu đây là ko phải trang handle OneSignal
-		// Thì tạo 1 iframe sang trang handle OneSignal để check đã Subscribe chưa?
-		if (iframeSource && oneSignalRole.valueOf() !== currentRole.valueOf()) {
+		// Nếu đây là trang handle OneSignal
+		if (oneSignalRole.valueOf() === currentRole.valueOf()) getUserIdOnesignal();
+		else if (iframeSource) {
 			window.addEventListener('message', receiveMessage, false);
 			iframe = document.createElement('iframe');
 			iframe.setAttribute('src', `${iframeSource}notification/check?source=${window.location.origin}`);
