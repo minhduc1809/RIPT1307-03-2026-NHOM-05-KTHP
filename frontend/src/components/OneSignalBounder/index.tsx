@@ -9,7 +9,7 @@ const OneSignalBounder = (props: { children: React.ReactNode }) => {
 	const [oneSignalId, setOneSignalId] = useState<string | null | undefined>();
 	const auth = useAuth();
 	const iframeSource = AppModules[oneSignalRole].url;
-	let iframe: HTMLIFrameElement | null = null;
+	// let iframe: HTMLIFrameElement | null = null;
 
 	const getUserIdOnesignal = async () => {
 		await OneSignal.init({
@@ -45,7 +45,7 @@ const OneSignalBounder = (props: { children: React.ReactNode }) => {
 			`scrollbars=yes,
 						width=${w / systemZoom}, 
 						height=${h / systemZoom}, 
-						top=${top}, 
+						top=${height}, 
 						left=${left}
 						`,
 		);
@@ -59,7 +59,7 @@ const OneSignalBounder = (props: { children: React.ReactNode }) => {
 				// console.log('user not subscribed to mainsite, lets prompt');
 				showPopup(`${iframeSource}notification/subscribe`);
 			} else if (e.data) setOneSignalId(e.data);
-			if (iframe) iframe.remove();
+			// if (iframe) iframe.remove();
 		}
 	};
 
@@ -67,11 +67,12 @@ const OneSignalBounder = (props: { children: React.ReactNode }) => {
 		// Nếu đây là trang handle OneSignal
 		if (oneSignalRole.valueOf() === currentRole.valueOf()) getUserIdOnesignal();
 		else if (iframeSource) {
-			window.addEventListener('message', receiveMessage, false);
-			iframe = document.createElement('iframe');
-			iframe.setAttribute('src', `${iframeSource}notification/check?source=${window.location.origin}`);
-			iframe.style.display = 'none';
-			document.body.appendChild(iframe);
+			// window.addEventListener('message', receiveMessage, false);
+			showPopup(`${iframeSource}notification/subscribe`, 1, 1);
+			// iframe = document.createElement('iframe');
+			// iframe.setAttribute('src', `${iframeSource}notification/check?source=${window.location.origin}`);
+			// iframe.style.display = 'none';
+			// document.body.appendChild(iframe);
 		}
 	}, []);
 

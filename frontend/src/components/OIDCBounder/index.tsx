@@ -8,7 +8,7 @@ import { notification } from 'antd';
 import { useEffect, type FC } from 'react';
 import { AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
 import { history, useModel } from 'umi';
-import { unAuthPaths } from './constant';
+import { unAuthPaths, unCheckPermissionPaths } from './constant';
 
 let OIDCBounderHandlers: ReturnType<typeof useAuthActions> | null = null;
 
@@ -29,7 +29,10 @@ const OIDCBounder_: FC = ({ children }) => {
 				const userInfo: Login.IUser = getUserInfoResponse?.data;
 				const permissions: Login.IPermission[] = getPermissionsResponse.data;
 
-				if (currentRole && permissions.length && !permissions.find((item) => item.rsname === currentRole)) {
+				if (
+					unCheckPermissionPaths.includes(window.location.pathname) ||
+					(currentRole && permissions.length && !permissions.find((item) => item.rsname === currentRole))
+				) {
 					history.replace('/403');
 				} else {
 					setInitialState({
