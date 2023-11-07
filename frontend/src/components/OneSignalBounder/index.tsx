@@ -13,7 +13,7 @@ const OneSignalBounder = (props: { children: React.ReactNode }) => {
 	let iframe: HTMLIFrameElement | null = null;
 
 	const getUserIdOnesignal = async () => {
-		OneSignal.init({
+		await OneSignal.init({
 			appId: oneSignalClient,
 		});
 		const id = await OneSignal.getUserId();
