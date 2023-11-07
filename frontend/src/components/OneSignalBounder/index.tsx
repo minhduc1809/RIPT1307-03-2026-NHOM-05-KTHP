@@ -69,8 +69,8 @@ const OneSignalBounder = (props: { children: React.ReactNode }) => {
 				// console.log('user not subscribed to mainsite, lets prompt');
 				showPopup(`${iframeSource}notification/subscribe`);
 			} else if (e.data) setOneSignalId(e.data);
+			if (iframe) iframe.remove();
 		}
-		if (iframe) iframe.remove();
 	};
 
 	useEffect(() => {
