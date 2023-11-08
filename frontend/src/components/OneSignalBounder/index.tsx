@@ -68,7 +68,7 @@ const OneSignalBounder = (props: { children: React.ReactNode }) => {
 		if (oneSignalRole.valueOf() === currentRole.valueOf()) getUserIdOnesignal();
 		else if (iframeSource) {
 			// window.addEventListener('message', receiveMessage, false);
-			showPopup(`${iframeSource}notification/subscribe`, 1, 1);
+			// showPopup(`${iframeSource}notification/subscribe`, 1, 1);
 			// iframe = document.createElement('iframe');
 			// iframe.setAttribute('src', `${iframeSource}notification/check?source=${window.location.origin}`);
 			// iframe.style.display = 'none';
