@@ -91,8 +91,14 @@ const TableStaticData = (props: TableStaticProps) => {
 				? getFilterColumnProps(item.dataIndex, item.filterData)
 				: undefined),
 			...(item?.sortable && {
-				sorter: (a: any, b: any) => (a[item.dataIndex as string] > b[item.dataIndex as string] ? 1 : -1),
+				sorter: (a: any, b: any) =>
+					item.customSort
+						? item.customSort(a[item.dataIndex as string], b[item.dataIndex as string])
+						: a[item.dataIndex as string] > b[item.dataIndex as string]
+						? 1
+						: -1,
 			}),
+			// Xử lý các cột children tương tự cột chính
 			children: item.children?.map((child) => ({
 				...child,
 				...(child?.filterType === 'string'
@@ -101,7 +107,12 @@ const TableStaticData = (props: TableStaticProps) => {
 					? getFilterColumnProps(child.dataIndex, child.filterData)
 					: undefined),
 				...(child?.sortable && {
-					sorter: (a: any, b: any) => (a[child.dataIndex as string] > b[child.dataIndex as string] ? 1 : -1),
+					sorter: (a: any, b: any) =>
+						child.customSort
+							? child.customSort(a[child.dataIndex as string], b[child.dataIndex as string])
+							: a[child.dataIndex as string] > b[child.dataIndex as string]
+							? 1
+							: -1,
 				}),
 			})),
 		}));
