@@ -14,7 +14,7 @@ const ModuleView = () => {
 
 			<Row gutter={[5, 5]}>
 				{Object.entries(AppModules)
-					.filter(([name]) => permissions?.includes(name as EModuleKey))
+					.filter(([name, value]) => permissions?.includes(name as EModuleKey) && !!value.url)
 					.map(([name, value]) => (
 						<Col span={8} key={name}>
 							<a href={value?.url} target='_blank' rel='noreferrer'>
