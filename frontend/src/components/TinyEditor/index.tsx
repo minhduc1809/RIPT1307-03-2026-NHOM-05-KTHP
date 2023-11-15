@@ -1,4 +1,4 @@
-import { uploadFile } from '@/services/uploadFile';
+import { EFileScope, uploadFile } from '@/services/uploadFile';
 import { Editor } from '@tinymce/tinymce-react';
 import './style.less';
 
@@ -31,7 +31,7 @@ const TinyEditor = (props: {
 			// Up ảnh lên và lấy url
 			const response = await uploadFile({
 				file,
-				public: '1',
+				scope: EFileScope.PUBLIC,
 			});
 			// Chèn ảnh vào dưới dạng url
 			callback(response?.data?.data?.url ?? '', {
