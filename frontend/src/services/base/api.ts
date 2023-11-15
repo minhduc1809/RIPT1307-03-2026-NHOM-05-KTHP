@@ -54,3 +54,7 @@ export async function getPermission() {
 export async function initOneSignal(payload: { playerId: string }) {
 	return axios.put(`${ipNotif}/one-signal/user`, payload);
 }
+
+export async function deleteOneSignal(data: { playerId: any }) {
+	return axios.delete(`${ipNotif}/one-signal/user`, { data });
+}

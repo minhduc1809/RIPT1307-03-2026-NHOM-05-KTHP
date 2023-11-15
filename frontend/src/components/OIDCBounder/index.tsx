@@ -8,6 +8,7 @@ import { notification } from 'antd';
 import { useEffect, type FC } from 'react';
 import { AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
 import { history, useModel } from 'umi';
+import { unAuthPaths, unCheckPermissionPaths } from './constant';
 
 let OIDCBounderHandlers: ReturnType<typeof useAuthActions> | null = null;
 
@@ -28,7 +29,10 @@ const OIDCBounder_: FC = ({ children }) => {
 				const userInfo: Login.IUser = getUserInfoResponse?.data;
 				const permissions: Login.IPermission[] = getPermissionsResponse.data;
 
-				if (currentRole && permissions.length && !permissions.find((item) => item.rsname === currentRole)) {
+				if (
+					unCheckPermissionPaths.includes(window.location.pathname) ||
+					(currentRole && permissions.length && !permissions.find((item) => item.rsname === currentRole))
+				) {
 					history.replace('/403');
 				} else {
 					setInitialState({
@@ -51,9 +55,7 @@ const OIDCBounder_: FC = ({ children }) => {
 	};
 
 	useEffect(() => {
-		if (auth.isLoading) {
-			return;
-		}
+		if (unAuthPaths.includes(window.location.pathname) || auth.isLoading) return;
 
 		// Chưa login + chưa có auth params ==> Cần redirect keycloak để lấy auth params + cookie
 		if (!hasAuthParams() && !auth.isAuthenticated) {

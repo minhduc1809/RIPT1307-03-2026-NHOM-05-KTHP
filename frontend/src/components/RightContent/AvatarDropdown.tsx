@@ -1,5 +1,5 @@
-import { landingUrl } from '@/services/base/constant';
-import { GlobalOutlined, LogoutOutlined } from '@ant-design/icons';
+import { AppModules, landingUrl } from '@/services/base/constant';
+import { GlobalOutlined, LogoutOutlined, SwapOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import { type ItemType } from 'antd/lib/menu/hooks/useItems';
 import React from 'react';
@@ -7,6 +7,7 @@ import { useModel } from 'umi';
 import { OIDCBounder } from '../OIDCBounder';
 import HeaderDropdown from './HeaderDropdown';
 import styles from './index.less';
+import { currentRole, keycloakAuthEndpoint } from '@/utils/ip';
 
 export type GlobalHeaderRightProps = {
 	menu?: boolean;
@@ -37,6 +38,15 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 			label: 'Cổng thông tin',
 			onClick: () => window.open(landingUrl),
 		},
+		{
+			key: 'password',
+			icon: <SwapOutlined />,
+			label: 'Đổi mật khẩu',
+			onClick: () => {
+				const redirect = window.location.href;
+				window.location.href = `${keycloakAuthEndpoint}?client_id=${AppModules[currentRole].clientId}&redirect_uri=${redirect}&response_type=code&scope=openid&kc_action=UPDATE_PASSWORD`;
+			},
+		},
 		{ type: 'divider', key: 'divider' },
 		{
 			key: 'logout',
@@ -46,6 +56,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 			danger: true,
 		},
 	];
+
 	if (menu && !initialState.currentUser.realm_access?.roles?.includes('QUAN_TRI_VIEN')) {
 		// items.splice(1, 0, {
 		//   key: 'password',
