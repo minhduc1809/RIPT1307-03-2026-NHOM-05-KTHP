@@ -29,6 +29,11 @@ export interface IColumn<T> extends Omit<ColumnType<T>, 'dataIndex' | 'width' | 
 	 * Phải check cả ở mobile view
 	 */
 	width: number;
+
+	/** CHỈ DÙNG TRONG TABLE STATIC
+	 * Hàm sort tùy chỉnh (có thể dùng để sắp xếp họ tên theo AB)
+	 */
+	customSort?: (value1: any, value2: any) => number;
 }
 
 export type TDataOption = {

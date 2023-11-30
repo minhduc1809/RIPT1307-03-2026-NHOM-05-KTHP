@@ -298,8 +298,8 @@ const TableBase = (props: TableBaseProps) => {
 					? getColumnSearchProps(child.dataIndex, child.title)
 					: child.filterType === 'select'
 					? getFilterColumnProps(child.dataIndex, child.filterData)
-					: item.filterType === 'customselect'
-					? getColumnSelectProps(item.dataIndex, item.filterCustomSelect)
+					: child.filterType === 'customselect'
+					? getColumnSelectProps(child.dataIndex, child.filterCustomSelect)
 					: undefined),
 			})),
 		}));

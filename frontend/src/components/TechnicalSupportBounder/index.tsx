@@ -36,8 +36,14 @@ const TechnicalSupportBounder = (props: { children: React.ReactNode }) => {
 						</Button>
 					</Tooltip>
 
-					<Modal bodyStyle={{ padding: 0 }} footer={false} visible={visible} onCancel={() => setVisible(false)}>
-						<FormPostIssue onCancel={() => setVisible(false)} />
+					<Modal
+						bodyStyle={{ padding: 0 }}
+						footer={false}
+						visible={visible}
+						onCancel={() => setVisible(false)}
+						maskClosable={false}
+					>
+						<FormPostIssue setVisible={setVisible} visible={visible} />
 					</Modal>
 				</>
 			) : null}

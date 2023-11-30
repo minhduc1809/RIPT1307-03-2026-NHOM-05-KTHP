@@ -65,9 +65,10 @@
 	.account {
 		.avatar {
 			margin-right: 8px;
-			color: var(--primary-color);
-			vertical-align: top;
-			background: rgba(255, 255, 255);
+			:global(.anticon) {
+				height: 32px;
+				font-size: 32px;
+			}
 		}
 	}
 }
