@@ -98,8 +98,8 @@
 	.ant-menu-submenu-title {
 		height: auto !important;
 		min-height: 36px;
-		padding-top: 5px;
-		padding-bottom: 5px;
+		// padding-top: 5px;
+		// padding-bottom: 5px;
 		line-height: 1.5 !important;
 		border-radius: 2px;
 
@@ -141,4 +141,30 @@
 	body .ant-design-pro > .ant-layout {
 		min-height: 100vh;
 	}
+}
+
+// Ẩn title, logo
+.ant-layout-sider-children .ant-pro-sider-logo {
+	justify-content: center;
+	padding: 12px 14px;
+
+	&.ant-pro-sider-collapsed {
+		padding: 14px !important;
+
+		img {
+			display: none;
+		}
+	}
+
+	img {
+		height: 36px;
+	}
+
+	h1 {
+		display: none;
+	}
+}
+
+.ant-pro-global-header-logo {
+	display: none;
 }

@@ -1,5 +1,6 @@
 import { AppModules, landingUrl } from '@/services/base/constant';
-import { GlobalOutlined, LogoutOutlined, SwapOutlined } from '@ant-design/icons';
+import { currentRole, keycloakAuthEndpoint } from '@/utils/ip';
+import { GlobalOutlined, LogoutOutlined, SwapOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import { type ItemType } from 'antd/lib/menu/hooks/useItems';
 import React from 'react';
@@ -7,7 +8,6 @@ import { useModel } from 'umi';
 import { OIDCBounder } from '../OIDCBounder';
 import HeaderDropdown from './HeaderDropdown';
 import styles from './index.less';
-import { currentRole, keycloakAuthEndpoint } from '@/utils/ip';
 
 export type GlobalHeaderRightProps = {
 	menu?: boolean;
@@ -84,11 +84,14 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 					<Avatar
 						className={styles.avatar}
 						src={
-							<img
-								// style={currentUser?.avatar_path ? {} : { objectFit: 'cover' }}
-								src={initialState.currentUser?.picture ?? '/logo.png'}
-							/>
+							initialState.currentUser?.picture ? (
+								<img
+									// style={currentUser?.avatar_path ? {} : { objectFit: 'cover' }}
+									src={initialState.currentUser?.picture}
+								/>
+							) : undefined
 						}
+						icon={!initialState.currentUser?.picture ? <UserOutlined /> : undefined}
 						alt='avatar'
 					/>
 					<span className={`${styles.name}`}>
