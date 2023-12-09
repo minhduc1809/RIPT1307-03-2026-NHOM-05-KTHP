@@ -1,20 +1,20 @@
 import rules from '@/utils/rules';
 import { Checkbox, Col, Form, Input, InputNumber, Row, Select, Space } from 'antd';
-import { type TDataOption, type IColumn, type TFilter } from './typing';
 import { useEffect, useState } from 'react';
-import { EOperatorType, OperatorLabel } from './constant';
 import MyDatePicker from '../MyDatePicker';
+import { EOperatorType, OperatorLabel } from './constant';
+import { type IColumn, type TDataOption, type TFilter } from './typing';
 
 const RowFilter = (props: {
 	index: number;
 	columns: IColumn<any>[];
 	filter: TFilter<any>;
 	onChange: (filter: TFilter<any>) => void;
-	fieldsFilterable: any[];
+	fieldsFilterable: string[];
 }) => {
 	const { index, columns, filter, onChange, fieldsFilterable } = props;
 	const [operators, setOperators] = useState<EOperatorType[]>([]);
-	const filterColumn = columns.find((item) => item.dataIndex === filter.field);
+	const filterColumn = columns.find((item) => JSON.stringify(item.dataIndex) === JSON.stringify(filter.field));
 	const filterType = filterColumn?.filterType;
 
 	useEffect(() => {
@@ -103,13 +103,17 @@ const RowFilter = (props: {
 					<Form.Item rules={[...rules.required]}>
 						<Select
 							options={columns
-								.filter((item) => fieldsFilterable.includes(item.dataIndex) || item.dataIndex === filter.field)
+								.filter(
+									(item) =>
+										fieldsFilterable.includes(JSON.stringify(item.dataIndex)) ||
+										JSON.stringify(item.dataIndex) === JSON.stringify(filter.field),
+								)
 								.map((item) => ({
 									key: item.dataIndex?.toString() ?? '',
 									value: Array.isArray(item.dataIndex) ? item.dataIndex.join('.') : item.dataIndex?.toString() ?? '',
 									label: item.title,
 								}))}
-							value={filter.field?.toString()}
+							value={Array.isArray(filter.field) ? filter.field.join('.') : filter.field?.toString()}
 							onChange={(val: string) => {
 								const temp = { ...filter };
 								temp.field = val;

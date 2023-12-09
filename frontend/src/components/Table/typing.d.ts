@@ -21,8 +21,10 @@ export interface IColumn<T> extends Omit<ColumnType<T>, 'dataIndex' | 'width' | 
 	/** JSX Element trả về 1 mảng value, thường là id */
 	filterCustomSelect?: JSX.Element;
 
-	/** Bắt buộc phải có để dùng custom Filter hoặc Import dữ liệu */
-	dataIndex?: keyof T | 'index' | string[];
+	/** Bắt buộc phải có để dùng custom Filter hoặc Import dữ liệu
+	 * Có thể filter 'string' với các trường populated
+	 */
+	dataIndex?: keyof T | 'index' | [keyof T, string];
 
 	/** Bắt buộc phải có
 	 * Lưu ý: độ rộng phải fit tương đối với nội dung của column, ko để quá rộng, hẹp

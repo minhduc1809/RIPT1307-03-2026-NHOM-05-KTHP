@@ -98,7 +98,7 @@ const TableBase = (props: TableBaseProps) => {
 	const getFilterColumn = (fieldName: any, operator?: EOperatorType, active?: boolean) =>
 		filters?.find(
 			(item) =>
-				item.field === fieldName &&
+				JSON.stringify(item.field) === JSON.stringify(fieldName) &&
 				(operator === undefined || item.operator === operator) &&
 				(active === undefined || item.active === active),
 		);
@@ -125,7 +125,7 @@ const TableBase = (props: TableBaseProps) => {
 	const handleSearch = (dataIndex: any, value: string, confirm?: () => void) => {
 		if (!value) {
 			// Remove filter of this column
-			const tempFilters = filters?.filter((item) => item.field !== dataIndex);
+			const tempFilters = filters?.filter((item) => JSON.stringify(item.field) !== JSON.stringify(dataIndex));
 			setFilters(tempFilters);
 		} else {
 			const filter = getFilterColumn(dataIndex);
