@@ -39,6 +39,7 @@ declare const APP_CONFIG_URL_TAI_CHINH: string;
 declare const APP_CONFIG_URL_CTSV: string;
 declare const APP_CONFIG_URL_QLKH: string;
 declare const APP_CONFIG_URL_VPS: string;
+declare const APP_CONFIG_URL_KHAO_THI: string;
 declare const APP_CONFIG_URL_CORE: string;
 
 declare const APP_CONFIG_TITLE_CONNECT: string;
@@ -49,4 +50,5 @@ declare const APP_CONFIG_TITLE_TAI_CHINH: string;
 declare const APP_CONFIG_TITLE_CTSV: string;
 declare const APP_CONFIG_TITLE_QLKH: string;
 declare const APP_CONFIG_TITLE_VPS: string;
+declare const APP_CONFIG_TITLE_KHAO_THI: string;
 declare const APP_CONFIG_TITLE_CORE: string;

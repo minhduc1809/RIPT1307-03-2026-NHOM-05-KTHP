@@ -25,6 +25,7 @@ ENV APP_CONFIG_URL_TAI_CHINH=https://tai-chinh-vwa-dev.vercel.app/
 ENV APP_CONFIG_URL_CTSV=https://ctsv-vwa-dev.vercel.app/
 ENV APP_CONFIG_URL_QLKH=https://qlkh-vwa-dev.vercel.app/
 ENV APP_CONFIG_URL_VPS=https://van-phong-vwa-dev.vercel.app/
+ENV APP_CONFIG_URL_KHAO_THI=https://khao-thi-vwa-dev.vercel.app/
 ENV APP_CONFIG_URL_CORE=https://core-vwa-dev.vercel.app/
 
 ENV APP_CONFIG_TITLE_CONNECT='Cổng người học'
@@ -35,6 +36,7 @@ ENV APP_CONFIG_TITLE_TAI_CHINH='Tài chính'
 ENV APP_CONFIG_TITLE_CTSV='Công tác sinh viên'
 ENV APP_CONFIG_TITLE_QLKH='Quản lý khoa học'
 ENV APP_CONFIG_TITLE_VPS='Văn phòng điều hành'
+ENV APP_CONFIG_TITLE_KHAO_THI='Khảo thí'
 ENV APP_CONFIG_TITLE_CORE='Danh mục chung'
 
 

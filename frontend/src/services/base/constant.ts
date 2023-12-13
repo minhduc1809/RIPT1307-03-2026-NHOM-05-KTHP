@@ -10,6 +10,7 @@ export enum EModuleKey {
 	VPS = 'van-phong-so',
 	TC = 'tai-chinh',
 	QLKH = 'quan-ly-khoa-hoc',
+	KT = 'khao-thi',
 }
 
 export const AppModules: Record<EModuleKey, Login.TModule> = {
@@ -66,6 +67,12 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
 		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}tc`,
 		url: APP_CONFIG_URL_TAI_CHINH,
 		icon: EModuleKey.TC + '.svg',
+	},
+	[EModuleKey.KT]: {
+		title: APP_CONFIG_TITLE_KHAO_THI,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}kt`,
+		url: APP_CONFIG_URL_KHAO_THI,
+		icon: EModuleKey.KT + '.svg',
 	},
 };
 
