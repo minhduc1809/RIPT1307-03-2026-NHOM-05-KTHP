@@ -35,15 +35,15 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 			icon: <UserOutlined />,
 			label: fullName ?? (initialState.currentUser?.preferred_username || ''),
 		},
-		{
-			key: 'password',
-			icon: <SwapOutlined />,
-			label: 'Đổi mật khẩu',
-			onClick: () => {
-				const redirect = window.location.href;
-				window.location.href = `${keycloakAuthEndpoint}?client_id=${AppModules[currentRole].clientId}&redirect_uri=${redirect}&response_type=code&scope=openid&kc_action=UPDATE_PASSWORD`;
-			},
-		},
+		// {
+		// 	key: 'password',
+		// 	icon: <SwapOutlined />,
+		// 	label: 'Đổi mật khẩu',
+		// 	onClick: () => {
+		// 		const redirect = window.location.href;
+		// 		window.location.href = `${keycloakAuthEndpoint}?client_id=${AppModules[currentRole].clientId}&redirect_uri=${redirect}&response_type=code&scope=openid&kc_action=UPDATE_PASSWORD`;
+		// 	},
+		// },
 		{
 			key: 'portal',
 			icon: <GlobalOutlined />,
