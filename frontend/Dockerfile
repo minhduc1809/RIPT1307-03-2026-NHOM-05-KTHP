@@ -25,6 +25,7 @@ ENV APP_CONFIG_URL_TAI_CHINH=https://thanhtoan.ript.vn/
 ENV APP_CONFIG_URL_CTSV=https://ctsv.ript.vn/
 ENV APP_CONFIG_URL_QLKH=
 ENV APP_CONFIG_URL_VPS=https://vanphong.ript.vn/
+ENV APP_CONFIG_URL_KHAO_THI=
 ENV APP_CONFIG_URL_CORE=https://core.ript.vn/
 
 ENV APP_CONFIG_TITLE_CONNECT='Slink'
@@ -35,6 +36,7 @@ ENV APP_CONFIG_TITLE_TAI_CHINH='Thanh toán'
 ENV APP_CONFIG_TITLE_CTSV='Công tác sinh viên'
 ENV APP_CONFIG_TITLE_QLKH='Quản lý khoa học'
 ENV APP_CONFIG_TITLE_VPS='Văn phòng số'
+ENV APP_CONFIG_TITLE_KHAO_THI='Khảo thí'
 ENV APP_CONFIG_TITLE_CORE='Danh mục chung'
 
 
