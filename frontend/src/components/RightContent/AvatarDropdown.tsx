@@ -1,6 +1,6 @@
 import { AppModules, landingUrl } from '@/services/base/constant';
 import { currentRole, keycloakAuthEndpoint } from '@/utils/ip';
-import { GlobalOutlined, LogoutOutlined, SwapOutlined, UserOutlined } from '@ant-design/icons';
+import { FileWordOutlined, GlobalOutlined, LogoutOutlined, SwapOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import { type ItemType } from 'antd/lib/menu/hooks/useItems';
 import React from 'react';
@@ -45,6 +45,12 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 		// 	},
 		// },
 		{
+			key: 'office',
+			icon: <FileWordOutlined />,
+			label: 'Office 365',
+			onClick: () => window.open('https://office.com/'),
+		},
+		{
 			key: 'portal',
 			icon: <GlobalOutlined />,
 			label: 'Cổng thông tin',
@@ -61,17 +67,6 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 	];
 
 	if (menu && !initialState.currentUser.realm_access?.roles?.includes('QUAN_TRI_VIEN')) {
-		// items.splice(1, 0, {
-		//   key: 'password',
-		//   icon: <LockOutlined />,
-		//   label: 'Đổi mật khẩu',
-		//   onClick: () =>
-		//     window.open(
-		//       keycloakAuthority +
-		//         '/login-actions/required-action?execution=UPDATE_PASSWORD&client_id=' +
-		//         keycloakClientID,
-		//     ),
-		// });
 		// items.splice(1, 0, {
 		//   key: 'center',
 		//   icon: <UserOutlined />,
