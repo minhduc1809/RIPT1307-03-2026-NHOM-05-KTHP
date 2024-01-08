@@ -385,6 +385,7 @@ const useInitModel = <T,>(
 		payload: { ids?: string[]; definitions: TExportField[] },
 		paramCondition?: Partial<T>,
 		paramFilters?: TFilter<T>[],
+		otherQuery?: Record<string, any>,
 	): Promise<Blob> => {
 		if (formSubmiting) return Promise.reject('Form submiting');
 		setFormSubmiting(true);
@@ -395,6 +396,7 @@ const useInitModel = <T,>(
 					...(filters?.filter((item) => item.active)?.map(({ active, ...item }) => item) || []),
 					...(paramFilters ?? []),
 				],
+				...(otherQuery ?? {}),
 			});
 			return res.data;
 		} catch (err) {

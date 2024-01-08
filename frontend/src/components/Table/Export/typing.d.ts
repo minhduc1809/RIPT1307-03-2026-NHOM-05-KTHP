@@ -19,4 +19,7 @@ export type ModalExportProps = {
 
 	/** Filter truyền lên để lấy dữ liệu */
 	filters?: TFilter<any>[];
+
+	/** Other query truyền lên để lấy dữ liệu */
+	otherQuery?: Record<string, any>;
 };
