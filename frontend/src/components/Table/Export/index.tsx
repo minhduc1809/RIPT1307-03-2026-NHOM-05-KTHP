@@ -9,7 +9,7 @@ import CardExportFields from './CardExportFields';
 import { type ModalExportProps } from './typing';
 
 const ModalExport = (props: ModalExportProps) => {
-	const { visible, onCancel, modelName, maskCloseableForm, fileName, condition, filters } = props;
+	const { visible, onCancel, modelName, maskCloseableForm, fileName, condition, filters, otherQuery } = props;
 	const { getExportFieldsModel, postExportModel, formSubmiting, selectedIds } = useModel(modelName);
 	const [allFields, setAllFields] = useState<TExportField[]>([]); // Export Fields lấy từ API
 	const [exportFields, setExportFields] = useState<TExportField[]>([]);
@@ -59,6 +59,7 @@ const ModalExport = (props: ModalExportProps) => {
 				selectedIds?.length > 0 ? { ids: selectedIds, definitions: finalFields } : { definitions: finalFields },
 				condition,
 				filters,
+				otherQuery,
 			).then((blob: Blob) => {
 				fileDownload(blob, fileName);
 				onCancel();
