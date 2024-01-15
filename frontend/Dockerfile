@@ -17,7 +17,7 @@ ENV APP_CONFIG_TEN_TRUONG_VIET_TAT_TIENG_ANH=RIPT
 ENV APP_CONFIG_PRIMARY_COLOR=#CC0D00
 
 ENV APP_CONFIG_URL_LANDING=https://ript.vn/
-ENV APP_CONFIG_URL_CONNECT=https://slink.ript.vn/
+ENV APP_CONFIG_URL_CONNECT=https://sinhvien.ript.vn/
 ENV APP_CONFIG_URL_CAN_BO=https://canbo.ript.vn/
 ENV APP_CONFIG_URL_DAO_TAO=https://daotao.ript.vn/
 ENV APP_CONFIG_URL_NHAN_SU=https://nhansu.ript.vn/
@@ -28,7 +28,7 @@ ENV APP_CONFIG_URL_VPS=https://vanphong.ript.vn/
 ENV APP_CONFIG_URL_KHAO_THI=
 ENV APP_CONFIG_URL_CORE=https://core.ript.vn/
 
-ENV APP_CONFIG_TITLE_CONNECT='Slink'
+ENV APP_CONFIG_TITLE_CONNECT='Cổng sinh viên'
 ENV APP_CONFIG_TITLE_CAN_BO='Cổng cán bộ'
 ENV APP_CONFIG_TITLE_DAO_TAO='Quản lý đào tạo'
 ENV APP_CONFIG_TITLE_NHAN_SU='Tổ chức nhân sự'
