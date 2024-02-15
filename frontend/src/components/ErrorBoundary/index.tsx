@@ -17,7 +17,7 @@ class ErrorBoundary extends React.Component<MyProps, MyState> {
 			Sentry.init({
 				dsn: sentryDSN,
 				integrations: [new Sentry.BrowserTracing()],
-				tracesSampleRate: 0.7,
+				tracesSampleRate: 0.2,
 				release: currentRole,
 			});
 	}
