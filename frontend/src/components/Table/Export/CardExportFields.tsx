@@ -35,15 +35,8 @@ const CardExportFields = (props: { fields: TExportField[]; setFields: (val: TExp
 		setFields(tmp);
 	};
 
-	const onUnCheckAll = () => setFields(fields.map((item) => ({ ...item, selected: false })));
-
 	return (
 		<Card title='Các trường để trích xuất' bordered={false} bodyStyle={{ padding: 0 }} headStyle={{ padding: 0 }}>
-			<div>
-				<Button size='small' onClick={onUnCheckAll}>
-					Bỏ chọn tất cả
-				</Button>
-			</div>
 			<TableStaticData
 				columns={columns}
 				data={fields.filter((item) => item.selected)}
