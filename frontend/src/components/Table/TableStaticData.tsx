@@ -1,5 +1,6 @@
 import { MenuOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Drawer, Input, Modal, Table, Tooltip, type InputRef } from 'antd';
+import classNames from 'classnames';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
@@ -187,7 +188,7 @@ const TableStaticData = (props: TableStaticProps) => {
 				<div className='extra'>
 					{hasTotal ? (
 						<Tooltip title='Tổng số dữ liệu'>
-							<div className='total'>
+							<div className={classNames({ total: true, small: props?.size === 'small' })}>
 								Tổng số:
 								<span>{total || props.data?.length || 0}</span>
 							</div>

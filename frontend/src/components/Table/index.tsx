@@ -27,6 +27,7 @@ import {
 	type PaginationProps,
 } from 'antd';
 import type { FilterValue, SortOrder } from 'antd/lib/table/interface';
+import classNames from 'classnames';
 import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import type { SortEnd, SortableContainerProps } from 'react-sortable-hoc';
@@ -411,12 +412,20 @@ const TableBase = (props: TableBaseProps) => {
 					) : null}
 
 					{buttons?.import ? (
-						<ButtonExtend icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
+						<ButtonExtend
+							size={props?.otherProps?.size}
+							icon={<ImportOutlined />}
+							onClick={() => setVisibleImport(true)}
+						>
 							Nhập dữ liệu
 						</ButtonExtend>
 					) : null}
 					{buttons?.export ? (
-						<ButtonExtend icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
+						<ButtonExtend
+							size={props?.otherProps?.size}
+							icon={<ExportOutlined />}
+							onClick={() => setVisibleExport(true)}
+						>
 							Xuất dữ liệu {selectedIds?.length > 0 ? `(${selectedIds.length})` : ''}
 						</ButtonExtend>
 					) : null}
@@ -435,6 +444,7 @@ const TableBase = (props: TableBaseProps) => {
 				<div className='extra'>
 					{buttons?.reload !== false ? (
 						<ButtonExtend
+							size={props?.otherProps?.size}
 							icon={<ReloadOutlined />}
 							onClick={() => getData(params)}
 							loading={loading}
@@ -446,6 +456,7 @@ const TableBase = (props: TableBaseProps) => {
 
 					{buttons?.filter !== false && hasFilter ? (
 						<ButtonExtend
+							size={props?.otherProps?.size}
 							icon={filters?.length ? <FilterTwoTone twoToneColor={primaryColor} /> : <FilterOutlined />}
 							onClick={() => setVisibleFilter(true)}
 							tooltip='Áp dụng bộ lọc tùy chỉnh'
@@ -456,7 +467,7 @@ const TableBase = (props: TableBaseProps) => {
 
 					{!props?.hideTotal ? (
 						<Tooltip title='Tổng số dữ liệu'>
-							<div className='total'>
+							<div className={classNames({ total: true, small: props?.otherProps?.size === 'small' })}>
 								Tổng số:
 								<span>{inputFormat(total || 0)}</span>
 							</div>
