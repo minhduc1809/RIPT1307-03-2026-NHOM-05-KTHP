@@ -55,7 +55,7 @@ const TinyEditor = (props: {
 					language_url: '/lang/vi_VN.js',
 					language: 'vi_VN',
 					height: height ?? 500,
-					menubar: hideMenubar ? false : 'file edit view insert table format tools',
+					menubar: hideMenubar || disabled ? false : 'file edit view insert table format tools',
 					plugins: [
 						// 'advlist',
 						'autolink',
@@ -94,7 +94,9 @@ const TinyEditor = (props: {
 						'emoticons',
 						// "editimage"
 					],
-					toolbar: miniToolbar
+					toolbar: disabled
+						? ''
+						: miniToolbar
 						? 'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify |  numlist bullist | forecolor backcolor removeformat'
 						: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat |  table image media link | charmap emoticons | fullscreen  preview  print',
 					// toolbar_sticky: true,
