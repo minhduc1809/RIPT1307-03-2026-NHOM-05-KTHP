@@ -362,9 +362,15 @@ const TableBase = (props: TableBaseProps) => {
 	 * @date 2023-04-13
 	 */
 	const onChange = (pagination: PaginationProps, fil: Record<string, FilterValue | null>, sorter: any) => {
+		const allColumns = finalColumns
+			.map((col) => {
+				if (col.children?.length) return [col, ...col.children];
+				else return [col];
+			})
+			.flat();
 		// Handle Filter in columns
 		Object.entries(fil).map(([field, values]) => {
-			const col = finalColumns.find((item) => item.dataIndex === field);
+			const col = allColumns.find((item) => item.dataIndex === field);
 			if (col?.filterType === 'select') handleFilter(field, values as any);
 			else if (col?.filterType === 'string') handleSearch(field, values?.[0] as any);
 			else if (col?.filterType === 'customselect') handleFilter(field, values as any);
