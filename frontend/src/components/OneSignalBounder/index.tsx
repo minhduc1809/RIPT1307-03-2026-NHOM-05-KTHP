@@ -12,11 +12,13 @@ const OneSignalBounder = (props: { children: React.ReactNode }) => {
 	// let iframe: HTMLIFrameElement | null = null;
 
 	const getUserIdOnesignal = async () => {
-		await OneSignal.init({
-			appId: oneSignalClient,
-		});
-		const id = await OneSignal.getUserId();
-		setOneSignalId(id);
+		if (!!oneSignalClient) {
+			await OneSignal.init({
+				appId: oneSignalClient,
+			});
+			const id = await OneSignal.getUserId();
+			setOneSignalId(id);
+		}
 	};
 
 	/** Show Popup center screen */

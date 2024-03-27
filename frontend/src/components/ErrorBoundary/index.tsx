@@ -13,7 +13,7 @@ class ErrorBoundary extends React.Component<MyProps, MyState> {
 	}
 
 	componentDidMount(): void {
-		if (process.env.NODE_ENV !== 'development')
+		if (process.env.NODE_ENV !== 'development' && !!sentryDSN)
 			Sentry.init({
 				dsn: sentryDSN,
 				integrations: [new Sentry.BrowserTracing()],
