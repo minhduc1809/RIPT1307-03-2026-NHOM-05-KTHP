@@ -25,7 +25,7 @@ ENV APP_CONFIG_URL_TAI_CHINH=https://taichinh.hvpnvn.edu.vn/
 ENV APP_CONFIG_URL_CTSV=https://ctsv.hvpnvn.edu.vn/
 ENV APP_CONFIG_URL_QLKH=https://qlkh.hvpnvn.edu.vn/
 ENV APP_CONFIG_URL_VPS=https://vanphong.hvpnvn.edu.vn/
-ENV APP_CONFIG_URL_KHAO_THI=
+ENV APP_CONFIG_URL_KHAO_THI=https://khaothi.hvpnvn.edu.vn/
 ENV APP_CONFIG_URL_CORE=https://core-vwa.vercel.app/
 ENV APP_CONFIG_URL_CSVC=
 
