@@ -41,6 +41,7 @@ declare const APP_CONFIG_URL_QLKH: string;
 declare const APP_CONFIG_URL_VPS: string;
 declare const APP_CONFIG_URL_KHAO_THI: string;
 declare const APP_CONFIG_URL_CORE: string;
+declare const APP_CONFIG_URL_CSVC: string;
 
 declare const APP_CONFIG_TITLE_CONNECT: string;
 declare const APP_CONFIG_TITLE_CAN_BO: string;

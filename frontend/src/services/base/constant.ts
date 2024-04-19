@@ -77,8 +77,8 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
 	},
 	[EModuleKey.CSVC]: {
 		title: APP_CONFIG_TITLE_CSVC,
-		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}kt`,
-		url: APP_CONFIG_URL_CTSV,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}csvc`,
+		url: APP_CONFIG_URL_CSVC,
 		icon: EModuleKey.KT + '.svg',
 	},
 };
