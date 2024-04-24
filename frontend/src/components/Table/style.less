@@ -51,6 +51,20 @@
 		}
 	}
 
+	/* Phân biệt columns có sort */
+	.ant-table-column-sort {
+		.ant-table-column-title {
+			color: var(--primary-color);
+			text-decoration: underline;
+		}
+	}
+
+	/* Phân biệt columns có filter */
+	.ant-table-column-title:has(+ .active) {
+		color: var(--primary-color);
+		text-decoration: underline;
+	}
+
 	/* Track */
 	::-webkit-scrollbar-track {
 		background: #f0f0f0;
@@ -72,6 +86,7 @@
 	width: 100vw !important;
 	height: 100vh;
 	margin: 0;
+
 	.ant-modal-content {
 		width: 100vw;
 		height: 100vh;
@@ -92,6 +107,7 @@
 		width: 100vw !important;
 		height: 100vh;
 		margin: 0;
+
 		.ant-modal-content {
 			width: 100vw;
 			height: 100vh;
