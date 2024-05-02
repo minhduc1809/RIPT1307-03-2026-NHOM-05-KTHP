@@ -28,6 +28,7 @@ ENV APP_CONFIG_URL_VPS=https://vanphong.hvpnvn.edu.vn/
 ENV APP_CONFIG_URL_KHAO_THI=https://khaothi.hvpnvn.edu.vn/
 ENV APP_CONFIG_URL_CORE=https://core-vwa.vercel.app/
 ENV APP_CONFIG_URL_CSVC=
+ENV APP_CONFIG_URL_THU_VIEN=https://thuvien.hvpnvn.edu.vn/
 
 ENV APP_CONFIG_TITLE_CONNECT='Cổng người học'
 ENV APP_CONFIG_TITLE_CAN_BO='Cổng cán bộ'
@@ -40,6 +41,7 @@ ENV APP_CONFIG_TITLE_VPS='Văn phòng điều hành'
 ENV APP_CONFIG_TITLE_KHAO_THI='Khảo thí'
 ENV APP_CONFIG_TITLE_CORE='Danh mục chung'
 ENV APP_CONFIG_TITLE_CSVC='Cơ sở vật chất'
+ENV APP_CONFIG_TITLE_THU_VIEN='Thư viện'
 
 
 # Set working directory
