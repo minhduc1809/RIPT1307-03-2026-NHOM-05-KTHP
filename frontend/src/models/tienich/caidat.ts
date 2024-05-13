@@ -1,12 +1,13 @@
 import { getSettingByKey, putSetting } from '@/services/base/api';
 import type { ESettingKey } from '@/services/base/constant';
 import type { ISetting } from '@/services/base/typing';
+import { message } from 'antd';
 import { useState } from 'react';
 
 export default () => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [formSubmiting, setFormSubmiting] = useState<boolean>(false);
-	const [settings, setSettings] = useState<Record<ESettingKey, any>>({});
+	const [settings, setSettings] = useState<Partial<Record<ESettingKey, any>>>({});
 
 	const getByKeyModel = async (key: ESettingKey): Promise<any> => {
 		setLoading(true);
@@ -31,6 +32,7 @@ export default () => {
 			const res = await putSetting(data);
 			const temp = Object.assign(settings, { [data.key]: data.value });
 			setSettings(temp);
+			message.success('Cập nhật thành công');
 
 			return res.data?.data;
 		} catch (error) {

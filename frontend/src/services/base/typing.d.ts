@@ -46,7 +46,6 @@ export interface IInitialState {
 }
 
 export interface ISetting {
-	_id: string;
 	key: ESettingKey;
 	value: any;
 }
