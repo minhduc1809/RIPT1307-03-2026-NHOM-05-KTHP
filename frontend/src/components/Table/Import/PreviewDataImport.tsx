@@ -52,9 +52,6 @@ const PreviewDataImport = (props: {
 			const tempData: any = [];
 			let tmp;
 			let invalid = false;
-			const decimalSeparator = Intl.NumberFormat()
-				.formatToParts(1.1)
-				.find((part) => part.type === 'decimal')?.value;
 
 			fileData?.forEach((row, index) => {
 				const temp: any = { ...(extendData ?? {}), row: index + startLine };
@@ -74,11 +71,7 @@ const PreviewDataImport = (props: {
 									temp[col.field] = content === 'Có' || content === '1' || content === 'x';
 									break;
 								case 'Number':
-									tmp = content
-										? Number.parseFloat(
-												decimalSeparator === ',' ? content.replace('.', ',') : content.replace(',', '.'),
-										  )
-										: null;
+									tmp = content ? Number.parseFloat(content.replace(',', '.')) : null;
 									// Với kiểu số thì làm tròn đến 2 chữ số thập phân ???
 									temp[col.field] = Number.isNaN(tmp) ? invalidText : tmp === null ? tmp : Math.round(tmp * 100) / 100;
 									if (!invalid) invalid = Number.isNaN(tmp);
