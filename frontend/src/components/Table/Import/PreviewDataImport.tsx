@@ -117,7 +117,11 @@ const PreviewDataImport = (props: {
 		<Row gutter={[12, 12]}>
 			<Col span={24}>
 				<div className='fw500'>Danh sách dữ liệu từ tập tin</div>
-				{hasInvalid ? <i style={{ color: 'red' }}>Có cột dữ liệu không hợp lệ, vui lòng kiểm tra lại!</i> : null}
+				{hasInvalid ? (
+					<i style={{ color: 'red' }}>
+						Có ô dữ liệu không hợp lệ (đã được đánh dấu trong bảng), vui lòng kiểm tra lại!
+					</i>
+				) : null}
 			</Col>
 
 			<Col span={24}>
