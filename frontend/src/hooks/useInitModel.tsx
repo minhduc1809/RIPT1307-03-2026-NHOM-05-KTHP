@@ -40,7 +40,9 @@ const useInitModel = <T,>(
 		getAllService,
 		postService,
 		putService,
+		putManyService,
 		deleteService,
+		deleteManyService,
 		getService,
 		getByIdService,
 		getImportHeaders,
@@ -222,6 +224,32 @@ const useInitModel = <T,>(
 		}
 	};
 
+	const putManyModel = async (
+		ids: (string | number)[],
+		payload: Partial<T>,
+		getData?: any,
+		notGet?: boolean,
+		closeModal?: boolean,
+		messageText?: string,
+	): Promise<T> => {
+		if (formSubmiting) return Promise.reject('Form submiting');
+		setFormSubmiting(true);
+		try {
+			const res = await putManyService(ids, chuanHoaObject(payload));
+			message.success(messageText ?? 'Lưu thành công');
+			setLoading(false);
+			if (getData) getData();
+			else if (!notGet) getModel();
+			if (closeModal !== false) setVisibleForm(false);
+
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
 	const deleteModel = async (id: string | number, getData?: () => void): Promise<any> => {
 		setLoading(true);
 		try {
@@ -248,24 +276,18 @@ const useInitModel = <T,>(
 		if (!ids.length) return;
 		setLoading(true);
 		try {
-			const arr = ids.map((id) => deleteService(id, true));
-			const res = await Promise.allSettled(arr);
-			const count = res.filter((i) => i.status === 'fulfilled').length;
-			if (count > 0) {
-				message.success(`Xóa thành công ${count} mục`);
+			const res = await deleteManyService(ids);
+			message.success(`Xóa thành công ${ids.length} mục`);
 
-				const maxPage = Math.ceil((total - count) / limit) || 1;
-				let newPage = page;
-				if (newPage > maxPage) {
-					newPage = maxPage;
-					setPage(newPage);
-				} else if (getData) getData();
-				else getModel(undefined, undefined, undefined, newPage);
-			} else {
-				message.error('Có lỗi xảy ra');
-				const err = res.filter((i) => i.status === 'rejected');
-				return Promise.reject(err);
-			}
+			const maxPage = Math.ceil((total - ids.length) / limit) || 1;
+			let newPage = page;
+			if (newPage > maxPage) {
+				newPage = maxPage;
+				setPage(newPage);
+			} else if (getData) getData();
+			else getModel(undefined, undefined, undefined, newPage);
+
+			return res.data;
 		} catch (err) {
 			return Promise.reject(err);
 		} finally {
@@ -416,6 +438,7 @@ const useInitModel = <T,>(
 		deleteModel,
 		deleteManyModel,
 		putModel,
+		putManyModel,
 		postModel,
 		getAllModel,
 		page,
