@@ -487,7 +487,7 @@ const TableBase = (props: TableBaseProps) => {
 					<Empty
 						style={{ marginTop: 32, marginBottom: 32 }}
 						description={props.emptyText ?? 'Không có dữ liệu'}
-						image={props.otherProps.size === 'small' ? Empty.PRESENTED_IMAGE_SIMPLE : undefined}
+						image={props.otherProps?.size === 'small' ? Empty.PRESENTED_IMAGE_SIMPLE : undefined}
 					/>
 				)}
 			>
