@@ -484,7 +484,11 @@ const TableBase = (props: TableBaseProps) => {
 
 			<ConfigProvider
 				renderEmpty={() => (
-					<Empty style={{ marginTop: 32, marginBottom: 32 }} description={props.emptyText ?? 'Không có dữ liệu'} />
+					<Empty
+						style={{ marginTop: 32, marginBottom: 32 }}
+						description={props.emptyText ?? 'Không có dữ liệu'}
+						image={props.otherProps.size === 'small' ? Empty.PRESENTED_IMAGE_SIMPLE : undefined}
+					/>
 				)}
 			>
 				<Table
