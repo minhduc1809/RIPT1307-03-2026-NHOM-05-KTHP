@@ -43,6 +43,7 @@ export interface IInitialState {
 	settings?: Partial<LayoutSettings>;
 	currentUser?: Login.IUser;
 	authorizedPermissions?: Login.IPermission[];
+	permissionLoading?: boolean;
 }
 
 export interface ISetting {

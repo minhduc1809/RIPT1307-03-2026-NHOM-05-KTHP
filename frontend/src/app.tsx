@@ -28,7 +28,9 @@ export const initialStateConfig = {
  * // Tobe removed
  * */
 export async function getInitialState(): Promise<IInitialState> {
-	return {};
+	return {
+		permissionLoading: true,
+	};
 }
 
 // Tobe removed

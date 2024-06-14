@@ -39,6 +39,7 @@ const OIDCBounder_: FC = ({ children }) => {
 						...initialState,
 						currentUser: { ...userInfo, ssoId: userInfo.sub },
 						authorizedPermissions: permissions,
+						permissionLoading: false,
 					});
 
 					if (window.location.pathname === '/' || window.location.pathname === '/user/login')
