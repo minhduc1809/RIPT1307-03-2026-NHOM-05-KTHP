@@ -1,4 +1,4 @@
-import { type FormInstance, message } from 'antd';
+import { message, type FormInstance } from 'antd';
 import { type AxiosResponse } from 'axios';
 import type { Moment } from 'moment';
 import moment from 'moment';
@@ -114,12 +114,21 @@ export function currencyFormat(num?: number) {
 }
 
 export function formatPhoneNumber(num: any) {
-	let phone = num.replace(/\D/g, '');
-	const match = phone.match(/^(\d{1,3})(\d{0,3})(\d{0,4})$/);
-	if (match) {
-		phone = `${match[1]}${match[2] ? ' ' : ''}${match[2]}${match[3] ? '-' : ''}${match[3]}`;
+	// Remove any non-digit characters
+	const phoneNumber = num.replace(/\D/g, '');
+
+	// Check if the number starts with 0 and is either 10 or 11 digits
+	if (/^0\d{9,10}$/.test(phoneNumber)) {
+		// Format the number according to the standard format
+		if (phoneNumber.length === 10) {
+			return phoneNumber.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+		} else if (phoneNumber.length === 11) {
+			return phoneNumber.replace(/(\d{4})(\d{3})(\d{4})/, '$1 $2 $3');
+		}
 	}
-	return phone;
+
+	// If the number doesn't match the standard format, return as it is
+	return phoneNumber;
 }
 
 export function chuanHoaTen(ten: any) {
@@ -199,6 +208,7 @@ export const checkFileSize = (arrFile: any[], fileSize?: number) => {
 	return check;
 };
 
+/** TO REMOVED */
 export const convert4NumberScoreToAlphabet = (score: string | number): string => {
 	const scoreValue = Number(score);
 	if (scoreValue === 4) return 'A+';
@@ -214,6 +224,7 @@ export const convert4NumberScoreToAlphabet = (score: string | number): string =>
 };
 
 /**
+ * TO REMOVED
  * Convert điểm hệ 10 sang hệ 4 và dạng chữ
  * @param  {string|number} score Điểm hệ 10
  * @returns [điểm dạng chữ, điểm hệ 4]
@@ -251,6 +262,7 @@ export const buildFormData = (payload: any) => {
 	return form;
 };
 
+/** TO REMOVED, INSTEAD NANOID */
 export const makeId = (length: number) => {
 	let text = '';
 	const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

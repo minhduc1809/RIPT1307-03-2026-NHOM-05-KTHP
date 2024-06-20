@@ -48,14 +48,17 @@ const TinyEditor = (props: {
 		<>
 			<Editor
 				// apiKey='ihu6rlypska4k9h96g5x752rocpj133f20q41afy85shcrc5'
-				apiKey='vrh3rpim05kai51zg4tcenfbzwhl243use11yolfq6d9ufvw'
+        tinymceScriptSrc='/tinymce/tinymce.min.js'
+        //@ts-ignore
+        licenseKey='gpl'
+				// apiKey='vrh3rpim05kai51zg4tcenfbzwhl243use11yolfq6d9ufvw'
 				value={value}
 				disabled={disabled}
 				init={{
 					language_url: '/lang/vi_VN.js',
 					language: 'vi_VN',
 					height: height ?? 500,
-					menubar: hideMenubar ? false : 'file edit view insert table format tools',
+					menubar: hideMenubar || disabled ? false : 'file edit view insert table format tools',
 					plugins: [
 						// 'advlist',
 						'autolink',
@@ -94,7 +97,9 @@ const TinyEditor = (props: {
 						'emoticons',
 						// "editimage"
 					],
-					toolbar: miniToolbar
+					toolbar: disabled
+						? ''
+						: miniToolbar
 						? 'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify |  numlist bullist | forecolor backcolor removeformat'
 						: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat |  table image media link | charmap emoticons | fullscreen  preview  print',
 					// toolbar_sticky: true,

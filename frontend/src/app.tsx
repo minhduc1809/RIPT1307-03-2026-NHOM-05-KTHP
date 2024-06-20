@@ -27,7 +27,9 @@ export const initialStateConfig = {
  * // Tobe removed
  * */
 export async function getInitialState(): Promise<IInitialState> {
-	return {};
+	return {
+		permissionLoading: true,
+	};
 }
 
 // Tobe removed
@@ -94,9 +96,18 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 		},
 
 		menuItemRender: (item: any, dom: any) => (
-			<div key={item?.path} onClick={() => history.push(item?.path ?? '/')}>
+			<a
+				className='not-underline'
+				key={item?.path}
+				href={item?.path}
+				onClick={(e) => {
+					e.preventDefault();
+					history.push(item?.path ?? '/');
+				}}
+				style={{ display: 'block' }}
+			>
 				{dom}
-			</div>
+			</a>
 		),
 
 		childrenRender: (dom) => (

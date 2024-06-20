@@ -8,6 +8,8 @@ import {
 	resourceServerClientId,
 } from '@/utils/ip';
 import queryString from 'query-string';
+import type { ESettingKey } from './constant';
+import type { ISetting } from './typing';
 
 // export async function getInfo() {
 //   return axios.get(`${ip3}/user/me`);
@@ -57,4 +59,14 @@ export async function initOneSignal(payload: { playerId: string }) {
 
 export async function deleteOneSignal(data: { playerId: any }) {
 	return axios.delete(`${ipNotif}/one-signal/user`, { data });
+}
+
+// Cài đặt
+
+export async function getSettingByKey(key: ESettingKey) {
+	return axios.get(`${ip3}/setting/${key}/value`);
+}
+
+export async function putSetting(data: ISetting) {
+	return axios.put(`${ip3}/setting/value`, data);
 }

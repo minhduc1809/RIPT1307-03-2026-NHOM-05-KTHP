@@ -17,10 +17,13 @@ const PrintTemplate = React.forwardRef(
 			subTitle?: React.ReactNode;
 			footer?: React.ReactNode;
 			hideTieuNgu?: boolean;
+
+			/** Tên Phòng ban hiển thị dưới tên trường */
+			tenPhongBan?: string;
 		},
 		ref: any,
 	) => {
-		const { children, title, subTitle, footer, hideTieuNgu } = props;
+		const { children, title, subTitle, footer, hideTieuNgu, tenPhongBan } = props;
 
 		// const componentRef = useRef(null);
 
@@ -52,8 +55,17 @@ const PrintTemplate = React.forwardRef(
 					{!hideTieuNgu ? (
 						<Row gutter={[5, 5]}>
 							<Col span={12} style={{ textAlign: 'center' }}>
-								<div>{coQuanChuQuan.toUpperCase()}</div>
-								<span className='tieu-ngu'>{unitName.toUpperCase()}</span>
+								{!!tenPhongBan ? (
+									<>
+										<div>{unitName.toUpperCase()}</div>
+										<span className='tieu-ngu'>{tenPhongBan.toUpperCase()}</span>
+									</>
+								) : (
+									<>
+										<div>{coQuanChuQuan.toUpperCase()}</div>
+										<span className='tieu-ngu'>{unitName.toUpperCase()}</span>
+									</>
+								)}
 							</Col>
 							<Col span={12} style={{ textAlign: 'center' }}>
 								<div className='quoc-hieu'>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>

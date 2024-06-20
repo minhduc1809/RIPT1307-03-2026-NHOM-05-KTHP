@@ -115,8 +115,8 @@ const ValidateDataImport = (props: { onOk: () => void; onCancel: () => void; onB
 
 			{importResponses.length ? (
 				<Col span={24}>
-					<Collapse defaultActiveKey={1}>
-						<Collapse.Panel key={0} header='Thành công'>
+					<Collapse defaultActiveKey={errorCount ? 1 : undefined}>
+						<Collapse.Panel key={0} header={`Thành công (${importResponses.length - (errorCount ?? 0)})`}>
 							<TableStaticData
 								columns={columns}
 								data={importResponses.filter((item) => !item?.rowErrors?.length)}
@@ -125,7 +125,7 @@ const ValidateDataImport = (props: { onOk: () => void; onCancel: () => void; onB
 								hasTotal
 							/>
 						</Collapse.Panel>
-						<Collapse.Panel key={1} header='Thất bại'>
+						<Collapse.Panel key={1} header={`Thất bại (${errorCount ?? 0})`}>
 							<TableStaticData
 								columns={[
 									...columns,

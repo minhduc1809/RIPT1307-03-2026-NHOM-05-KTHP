@@ -10,6 +10,8 @@ export enum EModuleKey {
 	VPS = 'van-phong-so',
 	TC = 'tai-chinh',
 	QLKH = 'quan-ly-khoa-hoc',
+	KT = 'khao-thi',
+	CSVC = 'co-so-vat-chat',
 }
 
 export const AppModules: Record<EModuleKey, Login.TModule> = {
@@ -67,6 +69,24 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
 		url: APP_CONFIG_URL_TAI_CHINH,
 		icon: EModuleKey.TC + '.svg',
 	},
+	[EModuleKey.KT]: {
+		title: APP_CONFIG_TITLE_KHAO_THI,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}kt`,
+		url: APP_CONFIG_URL_KHAO_THI,
+		icon: EModuleKey.KT + '.svg',
+	},
+	[EModuleKey.CSVC]: {
+		title: APP_CONFIG_TITLE_CSVC,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}csvc`,
+		url: APP_CONFIG_URL_CSVC,
+		icon: EModuleKey.CSVC + '.svg',
+	},
+};
+
+export const moduleThuVien: Partial<Login.TModule> = {
+	title: APP_CONFIG_TITLE_THU_VIEN,
+	url: APP_CONFIG_URL_THU_VIEN,
+	icon: 'thu-vien.svg',
 };
 
 /** Đường link landing page */
@@ -86,3 +106,6 @@ export const unitPrefix = APP_CONFIG_TIEN_TO_TRUONG;
 
 /** Tên tiếng anh của trường */
 export const tenTruongVietTatTiengAnh = APP_CONFIG_TEN_TRUONG_VIET_TAT_TIENG_ANH;
+
+/** Cài đặt hệ thống */
+export enum ESettingKey {}

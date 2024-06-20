@@ -27,6 +27,7 @@ import {
 	type PaginationProps,
 } from 'antd';
 import type { FilterValue, SortOrder } from 'antd/lib/table/interface';
+import classNames from 'classnames';
 import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import type { SortEnd, SortableContainerProps } from 'react-sortable-hoc';
@@ -98,7 +99,7 @@ const TableBase = (props: TableBaseProps) => {
 	const getFilterColumn = (fieldName: any, operator?: EOperatorType, active?: boolean) =>
 		filters?.find(
 			(item) =>
-				item.field === fieldName &&
+				JSON.stringify(item.field) === JSON.stringify(fieldName) &&
 				(operator === undefined || item.operator === operator) &&
 				(active === undefined || item.active === active),
 		);
@@ -125,7 +126,7 @@ const TableBase = (props: TableBaseProps) => {
 	const handleSearch = (dataIndex: any, value: string, confirm?: () => void) => {
 		if (!value) {
 			// Remove filter of this column
-			const tempFilters = filters?.filter((item) => item.field !== dataIndex);
+			const tempFilters = filters?.filter((item) => JSON.stringify(item.field) !== JSON.stringify(dataIndex));
 			setFilters(tempFilters);
 		} else {
 			const filter = getFilterColumn(dataIndex);
@@ -361,9 +362,15 @@ const TableBase = (props: TableBaseProps) => {
 	 * @date 2023-04-13
 	 */
 	const onChange = (pagination: PaginationProps, fil: Record<string, FilterValue | null>, sorter: any) => {
+		const allColumns = finalColumns
+			.map((col) => {
+				if (col.children?.length) return [col, ...col.children];
+				else return [col];
+			})
+			.flat();
 		// Handle Filter in columns
 		Object.entries(fil).map(([field, values]) => {
-			const col = finalColumns.find((item) => item.dataIndex === field);
+			const col = allColumns.find((item) => item.dataIndex === field);
 			if (col?.filterType === 'select') handleFilter(field, values as any);
 			else if (col?.filterType === 'string') handleSearch(field, values?.[0] as any);
 			else if (col?.filterType === 'customselect') handleFilter(field, values as any);
@@ -411,12 +418,20 @@ const TableBase = (props: TableBaseProps) => {
 					) : null}
 
 					{buttons?.import ? (
-						<ButtonExtend icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
+						<ButtonExtend
+							size={props?.otherProps?.size}
+							icon={<ImportOutlined />}
+							onClick={() => setVisibleImport(true)}
+						>
 							Nhập dữ liệu
 						</ButtonExtend>
 					) : null}
 					{buttons?.export ? (
-						<ButtonExtend icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
+						<ButtonExtend
+							size={props?.otherProps?.size}
+							icon={<ExportOutlined />}
+							onClick={() => setVisibleExport(true)}
+						>
 							Xuất dữ liệu {selectedIds?.length > 0 ? `(${selectedIds.length})` : ''}
 						</ButtonExtend>
 					) : null}
@@ -435,6 +450,7 @@ const TableBase = (props: TableBaseProps) => {
 				<div className='extra'>
 					{buttons?.reload !== false ? (
 						<ButtonExtend
+							size={props?.otherProps?.size}
 							icon={<ReloadOutlined />}
 							onClick={() => getData(params)}
 							loading={loading}
@@ -446,6 +462,7 @@ const TableBase = (props: TableBaseProps) => {
 
 					{buttons?.filter !== false && hasFilter ? (
 						<ButtonExtend
+							size={props?.otherProps?.size}
 							icon={filters?.length ? <FilterTwoTone twoToneColor={primaryColor} /> : <FilterOutlined />}
 							onClick={() => setVisibleFilter(true)}
 							tooltip='Áp dụng bộ lọc tùy chỉnh'
@@ -456,7 +473,7 @@ const TableBase = (props: TableBaseProps) => {
 
 					{!props?.hideTotal ? (
 						<Tooltip title='Tổng số dữ liệu'>
-							<div className='total'>
+							<div className={classNames({ total: true, small: props?.otherProps?.size === 'small' })}>
 								Tổng số:
 								<span>{inputFormat(total || 0)}</span>
 							</div>
@@ -467,7 +484,11 @@ const TableBase = (props: TableBaseProps) => {
 
 			<ConfigProvider
 				renderEmpty={() => (
-					<Empty style={{ marginTop: 32, marginBottom: 32 }} description={props.emptyText ?? 'Không có dữ liệu'} />
+					<Empty
+						style={{ marginTop: 32, marginBottom: 32 }}
+						description={props.emptyText ?? 'Không có dữ liệu'}
+						image={props.otherProps?.size === 'small' ? Empty.PRESENTED_IMAGE_SIMPLE : undefined}
+					/>
 				)}
 			>
 				<Table

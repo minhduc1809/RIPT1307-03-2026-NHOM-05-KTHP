@@ -1,5 +1,6 @@
 import { MenuOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { Drawer, Input, Modal, Table, Tooltip, type InputRef } from 'antd';
+import classNames from 'classnames';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
@@ -27,7 +28,7 @@ const TableStaticData = (props: TableStaticProps) => {
 		setSearchedColumn(dataIndex);
 	};
 
-	const getColumnSearchProps = (dataIndex: any, columnTitle: any): Partial<IColumn<unknown>> => ({
+	const getColumnSearchProps = (dataIndex: any, columnTitle: any, render: any): Partial<IColumn<unknown>> => ({
 		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
 			<div className='column-search-box' onKeyDown={(e) => e.stopPropagation()}>
 				<Input.Search
@@ -56,8 +57,10 @@ const TableStaticData = (props: TableStaticProps) => {
 				? record[dataIndex[0]][dataIndex?.[1]]?.toString()?.toLowerCase()?.includes(value.toLowerCase())
 				: '',
 		onFilterDropdownVisibleChange: (vis) => vis && setTimeout(() => searchInputRef?.current?.select(), 100),
-		render: (text: any) =>
-			searchedColumn === dataIndex ? (
+		render: (text: any, record: any) =>
+			render ? (
+				render(text, record)
+			) : searchedColumn === dataIndex ? (
 				<Highlighter
 					highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
 					searchWords={[searchText]}
@@ -86,7 +89,7 @@ const TableStaticData = (props: TableStaticProps) => {
 		?.map((item) => ({
 			...item,
 			...(item?.filterType === 'string'
-				? getColumnSearchProps(item.dataIndex, item.title)
+				? getColumnSearchProps(item.dataIndex, item.title, item.render)
 				: item?.filterType === 'select'
 				? getFilterColumnProps(item.dataIndex, item.filterData)
 				: undefined),
@@ -102,7 +105,7 @@ const TableStaticData = (props: TableStaticProps) => {
 			children: item.children?.map((child) => ({
 				...child,
 				...(child?.filterType === 'string'
-					? getColumnSearchProps(child.dataIndex, item.title)
+					? getColumnSearchProps(child.dataIndex, item.title, item.render)
 					: child?.filterType === 'select'
 					? getFilterColumnProps(child.dataIndex, child.filterData)
 					: undefined),
@@ -185,7 +188,7 @@ const TableStaticData = (props: TableStaticProps) => {
 				<div className='extra'>
 					{hasTotal ? (
 						<Tooltip title='Tổng số dữ liệu'>
-							<div className='total'>
+							<div className={classNames({ total: true, small: props?.size === 'small' })}>
 								Tổng số:
 								<span>{total || props.data?.length || 0}</span>
 							</div>

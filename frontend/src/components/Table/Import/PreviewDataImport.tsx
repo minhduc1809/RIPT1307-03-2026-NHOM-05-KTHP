@@ -71,9 +71,10 @@ const PreviewDataImport = (props: {
 									temp[col.field] = content === 'Có' || content === '1' || content === 'x';
 									break;
 								case 'Number':
-									tmp = content ? Number.parseFloat(content) : null;
-									temp[col.field] = Number.isNaN(tmp) ? invalidText : tmp;
-									invalid = Number.isNaN(tmp);
+									tmp = content ? Number.parseFloat(content.replace(',', '.')) : null;
+									// Với kiểu số thì làm tròn đến 2 chữ số thập phân ???
+									temp[col.field] = Number.isNaN(tmp) ? invalidText : tmp === null ? tmp : Math.round(tmp * 100) / 100;
+									if (!invalid) invalid = Number.isNaN(tmp);
 									break;
 								// case 'String':
 								//   temp[col.field] = content?.toString();
@@ -86,7 +87,7 @@ const PreviewDataImport = (props: {
 										moment(content).toISOString() ||
 										invalidText;
 									temp[col.field] = tmp;
-									invalid = tmp === invalidText;
+									if (!invalid) invalid = tmp === invalidText;
 									break;
 								default:
 									temp[col.field] = content;
@@ -94,7 +95,7 @@ const PreviewDataImport = (props: {
 							}
 						} catch {
 							temp[col.field] = invalidText;
-							invalid = true;
+							if (!invalid) invalid = true;
 						}
 					}
 					return true;
@@ -116,7 +117,11 @@ const PreviewDataImport = (props: {
 		<Row gutter={[12, 12]}>
 			<Col span={24}>
 				<div className='fw500'>Danh sách dữ liệu từ tập tin</div>
-				{hasInvalid ? <i style={{ color: 'red' }}>Có cột dữ liệu không hợp lệ, vui lòng kiểm tra lại!</i> : null}
+				{hasInvalid ? (
+					<i style={{ color: 'red' }}>
+						Có ô dữ liệu không hợp lệ (đã được đánh dấu trong bảng), vui lòng kiểm tra lại!
+					</i>
+				) : null}
 			</Col>
 
 			<Col span={24}>

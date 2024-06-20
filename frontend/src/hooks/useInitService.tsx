@@ -21,8 +21,16 @@ const useInitService = (url: string, ip?: string) => {
 		return axios.put(`${finalIp}/${url}/${id}`, payload);
 	};
 
+	const putManyService = (ids: (string | number)[], update: any) => {
+		return axios.put(`${finalIp}/${url}/many/ids`, { ids, update });
+	};
+
 	const deleteService = (id: string | number, silent?: boolean) => {
 		return axios.delete(`${finalIp}/${url}/${id}`, { data: { silent } });
+	};
+
+	const deleteManyService = (ids: (string | number)[], silent?: boolean) => {
+		return axios.delete(`${finalIp}/${url}/many/ids`, { data: { silent, ids } });
 	};
 
 	const getAllService = (payload?: { condition?: any; sort?: any }, path?: string) => {
@@ -67,7 +75,9 @@ const useInitService = (url: string, ip?: string) => {
 		getByIdService,
 		postService,
 		putService,
+		putManyService,
 		deleteService,
+		deleteManyService,
 		getAllService,
 		getImportHeaders,
 		getImportTemplate,
