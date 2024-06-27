@@ -123,6 +123,7 @@ const useInitModel = <T,>(
 		pathParam?: string,
 		isSetDanhSach?: boolean,
 		selectParams?: string[],
+		otherQuery?: Record<string, any>,
 	): Promise<T[]> => {
 		setLoading(true);
 		try {
@@ -131,6 +132,7 @@ const useInitModel = <T,>(
 				sort: sortParam,
 				filters: filterParam,
 				select: selectParams?.join(' '),
+				...(otherQuery ?? {}),
 			};
 			const response = await getAllService(payload, pathParam);
 			const data: T[] = response?.data?.data ?? [];
