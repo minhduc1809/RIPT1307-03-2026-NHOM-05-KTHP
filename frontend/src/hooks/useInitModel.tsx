@@ -87,7 +87,7 @@ const useInitModel = <T,>(
 				...paramCondition,
 			},
 			filters: [
-				...(filters?.filter((item) => item.active)?.map(({ active, ...item }) => item) || []),
+				...(filters?.filter((item) => item.active !== false)?.map(({ active, ...item }) => item) || []),
 				...(filterParams || []),
 			],
 			select: selectParams?.join(' '),
@@ -417,7 +417,7 @@ const useInitModel = <T,>(
 			const res = await postExport(payload, {
 				condition: { ...condition, ...paramCondition },
 				filters: [
-					...(filters?.filter((item) => item.active)?.map(({ active, ...item }) => item) || []),
+					...(filters?.filter((item) => item.active !== false)?.map(({ active, ...item }) => item) || []),
 					...(paramFilters ?? []),
 				],
 				...(otherQuery ?? {}),
