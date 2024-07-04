@@ -1,4 +1,5 @@
-import { AppModules, EModuleKey, moduleThuVien } from '@/services/base/constant';
+import { AppModules, EModuleKey, moduleQuanLyVanBan, moduleThuVien } from '@/services/base/constant';
+import type { Login } from '@/services/base/typing';
 import { UserSwitchOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
 import { useModel } from 'umi';
@@ -7,6 +8,12 @@ import './style.less';
 const ModuleView = () => {
 	const { initialState } = useModel('@@initialState');
 	const permissions = initialState?.authorizedPermissions?.map((item) => item.rsname);
+	const isCanBo = initialState?.authorizedPermissions?.some(
+		(permission) => permission.rsname === EModuleKey.CONG_CAN_BO,
+	);
+	const extendModules: Partial<Login.TModule>[] = [];
+	if (moduleThuVien.url) extendModules.push(moduleThuVien);
+	if (moduleQuanLyVanBan.url && isCanBo) extendModules.push(moduleQuanLyVanBan);
 
 	return (
 		<div className='module-view'>
@@ -30,20 +37,20 @@ const ModuleView = () => {
 						</Col>
 					))}
 
-				{moduleThuVien.url ? (
-					<Col span={8}>
-						<a href={moduleThuVien.url} target='_blank' rel='noreferrer'>
+				{extendModules.map((mod) => (
+					<Col span={8} key={mod.url}>
+						<a href={mod.url} target='_blank' rel='noreferrer'>
 							<div className='module-item'>
-								{moduleThuVien.icon ? (
-									<img src={`${AppModules[EModuleKey.CORE].url}modules/${moduleThuVien.icon}`} />
+								{mod.icon ? (
+									<img src={`${AppModules[EModuleKey.CORE].url}modules/${mod.icon}`} />
 								) : (
 									<UserSwitchOutlined />
 								)}
-								<span className='module-name'>{moduleThuVien.title}</span>
+								<span className='module-name'>{mod.title}</span>
 							</div>
 						</a>
 					</Col>
-				) : null}
+				))}
 			</Row>
 		</div>
 	);
