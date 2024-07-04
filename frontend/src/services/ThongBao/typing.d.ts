@@ -1,31 +1,36 @@
-import { type EReceiverType } from './constant';
+import type { ESourceTypeNotification, EReceiverType, ENotificationSource } from './constant';
 
 declare module ThongBao {
-  export interface IRecord {
-    _id: string;
-    title: string;
-    senderName: string;
-    sender?: string;
-    description?: string;
-    content?: string;
-    imageUrl?: string;
+	export interface IRecord {
+		_id: string;
+		title: string;
+		senderName: string;
+		sender?: string;
+		description?: string;
+		content?: string;
+		imageUrl?: string;
 
-    filter?: {
-      roles: EVaiTroBieuMau[];
-      idKhoaSinhVien: string;
-      idKhoa: string;
-      idNganh: string;
-      idLopHanhChinh: string;
-      idLopTinChi: string;
-    };
-    receiverType: EReceiverType;
-    topics?: string[];
-    users?: string[];
+		filter?: {
+			roles: EVaiTroBieuMau[];
+			idKhoaSinhVien: string;
+			idKhoa: string;
+			idNganh: string;
+			idLopHanhChinh: string;
+			idLopTinChi: string;
+		};
+		receiverType: EReceiverType;
+		users?: string[];
 
-    data?: any;
-    oneSignalData?: any;
-    urlFile?: string[];
-    createdAt: string; // '2023-06-27T07:47:29.693Z';
-    read: boolean;
-  }
+		// oneSignalData?: any;
+		taiLieuDinhKem?: string[];
+		createdAt: string; // '2023-06-27T07:47:29.693Z';
+		read: boolean;
+
+		sourceType?: ESourceTypeNotification;
+		notificationInternal: boolean;
+		thoiGianHieuLuc: Date;
+
+		notificationSource?: ENotificationSource;
+		metadata?: any;
+	}
 }
