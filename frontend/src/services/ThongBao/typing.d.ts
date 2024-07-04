@@ -30,7 +30,11 @@ declare module ThongBao {
 		notificationInternal: boolean;
 		thoiGianHieuLuc: Date;
 
-		notificationSource?: ENotificationSource;
-		metadata?: any;
+		metadata?: TNotificationSource;
 	}
+
+	export type TNotificationSource = {
+		entityId?: string;
+		entitySource?: ENotificationSource;
+	} & Record<string, any>;
 }

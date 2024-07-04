@@ -10,7 +10,7 @@ import './style.less';
 
 const ViewThongBao = (props: { record?: ThongBao.IRecord; afterViewDetail?: () => void; hideCard?: boolean }) => {
 	const { record, afterViewDetail, hideCard } = props;
-	const pathname = useMemo(() => OneSignalDataToPath(record?.notificationSource, record?.metadata), [record?._id]);
+	const pathname = useMemo(() => OneSignalDataToPath(record?.metadata), [record?._id]);
 
 	const redirectNotif = () => {
 		if (pathname) {
