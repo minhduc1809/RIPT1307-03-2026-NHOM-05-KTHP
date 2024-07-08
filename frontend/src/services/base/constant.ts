@@ -89,6 +89,12 @@ export const moduleThuVien: Partial<Login.TModule> = {
 	icon: 'thu-vien.svg',
 };
 
+export const moduleQuanLyVanBan: Partial<Login.TModule> = {
+	title: APP_CONFIG_TITLE_QLVB,
+	url: APP_CONFIG_URL_QLVB,
+	icon: 'quan-ly-van-ban.svg',
+};
+
 /** Đường link landing page */
 export const landingUrl = APP_CONFIG_URL_LANDING;
 

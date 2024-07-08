@@ -166,14 +166,14 @@ const ValidateDataImport = (props: { onOk: () => void; onCancel: () => void; onB
 								)
 							}
 							onConfirm={onExecute}
-							disabled={isError || !!errorCount}
+							// disabled={isError || !!errorCount}
 						>
 							<Button
 								htmlType='submit'
 								type='primary'
 								loading={formSubmiting}
 								icon={<SaveOutlined />}
-								disabled={isError || !!errorCount}
+								// disabled={isError || !!errorCount}
 							>
 								Lưu dữ liệu
 							</Button>

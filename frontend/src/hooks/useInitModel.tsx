@@ -87,7 +87,7 @@ const useInitModel = <T,>(
 				...paramCondition,
 			},
 			filters: [
-				...(filters?.filter((item) => item.active)?.map(({ active, ...item }) => item) || []),
+				...(filters?.filter((item) => item.active !== false)?.map(({ active, ...item }) => item) || []),
 				...(filterParams || []),
 			],
 			select: selectParams?.join(' '),
@@ -123,6 +123,7 @@ const useInitModel = <T,>(
 		pathParam?: string,
 		isSetDanhSach?: boolean,
 		selectParams?: string[],
+		otherQuery?: Record<string, any>,
 	): Promise<T[]> => {
 		setLoading(true);
 		try {
@@ -131,6 +132,7 @@ const useInitModel = <T,>(
 				sort: sortParam,
 				filters: filterParam,
 				select: selectParams?.join(' '),
+				...(otherQuery ?? {}),
 			};
 			const response = await getAllService(payload, pathParam);
 			const data: T[] = response?.data?.data ?? [];
@@ -415,7 +417,7 @@ const useInitModel = <T,>(
 			const res = await postExport(payload, {
 				condition: { ...condition, ...paramCondition },
 				filters: [
-					...(filters?.filter((item) => item.active)?.map(({ active, ...item }) => item) || []),
+					...(filters?.filter((item) => item.active !== false)?.map(({ active, ...item }) => item) || []),
 					...(paramFilters ?? []),
 				],
 				...(otherQuery ?? {}),
