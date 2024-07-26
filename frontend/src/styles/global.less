@@ -450,6 +450,31 @@ canvas {
 	}
 }
 
+// Big calendar
+.ant-card-body,
+.ant-card-body {
+	.rbc-toolbar {
+		gap: 5px;
+
+		@media (max-width: @screen-xs) {
+			flex-direction: column;
+		}
+
+		button {
+			padding: 4px 15px;
+			border-radius: 2px;
+			font-size: 14px;
+			height: 32px;
+
+			box-shadow: 0 2px 0 rgba(0, 0, 0, .015);
+			cursor: pointer;
+			transition: all .3s cubic-bezier(.645, .045, .355, 1);
+			color: rgba(0, 0, 0, .85);
+			border: 1px solid #d9d9d9;
+		}
+	}
+}
+
 @media (max-width: @screen-xs) {
 	.ant-drawer-content-wrapper {
 		width: 100% !important;
