@@ -101,7 +101,7 @@ const TableBase = (props: TableBaseProps) => {
 		filters?.find(
 			(item) =>
 				JSON.stringify(item.field) === JSON.stringify(fieldName) &&
-				(operator === undefined || item.active === undefined || item.operator === operator) &&
+				(operator === undefined || item.operator === operator) &&
 				(active === undefined || item.active === undefined || item.active === active),
 		);
 
@@ -212,7 +212,7 @@ const TableBase = (props: TableBaseProps) => {
 			if (filter)
 				// Udpate current filter
 				tempFilters = tempFilters.map((item) =>
-					JSON.stringify(item.field) !== JSON.stringify(dataIndex)
+					JSON.stringify(item.field) === JSON.stringify(dataIndex)
 						? { ...item, active: true, operator: EOperatorType.INCLUDE, values }
 						: item,
 				);
@@ -375,7 +375,8 @@ const TableBase = (props: TableBaseProps) => {
 			.flat();
 		// Handle Filter in columns
 		Object.entries(fil).map(([field, values]) => {
-			const dataIndex = field.split('.');
+			// Field từ table => nếu dataIndex là Array => field1.subfield
+			const dataIndex = field.includes('.') ? field.split('.') : field;
 			const col = allColumns.find((item) => JSON.stringify(item.dataIndex) === JSON.stringify(dataIndex));
 			if (col?.filterType === 'select') handleFilter(dataIndex, values as any);
 			else if (col?.filterType === 'string') handleSearch(dataIndex, values?.[0] as any);
