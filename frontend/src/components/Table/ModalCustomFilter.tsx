@@ -1,6 +1,7 @@
 import { CloseOutlined, FilterFilled, PlusOutlined } from '@ant-design/icons';
 import { Button, Form, Modal, Space } from 'antd';
 import { useEffect, useState } from 'react';
+import { findFiltersInColumns } from './function';
 import RowFilter from './RowFilter';
 import { type IColumn, type TFilter } from './typing';
 
@@ -12,7 +13,7 @@ const ModalCustomFilter = (props: {
 	setFilters: any;
 }) => {
 	const { visible, setVisible, columns, filters, setFilters } = props;
-	const [filtersTemp, setFiltersTemp] = useState(filters ?? []);
+	const [filtersTemp, setFiltersTemp] = useState<TFilter<any>[]>([]);
 	const [form] = Form.useForm();
 	const fieldsFiltered = filtersTemp.map((item) => JSON.stringify(item.field));
 	const fieldsFilterable = columns
@@ -20,8 +21,9 @@ const ModalCustomFilter = (props: {
 		.map((item) => JSON.stringify(item.dataIndex));
 
 	useEffect(() => {
-		setFiltersTemp(filters ?? []);
-		if (visible) form.setFieldsValue({ filters });
+		const fil = findFiltersInColumns(columns, filters);
+		setFiltersTemp(fil ?? []);
+		if (visible) form.setFieldsValue({ filters: fil });
 	}, [filters, visible]);
 
 	const onFinish = (values: any) => {
