@@ -104,8 +104,10 @@ const useInitModel = <T,>(
 				setPage(maxPage);
 				return Promise.reject('Invalid page');
 			} else {
-				if (isSetDanhSach !== false) setDanhSach(tempData);
-				setTotal(tempTotal);
+				if (isSetDanhSach !== false) {
+					setDanhSach(tempData);
+					setTotal(tempTotal);
+				}
 				return tempData;
 			}
 		} catch (er) {
