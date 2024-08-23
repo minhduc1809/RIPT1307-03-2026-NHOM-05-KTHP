@@ -71,7 +71,7 @@ const TinyEditor = (props: {
 						'visualblocks',
 						'code',
 						'fullscreen',
-						'insertdatetime',
+						// 'insertdatetime',
 						'media',
 						'table',
 						'preview',
@@ -113,6 +113,7 @@ const TinyEditor = (props: {
 					contextmenu: 'link image imagetools table',
 					file_picker_callback: imageHandler,
 					paste_data_images: true,
+					smart_paste: true,
 					content_style: `
             body {
               background: #fff;
