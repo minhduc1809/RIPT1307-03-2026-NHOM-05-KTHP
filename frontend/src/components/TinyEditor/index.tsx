@@ -51,12 +51,11 @@ const TinyEditor = (props: {
 			<Editor
 				// apiKey='ihu6rlypska4k9h96g5x752rocpj133f20q41afy85shcrc5'
 				tinymceScriptSrc='/tinymce/tinymce.min.js'
-				//@ts-ignore
-				licenseKey='gpl'
 				// apiKey='vrh3rpim05kai51zg4tcenfbzwhl243use11yolfq6d9ufvw'
 				value={value}
 				disabled={disabled}
 				init={{
+					license_key: 'gpl',
 					language_url: '/lang/vi_VN.js',
 					language: 'vi_VN',
 					max_height: height ?? 500,
@@ -101,12 +100,12 @@ const TinyEditor = (props: {
 						// "editimage",
 						'autoresize',
 					],
-					toobar: disabled
+					toolbar: disabled
 						? ''
 						: tinyToolbar
-						? 'undo redo | bold italic | forecolor backcolor'
+						? 'undo redo | bold italic | forecolor backcolor | emoticons'
 						: miniToolbar
-						? 'undo redo | fontfamily fontsize | bold italic underline | forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | numlist bullist'
+						? 'undo redo | fontfamily fontsize | bold italic underline | forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | numlist bullist | emoticons'
 						: // Full toolbar
 						  'undo redo | styles fontfamily fontsize | bold italic underline strikethrough | forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | table image media link | charmap emoticons | fullscreen preview print',
 					toolbar_sticky: true,
@@ -151,9 +150,9 @@ const TinyEditor = (props: {
 						Arial=arial,helvetica,sans-serif; 
 						Arial Black=arial black,avant garde; 
 						Times New Roman=times new roman,times; 
-						Consolas=consolas,times; 
 						Comic Sans MS=comic sans ms,sans-serif; 
 						Noto Sans=noto sans; 
+						Monospace=monospace;
 						Courier New=courier new,courier; 
 						Helvetica=helvetica; 
 						Tahoma=tahoma,arial,helvetica,sans-serif; 
