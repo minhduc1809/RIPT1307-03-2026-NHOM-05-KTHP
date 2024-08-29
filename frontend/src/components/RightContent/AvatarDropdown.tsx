@@ -53,7 +53,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 		{
 			key: 'portal',
 			icon: <GlobalOutlined />,
-			label: 'Cổng thông tin',
+			label: APP_CONFIG_TITLE_LANDING ?? 'Cổng thông tin',
 			onClick: () => window.open(landingUrl),
 		},
 		{ type: 'divider', key: 'divider' },
