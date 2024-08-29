@@ -45,6 +45,7 @@ declare const APP_CONFIG_URL_CSVC: string;
 declare const APP_CONFIG_URL_THU_VIEN: string;
 declare const APP_CONFIG_URL_QLVB: string;
 
+declare const APP_CONFIG_TITLE_LANDING: string;
 declare const APP_CONFIG_TITLE_CONNECT: string;
 declare const APP_CONFIG_TITLE_CAN_BO: string;
 declare const APP_CONFIG_TITLE_DAO_TAO: string;

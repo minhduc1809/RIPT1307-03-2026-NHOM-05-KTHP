@@ -38,6 +38,7 @@ import ModalExport from './Export';
 import ModalImport from './Import';
 import ModalCustomFilter from './ModalCustomFilter';
 import { EOperatorType } from './constant';
+import { findFiltersInColumns } from './function';
 import './style.less';
 import type { IColumn, TDataOption, TFilter, TableBaseProps } from './typing';
 
@@ -101,7 +102,7 @@ const TableBase = (props: TableBaseProps) => {
 			(item) =>
 				JSON.stringify(item.field) === JSON.stringify(fieldName) &&
 				(operator === undefined || item.operator === operator) &&
-				(active === undefined || item.active === active),
+				(active === undefined || item.active === undefined || item.active === active),
 		);
 
 	//#region Get Sort Column Props
@@ -134,7 +135,9 @@ const TableBase = (props: TableBaseProps) => {
 			if (filter)
 				// Udpate current filter
 				tempFilters = tempFilters.map((item) =>
-					item.field === dataIndex ? { ...item, active: true, operator: EOperatorType.CONTAIN, values: [value] } : item,
+					JSON.stringify(item.field) === JSON.stringify(dataIndex)
+						? { ...item, active: true, operator: EOperatorType.CONTAIN, values: [value] }
+						: item,
 				);
 			// Add new filter rule for this column
 			else
@@ -201,7 +204,7 @@ const TableBase = (props: TableBaseProps) => {
 	const handleFilter = (dataIndex: any, values: string[]) => {
 		if (!values || !values.length) {
 			// Remove filter of this column
-			const tempFilters = filters?.filter((item) => item.field !== dataIndex);
+			const tempFilters = filters?.filter((item) => JSON.stringify(item.field) !== JSON.stringify(dataIndex));
 			setFilters(tempFilters);
 		} else {
 			const filter = getFilterColumn(dataIndex);
@@ -209,7 +212,9 @@ const TableBase = (props: TableBaseProps) => {
 			if (filter)
 				// Udpate current filter
 				tempFilters = tempFilters.map((item) =>
-					item.field === dataIndex ? { ...item, active: true, operator: EOperatorType.INCLUDE, values } : item,
+					JSON.stringify(item.field) === JSON.stringify(dataIndex)
+						? { ...item, active: true, operator: EOperatorType.INCLUDE, values }
+						: item,
 				);
 			// Add new filter rule for this column
 			else
@@ -370,10 +375,12 @@ const TableBase = (props: TableBaseProps) => {
 			.flat();
 		// Handle Filter in columns
 		Object.entries(fil).map(([field, values]) => {
-			const col = allColumns.find((item) => item.dataIndex === field);
-			if (col?.filterType === 'select') handleFilter(field, values as any);
-			else if (col?.filterType === 'string') handleSearch(field, values?.[0] as any);
-			else if (col?.filterType === 'customselect') handleFilter(field, values as any);
+			// Field từ table => nếu dataIndex là Array => field1.subfield
+			const dataIndex = field.includes('.') ? field.split('.') : field;
+			const col = allColumns.find((item) => JSON.stringify(item.dataIndex) === JSON.stringify(dataIndex));
+			if (col?.filterType === 'select') handleFilter(dataIndex, values as any);
+			else if (col?.filterType === 'string') handleSearch(dataIndex, values?.[0] as any);
+			else if (col?.filterType === 'customselect') handleFilter(dataIndex, values as any);
 		});
 
 		const { order, field } = sorter;
@@ -463,7 +470,13 @@ const TableBase = (props: TableBaseProps) => {
 					{buttons?.filter !== false && hasFilter ? (
 						<ButtonExtend
 							size={props?.otherProps?.size}
-							icon={filters?.length ? <FilterTwoTone twoToneColor={primaryColor} /> : <FilterOutlined />}
+							icon={
+								findFiltersInColumns(finalColumns, filters)?.length ? (
+									<FilterTwoTone twoToneColor={primaryColor} />
+								) : (
+									<FilterOutlined />
+								)
+							}
 							onClick={() => setVisibleFilter(true)}
 							tooltip='Áp dụng bộ lọc tùy chỉnh'
 						>

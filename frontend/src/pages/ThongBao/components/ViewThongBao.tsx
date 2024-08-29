@@ -25,7 +25,7 @@ const ViewThongBao = (props: { record?: ThongBao.IRecord; afterViewDetail?: () =
 				avatar={record?.imageUrl ? <Avatar src={record?.imageUrl} size='large' /> : false}
 				description={
 					<>
-						<div>{record?.description}</div>
+						<div style={{ marginBottom: 8 }}>{record?.description}</div>
 						<UserOutlined /> {record?.senderName ?? ''} <Divider type='vertical' />
 						<CalendarOutlined /> {moment(record?.createdAt).format('HH:mm DD/MM/YYYY')}
 					</>

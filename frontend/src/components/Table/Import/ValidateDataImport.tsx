@@ -56,7 +56,7 @@ const ValidateDataImport = (props: { onOk: () => void; onCancel: () => void; onB
 				setStep(1);
 				setErrorCount(res.validate?.filter((item) => !!item.rowErrors?.length).length);
 				setIsError(res.error);
-				const temp = res.validate?.map((item) => ({ ...item, index: item.index + startLine }));
+				const temp = res.validate?.map((item) => ({ ...item, rowIndex: item.index + startLine }));
 				setImportResponses(temp ?? []);
 
 				onOk(); // Get data
