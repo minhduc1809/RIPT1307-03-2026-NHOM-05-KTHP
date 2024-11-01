@@ -6,6 +6,7 @@
 	:global(.anticon) {
 		margin-right: 8px;
 	}
+
 	:global(.ant-dropdown-menu-item) {
 		min-width: 160px;
 	}
@@ -20,7 +21,7 @@
 	overflow: hidden;
 
 	:global(.anticon),
-	a > img {
+	a>img {
 		display: flex;
 		align-items: center;
 		height: 48px;
@@ -33,7 +34,7 @@
 		}
 	}
 
-	a > img {
+	a>img {
 		padding: 12px 8px;
 	}
 
@@ -45,7 +46,7 @@
 		cursor: pointer;
 		transition: all 0.3s;
 
-		> span {
+		>span {
 			vertical-align: middle;
 		}
 
@@ -70,6 +71,15 @@
 	.account {
 		.avatar {
 			margin-right: 8px;
+			height: 42px;
+			width: 42px;
+			line-height: 42px;
+			font-size: 22px;
+
+			img {
+				object-fit: cover;
+			}
+
 			:global(.anticon) {
 				height: 32px;
 				font-size: 32px;
@@ -83,6 +93,7 @@
 		&:hover {
 			background: #252a3d;
 		}
+
 		&:global(.opened) {
 			background: #252a3d;
 		}
@@ -93,18 +104,22 @@
 	:global(.ant-divider-vertical) {
 		vertical-align: unset;
 	}
+
 	.name {
 		display: none;
 	}
+
 	.right {
 		position: absolute;
 		top: 0;
 		right: 12px;
+
 		.account {
 			.avatar {
 				margin-right: 0;
 			}
 		}
+
 		.search {
 			display: none;
 		}
