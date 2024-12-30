@@ -7,9 +7,9 @@ import Highlighter from 'react-highlight-words';
 import type { SortEnd, SortableContainerProps } from 'react-sortable-hoc';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import ButtonExtend from './ButtonExtend';
+import { updateSearchStorage } from './function';
 import './style.less';
 import type { IColumn, TDataOption, TableStaticProps } from './typing';
-import { updateSearchStorage } from './function';
 
 const TableStaticData = (props: TableStaticProps) => {
 	const { Form, showEdit, setShowEdit, addStt, data, children, hasCreate, hasTotal, rowSortable } = props;
