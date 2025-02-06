@@ -1,5 +1,5 @@
 import { MenuOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
-import { Drawer, Input, Modal, Table, Tooltip, type InputRef } from 'antd';
+import { AutoComplete, Drawer, Input, Modal, Table, Tooltip, type InputRef } from 'antd';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
@@ -7,6 +7,7 @@ import Highlighter from 'react-highlight-words';
 import type { SortEnd, SortableContainerProps } from 'react-sortable-hoc';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import ButtonExtend from './ButtonExtend';
+import { updateSearchStorage } from './function';
 import './style.less';
 import type { IColumn, TDataOption, TableStaticProps } from './typing';
 
@@ -29,26 +30,43 @@ const TableStaticData = (props: TableStaticProps) => {
 	};
 
 	const getColumnSearchProps = (dataIndex: any, columnTitle: any, render: any): Partial<IColumn<unknown>> => ({
-		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-			<div className='column-search-box' onKeyDown={(e) => e.stopPropagation()}>
-				<Input.Search
-					placeholder={`Tìm ${columnTitle}`}
-					allowClear
-					enterButton
-					value={selectedKeys[0]}
-					onChange={(e) => {
-						if (e.type === 'click') {
-							setSelectedKeys([]);
-							confirm();
-						} else {
-							setSelectedKeys(e.target.value ? [e.target.value] : []);
-						}
-					}}
-					onSearch={() => handleSearch(confirm, dataIndex)}
-					ref={searchInputRef}
-				/>
-			</div>
-		),
+		filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => {
+			const searchOptions = (JSON.parse(localStorage.getItem('dataTimKiem') || '{}')[dataIndex] || []).map(
+				(value: string) => ({ value, label: value }),
+			);
+
+			return (
+				<div className='column-search-box' onKeyDown={(e) => e.stopPropagation()}>
+					<AutoComplete
+						options={searchOptions}
+						onSelect={(value: string) => {
+							setSelectedKeys([value]);
+							handleSearch(confirm, dataIndex);
+						}}
+					>
+						<Input.Search
+							placeholder={`Tìm ${columnTitle}`}
+							allowClear
+							enterButton
+							value={selectedKeys[0]}
+							onChange={(e) => {
+								if (e.type === 'click') {
+									setSelectedKeys([]);
+									confirm();
+								} else {
+									setSelectedKeys(e.target.value ? [e.target.value] : []);
+								}
+							}}
+							onSearch={(value) => {
+								if (value) updateSearchStorage(dataIndex, value);
+								handleSearch(confirm, dataIndex);
+							}}
+							ref={searchInputRef}
+						/>
+					</AutoComplete>
+				</div>
+			);
+		},
 		filterIcon: (filtered: boolean) => <SearchOutlined className={filtered ? 'text-primary' : undefined} />,
 		onFilter: (value: any, record: any) =>
 			typeof dataIndex === 'string'
@@ -94,12 +112,11 @@ const TableStaticData = (props: TableStaticProps) => {
 				? getFilterColumnProps(item.dataIndex, item.filterData)
 				: undefined),
 			...(item?.sortable && {
-				sorter: (a: any, b: any) =>
-					item.customSort
-						? item.customSort(a[item.dataIndex as string], b[item.dataIndex as string])
-						: a[item.dataIndex as string] > b[item.dataIndex as string]
-						? 1
-						: -1,
+				sorter: (a: any, b: any) => {
+					const aValue = _.get(a, item?.dataIndex ?? '', undefined);
+					const bValue = _.get(b, item?.dataIndex ?? '', undefined);
+					return item.customSort ? item.customSort(aValue, bValue) : aValue > bValue ? 1 : -1;
+				},
 			}),
 			// Xử lý các cột children tương tự cột chính
 			children: item.children?.map((child) => ({

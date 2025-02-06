@@ -15,6 +15,7 @@ body,
 
 a {
 	position: relative;
+	word-break: break-word;
 
 	&::after {
 		position: absolute;
@@ -182,6 +183,10 @@ a {
 			color: var(--ant-warning-color-hover);
 		}
 	}
+}
+
+.ant-table-cell .ant-btn {
+	height: 30px;
 }
 
 canvas {
@@ -362,6 +367,19 @@ canvas {
 
 // Card Statistics Small
 .card-stat-small {
+	&.pointer {
+		cursor: pointer;
+	}
+
+	&.highlight {
+		background-color: #f2fce1bf;
+
+		.text {
+			color: var(--primary-color);
+			font-weight: 600;
+		}
+	}
+
 	.ant-card-body {
 		display: flex;
 		gap: 8px;
@@ -502,5 +520,28 @@ canvas {
 				}
 			}
 		}
+	}
+}
+
+.ant-card-small>.ant-card-head>.ant-card-head-wrapper>.ant-card-extra {
+	padding: 3px 0 !important;
+}
+
+.card-highlight {
+	.ant-card-head {
+		background-color: var(--primary-color);
+		color: white;
+
+		.ant-btn-link,
+		a {
+			color: white;
+		}
+	}
+}
+
+.ant-collapse-item-active {
+	.ant-collapse-header-text {
+		font-weight: 600;
+		color: var(--primary-color);
 	}
 }

@@ -1,11 +1,12 @@
+import { EDinhDangFile } from '@/services/base/constant';
 import { message, type FormInstance } from 'antd';
 import { type AxiosResponse } from 'axios';
 import type { Moment } from 'moment';
 import moment from 'moment';
 import * as XLSX from 'xlsx';
 
-const reg =
-	/(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
+export const urlRegex =
+	/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.,~#?&//=]*)$/;
 
 const charMap: any = {
 	a: '[aàáâãăăạảấầẩẫậắằẳẵặ]',
@@ -18,7 +19,7 @@ const charMap: any = {
 	' ': ' ',
 };
 
-export const isUrl = (path: string): boolean => reg.test(path);
+export const isUrl = (path: string): boolean => urlRegex.test(path);
 
 export const isAntDesignPro = (): boolean => {
 	if (ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site') {
@@ -162,6 +163,76 @@ export function renderFileListUrl(url: string) {
 			},
 		],
 	};
+}
+
+/**
+ * Get file type
+ * @param mimeType Mime type or extension of file
+ * @returns
+ */
+export function getFileType(mimeType: string) {
+	if (!mimeType) return EDinhDangFile.UNKNOWN;
+
+	const mimeGroups: Record<string, string[]> = {
+		[EDinhDangFile.WORD]: [
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+			'application/vnd.ms-word.document.macroEnabled.12',
+			'application/vnd.ms-word.template.macroEnabled.12',
+			'application/msword',
+
+			'doc',
+			'docx',
+		],
+		[EDinhDangFile.EXCEL]: [
+			'application/vnd.ms-excel',
+			'application/vnd.ms-excel',
+			'application/vnd.ms-excel',
+
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+			'application/vnd.ms-excel.sheet.macroEnabled.12',
+			'application/vnd.ms-excel.template.macroEnabled.12',
+			'application/vnd.ms-excel.addin.macroEnabled.12',
+			'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+			'application/vnd.ms-excel',
+
+			'xls',
+			'xlsx',
+		],
+		[EDinhDangFile.POWERPOINT]: [
+			'application/vnd.ms-powerpoint',
+			'application/vnd.ms-powerpoint',
+			'application/vnd.ms-powerpoint',
+			'application/vnd.ms-powerpoint',
+
+			'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+			'application/vnd.openxmlformats-officedocument.presentationml.template',
+			'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+			'application/vnd.ms-powerpoint.addin.macroEnabled.12',
+			'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
+			'application/vnd.ms-powerpoint.template.macroEnabled.12',
+			'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
+
+			'ppt',
+			'pptx',
+		],
+		[EDinhDangFile.PDF]: ['application/pdf'],
+		[EDinhDangFile.IMAGE]: ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'],
+		[EDinhDangFile.VIDEO]: ['video/mp4', 'video/avi', 'video/mpeg'],
+		[EDinhDangFile.AUDIO]: ['audio/mpeg', 'audio/wav', 'audio/ogg'],
+		[EDinhDangFile.TEXT]: ['text/plain', 'text/csv', 'text/html'],
+	};
+
+	let result: EDinhDangFile = EDinhDangFile.UNKNOWN;
+	for (const [fileType, mimeList] of Object.entries(mimeGroups)) {
+		if (mimeList.some((mime) => mime.includes(mimeType))) {
+			result = fileType as EDinhDangFile;
+			break;
+		}
+	}
+
+	return result;
 }
 
 export function renderFileListUrlWithName(url: string, fileName?: string) {
@@ -430,7 +501,104 @@ export const compareFullname = (a: any, b: any): number => {
 	if (typeof a !== 'string' || typeof b !== 'string') return 0;
 	const tenA = a.split(' ').pop()?.toLocaleLowerCase() ?? '';
 	const tenB = b.split(' ').pop()?.toLocaleLowerCase() ?? '';
-	const compareTen = tenA.localeCompare(tenB);
+	const compareTen = tenA.localeCompare(tenB, 'vi');
 
-	return compareTen === 0 ? a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()) : compareTen;
+	return compareTen === 0 ? a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase(), 'vi') : compareTen;
+};
+
+/**
+ * Xóa tiếng Việt
+ * @param str
+ * @returns
+ */
+export function removeVietnameseTones(str: string, removeSpecial: boolean = false) {
+	let strTemp = str;
+	strTemp = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, 'a');
+	strTemp = strTemp.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, 'e');
+	strTemp = strTemp.replace(/ì|í|ị|ỉ|ĩ/g, 'i');
+	strTemp = strTemp.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, 'o');
+	strTemp = strTemp.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, 'u');
+	strTemp = strTemp.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, 'y');
+	strTemp = strTemp.replace(/đ/g, 'd');
+	strTemp = strTemp.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, 'A');
+	strTemp = strTemp.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, 'E');
+	strTemp = strTemp.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, 'I');
+	strTemp = strTemp.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, 'O');
+	strTemp = strTemp.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, 'U');
+	strTemp = strTemp.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, 'Y');
+	strTemp = strTemp.replace(/Đ/g, 'D');
+	// Some system encode vietnamese combining accent as individual utf-8 characters
+	// Một vài bộ encode coi các dấu mũ, dấu chữ như một kí tự riêng biệt nên thêm hai dòng này
+	strTemp = strTemp.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ''); //       huyền, sắc, ngã, hỏi, nặng
+	strTemp = strTemp.replace(/\u02C6|\u0306|\u031B/g, ''); // ˆ    Â, Ê, Ă, Ơ, Ư
+
+	// Remove punctuations
+	// Bỏ dấu câu, kí tự đặc biệt
+	if (removeSpecial)
+		strTemp = strTemp.replace(
+			/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
+			' ',
+		);
+
+	// Remove extra spaces
+	// Bỏ các khoảng trắng liền nhau
+	strTemp = strTemp.replace(/ + /g, ' ');
+	strTemp = strTemp.trim();
+
+	return strTemp;
+}
+
+/**
+ * Scroll to div element
+ * @param id
+ * @param delay
+ */
+export const handleScrollToDivElementById = (id: string, delay?: number) => {
+	if (delay) {
+		setTimeout(() => {
+			const targetDiv = document.getElementById(id);
+			// Scroll to the target div
+			if (targetDiv) {
+				targetDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			}
+		}, delay);
+	} else {
+		const targetDiv = document.getElementById(id);
+		// Scroll to the target div
+		if (targetDiv) {
+			targetDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}
+	}
+};
+
+/**
+ * Copy text to clipboard
+ * @param text
+ * @param callBack
+ */
+export const copyToClipboard = (text: string, callBack?: () => void) => {
+	navigator.clipboard
+		.writeText(text)
+		.then(function () {
+			if (callBack) callBack();
+		})
+		.catch(function (err) {
+			console.error('Could not copy text: ', err);
+		});
+};
+
+/**
+ * Convert plain text to HTML contains Link tags
+ * @param text Plain text
+ * @param targetBlank
+ * @returns HTML contains a tag
+ */
+export const createTextLinks = (text: string, targetBlank: boolean = true) => {
+	return removeHtmlTags(text || '').replace(
+		/((https?:\/\/(www\.)?)|(www\.))(\S+)/gi,
+		function (match, temp, protocol, www1, www2, url) {
+			const hyperlink = (protocol ?? 'https://') + url;
+			return `<a href="${hyperlink}"${targetBlank ? 'target="_blank" rel="noreferrer"' : ''}>${url}</a>`;
+		},
+	);
 };

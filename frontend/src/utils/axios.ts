@@ -76,12 +76,18 @@ axios.interceptors.response.use(
 			switch (error?.response?.status) {
 				case 400:
 					notification.error({
-						message: 'Bad request',
+						message: 'Dữ liệu chưa đúng (004)',
 						description: descriptionError,
 					});
 					break;
 
 				case 401:
+					// Nếu có access token (có thể access token hết hạn) thì mới cảnh báo
+					if (originalRequest?.headers?.Authorization)
+						notification.error({
+							message: 'Phiên đăng nhập đã thay đổi (104)',
+							description: 'Vui lòng tải lại trang (F5) để cập nhật. Chú ý các dữ liệu chưa lưu sẽ bị mất!',
+						});
 					if (originalRequest._retry) break;
 					break;
 				// return routeLogin('Unauthorize');
@@ -139,21 +145,21 @@ axios.interceptors.response.use(
 				case 403:
 				case 405:
 					notification.error({
-						message: 'Thao tác không được phép',
+						message: 'Thao tác không được phép (304)',
 						description: descriptionError,
 					});
 					break;
 
 				case 404:
 					notification.error({
-						message: 'Không tìm thấy dữ liệu',
+						message: 'Không tìm thấy dữ liệu (040)',
 						description: descriptionError,
 					});
 					break;
 
 				case 409:
 					notification.error({
-						message: 'Dữ liệu chưa đúng',
+						message: 'Dữ liệu chưa đúng (904)',
 						description: descriptionError,
 					});
 					break;
@@ -161,13 +167,13 @@ axios.interceptors.response.use(
 				case 500:
 				case 502:
 					notification.error({
-						message: 'Server gặp lỗi',
+						message: 'Hệ thống đang cập nhật (005)',
 						description: descriptionError,
 					});
 					break;
 
 				default:
-					message.error('Có lỗi xảy ra. Vui lòng thử lại');
+					message.error('Hệ thống đang cập nhật. Vui lòng thử lại sau');
 					break;
 			}
 		// Do something with response error
