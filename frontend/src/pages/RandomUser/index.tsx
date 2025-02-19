@@ -1,27 +1,52 @@
 import type { IColumn } from '@/components/Table/typing';
-import { Button, Form, Input, Modal, Table } from 'antd';
+import { Button, Form, Input, Modal, Select, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
+import queryString from 'query-string';
+import axios from 'axios';
 
 const RandomUser = () => {
 	const { data, getDataUser } = useModel('randomuser');
 	const [visible, setVisible] = useState<boolean>(false);
 	const [isEdit, setIsEdit] = useState<boolean>(false);
 	const [row, setRow] = useState<RandomUser.Record>();
+	const [data2, setData2] = useState([]);
+	const [pageSize, setPageSize] = useState(10);
+	const [current, setCurrent] = useState(1);
+	const [total, setTotal] = useState(0);
+
+	const getData = async () => {
+		const res = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=${pageSize}&offset=${current}`);
+		setData2(res?.data?.results ?? []);
+		setTotal(res?.data?.count ?? 0);
+	};
+
 	useEffect(() => {
 		getDataUser();
-	}, []);
+		getData();
+	}, [pageSize, current]);
+
+	// Lấy URL hiện tại
+	const urlParams = new URLSearchParams(window.location.search);
+	// Lấy giá trị tham số 'param1'
+	const color1 = urlParams.get('color1');
+	console.log('Giá trị color1:', color1);
+	const color2 = urlParams.get('color2');
+	console.log('Giá trị color2:', color2);
+
+	const parsed = queryString.parse(location.search);
+	console.log(parsed);
 
 	const columns: IColumn<RandomUser.Record>[] = [
 		{
 			title: 'Address',
-			dataIndex: 'address',
+			dataIndex: 'name',
 			key: 'name',
 			width: 200,
 		},
 		{
 			title: 'Balance',
-			dataIndex: 'balance',
+			dataIndex: 'url',
 			key: 'age',
 			width: 100,
 		},
@@ -70,7 +95,15 @@ const RandomUser = () => {
 			>
 				Add User
 			</Button>
-			<Table dataSource={data} columns={columns} />
+			<Table
+				onChange={(pagination) => {
+					setPageSize(pagination.pageSize);
+					setCurrent(pagination.current);
+				}}
+				pagination={{ total, pageSize, current }}
+				dataSource={data2}
+				columns={columns}
+			/>
 			<Modal
 				destroyOnClose
 				footer={false}
