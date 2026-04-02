@@ -1,4 +1,4 @@
-﻿export default [
+export default [
 	{
 		path: '/user',
 		layout: false,
@@ -8,6 +8,12 @@
 				layout: false,
 				name: 'login',
 				component: './user/Login',
+			},
+			{
+				path: '/user/register',
+				layout: false,
+				name: 'register',
+				component: './user/Register',
 			},
 			{
 				path: '/user',
@@ -21,66 +27,80 @@
 	{
 		path: '/dashboard',
 		name: 'Dashboard',
-		component: './TrangChu',
+		component: './Dashboard',
 		icon: 'HomeOutlined',
 	},
 	{
-		path: '/gioi-thieu',
-		name: 'About',
-		component: './TienIch/GioiThieu',
-		hideInMenu: true,
-	},
-	{
-		path: '/random-user',
-		name: 'RandomUser',
-		component: './RandomUser',
-		icon: 'ArrowsAltOutlined',
-	},
-	{
-		path: '/todo-list',
-		name: 'TodoList',
-		icon: 'OrderedListOutlined',
-		component: './TodoList',
-	},
-
-	// DANH MUC HE THONG
-	// {
-	// 	name: 'DanhMuc',
-	// 	path: '/danh-muc',
-	// 	icon: 'copy',
-	// 	routes: [
-	// 		{
-	// 			name: 'ChucVu',
-	// 			path: 'chuc-vu',
-	// 			component: './DanhMuc/ChucVu',
-	// 		},
-	// 	],
-	// },
-
-	{
-		path: '/notification',
+		path: '/forms',
+		name: 'Forms',
+		icon: 'FormOutlined',
 		routes: [
 			{
-				path: './subscribe',
-				exact: true,
-				component: './ThongBao/Subscribe',
+				path: '/forms',
+				hideInMenu: true,
+				component: './Forms',
 			},
 			{
-				path: './check',
-				exact: true,
-				component: './ThongBao/Check',
+				path: '/forms/builder',
+				name: 'Form Builder',
+				hideInMenu: true,
+				component: './Forms/Builder',
 			},
 			{
-				path: './',
-				exact: true,
-				component: './ThongBao/NotifOneSignal',
+				path: '/forms/:formId',
+				name: 'Fill Form',
+				hideInMenu: true,
+				component: './Forms/FormDetail',
 			},
 		],
-		layout: false,
-		hideInMenu: true,
 	},
 	{
+		path: '/workflows',
+		name: 'Workflows',
+		icon: 'PartitionOutlined',
+		routes: [
+			{
+				path: '/workflows',
+				hideInMenu: true,
+				component: './Workflows',
+			},
+			{
+				path: '/workflows/builder',
+				name: 'Workflow Builder',
+				hideInMenu: true,
+				component: './Workflows/Builder',
+			},
+		],
+	},
+	{
+		path: '/submissions',
+		name: 'Submissions',
+		icon: 'FileDoneOutlined',
+		hideInMenu: true,
+		routes: [
+			{
+				path: '/submissions/:id',
+				name: 'Submission Detail',
+				component: './Submissions/Detail',
+			},
+		],
+	},
+	{
+		path: '/notifications',
+		name: 'Notifications',
+		icon: 'BellOutlined',
+		component: './Notifications',
+	},
+	{
+		path: '/profile',
+		name: 'Profile',
+		icon: 'UserOutlined',
+		component: './Profile',
+	},
+
+	{
 		path: '/',
+		redirect: '/dashboard',
 	},
 	{
 		path: '/403',
