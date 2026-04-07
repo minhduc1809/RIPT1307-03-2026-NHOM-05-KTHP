@@ -1,3 +1,5 @@
+import component from "@/locales/en-US/component";
+
 export default [
 	{
 		path: '/user',
@@ -100,7 +102,8 @@ export default [
 
 	{
 		path: '/',
-		redirect: '/dashboard',
+		component: './Home',
+		layout: false,
 	},
 	{
 		path: '/403',

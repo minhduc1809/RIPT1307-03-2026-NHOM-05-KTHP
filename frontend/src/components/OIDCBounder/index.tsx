@@ -35,7 +35,7 @@ const OIDCBounder_: FC = ({ children }) => {
 		if (newSearch) newSearch = '?' + newSearch;
 		// Reload trang để cập nhật access token mới
 		const pathname =
-			window.location.pathname === '/' || window.location.pathname === '/user/login'
+			window.location.pathname === '/user/login'
 				? '/dashboard'
 				: window.location.pathname;
 		window.location.replace(`${pathname}${newSearch}${window.location.hash}`);
@@ -63,7 +63,7 @@ const OIDCBounder_: FC = ({ children }) => {
 				if (!isUncheckPath && currentRole && permissions.length && !hasRole) {
 					history.replace('/403');
 				} else {
-					if (window.location.pathname === '/' || window.location.pathname === '/user/login') redirectLocation();
+					if (window.location.pathname === '/user/login') redirectLocation();
 				}
 			} catch {
 				if (auth.isAuthenticated) auth.removeUser();
@@ -87,7 +87,9 @@ const OIDCBounder_: FC = ({ children }) => {
 
 		// Chưa login + chưa có auth params ==> Cần redirect keycloak để lấy auth params + cookie
 		if (!hasAuthParams() && !auth.isAuthenticated) {
-			auth.signinRedirect();
+			if (window.location.pathname !== '/') {
+				auth.signinRedirect();
+			}
 			return;
 		}
 

@@ -1,0 +1,343 @@
+@import '~antd/es/style/themes/default.less';
+
+.homeContainer {
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background-color: #f7f9fb;
+  color: #2a3439;
+}
+
+.homeHeader {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 50;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  padding: 0 24px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  .headerContent {
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2937;
+  }
+}
+
+.homeHero {
+  padding: 140px 24px 80px;
+  max-width: 1280px;
+  margin: 0 auto;
+
+  .heroTitle {
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+
+    .textGradient {
+      background: linear-gradient(135deg, #565e74 0%, #4a5268 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  .heroSubtitle {
+    font-size: 18px;
+    color: #566166;
+    margin-bottom: 32px;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  .heroImageWrapper {
+    position: relative;
+    border-radius: 16px;
+    box-shadow: 0px 12px 32px rgba(42, 52, 57, 0.06);
+    overflow: hidden;
+    border: 1px solid rgba(169, 180, 185, 0.15);
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  }
+}
+
+.featuresSection {
+  background-color: #f0f4f7;
+  padding: 96px 24px;
+
+  .featuresContainer {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .sectionTitle {
+    text-align: center;
+    margin-bottom: 64px;
+
+    h2 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: #566166;
+      font-size: 16px;
+    }
+  }
+
+  .featureCard {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0px 12px 32px rgba(42, 52, 57, 0.06);
+    border: 1px solid rgba(169, 180, 185, 0.15);
+    transition: transform 0.3s ease;
+    height: 100%;
+
+    &:hover {
+      transform: translateY(-4px);
+    }
+
+    .iconWrapper {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      
+      &.c1 { background: #d3e4fe; color: #435368; }
+      &.c2 { background: #e3dbfd; color: #524c68; }
+      &.c3 { background: #dae2fd; color: #4a5167; }
+      &.c4 { background: #d3e4fe; color: #314055; }
+    }
+
+    h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #2a3439;
+    }
+
+    p {
+      color: #566166;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  }
+}
+
+.howItWorksSection {
+  padding: 96px 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+
+  .sectionTitle {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 48px;
+  }
+
+  .stepItem {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 48px;
+
+    .stepNumber {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #565e74;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+
+    h4 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #2a3439;
+    }
+
+    p {
+      color: #566166;
+      line-height: 1.6;
+    }
+  }
+
+  .visualWrapper {
+    background: #e8eff3;
+    border-radius: 16px;
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 25px 25px rgba(0,0,0,0.15));
+    }
+  }
+}
+
+.useCasesSection {
+  background: #f7f9fb;
+  padding: 96px 24px;
+
+  .useCasesContainer {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .caseCard {
+    cursor: pointer;
+
+    .imgWrapper {
+      height: 256px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      background: #e1e9ee;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+    }
+
+    &:hover img {
+      transform: scale(1.1);
+    }
+
+    .caseHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+
+      h4 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #2a3439;
+      }
+    }
+
+    p {
+      color: #566166;
+      font-size: 14px;
+    }
+  }
+}
+
+.ctaSection {
+  padding: 96px 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+
+  .ctaBox {
+    background: linear-gradient(135deg, #565e74 0%, #4a5268 100%);
+    border-radius: 32px;
+    padding: 80px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+
+    h2 {
+      font-size: 40px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 18px;
+      margin-bottom: 32px;
+    }
+
+    .ctaButtons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+}
+
+.homeFooter {
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  padding: 48px 24px;
+
+  .footerContent {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 32px;
+    color: #64748b;
+
+    .brand {
+      font-weight: 700;
+      font-size: 18px;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .links {
+      display: flex;
+      gap: 32px;
+      
+      a {
+        color: inherit;
+        text-decoration: none;
+        &:hover {
+          color: #0f172a;
+        }
+      }
+    }
+  }
+}
+
+.material-icons-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}

@@ -83,18 +83,15 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 
 		onPageChange: () => {
 			if (initialState?.currentUser) {
-				const { location } = history;
 				const isUncheckPath = unCheckPermissionPaths.some((path) => window.location.pathname.includes(path));
-
-				if (location.pathname === '/') {
-					history.replace('/dashboard');
-				} else if (
+				if (
 					!isUncheckPath &&
 					currentRole &&
 					initialState?.authorizedPermissions?.length &&
 					!initialState?.authorizedPermissions?.find((item) => item.rsname === currentRole)
-				)
+				) {
 					history.replace('/403');
+				}
 			}
 		},
 
