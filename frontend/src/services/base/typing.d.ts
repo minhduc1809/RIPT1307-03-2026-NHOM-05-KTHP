@@ -34,7 +34,6 @@ declare module Login {
 
 	export type TModule = {
 		title: string;
-		clientId: string;
 		url?: string;
 		icon?: string;
 	};
