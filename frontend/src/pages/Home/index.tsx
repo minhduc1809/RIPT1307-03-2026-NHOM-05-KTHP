@@ -246,7 +246,7 @@ const Home: React.FC = () => {
           <div>
             <div className={styles.brand}>FlowState</div>
             <div>Giải pháp tối ưu hóa quy trình doanh nghiệp hiện đại.</div>
-            <div style={{ marginTop: '16px', fontSize: '14px' }}>© 2024 FlowState Systems. All rights reserved.</div>
+            <div style={{ marginTop: '16px', fontSize: '14px' }}>© 2025 FlowState Systems. All rights reserved.</div>
           </div>
           <div className={styles.links}>
             <a href="#">Privacy Policy</a>

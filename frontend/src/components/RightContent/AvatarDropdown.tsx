@@ -3,8 +3,7 @@ import { FileWordOutlined, GlobalOutlined, LogoutOutlined, UserOutlined } from '
 import { Avatar, Menu, Spin } from 'antd';
 import { type ItemType } from 'antd/lib/menu/hooks/useItems';
 import React from 'react';
-import { useModel } from 'umi';
-import { OIDCBounder } from '../OIDCBounder';
+import { useModel, history } from 'umi';
 import HeaderDropdown from './HeaderDropdown';
 import styles from './index.less';
 
@@ -15,7 +14,11 @@ export type GlobalHeaderRightProps = {
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 	const { initialState } = useModel('@@initialState');
 
-	const loginOut = () => OIDCBounder?.getActions()?.dangXuat();
+	const loginOut = () => {
+		localStorage.clear();
+		sessionStorage.clear();
+		history.replace('/user/login');
+	};
 
 	if (!initialState || !initialState.currentUser)
 		return (
