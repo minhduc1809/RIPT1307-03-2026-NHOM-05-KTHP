@@ -27,7 +27,9 @@ const Home: React.FC = () => {
         <div className={styles.headerContent}>
           <div className={styles.logo}>FlowForm</div>
           <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-            <Button type="text" style={{ fontWeight: 500 }}>
+            <Button type="text" style={{ fontWeight: 500 }} onClick={() => {
+              window.location.href = '/user/login';
+            }}>
               Log In
             </Button>
             <Button

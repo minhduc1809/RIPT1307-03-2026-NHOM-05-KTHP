@@ -7,8 +7,8 @@ export async function getUserInfo() {
 	return axios.get(`${ip3}/user/me`);
 }
 
-export async function adminlogin(payload: { username?: string; password?: string }) {
-	return axios.post(`${ip3}/auth/login`, { ...payload, platform: 'Web' });
+export async function adminlogin(payload: { email: string; password: string }) {
+	return axios.post(`${ip3}/auth/login`, payload);
 }
 
 export async function initOneSignal(payload: { playerId: string }) {

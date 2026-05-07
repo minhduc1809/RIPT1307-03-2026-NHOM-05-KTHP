@@ -12,12 +12,6 @@ export default [
 				component: './user/Login',
 			},
 			{
-				path: '/user/register',
-				layout: false,
-				name: 'register',
-				component: './user/Register',
-			},
-			{
 				path: '/user',
 				redirect: '/user/login',
 			},
