@@ -23,7 +23,6 @@ const GlobalHeaderRight: React.FC = () => {
 					<InfoCircleOutlined />
 				</a>
 			</Tooltip> */}
-			<p>hello</p>
 			<AvatarDropdown menu />
 		</div>
 	);
