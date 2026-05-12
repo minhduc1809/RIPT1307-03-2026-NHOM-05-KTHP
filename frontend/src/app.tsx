@@ -22,9 +22,22 @@ export const initialStateConfig = {
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
- * // Tobe removed
  * */
 export async function getInitialState(): Promise<IInitialState> {
+	const token = localStorage.getItem('token');
+	if (token) {
+		try {
+			const { getUserInfo } = await import('@/services/base/api');
+			const response = await getUserInfo();
+			return {
+				currentUser: response?.data?.data,
+				permissionLoading: false,
+			};
+		} catch (error) {
+			// Token invalid or expired, clear storage
+			localStorage.clear();
+		}
+	}
 	return {
 		permissionLoading: true,
 	};

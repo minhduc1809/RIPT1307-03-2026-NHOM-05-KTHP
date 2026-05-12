@@ -1,4 +1,4 @@
-import component from "@/locales/en-US/component";
+
 
 export default [
 	{
