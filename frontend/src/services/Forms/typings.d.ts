@@ -13,7 +13,7 @@ export interface IFormFieldRule {
 export interface IFormField {
 	key: string;
 	label: string;
-	type: 'text' | 'number' | 'date';
+	type: 'text' | 'number' | 'date' | 'select';
 	rules?: IFormFieldRule;
 }
 
