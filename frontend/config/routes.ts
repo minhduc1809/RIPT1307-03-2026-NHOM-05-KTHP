@@ -1,4 +1,4 @@
-import component from "@/locales/en-US/component";
+import component from '@/locales/en-US/component';
 
 export default [
 	{
@@ -10,12 +10,6 @@ export default [
 				layout: false,
 				name: 'login',
 				component: './user/Login',
-			},
-			{
-				path: '/user/register',
-				layout: false,
-				name: 'register',
-				component: './user/Register',
 			},
 			{
 				path: '/user',
