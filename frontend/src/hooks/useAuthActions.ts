@@ -1,4 +1,4 @@
-import { deleteOneSignal } from '@/services/base/api';
+import { deleteOneSignal, logoutApi } from '@/services/base/api';
 import { currentRole, oneSignalRole } from '@/utils/ip';
 import OneSignal from 'react-onesignal';
 import { useModel, history } from 'umi';
@@ -6,10 +6,20 @@ import { useModel, history } from 'umi';
 export const useAuthActions = () => {
 	const { initialState, setInitialState } = useModel('@@initialState');
 
-	const handleLogout = () => {
+	const handleLogout = async () => {
 		if (oneSignalRole.valueOf() === currentRole.valueOf()) {
 			OneSignal.getUserId((playerId) => deleteOneSignal({ playerId }));
 			OneSignal.setSubscription(false);
+		}
+
+		// Call logout API to revoke refresh token
+		try {
+			const refreshToken = localStorage.getItem('refreshToken');
+			if (refreshToken) {
+				await logoutApi(refreshToken);
+			}
+		} catch (error) {
+			console.error('Logout API error:', error);
 		}
 
 		sessionStorage.clear();

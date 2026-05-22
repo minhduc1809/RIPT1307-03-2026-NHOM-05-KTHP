@@ -3,6 +3,20 @@ import axios from 'axios';
 import { history } from 'umi';
 import data from './data';
 
+let isRefreshing = false;
+let failedQueue: Array<{ resolve: (value?: any) => void; reject: (reason?: any) => void }> = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
 function routeLogin(errorCode: string) {
 	// notification.warning({
 	//   message: 'Vui lòng đăng nhập lại',
@@ -34,7 +48,7 @@ axios.interceptors.response.use(
 	(response) =>
 		// Do something with response data
 		response,
-	(error) => {
+	async (error) => {
 		let er = error?.response?.data;
 		// Convert response data to JSON
 		if ((error?.response?.config?.responseType as string)?.toLowerCase() === 'arraybuffer') {
@@ -54,6 +68,52 @@ axios.interceptors.response.use(
 		const originalRequest = error.config;
 		let originData = originalRequest?.data;
 		if (typeof originData === 'string') originData = JSON.parse(originData);
+
+		// Handle 401 with token refresh
+		if (error?.response?.status === 401 && !originalRequest._retry) {
+			const refreshToken = localStorage.getItem('refreshToken');
+
+			// If no refresh token or this is the login/refresh request itself, redirect to login
+			if (!refreshToken || originalRequest.url?.includes('/auth/refresh') || originalRequest.url?.includes('/auth/login')) {
+				return routeLogin('Unauthorize');
+			}
+
+			if (isRefreshing) {
+				// Queue requests while refreshing
+				return new Promise((resolve, reject) => {
+					failedQueue.push({ resolve, reject });
+				}).then((token) => {
+					originalRequest.headers.Authorization = `Bearer ${token}`;
+					return axios(originalRequest);
+				}).catch((err) => Promise.reject(err));
+			}
+
+			originalRequest._retry = true;
+			isRefreshing = true;
+
+			try {
+				const { data: refreshData } = await axios.post(
+					originalRequest.url?.split('/auth/')[0] + '/auth/refresh',
+					{ refreshToken },
+					{ headers: {} } // Don't send expired token
+				);
+
+				const newAccessToken = refreshData.accessToken;
+				localStorage.setItem('token', newAccessToken);
+				processQueue(null, newAccessToken);
+
+				originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+				return axios(originalRequest);
+			} catch (refreshError) {
+				processQueue(refreshError, null);
+				localStorage.clear();
+				history.replace('/user/login');
+				return Promise.reject(refreshError);
+			} finally {
+				isRefreshing = false;
+			}
+		}
+
 		if (typeof originData !== 'object' || !Object.keys(originData ?? {}).includes('silent') || !originData?.silent)
 			switch (error?.response?.status) {
 				case 400:
@@ -64,14 +124,8 @@ axios.interceptors.response.use(
 					break;
 
 				case 401:
-					// Nếu có access token (có thể access token hết hạn) thì mới cảnh báo
-					if (originalRequest?.headers?.Authorization)
-						notification.error({
-							message: 'Phiên đăng nhập đã thay đổi (104)',
-							description: 'Vui lòng tải lại trang (F5) để cập nhật. Chú ý các dữ liệu chưa lưu sẽ bị mất!',
-						});
-					if (originalRequest._retry) break;
-					return routeLogin('Unauthorize');
+					// Handled above with refresh logic
+					break;
 
 				case 403:
 				case 405:

@@ -40,6 +40,7 @@ export default [
 				path: '/forms/builder',
 				name: 'Form Builder',
 				hideInMenu: true,
+				layout: false,
 				component: './Forms/Builder',
 			},
 			{
