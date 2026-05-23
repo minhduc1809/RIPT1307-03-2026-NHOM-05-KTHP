@@ -1,13 +1,15 @@
 import {
 	CameraOutlined,
+	CheckCircleOutlined,
 	DeleteOutlined,
 	EditOutlined,
 	KeyOutlined,
 	MailOutlined,
 	PlusOutlined,
+	StopOutlined,
 	UserOutlined
 } from '@ant-design/icons';
-import { Avatar, Button, Form, Input, message, Modal, Select, Table, Tooltip, Spin } from 'antd';
+import { Avatar, Button, Form, Input, message, Modal, Select, Switch, Table, Tooltip, Spin } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -137,6 +139,7 @@ const Profile: React.FC = () => {
 				firstName: user.firstName,
 				lastName: user.lastName,
 				role: user.role,
+				isActive: user.isActive,
 			});
 		} else {
 			setEditingUser(null);
@@ -154,6 +157,7 @@ const Profile: React.FC = () => {
 					firstName: values.firstName,
 					lastName: values.lastName,
 					role: values.role,
+					isActive: values.isActive,
 				});
 				message.success('Cập nhật người dùng thành công');
 			} else {
@@ -193,6 +197,17 @@ const Profile: React.FC = () => {
 				}
 			},
 		});
+	};
+
+	const handleToggleActive = async (user: IUser) => {
+		const newStatus = !user.isActive;
+		try {
+			await updateUser(user.id, { isActive: newStatus });
+			message.success(newStatus ? 'Đã kích hoạt tài khoản' : 'Đã khoá tài khoản');
+			fetchUsers();
+		} catch (error) {
+			message.error('Cập nhật trạng thái thất bại');
+		}
 	};
 
 	const handleOpenRoleModal = (user: IUser) => {
@@ -238,7 +253,7 @@ const Profile: React.FC = () => {
 			dataIndex: 'role',
 			key: 'role',
 			render: (role: string) => {
-				const roleClass = role === 'ADMIN' ? styles.admin : role === 'MANAGER' ? styles.manager : styles.user;
+				const roleClass = role === 'ADMIN' ? styles.admin : role === 'MANAGER' ? styles.manager : role === 'HR' ? styles.hr : styles.user;
 				return <span className={`${styles.roleTag} ${roleClass}`}>{role}</span>;
 			},
 		},
@@ -281,6 +296,13 @@ const Profile: React.FC = () => {
 						</button>
 					</Tooltip>
 					{record.id !== myProfile?.id && (
+						<Tooltip title={record.isActive ? 'Khoá tài khoản' : 'Kích hoạt'}>
+							<button className={`${styles.actionBtn} ${record.isActive ? styles.deactivateBtn : styles.activateBtn}`} onClick={() => handleToggleActive(record)}>
+								{record.isActive ? <StopOutlined /> : <CheckCircleOutlined />}
+							</button>
+						</Tooltip>
+					)}
+					{record.id !== myProfile?.id && (
 						<Tooltip title="Xóa">
 							<button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDeleteUser(record)}>
 								<DeleteOutlined />
@@ -312,7 +334,7 @@ const Profile: React.FC = () => {
 					</div>
 					<div className={styles.userSubtitle}>{myProfile?.email}</div>
 					<div className={styles.roleBadges}>
-						<span className={`${styles.roleBadge} ${myProfile?.role === 'ADMIN' ? styles.admin : myProfile?.role === 'MANAGER' ? styles.manager : styles.user}`}>
+						<span className={`${styles.roleBadge} ${myProfile?.role === 'ADMIN' ? styles.admin : myProfile?.role === 'MANAGER' ? styles.manager : myProfile?.role === 'HR' ? styles.hr : styles.user}`}>
 							{myProfile?.role}
 						</span>
 						<span className={`${styles.roleBadge} ${styles.activeBadge}`}>ACTIVE</span>
@@ -368,6 +390,7 @@ const Profile: React.FC = () => {
 								>
 									<Option value="ADMIN">Admin</Option>
 									<Option value="MANAGER">Manager</Option>
+									<Option value="HR">HR</Option>
 									<Option value="USER">User</Option>
 								</Select>
 							</div>
@@ -429,9 +452,15 @@ const Profile: React.FC = () => {
 						<Select>
 							<Option value="ADMIN">Admin</Option>
 							<Option value="MANAGER">Manager</Option>
+							<Option value="HR">HR</Option>
 							<Option value="USER">User</Option>
 						</Select>
 					</Form.Item>
+					{editingUser && (
+						<Form.Item name="isActive" label="Trạng thái" valuePropName="checked">
+							<Switch checkedChildren="Hoạt động" unCheckedChildren="Đã khoá" />
+						</Form.Item>
+					)}
 				</Form>
 			</Modal>
 
@@ -450,6 +479,7 @@ const Profile: React.FC = () => {
 						<Select>
 							<Option value="ADMIN">Admin</Option>
 							<Option value="MANAGER">Manager</Option>
+							<Option value="HR">HR</Option>
 							<Option value="USER">User</Option>
 						</Select>
 					</Form.Item>

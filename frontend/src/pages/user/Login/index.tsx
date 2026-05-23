@@ -125,7 +125,7 @@ const Login: React.FC = () => {
 						</Form>
 
 						<div className={styles.registerLink}>
-							Chưa có tài khoản? <Link to='/user/register'>Đăng ký ngay</Link>
+							Liên hệ quản trị viên để được cấp tài khoản
 						</div>
 					</div>
 				</div>

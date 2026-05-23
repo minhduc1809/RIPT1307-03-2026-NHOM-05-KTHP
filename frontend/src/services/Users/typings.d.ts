@@ -2,7 +2,7 @@ export interface IUser {
 	id: string;
 	email: string;
 	username: string;
-	role: 'ADMIN' | 'MANAGER' | 'USER';
+	role: 'ADMIN' | 'MANAGER' | 'HR' | 'USER';
 	firstName?: string | null;
 	lastName?: string | null;
 	picture?: string | null;
@@ -25,19 +25,20 @@ export interface ICreateUserRequest {
 	password: string;
 	firstName?: string;
 	lastName?: string;
-	role?: 'ADMIN' | 'MANAGER' | 'USER';
+	role?: 'ADMIN' | 'MANAGER' | 'HR' | 'USER';
 }
 
 export interface IUpdateUserRequest {
 	email?: string;
 	firstName?: string;
 	lastName?: string;
-	role?: 'ADMIN' | 'MANAGER' | 'USER';
+	role?: 'ADMIN' | 'MANAGER' | 'HR' | 'USER';
 	picture?: string;
+	isActive?: boolean;
 }
 
 export interface IAssignRoleRequest {
-	role: 'ADMIN' | 'MANAGER' | 'USER';
+	role: 'ADMIN' | 'MANAGER' | 'HR' | 'USER';
 }
 
 export interface IUserPageRequest {
