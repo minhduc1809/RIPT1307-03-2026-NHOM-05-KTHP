@@ -98,7 +98,7 @@ axios.interceptors.response.use(
 					{ headers: {} } // Don't send expired token
 				);
 
-				const newAccessToken = refreshData.accessToken;
+				const newAccessToken = refreshData.data.accessToken;
 				localStorage.setItem('token', newAccessToken);
 				processQueue(null, newAccessToken);
 

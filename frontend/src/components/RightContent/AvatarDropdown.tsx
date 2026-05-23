@@ -1,9 +1,9 @@
-import { landingUrl } from '@/services/base/constant';
-import { FileWordOutlined, GlobalOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { useAuthActions } from '@/hooks/useAuthActions';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import { type ItemType } from 'antd/lib/menu/hooks/useItems';
 import React from 'react';
-import { useModel, history } from 'umi';
+import { useModel } from 'umi';
 import HeaderDropdown from './HeaderDropdown';
 import styles from './index.less';
 
@@ -13,12 +13,7 @@ export type GlobalHeaderRightProps = {
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 	const { initialState } = useModel('@@initialState');
-
-	const loginOut = () => {
-		localStorage.clear();
-		sessionStorage.clear();
-		history.replace('/user/login');
-	};
+	const { dangXuat } = useAuthActions();
 
 	if (!initialState || !initialState.currentUser)
 		return (
@@ -27,9 +22,9 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 			</span>
 		);
 
-	const fullName = initialState.currentUser?.family_name
-		? `${initialState.currentUser.family_name} ${initialState.currentUser?.given_name ?? ''}`
-		: initialState.currentUser?.name ?? (initialState.currentUser?.preferred_username || '');
+	const fullName = initialState.currentUser?.lastName
+		? `${initialState.currentUser.lastName} ${initialState.currentUser?.firstName ?? ''}`.trim()
+		: initialState.currentUser?.username || '';
 	const lastNameChar = fullName.split(' ')?.at(-1)?.[0]?.toUpperCase();
 
 	const items: ItemType[] = [
@@ -53,12 +48,12 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 			key: 'logout',
 			icon: <LogoutOutlined />,
 			label: 'Đăng xuất',
-			onClick: loginOut,
+			onClick: dangXuat,
 			danger: true,
 		},
 	];
 
-	if (menu && !initialState.currentUser.realm_access?.roles?.includes('QUAN_TRI_VIEN')) {
+	if (menu && initialState.currentUser.role !== 'ADMIN') {
 		// items.splice(1, 0, {
 		//   key: 'center',
 		//   icon: <UserOutlined />,

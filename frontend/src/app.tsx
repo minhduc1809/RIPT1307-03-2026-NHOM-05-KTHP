@@ -91,10 +91,18 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 		footerRender: () => <Footer />,
 
 		onPageChange: () => {
+			const { location } = history;
+			const publicPaths = ['/user/login', '/user/register', '/notification/subscribe'];
+			const isPublicPath = publicPaths.some((path) => location.pathname.includes(path));
+
+			if (!initialState?.currentUser && !isPublicPath) {
+				history.replace('/user/login');
+				return;
+			}
+
 			if (initialState?.currentUser) {
-				const isUncheckPath = ['/notification/subscribe'].some((path) => window.location.pathname.includes(path));
 				if (
-					!isUncheckPath &&
+					!isPublicPath &&
 					currentRole &&
 					initialState?.authorizedPermissions?.length &&
 					!initialState?.authorizedPermissions?.find((item) => item.rsname === currentRole)

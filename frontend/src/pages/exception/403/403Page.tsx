@@ -1,4 +1,5 @@
 import Footer from '@/components/Footer';
+import { useAuthActions } from '@/hooks/useAuthActions';
 
 import { landingUrl } from '@/services/base/constant';
 import { currentRole } from '@/utils/ip';
@@ -9,17 +10,12 @@ import { history, useModel } from 'umi';
 
 const NotAccessible = () => {
 	const { initialState } = useModel('@@initialState');
+	const { dangXuat } = useAuthActions();
 
 	useEffect(() => {
 		if (currentRole && initialState?.authorizedPermissions?.find((item) => item.rsname === currentRole))
 			history.replace('/dashboard');
 	}, [initialState?.authorizedPermissions]);
-
-	const onLogout = (): void => {
-		localStorage.clear();
-		sessionStorage.clear();
-		history.replace('/user/login');
-	};
 
 	return (
 		<div
@@ -43,7 +39,7 @@ const NotAccessible = () => {
 						<Button type='primary' onClick={() => (window.location.href = landingUrl)} icon={<GlobalOutlined />}>
 							Tới trang Cổng thông tin
 						</Button>
-						<Button icon={<LogoutOutlined />} onClick={onLogout}>
+						<Button icon={<LogoutOutlined />} onClick={dangXuat}>
 							Đăng xuất
 						</Button>
 					</div>
