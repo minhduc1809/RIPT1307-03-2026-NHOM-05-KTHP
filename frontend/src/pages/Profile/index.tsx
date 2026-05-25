@@ -3,6 +3,7 @@ import {
 	DeleteOutlined,
 	EditOutlined,
 	KeyOutlined,
+	LoadingOutlined,
 	MailOutlined,
 	PlusOutlined,
 	UserOutlined
@@ -10,7 +11,7 @@ import {
 import { Avatar, Button, Form, Input, message, Modal, Select, Table, Tooltip, Spin } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useModel } from 'umi';
 import {
 	assignRole,
@@ -21,6 +22,7 @@ import {
 	updateMyProfile,
 	updateUser,
 } from '@/services/Users/userApi';
+import { uploadFileAvatar } from '@/services/Files/fileApi';
 import type { IUser } from '@/services/Users/typings';
 import styles from './index.less';
 
@@ -36,6 +38,8 @@ const Profile: React.FC = () => {
 	const [updatingProfile, setUpdatingProfile] = useState(false);
 	const [loadingProfile, setLoadingProfile] = useState(true);
 	const [myProfile, setMyProfile] = useState<IUser | null>(null);
+	const [uploadingAvatar, setUploadingAvatar] = useState(false);
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	// User Management State
 	const [users, setUsers] = useState<IUser[]>([]);
@@ -86,6 +90,7 @@ const Profile: React.FC = () => {
 			const res = await updateMyProfile({
 				firstName: values.firstName,
 				lastName: values.lastName,
+				picture: myProfile?.picture || undefined,
 			});
 			message.success('Cập nhật hồ sơ thành công');
 			const updatedProfile = (res as any)?.data?.data || (res as any)?.data;
@@ -96,6 +101,63 @@ const Profile: React.FC = () => {
 			message.error('Cập nhật hồ sơ thất bại');
 		} finally {
 			setUpdatingProfile(false);
+		}
+	};
+
+	// --- AVATAR UPLOAD LOGIC ---
+	const handleAvatarClick = () => {
+		fileInputRef.current?.click();
+	};
+
+	const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (!file) return;
+
+		// Validate file type
+		const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+		if (!allowedTypes.includes(file.type)) {
+			message.error('Chỉ chấp nhận file ảnh PNG, JPEG, JPG');
+			return;
+		}
+
+		// Validate file size (max 10MB)
+		if (file.size > 10 * 1024 * 1024) {
+			message.error('Kích thước file không được vượt quá 10MB');
+			return;
+		}
+
+		setUploadingAvatar(true);
+		try {
+			// Step 1: Upload file
+			const uploadRes = await uploadFileAvatar(file);
+			const pictureUrl = (uploadRes as any)?.data?.data?.url || (uploadRes as any)?.data?.url;
+
+			if (!pictureUrl) {
+				message.error('Upload ảnh thất bại');
+				return;
+			}
+
+			// Step 2: Update profile with new picture URL
+			const res = await updateMyProfile({
+				firstName: myProfile?.firstName || undefined,
+				lastName: myProfile?.lastName || undefined,
+				picture: pictureUrl,
+			});
+
+			const updatedProfile = (res as any)?.data?.data || (res as any)?.data;
+			setMyProfile(updatedProfile);
+			// Update global state so header avatar also updates
+			setInitialState((s: any) => ({ ...s, currentUser: { ...s.currentUser, ...updatedProfile } }));
+			message.success('Cập nhật ảnh đại diện thành công');
+		} catch (error) {
+			console.error('Avatar upload failed:', error);
+			message.error('Cập nhật ảnh đại diện thất bại');
+		} finally {
+			setUploadingAvatar(false);
+			// Reset file input so same file can be selected again
+			if (fileInputRef.current) {
+				fileInputRef.current.value = '';
+			}
 		}
 	};
 
@@ -303,9 +365,21 @@ const Profile: React.FC = () => {
 				<div className={styles.profileCard}>
 					<div className={styles.avatarWrapper}>
 						<Avatar className={styles.avatar} src={myProfile?.picture} icon={!myProfile?.picture && <UserOutlined />} />
-						<div className={styles.editAvatarBtn}>
+						{uploadingAvatar && (
+							<div className={styles.avatarOverlay}>
+								<LoadingOutlined style={{ fontSize: 24, color: '#fff' }} />
+							</div>
+						)}
+						<div className={styles.editAvatarBtn} onClick={handleAvatarClick}>
 							<CameraOutlined />
 						</div>
+						<input
+							type="file"
+							ref={fileInputRef}
+							style={{ display: 'none' }}
+							accept="image/png,image/jpeg,image/jpg"
+							onChange={handleAvatarChange}
+						/>
 					</div>
 					<div className={styles.userName}>
 						{myProfile?.firstName || myProfile?.lastName ? `${myProfile?.firstName || ''} ${myProfile?.lastName || ''}`.trim() : myProfile?.username}

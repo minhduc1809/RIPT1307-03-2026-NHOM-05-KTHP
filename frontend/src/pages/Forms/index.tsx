@@ -129,10 +129,6 @@ const FormsDashboard: React.FC = () => {
 		history.push(`/forms/builder?id=${record.id}`);
 	};
 
-	const handleView = (record: IForm) => {
-		history.push(`/forms/${record.id}`);
-	};
-
 	const getFieldCount = (form: IForm): number => {
 		return form.schema?.fields?.length ?? 0;
 	};
@@ -194,11 +190,6 @@ const FormsDashboard: React.FC = () => {
 				align: 'right' as const,
 				render: (_: any, record: IForm) => (
 					<div className={styles.actionBtns}>
-						<Tooltip title='Xem chi tiết'>
-							<button className={`${styles.actionBtn} ${styles.viewBtn}`} onClick={(e) => { e.stopPropagation(); handleView(record); }}>
-								<EyeOutlined style={{ fontSize: 16 }} />
-							</button>
-						</Tooltip>
 						<Tooltip title='Chỉnh sửa'>
 							<button className={`${styles.actionBtn} ${styles.editBtn}`} onClick={(e) => { e.stopPropagation(); handleEdit(record); }}>
 								<EditOutlined style={{ fontSize: 16 }} />
@@ -316,7 +307,7 @@ const FormsDashboard: React.FC = () => {
 					}
 					onRow={(record) => ({
 						style: { cursor: 'pointer' },
-						onClick: () => handleView(record),
+						onClick: () => handleEdit(record),
 					})}
 				/>
 			</div>

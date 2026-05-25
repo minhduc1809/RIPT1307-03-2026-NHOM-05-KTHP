@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { history } from 'umi';
+import React, { useEffect, useState } from 'react';
+import { history, useLocation } from 'umi';
 import { message } from 'antd';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import {
@@ -20,7 +20,7 @@ import {
 	UserOutlined,
 	SelectOutlined,
 } from '@ant-design/icons';
-import { createForm } from '@/services/Forms/formApi';
+import { createForm, getFormById, updateForm } from '@/services/Forms/formApi';
 import styles from './index.less';
 
 interface IBuilderField {
@@ -58,6 +58,10 @@ const THEME_PRESETS = [
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
 const FormBuilder: React.FC = () => {
+	const location = useLocation();
+	const queryParams = new URLSearchParams(location.search);
+	const editId = queryParams.get('id');
+
 	const [formName, setFormName] = useState('Đăng ký thông tin mới');
 	const [formDescription, setFormDescription] = useState('Vui lòng điền đầy đủ các thông tin bên dưới để tiếp tục.');
 	const [fields, setFields] = useState<IBuilderField[]>([]);
@@ -66,6 +70,48 @@ const FormBuilder: React.FC = () => {
 	const [activeTab, setActiveTab] = useState<'components' | 'themes'>('components');
 	const [themePreset, setThemePreset] = useState<'default' | 'dark' | 'mint' | 'sunset' | 'violet'>('default');
 	const [isSaving, setIsSaving] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [originalFormId, setOriginalFormId] = useState<string | undefined>(undefined);
+
+	// Load existing form data when editing
+	useEffect(() => {
+		if (!editId) return;
+		setIsLoading(true);
+		getFormById(editId)
+			.then((response) => {
+				const form = (response as any)?.data?.data ?? (response as any)?.data;
+				if (form) {
+					setFormName(form.name || '');
+					setFormDescription(form.description || '');
+					setOriginalFormId(form.schema?.formId);
+
+					// Map schema fields to builder fields
+					if (form.schema?.fields && Array.isArray(form.schema.fields)) {
+						const builderFields: IBuilderField[] = form.schema.fields.map((f: any) => ({
+							id: generateId(),
+							type: f.type || 'text',
+							key: f.key || '',
+							label: f.label || '',
+							placeholder: f.type === 'select' ? 'Chọn một tùy chọn' : 'Nhập giá trị...',
+							required: f.rules?.required ?? false,
+							options: f.type === 'select' ? f.rules?.allowedTypes || [] : undefined,
+							minLength: f.rules?.minLength,
+							maxLength: f.rules?.maxLength,
+							regex: f.rules?.regex,
+							min: f.rules?.min,
+							max: f.rules?.max,
+							afterField: f.rules?.afterField,
+						}));
+						setFields(builderFields);
+					}
+				}
+			})
+			.catch((error) => {
+				console.error('Failed to load form:', error);
+				message.error('Không thể tải biểu mẫu');
+			})
+			.finally(() => setIsLoading(false));
+	}, [editId]);
 
 	const selectedField = fields.find((f) => f.id === selectedFieldId);
 
@@ -89,7 +135,7 @@ const FormBuilder: React.FC = () => {
 		if (source.droppableId === 'toolbox' && destination.droppableId === 'canvas') {
 			const fieldTypeTemplate = FIELD_TYPES[source.index];
 			const newFieldId = generateId();
-			
+
 			const newField: IBuilderField = {
 				id: newFieldId,
 				type: fieldTypeTemplate.type,
@@ -146,22 +192,22 @@ const FormBuilder: React.FC = () => {
 			const schemaFields = fields.map((f) => {
 				const fieldRule: any = {};
 				if (f.required) fieldRule.required = true;
-				
+
 				if (f.type === 'text') {
 					if (f.minLength !== undefined) fieldRule.minLength = f.minLength;
 					if (f.maxLength !== undefined) fieldRule.maxLength = f.maxLength;
 					if (f.regex) fieldRule.regex = f.regex;
 				}
-				
+
 				if (f.type === 'number') {
 					if (f.min !== undefined) fieldRule.min = f.min;
 					if (f.max !== undefined) fieldRule.max = f.max;
 				}
-				
+
 				if (f.type === 'date') {
 					if (f.afterField) fieldRule.afterField = f.afterField;
 				}
-				
+
 				if (f.type === 'select' && f.options) {
 					fieldRule.allowedTypes = f.options;
 				}
@@ -174,20 +220,27 @@ const FormBuilder: React.FC = () => {
 				};
 			});
 
-			await createForm({
+			const formData = {
 				name: formName,
 				description: formDescription,
 				schema: {
-					formId: `form_${generateId()}`,
+					formId: originalFormId || `form_${generateId()}`,
 					fields: schemaFields as any,
 				},
-				settings: { allowAnonymous: false }
-			});
+				settings: { allowAnonymous: false },
+			};
 
-			message.success('Tạo biểu mẫu thành công!');
+			if (editId) {
+				await updateForm(editId, formData);
+				message.success('Cập nhật biểu mẫu thành công!');
+			} else {
+				await createForm(formData);
+				message.success('Tạo biểu mẫu thành công!');
+			}
+
 			history.push('/forms');
 		} catch (error) {
-			message.error('Lưu biểu mẫu thất bại');
+			message.error(editId ? 'Cập nhật biểu mẫu thất bại' : 'Lưu biểu mẫu thất bại');
 			console.error(error);
 		} finally {
 			setIsSaving(false);
@@ -200,11 +253,7 @@ const FormBuilder: React.FC = () => {
 			case 'text':
 			case 'number':
 			case 'date':
-				return (
-					<div className={styles.fieldInputPreview}>
-						{field.placeholder || '...'}
-					</div>
-				);
+				return <div className={styles.fieldInputPreview}>{field.placeholder || '...'}</div>;
 			case 'select':
 				const isOpen = openDropdownId === field.id;
 				return (
@@ -246,15 +295,15 @@ const FormBuilder: React.FC = () => {
 			{/* Top Header */}
 			<header className={styles.header}>
 				<div className={styles.headerLeft}>
-					<span className={styles.logo}>Blueprint Builder</span>
+					<span className={styles.logo}>{editId ? 'Chỉnh sửa biểu mẫu' : 'Form Builder'}</span>
 				</div>
 				<div className={styles.headerRight}>
 					<div className={styles.actions}>
 						<button className={styles.btnBack} onClick={() => history.push('/forms')}>
 							Quay lại
 						</button>
-						<button className={styles.btnSave} onClick={handleSave} disabled={isSaving}>
-							{isSaving ? 'Đang lưu...' : 'Lưu'}
+						<button className={styles.btnSave} onClick={handleSave} disabled={isSaving || isLoading}>
+							{isSaving ? 'Đang lưu...' : editId ? 'Cập nhật' : 'Lưu'}
 						</button>
 					</div>
 					<div className={styles.icons}>
@@ -294,13 +343,9 @@ const FormBuilder: React.FC = () => {
 						{activeTab === 'components' ? (
 							<div className={styles.fieldTypes}>
 								<h3>Loại trường</h3>
-								<Droppable droppableId="toolbox" isDropDisabled={true}>
+								<Droppable droppableId='toolbox' isDropDisabled={true}>
 									{(provided) => (
-										<div
-											className={styles.fieldGrid}
-											ref={provided.innerRef}
-											{...provided.droppableProps}
-										>
+										<div className={styles.fieldGrid} ref={provided.innerRef} {...provided.droppableProps}>
 											{FIELD_TYPES.map((type, index) => (
 												<Draggable key={type.type} draggableId={type.type} index={index}>
 													{(dragProvided) => (
@@ -311,9 +356,7 @@ const FormBuilder: React.FC = () => {
 															{...dragProvided.dragHandleProps}
 														>
 															<div className={styles.fieldCard}>
-																<div className={`${styles.iconWrapper} ${styles[type.type]}`}>
-																	{type.icon}
-																</div>
+																<div className={`${styles.iconWrapper} ${styles[type.type]}`}>{type.icon}</div>
 																<span className={styles.fieldLabel}>{type.label}</span>
 															</div>
 														</div>
@@ -335,7 +378,10 @@ const FormBuilder: React.FC = () => {
 											className={`${styles.presetCard} ${themePreset === preset.id ? styles.activePreset : ''}`}
 											onClick={() => setThemePreset(preset.id)}
 										>
-											<div className={styles.colorPreview} style={{ background: preset.color === '#f7f9fb' ? '#e2e8f0' : preset.color }} />
+											<div
+												className={styles.colorPreview}
+												style={{ background: preset.color === '#f7f9fb' ? '#e2e8f0' : preset.color }}
+											/>
 											<span>{preset.label}</span>
 										</div>
 									))}
@@ -345,32 +391,31 @@ const FormBuilder: React.FC = () => {
 					</aside>
 
 					{/* Middle Canvas (Droppable) */}
-					<section className={`${styles.canvasArea} ${styles[`theme_${themePreset}`]}`} onClick={() => setSelectedFieldId(null)}>
+					<section
+						className={`${styles.canvasArea} ${styles[`theme_${themePreset}`]}`}
+						onClick={() => setSelectedFieldId(null)}
+					>
 						<div className={styles.canvasContainer} onClick={(e) => e.stopPropagation()}>
 							<div className={styles.formHeader}>
 								<input
-									type="text"
+									type='text'
 									className={styles.formTitleInput}
 									value={formName}
 									onChange={(e) => setFormName(e.target.value)}
-									placeholder="Tên biểu mẫu"
+									placeholder='Tên biểu mẫu'
 								/>
 								<textarea
 									className={styles.formDescInput}
 									value={formDescription}
 									onChange={(e) => setFormDescription(e.target.value)}
-									placeholder="Mô tả biểu mẫu..."
+									placeholder='Mô tả biểu mẫu...'
 									rows={2}
 								/>
 							</div>
 
-							<Droppable droppableId="canvas">
+							<Droppable droppableId='canvas'>
 								{(provided, snapshot) => (
-									<div
-										className={styles.dropZone}
-										ref={provided.innerRef}
-										{...provided.droppableProps}
-									>
+									<div className={styles.dropZone} ref={provided.innerRef} {...provided.droppableProps}>
 										{fields.map((field, index) => (
 											<Draggable key={field.id} draggableId={field.id} index={index}>
 												{(dragProvided) => (
@@ -378,25 +423,17 @@ const FormBuilder: React.FC = () => {
 														ref={dragProvided.innerRef}
 														{...dragProvided.draggableProps}
 														{...dragProvided.dragHandleProps}
-														className={`${styles.formFieldItem} ${
-															selectedFieldId === field.id ? styles.active : ''
-														}`}
+														className={`${styles.formFieldItem} ${selectedFieldId === field.id ? styles.active : ''}`}
 														onClick={(e) => {
 															e.stopPropagation();
 															setSelectedFieldId(field.id);
 														}}
 													>
 														<div className={styles.fieldActions}>
-															<button
-																className={styles.btnCopy}
-																onClick={(e) => handleCopyField(field, index, e)}
-															>
+															<button className={styles.btnCopy} onClick={(e) => handleCopyField(field, index, e)}>
 																<CopyOutlined />
 															</button>
-															<button
-																className={styles.btnDelete}
-																onClick={(e) => handleDeleteField(field.id, e)}
-															>
+															<button className={styles.btnDelete} onClick={(e) => handleDeleteField(field.id, e)}>
 																<DeleteOutlined />
 															</button>
 														</div>
@@ -439,7 +476,7 @@ const FormBuilder: React.FC = () => {
 									<div className={styles.propGroup}>
 										<label>Mã trường (Key)</label>
 										<input
-											type="text"
+											type='text'
 											className={styles.propInput}
 											value={selectedField.key}
 											onChange={(e) => updateFieldProp(selectedField.id, 'key', e.target.value)}
@@ -448,7 +485,7 @@ const FormBuilder: React.FC = () => {
 									<div className={styles.propGroup}>
 										<label>Nhãn hiển thị</label>
 										<input
-											type="text"
+											type='text'
 											className={styles.propInput}
 											value={selectedField.label}
 											onChange={(e) => updateFieldProp(selectedField.id, 'label', e.target.value)}
@@ -457,7 +494,7 @@ const FormBuilder: React.FC = () => {
 									<div className={styles.propGroup}>
 										<label>Gợi ý (Placeholder)</label>
 										<input
-											type="text"
+											type='text'
 											className={styles.propInput}
 											value={selectedField.placeholder || ''}
 											onChange={(e) => updateFieldProp(selectedField.id, 'placeholder', e.target.value)}
@@ -471,7 +508,7 @@ const FormBuilder: React.FC = () => {
 										</div>
 										<label className={styles.toggleWrapper}>
 											<input
-												type="checkbox"
+												type='checkbox'
 												checked={selectedField.required}
 												onChange={(e) => updateFieldProp(selectedField.id, 'required', e.target.checked)}
 											/>
@@ -485,28 +522,40 @@ const FormBuilder: React.FC = () => {
 											<div className={styles.propGroup}>
 												<label>Độ dài tối thiểu (minLength)</label>
 												<input
-													type="number"
+													type='number'
 													className={styles.propInput}
 													value={selectedField.minLength ?? ''}
-													onChange={(e) => updateFieldProp(selectedField.id, 'minLength', e.target.value ? Number(e.target.value) : undefined)}
+													onChange={(e) =>
+														updateFieldProp(
+															selectedField.id,
+															'minLength',
+															e.target.value ? Number(e.target.value) : undefined,
+														)
+													}
 												/>
 											</div>
 											<div className={styles.propGroup}>
 												<label>Độ dài tối đa (maxLength)</label>
 												<input
-													type="number"
+													type='number'
 													className={styles.propInput}
 													value={selectedField.maxLength ?? ''}
-													onChange={(e) => updateFieldProp(selectedField.id, 'maxLength', e.target.value ? Number(e.target.value) : undefined)}
+													onChange={(e) =>
+														updateFieldProp(
+															selectedField.id,
+															'maxLength',
+															e.target.value ? Number(e.target.value) : undefined,
+														)
+													}
 												/>
 											</div>
 											<div className={styles.propGroup}>
 												<label>Biểu thức Regex (regex)</label>
 												<input
-													type="text"
+													type='text'
 													className={styles.propInput}
 													value={selectedField.regex || ''}
-													placeholder="VD: ^[\w-\.]+@..."
+													placeholder='VD: ^[\w-\.]+@...'
 													onChange={(e) => updateFieldProp(selectedField.id, 'regex', e.target.value)}
 												/>
 											</div>
@@ -518,19 +567,31 @@ const FormBuilder: React.FC = () => {
 											<div className={styles.propGroup}>
 												<label>Giá trị nhỏ nhất (min)</label>
 												<input
-													type="number"
+													type='number'
 													className={styles.propInput}
 													value={selectedField.min ?? ''}
-													onChange={(e) => updateFieldProp(selectedField.id, 'min', e.target.value ? Number(e.target.value) : undefined)}
+													onChange={(e) =>
+														updateFieldProp(
+															selectedField.id,
+															'min',
+															e.target.value ? Number(e.target.value) : undefined,
+														)
+													}
 												/>
 											</div>
 											<div className={styles.propGroup}>
 												<label>Giá trị lớn nhất (max)</label>
 												<input
-													type="number"
+													type='number'
 													className={styles.propInput}
 													value={selectedField.max ?? ''}
-													onChange={(e) => updateFieldProp(selectedField.id, 'max', e.target.value ? Number(e.target.value) : undefined)}
+													onChange={(e) =>
+														updateFieldProp(
+															selectedField.id,
+															'max',
+															e.target.value ? Number(e.target.value) : undefined,
+														)
+													}
 												/>
 											</div>
 										</>
@@ -544,10 +605,14 @@ const FormBuilder: React.FC = () => {
 												value={selectedField.afterField || ''}
 												onChange={(e) => updateFieldProp(selectedField.id, 'afterField', e.target.value)}
 											>
-												<option value="">-- Không có --</option>
-												{fields.filter(f => f.type === 'date' && f.id !== selectedField.id).map(f => (
-													<option key={f.key} value={f.key}>{f.label} ({f.key})</option>
-												))}
+												<option value=''>-- Không có --</option>
+												{fields
+													.filter((f) => f.type === 'date' && f.id !== selectedField.id)
+													.map((f) => (
+														<option key={f.key} value={f.key}>
+															{f.label} ({f.key})
+														</option>
+													))}
 											</select>
 										</div>
 									)}
@@ -559,7 +624,7 @@ const FormBuilder: React.FC = () => {
 												{selectedField.options?.map((opt, optIdx) => (
 													<div key={optIdx} className={styles.optionItem}>
 														<input
-															type="text"
+															type='text'
 															value={opt}
 															onChange={(e) => {
 																const newOpts = [...(selectedField.options || [])];
@@ -582,7 +647,10 @@ const FormBuilder: React.FC = () => {
 											<button
 												className={styles.btnAddOption}
 												onClick={() => {
-													const newOpts = [...(selectedField.options || []), `Lựa chọn ${(selectedField.options?.length || 0) + 1}`];
+													const newOpts = [
+														...(selectedField.options || []),
+														`Lựa chọn ${(selectedField.options?.length || 0) + 1}`,
+													];
 													updateFieldProp(selectedField.id, 'options', newOpts);
 												}}
 											>

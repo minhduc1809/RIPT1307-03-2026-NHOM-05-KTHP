@@ -43,6 +43,20 @@
 				}
 			}
 
+			.avatarOverlay {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 120px;
+				height: 120px;
+				border-radius: 50%;
+				background: rgba(0, 0, 0, 0.45);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 2;
+			}
+
 			.editAvatarBtn {
 				position: absolute;
 				bottom: 4px;
@@ -59,9 +73,11 @@
 				transition: all 0.2s;
 				color: #fff;
 				font-size: 14px;
+				z-index: 3;
 
 				&:hover {
 					transform: scale(1.1);
+					background: linear-gradient(135deg, #6b7490 0%, #5d6580 100%);
 				}
 			}
 		}
