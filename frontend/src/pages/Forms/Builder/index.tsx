@@ -19,6 +19,8 @@ import {
 	QuestionCircleOutlined,
 	UserOutlined,
 	SelectOutlined,
+	LockOutlined,
+	GlobalOutlined,
 } from '@ant-design/icons';
 import { createForm, getFormById, updateForm } from '@/services/Forms/formApi';
 import styles from './index.less';
@@ -67,8 +69,9 @@ const FormBuilder: React.FC = () => {
 	const [fields, setFields] = useState<IBuilderField[]>([]);
 	const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
 	const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-	const [activeTab, setActiveTab] = useState<'components' | 'themes'>('components');
+	const [activeTab, setActiveTab] = useState<'components' | 'themes' | 'settings'>('components');
 	const [themePreset, setThemePreset] = useState<'default' | 'dark' | 'mint' | 'sunset' | 'violet'>('default');
+	const [allowAnonymous, setAllowAnonymous] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [originalFormId, setOriginalFormId] = useState<string | undefined>(undefined);
@@ -84,6 +87,14 @@ const FormBuilder: React.FC = () => {
 					setFormName(form.name || '');
 					setFormDescription(form.description || '');
 					setOriginalFormId(form.schema?.formId);
+
+					// Load settings
+					if (form.settings) {
+						setAllowAnonymous(form.settings.allowAnonymous ?? false);
+						if (form.settings.theme && ['default', 'dark', 'mint', 'sunset', 'violet'].includes(form.settings.theme)) {
+							setThemePreset(form.settings.theme);
+						}
+					}
 
 					// Map schema fields to builder fields
 					if (form.schema?.fields && Array.isArray(form.schema.fields)) {
@@ -227,7 +238,7 @@ const FormBuilder: React.FC = () => {
 					formId: originalFormId || `form_${generateId()}`,
 					fields: schemaFields as any,
 				},
-				settings: { allowAnonymous: false },
+				settings: { allowAnonymous, theme: themePreset },
 			};
 
 			if (editId) {
@@ -338,6 +349,13 @@ const FormBuilder: React.FC = () => {
 								<BgColorsOutlined />
 								<span>Themes</span>
 							</button>
+							<button
+								className={`${styles.tabItem} ${activeTab === 'settings' ? styles.active : ''}`}
+								onClick={() => setActiveTab('settings')}
+							>
+								<SettingOutlined />
+								<span>Settings</span>
+							</button>
 						</div>
 
 						{activeTab === 'components' ? (
@@ -368,7 +386,7 @@ const FormBuilder: React.FC = () => {
 									)}
 								</Droppable>
 							</div>
-						) : (
+						) : activeTab === 'themes' ? (
 							<div className={styles.themePresetsList}>
 								<h3>Giao diện nền</h3>
 								<div className={styles.presetGrid}>
@@ -385,6 +403,34 @@ const FormBuilder: React.FC = () => {
 											<span>{preset.label}</span>
 										</div>
 									))}
+								</div>
+							</div>
+						) : (
+							<div className={styles.settingsPanel}>
+								<h3>Cài đặt biểu mẫu</h3>
+								<div className={styles.settingItem}>
+									<div className={styles.settingInfo}>
+										<div className={styles.settingIcon}>
+											{allowAnonymous ? <GlobalOutlined /> : <LockOutlined />}
+										</div>
+										<div className={styles.settingText}>
+											<span className={styles.settingLabel}>Cho phép gửi ẩn danh</span>
+											<p className={styles.settingDesc}>Người dùng không cần đăng nhập để gửi biểu mẫu này</p>
+										</div>
+									</div>
+									<label className={styles.settingToggle}>
+										<input
+											type='checkbox'
+											checked={allowAnonymous}
+											onChange={(e) => setAllowAnonymous(e.target.checked)}
+										/>
+										<div className={`${styles.toggleTrack} ${allowAnonymous ? styles.checked : ''}`} />
+										<div className={`${styles.toggleThumb} ${allowAnonymous ? styles.checked : ''}`} />
+									</label>
+								</div>
+								<div className={styles.settingStatus}>
+									<span className={`${styles.statusDot} ${allowAnonymous ? styles.on : styles.off}`} />
+									{allowAnonymous ? 'Ẩn danh: Bật' : 'Ẩn danh: Tắt'}
 								</div>
 							</div>
 						)}

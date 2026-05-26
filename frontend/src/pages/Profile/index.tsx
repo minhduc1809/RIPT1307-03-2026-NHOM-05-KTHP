@@ -232,7 +232,11 @@ const Profile: React.FC = () => {
 			setIsUserModalVisible(false);
 			fetchUsers();
 		} catch (error: any) {
-			message.error(error?.response?.data?.message?.[0] || 'Có lỗi xảy ra');
+			const errorMsg = error?.response?.data?.message;
+			const displayMsg = Array.isArray(errorMsg) 
+				? errorMsg.join(', ')
+				: (typeof errorMsg === 'string' ? errorMsg : 'Có lỗi xảy ra');
+			message.error(displayMsg);
 		} finally {
 			setSubmittingUser(false);
 		}
