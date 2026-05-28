@@ -12,9 +12,6 @@
 - [6. Chi tiết người dùng (Get One)](#6-chi-tiết-người-dùng-get-one)
 - [7. Cập nhật người dùng (Update)](#7-cập-nhật-người-dùng-update)
 - [8. Xóa người dùng (Delete)](#8-xóa-người-dùng-delete)
-- [9. Gán vai trò (Assign Role)](#9-gán-vai-trò-assign-role)
-- [10. Danh sách vai trò (List Roles)](#10-danh-sách-vai-trò-list-roles)
-- [11. Danh sách quyền (List Permissions)](#11-danh-sách-quyền-list-permissions)
 
 ---
 
@@ -376,92 +373,6 @@ Xóa mềm người dùng (đánh dấu `deletedAt`).
 | ------ | ----------------- | ----------------------------------- |
 | `404`  | `user.NOT_FOUND`  | Không tìm thấy user hoặc đã bị xóa |
 
----
-
-## 9. Gán vai trò (Assign Role)
-
-Gán vai trò mới cho người dùng.
-
-| Thuộc tính   | Giá trị                         |
-| ------------ | -------------------------------- |
-| **Endpoint** | `PUT /users/:id/roles`           |
-| **Auth**     | ✅ Bearer Token (Authorization)  |
-| **Roles**    | `ADMIN`                          |
-| **Status**   | `200 OK`                         |
-
-### Request Body
-
-```json
-{
-  "role": "MANAGER"
-}
-```
-
-| Trường | Kiểu   | Bắt buộc | Validation                 |
-| ------ | ------ | --------- | -------------------------- |
-| `role` | `enum` | ✅        | `ADMIN`, `MANAGER`, `USER` |
-
-### Response (200 OK)
-
-```json
-{
-  "id": "cmp12xsmx00008pqv88263uth",
-  "email": "admin@example.com",
-  "username": "admin",
-  "role": "MANAGER",
-  "firstName": "Admin",
-  "lastName": "User",
-  "isActive": true,
-  "createdAt": "2026-05-12T08:00:00.000Z"
-}
-```
-
-### Lỗi
-
-| Status | Mã lỗi           | Mô tả                              |
-| ------ | ----------------- | ----------------------------------- |
-| `404`  | `user.NOT_FOUND`  | Không tìm thấy user hoặc đã bị xóa |
-
----
-
-## 10. Danh sách vai trò (List Roles)
-
-Lấy danh sách tất cả vai trò trong hệ thống.
-
-| Thuộc tính   | Giá trị                         |
-| ------------ | -------------------------------- |
-| **Endpoint** | `GET /roles`                     |
-| **Auth**     | ✅ Bearer Token (Authorization)  |
-| **Roles**    | `ADMIN`                          |
-| **Status**   | `200 OK`                         |
-
-### Response (200 OK)
-
-```json
-["ADMIN", "MANAGER", "USER"]
-```
-
----
-
-## 11. Danh sách quyền (List Permissions)
-
-Lấy danh sách tất cả quyền trong hệ thống.
-
-| Thuộc tính   | Giá trị                         |
-| ------------ | -------------------------------- |
-| **Endpoint** | `GET /permissions`               |
-| **Auth**     | ✅ Bearer Token (Authorization)  |
-| **Roles**    | `ADMIN`                          |
-| **Status**   | `200 OK`                         |
-
-### Response (200 OK)
-
-```json
-["roles.read", "roles.write", "users.role.assign"]
-```
-
----
-
 ## Data Model
 
 ```
@@ -507,9 +418,6 @@ Lấy danh sách tất cả quyền trong hệ thống.
 | `GET /users/:id`      | ✅    | ✅      | ❌   |
 | `PATCH /users/:id`    | ✅    | ❌      | ❌   |
 | `DELETE /users/:id`   | ✅    | ❌      | ❌   |
-| `PUT /users/:id/roles`| ✅    | ❌      | ❌   |
-| `GET /roles`          | ✅    | ❌      | ❌   |
-| `GET /permissions`    | ✅    | ❌      | ❌   |
 
 ---
 

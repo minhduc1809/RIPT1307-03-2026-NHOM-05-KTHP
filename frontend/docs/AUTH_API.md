@@ -11,7 +11,6 @@
 - [5. Đăng nhập qua Keycloak](#5-đăng-nhập-qua-keycloak)
 - [6. Đăng xuất Keycloak](#6-đăng-xuất-keycloak)
 - [7. Lấy thông tin người dùng hiện tại (Me)](#7-lấy-thông-tin-người-dùng-hiện-tại-me)
-Tạo người dùng mới. Mật khẩu được hash bằng bcrypt (10 rounds) trước khi lưu.
 
 ---
 
