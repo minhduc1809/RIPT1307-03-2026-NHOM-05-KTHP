@@ -74,6 +74,18 @@ export default [
 				hideInMenu: true,
 				component: './Workflows/Builder',
 			},
+			{
+				path: '/workflows/:id/edit',
+				name: 'Workflow Edit',
+				hideInMenu: true,
+				component: './Workflows/WorkflowEdit',
+			},
+			{
+				path: '/workflows/:id',
+				name: 'Workflow Detail',
+				hideInMenu: true,
+				component: './Workflows/WorkflowDetail',
+			},
 		],
 	},
 	{

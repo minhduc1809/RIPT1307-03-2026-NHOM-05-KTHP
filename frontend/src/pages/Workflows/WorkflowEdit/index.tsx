@@ -7,19 +7,27 @@ import {
 	PlusOutlined,
 	SaveOutlined,
 } from '@ant-design/icons';
-import { AutoComplete, Button, Checkbox, Input, message, Modal, Select } from 'antd';
+import { AutoComplete, Button, Checkbox, Input, message, Modal, Select, Spin } from 'antd';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { history } from 'umi';
 import { getActiveForms } from '@/services/Forms/formApi';
 import type { IForm } from '@/services/Forms/typings';
-import { createWorkflowDefinition } from '@/services/Workflows/workflowApi';
+import {
+	getWorkflowDefinitionById,
+	updateWorkflowDefinition,
+} from '@/services/Workflows/workflowApi';
 import type { IWorkflowConfig, IWorkflowTransition } from '@/services/Workflows/typings';
 import styles from './index.less';
 
 const SUGGESTED_ACTIONS = ['approve', 'reject', 'cancel', 'return_for_edit', 'resubmit'];
 const ALL_ROLES = ['ADMIN', 'MANAGER', 'USER'];
 
-const WorkflowBuilder: React.FC = () => {
+const WorkflowEdit: React.FC = (props: any) => {
+	const workflowId = props?.match?.params?.id;
+
+	// ---- Loading ----
+	const [loadingData, setLoadingData] = useState(true);
+
 	// ---- Basic Info ----
 	const [workflowName, setWorkflowName] = useState('');
 	const [selectedFormId, setSelectedFormId] = useState<string | undefined>(undefined);
@@ -43,6 +51,34 @@ const WorkflowBuilder: React.FC = () => {
 
 	// ---- Saving ----
 	const [saving, setSaving] = useState(false);
+
+	// ---- Load existing workflow ----
+	useEffect(() => {
+		const loadWorkflow = async () => {
+			if (!workflowId) return;
+			setLoadingData(true);
+			try {
+				const response = await getWorkflowDefinitionById(workflowId);
+				const data = (response as any)?.data?.data ?? (response as any)?.data;
+				if (data) {
+					setWorkflowName(data.name || '');
+					setSelectedFormId(data.formId || undefined);
+					if (data.config) {
+						setStates(data.config.states || []);
+						setInitialState(data.config.initialState || undefined);
+						setFinalStates(data.config.finalStates || []);
+						setTransitions(data.config.transitions || []);
+					}
+				}
+			} catch (error) {
+				console.error('Failed to load workflow:', error);
+				message.error('Không thể tải workflow');
+			} finally {
+				setLoadingData(false);
+			}
+		};
+		loadWorkflow();
+	}, [workflowId]);
 
 	// ---- Load forms for linking ----
 	useEffect(() => {
@@ -74,16 +110,11 @@ const WorkflowBuilder: React.FC = () => {
 		}
 		setStates((prev) => [...prev, name]);
 		setNewStateName('');
-
-		// Auto-set initial state if first state
-		if (states.length === 0) {
-			setInitialState(name);
-		}
+		if (states.length === 0) setInitialState(name);
 	}, [newStateName, states]);
 
 	const removeState = useCallback(
 		(stateName: string) => {
-			// Check if state is used in transitions
 			const isUsed = transitions.some(
 				(t) =>
 					t.to === stateName ||
@@ -94,7 +125,6 @@ const WorkflowBuilder: React.FC = () => {
 				message.error('Không thể xóa trạng thái đang được sử dụng trong transitions');
 				return;
 			}
-
 			setStates((prev) => prev.filter((s) => s !== stateName));
 			if (initialState === stateName) setInitialState(undefined);
 			setFinalStates((prev) => prev.filter((s) => s !== stateName));
@@ -103,15 +133,6 @@ const WorkflowBuilder: React.FC = () => {
 	);
 
 	// ---- Transition Management ----
-	const openTransitionModal = () => {
-		setEditFrom(undefined);
-		setEditTo(undefined);
-		setEditAction('');
-		setEditRoles([]);
-		setEditRequireComment(false);
-		setTransitionModalOpen(true);
-	};
-
 	const addTransition = () => {
 		if (!editFrom) {
 			message.warning('Vui lòng chọn trạng thái nguồn');
@@ -151,7 +172,8 @@ const WorkflowBuilder: React.FC = () => {
 		if (!states.includes(initialState)) return 'Trạng thái khởi tạo không hợp lệ';
 		if (finalStates.length === 0) return 'Cần ít nhất 1 trạng thái kết thúc';
 		for (const fs of finalStates) {
-			if (!states.includes(fs)) return `Trạng thái kết thúc "${fs}" không nằm trong danh sách states`;
+			if (!states.includes(fs))
+				return `Trạng thái kết thúc "${fs}" không nằm trong danh sách states`;
 		}
 		if (transitions.length === 0) return 'Cần ít nhất 1 transition';
 		for (const t of transitions) {
@@ -166,7 +188,7 @@ const WorkflowBuilder: React.FC = () => {
 		return null;
 	}, [workflowName, states, initialState, finalStates, transitions]);
 
-	// ---- Submit ----
+	// ---- Submit (Update) ----
 	const handleSave = async () => {
 		const error = validate();
 		if (error) {
@@ -183,16 +205,15 @@ const WorkflowBuilder: React.FC = () => {
 
 		setSaving(true);
 		try {
-			await createWorkflowDefinition({
+			await updateWorkflowDefinition(workflowId, {
 				name: workflowName.trim(),
-				...(selectedFormId && { formId: selectedFormId }),
+				...(selectedFormId ? { formId: selectedFormId } : {}),
 				config,
 			});
-			message.success('Tạo workflow thành công!');
-			history.push('/workflows');
+			message.success('Cập nhật workflow thành công!');
+			history.push(`/workflows/${workflowId}`);
 		} catch (err) {
-			// Error is handled by axios interceptor
-			console.error('Failed to create workflow:', err);
+			console.error('Failed to update workflow:', err);
 		} finally {
 			setSaving(false);
 		}
@@ -201,34 +222,49 @@ const WorkflowBuilder: React.FC = () => {
 	// ---- Preview data ----
 	const orderedStates = useMemo(() => {
 		if (states.length === 0) return [];
-		// Put initial state first, then non-final, then final
 		const init = initialState ? [initialState] : [];
 		const middle = states.filter((s) => s !== initialState && !finalStates.includes(s));
 		const final = finalStates.filter((s) => s !== initialState);
 		return [...new Set([...init, ...middle, ...final])];
 	}, [states, initialState, finalStates]);
 
-	const stateOptions = useMemo(
-		() => states.map((s) => ({ label: s, value: s })),
-		[states],
-	);
-
+	const stateOptions = useMemo(() => states.map((s) => ({ label: s, value: s })), [states]);
 	const fromStateOptions = useMemo(
 		() => [{ label: '* (tất cả)', value: '*' }, ...stateOptions],
 		[stateOptions],
 	);
+
+	if (loadingData) {
+		return (
+			<div className={styles.builderPage}>
+				<div
+					style={{
+						display: 'flex',
+						justifyContent: 'center',
+						alignItems: 'center',
+						minHeight: '100vh',
+					}}
+				>
+					<Spin size="large" />
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className={styles.builderPage}>
 			{/* ===== HEADER ===== */}
 			<div className={styles.builderHeader}>
 				<div className={styles.headerLeft}>
-					<button className={styles.backBtn} onClick={() => history.push('/workflows')}>
+					<button
+						className={styles.backBtn}
+						onClick={() => history.push(`/workflows/${workflowId}`)}
+					>
 						<ArrowLeftOutlined />
 					</button>
 					<div className={styles.headerInfo}>
-						<h1>Tạo Workflow Mới</h1>
-						<p>Thiết kế luồng phê duyệt cho biểu mẫu của bạn</p>
+						<h1>Chỉnh sửa Workflow</h1>
+						<p>{workflowName || 'Đang tải...'}</p>
 					</div>
 				</div>
 				<div className={styles.headerActions}>
@@ -239,7 +275,7 @@ const WorkflowBuilder: React.FC = () => {
 						loading={saving}
 						onClick={handleSave}
 					>
-						Lưu Workflow
+						Lưu thay đổi
 					</Button>
 				</div>
 			</div>
@@ -279,7 +315,9 @@ const WorkflowBuilder: React.FC = () => {
 								options={forms.map((f) => ({ label: f.name, value: f.id }))}
 								showSearch
 								filterOption={(input, option) =>
-									(option?.label as string)?.toLowerCase().includes(input.toLowerCase())
+									(option?.label as string)
+										?.toLowerCase()
+										.includes(input.toLowerCase())
 								}
 							/>
 						</div>
@@ -296,7 +334,6 @@ const WorkflowBuilder: React.FC = () => {
 						</div>
 					</div>
 					<div className={styles.sectionBody}>
-						{/* Add State */}
 						<div className={styles.stateInputRow}>
 							<div className={styles.stateInput}>
 								<Input
@@ -311,11 +348,10 @@ const WorkflowBuilder: React.FC = () => {
 							</button>
 						</div>
 
-						{/* States List */}
 						{states.length === 0 ? (
 							<div className={styles.emptyStates}>
 								<span>📋</span>
-								Chưa có trạng thái nào. Hãy thêm ít nhất 1 trạng thái.
+								Chưa có trạng thái nào.
 							</div>
 						) : (
 							<div className={styles.statesList}>
@@ -323,7 +359,8 @@ const WorkflowBuilder: React.FC = () => {
 									const isInitial = initialState === s;
 									const isFinal = finalStates.includes(s);
 									let tagClass = styles.stateTag;
-									if (isInitial && isFinal) tagClass += ` ${styles.initialFinal}`;
+									if (isInitial && isFinal)
+										tagClass += ` ${styles.initialFinal}`;
 									else if (isInitial) tagClass += ` ${styles.initial}`;
 									else if (isFinal) tagClass += ` ${styles.final}`;
 
@@ -332,12 +369,16 @@ const WorkflowBuilder: React.FC = () => {
 											<span className={styles.stateLabel}>
 												{s}
 												{isInitial && (
-													<span className={`${styles.badge} ${styles.initialBadge}`}>
+													<span
+														className={`${styles.badge} ${styles.initialBadge}`}
+													>
 														Bắt đầu
 													</span>
 												)}
 												{isFinal && (
-													<span className={`${styles.badge} ${styles.finalBadge}`}>
+													<span
+														className={`${styles.badge} ${styles.finalBadge}`}
+													>
 														Kết thúc
 													</span>
 												)}
@@ -355,12 +396,12 @@ const WorkflowBuilder: React.FC = () => {
 							</div>
 						)}
 
-						{/* Initial / Final config */}
 						{states.length > 0 && (
 							<div className={styles.stateConfigRow}>
 								<div className={styles.formGroup}>
 									<label>
-										Trạng thái khởi tạo <span className={styles.required}>*</span>
+										Trạng thái khởi tạo{' '}
+										<span className={styles.required}>*</span>
 									</label>
 									<Select
 										placeholder="Chọn trạng thái bắt đầu"
@@ -372,7 +413,8 @@ const WorkflowBuilder: React.FC = () => {
 								</div>
 								<div className={styles.formGroup}>
 									<label>
-										Trạng thái kết thúc <span className={styles.required}>*</span>
+										Trạng thái kết thúc{' '}
+										<span className={styles.required}>*</span>
 									</label>
 									<Select
 										mode="multiple"
@@ -445,7 +487,9 @@ const WorkflowBuilder: React.FC = () => {
 											<div className={styles.transitionFlow}>
 												<span
 													className={`${styles.stateChip} ${
-														t.from === '*' ? styles.wildcard : styles.from
+														t.from === '*'
+															? styles.wildcard
+															: styles.from
 													}`}
 												>
 													{fromLabel}
@@ -453,10 +497,14 @@ const WorkflowBuilder: React.FC = () => {
 												<span className={styles.arrow}>
 													<ArrowRightOutlined />
 												</span>
-												<span className={`${styles.stateChip} ${styles.to}`}>
+												<span
+													className={`${styles.stateChip} ${styles.to}`}
+												>
 													{t.to}
 												</span>
-												<span className={styles.actionName}>{t.action}</span>
+												<span className={styles.actionName}>
+													{t.action}
+												</span>
 											</div>
 											<div className={styles.transitionMeta}>
 												{t.roles?.map((r) => (
@@ -517,7 +565,9 @@ const WorkflowBuilder: React.FC = () => {
 													</div>
 												)}
 												<div className={styles.previewNode}>
-													<div className={`${styles.nodeDot} ${nodeClass}`}>
+													<div
+														className={`${styles.nodeDot} ${nodeClass}`}
+													>
 														{isInit ? '▶' : isFin ? '■' : '●'}
 													</div>
 													<div className={styles.nodeName}>{s}</div>
@@ -543,9 +593,24 @@ const WorkflowBuilder: React.FC = () => {
 				width={520}
 				destroyOnClose
 			>
-				<div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 8 }}>
+				<div
+					style={{
+						display: 'flex',
+						flexDirection: 'column',
+						gap: 16,
+						paddingTop: 8,
+					}}
+				>
 					<div>
-						<label style={{ display: 'block', fontWeight: 600, fontSize: 13, color: '#475569', marginBottom: 8 }}>
+						<label
+							style={{
+								display: 'block',
+								fontWeight: 600,
+								fontSize: 13,
+								color: '#475569',
+								marginBottom: 8,
+							}}
+						>
 							Từ trạng thái <span style={{ color: '#ef4444' }}>*</span>
 						</label>
 						<Select
@@ -558,7 +623,15 @@ const WorkflowBuilder: React.FC = () => {
 					</div>
 
 					<div>
-						<label style={{ display: 'block', fontWeight: 600, fontSize: 13, color: '#475569', marginBottom: 8 }}>
+						<label
+							style={{
+								display: 'block',
+								fontWeight: 600,
+								fontSize: 13,
+								color: '#475569',
+								marginBottom: 8,
+							}}
+						>
 							Đến trạng thái <span style={{ color: '#ef4444' }}>*</span>
 						</label>
 						<Select
@@ -571,7 +644,15 @@ const WorkflowBuilder: React.FC = () => {
 					</div>
 
 					<div>
-						<label style={{ display: 'block', fontWeight: 600, fontSize: 13, color: '#475569', marginBottom: 8 }}>
+						<label
+							style={{
+								display: 'block',
+								fontWeight: 600,
+								fontSize: 13,
+								color: '#475569',
+								marginBottom: 8,
+							}}
+						>
 							Action <span style={{ color: '#ef4444' }}>*</span>
 						</label>
 						<AutoComplete
@@ -581,13 +662,23 @@ const WorkflowBuilder: React.FC = () => {
 							style={{ width: '100%' }}
 							options={SUGGESTED_ACTIONS.map((a) => ({ label: a, value: a }))}
 							filterOption={(input, option) =>
-								(option?.value as string)?.toLowerCase().includes(input.toLowerCase())
+								(option?.value as string)
+									?.toLowerCase()
+									.includes(input.toLowerCase())
 							}
 						/>
 					</div>
 
 					<div>
-						<label style={{ display: 'block', fontWeight: 600, fontSize: 13, color: '#475569', marginBottom: 8 }}>
+						<label
+							style={{
+								display: 'block',
+								fontWeight: 600,
+								fontSize: 13,
+								color: '#475569',
+								marginBottom: 8,
+							}}
+						>
 							Roles được phép
 						</label>
 						<Select
@@ -614,4 +705,4 @@ const WorkflowBuilder: React.FC = () => {
 	);
 };
 
-export default WorkflowBuilder;
+export default WorkflowEdit;
