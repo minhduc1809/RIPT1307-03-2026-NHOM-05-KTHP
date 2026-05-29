@@ -1,0 +1,372 @@
+@import '~antd/es/style/themes/default.less';
+
+.detailPage {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 32px 20px 80px;
+
+	.pageHeader {
+		margin-bottom: 32px;
+
+		.headerLeft {
+			display: flex;
+			align-items: center;
+			gap: 14px;
+			margin-bottom: 8px;
+
+			.backBtn {
+				width: 40px;
+				height: 40px;
+				border-radius: 10px;
+				border: 1px solid #e2e8f0;
+				background: #fff;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				color: #64748b;
+				transition: all 0.2s;
+				font-size: 16px;
+
+				&:hover {
+					background: #f1f5f9;
+					color: #1a2332;
+				}
+			}
+
+			h1 {
+				font-size: 24px;
+				font-weight: 800;
+				color: #1a2332;
+				margin: 0;
+			}
+		}
+
+		.headerMeta {
+			margin-left: 54px;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			font-size: 13px;
+			color: #94a3b8;
+		}
+	}
+
+	// ---- Status Badge ----
+	.statusBadge {
+		font-size: 12px;
+		padding: 3px 12px;
+		border-radius: 8px;
+		font-weight: 700;
+
+		&.SUBMITTED { background: #f1f5f9; color: #475569; }
+		&.UNDER_REVIEW { background: #fef3c7; color: #92400e; }
+		&.APPROVED { background: #d1fae5; color: #047857; }
+		&.REJECTED { background: #fee2e2; color: #dc2626; }
+		&.CANCELLED { background: #fef3c7; color: #92400e; }
+		&.RETURNED { background: #e0e7ff; color: #4338ca; }
+		&.DRAFT { background: #f1f5f9; color: #94a3b8; }
+	}
+
+	// ---- Card ----
+	.card {
+		background: #fff;
+		border-radius: 20px;
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+		margin-bottom: 20px;
+		overflow: visible;
+
+		.cardHeader {
+			padding: 24px 28px;
+			border-bottom: 1px solid #f1f5f9;
+			display: flex;
+			align-items: center;
+			gap: 12px;
+
+			.cardIcon {
+				width: 42px;
+				height: 42px;
+				border-radius: 12px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 18px;
+			}
+
+			.cardTitle {
+				h3 {
+					font-size: 16px;
+					font-weight: 700;
+					color: #1a2332;
+					margin: 0;
+				}
+				p {
+					font-size: 12px;
+					color: #94a3b8;
+					margin: 2px 0 0;
+				}
+			}
+		}
+
+		.cardBody {
+			padding: 24px 28px;
+		}
+	}
+
+	.dataIcon { background: #ede9fe; color: #7c3aed; }
+	.timelineIcon { background: #dbeafe; color: #2563eb; }
+	.actionIcon { background: #fef3c7; color: #d97706; }
+
+	// ---- Data Rows ----
+	.dataRow {
+		display: flex;
+		justify-content: space-between;
+		padding: 10px 0;
+		font-size: 14px;
+		border-bottom: 1px solid #f1f5f9;
+
+		&:last-child { border-bottom: none; }
+
+		.dataKey {
+			color: #64748b;
+			font-weight: 500;
+		}
+
+		.dataValue {
+			color: #1a2332;
+			font-weight: 600;
+			text-align: right;
+			max-width: 60%;
+			word-break: break-word;
+		}
+	}
+
+	// ---- Timeline ----
+	.timeline {
+		position: relative;
+		padding-left: 28px;
+
+		&::before {
+			content: '';
+			position: absolute;
+			left: 9px;
+			top: 8px;
+			bottom: 8px;
+			width: 2px;
+			background: #e2e8f0;
+		}
+	}
+
+	.timelineItem {
+		position: relative;
+		padding-bottom: 24px;
+
+		&:last-child { padding-bottom: 0; }
+
+		.timelineDot {
+			position: absolute;
+			left: -28px;
+			top: 4px;
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 10px;
+			background: #e2e8f0;
+			color: #64748b;
+
+			&.submit { background: #dbeafe; color: #2563eb; }
+			&.approve { background: #d1fae5; color: #047857; }
+			&.reject { background: #fee2e2; color: #dc2626; }
+			&.return { background: #e0e7ff; color: #4338ca; }
+		}
+
+		.timelineContent {
+			.timelineAction {
+				font-size: 14px;
+				font-weight: 700;
+				color: #1a2332;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin-bottom: 2px;
+
+				.actionBadge {
+					font-size: 11px;
+					padding: 2px 8px;
+					border-radius: 6px;
+					font-weight: 600;
+
+					&.submit { background: #dbeafe; color: #1e40af; }
+					&.approve { background: #d1fae5; color: #047857; }
+					&.reject { background: #fee2e2; color: #dc2626; }
+					&.cancel { background: #fee2e2; color: #dc2626; }
+					&.return { background: #e0e7ff; color: #4338ca; }
+					&.resubmit { background: #dbeafe; color: #1e40af; }
+					&.default { background: #f1f5f9; color: #475569; }
+				}
+			}
+
+			.timelineSteps {
+				font-size: 12px;
+				color: #94a3b8;
+				margin-bottom: 2px;
+
+				.arrow {
+					margin: 0 4px;
+					color: #cbd5e1;
+				}
+			}
+
+			.timelineMeta {
+				font-size: 12px;
+				color: #94a3b8;
+				display: flex;
+				gap: 12px;
+			}
+
+			.timelineComment {
+				margin-top: 6px;
+				padding: 8px 12px;
+				border-radius: 10px;
+				background: #f8fafc;
+				border: 1px solid #f1f5f9;
+				font-size: 13px;
+				color: #475569;
+				font-style: italic;
+			}
+		}
+	}
+
+	// ---- Actions ----
+	.actionsSection {
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+	}
+
+	.actionBtn {
+		height: 42px;
+		padding: 0 20px;
+		border-radius: 12px;
+		font-weight: 600;
+		font-size: 14px;
+		border: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		transition: all 0.2s;
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		&.approve {
+			background: #d1fae5;
+			color: #047857;
+			&:hover:not(:disabled) { background: #a7f3d0; transform: translateY(-1px); }
+		}
+
+		&.reject {
+			background: #fee2e2;
+			color: #dc2626;
+			&:hover:not(:disabled) { background: #fecaca; transform: translateY(-1px); }
+		}
+
+		&.recall {
+			background: #fef3c7;
+			color: #d97706;
+			&:hover:not(:disabled) { background: #fde68a; transform: translateY(-1px); }
+		}
+
+		&.resubmit {
+			background: #dbeafe;
+			color: #1e40af;
+			&:hover:not(:disabled) { background: #bfdbfe; transform: translateY(-1px); }
+		}
+
+		&.other {
+			background: #f1f5f9;
+			color: #64748b;
+			&:hover:not(:disabled) { background: #e2e8f0; transform: translateY(-1px); }
+		}
+	}
+
+	// ---- Comment Field ----
+	.commentSection {
+		margin-top: 16px;
+
+		.commentLabel {
+			display: block;
+			font-size: 13px;
+			font-weight: 600;
+			color: #475569;
+			margin-bottom: 8px;
+
+			.required { color: #ef4444; margin-left: 2px; }
+		}
+
+		:global {
+			.ant-input {
+				border-radius: 10px !important;
+				border-color: #e2e8f0 !important;
+			}
+		}
+	}
+
+	.confirmBar {
+		margin-top: 16px;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+
+		.transitionInfo {
+			font-size: 13px;
+			color: #64748b;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+
+			.fromState {
+				font-weight: 600;
+				padding: 2px 8px;
+				border-radius: 6px;
+				background: #fef3c7;
+				color: #92400e;
+			}
+
+			.toState {
+				font-weight: 600;
+				padding: 2px 8px;
+				border-radius: 6px;
+				background: #dbeafe;
+				color: #1e40af;
+			}
+
+			.arrow { color: #cbd5e1; }
+		}
+	}
+
+	// ---- Loading / Empty ----
+	.loadingContainer {
+		display: flex;
+		justify-content: center;
+		padding: 80px;
+	}
+
+	.errorState {
+		text-align: center;
+		padding: 80px 20px;
+		color: #94a3b8;
+
+		span {
+			font-size: 48px;
+			display: block;
+			margin-bottom: 12px;
+		}
+	}
+}

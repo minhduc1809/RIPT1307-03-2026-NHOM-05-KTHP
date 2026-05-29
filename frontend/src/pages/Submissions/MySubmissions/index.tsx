@@ -1,0 +1,224 @@
+import {
+	CheckCircleOutlined,
+	ClockCircleOutlined,
+	CloseCircleOutlined,
+	FileTextOutlined,
+	RollbackOutlined,
+	UnorderedListOutlined,
+} from '@ant-design/icons';
+import { Pagination, Spin } from 'antd';
+import moment from 'moment';
+import React, { useCallback, useEffect, useState } from 'react';
+import { history } from 'umi';
+import { getMySubmissions } from '@/services/Submissions/submissionApi';
+import type { ISubmission } from '@/services/Submissions/typings';
+import styles from './index.less';
+
+const STATUS_LABELS: Record<string, string> = {
+	DRAFT: 'Nháp',
+	SUBMITTED: 'Đã nộp',
+	UNDER_REVIEW: 'Đang duyệt',
+	APPROVED: 'Đã duyệt',
+	REJECTED: 'Từ chối',
+	CANCELLED: 'Đã hủy',
+	RETURNED: 'Trả lại',
+};
+
+const MySubmissions: React.FC = () => {
+	const [loading, setLoading] = useState(true);
+	const [items, setItems] = useState<ISubmission[]>([]);
+	const [total, setTotal] = useState(0);
+	const [page, setPage] = useState(1);
+	const [limit] = useState(20);
+	const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
+	const [counts, setCounts] = useState<Record<string, number>>({});
+
+	const fetchSubmissions = useCallback(async () => {
+		setLoading(true);
+		try {
+			const response = await getMySubmissions({ page, limit, status: statusFilter });
+			const data = (response as any)?.data?.data ?? (response as any)?.data;
+			setItems(data?.items ?? []);
+			setTotal(data?.meta?.total ?? 0);
+		} catch {
+			// silent
+		} finally {
+			setLoading(false);
+		}
+	}, [page, limit, statusFilter]);
+
+	// Fetch counts for each status on mount
+	useEffect(() => {
+		const fetchCounts = async () => {
+			try {
+				const statuses = ['UNDER_REVIEW', 'APPROVED', 'REJECTED', 'RETURNED'];
+				const results = await Promise.all([
+					getMySubmissions({ limit: 1 }),
+					...statuses.map((s) => getMySubmissions({ limit: 1, status: s })),
+				]);
+				const newCounts: Record<string, number> = {};
+				const allData = (results[0] as any)?.data?.data ?? (results[0] as any)?.data;
+				newCounts.ALL = allData?.meta?.total ?? 0;
+				statuses.forEach((s, i) => {
+					const d = (results[i + 1] as any)?.data?.data ?? (results[i + 1] as any)?.data;
+					newCounts[s] = d?.meta?.total ?? 0;
+				});
+				setCounts(newCounts);
+			} catch {
+				// silent
+			}
+		};
+		fetchCounts();
+	}, []);
+
+	useEffect(() => {
+		fetchSubmissions();
+	}, [fetchSubmissions]);
+
+	const handleFilterClick = (status: string | undefined) => {
+		setStatusFilter(status);
+		setPage(1);
+	};
+
+	return (
+		<div className={styles.mySubmissionsPage}>
+			{/* Header */}
+			<div className={styles.pageHeader}>
+				<h1>Yêu cầu của tôi</h1>
+				<p>Theo dõi trạng thái các biểu mẫu bạn đã nộp</p>
+			</div>
+
+			{/* Stats */}
+			<div className={styles.statsBar}>
+				<div
+					className={`${styles.statCard} ${styles.all} ${statusFilter === undefined ? styles.active : ''}`}
+					onClick={() => handleFilterClick(undefined)}
+				>
+					<div className={styles.statIcon}><UnorderedListOutlined /></div>
+					<div className={styles.statInfo}>
+						<div className={styles.statNumber}>{counts.ALL ?? '-'}</div>
+						<div className={styles.statLabel}>Tất cả</div>
+					</div>
+				</div>
+				<div
+					className={`${styles.statCard} ${styles.underReview} ${statusFilter === 'UNDER_REVIEW' ? styles.active : ''}`}
+					onClick={() => handleFilterClick('UNDER_REVIEW')}
+				>
+					<div className={styles.statIcon}><ClockCircleOutlined /></div>
+					<div className={styles.statInfo}>
+						<div className={styles.statNumber}>{counts.UNDER_REVIEW ?? '-'}</div>
+						<div className={styles.statLabel}>Đang duyệt</div>
+					</div>
+				</div>
+				<div
+					className={`${styles.statCard} ${styles.approved} ${statusFilter === 'APPROVED' ? styles.active : ''}`}
+					onClick={() => handleFilterClick('APPROVED')}
+				>
+					<div className={styles.statIcon}><CheckCircleOutlined /></div>
+					<div className={styles.statInfo}>
+						<div className={styles.statNumber}>{counts.APPROVED ?? '-'}</div>
+						<div className={styles.statLabel}>Đã duyệt</div>
+					</div>
+				</div>
+				<div
+					className={`${styles.statCard} ${styles.rejected} ${statusFilter === 'REJECTED' ? styles.active : ''}`}
+					onClick={() => handleFilterClick('REJECTED')}
+				>
+					<div className={styles.statIcon}><CloseCircleOutlined /></div>
+					<div className={styles.statInfo}>
+						<div className={styles.statNumber}>{counts.REJECTED ?? '-'}</div>
+						<div className={styles.statLabel}>Từ chối</div>
+					</div>
+				</div>
+				<div
+					className={`${styles.statCard} ${styles.returned} ${statusFilter === 'RETURNED' ? styles.active : ''}`}
+					onClick={() => handleFilterClick('RETURNED')}
+				>
+					<div className={styles.statIcon}><RollbackOutlined /></div>
+					<div className={styles.statInfo}>
+						<div className={styles.statNumber}>{counts.RETURNED ?? '-'}</div>
+						<div className={styles.statLabel}>Trả lại</div>
+					</div>
+				</div>
+			</div>
+
+			{/* List */}
+			<div className={styles.listSection}>
+				<div className={styles.listHeader}>
+					<div className={styles.listIcon}><FileTextOutlined /></div>
+					<div className={styles.listTitle}>
+						<h3>{statusFilter ? STATUS_LABELS[statusFilter] : 'Tất cả yêu cầu'}</h3>
+						<p>{total} yêu cầu</p>
+					</div>
+				</div>
+
+				<div className={styles.listBody}>
+					{loading ? (
+						<div className={styles.loadingContainer}><Spin size="large" /></div>
+					) : items.length === 0 ? (
+						<div className={styles.emptyState}>
+							<span>📭</span>
+							<p>Chưa có yêu cầu nào</p>
+						</div>
+					) : (
+						<>
+							{items.map((item) => {
+								const dataKeys = Object.keys(item.data || {}).slice(0, 3);
+								return (
+									<div
+										key={item.id}
+										className={styles.submissionItem}
+										onClick={() => history.push(`/submissions/${item.id}`)}
+									>
+										<div className={styles.itemInfo}>
+											<div className={styles.itemTitle}>
+												{item.form?.name || `Form #${item.formId.substring(0, 8)}`}
+												<span className={`${styles.statusBadge} ${styles[item.status]}`}>
+													{STATUS_LABELS[item.status] || item.status}
+												</span>
+											</div>
+											<div className={styles.itemMeta}>
+												<span className={styles.metaItem}>
+													<ClockCircleOutlined />
+													{moment(item.createdAt).format('DD/MM/YYYY HH:mm')}
+												</span>
+												{item.revisionNumber > 1 && (
+													<span className={styles.metaItem}>
+														Lần nộp #{item.revisionNumber}
+													</span>
+												)}
+											</div>
+											{dataKeys.length > 0 && (
+												<div className={styles.itemData}>
+													{dataKeys.map((key) => (
+														<span key={key} className={styles.dataTag}>
+															{key}: {String(item.data[key])}
+														</span>
+													))}
+												</div>
+											)}
+										</div>
+									</div>
+								);
+							})}
+
+							{total > limit && (
+								<div style={{ padding: '16px 20px', textAlign: 'center' }}>
+									<Pagination
+										current={page}
+										pageSize={limit}
+										total={total}
+										onChange={(p) => setPage(p)}
+										showTotal={(t) => `Tổng ${t} yêu cầu`}
+									/>
+								</div>
+							)}
+						</>
+					)}
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default MySubmissions;

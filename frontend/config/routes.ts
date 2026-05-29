@@ -95,7 +95,13 @@ export default [
 		routes: [
 			{
 				path: '/submissions',
-				redirect: '/submissions/approval',
+				component: './Submissions/RedirectByRole',
+				hideInMenu: true,
+			},
+			{
+				path: '/submissions/mine',
+				name: 'Yêu cầu của tôi',
+				component: './Submissions/MySubmissions',
 			},
 			{
 				path: '/submissions/new/:formId',
@@ -106,7 +112,6 @@ export default [
 			{
 				path: '/submissions/new',
 				name: 'Nộp biểu mẫu',
-				exact: true,
 				component: './Submissions/FormSubmit',
 			},
 			{
@@ -116,7 +121,7 @@ export default [
 			},
 			{
 				path: '/submissions/:id',
-				name: 'Submission Detail',
+				name: 'Chi tiết',
 				hideInMenu: true,
 				component: './Submissions/Detail',
 			},
