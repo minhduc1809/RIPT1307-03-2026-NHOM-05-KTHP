@@ -15,8 +15,10 @@ import CountUp from 'react-countup';
 import Chart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
 import moment from 'moment';
+import { useModel } from 'umi';
 import {
 	getDashboardSummary,
+	getMyDashboardSummary,
 	getSubmissionsByDay,
 	getSubmissionsByStatus,
 	getTopForms,
@@ -99,6 +101,10 @@ const BAR_GRADIENTS = [
 // DASHBOARD COMPONENT
 // =============================================
 const Dashboard: React.FC = () => {
+	const { initialState } = useModel('@@initialState');
+	const userRole = initialState?.currentUser?.role;
+	const isFullDashboard = userRole === 'ADMIN' || userRole === 'MANAGER';
+
 	// Data state
 	const [summary, setSummary] = useState<ISummary | null>(null);
 	const [statusData, setStatusData] = useState<IStatusItem[]>([]);
@@ -118,30 +124,35 @@ const Dashboard: React.FC = () => {
 		else setLoading(true);
 
 		try {
-			const [summaryRes, statusRes, dayRes, topRes] = await Promise.all([
-				getDashboardSummary(),
-				getSubmissionsByStatus(),
-				getSubmissionsByDay(selectedDays),
-				getTopForms(10),
-			]);
+			if (isFullDashboard) {
+				const [summaryRes, statusRes, dayRes, topRes] = await Promise.all([
+					getDashboardSummary(),
+					getSubmissionsByStatus(),
+					getSubmissionsByDay(selectedDays),
+					getTopForms(10),
+				]);
 
-			setSummary(extractData<ISummary>(summaryRes));
+				setSummary(extractData<ISummary>(summaryRes));
 
-			const rawStatus = extractData<IStatusItem[] | any>(statusRes);
-			setStatusData(Array.isArray(rawStatus) ? rawStatus : []);
+				const rawStatus = extractData<IStatusItem[] | any>(statusRes);
+				setStatusData(Array.isArray(rawStatus) ? rawStatus : []);
 
-			const rawDay = extractData<IDayItem[] | any>(dayRes);
-			setDayData(Array.isArray(rawDay) ? rawDay : []);
+				const rawDay = extractData<IDayItem[] | any>(dayRes);
+				setDayData(Array.isArray(rawDay) ? rawDay : []);
 
-			const rawTop = extractData<ITopForm[] | any>(topRes);
-			setTopForms(Array.isArray(rawTop) ? rawTop : []);
+				const rawTop = extractData<ITopForm[] | any>(topRes);
+				setTopForms(Array.isArray(rawTop) ? rawTop : []);
+			} else {
+				const summaryRes = await getMyDashboardSummary();
+				setSummary(extractData<ISummary>(summaryRes));
+			}
 		} catch (error) {
 			console.error('Dashboard fetch error', error);
 		} finally {
 			setLoading(false);
 			setRefreshing(false);
 		}
-	}, [selectedDays]);
+	}, [selectedDays, isFullDashboard]);
 
 	useEffect(() => {
 		fetchAll();
@@ -310,7 +321,7 @@ const Dashboard: React.FC = () => {
 			<div className={styles.dashboardHeader}>
 				<div className={styles.headerLeft}>
 					<h1>Dashboard</h1>
-					<p>Tổng quan hệ thống quản lý biểu mẫu</p>
+					<p>{isFullDashboard ? 'Tổng quan hệ thống quản lý biểu mẫu' : 'Tổng quan yêu cầu của tôi'}</p>
 				</div>
 				<div className={styles.headerRight}>
 					<Tooltip title="Làm mới dữ liệu">
@@ -389,8 +400,8 @@ const Dashboard: React.FC = () => {
 				</div>
 			</div>
 
-			{/* ====== CHARTS ====== */}
-			<div className={styles.chartsGrid}>
+			{/* ====== CHARTS (ADMIN/MANAGER only) ====== */}
+			{isFullDashboard && <div className={styles.chartsGrid}>
 				{/* Donut – Submissions by Status */}
 				<div className={`${styles.chartCard} ${styles.fadeIn}`} style={{ animationDelay: '0.25s' }}>
 					<div className={styles.chartHeader}>
@@ -453,9 +464,10 @@ const Dashboard: React.FC = () => {
 						)}
 					</div>
 				</div>
-			</div>
+			</div>}
 
-			{/* ====== TOP FORMS ====== */}
+			{/* ====== TOP FORMS (ADMIN/MANAGER only) ====== */}
+			{isFullDashboard &&
 			<div className={`${styles.topFormsSection} ${styles.fadeIn}`} style={{ animationDelay: '0.35s' }}>
 				<div className={styles.topFormsHeader}>
 					<div className={styles.topFormsTitle}>
@@ -502,7 +514,7 @@ const Dashboard: React.FC = () => {
 						<span>Chưa có dữ liệu top forms</span>
 					</div>
 				)}
-			</div>
+			</div>}
 		</div>
 	);
 };

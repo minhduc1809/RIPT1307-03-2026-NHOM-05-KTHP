@@ -8,9 +8,10 @@ import {
 	SendOutlined,
 	UndoOutlined,
 } from '@ant-design/icons';
-import { Input, message, Spin } from 'antd';
+import { Button, DatePicker, Input, InputNumber, message, Modal, Popconfirm, Select, Spin } from 'antd';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
+import type { IFormField } from '@/services/Forms/typings';
 import { history, useModel, useParams } from 'umi';
 import {
 	executeWorkflowAction,
@@ -26,11 +27,12 @@ import type {
 	IWorkflowHistory,
 	IWorkflowHistoryResponse,
 } from '@/services/Submissions/typings';
+import { getReadableData } from '@/utils/formDataHelper';
 import styles from './index.less';
 
 const STATUS_LABELS: Record<string, string> = {
 	DRAFT: 'Nháp',
-	SUBMITTED: 'Đã nộp',
+	SUBMITTED: 'Hoàn tất',
 	UNDER_REVIEW: 'Đang duyệt',
 	APPROVED: 'Đã duyệt',
 	REJECTED: 'Từ chối',
@@ -76,6 +78,11 @@ const SubmissionDetail: React.FC = () => {
 	const [selectedAction, setSelectedAction] = useState<IAvailableAction | null>(null);
 	const [comment, setComment] = useState('');
 	const [executing, setExecuting] = useState(false);
+
+	// Resubmit modal state
+	const [resubmitVisible, setResubmitVisible] = useState(false);
+	const [resubmitData, setResubmitData] = useState<Record<string, any>>({});
+	const [resubmitErrors, setResubmitErrors] = useState<Record<string, string>>({});
 
 	const isOwner = submission?.submittedBy === userId;
 	const isApprover = userRole === 'ADMIN' || userRole === 'MANAGER';
@@ -159,19 +166,75 @@ const SubmissionDetail: React.FC = () => {
 		}
 	};
 
+	const openResubmitModal = () => {
+		setResubmitData({ ...(submission?.data || {}) });
+		setResubmitErrors({});
+		setResubmitVisible(true);
+	};
+
+	const getFormFields = (): IFormField[] => {
+		return (submission?.form as any)?.schema?.fields ?? [];
+	};
+
+	const setResubmitFieldValue = (key: string, value: any) => {
+		setResubmitData((prev) => ({ ...prev, [key]: value }));
+		if (resubmitErrors[key]) {
+			setResubmitErrors((prev) => { const n = { ...prev }; delete n[key]; return n; });
+		}
+	};
+
+	const validateResubmit = (): boolean => {
+		const fields = getFormFields();
+		const newErrors: Record<string, string> = {};
+		for (const field of fields) {
+			const val = resubmitData[field.key];
+			const rules = field.rules;
+			if (rules?.required && (val === undefined || val === null || val === '')) {
+				newErrors[field.key] = `${field.label} là bắt buộc`;
+				continue;
+			}
+			if (val !== undefined && val !== null && val !== '') {
+				if (field.type === 'text') {
+					const strVal = String(val);
+					if (rules?.minLength && strVal.length < rules.minLength) newErrors[field.key] = `Tối thiểu ${rules.minLength} ký tự`;
+					else if (rules?.maxLength && strVal.length > rules.maxLength) newErrors[field.key] = `Tối đa ${rules.maxLength} ký tự`;
+					else if (rules?.regex && !new RegExp(rules.regex).test(strVal)) newErrors[field.key] = 'Không đúng định dạng';
+				} else if (field.type === 'number') {
+					const numVal = Number(val);
+					if (rules?.min !== undefined && numVal < rules.min) newErrors[field.key] = `Giá trị tối thiểu là ${rules.min}`;
+					else if (rules?.max !== undefined && numVal > rules.max) newErrors[field.key] = `Giá trị tối đa là ${rules.max}`;
+				}
+			}
+		}
+		setResubmitErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
+	};
+
 	const handleResubmit = async () => {
+		if (!validateResubmit()) {
+			message.error('Vui lòng kiểm tra lại dữ liệu');
+			return;
+		}
 		setExecuting(true);
 		try {
-			const res = await resubmitSubmission(id!);
+			const res = await resubmitSubmission(id!, { data: resubmitData });
 			const newSub = (res as any)?.data?.data ?? (res as any)?.data;
 			message.success('Đã nộp lại yêu cầu');
+			setResubmitVisible(false);
 			if (newSub?.id) {
 				history.push(`/submissions/${newSub.id}`);
 			} else {
 				history.push('/submissions/mine');
 			}
 		} catch (err: any) {
-			message.error(err?.response?.data?.message || 'Có lỗi xảy ra');
+			const errData = err?.response?.data;
+			if (errData?.errors && Array.isArray(errData.errors)) {
+				const serverErrors: Record<string, string> = {};
+				for (const e of errData.errors) serverErrors[e.field] = e.i18nKey || 'Dữ liệu không hợp lệ';
+				setResubmitErrors(serverErrors);
+			} else {
+				message.error(errData?.message || 'Có lỗi xảy ra');
+			}
 		} finally {
 			setExecuting(false);
 		}
@@ -247,19 +310,38 @@ const SubmissionDetail: React.FC = () => {
 					</div>
 				</div>
 				<div className={styles.cardBody}>
-					{Object.entries(submission.data || {}).map(([key, value]) => (
-						<div key={key} className={styles.dataRow}>
-							<span className={styles.dataKey}>{key}</span>
-							<span className={styles.dataValue}>{String(value)}</span>
-						</div>
-					))}
-					{Object.keys(submission.data || {}).length === 0 && (
-						<div style={{ color: '#94a3b8', textAlign: 'center', padding: 20 }}>
-							Không có dữ liệu
-						</div>
-					)}
+					{(() => {
+						const readable = getReadableData(submission);
+						return readable.length === 0 ? (
+							<div style={{ color: '#94a3b8', textAlign: 'center', padding: 20 }}>
+								Không có dữ liệu
+							</div>
+						) : (
+							readable.map((f) => (
+								<div key={f.key} className={styles.dataRow}>
+									<span className={styles.dataKey}>{f.label}</span>
+									<span className={styles.dataValue}>{f.value}</span>
+								</div>
+							))
+						);
+					})()}
 				</div>
 			</div>
+
+			{/* No-workflow notice */}
+			{histories.length === 0 && submission.status === 'SUBMITTED' && (
+				<div className={styles.card}>
+					<div className={styles.cardHeader}>
+						<div className={`${styles.cardIcon} ${styles.dataIcon}`} style={{ background: '#d1fae5', color: '#047857' }}>
+							<CheckCircleOutlined />
+						</div>
+						<div className={styles.cardTitle}>
+							<h3>Đã nộp thành công</h3>
+							<p>Biểu mẫu này không yêu cầu phê duyệt. Dữ liệu của bạn đã được ghi nhận.</p>
+						</div>
+					</div>
+				</div>
+			)}
 
 			{/* Workflow History Timeline */}
 			{histories.length > 0 && (
@@ -299,6 +381,7 @@ const SubmissionDetail: React.FC = () => {
 											<span>{h.toStep}</span>
 										</div>
 										<div className={styles.timelineMeta}>
+											{h.actor && <span>{h.actor.name}</span>}
 											<span>{moment(h.createdAt).format('DD/MM/YYYY HH:mm')}</span>
 										</div>
 										{h.comment && (
@@ -353,21 +436,29 @@ const SubmissionDetail: React.FC = () => {
 
 							{/* Owner actions */}
 							{canRecall && (
-								<button
-									className={`${styles.actionBtn} ${styles.recall}`}
-									onClick={handleRecall}
-									disabled={executing}
+								<Popconfirm
+									title="Xác nhận thu hồi?"
+									description="Yêu cầu sẽ bị hủy và chuyển về trạng thái nháp."
+									onConfirm={handleRecall}
+									okText="Thu hồi"
+									cancelText="Không"
+									placement="topRight"
 								>
-									<UndoOutlined /> Thu hồi
-								</button>
+									<button
+										className={`${styles.actionBtn} ${styles.recall}`}
+										disabled={executing}
+									>
+										<UndoOutlined /> Thu hồi
+									</button>
+								</Popconfirm>
 							)}
 							{canResubmit && (
 								<button
 									className={`${styles.actionBtn} ${styles.resubmit}`}
-									onClick={handleResubmit}
+									onClick={openResubmitModal}
 									disabled={executing}
 								>
-									<SendOutlined /> Nộp lại
+									<SendOutlined /> Sửa và nộp lại
 								</button>
 							)}
 						</div>
@@ -412,6 +503,96 @@ const SubmissionDetail: React.FC = () => {
 					</div>
 				</div>
 			)}
+
+			{/* Resubmit Modal */}
+			<Modal
+				title="Sửa và nộp lại yêu cầu"
+				visible={resubmitVisible}
+				onCancel={() => setResubmitVisible(false)}
+				footer={
+					<div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+						<Button onClick={() => setResubmitVisible(false)}>Hủy</Button>
+						<Button
+							type="primary"
+							icon={<SendOutlined />}
+							loading={executing}
+							onClick={handleResubmit}
+						>
+							Nộp lại
+						</Button>
+					</div>
+				}
+				width={600}
+				destroyOnClose
+				style={{ top: 40 }}
+				bodyStyle={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto', padding: '16px 24px' }}
+			>
+				{getFormFields().length === 0 ? (
+					<div style={{ textAlign: 'center', padding: 40, color: '#94a3b8' }}>
+						Không thể tải trường biểu mẫu. Vui lòng thử lại.
+					</div>
+				) : (
+					getFormFields().map((field) => {
+						const value = resubmitData[field.key];
+						const error = resubmitErrors[field.key];
+						return (
+							<div key={field.key} style={{ marginBottom: 16 }}>
+								<label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6 }}>
+									{field.label}
+									{field.rules?.required && <span style={{ color: '#ef4444', marginLeft: 2 }}>*</span>}
+								</label>
+
+								{field.type === 'text' && (
+									<Input
+										placeholder={`Nhập ${field.label.toLowerCase()}`}
+										value={value || ''}
+										onChange={(e) => setResubmitFieldValue(field.key, e.target.value)}
+										maxLength={field.rules?.maxLength}
+									/>
+								)}
+
+								{field.type === 'number' && (
+									<InputNumber
+										placeholder={`Nhập ${field.label.toLowerCase()}`}
+										value={value}
+										onChange={(val) => setResubmitFieldValue(field.key, val)}
+										min={field.rules?.min}
+										max={field.rules?.max}
+										style={{ width: '100%' }}
+									/>
+								)}
+
+								{field.type === 'date' && (
+									<DatePicker
+										placeholder={`Chọn ${field.label.toLowerCase()}`}
+										value={value ? moment(value) : null}
+										onChange={(val) => setResubmitFieldValue(field.key, val?.toISOString() ?? null)}
+										style={{ width: '100%' }}
+									/>
+								)}
+
+								{field.type === 'select' && (() => {
+									const opts: string[] = field.options
+										? (field.options as any[]).map((o: any) => (typeof o === 'string' ? o : o.value))
+										: field.rules?.allowedTypes ?? [];
+									return (
+										<Select
+											placeholder={`Chọn ${field.label.toLowerCase()}`}
+											value={value}
+											onChange={(val) => setResubmitFieldValue(field.key, val)}
+											style={{ width: '100%' }}
+											allowClear
+											options={opts.map((o) => ({ label: o, value: o }))}
+										/>
+									);
+								})()}
+
+								{error && <div style={{ fontSize: 12, color: '#ef4444', marginTop: 4 }}>{error}</div>}
+							</div>
+						);
+					})
+				)}
+			</Modal>
 		</div>
 	);
 };

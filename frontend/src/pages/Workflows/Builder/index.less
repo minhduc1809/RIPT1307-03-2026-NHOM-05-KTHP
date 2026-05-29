@@ -51,7 +51,6 @@
 					margin: 0;
 					letter-spacing: -0.3px;
 				}
-
 				p {
 					font-size: 13px;
 					color: #94a3b8;
@@ -80,10 +79,6 @@
 					box-shadow: 0 6px 20px rgba(86, 94, 116, 0.4);
 					background: linear-gradient(135deg, #4a5268 0%, #3e4558 100%);
 				}
-
-				&:active {
-					transform: scale(0.97);
-				}
 			}
 		}
 	}
@@ -97,6 +92,7 @@
 		gap: 24px;
 	}
 
+	// ---------- Section Card ----------
 	.sectionCard {
 		background: #fff;
 		border-radius: 20px;
@@ -104,9 +100,7 @@
 		overflow: visible;
 		transition: box-shadow 0.3s;
 
-		&:hover {
-			box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-		}
+		&:hover { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
 
 		.sectionHeader {
 			padding: 24px 28px 0;
@@ -124,55 +118,24 @@
 				font-size: 18px;
 				flex-shrink: 0;
 
-				&.info {
-					background: #ede9fe;
-					color: #7c3aed;
-				}
-
-				&.states {
-					background: #dbeafe;
-					color: #2563eb;
-				}
-
-				&.transitions {
-					background: #fef3c7;
-					color: #d97706;
-				}
-
-				&.preview {
-					background: #d1fae5;
-					color: #059669;
-				}
+				&.info { background: #ede9fe; color: #7c3aed; }
+				&.steps { background: #dbeafe; color: #2563eb; }
+				&.preview { background: #d1fae5; color: #059669; }
 			}
 
 			.sectionTitle {
-				h3 {
-					font-size: 16px;
-					font-weight: 700;
-					color: #1a2332;
-					margin: 0;
-				}
-
-				p {
-					font-size: 12px;
-					color: #94a3b8;
-					margin: 2px 0 0;
-				}
+				h3 { font-size: 16px; font-weight: 700; color: #1a2332; margin: 0; }
+				p { font-size: 12px; color: #94a3b8; margin: 2px 0 0; }
 			}
 		}
 
-		.sectionBody {
-			padding: 20px 28px 28px;
-		}
+		.sectionBody { padding: 20px 28px 28px; }
 	}
 
-	// ---------- Basic Info Section ----------
+	// ---------- Form Group ----------
 	.formGroup {
 		margin-bottom: 20px;
-
-		&:last-child {
-			margin-bottom: 0;
-		}
+		&:last-child { margin-bottom: 0; }
 
 		label {
 			display: block;
@@ -180,11 +143,7 @@
 			font-weight: 600;
 			color: #475569;
 			margin-bottom: 8px;
-
-			.required {
-				color: #ef4444;
-				margin-left: 2px;
-			}
+			.required { color: #ef4444; margin-left: 2px; }
 		}
 
 		:global {
@@ -195,183 +154,142 @@
 				min-height: 42px !important;
 				font-size: 14px;
 				transition: all 0.2s;
-
-				&:hover {
-					border-color: #94a3b8 !important;
-				}
-
-				&:focus,
-				&.ant-select-focused {
-					border-color: #565e74 !important;
-					box-shadow: 0 0 0 3px rgba(86, 94, 116, 0.1) !important;
-				}
+				&:hover { border-color: #94a3b8 !important; }
+				&:focus { border-color: #565e74 !important; box-shadow: 0 0 0 3px rgba(86, 94, 116, 0.1) !important; }
 			}
-
-			.ant-select-selection-item {
-				line-height: 40px !important;
-			}
+			.ant-select-selection-item { line-height: 40px !important; }
 		}
 	}
 
-	// ---------- States Section ----------
-	.stateInputRow {
+	// ---------- Steps Section ----------
+	.stepsList {
 		display: flex;
-		gap: 8px;
+		flex-direction: column;
+		gap: 12px;
 		margin-bottom: 16px;
+	}
 
-		.stateInput {
-			flex: 1;
+	.stepCard {
+		background: #f8fafc;
+		border: 1px solid #e2e8f0;
+		border-radius: 16px;
+		padding: 20px;
+		transition: all 0.2s;
+		animation: slideIn 0.3s ease;
 
-			:global(.ant-input) {
-				border-radius: 10px !important;
-				height: 42px !important;
-				border-color: #e2e8f0 !important;
-
-				&:focus {
-					border-color: #565e74 !important;
-					box-shadow: 0 0 0 3px rgba(86, 94, 116, 0.1) !important;
-				}
-			}
+		&:hover {
+			border-color: #cbd5e1;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 		}
 
-		.addStateBtn {
-			height: 42px;
-			padding: 0 20px;
-			border-radius: 10px;
-			font-weight: 600;
-			font-size: 13px;
-			background: #f1f5f9;
-			border: 1px dashed #cbd5e1;
-			color: #64748b;
+		.stepHeader {
 			display: flex;
 			align-items: center;
-			gap: 6px;
-			cursor: pointer;
-			transition: all 0.2s;
+			justify-content: space-between;
+			margin-bottom: 16px;
 
-			&:hover {
-				background: #e2e8f0;
-				border-color: #94a3b8;
-				color: #1a2332;
-			}
-		}
-	}
+			.stepBadge {
+				display: flex;
+				align-items: center;
+				gap: 10px;
 
-	.statesList {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 8px;
-		margin-bottom: 20px;
-		min-height: 36px;
+				.stepNumber {
+					width: 32px;
+					height: 32px;
+					border-radius: 10px;
+					background: linear-gradient(135deg, #2563eb, #3b82f6);
+					color: #fff;
+					font-weight: 700;
+					font-size: 14px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				}
 
-		.stateTag {
-			display: inline-flex;
-			align-items: center;
-			gap: 6px;
-			padding: 6px 14px;
-			border-radius: 20px;
-			font-size: 13px;
-			font-weight: 500;
-			background: #f1f5f9;
-			color: #475569;
-			border: 1px solid #e2e8f0;
-			transition: all 0.2s;
-			animation: fadeIn 0.2s ease;
-
-			&.initial {
-				background: #dbeafe;
-				color: #1d4ed8;
-				border-color: #93c5fd;
+				.stepTitle {
+					font-size: 15px;
+					font-weight: 700;
+					color: #1a2332;
+				}
 			}
 
-			&.final {
-				background: #d1fae5;
-				color: #047857;
-				border-color: #6ee7b7;
-			}
-
-			&.initialFinal {
-				background: linear-gradient(135deg, #dbeafe 0%, #d1fae5 100%);
-				color: #1a2332;
-				border-color: #93c5fd;
-			}
-
-			.stateLabel {
+			.stepActions {
 				display: flex;
 				align-items: center;
 				gap: 4px;
 
-				.badge {
-					font-size: 10px;
-					padding: 1px 6px;
+				button {
+					width: 32px;
+					height: 32px;
 					border-radius: 8px;
-					font-weight: 700;
-					letter-spacing: 0.5px;
-					text-transform: uppercase;
+					border: none;
+					background: transparent;
+					color: #94a3b8;
+					cursor: pointer;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					font-size: 14px;
+					transition: all 0.2s;
 
-					&.initialBadge {
-						background: #2563eb;
-						color: #fff;
-					}
-
-					&.finalBadge {
-						background: #059669;
-						color: #fff;
-					}
+					&:hover { background: #f1f5f9; color: #1a2332; }
+					&.deleteBtn:hover { background: #fef2f2; color: #ef4444; }
+					&:disabled { opacity: 0.3; cursor: not-allowed; &:hover { background: transparent; color: #94a3b8; } }
 				}
 			}
+		}
 
-			.removeState {
-				cursor: pointer;
-				color: #94a3b8;
-				font-size: 11px;
-				border: none;
-				background: none;
-				padding: 2px;
+		.stepBody {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 16px;
+
+			@media (max-width: 600px) { grid-template-columns: 1fr; }
+		}
+
+		.stepField {
+			label {
+				display: block;
+				font-size: 12px;
+				font-weight: 600;
+				color: #64748b;
+				margin-bottom: 6px;
+			}
+
+			:global {
+				.ant-select-selector {
+					border-radius: 10px !important;
+					border-color: #e2e8f0 !important;
+					min-height: 38px !important;
+				}
+			}
+		}
+
+		.stepOptions {
+			grid-column: 1 / -1;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 16px;
+			padding-top: 4px;
+
+			.optionGroup {
 				display: flex;
 				align-items: center;
-				transition: color 0.2s;
+				gap: 8px;
 
-				&:hover {
-					color: #ef4444;
+				:global(.ant-checkbox-wrapper) {
+					font-size: 13px;
+					color: #475569;
 				}
 			}
 		}
 	}
 
-	.stateConfigRow {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 16px;
-
-		@media (max-width: 600px) {
-			grid-template-columns: 1fr;
-		}
-	}
-
-	.emptyStates {
-		text-align: center;
-		padding: 24px;
-		color: #94a3b8;
-		font-size: 13px;
-		background: #f8fafc;
-		border-radius: 12px;
-		border: 1px dashed #e2e8f0;
-		margin-bottom: 20px;
-
-		span {
-			font-size: 28px;
-			display: block;
-			margin-bottom: 8px;
-		}
-	}
-
-	// ---------- Transitions Section ----------
-	.addTransitionBtn {
+	.addStepBtn {
 		width: 100%;
-		height: 48px;
-		border-radius: 12px;
-		border: 1px dashed #cbd5e1;
+		height: 52px;
+		border-radius: 14px;
+		border: 2px dashed #cbd5e1;
 		background: #f8fafc;
 		color: #64748b;
 		font-weight: 600;
@@ -382,151 +300,32 @@
 		gap: 8px;
 		cursor: pointer;
 		transition: all 0.2s;
-		margin-bottom: 16px;
 
 		&:hover {
 			background: #f1f5f9;
 			border-color: #94a3b8;
 			color: #1a2332;
 		}
-
-		&:disabled {
-			opacity: 0.5;
-			cursor: not-allowed;
-		}
 	}
 
-	.transitionsList {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-	}
-
-	.transitionCard {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 16px 20px;
-		background: #f8fafc;
-		border-radius: 14px;
-		border: 1px solid #e2e8f0;
-		transition: all 0.2s;
-		animation: slideIn 0.3s ease;
-
-		&:hover {
-			background: #f1f5f9;
-			border-color: #cbd5e1;
-		}
-
-		.transitionFlow {
-			display: flex;
-			align-items: center;
-			gap: 10px;
-			flex: 1;
-			min-width: 0;
-
-			.stateChip {
-				padding: 4px 12px;
-				border-radius: 8px;
-				font-size: 12px;
-				font-weight: 600;
-				white-space: nowrap;
-
-				&.from {
-					background: #fef3c7;
-					color: #92400e;
-				}
-
-				&.to {
-					background: #dbeafe;
-					color: #1e40af;
-				}
-
-				&.wildcard {
-					background: #fce7f3;
-					color: #9d174d;
-				}
-			}
-
-			.arrow {
-				color: #94a3b8;
-				font-size: 14px;
-				flex-shrink: 0;
-			}
-
-			.actionName {
-				padding: 4px 10px;
-				border-radius: 8px;
-				background: #ede9fe;
-				color: #6d28d9;
-				font-size: 12px;
-				font-weight: 600;
-				white-space: nowrap;
-			}
-		}
-
-		.transitionMeta {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			flex-shrink: 0;
-			margin-left: 12px;
-
-			.roleChip {
-				padding: 2px 8px;
-				border-radius: 6px;
-				font-size: 11px;
-				font-weight: 500;
-				background: #f1f5f9;
-				color: #64748b;
-			}
-
-			.commentBadge {
-				font-size: 11px;
-				color: #d97706;
-				display: flex;
-				align-items: center;
-				gap: 3px;
-			}
-
-			.removeTransition {
-				cursor: pointer;
-				color: #cbd5e1;
-				border: none;
-				background: none;
-				padding: 4px;
-				border-radius: 6px;
-				display: flex;
-				align-items: center;
-				font-size: 14px;
-				transition: all 0.2s;
-
-				&:hover {
-					color: #ef4444;
-					background: #fef2f2;
-				}
-			}
-		}
-	}
-
-	.emptyTransitions {
+	.emptySteps {
 		text-align: center;
-		padding: 32px;
+		padding: 40px 20px;
 		color: #94a3b8;
 		font-size: 13px;
+		background: #f8fafc;
+		border-radius: 14px;
+		border: 2px dashed #e2e8f0;
+		margin-bottom: 16px;
 
-		span {
-			font-size: 32px;
-			display: block;
-			margin-bottom: 8px;
-		}
+		span { font-size: 32px; display: block; margin-bottom: 8px; }
 	}
 
 	// ---------- Preview Section ----------
 	.previewContainer {
 		background: #f8fafc;
 		border-radius: 16px;
-		padding: 24px;
+		padding: 28px;
 		border: 1px solid #e2e8f0;
 		overflow-x: auto;
 	}
@@ -534,7 +333,7 @@
 	.previewFlow {
 		display: flex;
 		align-items: flex-start;
-		gap: 8px;
+		gap: 6px;
 		min-width: min-content;
 		justify-content: center;
 		flex-wrap: wrap;
@@ -547,33 +346,25 @@
 		gap: 6px;
 
 		.nodeDot {
-			width: 48px;
-			height: 48px;
+			width: 52px;
+			height: 52px;
 			border-radius: 14px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			font-size: 13px;
+			font-size: 11px;
 			font-weight: 700;
 			color: #fff;
-			background: #94a3b8;
 			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-			transition: transform 0.2s;
 			text-align: center;
 			line-height: 1.2;
-			padding: 4px;
+			padding: 6px;
 
-			&.initial {
-				background: linear-gradient(135deg, #2563eb, #3b82f6);
-			}
-
-			&.final {
-				background: linear-gradient(135deg, #059669, #10b981);
-			}
-
-			&.normal {
-				background: linear-gradient(135deg, #64748b, #94a3b8);
-			}
+			&.start { background: linear-gradient(135deg, #2563eb, #3b82f6); }
+			&.step { background: linear-gradient(135deg, #64748b, #94a3b8); }
+			&.approved { background: linear-gradient(135deg, #059669, #10b981); }
+			&.rejected { background: linear-gradient(135deg, #dc2626, #ef4444); }
+			&.returned { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
 		}
 
 		.nodeName {
@@ -584,14 +375,45 @@
 			max-width: 80px;
 			word-break: break-word;
 		}
+
+		.nodeRole {
+			font-size: 10px;
+			color: #94a3b8;
+			font-weight: 500;
+		}
 	}
 
 	.previewArrow {
 		display: flex;
 		align-items: center;
-		height: 48px;
+		height: 52px;
 		color: #cbd5e1;
-		font-size: 20px;
+		font-size: 18px;
+	}
+
+	.previewBranches {
+		display: flex;
+		justify-content: center;
+		gap: 16px;
+		margin-top: 16px;
+		padding-top: 16px;
+		border-top: 1px dashed #e2e8f0;
+
+		.branchItem {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			font-size: 12px;
+			color: #64748b;
+
+			.branchDot {
+				width: 10px;
+				height: 10px;
+				border-radius: 3px;
+				&.rejected { background: #ef4444; }
+				&.returned { background: #8b5cf6; }
+			}
+		}
 	}
 
 	.emptyPreview {
@@ -600,55 +422,9 @@
 		color: #94a3b8;
 		font-size: 13px;
 	}
-
-	// ---------- Modal Styles ----------
-	:global {
-		.workflow-transition-modal {
-			.ant-modal-content {
-				border-radius: 20px;
-				overflow: hidden;
-			}
-
-			.ant-modal-header {
-				padding: 20px 24px;
-				border-bottom: 1px solid #f1f5f9;
-			}
-
-			.ant-modal-title {
-				font-weight: 700;
-				font-size: 16px;
-			}
-
-			.ant-modal-body {
-				padding: 24px;
-			}
-
-			.ant-modal-footer {
-				padding: 16px 24px;
-				border-top: 1px solid #f1f5f9;
-			}
-		}
-	}
-}
-
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-		transform: scale(0.9);
-	}
-	to {
-		opacity: 1;
-		transform: scale(1);
-	}
 }
 
 @keyframes slideIn {
-	from {
-		opacity: 0;
-		transform: translateY(-8px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
+	from { opacity: 0; transform: translateY(-8px); }
+	to { opacity: 1; transform: translateY(0); }
 }

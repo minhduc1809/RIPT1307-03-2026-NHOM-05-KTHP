@@ -1,14 +1,14 @@
 import {
 	ArrowLeftOutlined,
 	ArrowRightOutlined,
-	CloseOutlined,
-	CommentOutlined,
 	DeleteOutlined,
+	DownOutlined,
 	PlusOutlined,
 	SaveOutlined,
+	UpOutlined,
 } from '@ant-design/icons';
-import { AutoComplete, Button, Checkbox, Input, message, Modal, Select } from 'antd';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Button, Checkbox, Input, message, Select } from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
 import { history } from 'umi';
 import { getActiveForms } from '@/services/Forms/formApi';
 import type { IForm } from '@/services/Forms/typings';
@@ -16,35 +16,97 @@ import { createWorkflowDefinition } from '@/services/Workflows/workflowApi';
 import type { IWorkflowConfig, IWorkflowTransition } from '@/services/Workflows/typings';
 import styles from './index.less';
 
-const SUGGESTED_ACTIONS = ['approve', 'reject', 'cancel', 'return_for_edit', 'resubmit'];
-const ALL_ROLES = ['ADMIN', 'MANAGER', 'USER'];
+const ALL_ROLES = ['ADMIN', 'MANAGER', 'HR', 'USER'];
+
+const ROLE_LABELS: Record<string, string> = {
+	ADMIN: 'Quản trị viên',
+	MANAGER: 'Quản lý',
+	HR: 'Nhân sự',
+	USER: 'Nhân viên',
+};
+
+const ROLE_LABELS_SHORT: Record<string, string> = {
+	ADMIN: 'Quản trị',
+	MANAGER: 'Quản lý',
+	HR: 'Nhân sự',
+	USER: 'Nhân viên',
+};
+
+interface ApprovalStep {
+	role: string;
+	requireCommentOnReject: boolean;
+	canReturn: boolean;
+	requireCommentOnReturn: boolean;
+}
+
+function buildConfig(steps: ApprovalStep[]): IWorkflowConfig {
+	const states: string[] = [];
+	const transitions: IWorkflowTransition[] = [];
+
+	steps.forEach((_, i) => {
+		states.push(`step_${i + 1}`);
+	});
+
+	states.push('approved', 'rejected');
+	const hasReturn = steps.some((s) => s.canReturn);
+	if (hasReturn) states.push('returned');
+
+	const finalStates = ['approved', 'rejected'];
+	if (hasReturn) finalStates.push('returned');
+
+	steps.forEach((step, i) => {
+		const fromState = `step_${i + 1}`;
+		const nextState = i < steps.length - 1 ? `step_${i + 2}` : 'approved';
+
+		transitions.push({
+			from: fromState,
+			to: nextState,
+			action: 'approve',
+			roles: [step.role],
+		});
+
+		transitions.push({
+			from: fromState,
+			to: 'rejected',
+			action: 'reject',
+			roles: [step.role],
+			...(step.requireCommentOnReject && { conditions: { requireComment: true } }),
+		});
+
+		if (step.canReturn) {
+			transitions.push({
+				from: fromState,
+				to: 'returned',
+				action: 'return_for_edit',
+				roles: [step.role],
+				...(step.requireCommentOnReturn && { conditions: { requireComment: true } }),
+			});
+		}
+	});
+
+	return {
+		states,
+		initialState: 'step_1',
+		finalStates,
+		transitions,
+	};
+}
+
+const DEFAULT_STEP: ApprovalStep = {
+	role: 'MANAGER',
+	requireCommentOnReject: true,
+	canReturn: false,
+	requireCommentOnReturn: false,
+};
 
 const WorkflowBuilder: React.FC = () => {
-	// ---- Basic Info ----
 	const [workflowName, setWorkflowName] = useState('');
 	const [selectedFormId, setSelectedFormId] = useState<string | undefined>(undefined);
 	const [forms, setForms] = useState<IForm[]>([]);
 	const [loadingForms, setLoadingForms] = useState(false);
-
-	// ---- States ----
-	const [states, setStates] = useState<string[]>([]);
-	const [initialState, setInitialState] = useState<string | undefined>(undefined);
-	const [finalStates, setFinalStates] = useState<string[]>([]);
-	const [newStateName, setNewStateName] = useState('');
-
-	// ---- Transitions ----
-	const [transitions, setTransitions] = useState<IWorkflowTransition[]>([]);
-	const [transitionModalOpen, setTransitionModalOpen] = useState(false);
-	const [editFrom, setEditFrom] = useState<string | undefined>(undefined);
-	const [editTo, setEditTo] = useState<string | undefined>(undefined);
-	const [editAction, setEditAction] = useState<string>('');
-	const [editRoles, setEditRoles] = useState<string[]>([]);
-	const [editRequireComment, setEditRequireComment] = useState(false);
-
-	// ---- Saving ----
+	const [steps, setSteps] = useState<ApprovalStep[]>([{ ...DEFAULT_STEP }]);
 	const [saving, setSaving] = useState(false);
 
-	// ---- Load forms for linking ----
 	useEffect(() => {
 		const loadForms = async () => {
 			setLoadingForms(true);
@@ -52,135 +114,53 @@ const WorkflowBuilder: React.FC = () => {
 				const response = await getActiveForms();
 				const data = (response as any)?.data?.data ?? (response as any)?.data;
 				setForms(Array.isArray(data) ? data : []);
-			} catch {
-				// Silently fail
-			} finally {
+			} catch { /* silent */ } finally {
 				setLoadingForms(false);
 			}
 		};
 		loadForms();
 	}, []);
 
-	// ---- State Management ----
-	const addState = useCallback(() => {
-		const name = newStateName.trim().toLowerCase().replace(/\s+/g, '_');
-		if (!name) {
-			message.warning('Vui lòng nhập tên trạng thái');
-			return;
-		}
-		if (states.includes(name)) {
-			message.warning('Trạng thái này đã tồn tại');
-			return;
-		}
-		setStates((prev) => [...prev, name]);
-		setNewStateName('');
-
-		// Auto-set initial state if first state
-		if (states.length === 0) {
-			setInitialState(name);
-		}
-	}, [newStateName, states]);
-
-	const removeState = useCallback(
-		(stateName: string) => {
-			// Check if state is used in transitions
-			const isUsed = transitions.some(
-				(t) =>
-					t.to === stateName ||
-					t.from === stateName ||
-					(Array.isArray(t.from) && t.from.includes(stateName)),
-			);
-			if (isUsed) {
-				message.error('Không thể xóa trạng thái đang được sử dụng trong transitions');
-				return;
-			}
-
-			setStates((prev) => prev.filter((s) => s !== stateName));
-			if (initialState === stateName) setInitialState(undefined);
-			setFinalStates((prev) => prev.filter((s) => s !== stateName));
-		},
-		[transitions, initialState],
-	);
-
-	// ---- Transition Management ----
-	const openTransitionModal = () => {
-		setEditFrom(undefined);
-		setEditTo(undefined);
-		setEditAction('');
-		setEditRoles([]);
-		setEditRequireComment(false);
-		setTransitionModalOpen(true);
+	const addStep = () => {
+		setSteps((prev) => [...prev, { ...DEFAULT_STEP }]);
 	};
 
-	const addTransition = () => {
-		if (!editFrom) {
-			message.warning('Vui lòng chọn trạng thái nguồn');
+	const removeStep = (index: number) => {
+		if (steps.length <= 1) {
+			message.warning('Cần ít nhất 1 bước duyệt');
 			return;
 		}
-		if (!editTo) {
-			message.warning('Vui lòng chọn trạng thái đích');
-			return;
-		}
-		const actionValue = editAction.trim().toLowerCase().replace(/\s+/g, '_');
-		if (!actionValue) {
-			message.warning('Vui lòng nhập tên action');
-			return;
-		}
-
-		const newTransition: IWorkflowTransition = {
-			from: editFrom,
-			to: editTo,
-			action: actionValue,
-			...(editRoles.length > 0 && { roles: editRoles }),
-			...(editRequireComment && { conditions: { requireComment: true } }),
-		};
-
-		setTransitions((prev) => [...prev, newTransition]);
-		setTransitionModalOpen(false);
+		setSteps((prev) => prev.filter((_, i) => i !== index));
 	};
 
-	const removeTransition = (index: number) => {
-		setTransitions((prev) => prev.filter((_, i) => i !== index));
+	const updateStep = (index: number, patch: Partial<ApprovalStep>) => {
+		setSteps((prev) => prev.map((s, i) => (i === index ? { ...s, ...patch } : s)));
 	};
 
-	// ---- Validation ----
-	const validate = useCallback((): string | null => {
+	const moveStep = (index: number, direction: -1 | 1) => {
+		const target = index + direction;
+		if (target < 0 || target >= steps.length) return;
+		setSteps((prev) => {
+			const arr = [...prev];
+			[arr[index], arr[target]] = [arr[target], arr[index]];
+			return arr;
+		});
+	};
+
+	const validate = (): string | null => {
 		if (!workflowName.trim()) return 'Vui lòng nhập tên workflow';
-		if (states.length === 0) return 'Cần ít nhất 1 trạng thái';
-		if (!initialState) return 'Vui lòng chọn trạng thái khởi tạo';
-		if (!states.includes(initialState)) return 'Trạng thái khởi tạo không hợp lệ';
-		if (finalStates.length === 0) return 'Cần ít nhất 1 trạng thái kết thúc';
-		for (const fs of finalStates) {
-			if (!states.includes(fs)) return `Trạng thái kết thúc "${fs}" không nằm trong danh sách states`;
-		}
-		if (transitions.length === 0) return 'Cần ít nhất 1 transition';
-		for (const t of transitions) {
-			const fromValue = typeof t.from === 'string' ? t.from : '';
-			if (fromValue !== '*' && !states.includes(fromValue)) {
-				return `Transition từ "${fromValue}" không hợp lệ`;
-			}
-			if (!states.includes(t.to)) {
-				return `Transition đến "${t.to}" không hợp lệ`;
-			}
+		if (steps.length === 0) return 'Cần ít nhất 1 bước duyệt';
+		for (let i = 0; i < steps.length; i++) {
+			if (!steps[i].role) return `Bước ${i + 1}: Chưa chọn người duyệt`;
 		}
 		return null;
-	}, [workflowName, states, initialState, finalStates, transitions]);
+	};
 
-	// ---- Submit ----
 	const handleSave = async () => {
 		const error = validate();
-		if (error) {
-			message.error(error);
-			return;
-		}
+		if (error) { message.error(error); return; }
 
-		const config: IWorkflowConfig = {
-			states,
-			initialState: initialState!,
-			finalStates,
-			transitions,
-		};
-
+		const config = buildConfig(steps);
 		setSaving(true);
 		try {
 			await createWorkflowDefinition({
@@ -191,36 +171,22 @@ const WorkflowBuilder: React.FC = () => {
 			message.success('Tạo workflow thành công!');
 			history.push('/workflows');
 		} catch (err) {
-			// Error is handled by axios interceptor
 			console.error('Failed to create workflow:', err);
 		} finally {
 			setSaving(false);
 		}
 	};
 
-	// ---- Preview data ----
-	const orderedStates = useMemo(() => {
-		if (states.length === 0) return [];
-		// Put initial state first, then non-final, then final
-		const init = initialState ? [initialState] : [];
-		const middle = states.filter((s) => s !== initialState && !finalStates.includes(s));
-		const final = finalStates.filter((s) => s !== initialState);
-		return [...new Set([...init, ...middle, ...final])];
-	}, [states, initialState, finalStates]);
+	const previewConfig = useMemo(() => {
+		if (steps.length === 0) return null;
+		return buildConfig(steps);
+	}, [steps]);
 
-	const stateOptions = useMemo(
-		() => states.map((s) => ({ label: s, value: s })),
-		[states],
-	);
-
-	const fromStateOptions = useMemo(
-		() => [{ label: '* (tất cả)', value: '*' }, ...stateOptions],
-		[stateOptions],
-	);
+	const hasReturn = steps.some((s) => s.canReturn);
 
 	return (
 		<div className={styles.builderPage}>
-			{/* ===== HEADER ===== */}
+			{/* Header */}
 			<div className={styles.builderHeader}>
 				<div className={styles.headerLeft}>
 					<button className={styles.backBtn} onClick={() => history.push('/workflows')}>
@@ -244,9 +210,8 @@ const WorkflowBuilder: React.FC = () => {
 				</div>
 			</div>
 
-			{/* ===== CONTENT ===== */}
 			<div className={styles.builderContent}>
-				{/* --- Section 1: Basic Info --- */}
+				{/* Section 1: Basic Info */}
 				<div className={styles.sectionCard}>
 					<div className={styles.sectionHeader}>
 						<div className={`${styles.sectionIcon} ${styles.info}`}>📝</div>
@@ -257,9 +222,7 @@ const WorkflowBuilder: React.FC = () => {
 					</div>
 					<div className={styles.sectionBody}>
 						<div className={styles.formGroup}>
-							<label>
-								Tên Workflow <span className={styles.required}>*</span>
-							</label>
+							<label>Tên Workflow <span className={styles.required}>*</span></label>
 							<Input
 								placeholder="Ví dụ: Luồng phê duyệt đơn nghỉ phép"
 								value={workflowName}
@@ -286,330 +249,184 @@ const WorkflowBuilder: React.FC = () => {
 					</div>
 				</div>
 
-				{/* --- Section 2: States --- */}
+				{/* Section 2: Approval Steps */}
 				<div className={styles.sectionCard}>
 					<div className={styles.sectionHeader}>
-						<div className={`${styles.sectionIcon} ${styles.states}`}>🔵</div>
+						<div className={`${styles.sectionIcon} ${styles.steps}`}>👥</div>
 						<div className={styles.sectionTitle}>
-							<h3>Quản lý trạng thái</h3>
-							<p>Thêm các bước trong luồng phê duyệt</p>
+							<h3>Các bước phê duyệt</h3>
+							<p>Thêm người duyệt theo thứ tự. Yêu cầu sẽ đi qua từng bước từ trên xuống.</p>
 						</div>
 					</div>
 					<div className={styles.sectionBody}>
-						{/* Add State */}
-						<div className={styles.stateInputRow}>
-							<div className={styles.stateInput}>
-								<Input
-									placeholder="Nhập tên trạng thái (ví dụ: pending_manager)"
-									value={newStateName}
-									onChange={(e) => setNewStateName(e.target.value)}
-									onPressEnter={addState}
-								/>
-							</div>
-							<button className={styles.addStateBtn} onClick={addState}>
-								<PlusOutlined /> Thêm
-							</button>
-						</div>
-
-						{/* States List */}
-						{states.length === 0 ? (
-							<div className={styles.emptyStates}>
-								<span>📋</span>
-								Chưa có trạng thái nào. Hãy thêm ít nhất 1 trạng thái.
+						{steps.length === 0 ? (
+							<div className={styles.emptySteps}>
+								<span>👥</span>
+								Chưa có bước duyệt nào. Nhấn nút bên dưới để thêm.
 							</div>
 						) : (
-							<div className={styles.statesList}>
-								{states.map((s) => {
-									const isInitial = initialState === s;
-									const isFinal = finalStates.includes(s);
-									let tagClass = styles.stateTag;
-									if (isInitial && isFinal) tagClass += ` ${styles.initialFinal}`;
-									else if (isInitial) tagClass += ` ${styles.initial}`;
-									else if (isFinal) tagClass += ` ${styles.final}`;
-
-									return (
-										<span key={s} className={tagClass}>
-											<span className={styles.stateLabel}>
-												{s}
-												{isInitial && (
-													<span className={`${styles.badge} ${styles.initialBadge}`}>
-														Bắt đầu
-													</span>
-												)}
-												{isFinal && (
-													<span className={`${styles.badge} ${styles.finalBadge}`}>
-														Kết thúc
-													</span>
-												)}
-											</span>
-											<button
-												className={styles.removeState}
-												onClick={() => removeState(s)}
-												title="Xóa trạng thái"
-											>
-												<CloseOutlined />
-											</button>
-										</span>
-									);
-								})}
-							</div>
-						)}
-
-						{/* Initial / Final config */}
-						{states.length > 0 && (
-							<div className={styles.stateConfigRow}>
-								<div className={styles.formGroup}>
-									<label>
-										Trạng thái khởi tạo <span className={styles.required}>*</span>
-									</label>
-									<Select
-										placeholder="Chọn trạng thái bắt đầu"
-										value={initialState}
-										onChange={setInitialState}
-										style={{ width: '100%' }}
-										options={stateOptions}
-									/>
-								</div>
-								<div className={styles.formGroup}>
-									<label>
-										Trạng thái kết thúc <span className={styles.required}>*</span>
-									</label>
-									<Select
-										mode="multiple"
-										placeholder="Chọn trạng thái kết thúc"
-										value={finalStates}
-										onChange={setFinalStates}
-										style={{ width: '100%' }}
-										options={stateOptions}
-									/>
-								</div>
-							</div>
-						)}
-					</div>
-				</div>
-
-				{/* --- Section 3: Transitions --- */}
-				<div className={styles.sectionCard}>
-					<div className={styles.sectionHeader}>
-						<div className={`${styles.sectionIcon} ${styles.transitions}`}>🔀</div>
-						<div className={styles.sectionTitle}>
-							<h3>Quản lý chuyển trạng thái</h3>
-							<p>Thiết lập các bước chuyển đổi giữa các trạng thái</p>
-						</div>
-					</div>
-					<div className={styles.sectionBody}>
-						<Button
-							type="dashed"
-							block
-							size="large"
-							icon={<PlusOutlined />}
-							onClick={() => {
-								setEditFrom(undefined);
-								setEditTo(undefined);
-								setEditAction('');
-								setEditRoles([]);
-								setEditRequireComment(false);
-								setTransitionModalOpen(true);
-							}}
-							disabled={states.length < 2}
-							style={{
-								height: 48,
-								borderRadius: 12,
-								fontWeight: 600,
-								fontSize: 14,
-								marginBottom: 16,
-							}}
-						>
-							Thêm Transition
-						</Button>
-
-						{transitions.length === 0 ? (
-							<div className={styles.emptyTransitions}>
-								<span>🔗</span>
-								{states.length < 2
-									? 'Cần ít nhất 2 trạng thái để tạo transition'
-									: 'Chưa có transition nào. Nhấn nút trên để thêm.'}
-							</div>
-						) : (
-							<div className={styles.transitionsList}>
-								{transitions.map((t, idx) => {
-									const fromLabel =
-										typeof t.from === 'string'
-											? t.from === '*'
-												? '* (tất cả)'
-												: t.from
-											: (t.from as string[]).join(', ');
-
-									return (
-										<div key={idx} className={styles.transitionCard}>
-											<div className={styles.transitionFlow}>
-												<span
-													className={`${styles.stateChip} ${
-														t.from === '*' ? styles.wildcard : styles.from
-													}`}
-												>
-													{fromLabel}
-												</span>
-												<span className={styles.arrow}>
-													<ArrowRightOutlined />
-												</span>
-												<span className={`${styles.stateChip} ${styles.to}`}>
-													{t.to}
-												</span>
-												<span className={styles.actionName}>{t.action}</span>
+							<div className={styles.stepsList}>
+								{steps.map((step, idx) => (
+									<div key={idx} className={styles.stepCard}>
+										<div className={styles.stepHeader}>
+											<div className={styles.stepBadge}>
+												<div className={styles.stepNumber}>{idx + 1}</div>
+												<div className={styles.stepTitle}>
+													{ROLE_LABELS[step.role] || step.role} duyệt
+												</div>
 											</div>
-											<div className={styles.transitionMeta}>
-												{t.roles?.map((r) => (
-													<span key={r} className={styles.roleChip}>
-														{r}
-													</span>
-												))}
-												{t.conditions?.requireComment && (
-													<span className={styles.commentBadge}>
-														<CommentOutlined /> bắt buộc
-													</span>
-												)}
+											<div className={styles.stepActions}>
 												<button
-													className={styles.removeTransition}
-													onClick={() => removeTransition(idx)}
-													title="Xóa transition"
+													onClick={() => moveStep(idx, -1)}
+													disabled={idx === 0}
+													title="Di lên"
+												>
+													<UpOutlined />
+												</button>
+												<button
+													onClick={() => moveStep(idx, 1)}
+													disabled={idx === steps.length - 1}
+													title="Di xuống"
+												>
+													<DownOutlined />
+												</button>
+												<button
+													className={styles.deleteBtn}
+													onClick={() => removeStep(idx)}
+													title="Xóa bước"
 												>
 													<DeleteOutlined />
 												</button>
 											</div>
 										</div>
-									);
-								})}
+
+										<div className={styles.stepBody}>
+											<div className={styles.stepField}>
+												<label>Người duyệt <span style={{ color: '#ef4444' }}>*</span></label>
+												<Select
+													value={step.role}
+													onChange={(val) => updateStep(idx, { role: val })}
+													style={{ width: '100%' }}
+													options={ALL_ROLES.map((r) => ({
+														label: `${ROLE_LABELS[r]} (${r})`,
+														value: r,
+													}))}
+												/>
+											</div>
+											<div className={styles.stepField}>
+												<label>Bước tiếp theo</label>
+												<Input
+													disabled
+													value={
+														idx < steps.length - 1
+															? `Bước ${idx + 2}: ${ROLE_LABELS[steps[idx + 1].role] || steps[idx + 1].role} duyệt`
+															: 'Phê duyệt hoàn tất'
+													}
+												/>
+											</div>
+											<div className={styles.stepOptions}>
+												<div className={styles.optionGroup}>
+													<Checkbox
+														checked={step.requireCommentOnReject}
+														onChange={(e) => updateStep(idx, { requireCommentOnReject: e.target.checked })}
+													>
+														Bắt buộc ghi chú khi từ chối
+													</Checkbox>
+												</div>
+												<div className={styles.optionGroup}>
+													<Checkbox
+														checked={step.canReturn}
+														onChange={(e) => updateStep(idx, {
+															canReturn: e.target.checked,
+															...(!e.target.checked && { requireCommentOnReturn: false }),
+														})}
+													>
+														Cho phép trả lại để sửa
+													</Checkbox>
+													{step.canReturn && (
+														<Checkbox
+															checked={step.requireCommentOnReturn}
+															onChange={(e) => updateStep(idx, { requireCommentOnReturn: e.target.checked })}
+														>
+															Bắt buộc ghi chú khi trả lại
+														</Checkbox>
+													)}
+												</div>
+											</div>
+										</div>
+									</div>
+								))}
 							</div>
 						)}
+
+						<button className={styles.addStepBtn} onClick={addStep}>
+							<PlusOutlined /> Thêm bước duyệt
+						</button>
 					</div>
 				</div>
 
-				{/* --- Section 4: Preview --- */}
+				{/* Section 3: Preview */}
 				<div className={styles.sectionCard}>
 					<div className={styles.sectionHeader}>
 						<div className={`${styles.sectionIcon} ${styles.preview}`}>👁️</div>
 						<div className={styles.sectionTitle}>
 							<h3>Xem trước luồng</h3>
-							<p>Sơ đồ tổng quan các trạng thái trong workflow</p>
+							<p>Sơ đồ tổng quan các bước phê duyệt</p>
 						</div>
 					</div>
 					<div className={styles.sectionBody}>
-						{orderedStates.length === 0 ? (
+						{steps.length === 0 ? (
 							<div className={styles.emptyPreview}>
-								Thêm trạng thái để xem sơ đồ luồng workflow
+								Thêm bước duyệt để xem sơ đồ luồng workflow
 							</div>
 						) : (
 							<div className={styles.previewContainer}>
 								<div className={styles.previewFlow}>
-									{orderedStates.map((s, idx) => {
-										const isInit = s === initialState;
-										const isFin = finalStates.includes(s);
-										let nodeClass = styles.normal;
-										if (isInit) nodeClass = styles.initial;
-										else if (isFin) nodeClass = styles.final;
+									{/* Submit node */}
+									<div className={styles.previewNode}>
+										<div className={`${styles.nodeDot} ${styles.start}`}>NỘP</div>
+										<div className={styles.nodeName}>Nộp yêu cầu</div>
+									</div>
 
-										return (
-											<React.Fragment key={s}>
-												{idx > 0 && (
-													<div className={styles.previewArrow}>
-														<ArrowRightOutlined />
-													</div>
-												)}
-												<div className={styles.previewNode}>
-													<div className={`${styles.nodeDot} ${nodeClass}`}>
-														{isInit ? '▶' : isFin ? '■' : '●'}
-													</div>
-													<div className={styles.nodeName}>{s}</div>
+									{steps.map((step, idx) => (
+										<React.Fragment key={idx}>
+											<div className={styles.previewArrow}><ArrowRightOutlined /></div>
+											<div className={styles.previewNode}>
+												<div className={`${styles.nodeDot} ${styles.step}`}>
+													B{idx + 1}
 												</div>
-											</React.Fragment>
-										);
-									})}
+												<div className={styles.nodeName}>
+													{ROLE_LABELS[step.role] || step.role}
+												</div>
+												<div className={styles.nodeRole}>duyệt</div>
+											</div>
+										</React.Fragment>
+									))}
+
+									<div className={styles.previewArrow}><ArrowRightOutlined /></div>
+									<div className={styles.previewNode}>
+										<div className={`${styles.nodeDot} ${styles.approved}`}>OK</div>
+										<div className={styles.nodeName}>Phê duyệt</div>
+									</div>
 								</div>
+
+								<div className={styles.previewBranches}>
+										<div className={styles.branchItem}>
+											<div className={`${styles.branchDot} ${styles.rejected}`} />
+											Bất kỳ bước nào có thể từ chối → Kết thúc
+										</div>
+										{hasReturn && (
+											<div className={styles.branchItem}>
+												<div className={`${styles.branchDot} ${styles.returned}`} />
+												Bất kỳ bước nào có thể trả lại → Người nộp sửa và nộp lại
+											</div>
+										)}
+									</div>
 							</div>
 						)}
 					</div>
 				</div>
 			</div>
-
-			{/* ===== TRANSITION MODAL ===== */}
-			<Modal
-				title="Thêm Transition"
-				visible={transitionModalOpen}
-				onCancel={() => setTransitionModalOpen(false)}
-				onOk={addTransition}
-				okText="Thêm"
-				cancelText="Hủy"
-				width={520}
-				destroyOnClose
-			>
-				<div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 8 }}>
-					<div>
-						<label style={{ display: 'block', fontWeight: 600, fontSize: 13, color: '#475569', marginBottom: 8 }}>
-							Từ trạng thái <span style={{ color: '#ef4444' }}>*</span>
-						</label>
-						<Select
-							placeholder="Chọn trạng thái nguồn"
-							value={editFrom}
-							onChange={setEditFrom}
-							style={{ width: '100%' }}
-							options={fromStateOptions}
-						/>
-					</div>
-
-					<div>
-						<label style={{ display: 'block', fontWeight: 600, fontSize: 13, color: '#475569', marginBottom: 8 }}>
-							Đến trạng thái <span style={{ color: '#ef4444' }}>*</span>
-						</label>
-						<Select
-							placeholder="Chọn trạng thái đích"
-							value={editTo}
-							onChange={setEditTo}
-							style={{ width: '100%' }}
-							options={stateOptions}
-						/>
-					</div>
-
-					<div>
-						<label style={{ display: 'block', fontWeight: 600, fontSize: 13, color: '#475569', marginBottom: 8 }}>
-							Action <span style={{ color: '#ef4444' }}>*</span>
-						</label>
-						<AutoComplete
-							placeholder="Chọn hoặc nhập tên action"
-							value={editAction || undefined}
-							onChange={(val) => setEditAction(val || '')}
-							style={{ width: '100%' }}
-							options={SUGGESTED_ACTIONS.map((a) => ({ label: a, value: a }))}
-							filterOption={(input, option) =>
-								(option?.value as string)?.toLowerCase().includes(input.toLowerCase())
-							}
-						/>
-					</div>
-
-					<div>
-						<label style={{ display: 'block', fontWeight: 600, fontSize: 13, color: '#475569', marginBottom: 8 }}>
-							Roles được phép
-						</label>
-						<Select
-							mode="multiple"
-							placeholder="Chọn roles (để trống = tất cả)"
-							value={editRoles}
-							onChange={setEditRoles}
-							style={{ width: '100%' }}
-							options={ALL_ROLES.map((r) => ({ label: r, value: r }))}
-						/>
-					</div>
-
-					<div>
-						<Checkbox
-							checked={editRequireComment}
-							onChange={(e) => setEditRequireComment(e.target.checked)}
-						>
-							Yêu cầu ghi chú (comment) khi thực hiện action
-						</Checkbox>
-					</div>
-				</div>
-			</Modal>
 		</div>
 	);
 };

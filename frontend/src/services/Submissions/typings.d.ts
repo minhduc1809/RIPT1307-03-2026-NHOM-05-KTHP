@@ -38,6 +38,7 @@ export interface IWorkflowHistory {
 	toStep: string;
 	action: string;
 	actorId: string;
+	actor?: { id: string; email: string; name: string } | null;
 	comment?: string | null;
 	createdAt: string;
 }

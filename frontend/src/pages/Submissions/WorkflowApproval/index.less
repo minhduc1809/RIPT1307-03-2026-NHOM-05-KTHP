@@ -117,14 +117,9 @@
 
 	// ---- Pending Item ----
 	.pendingItem {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 18px 20px;
+		padding: 0;
 		border-radius: 14px;
-		transition: background 0.2s;
-		cursor: pointer;
-		gap: 16px;
+		transition: all 0.2s;
 
 		&:hover {
 			background: #f8fafc;
@@ -132,6 +127,22 @@
 
 		& + .pendingItem {
 			border-top: 1px solid #f1f5f9;
+		}
+
+		&.expanded {
+			background: #f8fafc;
+			border: 1px solid #e2e8f0;
+			margin: 4px 0;
+
+			& + .pendingItem { border-top: none; }
+		}
+
+		.itemRow {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 18px 20px;
+			gap: 16px;
 		}
 
 		.itemInfo {
@@ -244,6 +255,49 @@
 						transform: translateY(-1px);
 					}
 				}
+
+				&.detail {
+					background: transparent;
+					color: #94a3b8;
+					padding: 0 8px;
+					min-width: 36px;
+
+					&:hover {
+						background: #f1f5f9;
+						color: #1a2332;
+					}
+				}
+			}
+		}
+	}
+
+	// ---- Expanded Data Preview ----
+	.expandedData {
+		padding: 0 20px 18px;
+		border-top: 1px solid #f1f5f9;
+		margin: 0 12px;
+		padding-top: 14px;
+
+		.expandedRow {
+			display: flex;
+			justify-content: space-between;
+			padding: 6px 0;
+			font-size: 13px;
+			border-bottom: 1px solid #f1f5f9;
+
+			&:last-child { border-bottom: none; }
+
+			.expandedKey {
+				color: #64748b;
+				font-weight: 500;
+			}
+
+			.expandedValue {
+				color: #1a2332;
+				font-weight: 600;
+				text-align: right;
+				max-width: 60%;
+				word-break: break-word;
 			}
 		}
 	}

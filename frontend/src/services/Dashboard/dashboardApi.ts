@@ -8,6 +8,11 @@ export async function getDashboardSummary() {
 	return axios.get(`${BASE}/summary`);
 }
 
+/** GET /dashboard/my-summary — Tổng quan nhanh của tôi (tất cả role) */
+export async function getMyDashboardSummary() {
+	return axios.get(`${BASE}/my-summary`);
+}
+
 /** GET /dashboard/submissions-by-status — Phân bổ submission theo trạng thái (ADMIN) */
 export async function getSubmissionsByStatus() {
 	return axios.get(`${BASE}/submissions-by-status`);
