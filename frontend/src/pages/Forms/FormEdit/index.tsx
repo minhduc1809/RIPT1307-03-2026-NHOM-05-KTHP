@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { history, useParams } from 'umi';
 import { message, Spin } from 'antd';
-import SortableList from '@/components/SortableList';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import {
 	CalendarOutlined,
 	ControlOutlined,
@@ -106,6 +106,14 @@ const FormEdit: React.FC = () => {
 
 	const selectedField = fields.find((f) => f.id === selectedFieldId);
 
+	const onDragEnd = (result: DropResult) => {
+		if (!result.destination) return;
+		if (result.source.index === result.destination.index) return;
+		const newFields = Array.from(fields);
+		const [moved] = newFields.splice(result.source.index, 1);
+		newFields.splice(result.destination.index, 0, moved);
+		setFields(newFields);
+	};
 
 	// Field Actions
 	const handleDeleteField = (id: string, e?: React.MouseEvent) => {
@@ -367,36 +375,53 @@ const FormEdit: React.FC = () => {
 							{formDescription && <p className={styles.formDescDisplay}>{formDescription}</p>}
 						</div>
 
-						<SortableList
-							items={fields}
-							droppableId="edit-canvas"
-							onReorder={setFields}
-							emptyText="Thêm trường từ panel bên trái"
-							renderItem={(field, index) => (
-								<div
-									className={`${styles.fieldEditItem} ${selectedFieldId === field.id ? styles.active : ''}`}
-									onClick={(e) => {
-										e.stopPropagation();
-										setSelectedFieldId(field.id);
-									}}
-								>
-									<div className={styles.fieldActions}>
-										<button className={styles.btnCopy} onClick={(e) => handleCopyField(field, index, e)}>
-											<CopyOutlined />
-										</button>
-										<button className={styles.btnDelete} onClick={(e) => handleDeleteField(field.id, e)}>
-											<DeleteOutlined />
-										</button>
-									</div>
+						<DragDropContext onDragEnd={onDragEnd}>
+							<Droppable droppableId="edit-canvas">
+								{(provided, snapshot) => (
+									<div className={styles.fieldsZone} ref={provided.innerRef} {...provided.droppableProps}>
+										{fields.map((field, index) => (
+											<Draggable key={field.id} draggableId={field.id} index={index}>
+												{(dragProvided) => (
+													<div
+														ref={dragProvided.innerRef}
+														{...dragProvided.draggableProps}
+														{...dragProvided.dragHandleProps}
+														className={`${styles.fieldEditItem} ${selectedFieldId === field.id ? styles.active : ''}`}
+														onClick={(e) => {
+															e.stopPropagation();
+															setSelectedFieldId(field.id);
+														}}
+													>
+														<div className={styles.fieldActions}>
+															<button className={styles.btnCopy} onClick={(e) => handleCopyField(field, index, e)}>
+																<CopyOutlined />
+															</button>
+															<button className={styles.btnDelete} onClick={(e) => handleDeleteField(field.id, e)}>
+																<DeleteOutlined />
+															</button>
+														</div>
 
-									<span className={styles.fieldLabel}>
-										{field.label}
-										{field.required && <span className={styles.requiredMark}>*</span>}
-									</span>
-									{renderFieldPreview(field)}
-								</div>
-							)}
-						/>
+														<span className={styles.fieldLabel}>
+															{field.label}
+															{field.required && <span className={styles.requiredMark}>*</span>}
+														</span>
+														{renderFieldPreview(field)}
+													</div>
+												)}
+											</Draggable>
+										))}
+										{provided.placeholder}
+
+										{fields.length === 0 && !snapshot.isDraggingOver && (
+											<div className={styles.emptyFields}>
+												<PlusCircleOutlined className={styles.icon} />
+												<span className={styles.text}>Thêm trường từ panel bên trái</span>
+											</div>
+										)}
+									</div>
+								)}
+							</Droppable>
+						</DragDropContext>
 					</div>
 				</section>
 

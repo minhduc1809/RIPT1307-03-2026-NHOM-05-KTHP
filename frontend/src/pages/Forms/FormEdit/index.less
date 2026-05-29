@@ -1,4 +1,4 @@
-@import '~antd/es/style/themes/default.less';
+﻿@import '~antd/es/style/themes/default.less';
 
 @primary: #565e74;
 @primary-dim: #4a5268;
@@ -426,7 +426,7 @@
 						padding: 18px;
 						border-radius: 12px;
 						border: 2px solid transparent;
-						transition: border-color 0.2s ease, background-color 0.2s ease;
+						transition: all 0.2s ease;
 						cursor: pointer;
 
 						&:hover {
@@ -509,6 +509,7 @@
 							display: flex;
 							align-items: center;
 							padding: 0 16px;
+							box-sizing: border-box;
 							color: @on-surface-variant;
 							font-style: italic;
 							font-size: 14px;

@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { history, useLocation } from 'umi';
 import { message } from 'antd';
-import SortableList from '@/components/SortableList';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import {
 	AppstoreOutlined,
 	BgColorsOutlined,
@@ -126,21 +126,43 @@ const FormBuilder: React.FC = () => {
 
 	const selectedField = fields.find((f) => f.id === selectedFieldId);
 
-	// Click-to-add from toolbox
-	const handleAddField = useCallback((type: typeof FIELD_TYPES[number]) => {
-		const newFieldId = generateId();
-		const newField: IBuilderField = {
-			id: newFieldId,
-			type: type.type,
-			key: `field_${newFieldId}`,
-			label: `Trường ${type.label}`,
-			placeholder: type.type === 'select' ? 'Chọn một tùy chọn' : 'Nhập giá trị...',
-			required: false,
-			...(type.type === 'select' ? { options: ['Lựa chọn 1', 'Lựa chọn 2'] } : {}),
-		};
-		setFields((prev) => [...prev, newField]);
-		setSelectedFieldId(newFieldId);
-	}, []);
+	// Drag and Drop Logic
+	const onDragEnd = (result: DropResult) => {
+		const { source, destination } = result;
+
+		// Dropped outside a valid droppable area
+		if (!destination) return;
+
+		// Reordering within the canvas
+		if (source.droppableId === 'canvas' && destination.droppableId === 'canvas') {
+			const newFields = Array.from(fields);
+			const [movedItem] = newFields.splice(source.index, 1);
+			newFields.splice(destination.index, 0, movedItem);
+			setFields(newFields);
+			return;
+		}
+
+		// Dragging from toolbox to canvas
+		if (source.droppableId === 'toolbox' && destination.droppableId === 'canvas') {
+			const fieldTypeTemplate = FIELD_TYPES[source.index];
+			const newFieldId = generateId();
+
+			const newField: IBuilderField = {
+				id: newFieldId,
+				type: fieldTypeTemplate.type,
+				key: `field_${newFieldId}`,
+				label: `Trường ${fieldTypeTemplate.label}`,
+				placeholder: fieldTypeTemplate.type === 'select' ? 'Chọn một tùy chọn' : 'Nhập giá trị...',
+				required: false,
+				...(fieldTypeTemplate.type === 'select' ? { options: ['Lựa chọn 1', 'Lựa chọn 2'] } : {}),
+			};
+
+			const newFields = Array.from(fields);
+			newFields.splice(destination.index, 0, newField);
+			setFields(newFields);
+			setSelectedFieldId(newFieldId);
+		}
+	};
 
 	// Field Actions
 	const handleDeleteField = (id: string, e?: React.MouseEvent) => {
@@ -284,7 +306,8 @@ const FormBuilder: React.FC = () => {
 			{/* Top Header */}
 			<header className={styles.header}>
 				<div className={styles.headerLeft}>
-					<span className={styles.logo}>{editId ? 'Chỉnh sửa biểu mẫu' : 'Form Builder'}</span>
+					<span className={styles.logo}>{editId ? 'Chỉnh sửa biểu mẫu' : 'Tạo biểu mẫu mới'}</span>
+					{!editId && <span className={styles.editBadge}>Đang tạo</span>}
 				</div>
 				<div className={styles.headerRight}>
 					<div className={styles.actions}>
@@ -295,168 +318,168 @@ const FormBuilder: React.FC = () => {
 							{isSaving ? 'Đang lưu...' : editId ? 'Cập nhật' : 'Lưu'}
 						</button>
 					</div>
-					<div className={styles.icons}>
-						<SettingOutlined />
-						<QuestionCircleOutlined />
-						<UserOutlined />
-					</div>
 				</div>
 			</header>
 
+			<DragDropContext onDragEnd={onDragEnd}>
 				<main className={styles.mainContent}>
-					{/* Left Sidebar (Components) */}
+					{/* Left Sidebar */}
 					<aside className={styles.sidebarLeft}>
 						<div className={styles.sidebarTitle}>
-							<h2>Thành phần</h2>
-							<p>Kéo để thêm trường</p>
+							<h2>Thông tin biểu mẫu</h2>
+							<p>Nhập tên, mô tả và thêm các trường</p>
 						</div>
 
-						<div className={styles.tabs}>
-							<button
-								className={`${styles.tabItem} ${activeTab === 'components' ? styles.active : ''}`}
-								onClick={() => setActiveTab('components')}
-							>
-								<AppstoreOutlined />
-								<span>Components</span>
-							</button>
-							<button
-								className={`${styles.tabItem} ${activeTab === 'themes' ? styles.active : ''}`}
-								onClick={() => setActiveTab('themes')}
-							>
-								<BgColorsOutlined />
-								<span>Themes</span>
-							</button>
-							<button
-								className={`${styles.tabItem} ${activeTab === 'settings' ? styles.active : ''}`}
-								onClick={() => setActiveTab('settings')}
-							>
-								<SettingOutlined />
-								<span>Settings</span>
-							</button>
+						<div className={styles.metaForm}>
+							<div className={styles.metaGroup}>
+								<label>Tên biểu mẫu</label>
+								<input
+									type="text"
+									value={formName}
+									onChange={(e) => setFormName(e.target.value)}
+									placeholder="Nhập tên biểu mẫu..."
+								/>
+							</div>
+							<div className={styles.metaGroup}>
+								<label>Mô tả</label>
+								<textarea
+									value={formDescription}
+									onChange={(e) => setFormDescription(e.target.value)}
+									placeholder="Nhập mô tả biểu mẫu..."
+									rows={3}
+								/>
+							</div>
 						</div>
 
-						{activeTab === 'components' ? (
-							<div className={styles.fieldTypes}>
-								<h3>Loại trường</h3>
-								<div className={styles.fieldGrid}>
-									{FIELD_TYPES.map((type) => (
-										<div
-											key={type.type}
-											className={styles.draggableItem}
-											onClick={() => handleAddField(type)}
-											style={{ cursor: 'pointer' }}
-										>
-											<div className={styles.fieldCard}>
-												<div className={`${styles.iconWrapper} ${styles[type.type]}`}>{type.icon}</div>
-												<span className={styles.fieldLabel}>{type.label}</span>
-											</div>
-										</div>
-									))}
-								</div>
-							</div>
-						) : activeTab === 'themes' ? (
-							<div className={styles.themePresetsList}>
-								<h3>Giao diện nền</h3>
-								<div className={styles.presetGrid}>
-									{THEME_PRESETS.map((preset) => (
-										<div
-											key={preset.id}
-											className={`${styles.presetCard} ${themePreset === preset.id ? styles.activePreset : ''}`}
-											onClick={() => setThemePreset(preset.id)}
-										>
-											<div
-												className={styles.colorPreview}
-												style={{ background: preset.color === '#f7f9fb' ? '#e2e8f0' : preset.color }}
-											/>
-											<span>{preset.label}</span>
-										</div>
-									))}
-								</div>
-							</div>
-						) : (
-							<div className={styles.settingsPanel}>
-								<h3>Cài đặt biểu mẫu</h3>
-								<div className={styles.settingItem}>
-									<div className={styles.settingInfo}>
-										<div className={styles.settingIcon}>
-											{allowAnonymous ? <GlobalOutlined /> : <LockOutlined />}
-										</div>
-										<div className={styles.settingText}>
-											<span className={styles.settingLabel}>Cho phép gửi ẩn danh</span>
-											<p className={styles.settingDesc}>Người dùng không cần đăng nhập để gửi biểu mẫu này</p>
-										</div>
+						{/* Add New Field */}
+						<div className={styles.addFieldSection}>
+							<h3>Thêm trường mới</h3>
+							<Droppable droppableId='toolbox' isDropDisabled={true}>
+								{(provided) => (
+									<div className={styles.fieldTypeGrid} ref={provided.innerRef} {...provided.droppableProps}>
+										{FIELD_TYPES.map((type, index) => (
+											<Draggable key={type.type} draggableId={type.type} index={index}>
+												{(dragProvided) => (
+													<div
+														ref={dragProvided.innerRef}
+														{...dragProvided.draggableProps}
+														{...dragProvided.dragHandleProps}
+														className={styles.fieldTypeCard}
+													>
+														<div className={`${styles.ftIcon} ${styles[type.type]}`}>{type.icon}</div>
+														<span className={styles.ftLabel}>{type.label}</span>
+													</div>
+												)}
+											</Draggable>
+										))}
+										{provided.placeholder}
 									</div>
-									<label className={styles.settingToggle}>
-										<input
-											type='checkbox'
-											checked={allowAnonymous}
-											onChange={(e) => setAllowAnonymous(e.target.checked)}
-										/>
-										<div className={`${styles.toggleTrack} ${allowAnonymous ? styles.checked : ''}`} />
-										<div className={`${styles.toggleThumb} ${allowAnonymous ? styles.checked : ''}`} />
-									</label>
+								)}
+							</Droppable>
+						</div>
+
+						{/* Settings */}
+						<div className={styles.addFieldSection}>
+							<h3>Cài đặt</h3>
+							<div className={styles.settingCard}>
+								<div className={styles.settingInfo}>
+									<div className={styles.settingIcon}>
+										{allowAnonymous ? <GlobalOutlined /> : <LockOutlined />}
+									</div>
+									<div>
+										<div className={styles.settingLabel}>Gửi ẩn danh</div>
+										<div className={styles.settingDesc}>Không cần đăng nhập</div>
+									</div>
 								</div>
-								<div className={styles.settingStatus}>
-									<span className={`${styles.statusDot} ${allowAnonymous ? styles.on : styles.off}`} />
-									{allowAnonymous ? 'Ẩn danh: Bật' : 'Ẩn danh: Tắt'}
-								</div>
+								<label className={styles.settingToggle}>
+									<input
+										type='checkbox'
+										checked={allowAnonymous}
+										onChange={(e) => setAllowAnonymous(e.target.checked)}
+									/>
+									<div className={`${styles.toggleTrack} ${allowAnonymous ? styles.checked : ''}`} />
+									<div className={`${styles.toggleThumb} ${allowAnonymous ? styles.checked : ''}`} />
+								</label>
 							</div>
-						)}
+						</div>
+
+						{/* Theme */}
+						<div className={styles.addFieldSection}>
+							<h3>Giao diện</h3>
+							<div className={styles.themeGrid}>
+								{THEME_PRESETS.map((preset) => (
+									<div
+										key={preset.id}
+										className={`${styles.themeChip} ${themePreset === preset.id ? styles.activeTheme : ''}`}
+										onClick={() => setThemePreset(preset.id)}
+									>
+										<div
+											className={styles.themeColor}
+											style={{ background: preset.color === '#f7f9fb' ? '#e2e8f0' : preset.color }}
+										/>
+										<span>{preset.label.split(' ')[0]}</span>
+									</div>
+								))}
+							</div>
+						</div>
 					</aside>
 
-					{/* Middle Canvas (Droppable) */}
+					{/* Middle Canvas */}
 					<section
 						className={`${styles.canvasArea} ${styles[`theme_${themePreset}`]}`}
 						onClick={() => setSelectedFieldId(null)}
 					>
 						<div className={styles.canvasContainer} onClick={(e) => e.stopPropagation()}>
 							<div className={styles.formHeader}>
-								<input
-									type='text'
-									className={styles.formTitleInput}
-									value={formName}
-									onChange={(e) => setFormName(e.target.value)}
-									placeholder='Tên biểu mẫu'
-								/>
-								<textarea
-									className={styles.formDescInput}
-									value={formDescription}
-									onChange={(e) => setFormDescription(e.target.value)}
-									placeholder='Mô tả biểu mẫu...'
-									rows={2}
-								/>
+								<h2 className={styles.formTitleDisplay}>{formName || 'Tên biểu mẫu'}</h2>
+								{formDescription && <p className={styles.formDescDisplay}>{formDescription}</p>}
 							</div>
 
-							<SortableList
-								items={fields}
-								droppableId="builder-canvas"
-								onReorder={setFields}
-								emptyText="Nhấn vào thành phần bên trái để thêm trường"
-								renderItem={(field, index) => (
-									<div
-										className={`${styles.formFieldItem} ${selectedFieldId === field.id ? styles.active : ''}`}
-										onClick={(e) => {
-											e.stopPropagation();
-											setSelectedFieldId(field.id);
-										}}
-									>
-										<div className={styles.fieldActions}>
-											<button className={styles.btnCopy} onClick={(e) => handleCopyField(field, index, e)}>
-												<CopyOutlined />
-											</button>
-											<button className={styles.btnDelete} onClick={(e) => handleDeleteField(field.id, e)}>
-												<DeleteOutlined />
-											</button>
-										</div>
+							<Droppable droppableId='canvas'>
+								{(provided, snapshot) => (
+									<div className={styles.dropZone} ref={provided.innerRef} {...provided.droppableProps}>
+										{fields.map((field, index) => (
+											<Draggable key={field.id} draggableId={field.id} index={index}>
+												{(dragProvided) => (
+													<div
+														ref={dragProvided.innerRef}
+														{...dragProvided.draggableProps}
+														{...dragProvided.dragHandleProps}
+														className={`${styles.formFieldItem} ${selectedFieldId === field.id ? styles.active : ''}`}
+														onClick={(e) => {
+															e.stopPropagation();
+															setSelectedFieldId(field.id);
+														}}
+													>
+														<div className={styles.fieldActions}>
+															<button className={styles.btnCopy} onClick={(e) => handleCopyField(field, index, e)}>
+																<CopyOutlined />
+															</button>
+															<button className={styles.btnDelete} onClick={(e) => handleDeleteField(field.id, e)}>
+																<DeleteOutlined />
+															</button>
+														</div>
 
-										<span className={styles.fieldLabel}>
-											{field.label}
-											{field.required && <span className={styles.requiredMark}>*</span>}
-										</span>
-										{renderFieldPreview(field)}
+														<span className={styles.fieldLabel}>
+															{field.label}
+															{field.required && <span className={styles.requiredMark}>*</span>}
+														</span>
+														{renderFieldPreview(field)}
+													</div>
+												)}
+											</Draggable>
+										))}
+										{provided.placeholder}
+
+										{fields.length === 0 && !snapshot.isDraggingOver && (
+											<div className={styles.dropPlaceholder}>
+												<PlusCircleOutlined className={styles.icon} />
+												<span className={styles.text}>Kéo thả thành phần từ bên trái vào đây</span>
+											</div>
+										)}
 									</div>
 								)}
-							/>
+							</Droppable>
 						</div>
 					</section>
 
@@ -676,6 +699,7 @@ const FormBuilder: React.FC = () => {
 						)}
 					</aside>
 				</main>
+			</DragDropContext>
 		</div>
 	);
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { MenuOutlined } from '@ant-design/icons';
 import styles from './index.less';
 
@@ -18,7 +18,7 @@ const SortableList: React.FC<SortableListProps> = ({
 	renderItem,
 	emptyText = 'Chưa có mục nào',
 }) => {
-	const handleDragEnd = (result: DropResult) => {
+	const onDragEnd = (result: any) => {
 		if (!result.destination) return;
 		if (result.source.index === result.destination.index) return;
 
@@ -33,29 +33,39 @@ const SortableList: React.FC<SortableListProps> = ({
 	}
 
 	return (
-		<DragDropContext onDragEnd={handleDragEnd}>
+		<DragDropContext onDragEnd={onDragEnd}>
 			<Droppable droppableId={droppableId}>
-				{(provided) => (
-					<div ref={provided.innerRef} {...provided.droppableProps} className={styles.list}>
+				{(droppableProvided) => (
+					<div
+						ref={droppableProvided.innerRef}
+						{...droppableProvided.droppableProps}
+					>
 						{items.map((item, index) => (
 							<Draggable key={item.id} draggableId={item.id} index={index}>
-								{(dragProvided, snapshot) => (
+								{(draggableProvided, snapshot) => (
 									<div
-										ref={dragProvided.innerRef}
-										{...dragProvided.draggableProps}
-										className={`${styles.item} ${snapshot.isDragging ? styles.dragging : ''}`}
+										ref={draggableProvided.innerRef}
+										{...draggableProvided.draggableProps}
+										className={snapshot.isDragging ? styles.dragging : ''}
+										style={{
+											...draggableProvided.draggableProps.style,
+											marginBottom: 12,
+										}}
 									>
-										<div {...dragProvided.dragHandleProps} className={styles.handle}>
-											<MenuOutlined />
-										</div>
-										<div className={styles.content}>
+										<div className={styles.wrapper}>
+											<div
+												{...draggableProvided.dragHandleProps}
+												className={styles.handle}
+											>
+												<MenuOutlined />
+											</div>
 											{renderItem(item, index)}
 										</div>
 									</div>
 								)}
 							</Draggable>
 						))}
-						{provided.placeholder}
+						{droppableProvided.placeholder}
 					</div>
 				)}
 			</Droppable>
