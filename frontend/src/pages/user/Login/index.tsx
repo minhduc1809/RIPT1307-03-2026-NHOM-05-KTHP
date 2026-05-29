@@ -2,7 +2,7 @@ import Footer from '@/components/Footer';
 import { adminlogin } from '@/services/base/api';
 import { LockOutlined, MailOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { history, useIntl, useModel, Link } from 'umi';
 import styles from './index.less';
 
@@ -11,6 +11,14 @@ const Login: React.FC = () => {
 	const { initialState, setInitialState } = useModel('@@initialState');
 	const intl = useIntl();
 	const [form] = Form.useForm();
+
+
+	useEffect(() => {
+		const token = localStorage.getItem('token');
+		if (token) {
+			history.replace('/dashboard');
+		}
+	}, []);
 
 	/**
 	 * Handle tokens and user info after successful login
