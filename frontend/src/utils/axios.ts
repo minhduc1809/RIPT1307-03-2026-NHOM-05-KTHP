@@ -98,8 +98,15 @@ axios.interceptors.response.use(
 					{ headers: {} } // Don't send expired token
 				);
 
-				const newAccessToken = refreshData.accessToken;
+				const responseData = refreshData?.data ?? refreshData;
+				const newAccessToken = responseData.accessToken;
 				localStorage.setItem('token', newAccessToken);
+
+				// Store rotated refresh token if backend returned one
+				if (responseData.refreshToken) {
+					localStorage.setItem('refreshToken', responseData.refreshToken);
+				}
+
 				processQueue(null, newAccessToken);
 
 				originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;

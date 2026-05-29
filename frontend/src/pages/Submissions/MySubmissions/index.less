@@ -1,0 +1,239 @@
+@import '~antd/es/style/themes/default.less';
+
+.mySubmissionsPage {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 32px 20px 80px;
+
+	.pageHeader {
+		margin-bottom: 32px;
+
+		h1 {
+			font-size: 24px;
+			font-weight: 800;
+			color: #1a2332;
+			margin: 0 0 4px;
+		}
+		p {
+			font-size: 14px;
+			color: #94a3b8;
+			margin: 0;
+		}
+	}
+
+	// ---- Stats Bar ----
+	.statsBar {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+		gap: 12px;
+		margin-bottom: 28px;
+	}
+
+	.statCard {
+		background: #fff;
+		border-radius: 16px;
+		padding: 16px 20px;
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		cursor: pointer;
+		transition: all 0.2s;
+		border: 2px solid transparent;
+
+		&:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+		}
+
+		&.active {
+			border-color: #2563eb;
+		}
+
+		.statIcon {
+			width: 40px;
+			height: 40px;
+			border-radius: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 18px;
+		}
+
+		.statInfo {
+			.statNumber {
+				font-size: 22px;
+				font-weight: 800;
+				color: #1a2332;
+				line-height: 1;
+			}
+			.statLabel {
+				font-size: 11px;
+				color: #94a3b8;
+				font-weight: 500;
+				margin-top: 2px;
+			}
+		}
+
+		&.all .statIcon { background: #f1f5f9; color: #64748b; }
+		&.underReview .statIcon { background: #fef3c7; color: #d97706; }
+		&.approved .statIcon { background: #d1fae5; color: #047857; }
+		&.rejected .statIcon { background: #fee2e2; color: #dc2626; }
+		&.returned .statIcon { background: #e0e7ff; color: #4338ca; }
+	}
+
+	// ---- List Section ----
+	.listSection {
+		background: #fff;
+		border-radius: 20px;
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+		overflow: visible;
+	}
+
+	.listHeader {
+		padding: 24px 28px;
+		border-bottom: 1px solid #f1f5f9;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+
+		.listIcon {
+			width: 42px;
+			height: 42px;
+			border-radius: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 18px;
+			background: #ede9fe;
+			color: #7c3aed;
+		}
+
+		.listTitle {
+			flex: 1;
+			h3 {
+				font-size: 16px;
+				font-weight: 700;
+				color: #1a2332;
+				margin: 0;
+			}
+			p {
+				font-size: 12px;
+				color: #94a3b8;
+				margin: 2px 0 0;
+			}
+		}
+	}
+
+	.listBody {
+		padding: 8px;
+	}
+
+	// ---- Submission Item ----
+	.submissionItem {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 18px 20px;
+		border-radius: 14px;
+		transition: background 0.2s;
+		cursor: pointer;
+		gap: 16px;
+
+		&:hover {
+			background: #f8fafc;
+		}
+
+		& + .submissionItem {
+			border-top: 1px solid #f1f5f9;
+		}
+
+		.itemInfo {
+			flex: 1;
+			min-width: 0;
+
+			.itemTitle {
+				font-size: 14px;
+				font-weight: 600;
+				color: #1a2332;
+				margin-bottom: 4px;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+
+			.itemMeta {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				font-size: 12px;
+				color: #94a3b8;
+
+				.metaItem {
+					display: flex;
+					align-items: center;
+					gap: 4px;
+				}
+			}
+
+			.itemData {
+				margin-top: 6px;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+
+				.dataTag {
+					font-size: 11px;
+					padding: 2px 8px;
+					border-radius: 6px;
+					background: #f1f5f9;
+					color: #64748b;
+					max-width: 200px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+			}
+		}
+	}
+
+	// ---- Status Badge ----
+	.statusBadge {
+		font-size: 11px;
+		padding: 2px 10px;
+		border-radius: 6px;
+		font-weight: 600;
+
+		&.SUBMITTED { background: #d1fae5; color: #047857; }
+		&.UNDER_REVIEW { background: #fef3c7; color: #92400e; }
+		&.APPROVED { background: #d1fae5; color: #047857; }
+		&.REJECTED { background: #fee2e2; color: #dc2626; }
+		&.CANCELLED { background: #fef3c7; color: #92400e; }
+		&.RETURNED { background: #e0e7ff; color: #4338ca; }
+		&.DRAFT { background: #f1f5f9; color: #94a3b8; }
+	}
+
+	// ---- Empty & Loading ----
+	.emptyState {
+		text-align: center;
+		padding: 60px 20px;
+		color: #94a3b8;
+
+		span {
+			font-size: 48px;
+			display: block;
+			margin-bottom: 12px;
+		}
+
+		p {
+			font-size: 14px;
+			margin: 0;
+		}
+	}
+
+	.loadingContainer {
+		display: flex;
+		justify-content: center;
+		padding: 60px;
+	}
+}

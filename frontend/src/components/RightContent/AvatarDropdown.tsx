@@ -1,4 +1,5 @@
 import { landingUrl } from '@/services/base/constant';
+import { logoutApi } from '@/services/base/api';
 import { FileWordOutlined, GlobalOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import { type ItemType } from 'antd/lib/menu/hooks/useItems';
@@ -14,7 +15,11 @@ export type GlobalHeaderRightProps = {
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 	const { initialState } = useModel('@@initialState');
 
-	const loginOut = () => {
+	const loginOut = async () => {
+		const refreshToken = localStorage.getItem('refreshToken');
+		if (refreshToken) {
+			try { await logoutApi(refreshToken); } catch { /* best effort */ }
+		}
 		localStorage.clear();
 		sessionStorage.clear();
 		history.replace('/user/login');

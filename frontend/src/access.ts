@@ -5,10 +5,13 @@ import type { IInitialState } from './services/base/typing';
  * @see https://umijs.org/zh-CN/plugins/plugin-access
  * */
 export default function access(initialState: IInitialState) {
-	// const scopes = initialState.authorizedPermissions?.find((item) => item.rsname === currentRole)?.scopes;
 	const scopes = initialState.authorizedPermissions?.map((item) => item.scopes).flat();
+	const role = (initialState as any)?.currentUser?.role;
 
 	return {
+		canAdmin: role === 'ADMIN',
+		canManage: role === 'ADMIN' || role === 'MANAGER',
+		canApprove: role === 'ADMIN' || role === 'MANAGER' || role === 'HR',
 		// canBoQLKH: token && vaiTro && vaiTro === 'can_bo_qlkh',
 		// lanhDao: token && vaiTro && vaiTro === 'lanh_dao',
 		// sinhVienVaNhanVien: token && vaiTro && ['nhan_vien', 'sinh_vien'].includes(vaiTro),

@@ -435,6 +435,11 @@ Lấy lịch sử các bước đã thực hiện trên workflow của một sub
 			"toStep": "pending_hr",
 			"action": "approve",
 			"actorId": "manager1-...",
+			"actor": {
+				"id": "manager1-...",
+				"email": "manager@example.com",
+				"name": "Nguyen Van A"
+			},
 			"comment": "Approved by manager",
 			"createdAt": "2026-05-12T09:00:00.000Z"
 		}
@@ -665,17 +670,17 @@ Phát ra khi tạo revision mới qua action `resubmit`. Tạo notification `INF
 
 ## Phân quyền (Authorization)
 
-| Endpoint                                           | ADMIN | MANAGER | USER |
-| -------------------------------------------------- | ----- | ------- | ---- |
-| `POST /workflows/definitions`                      | ✅    | ✅      | ❌   |
-| `GET /workflows/definitions`                       | ✅    | ✅      | ❌   |
-| `GET /workflows/definitions/:id`                   | ✅    | ✅      | ❌   |
-| `PUT /workflows/definitions/:id`                   | ✅    | ✅      | ❌   |
-| `DELETE /workflows/definitions/:id`                | ✅    | ❌      | ❌   |
-| `POST /workflows/action`                           | ✅    | ✅      | ✅   |
-| `GET /workflows/pending`                           | ✅    | ✅      | ✅   |
-| `GET /workflows/submissions/:id/history`           | ✅    | ✅      | ✅   |
-| `GET /workflows/submissions/:id/available-actions` | ✅    | ✅      | ✅   |
+| Endpoint                                           | ADMIN | MANAGER | HR | USER |
+| -------------------------------------------------- | ----- | ------- | -- | ---- |
+| `POST /workflows/definitions`                      | ✅    | ✅      | ❌ | ❌   |
+| `GET /workflows/definitions`                       | ✅    | ✅      | ❌ | ❌   |
+| `GET /workflows/definitions/:id`                   | ✅    | ✅      | ❌ | ❌   |
+| `PUT /workflows/definitions/:id`                   | ✅    | ✅      | ❌ | ❌   |
+| `DELETE /workflows/definitions/:id`                | ✅    | ❌      | ❌ | ❌   |
+| `POST /workflows/action`                           | ✅    | ✅      | ✅ | ✅   |
+| `GET /workflows/pending`                           | ✅    | ✅      | ✅ | ✅   |
+| `GET /workflows/submissions/:id/history`           | ✅    | ✅      | ✅ | ✅   |
+| `GET /workflows/submissions/:id/available-actions` | ✅    | ✅      | ✅ | ✅   |
 
 > **Lưu ý:** Endpoint `POST /workflows/action` kiểm tra quyền dựa trên `roles` trong transition config, không chỉ role-level guard.
 

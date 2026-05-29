@@ -130,7 +130,7 @@ Tạo tài khoản mới với role mặc định là `USER`.
 
 ## 3. Làm mới Access Token (Refresh)
 
-Sử dụng refresh token để lấy access token mới khi access token hết hạn.
+Sử dụng refresh token để lấy access token mới khi access token hết hạn. Backend thực hiện **token rotation** — refresh token cũ bị thu hồi và trả về refresh token mới.
 
 | Thuộc tính   | Giá trị                 |
 | ------------ | ----------------------- |
@@ -154,15 +154,18 @@ Sử dụng refresh token để lấy access token mới khi access token hết 
 
 ```json
 {
-  "accessToken": "eyJhbGciOiJIUzI1NiIs..."
+  "accessToken": "eyJhbGciOiJIUzI1NiIs...",
+  "refreshToken": "eyJhbGciOiJIUzI1NiIs..."
 }
 ```
 
+> **Token Rotation:** Mỗi lần refresh, token cũ bị xóa và token mới được tạo. Client phải lưu lại `refreshToken` mới từ response.
+
 ### Lỗi
 
-| Status | Mã lỗi                         | Mô tả                                |
-| ------ | ------------------------------- | ------------------------------------- |
-| `401`  | `error.INVALID_REFRESH_TOKEN`   | Refresh token không hợp lệ hoặc hết hạn |
+| Status | Mã lỗi                         | Mô tả                                    |
+| ------ | ------------------------------- | ----------------------------------------- |
+| `401`  | `error.INVALID_REFRESH_TOKEN`   | Refresh token không hợp lệ hoặc hết hạn  |
 
 ---
 

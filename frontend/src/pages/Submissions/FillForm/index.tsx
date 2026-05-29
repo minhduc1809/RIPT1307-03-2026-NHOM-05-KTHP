@@ -1,6 +1,7 @@
 import { ArrowLeftOutlined, SendOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Input, InputNumber, message, Select, Spin } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
+import moment from 'moment';
 import { history } from 'umi';
 import { getFormById } from '@/services/Forms/formApi';
 import type { IForm, IFormField } from '@/services/Forms/typings';
@@ -100,9 +101,14 @@ const FillForm: React.FC = (props: any) => {
 
 		setSubmitting(true);
 		try {
-			await createSubmission({ formId, data: formData });
+			const res = await createSubmission({ formId, data: formData });
+			const created = (res as any)?.data?.data ?? (res as any)?.data;
 			message.success('Nộp biểu mẫu thành công!');
-			history.push('/submissions/new');
+			if (created?.id) {
+				history.push(`/submissions/${created.id}`);
+			} else {
+				history.push('/submissions/mine');
+			}
 		} catch (err: any) {
 			const errData = err?.response?.data;
 			if (errData?.errors && Array.isArray(errData.errors)) {
@@ -153,8 +159,8 @@ const FillForm: React.FC = (props: any) => {
 				{field.type === 'date' && (
 					<DatePicker
 						placeholder={`Chọn ${field.label.toLowerCase()}`}
-						value={value}
-						onChange={(val) => setFieldValue(field.key, val?.toISOString())}
+						value={value ? moment(value) : null}
+						onChange={(val) => setFieldValue(field.key, val?.toISOString() ?? null)}
 						style={{ width: '100%' }}
 					/>
 				)}
