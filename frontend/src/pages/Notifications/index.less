@@ -1,0 +1,365 @@
+@import '~antd/es/style/themes/default.less';
+
+.notifPage {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 32px 20px 80px;
+
+	// ---- Header ----
+	.pageHeader {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		margin-bottom: 28px;
+
+		.headerLeft {
+			h1 {
+				font-size: 26px;
+				font-weight: 800;
+				color: #1a2332;
+				margin: 0 0 4px;
+			}
+			p {
+				font-size: 14px;
+				color: #94a3b8;
+				margin: 0;
+			}
+		}
+
+		.headerActions {
+			display: flex;
+			gap: 10px;
+			align-items: center;
+
+			.markAllBtn {
+				height: 40px;
+				padding: 0 20px;
+				border-radius: 12px;
+				font-weight: 600;
+				font-size: 13px;
+				border: 1px solid #e2e8f0;
+				background: #fff;
+				color: #64748b;
+				cursor: pointer;
+				transition: all 0.2s;
+				display: flex;
+				align-items: center;
+				gap: 6px;
+
+				&:hover {
+					background: #f1f5f9;
+					color: #1a2332;
+					border-color: #cbd5e1;
+				}
+			}
+		}
+	}
+
+	// ---- Connection Status ----
+	.connectionBar {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 10px 16px;
+		border-radius: 12px;
+		margin-bottom: 20px;
+		font-size: 13px;
+		font-weight: 500;
+
+		.statusDot {
+			width: 8px;
+			height: 8px;
+			border-radius: 50%;
+			flex-shrink: 0;
+		}
+
+		&.connected {
+			background: #d1fae5;
+			color: #047857;
+
+			.statusDot { background: #059669; }
+		}
+
+		&.disconnected {
+			background: #fee2e2;
+			color: #b91c1c;
+
+			.statusDot { background: #dc2626; }
+		}
+
+		&.connecting {
+			background: #fef3c7;
+			color: #92400e;
+
+			.statusDot {
+				background: #d97706;
+				animation: pulse 1.4s infinite;
+			}
+		}
+	}
+
+	@keyframes pulse {
+		0%, 100% { opacity: 1; }
+		50% { opacity: 0.3; }
+	}
+
+	// ---- Tabs / Filter ----
+	.filterBar {
+		display: flex;
+		gap: 8px;
+		margin-bottom: 20px;
+
+		.filterBtn {
+			height: 36px;
+			padding: 0 18px;
+			border-radius: 10px;
+			font-weight: 600;
+			font-size: 13px;
+			border: 1px solid #e2e8f0;
+			background: #fff;
+			color: #64748b;
+			cursor: pointer;
+			transition: all 0.2s;
+			display: flex;
+			align-items: center;
+			gap: 5px;
+
+			.badge {
+				background: #ef4444;
+				color: #fff;
+				font-size: 11px;
+				padding: 0 6px;
+				border-radius: 8px;
+				min-width: 20px;
+				text-align: center;
+				font-weight: 700;
+			}
+
+			&.active {
+				background: #1a2332;
+				color: #fff;
+				border-color: #1a2332;
+
+				.badge {
+					background: #fff;
+					color: #1a2332;
+				}
+			}
+
+			&:hover:not(.active) {
+				background: #f8fafc;
+				border-color: #cbd5e1;
+			}
+		}
+	}
+
+	// ---- Notification List ----
+	.notifList {
+		background: #fff;
+		border-radius: 20px;
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+		overflow: hidden;
+	}
+
+	.notifItem {
+		display: flex;
+		align-items: flex-start;
+		gap: 14px;
+		padding: 18px 24px;
+		cursor: pointer;
+		transition: background 0.15s;
+		border-bottom: 1px solid #f1f5f9;
+		position: relative;
+
+		&:last-child { border-bottom: none; }
+
+		&:hover { background: #f8fafc; }
+
+		&.unread {
+			background: #fefce8;
+
+			&:hover { background: #fef9c3; }
+
+			&::before {
+				content: '';
+				position: absolute;
+				left: 0;
+				top: 0;
+				bottom: 0;
+				width: 4px;
+				background: #2563eb;
+				border-radius: 0 4px 4px 0;
+			}
+		}
+
+		.notifIcon {
+			width: 42px;
+			height: 42px;
+			border-radius: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 18px;
+			flex-shrink: 0;
+
+			&.typeInfo {
+				background: #dbeafe;
+				color: #2563eb;
+			}
+			&.typeSuccess {
+				background: #d1fae5;
+				color: #059669;
+			}
+			&.typeWarning {
+				background: #fef3c7;
+				color: #d97706;
+			}
+			&.typeError {
+				background: #fee2e2;
+				color: #dc2626;
+			}
+		}
+
+		.notifContent {
+			flex: 1;
+			min-width: 0;
+
+			.notifTitle {
+				font-size: 14px;
+				font-weight: 600;
+				color: #1a2332;
+				margin-bottom: 3px;
+				line-height: 1.4;
+			}
+
+			.notifMessage {
+				font-size: 13px;
+				color: #64748b;
+				line-height: 1.5;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+
+			.notifTime {
+				font-size: 11px;
+				color: #94a3b8;
+				margin-top: 4px;
+				display: flex;
+				align-items: center;
+				gap: 4px;
+			}
+		}
+
+		.notifActions {
+			flex-shrink: 0;
+			display: flex;
+			align-items: center;
+
+			.readBtn {
+				width: 32px;
+				height: 32px;
+				border-radius: 8px;
+				border: none;
+				background: transparent;
+				color: #94a3b8;
+				font-size: 14px;
+				cursor: pointer;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transition: all 0.2s;
+
+				&:hover {
+					background: #dbeafe;
+					color: #2563eb;
+				}
+			}
+		}
+	}
+
+	// ---- New notification toast ----
+	.newNotifToast {
+		position: fixed;
+		top: 80px;
+		right: 24px;
+		background: #fff;
+		border-radius: 16px;
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+		padding: 16px 20px;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		max-width: 380px;
+		z-index: 1050;
+		animation: slideIn 0.3s ease;
+		border-left: 4px solid #2563eb;
+
+		.toastIcon {
+			font-size: 24px;
+		}
+
+		.toastContent {
+			flex: 1;
+
+			.toastTitle {
+				font-size: 13px;
+				font-weight: 700;
+				color: #1a2332;
+			}
+
+			.toastMsg {
+				font-size: 12px;
+				color: #64748b;
+				margin-top: 2px;
+			}
+		}
+
+		.toastClose {
+			background: none;
+			border: none;
+			color: #94a3b8;
+			cursor: pointer;
+			font-size: 14px;
+			padding: 4px;
+
+			&:hover { color: #1a2332; }
+		}
+	}
+
+	@keyframes slideIn {
+		from { transform: translateX(100%); opacity: 0; }
+		to { transform: translateX(0); opacity: 1; }
+	}
+
+	// ---- Empty / Loading ----
+	.emptyState {
+		text-align: center;
+		padding: 60px 20px;
+		color: #94a3b8;
+
+		span {
+			font-size: 48px;
+			display: block;
+			margin-bottom: 12px;
+		}
+
+		p {
+			font-size: 14px;
+			margin: 0;
+		}
+	}
+
+	.loadingContainer {
+		display: flex;
+		justify-content: center;
+		padding: 60px;
+	}
+
+	.pagination {
+		padding: 16px 24px;
+		display: flex;
+		justify-content: center;
+	}
+}

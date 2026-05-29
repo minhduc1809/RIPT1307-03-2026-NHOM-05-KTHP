@@ -15,6 +15,7 @@ export interface IFormField {
 	label: string;
 	type: 'text' | 'number' | 'date' | 'select';
 	rules?: IFormFieldRule;
+	options?: { label: string; value: string }[] | string[];
 }
 
 export interface IFormSchema {

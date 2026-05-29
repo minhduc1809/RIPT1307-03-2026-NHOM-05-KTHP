@@ -7,6 +7,7 @@ import {
 	ClockCircleOutlined,
 	CalendarOutlined,
 	TrophyOutlined,
+	CloseCircleOutlined,
 } from '@ant-design/icons';
 import { Spin, Tooltip } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -26,10 +27,15 @@ import styles from './index.less';
 // TYPE DEFINITIONS
 // =============================================
 interface ISummary {
-	totalForms: number;
-	totalSubmissions: number;
-	totalUsers: number;
-	pendingSubmissions: number;
+	total: number;
+	pending: number;
+	approved: number;
+	rejected: number;
+	// Legacy fields (may be added later)
+	totalForms?: number;
+	totalSubmissions?: number;
+	totalUsers?: number;
+	pendingSubmissions?: number;
 }
 
 interface IStatusItem {
@@ -324,46 +330,46 @@ const Dashboard: React.FC = () => {
 			<div className={styles.statsGrid}>
 				<div className={`${styles.statCard} ${styles.forms} ${styles.fadeIn}`} style={{ animationDelay: '0.05s' }}>
 					<div className={styles.statTop}>
-						<span className={styles.statLabel}>Tổng biểu mẫu</span>
+						<span className={styles.statLabel}>Tổng submissions</span>
 						<div className={`${styles.statIcon} ${styles.formIcon}`}>
 							<FormOutlined />
 						</div>
 					</div>
 					<div className={styles.statValue}>
-						<CountUp end={summary?.totalForms ?? 0} duration={1.5} separator="," />
+						<CountUp end={summary?.total ?? 0} duration={1.5} separator="," />
 					</div>
 					<div className={`${styles.statChange} ${styles.neutral}`}>
-						<CalendarOutlined /> Tổng số form đã tạo
+						<CalendarOutlined /> Tổng lượt nộp biểu mẫu
 					</div>
 				</div>
 
 				<div className={`${styles.statCard} ${styles.submissions} ${styles.fadeIn}`} style={{ animationDelay: '0.1s' }}>
 					<div className={styles.statTop}>
-						<span className={styles.statLabel}>Tổng submissions</span>
+						<span className={styles.statLabel}>Đã duyệt</span>
 						<div className={`${styles.statIcon} ${styles.submissionIcon}`}>
 							<FileTextOutlined />
 						</div>
 					</div>
 					<div className={styles.statValue}>
-						<CountUp end={summary?.totalSubmissions ?? 0} duration={1.5} separator="," />
+						<CountUp end={summary?.approved ?? 0} duration={1.5} separator="," />
 					</div>
 					<div className={`${styles.statChange} ${styles.neutral}`}>
-						<InboxOutlined /> Tổng lượt nộp biểu mẫu
+						<InboxOutlined /> Submissions đã được phê duyệt
 					</div>
 				</div>
 
 				<div className={`${styles.statCard} ${styles.users} ${styles.fadeIn}`} style={{ animationDelay: '0.15s' }}>
 					<div className={styles.statTop}>
-						<span className={styles.statLabel}>Người dùng</span>
+						<span className={styles.statLabel}>Từ chối</span>
 						<div className={`${styles.statIcon} ${styles.userIcon}`}>
-							<TeamOutlined />
+							<CloseCircleOutlined />
 						</div>
 					</div>
 					<div className={styles.statValue}>
-						<CountUp end={summary?.totalUsers ?? 0} duration={1.5} separator="," />
+						<CountUp end={summary?.rejected ?? 0} duration={1.5} separator="," />
 					</div>
 					<div className={`${styles.statChange} ${styles.neutral}`}>
-						<TeamOutlined /> Tài khoản trong hệ thống
+						<CloseCircleOutlined /> Submissions bị từ chối
 					</div>
 				</div>
 
@@ -375,7 +381,7 @@ const Dashboard: React.FC = () => {
 						</div>
 					</div>
 					<div className={styles.statValue}>
-						<CountUp end={summary?.pendingSubmissions ?? 0} duration={1.5} separator="," />
+						<CountUp end={summary?.pending ?? 0} duration={1.5} separator="," />
 					</div>
 					<div className={`${styles.statChange} ${styles.neutral}`}>
 						<ClockCircleOutlined /> Submissions đang chờ xử lý

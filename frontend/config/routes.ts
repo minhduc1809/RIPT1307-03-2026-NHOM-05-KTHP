@@ -92,11 +92,32 @@ export default [
 		path: '/submissions',
 		name: 'Submissions',
 		icon: 'FileDoneOutlined',
-		hideInMenu: true,
 		routes: [
+			{
+				path: '/submissions',
+				redirect: '/submissions/approval',
+			},
+			{
+				path: '/submissions/new/:formId',
+				name: 'Điền biểu mẫu',
+				hideInMenu: true,
+				component: './Submissions/FillForm',
+			},
+			{
+				path: '/submissions/new',
+				name: 'Nộp biểu mẫu',
+				exact: true,
+				component: './Submissions/FormSubmit',
+			},
+			{
+				path: '/submissions/approval',
+				name: 'Phê duyệt',
+				component: './Submissions/WorkflowApproval',
+			},
 			{
 				path: '/submissions/:id',
 				name: 'Submission Detail',
+				hideInMenu: true,
 				component: './Submissions/Detail',
 			},
 		],

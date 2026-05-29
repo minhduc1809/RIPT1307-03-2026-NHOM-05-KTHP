@@ -130,7 +130,12 @@ const Profile: React.FC = () => {
 		try {
 			// Step 1: Upload file
 			const uploadRes = await uploadFileAvatar(file);
-			const pictureUrl = (uploadRes as any)?.data?.data?.url || (uploadRes as any)?.data?.url;
+			const uploadData = (uploadRes as any)?.data?.data || (uploadRes as any)?.data;
+			// Build picture URL from file ID or use direct URL/storedPath
+			const pictureUrl =
+				uploadData?.url ||
+				(uploadData?.id ? `${(window as any).APP_CONFIG_IP_ROOT || 'http://localhost:3000'}/files/${uploadData.id}` : null) ||
+				(uploadData?.storedPath ? `${(window as any).APP_CONFIG_IP_ROOT || 'http://localhost:3000'}/${uploadData.storedPath}` : null);
 
 			if (!pictureUrl) {
 				message.error('Upload ảnh thất bại');
