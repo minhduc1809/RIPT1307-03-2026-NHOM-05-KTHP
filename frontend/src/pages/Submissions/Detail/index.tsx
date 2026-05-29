@@ -32,7 +32,7 @@ import styles from './index.less';
 
 const STATUS_LABELS: Record<string, string> = {
 	DRAFT: 'Nháp',
-	SUBMITTED: 'Đã nộp',
+	SUBMITTED: 'Hoàn tất',
 	UNDER_REVIEW: 'Đang duyệt',
 	APPROVED: 'Đã duyệt',
 	REJECTED: 'Từ chối',
@@ -327,6 +327,21 @@ const SubmissionDetail: React.FC = () => {
 					})()}
 				</div>
 			</div>
+
+			{/* No-workflow notice */}
+			{histories.length === 0 && submission.status === 'SUBMITTED' && (
+				<div className={styles.card}>
+					<div className={styles.cardHeader}>
+						<div className={`${styles.cardIcon} ${styles.dataIcon}`} style={{ background: '#d1fae5', color: '#047857' }}>
+							<CheckCircleOutlined />
+						</div>
+						<div className={styles.cardTitle}>
+							<h3>Đã nộp thành công</h3>
+							<p>Biểu mẫu này không yêu cầu phê duyệt. Dữ liệu của bạn đã được ghi nhận.</p>
+						</div>
+					</div>
+				</div>
+			)}
 
 			{/* Workflow History Timeline */}
 			{histories.length > 0 && (
