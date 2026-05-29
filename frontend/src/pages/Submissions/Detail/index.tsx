@@ -26,6 +26,7 @@ import type {
 	IWorkflowHistory,
 	IWorkflowHistoryResponse,
 } from '@/services/Submissions/typings';
+import { getReadableData } from '@/utils/formDataHelper';
 import styles from './index.less';
 
 const STATUS_LABELS: Record<string, string> = {
@@ -247,17 +248,21 @@ const SubmissionDetail: React.FC = () => {
 					</div>
 				</div>
 				<div className={styles.cardBody}>
-					{Object.entries(submission.data || {}).map(([key, value]) => (
-						<div key={key} className={styles.dataRow}>
-							<span className={styles.dataKey}>{key}</span>
-							<span className={styles.dataValue}>{String(value)}</span>
-						</div>
-					))}
-					{Object.keys(submission.data || {}).length === 0 && (
-						<div style={{ color: '#94a3b8', textAlign: 'center', padding: 20 }}>
-							Không có dữ liệu
-						</div>
-					)}
+					{(() => {
+						const readable = getReadableData(submission);
+						return readable.length === 0 ? (
+							<div style={{ color: '#94a3b8', textAlign: 'center', padding: 20 }}>
+								Không có dữ liệu
+							</div>
+						) : (
+							readable.map((f) => (
+								<div key={f.key} className={styles.dataRow}>
+									<span className={styles.dataKey}>{f.label}</span>
+									<span className={styles.dataValue}>{f.value}</span>
+								</div>
+							))
+						);
+					})()}
 				</div>
 			</div>
 

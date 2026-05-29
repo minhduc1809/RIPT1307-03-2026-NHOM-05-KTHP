@@ -3,15 +3,18 @@ import {
 	ClockCircleOutlined,
 	CloseCircleOutlined,
 	FileTextOutlined,
+	PlusOutlined,
 	RollbackOutlined,
 	UnorderedListOutlined,
 } from '@ant-design/icons';
-import { Pagination, Spin } from 'antd';
+import { Button, Pagination, Spin } from 'antd';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import { history } from 'umi';
 import { getMySubmissions } from '@/services/Submissions/submissionApi';
 import type { ISubmission } from '@/services/Submissions/typings';
+import SubmitFormModal from '@/components/SubmitFormModal';
+import { getReadableData } from '@/utils/formDataHelper';
 import styles from './index.less';
 
 const STATUS_LABELS: Record<string, string> = {
@@ -25,6 +28,7 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const MySubmissions: React.FC = () => {
+	const [submitModalVisible, setSubmitModalVisible] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const [items, setItems] = useState<ISubmission[]>([]);
 	const [total, setTotal] = useState(0);
@@ -84,8 +88,24 @@ const MySubmissions: React.FC = () => {
 		<div className={styles.mySubmissionsPage}>
 			{/* Header */}
 			<div className={styles.pageHeader}>
-				<h1>Yêu cầu của tôi</h1>
-				<p>Theo dõi trạng thái các biểu mẫu bạn đã nộp</p>
+				<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+					<div>
+						<h1>Yêu cầu của tôi</h1>
+						<p>Theo dõi trạng thái các biểu mẫu bạn đã nộp</p>
+					</div>
+					<Button
+						type="primary"
+						icon={<PlusOutlined />}
+						onClick={() => setSubmitModalVisible(true)}
+						style={{
+							height: 40, borderRadius: 10, fontWeight: 600,
+							background: 'linear-gradient(135deg, #2563eb, #3b82f6)',
+							border: 'none', boxShadow: '0 2px 8px rgba(37,99,235,0.3)',
+						}}
+					>
+						Nộp biểu mẫu
+					</Button>
+				</div>
 			</div>
 
 			{/* Stats */}
@@ -163,7 +183,7 @@ const MySubmissions: React.FC = () => {
 					) : (
 						<>
 							{items.map((item) => {
-								const dataKeys = Object.keys(item.data || {}).slice(0, 3);
+								const readable = getReadableData(item).slice(0, 3);
 								return (
 									<div
 										key={item.id}
@@ -188,11 +208,11 @@ const MySubmissions: React.FC = () => {
 													</span>
 												)}
 											</div>
-											{dataKeys.length > 0 && (
+											{readable.length > 0 && (
 												<div className={styles.itemData}>
-													{dataKeys.map((key) => (
-														<span key={key} className={styles.dataTag}>
-															{key}: {String(item.data[key])}
+													{readable.map((f) => (
+														<span key={f.key} className={styles.dataTag}>
+															{f.label}: {f.value}
 														</span>
 													))}
 												</div>
@@ -217,6 +237,11 @@ const MySubmissions: React.FC = () => {
 					)}
 				</div>
 			</div>
+
+			<SubmitFormModal
+				visible={submitModalVisible}
+				onClose={() => { setSubmitModalVisible(false); fetchSubmissions(); }}
+			/>
 		</div>
 	);
 };
