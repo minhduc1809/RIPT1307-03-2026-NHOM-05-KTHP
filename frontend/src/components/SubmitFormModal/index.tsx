@@ -260,7 +260,8 @@ const SubmitFormModal: React.FC<Props> = ({ visible, onClose }) => {
 			}
 			width={600}
 			destroyOnClose
-			bodyStyle={{ maxHeight: '65vh', overflowY: 'auto' }}
+			style={{ top: 40 }}
+			bodyStyle={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto', padding: '16px 24px' }}
 		>
 			{step === 'pick' && (
 				<>

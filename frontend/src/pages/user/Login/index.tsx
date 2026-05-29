@@ -118,7 +118,6 @@ const Login: React.FC = () => {
 							</Form.Item>
 
 							<div className={styles.formActions}>
-								<Link to='/user/forgot-password' className={styles.forgotPassword}>Quên mật khẩu?</Link>
 							</div>
 
 							<Button 

@@ -395,8 +395,10 @@ const WorkflowApproval: React.FC = () => {
 				visible={commentModalVisible}
 				onCancel={() => setCommentModalVisible(false)}
 				footer={null}
-				width={480}
+				width={520}
 				destroyOnClose
+				style={{ top: 40 }}
+				bodyStyle={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}
 			>
 				{commentModalItem?.submission && (
 					<div className={styles.submissionData}>

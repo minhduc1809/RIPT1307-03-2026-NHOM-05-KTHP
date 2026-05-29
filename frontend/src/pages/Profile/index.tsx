@@ -309,7 +309,7 @@ const Profile: React.FC = () => {
 			dataIndex: 'role',
 			key: 'role',
 			render: (role: string) => {
-				const roleClass = role === 'ADMIN' ? styles.admin : role === 'MANAGER' ? styles.manager : styles.user;
+				const roleClass = role === 'ADMIN' ? styles.admin : role === 'MANAGER' ? styles.manager : role === 'HR' ? styles.hr : styles.user;
 				return <span className={`${styles.roleTag} ${roleClass}`}>{role}</span>;
 			},
 		},
@@ -395,7 +395,7 @@ const Profile: React.FC = () => {
 					</div>
 					<div className={styles.userSubtitle}>{myProfile?.email}</div>
 					<div className={styles.roleBadges}>
-						<span className={`${styles.roleBadge} ${myProfile?.role === 'ADMIN' ? styles.admin : myProfile?.role === 'MANAGER' ? styles.manager : styles.user}`}>
+						<span className={`${styles.roleBadge} ${myProfile?.role === 'ADMIN' ? styles.admin : myProfile?.role === 'MANAGER' ? styles.manager : myProfile?.role === 'HR' ? styles.hr : styles.user}`}>
 							{myProfile?.role}
 						</span>
 						<span className={`${styles.roleBadge} ${styles.activeBadge}`}>ACTIVE</span>
@@ -451,6 +451,7 @@ const Profile: React.FC = () => {
 								>
 									<Option value="ADMIN">Admin</Option>
 									<Option value="MANAGER">Manager</Option>
+									<Option value="HR">HR</Option>
 									<Option value="USER">User</Option>
 								</Select>
 							</div>
@@ -512,6 +513,7 @@ const Profile: React.FC = () => {
 						<Select>
 							<Option value="ADMIN">Admin</Option>
 							<Option value="MANAGER">Manager</Option>
+							<Option value="HR">HR</Option>
 							<Option value="USER">User</Option>
 						</Select>
 					</Form.Item>
@@ -533,6 +535,7 @@ const Profile: React.FC = () => {
 						<Select>
 							<Option value="ADMIN">Admin</Option>
 							<Option value="MANAGER">Manager</Option>
+							<Option value="HR">HR</Option>
 							<Option value="USER">User</Option>
 						</Select>
 					</Form.Item>

@@ -30,6 +30,7 @@ export default [
 		path: '/forms',
 		name: 'Forms',
 		icon: 'FormOutlined',
+		access: 'canManage',
 		routes: [
 			{
 				path: '/forms',
@@ -62,6 +63,7 @@ export default [
 		path: '/workflows',
 		name: 'Workflows',
 		icon: 'PartitionOutlined',
+		access: 'canManage',
 		routes: [
 			{
 				path: '/workflows',
@@ -117,6 +119,7 @@ export default [
 			{
 				path: '/submissions/approval',
 				name: 'Phê duyệt',
+				access: 'canApprove',
 				component: './Submissions/WorkflowApproval',
 			},
 			{

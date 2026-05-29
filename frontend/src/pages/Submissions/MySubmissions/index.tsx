@@ -19,7 +19,7 @@ import styles from './index.less';
 
 const STATUS_LABELS: Record<string, string> = {
 	DRAFT: 'Nháp',
-	SUBMITTED: 'Đã nộp',
+	SUBMITTED: 'Hoàn tất',
 	UNDER_REVIEW: 'Đang duyệt',
 	APPROVED: 'Đã duyệt',
 	REJECTED: 'Từ chối',
