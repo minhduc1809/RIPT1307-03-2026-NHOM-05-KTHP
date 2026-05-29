@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { history, useLocation } from 'umi';
 import { message } from 'antd';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import SortableList from '@/components/SortableList';
 import {
 	AppstoreOutlined,
 	BgColorsOutlined,
@@ -126,43 +126,21 @@ const FormBuilder: React.FC = () => {
 
 	const selectedField = fields.find((f) => f.id === selectedFieldId);
 
-	// Drag and Drop Logic
-	const onDragEnd = (result: DropResult) => {
-		const { source, destination } = result;
-
-		// Dropped outside a valid droppable area
-		if (!destination) return;
-
-		// Reordering within the canvas
-		if (source.droppableId === 'canvas' && destination.droppableId === 'canvas') {
-			const newFields = Array.from(fields);
-			const [movedItem] = newFields.splice(source.index, 1);
-			newFields.splice(destination.index, 0, movedItem);
-			setFields(newFields);
-			return;
-		}
-
-		// Dragging from toolbox to canvas
-		if (source.droppableId === 'toolbox' && destination.droppableId === 'canvas') {
-			const fieldTypeTemplate = FIELD_TYPES[source.index];
-			const newFieldId = generateId();
-
-			const newField: IBuilderField = {
-				id: newFieldId,
-				type: fieldTypeTemplate.type,
-				key: `field_${newFieldId}`,
-				label: `Trường ${fieldTypeTemplate.label}`,
-				placeholder: fieldTypeTemplate.type === 'select' ? 'Chọn một tùy chọn' : 'Nhập giá trị...',
-				required: false,
-				...(fieldTypeTemplate.type === 'select' ? { options: ['Lựa chọn 1', 'Lựa chọn 2'] } : {}),
-			};
-
-			const newFields = Array.from(fields);
-			newFields.splice(destination.index, 0, newField);
-			setFields(newFields);
-			setSelectedFieldId(newFieldId);
-		}
-	};
+	// Click-to-add from toolbox
+	const handleAddField = useCallback((type: typeof FIELD_TYPES[number]) => {
+		const newFieldId = generateId();
+		const newField: IBuilderField = {
+			id: newFieldId,
+			type: type.type,
+			key: `field_${newFieldId}`,
+			label: `Trường ${type.label}`,
+			placeholder: type.type === 'select' ? 'Chọn một tùy chọn' : 'Nhập giá trị...',
+			required: false,
+			...(type.type === 'select' ? { options: ['Lựa chọn 1', 'Lựa chọn 2'] } : {}),
+		};
+		setFields((prev) => [...prev, newField]);
+		setSelectedFieldId(newFieldId);
+	}, []);
 
 	// Field Actions
 	const handleDeleteField = (id: string, e?: React.MouseEvent) => {
@@ -325,7 +303,6 @@ const FormBuilder: React.FC = () => {
 				</div>
 			</header>
 
-			<DragDropContext onDragEnd={onDragEnd}>
 				<main className={styles.mainContent}>
 					{/* Left Sidebar (Components) */}
 					<aside className={styles.sidebarLeft}>
@@ -361,30 +338,21 @@ const FormBuilder: React.FC = () => {
 						{activeTab === 'components' ? (
 							<div className={styles.fieldTypes}>
 								<h3>Loại trường</h3>
-								<Droppable droppableId='toolbox' isDropDisabled={true}>
-									{(provided) => (
-										<div className={styles.fieldGrid} ref={provided.innerRef} {...provided.droppableProps}>
-											{FIELD_TYPES.map((type, index) => (
-												<Draggable key={type.type} draggableId={type.type} index={index}>
-													{(dragProvided) => (
-														<div
-															className={styles.draggableItem}
-															ref={dragProvided.innerRef}
-															{...dragProvided.draggableProps}
-															{...dragProvided.dragHandleProps}
-														>
-															<div className={styles.fieldCard}>
-																<div className={`${styles.iconWrapper} ${styles[type.type]}`}>{type.icon}</div>
-																<span className={styles.fieldLabel}>{type.label}</span>
-															</div>
-														</div>
-													)}
-												</Draggable>
-											))}
-											{provided.placeholder}
+								<div className={styles.fieldGrid}>
+									{FIELD_TYPES.map((type) => (
+										<div
+											key={type.type}
+											className={styles.draggableItem}
+											onClick={() => handleAddField(type)}
+											style={{ cursor: 'pointer' }}
+										>
+											<div className={styles.fieldCard}>
+												<div className={`${styles.iconWrapper} ${styles[type.type]}`}>{type.icon}</div>
+												<span className={styles.fieldLabel}>{type.label}</span>
+											</div>
 										</div>
-									)}
-								</Droppable>
+									))}
+								</div>
 							</div>
 						) : activeTab === 'themes' ? (
 							<div className={styles.themePresetsList}>
@@ -459,51 +427,36 @@ const FormBuilder: React.FC = () => {
 								/>
 							</div>
 
-							<Droppable droppableId='canvas'>
-								{(provided, snapshot) => (
-									<div className={styles.dropZone} ref={provided.innerRef} {...provided.droppableProps}>
-										{fields.map((field, index) => (
-											<Draggable key={field.id} draggableId={field.id} index={index}>
-												{(dragProvided) => (
-													<div
-														ref={dragProvided.innerRef}
-														{...dragProvided.draggableProps}
-														{...dragProvided.dragHandleProps}
-														className={`${styles.formFieldItem} ${selectedFieldId === field.id ? styles.active : ''}`}
-														onClick={(e) => {
-															e.stopPropagation();
-															setSelectedFieldId(field.id);
-														}}
-													>
-														<div className={styles.fieldActions}>
-															<button className={styles.btnCopy} onClick={(e) => handleCopyField(field, index, e)}>
-																<CopyOutlined />
-															</button>
-															<button className={styles.btnDelete} onClick={(e) => handleDeleteField(field.id, e)}>
-																<DeleteOutlined />
-															</button>
-														</div>
+							<SortableList
+								items={fields}
+								droppableId="builder-canvas"
+								onReorder={setFields}
+								emptyText="Nhấn vào thành phần bên trái để thêm trường"
+								renderItem={(field, index) => (
+									<div
+										className={`${styles.formFieldItem} ${selectedFieldId === field.id ? styles.active : ''}`}
+										onClick={(e) => {
+											e.stopPropagation();
+											setSelectedFieldId(field.id);
+										}}
+									>
+										<div className={styles.fieldActions}>
+											<button className={styles.btnCopy} onClick={(e) => handleCopyField(field, index, e)}>
+												<CopyOutlined />
+											</button>
+											<button className={styles.btnDelete} onClick={(e) => handleDeleteField(field.id, e)}>
+												<DeleteOutlined />
+											</button>
+										</div>
 
-														<span className={styles.fieldLabel}>
-															{field.label}
-															{field.required && <span className={styles.requiredMark}>*</span>}
-														</span>
-														{renderFieldPreview(field)}
-													</div>
-												)}
-											</Draggable>
-										))}
-										{provided.placeholder}
-
-										{fields.length === 0 && !snapshot.isDraggingOver && (
-											<div className={styles.dropPlaceholder}>
-												<PlusCircleOutlined className={styles.icon} />
-												<span className={styles.text}>Kéo thả thêm thành phần vào đây</span>
-											</div>
-										)}
+										<span className={styles.fieldLabel}>
+											{field.label}
+											{field.required && <span className={styles.requiredMark}>*</span>}
+										</span>
+										{renderFieldPreview(field)}
 									</div>
 								)}
-							</Droppable>
+							/>
 						</div>
 					</section>
 
@@ -723,7 +676,6 @@ const FormBuilder: React.FC = () => {
 						)}
 					</aside>
 				</main>
-			</DragDropContext>
 		</div>
 	);
 };

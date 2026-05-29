@@ -22,15 +22,14 @@ import styles from './index.less';
 const ALL_ROLES = ['ADMIN', 'MANAGER', 'HR', 'USER'];
 
 const ROLE_LABELS: Record<string, string> = {
-	ADMIN: 'Quan tri vien',
-	MANAGER: 'Quan ly',
-	HR: 'Nhan su',
-	USER: 'Nhan vien',
+	ADMIN: 'Quản trị viên',
+	MANAGER: 'Quản lý',
+	HR: 'Nhân sự',
+	USER: 'Nhân viên',
 };
 
 interface ApprovalStep {
 	role: string;
-	canReject: boolean;
 	requireCommentOnReject: boolean;
 	canReturn: boolean;
 	requireCommentOnReturn: boolean;
@@ -44,14 +43,11 @@ function buildConfig(steps: ApprovalStep[]): IWorkflowConfig {
 		states.push(`step_${i + 1}`);
 	});
 
-	states.push('approved');
-	const hasReject = steps.some((s) => s.canReject);
+	states.push('approved', 'rejected');
 	const hasReturn = steps.some((s) => s.canReturn);
-	if (hasReject) states.push('rejected');
 	if (hasReturn) states.push('returned');
 
-	const finalStates = ['approved'];
-	if (hasReject) finalStates.push('rejected');
+	const finalStates = ['approved', 'rejected'];
 	if (hasReturn) finalStates.push('returned');
 
 	steps.forEach((step, i) => {
@@ -65,15 +61,13 @@ function buildConfig(steps: ApprovalStep[]): IWorkflowConfig {
 			roles: [step.role],
 		});
 
-		if (step.canReject) {
-			transitions.push({
-				from: fromState,
-				to: 'rejected',
-				action: 'reject',
-				roles: [step.role],
-				...(step.requireCommentOnReject && { conditions: { requireComment: true } }),
-			});
-		}
+		transitions.push({
+			from: fromState,
+			to: 'rejected',
+			action: 'reject',
+			roles: [step.role],
+			...(step.requireCommentOnReject && { conditions: { requireComment: true } }),
+		});
 
 		if (step.canReturn) {
 			transitions.push({
@@ -119,7 +113,6 @@ function parseConfigToSteps(config: IWorkflowConfig): ApprovalStep[] | null {
 
 		steps.push({
 			role: approveT.roles?.[0] || 'MANAGER',
-			canReject: !!rejectT,
 			requireCommentOnReject: !!rejectT?.conditions?.requireComment,
 			canReturn: !!returnT,
 			requireCommentOnReturn: !!returnT?.conditions?.requireComment,
@@ -133,7 +126,6 @@ function parseConfigToSteps(config: IWorkflowConfig): ApprovalStep[] | null {
 
 const DEFAULT_STEP: ApprovalStep = {
 	role: 'MANAGER',
-	canReject: true,
 	requireCommentOnReject: true,
 	canReturn: false,
 	requireCommentOnReturn: false,
@@ -166,7 +158,7 @@ const WorkflowEdit: React.FC = (props: any) => {
 					}
 				}
 			} catch {
-				message.error('Khong the tai workflow');
+				message.error('Không thể tải workflow');
 			} finally {
 				setLoadingData(false);
 			}
@@ -194,7 +186,7 @@ const WorkflowEdit: React.FC = (props: any) => {
 
 	const removeStep = (index: number) => {
 		if (steps.length <= 1) {
-			message.warning('Can it nhat 1 buoc duyet');
+			message.warning('Cần ít nhất 1 bước duyệt');
 			return;
 		}
 		setSteps((prev) => prev.filter((_, i) => i !== index));
@@ -215,10 +207,10 @@ const WorkflowEdit: React.FC = (props: any) => {
 	};
 
 	const validate = (): string | null => {
-		if (!workflowName.trim()) return 'Vui long nhap ten workflow';
-		if (steps.length === 0) return 'Can it nhat 1 buoc duyet';
+		if (!workflowName.trim()) return 'Vui lòng nhập tên workflow';
+		if (steps.length === 0) return 'Cần ít nhất 1 bước duyệt';
 		for (let i = 0; i < steps.length; i++) {
-			if (!steps[i].role) return `Buoc ${i + 1}: Chua chon nguoi duyet`;
+			if (!steps[i].role) return `Buoc ${i + 1}: Chưa chọn người duyệt`;
 		}
 		return null;
 	};
@@ -235,7 +227,7 @@ const WorkflowEdit: React.FC = (props: any) => {
 				...(selectedFormId ? { formId: selectedFormId } : {}),
 				config,
 			});
-			message.success('Cap nhat workflow thanh cong!');
+			message.success('Cập nhật workflow thành công!');
 			history.push(`/workflows/${workflowId}`);
 		} catch (err) {
 			console.error('Failed to update workflow:', err);
@@ -244,7 +236,6 @@ const WorkflowEdit: React.FC = (props: any) => {
 		}
 	};
 
-	const hasReject = steps.some((s) => s.canReject);
 	const hasReturn = steps.some((s) => s.canReturn);
 
 	if (loadingData) {
@@ -266,8 +257,8 @@ const WorkflowEdit: React.FC = (props: any) => {
 						<ArrowLeftOutlined />
 					</button>
 					<div className={styles.headerInfo}>
-						<h1>Chinh sua Workflow</h1>
-						<p>{workflowName || 'Dang tai...'}</p>
+						<h1>Chỉnh sửa Workflow</h1>
+						<p>{workflowName || 'Đang tải...'}</p>
 					</div>
 				</div>
 				<div className={styles.headerActions}>
@@ -278,7 +269,7 @@ const WorkflowEdit: React.FC = (props: any) => {
 						loading={saving}
 						onClick={handleSave}
 					>
-						Luu thay doi
+						Lưu thay đổi
 					</Button>
 				</div>
 			</div>
@@ -289,24 +280,24 @@ const WorkflowEdit: React.FC = (props: any) => {
 					<div className={styles.sectionHeader}>
 						<div className={`${styles.sectionIcon} ${styles.info}`}>📝</div>
 						<div className={styles.sectionTitle}>
-							<h3>Thong tin co ban</h3>
-							<p>Dat ten va lien ket workflow voi bieu mau</p>
+							<h3>Thông tin cơ bản</h3>
+							<p>Đặt tên và liên kết workflow với biểu mẫu</p>
 						</div>
 					</div>
 					<div className={styles.sectionBody}>
 						<div className={styles.formGroup}>
-							<label>Ten Workflow <span className={styles.required}>*</span></label>
+							<label>Tên Workflow <span className={styles.required}>*</span></label>
 							<Input
-								placeholder="Vi du: Luong phe duyet don nghi phep"
+								placeholder="Ví dụ: Luồng phê duyệt đơn nghỉ phép"
 								value={workflowName}
 								onChange={(e) => setWorkflowName(e.target.value)}
 								maxLength={100}
 							/>
 						</div>
 						<div className={styles.formGroup}>
-							<label>Lien ket voi Bieu mau</label>
+							<label>Liên kết với Biểu mẫu</label>
 							<Select
-								placeholder="Chon bieu mau (khong bat buoc)"
+								placeholder="Chọn biểu mẫu (không bắt buộc)"
 								value={selectedFormId}
 								onChange={setSelectedFormId}
 								allowClear
@@ -327,15 +318,15 @@ const WorkflowEdit: React.FC = (props: any) => {
 					<div className={styles.sectionHeader}>
 						<div className={`${styles.sectionIcon} ${styles.steps}`}>👥</div>
 						<div className={styles.sectionTitle}>
-							<h3>Cac buoc phe duyet</h3>
-							<p>Them nguoi duyet theo thu tu. Yeu cau se di qua tung buoc tu tren xuong.</p>
+							<h3>Các bước phê duyệt</h3>
+							<p>Thêm người duyệt theo thứ tự. Yêu cầu sẽ đi qua từng bước từ trên xuống.</p>
 						</div>
 					</div>
 					<div className={styles.sectionBody}>
 						{steps.length === 0 ? (
 							<div className={styles.emptySteps}>
 								<span>👥</span>
-								Chua co buoc duyet nao. Nhan nut ben duoi de them.
+								Chưa có bước duyệt nào. Nhấn nút bên dưới để thêm.
 							</div>
 						) : (
 							<div className={styles.stepsList}>
@@ -345,17 +336,17 @@ const WorkflowEdit: React.FC = (props: any) => {
 											<div className={styles.stepBadge}>
 												<div className={styles.stepNumber}>{idx + 1}</div>
 												<div className={styles.stepTitle}>
-													{ROLE_LABELS[step.role] || step.role} duyet
+													{ROLE_LABELS[step.role] || step.role} duyệt
 												</div>
 											</div>
 											<div className={styles.stepActions}>
-												<button onClick={() => moveStep(idx, -1)} disabled={idx === 0} title="Di len">
+												<button onClick={() => moveStep(idx, -1)} disabled={idx === 0} title="Di lên">
 													<UpOutlined />
 												</button>
-												<button onClick={() => moveStep(idx, 1)} disabled={idx === steps.length - 1} title="Di xuong">
+												<button onClick={() => moveStep(idx, 1)} disabled={idx === steps.length - 1} title="Di xuống">
 													<DownOutlined />
 												</button>
-												<button className={styles.deleteBtn} onClick={() => removeStep(idx)} title="Xoa buoc">
+												<button className={styles.deleteBtn} onClick={() => removeStep(idx)} title="Xóa bước">
 													<DeleteOutlined />
 												</button>
 											</div>
@@ -363,7 +354,7 @@ const WorkflowEdit: React.FC = (props: any) => {
 
 										<div className={styles.stepBody}>
 											<div className={styles.stepField}>
-												<label>Nguoi duyet <span style={{ color: '#ef4444' }}>*</span></label>
+												<label>Người duyệt <span style={{ color: '#ef4444' }}>*</span></label>
 												<Select
 													value={step.role}
 													onChange={(val) => updateStep(idx, { role: val })}
@@ -375,35 +366,24 @@ const WorkflowEdit: React.FC = (props: any) => {
 												/>
 											</div>
 											<div className={styles.stepField}>
-												<label>Buoc tiep theo</label>
+												<label>Bước tiếp theo</label>
 												<Input
 													disabled
 													value={
 														idx < steps.length - 1
-															? `Buoc ${idx + 2}: ${ROLE_LABELS[steps[idx + 1].role] || steps[idx + 1].role} duyet`
-															: 'Phe duyet hoan tat'
+															? `Bước ${idx + 2}: ${ROLE_LABELS[steps[idx + 1].role] || steps[idx + 1].role} duyệt`
+															: 'Phê duyệt hoàn tất'
 													}
 												/>
 											</div>
 											<div className={styles.stepOptions}>
 												<div className={styles.optionGroup}>
 													<Checkbox
-														checked={step.canReject}
-														onChange={(e) => updateStep(idx, {
-															canReject: e.target.checked,
-															...(!e.target.checked && { requireCommentOnReject: false }),
-														})}
+														checked={step.requireCommentOnReject}
+														onChange={(e) => updateStep(idx, { requireCommentOnReject: e.target.checked })}
 													>
-														Co the tu choi
+														Bắt buộc ghi chú khi từ chối
 													</Checkbox>
-													{step.canReject && (
-														<Checkbox
-															checked={step.requireCommentOnReject}
-															onChange={(e) => updateStep(idx, { requireCommentOnReject: e.target.checked })}
-														>
-															Bat buoc ghi chu khi tu choi
-														</Checkbox>
-													)}
 												</div>
 												<div className={styles.optionGroup}>
 													<Checkbox
@@ -413,14 +393,14 @@ const WorkflowEdit: React.FC = (props: any) => {
 															...(!e.target.checked && { requireCommentOnReturn: false }),
 														})}
 													>
-														Co the tra lai
+														Cho phép trả lại để sửa
 													</Checkbox>
 													{step.canReturn && (
 														<Checkbox
 															checked={step.requireCommentOnReturn}
 															onChange={(e) => updateStep(idx, { requireCommentOnReturn: e.target.checked })}
 														>
-															Bat buoc ghi chu khi tra lai
+															Bắt buộc ghi chú khi trả lại
 														</Checkbox>
 													)}
 												</div>
@@ -432,7 +412,7 @@ const WorkflowEdit: React.FC = (props: any) => {
 						)}
 
 						<button className={styles.addStepBtn} onClick={addStep}>
-							<PlusOutlined /> Them buoc duyet
+							<PlusOutlined /> Thêm bước duyệt
 						</button>
 					</div>
 				</div>
@@ -442,21 +422,21 @@ const WorkflowEdit: React.FC = (props: any) => {
 					<div className={styles.sectionHeader}>
 						<div className={`${styles.sectionIcon} ${styles.preview}`}>👁️</div>
 						<div className={styles.sectionTitle}>
-							<h3>Xem truoc luong</h3>
-							<p>So do tong quan cac buoc phe duyet</p>
+							<h3>Xem trước luồng</h3>
+							<p>Sơ đồ tổng quan các bước phê duyệt</p>
 						</div>
 					</div>
 					<div className={styles.sectionBody}>
 						{steps.length === 0 ? (
 							<div className={styles.emptyPreview}>
-								Them buoc duyet de xem so do luong workflow
+								Thêm bước duyệt để xem sơ đồ luồng workflow
 							</div>
 						) : (
 							<div className={styles.previewContainer}>
 								<div className={styles.previewFlow}>
 									<div className={styles.previewNode}>
-										<div className={`${styles.nodeDot} ${styles.start}`}>NOP</div>
-										<div className={styles.nodeName}>Nop yeu cau</div>
+										<div className={`${styles.nodeDot} ${styles.start}`}>NỘP</div>
+										<div className={styles.nodeName}>Nộp yêu cầu</div>
 									</div>
 
 									{steps.map((step, idx) => (
@@ -465,7 +445,7 @@ const WorkflowEdit: React.FC = (props: any) => {
 											<div className={styles.previewNode}>
 												<div className={`${styles.nodeDot} ${styles.step}`}>B{idx + 1}</div>
 												<div className={styles.nodeName}>{ROLE_LABELS[step.role] || step.role}</div>
-												<div className={styles.nodeRole}>duyet</div>
+												<div className={styles.nodeRole}>duyệt</div>
 											</div>
 										</React.Fragment>
 									))}
@@ -473,26 +453,22 @@ const WorkflowEdit: React.FC = (props: any) => {
 									<div className={styles.previewArrow}><ArrowRightOutlined /></div>
 									<div className={styles.previewNode}>
 										<div className={`${styles.nodeDot} ${styles.approved}`}>OK</div>
-										<div className={styles.nodeName}>Phe duyet</div>
+										<div className={styles.nodeName}>Phê duyệt</div>
 									</div>
 								</div>
 
-								{(hasReject || hasReturn) && (
-									<div className={styles.previewBranches}>
-										{hasReject && (
-											<div className={styles.branchItem}>
-												<div className={`${styles.branchDot} ${styles.rejected}`} />
-												Bat ky buoc nao co the tu choi → Ket thuc
-											</div>
-										)}
+								<div className={styles.previewBranches}>
+										<div className={styles.branchItem}>
+											<div className={`${styles.branchDot} ${styles.rejected}`} />
+											Bất kỳ bước nào có thể từ chối → Kết thúc
+										</div>
 										{hasReturn && (
 											<div className={styles.branchItem}>
 												<div className={`${styles.branchDot} ${styles.returned}`} />
-												Bat ky buoc nao co the tra lai → Nguoi nop sua va nop lai
+												Bất kỳ bước nào có thể trả lại → Người nộp sửa và nộp lại
 											</div>
 										)}
 									</div>
-								)}
 							</div>
 						)}
 					</div>

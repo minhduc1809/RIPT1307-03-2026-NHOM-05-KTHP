@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { history, useParams } from 'umi';
 import { message, Spin } from 'antd';
+import SortableList from '@/components/SortableList';
 import {
 	CalendarOutlined,
 	ControlOutlined,
@@ -104,6 +105,7 @@ const FormEdit: React.FC = () => {
 	}, [formId]);
 
 	const selectedField = fields.find((f) => f.id === selectedFieldId);
+
 
 	// Field Actions
 	const handleDeleteField = (id: string, e?: React.MouseEvent) => {
@@ -365,10 +367,13 @@ const FormEdit: React.FC = () => {
 							{formDescription && <p className={styles.formDescDisplay}>{formDescription}</p>}
 						</div>
 
-						<div className={styles.fieldsZone}>
-							{fields.map((field, index) => (
+						<SortableList
+							items={fields}
+							droppableId="edit-canvas"
+							onReorder={setFields}
+							emptyText="Thêm trường từ panel bên trái"
+							renderItem={(field, index) => (
 								<div
-									key={field.id}
 									className={`${styles.fieldEditItem} ${selectedFieldId === field.id ? styles.active : ''}`}
 									onClick={(e) => {
 										e.stopPropagation();
@@ -390,15 +395,8 @@ const FormEdit: React.FC = () => {
 									</span>
 									{renderFieldPreview(field)}
 								</div>
-							))}
-
-							{fields.length === 0 && (
-								<div className={styles.emptyFields}>
-									<PlusCircleOutlined className={styles.icon} />
-									<span className={styles.text}>Thêm trường từ panel bên trái</span>
-								</div>
 							)}
-						</div>
+						/>
 					</div>
 				</section>
 
