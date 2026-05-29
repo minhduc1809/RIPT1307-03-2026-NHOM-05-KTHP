@@ -1,5 +1,5 @@
 import Footer from '@/components/Footer';
-import { adminlogin, getUserInfo } from '@/services/base/api';
+import { adminlogin } from '@/services/base/api';
 import { LockOutlined, MailOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message } from 'antd';
 import React, { useState } from 'react';
@@ -15,41 +15,35 @@ const Login: React.FC = () => {
 	/**
 	 * Handle tokens and user info after successful login
 	 */
-	const handleLoginSuccess = async (data: { accessToken: string; refreshToken: string }) => {
+	const handleLoginSuccess = async (data: { accessToken: string; refreshToken: string; user: any }) => {
 		// Store tokens client-side as per AUTH_API.md
 		localStorage.setItem('token', data.accessToken);
 		localStorage.setItem('refreshToken', data.refreshToken);
 
-		try {
-			// Fetch current user information
-			const info = await getUserInfo();
-			setInitialState({
-				...initialState,
-				currentUser: info?.data?.data,
-			});
+		// Use user info from login response directly
+		setInitialState({
+			...initialState,
+			currentUser: data.user,
+		});
 
-			const defaultloginSuccessMessage = intl.formatMessage({
-				id: 'pages.login.success',
-				defaultMessage: 'Đăng nhập thành công',
-			});
-			message.success(defaultloginSuccessMessage);
-			history.push('/dashboard');
-		} catch (error) {
-			console.error('Failed to fetch user info', error);
-			message.error('Không thể lấy thông tin người dùng.');
-		}
+		const defaultloginSuccessMessage = intl.formatMessage({
+			id: 'pages.login.success',
+			defaultMessage: 'Đăng nhập thành công',
+		});
+		message.success(defaultloginSuccessMessage);
+		history.push('/dashboard');
 	};
 
 	const handleSubmit = async (values: { email: string; password: string }) => {
 		try {
 			setSubmitting(true);
 			// Call login endpoint defined in AUTH_API.md
-			const msg = await adminlogin({ email: values.email, password: values.password });
+			const response = await adminlogin({ email: values.email, password: values.password });
 			
-			if (msg.status === 200 && msg?.data?.data?.accessToken) {
-				await handleLoginSuccess(msg.data.data);
+			if (response.status === 200 && response?.data?.data?.accessToken) {
+				await handleLoginSuccess(response.data.data);
 			} else {
-				throw new Error(msg?.data?.message || 'Login failed');
+				throw new Error('Login failed');
 			}
 		} catch (error: any) {
 			const errorMsg = error?.response?.data?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.';

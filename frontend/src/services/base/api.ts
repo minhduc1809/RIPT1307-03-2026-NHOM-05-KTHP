@@ -4,11 +4,19 @@ import type { ESettingKey } from './constant';
 import type { ISetting } from './typing';
 
 export async function getUserInfo() {
-	return axios.get(`${ip3}/user/me`);
+	return axios.get(`${ip3}/auth/me`);
 }
 
 export async function adminlogin(payload: { email: string; password: string }) {
 	return axios.post(`${ip3}/auth/login`, payload);
+}
+
+export async function refreshAccessToken(refreshToken: string) {
+	return axios.post(`${ip3}/auth/refresh`, { refreshToken });
+}
+
+export async function logoutApi(refreshToken: string) {
+	return axios.post(`${ip3}/auth/logout`, { refreshToken });
 }
 
 export async function initOneSignal(payload: { playerId: string }) {

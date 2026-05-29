@@ -1,4 +1,4 @@
-import component from "@/locales/en-US/component";
+
 
 export default [
 	{
@@ -40,13 +40,21 @@ export default [
 				path: '/forms/builder',
 				name: 'Form Builder',
 				hideInMenu: true,
+				layout: false,
 				component: './Forms/Builder',
 			},
 			{
-				path: '/forms/:formId',
-				name: 'Fill Form',
+				path: '/forms/:formId/edit',
+				name: 'Form Edit',
 				hideInMenu: true,
-				component: './Forms/FormDetail',
+				layout: false,
+				component: './Forms/FormEdit',
+			},
+			{
+				path: '/forms/:formId',
+				name: 'Form View',
+				hideInMenu: true,
+				component: './Forms/FormView',
 			},
 		],
 	},
@@ -66,17 +74,50 @@ export default [
 				hideInMenu: true,
 				component: './Workflows/Builder',
 			},
+			{
+				path: '/workflows/:id/edit',
+				name: 'Workflow Edit',
+				hideInMenu: true,
+				component: './Workflows/WorkflowEdit',
+			},
+			{
+				path: '/workflows/:id',
+				name: 'Workflow Detail',
+				hideInMenu: true,
+				component: './Workflows/WorkflowDetail',
+			},
 		],
 	},
 	{
 		path: '/submissions',
 		name: 'Submissions',
 		icon: 'FileDoneOutlined',
-		hideInMenu: true,
 		routes: [
+			{
+				path: '/submissions',
+				redirect: '/submissions/approval',
+			},
+			{
+				path: '/submissions/new/:formId',
+				name: 'Điền biểu mẫu',
+				hideInMenu: true,
+				component: './Submissions/FillForm',
+			},
+			{
+				path: '/submissions/new',
+				name: 'Nộp biểu mẫu',
+				exact: true,
+				component: './Submissions/FormSubmit',
+			},
+			{
+				path: '/submissions/approval',
+				name: 'Phê duyệt',
+				component: './Submissions/WorkflowApproval',
+			},
 			{
 				path: '/submissions/:id',
 				name: 'Submission Detail',
+				hideInMenu: true,
 				component: './Submissions/Detail',
 			},
 		],
