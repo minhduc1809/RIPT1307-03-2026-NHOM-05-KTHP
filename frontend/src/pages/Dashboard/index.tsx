@@ -52,8 +52,8 @@ interface IDayItem {
 
 interface ITopForm {
 	formId: string;
-	formTitle: string;
-	submissionCount: number;
+	formName: string | null;
+	count: number;
 }
 
 // =============================================
@@ -294,7 +294,7 @@ const Dashboard: React.FC = () => {
 	];
 
 	// ----- RENDER HELPERS -----
-	const maxCount = topForms.length > 0 ? topForms[0].submissionCount : 1;
+	const maxCount = topForms.length > 0 ? topForms[0].count : 1;
 
 	const getRankClass = (idx: number) => {
 		if (idx === 0) return styles.rank1;
@@ -487,13 +487,13 @@ const Dashboard: React.FC = () => {
 									{idx + 1}
 								</div>
 								<div className={styles.formInfo}>
-									<div className={styles.formName}>{form.formTitle}</div>
+									<div className={styles.formName}>{form.formName ?? 'Không có tên'}</div>
 									<div className={styles.formMeta}>ID: {form.formId.slice(0, 8)}...</div>
 									<div className={styles.formBar}>
 										<div
 											className={styles.barFill}
 											style={{
-												width: `${(form.submissionCount / maxCount) * 100}%`,
+												width: `${(form.count / maxCount) * 100}%`,
 												background: BAR_GRADIENTS[idx % BAR_GRADIENTS.length],
 											}}
 										/>
@@ -501,7 +501,7 @@ const Dashboard: React.FC = () => {
 								</div>
 								<div className={styles.formCount}>
 									<span className={styles.countValue}>
-										<CountUp end={form.submissionCount} duration={1.2} separator="," />
+										<CountUp end={form.count} duration={1.2} separator="," />
 									</span>
 									<span className={styles.countLabel}>lượt nộp</span>
 								</div>
