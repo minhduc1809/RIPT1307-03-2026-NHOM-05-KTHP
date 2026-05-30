@@ -37,6 +37,7 @@ const ExportJobButton: React.FC<ExportJobButtonProps> = ({
 	const [status, setStatus] = useState<JobStatus>('IDLE');
 	const [progress, setProgress] = useState(0);
 	const [error, setError] = useState<string | null>(null);
+	const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 	const pollingRef = useRef<NodeJS.Timeout | null>(null);
 
 	const stopPolling = useCallback(() => {
@@ -57,6 +58,7 @@ const ExportJobButton: React.FC<ExportJobButtonProps> = ({
 
 					if (data?.status === 'DONE') {
 						setStatus('DONE');
+						setDownloadUrl(data?.result?.url || data?.result?.filepath || null);
 						stopPolling();
 					} else if (data?.status === 'FAILED') {
 						setStatus('FAILED');
@@ -114,6 +116,14 @@ const ExportJobButton: React.FC<ExportJobButtonProps> = ({
 
 	const handleDownload = async () => {
 		if (!jobId) return;
+
+		// If Cloudinary URL, open directly (public URL, no auth needed)
+		if (downloadUrl && downloadUrl.startsWith('http')) {
+			window.open(downloadUrl, '_blank');
+			return;
+		}
+
+		// Fallback: download from backend with auth header
 		try {
 			const token = localStorage.getItem('token');
 			const url = getExportDownloadUrl(jobId);
@@ -142,6 +152,7 @@ const ExportJobButton: React.FC<ExportJobButtonProps> = ({
 		setJobId(null);
 		setProgress(0);
 		setError(null);
+		setDownloadUrl(null);
 	};
 
 	const renderStatusIcon = () => {

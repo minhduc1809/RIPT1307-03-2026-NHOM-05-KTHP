@@ -673,6 +673,209 @@
 		color: #94a3b8;
 		font-size: 13px;
 	}
+
+	// ---------- Stage Composer ----------
+	.stagesList {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.stageCard {
+		background: #f8fafc;
+		border: 1.5px solid #e2e8f0;
+		border-radius: 16px;
+		padding: 20px;
+		transition: all 0.2s;
+		animation: slideIn 0.3s ease;
+
+		&:hover { border-color: #cbd5e1; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); }
+
+		.stageHeader {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 14px;
+
+			.stageBadge {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+
+				.stageNumber {
+					width: 30px;
+					height: 30px;
+					border-radius: 50%;
+					background: linear-gradient(135deg, #475569, #64748b);
+					color: #fff;
+					font-weight: 700;
+					font-size: 13px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					flex-shrink: 0;
+				}
+
+				.stageLabel {
+					font-size: 14px;
+					font-weight: 600;
+					color: #475569;
+				}
+			}
+		}
+
+		.typeRow {
+			display: flex;
+			gap: 6px;
+			margin-bottom: 14px;
+		}
+
+		.typePill {
+			height: 32px;
+			padding: 0 14px;
+			border-radius: 8px;
+			border: 1.5px solid #e2e8f0;
+			background: #fff;
+			color: #64748b;
+			font-size: 12px;
+			font-weight: 600;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			transition: all 0.15s;
+			white-space: nowrap;
+
+			&:hover { border-color: #94a3b8; }
+
+			&.active {
+				border-color: #6366f1;
+				background: #eef2ff;
+				color: #4338ca;
+			}
+		}
+
+		.stageBody {
+			// type-specific content
+		}
+
+		.stageRow {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 14px;
+
+			@media (max-width: 600px) { grid-template-columns: 1fr; }
+		}
+
+		.stageField {
+			label {
+				display: block;
+				font-size: 12px;
+				font-weight: 600;
+				color: #64748b;
+				margin-bottom: 6px;
+			}
+
+			.fieldHint {
+				font-size: 11px;
+				color: #94a3b8;
+				margin: 6px 0 0;
+			}
+		}
+
+		.stagePerms {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 6px;
+			margin-top: 12px;
+		}
+
+		.permChip {
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			height: 30px;
+			padding: 0 12px;
+			border-radius: 8px;
+			border: 1.5px solid #e2e8f0;
+			background: #fff;
+			font-size: 12px;
+			font-weight: 600;
+			color: #64748b;
+			cursor: pointer;
+			transition: all 0.15s;
+			white-space: nowrap;
+
+			&:hover { border-color: #94a3b8; }
+
+			&.always {
+				background: #f1f5f9;
+				border-color: #f1f5f9;
+				color: #94a3b8;
+				cursor: default;
+			}
+
+			&.active {
+				border-color: #c7d2fe;
+				background: #eef2ff;
+				color: #4338ca;
+			}
+
+			:global(.ant-checkbox) { top: 0; }
+			:global(.ant-checkbox-wrapper) { margin: 0; }
+			:global(.ant-checkbox-wrapper > span:last-child) { display: none; }
+		}
+	}
+
+	.stageArrow {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 4px 0;
+		color: #cbd5e1;
+
+		.arrowLine {
+			width: 2px;
+			height: 16px;
+			background: #cbd5e1;
+		}
+
+		.arrowIcon {
+			font-size: 12px;
+		}
+	}
+
+	.addStageRow {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-top: 16px;
+		flex-wrap: wrap;
+
+		.addLabel {
+			font-size: 13px;
+			font-weight: 600;
+			color: #94a3b8;
+		}
+
+		.addTypeBtn {
+			height: 38px;
+			padding: 0 16px;
+			border-radius: 10px;
+			border: 2px dashed #cbd5e1;
+			background: #f8fafc;
+			color: #64748b;
+			font-weight: 600;
+			font-size: 12px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			transition: all 0.2s;
+
+			&:hover { background: #f1f5f9; border-color: #94a3b8; color: #1a2332; }
+		}
+	}
 }
 
 @keyframes slideIn {
