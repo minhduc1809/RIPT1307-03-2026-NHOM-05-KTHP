@@ -22,6 +22,7 @@ import {
 	getSubmissionsByDay,
 	getSubmissionsByStatus,
 	getTopForms,
+	getSlaMetrics,
 } from '@/services/Dashboard/dashboardApi';
 import styles from './index.less';
 
@@ -54,6 +55,16 @@ interface ITopForm {
 	formId: string;
 	formName: string | null;
 	count: number;
+}
+
+interface ISlaMetric {
+	definitionName: string;
+	step: string;
+	slaHours: number;
+	totalInstances: number;
+	breachedCount: number;
+	complianceRate: number;
+	avgDurationHours: number;
 }
 
 // =============================================
@@ -110,6 +121,7 @@ const Dashboard: React.FC = () => {
 	const [statusData, setStatusData] = useState<IStatusItem[]>([]);
 	const [dayData, setDayData] = useState<IDayItem[]>([]);
 	const [topForms, setTopForms] = useState<ITopForm[]>([]);
+	const [slaMetrics, setSlaMetrics] = useState<ISlaMetric[]>([]);
 
 	// Loading state
 	const [loading, setLoading] = useState(true);
@@ -125,11 +137,12 @@ const Dashboard: React.FC = () => {
 
 		try {
 			if (isFullDashboard) {
-				const [summaryRes, statusRes, dayRes, topRes] = await Promise.all([
+				const [summaryRes, statusRes, dayRes, topRes, slaRes] = await Promise.all([
 					getDashboardSummary(),
 					getSubmissionsByStatus(),
 					getSubmissionsByDay(selectedDays),
 					getTopForms(10),
+					getSlaMetrics(selectedDays),
 				]);
 
 				setSummary(extractData<ISummary>(summaryRes));
@@ -142,6 +155,9 @@ const Dashboard: React.FC = () => {
 
 				const rawTop = extractData<ITopForm[] | any>(topRes);
 				setTopForms(Array.isArray(rawTop) ? rawTop : []);
+
+				const rawSla = extractData<ISlaMetric[] | any>(slaRes);
+				setSlaMetrics(Array.isArray(rawSla) ? rawSla : []);
 			} else {
 				const summaryRes = await getMyDashboardSummary();
 				setSummary(extractData<ISummary>(summaryRes));
@@ -515,6 +531,69 @@ const Dashboard: React.FC = () => {
 					</div>
 				)}
 			</div>}
+
+			{/* ====== SLA METRICS (ADMIN/MANAGER only) ====== */}
+			{isFullDashboard && slaMetrics.length > 0 && (
+				<div className={`${styles.topFormsSection} ${styles.fadeIn}`} style={{ animationDelay: '0.4s' }}>
+					<div className={styles.topFormsHeader}>
+						<div className={styles.topFormsTitle}>
+							<h3>
+								<ClockCircleOutlined style={{ color: '#6366f1', marginRight: 8 }} />
+								SLA Compliance
+							</h3>
+							<p>Tỷ lệ tuân thủ SLA theo từng bước quy trình ({selectedDays} ngày gần nhất)</p>
+						</div>
+					</div>
+
+					<div style={{ overflowX: 'auto' }}>
+						<table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+							<thead>
+								<tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+									<th style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 700, color: '#475569' }}>Quy trình</th>
+									<th style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 700, color: '#475569' }}>Bước</th>
+									<th style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 700, color: '#475569' }}>SLA (giờ)</th>
+									<th style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 700, color: '#475569' }}>Tổng</th>
+									<th style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 700, color: '#475569' }}>Vi phạm</th>
+									<th style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 700, color: '#475569' }}>TB (giờ)</th>
+									<th style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 700, color: '#475569' }}>Tuân thủ</th>
+								</tr>
+							</thead>
+							<tbody>
+								{slaMetrics.map((m, idx) => {
+									const complianceColor =
+										m.complianceRate >= 90 ? '#10b981' :
+										m.complianceRate >= 70 ? '#f59e0b' : '#ef4444';
+									return (
+										<tr key={idx} style={{ borderBottom: '1px solid #f0f4f7' }}>
+											<td style={{ padding: '10px 14px', fontWeight: 500 }}>{m.definitionName}</td>
+											<td style={{ padding: '10px 14px', color: '#64748b' }}>{m.step}</td>
+											<td style={{ padding: '10px 14px', textAlign: 'center' }}>{m.slaHours}</td>
+											<td style={{ padding: '10px 14px', textAlign: 'center' }}>{m.totalInstances}</td>
+											<td style={{ padding: '10px 14px', textAlign: 'center', color: m.breachedCount > 0 ? '#ef4444' : '#94a3b8', fontWeight: m.breachedCount > 0 ? 700 : 400 }}>
+												{m.breachedCount}
+											</td>
+											<td style={{ padding: '10px 14px', textAlign: 'center' }}>{m.avgDurationHours}</td>
+											<td style={{ padding: '10px 14px', textAlign: 'center' }}>
+												<span style={{
+													display: 'inline-block',
+													padding: '2px 10px',
+													borderRadius: 12,
+													background: `${complianceColor}18`,
+													color: complianceColor,
+													fontWeight: 700,
+													fontSize: 12,
+												}}>
+													{m.complianceRate}%
+												</span>
+											</td>
+										</tr>
+									);
+								})}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };

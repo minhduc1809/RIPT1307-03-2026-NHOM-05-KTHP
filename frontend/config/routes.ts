@@ -98,6 +98,15 @@ export default [
 		],
 	},
 
+	// Delegation — ADMIN + MANAGER + HR
+	{
+		path: '/delegations',
+		name: 'Ủy quyền',
+		icon: 'SwapOutlined',
+		access: 'canApprove',
+		component: './Delegations',
+	},
+
 	///////////////////////////////////
 	// ALL ROLES
 	// Active Forms — Browse & Fill (all roles)
@@ -118,6 +127,12 @@ export default [
 				path: '/submissions',
 				component: './Submissions/RedirectByRole',
 				hideInMenu: true,
+			},
+			{
+				path: '/submissions/pending',
+				name: 'Chờ phê duyệt',
+				access: 'canApprove',
+				component: './Submissions/PendingApprovals',
 			},
 			{
 				path: '/submissions/mine',

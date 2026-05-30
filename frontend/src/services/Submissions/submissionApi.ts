@@ -55,6 +55,16 @@ export async function resubmitSubmission(id: string, data?: { data?: Record<stri
 	return axios.post<ISubmission>(`${SUB_BASE}/${id}/resubmit`, data);
 }
 
+/** PATCH /submissions/:id/withdraw — Rút đơn (hủy vĩnh viễn) */
+export async function withdrawSubmission(id: string) {
+	return axios.patch<ISubmission>(`${SUB_BASE}/${id}/withdraw`);
+}
+
+/** GET /submissions/:id/revisions — Lịch sử các phiên bản nộp lại */
+export async function getSubmissionRevisions(id: string) {
+	return axios.get<ISubmission[]>(`${SUB_BASE}/${id}/revisions`);
+}
+
 // ===================== WORKFLOW ACTIONS =====================
 
 /** POST /workflows/action — Thực hiện workflow action */

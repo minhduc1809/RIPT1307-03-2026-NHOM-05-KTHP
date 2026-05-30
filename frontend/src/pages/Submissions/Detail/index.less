@@ -181,6 +181,7 @@
 			&.approve { background: #d1fae5; color: #047857; }
 			&.reject { background: #fee2e2; color: #dc2626; }
 			&.return { background: #e0e7ff; color: #4338ca; }
+			&.recall { background: #fef3c7; color: #d97706; }
 		}
 
 		.timelineContent {
@@ -204,6 +205,7 @@
 					&.reject { background: #fee2e2; color: #dc2626; }
 					&.cancel { background: #fee2e2; color: #dc2626; }
 					&.return { background: #e0e7ff; color: #4338ca; }
+					&.recall { background: #fef3c7; color: #92400e; }
 					&.resubmit { background: #dbeafe; color: #1e40af; }
 					&.default { background: #f1f5f9; color: #475569; }
 				}
@@ -283,10 +285,22 @@
 			&:hover:not(:disabled) { background: #fde68a; transform: translateY(-1px); }
 		}
 
+		&.withdraw {
+			background: #fee2e2;
+			color: #dc2626;
+			&:hover:not(:disabled) { background: #fecaca; transform: translateY(-1px); }
+		}
+
 		&.resubmit {
 			background: #dbeafe;
 			color: #1e40af;
 			&:hover:not(:disabled) { background: #bfdbfe; transform: translateY(-1px); }
+		}
+
+		&.cloneNew {
+			background: #e0e7ff;
+			color: #4338ca;
+			&:hover:not(:disabled) { background: #c7d2fe; transform: translateY(-1px); }
 		}
 
 		&.other {
@@ -348,6 +362,79 @@
 			}
 
 			.arrow { color: #cbd5e1; }
+		}
+	}
+
+	// ---- Delegation ----
+	.delegationSection {
+		margin-top: 16px;
+		margin-bottom: 4px;
+	}
+
+	// ---- SLA Info ----
+	.slaInfo {
+		font-size: 12px;
+		font-weight: 600;
+		color: #d97706;
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	// ---- System Bot ----
+	.systemBot {
+		opacity: 0.85;
+	}
+
+	.systemBotLabel {
+		font-size: 10px;
+		padding: 1px 6px;
+		border-radius: 4px;
+		background: #f1f5f9;
+		color: #94a3b8;
+		font-weight: 500;
+	}
+
+	.botDot {
+		background: #e2e8f0 !important;
+		color: #94a3b8 !important;
+	}
+
+	// ---- Delegated For ----
+	.delegatedFor {
+		font-style: italic;
+		color: #7c3aed;
+	}
+
+	// ---- Parallel Progress ----
+	.parallelProgress {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.parallelItem {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 13px;
+		color: #64748b;
+		padding: 8px 12px;
+		border-radius: 10px;
+		background: #fef3c7;
+
+		&.completed {
+			background: #d1fae5;
+			color: #047857;
+		}
+
+		.parallelAction {
+			font-weight: 600;
+		}
+
+		.parallelActor {
+			font-size: 12px;
+			color: #94a3b8;
 		}
 	}
 

@@ -27,3 +27,8 @@ export async function getSubmissionsByDay(days?: number) {
 export async function getTopForms(limit?: number) {
 	return axios.get(`${BASE}/top-forms`, { params: { limit } });
 }
+
+/** GET /dashboard/sla-metrics — SLA compliance metrics per workflow step (ADMIN) */
+export async function getSlaMetrics(days?: number) {
+	return axios.get(`${BASE}/sla-metrics`, { params: { days } });
+}

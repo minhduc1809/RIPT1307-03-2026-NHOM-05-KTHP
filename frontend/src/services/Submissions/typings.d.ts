@@ -39,6 +39,8 @@ export interface IWorkflowHistory {
 	action: string;
 	actorId: string;
 	actor?: { id: string; email: string; name: string } | null;
+	delegatedForId?: string | null;
+	delegatedFor?: { id: string; email: string; name: string } | null;
 	comment?: string | null;
 	createdAt: string;
 }
@@ -67,6 +69,7 @@ export interface IAvailableAction {
 	action: string;
 	targetState: string;
 	requiresComment: boolean;
+	isParallel?: boolean;
 }
 
 export interface IAvailableActionsResponse {
@@ -79,6 +82,7 @@ export interface IWorkflowActionRequest {
 	action: string;
 	comment?: string;
 	data?: Record<string, any>;
+	delegatedForId?: string;
 }
 
 export interface IWorkflowActionResponse {

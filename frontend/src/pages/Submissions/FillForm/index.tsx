@@ -5,11 +5,12 @@ import moment from 'moment';
 import { history } from 'umi';
 import { getFormById } from '@/services/Forms/formApi';
 import type { IForm, IFormField } from '@/services/Forms/typings';
-import { createSubmission } from '@/services/Submissions/submissionApi';
+import { createSubmission, getSubmissionById } from '@/services/Submissions/submissionApi';
 import styles from './index.less';
 
 const FillForm: React.FC = (props: any) => {
 	const formId = props?.match?.params?.formId;
+	const cloneFrom = props?.location?.query?.cloneFrom;
 
 	const [loading, setLoading] = useState(true);
 	const [form, setForm] = useState<IForm | null>(null);
@@ -34,6 +35,23 @@ const FillForm: React.FC = (props: any) => {
 		};
 		loadForm();
 	}, [formId]);
+
+	// Clone data from existing submission
+	useEffect(() => {
+		if (!cloneFrom) return;
+		const loadCloneData = async () => {
+			try {
+				const res = await getSubmissionById(cloneFrom);
+				const data = (res as any)?.data?.data ?? (res as any)?.data;
+				if (data?.data) {
+					setFormData(data.data);
+				}
+			} catch {
+				message.warning('Không thể tải dữ liệu đơn gốc');
+			}
+		};
+		loadCloneData();
+	}, [cloneFrom]);
 
 	const getFields = (): IFormField[] => {
 		return form?.schema?.fields ?? [];

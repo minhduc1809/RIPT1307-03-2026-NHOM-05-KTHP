@@ -4,8 +4,12 @@ import {
 	CheckCircleOutlined,
 	ClockCircleOutlined,
 	CloseCircleOutlined,
+	CopyOutlined,
+	ExclamationCircleOutlined,
+	RobotOutlined,
 	RollbackOutlined,
 	SendOutlined,
+	StopOutlined,
 	UndoOutlined,
 } from '@ant-design/icons';
 import { Button, DatePicker, Input, InputNumber, message, Modal, Popconfirm, Select, Spin } from 'antd';
@@ -20,6 +24,7 @@ import {
 	getWorkflowHistory,
 	recallSubmission,
 	resubmitSubmission,
+	withdrawSubmission,
 } from '@/services/Submissions/submissionApi';
 import type {
 	IAvailableAction,
@@ -27,6 +32,10 @@ import type {
 	IWorkflowHistory,
 	IWorkflowHistoryResponse,
 } from '@/services/Submissions/typings';
+import { getWorkflowDefinitionById } from '@/services/Workflows/workflowApi';
+import type { IWorkflowDefinition } from '@/services/Workflows/typings';
+import { getDelegations } from '@/services/Delegations/delegationApi';
+import type { IDelegation } from '@/services/Delegations/typings';
 import { getReadableData } from '@/utils/formDataHelper';
 import styles from './index.less';
 
@@ -47,13 +56,20 @@ const ACTION_LABELS: Record<string, string> = {
 	cancel: 'Hủy',
 	return_for_edit: 'Trả lại',
 	resubmit: 'Gửi lại',
+	RECALL: 'Thu hồi',
+	WITHDRAW: 'Rút đơn',
+	PARALLEL_JOIN_COMPLETE: 'Hoàn tất duyệt song song',
+	vote_approve: 'Bỏ phiếu đồng ý',
+	vote_reject: 'Bỏ phiếu từ chối',
+	VOTING_COMPLETE: 'Kết thúc bỏ phiếu',
 };
 
 function getActionClass(action: string): string {
 	if (action === 'SUBMIT' || action === 'resubmit') return 'submit';
-	if (action === 'approve') return 'approve';
-	if (action === 'reject' || action === 'cancel') return 'reject';
+	if (action === 'approve' || action === 'PARALLEL_JOIN_COMPLETE' || action === 'vote_approve' || action === 'VOTING_COMPLETE') return 'approve';
+	if (action === 'reject' || action === 'cancel' || action === 'WITHDRAW' || action === 'vote_reject') return 'reject';
 	if (action === 'return_for_edit') return 'return';
+	if (action === 'RECALL') return 'recall';
 	return 'default';
 }
 
@@ -61,11 +77,26 @@ function getDotClass(action: string): string {
 	return getActionClass(action);
 }
 
+function isSystemBot(actor: { id: string; email: string; name: string } | null | undefined): boolean {
+	if (!actor) return false;
+	return actor.name === 'System Bot' || actor.email === 'system@bot';
+}
+
+function getActionIcon(action: string, actor?: { id: string; email: string; name: string } | null) {
+	if (isSystemBot(actor)) return <RobotOutlined />;
+	if (action === 'approve' || action === 'PARALLEL_JOIN_COMPLETE') return <CheckCircleOutlined />;
+	if (action === 'reject' || action === 'cancel') return <CloseCircleOutlined />;
+	if (action === 'SUBMIT') return <SendOutlined />;
+	if (action === 'return_for_edit') return <RollbackOutlined />;
+	if (action === 'RECALL') return <UndoOutlined />;
+	if (action === 'WITHDRAW') return <StopOutlined />;
+	return <ArrowRightOutlined />;
+}
+
 const SubmissionDetail: React.FC = () => {
 	const { id } = useParams<{ id: string }>();
 	const { initialState } = useModel('@@initialState');
 	const currentUser = initialState?.currentUser;
-	const userRole = currentUser?.role;
 	const userId = currentUser?.id;
 
 	const [loading, setLoading] = useState(true);
@@ -73,11 +104,16 @@ const SubmissionDetail: React.FC = () => {
 	const [historyData, setHistoryData] = useState<IWorkflowHistoryResponse | null>(null);
 	const [availableActions, setAvailableActions] = useState<IAvailableAction[]>([]);
 	const [currentState, setCurrentState] = useState('');
+	const [workflowDef, setWorkflowDef] = useState<IWorkflowDefinition | null>(null);
 
 	// Action state
 	const [selectedAction, setSelectedAction] = useState<IAvailableAction | null>(null);
 	const [comment, setComment] = useState('');
 	const [executing, setExecuting] = useState(false);
+
+	// Delegation state
+	const [activeDelegations, setActiveDelegations] = useState<IDelegation[]>([]);
+	const [delegatedForId, setDelegatedForId] = useState<string | undefined>(undefined);
 
 	// Resubmit modal state
 	const [resubmitVisible, setResubmitVisible] = useState(false);
@@ -85,9 +121,26 @@ const SubmissionDetail: React.FC = () => {
 	const [resubmitErrors, setResubmitErrors] = useState<Record<string, string>>({});
 
 	const isOwner = submission?.submittedBy === userId;
-	const isApprover = userRole === 'ADMIN' || userRole === 'MANAGER';
-	const canRecall = isOwner && submission?.status === 'UNDER_REVIEW';
-	const canResubmit = isOwner && ['REJECTED', 'CANCELLED', 'RETURNED'].includes(submission?.status || '');
+	const canRecall = isOwner && availableActions.some((a) => a.action === 'recall');
+	const canResubmit = isOwner && submission?.status === 'RETURNED';
+	const canWithdraw = isOwner && ['SUBMITTED', 'UNDER_REVIEW'].includes(submission?.status || '');
+	const canCloneAsNew = isOwner && submission?.status === 'REJECTED';
+
+	// Parallel approval detection
+	const parallelTransition = workflowDef?.config?.transitions?.find(
+		(t) => t.type === 'PARALLEL_JOIN' && (
+			t.from === currentState ||
+			(Array.isArray(t.from) && t.from.includes(currentState))
+		),
+	);
+	const parallelRequireActions = parallelTransition?.requireActions ?? [];
+	const histories: IWorkflowHistory[] = historyData?.history ?? [];
+	const parallelCompletedActions = parallelRequireActions.filter((reqAction) =>
+		histories.some((h) => h.action === reqAction && h.toStep === currentState),
+	);
+
+	// SLA info
+	const slaDetail = workflowDef?.config?.statesDetails?.[currentState];
 
 	const fetchAll = useCallback(async () => {
 		if (!id) return;
@@ -115,12 +168,42 @@ const SubmissionDetail: React.FC = () => {
 			} catch {
 				setAvailableActions([]);
 			}
+
+			// Fetch workflow definition for parallel approval / SLA display
+			const definitionId = subData?.workflows?.[0]?.definitionId;
+			if (definitionId) {
+				try {
+					const defRes = await getWorkflowDefinitionById(definitionId);
+					const defData = (defRes as any)?.data?.data ?? (defRes as any)?.data;
+					setWorkflowDef(defData);
+				} catch {
+					setWorkflowDef(null);
+				}
+			}
+
+			// Fetch active delegations for current user (as delegate)
+			try {
+				const delRes = await getDelegations({ limit: 100 });
+				const delData = (delRes as any)?.data?.data ?? (delRes as any)?.data;
+				const items: IDelegation[] = delData?.items ?? delData ?? [];
+				const now = moment();
+				const active = items.filter(
+					(d) =>
+						d.isActive &&
+						d.toUserId === userId &&
+						moment(d.startDate).isSameOrBefore(now) &&
+						moment(d.endDate).isSameOrAfter(now),
+				);
+				setActiveDelegations(active);
+			} catch {
+				setActiveDelegations([]);
+			}
 		} catch {
 			message.error('Không thể tải chi tiết yêu cầu');
 		} finally {
 			setLoading(false);
 		}
-	}, [id]);
+	}, [id, userId]);
 
 	useEffect(() => {
 		fetchAll();
@@ -140,10 +223,12 @@ const SubmissionDetail: React.FC = () => {
 				submissionId: id!,
 				action: selectedAction.action,
 				...(comment.trim() ? { comment: comment.trim() } : {}),
+				...(delegatedForId ? { delegatedForId } : {}),
 			});
 			message.success(`Đã thực hiện "${ACTION_LABELS[selectedAction.action] || selectedAction.action}" thành công!`);
 			setSelectedAction(null);
 			setComment('');
+			setDelegatedForId(undefined);
 			fetchAll();
 		} catch (err: any) {
 			const errMsg = err?.response?.data?.message;
@@ -163,6 +248,25 @@ const SubmissionDetail: React.FC = () => {
 			message.error(err?.response?.data?.message || 'Có lỗi xảy ra');
 		} finally {
 			setExecuting(false);
+		}
+	};
+
+	const handleWithdraw = async () => {
+		setExecuting(true);
+		try {
+			await withdrawSubmission(id!);
+			message.success('Đã rút đơn thành công');
+			fetchAll();
+		} catch (err: any) {
+			message.error(err?.response?.data?.message || 'Có lỗi xảy ra');
+		} finally {
+			setExecuting(false);
+		}
+	};
+
+	const handleCloneAsNew = () => {
+		if (submission?.formId) {
+			history.push(`/submissions/new/${submission.formId}?cloneFrom=${submission.id}`);
 		}
 	};
 
@@ -241,16 +345,16 @@ const SubmissionDetail: React.FC = () => {
 	};
 
 	const getActionBtnClass = (action: string): string => {
-		if (action === 'approve') return styles.approve;
-		if (action === 'reject' || action === 'cancel') return styles.reject;
+		if (action === 'approve' || action === 'vote_approve') return styles.approve;
+		if (action === 'reject' || action === 'cancel' || action === 'vote_reject') return styles.reject;
 		if (action === 'return_for_edit') return styles.other;
 		if (action === 'resubmit') return styles.resubmit;
 		return styles.other;
 	};
 
-	const getActionIcon = (action: string) => {
-		if (action === 'approve') return <CheckCircleOutlined />;
-		if (action === 'reject' || action === 'cancel') return <CloseCircleOutlined />;
+	const getButtonActionIcon = (action: string) => {
+		if (action === 'approve' || action === 'vote_approve') return <CheckCircleOutlined />;
+		if (action === 'reject' || action === 'cancel' || action === 'vote_reject') return <CloseCircleOutlined />;
 		if (action === 'return_for_edit') return <RollbackOutlined />;
 		return <ArrowRightOutlined />;
 	};
@@ -274,8 +378,6 @@ const SubmissionDetail: React.FC = () => {
 		);
 	}
 
-	const histories: IWorkflowHistory[] = historyData?.history ?? [];
-
 	return (
 		<div className={styles.detailPage}>
 			{/* Header */}
@@ -298,6 +400,14 @@ const SubmissionDetail: React.FC = () => {
 						<span>Lần nộp #{submission.revisionNumber}</span>
 					)}
 				</div>
+				{/* SLA info */}
+				{slaDetail?.slaHours && submission.status === 'UNDER_REVIEW' && (
+					<div className={styles.headerMeta} style={{ marginTop: 6 }}>
+						<span className={styles.slaInfo}>
+							<ExclamationCircleOutlined /> SLA: {slaDetail.slaHours} giờ làm việc
+						</span>
+					</div>
+				)}
 			</div>
 
 			{/* Submission Data */}
@@ -343,6 +453,40 @@ const SubmissionDetail: React.FC = () => {
 				</div>
 			)}
 
+			{/* Parallel Approval Progress */}
+			{parallelRequireActions.length > 0 && submission.status === 'UNDER_REVIEW' && (
+				<div className={styles.card}>
+					<div className={styles.cardHeader}>
+						<div className={`${styles.cardIcon} ${styles.timelineIcon}`}>
+							<CheckCircleOutlined />
+						</div>
+						<div className={styles.cardTitle}>
+							<h3>Duyệt song song</h3>
+							<p>{parallelCompletedActions.length}/{parallelRequireActions.length} phê duyệt đã nhận</p>
+						</div>
+					</div>
+					<div className={styles.cardBody}>
+						<div className={styles.parallelProgress}>
+							{parallelRequireActions.map((reqAction) => {
+								const completed = parallelCompletedActions.includes(reqAction);
+								const historyEntry = histories.find((h) => h.action === reqAction && h.toStep === currentState);
+								return (
+									<div key={reqAction} className={`${styles.parallelItem} ${completed ? styles.completed : ''}`}>
+										{completed ? <CheckCircleOutlined style={{ color: '#047857' }} /> : <ClockCircleOutlined style={{ color: '#d97706' }} />}
+										<span className={styles.parallelAction}>{ACTION_LABELS[reqAction] || reqAction}</span>
+										{completed && historyEntry?.actor && (
+											<span className={styles.parallelActor}>
+												— {historyEntry.actor.name} ({moment(historyEntry.createdAt).format('DD/MM HH:mm')})
+											</span>
+										)}
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				</div>
+			)}
+
 			{/* Workflow History Timeline */}
 			{histories.length > 0 && (
 				<div className={styles.card}>
@@ -358,18 +502,18 @@ const SubmissionDetail: React.FC = () => {
 					<div className={styles.cardBody}>
 						<div className={styles.timeline}>
 							{[...histories].reverse().map((h) => (
-								<div key={h.id} className={styles.timelineItem}>
-									<div className={`${styles.timelineDot} ${styles[getDotClass(h.action)]}`}>
-										{h.action === 'approve' ? <CheckCircleOutlined /> :
-										 h.action === 'reject' || h.action === 'cancel' ? <CloseCircleOutlined /> :
-										 h.action === 'SUBMIT' ? <SendOutlined /> :
-										 <ArrowRightOutlined />}
+								<div key={h.id} className={`${styles.timelineItem} ${isSystemBot(h.actor) ? styles.systemBot : ''}`}>
+									<div className={`${styles.timelineDot} ${styles[getDotClass(h.action)]} ${isSystemBot(h.actor) ? styles.botDot : ''}`}>
+										{getActionIcon(h.action, h.actor)}
 									</div>
 									<div className={styles.timelineContent}>
 										<div className={styles.timelineAction}>
 											<span className={`${styles.actionBadge} ${styles[getActionClass(h.action)]}`}>
 												{ACTION_LABELS[h.action] || h.action}
 											</span>
+											{isSystemBot(h.actor) && (
+												<span className={styles.systemBotLabel}>Hệ thống tự động</span>
+											)}
 										</div>
 										<div className={styles.timelineSteps}>
 											{h.fromStep && (
@@ -381,7 +525,12 @@ const SubmissionDetail: React.FC = () => {
 											<span>{h.toStep}</span>
 										</div>
 										<div className={styles.timelineMeta}>
-											{h.actor && <span>{h.actor.name}</span>}
+											{h.actor && !isSystemBot(h.actor) && <span>{h.actor.name}</span>}
+											{h.delegatedFor && (
+												<span className={styles.delegatedFor}>
+													Duyệt thay cho {h.delegatedFor.name}
+												</span>
+											)}
 											<span>{moment(h.createdAt).format('DD/MM/YYYY HH:mm')}</span>
 										</div>
 										{h.comment && (
@@ -398,7 +547,7 @@ const SubmissionDetail: React.FC = () => {
 			)}
 
 			{/* Actions Card */}
-			{(availableActions.length > 0 || canRecall || canResubmit) && (
+			{(availableActions.length > 0 || canRecall || canResubmit || canWithdraw || canCloneAsNew) && (
 				<div className={styles.card}>
 					<div className={styles.cardHeader}>
 						<div className={`${styles.cardIcon} ${styles.actionIcon}`}>
@@ -408,8 +557,9 @@ const SubmissionDetail: React.FC = () => {
 							<h3>Thao tác</h3>
 							<p>
 								{availableActions.length > 0 && 'Chọn action để thực hiện'}
-								{canRecall && 'Thu hồi yêu cầu đang chờ duyệt'}
-								{canResubmit && 'Nộp lại yêu cầu đã bị từ chối hoặc trả lại'}
+								{canRecall && !availableActions.length && 'Thu hồi yêu cầu đang chờ duyệt'}
+								{canResubmit && !availableActions.length && 'Sửa và nộp lại yêu cầu đã bị trả lại'}
+								{canCloneAsNew && !availableActions.length && !canResubmit && 'Tạo đơn mới từ dữ liệu này'}
 							</p>
 						</div>
 					</div>
@@ -423,6 +573,7 @@ const SubmissionDetail: React.FC = () => {
 									onClick={() => {
 										setSelectedAction(selectedAction?.action === act.action ? null : act);
 										setComment('');
+										setDelegatedForId(undefined);
 									}}
 									disabled={executing}
 									style={{
@@ -430,15 +581,14 @@ const SubmissionDetail: React.FC = () => {
 										outlineOffset: 2,
 									}}
 								>
-									{getActionIcon(act.action)} {ACTION_LABELS[act.action] || act.action}
+									{getButtonActionIcon(act.action)} {ACTION_LABELS[act.action] || act.action}
 								</button>
 							))}
 
 							{/* Owner actions */}
 							{canRecall && (
 								<Popconfirm
-									title="Xác nhận thu hồi?"
-									description="Yêu cầu sẽ bị hủy và chuyển về trạng thái nháp."
+									title="Xác nhận thu hồi? Yêu cầu sẽ chuyển về trạng thái nháp."
 									onConfirm={handleRecall}
 									okText="Thu hồi"
 									cancelText="Không"
@@ -452,6 +602,23 @@ const SubmissionDetail: React.FC = () => {
 									</button>
 								</Popconfirm>
 							)}
+							{canWithdraw && (
+								<Popconfirm
+									title="Xác nhận rút đơn? Đơn sẽ bị hủy vĩnh viễn, không thể khôi phục."
+									onConfirm={handleWithdraw}
+									okText="Rút đơn"
+									cancelText="Không"
+									placement="topRight"
+									okButtonProps={{ danger: true }}
+								>
+									<button
+										className={`${styles.actionBtn} ${styles.withdraw}`}
+										disabled={executing}
+									>
+										<StopOutlined /> Rút đơn
+									</button>
+								</Popconfirm>
+							)}
 							{canResubmit && (
 								<button
 									className={`${styles.actionBtn} ${styles.resubmit}`}
@@ -461,11 +628,40 @@ const SubmissionDetail: React.FC = () => {
 									<SendOutlined /> Sửa và nộp lại
 								</button>
 							)}
+							{canCloneAsNew && (
+								<button
+									className={`${styles.actionBtn} ${styles.cloneNew}`}
+									onClick={handleCloneAsNew}
+									disabled={executing}
+								>
+									<CopyOutlined /> Tạo đơn mới từ dữ liệu này
+								</button>
+							)}
 						</div>
 
 						{/* Selected action details */}
 						{selectedAction && (
 							<>
+								{/* Delegation select */}
+								{activeDelegations.length > 0 && (
+									<div className={styles.delegationSection}>
+										<label className={styles.commentLabel}>
+											Duyệt thay cho
+										</label>
+										<Select
+											allowClear
+											placeholder="Duyệt với quyền của chính mình"
+											value={delegatedForId}
+											onChange={(val) => setDelegatedForId(val)}
+											style={{ width: '100%' }}
+											options={activeDelegations.map((d) => ({
+												label: d.fromUser?.username || d.fromUser?.email || d.fromUserId,
+												value: d.fromUserId,
+											}))}
+										/>
+									</div>
+								)}
+
 								<div className={styles.commentSection}>
 									<label className={styles.commentLabel}>
 										Ghi chú
