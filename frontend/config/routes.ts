@@ -68,6 +68,7 @@ export default [
 		path: '/workflows',
 		name: 'Quy trình',
 		icon: 'PartitionOutlined',
+		access: 'canApprove',
 		routes: [
 			{
 				path: '/workflows',
