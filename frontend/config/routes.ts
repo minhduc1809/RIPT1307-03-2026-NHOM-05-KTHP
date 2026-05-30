@@ -19,16 +19,19 @@ export default [
 	},
 
 	///////////////////////////////////
-	// DEFAULT MENU
+	// ADMIN + MANAGER ONLY
 	{
 		path: '/dashboard',
 		name: 'Dashboard',
 		component: './Dashboard',
 		icon: 'HomeOutlined',
+		access: 'canManage',
 	},
+
+	// Forms Management — ADMIN + MANAGER only
 	{
 		path: '/forms',
-		name: 'Forms',
+		name: 'Quản lý biểu mẫu',
 		icon: 'FormOutlined',
 		access: 'canManage',
 		routes: [
@@ -59,11 +62,13 @@ export default [
 			},
 		],
 	},
+
+	// Workflows Management — ADMIN + MANAGER only (CRUD)
 	{
 		path: '/workflows',
-		name: 'Workflows',
+		name: 'Quy trình',
 		icon: 'PartitionOutlined',
-		access: 'canManage',
+		access: 'canApprove',
 		routes: [
 			{
 				path: '/workflows',
@@ -74,12 +79,14 @@ export default [
 				path: '/workflows/builder',
 				name: 'Workflow Builder',
 				hideInMenu: true,
+				access: 'canManage',
 				component: './Workflows/Builder',
 			},
 			{
 				path: '/workflows/:id/edit',
 				name: 'Workflow Edit',
 				hideInMenu: true,
+				access: 'canManage',
 				component: './Workflows/WorkflowEdit',
 			},
 			{
@@ -90,9 +97,21 @@ export default [
 			},
 		],
 	},
+
+	///////////////////////////////////
+	// ALL ROLES
+	// Active Forms — Browse & Fill (all roles)
+	{
+		path: '/active-forms',
+		name: 'Biểu mẫu',
+		icon: 'FileTextOutlined',
+		component: './Forms/ActiveForms',
+	},
+
+	// Submissions
 	{
 		path: '/submissions',
-		name: 'Submissions',
+		name: 'Yêu cầu',
 		icon: 'FileDoneOutlined',
 		routes: [
 			{
@@ -117,12 +136,6 @@ export default [
 				component: './Submissions/FormSubmit',
 			},
 			{
-				path: '/submissions/approval',
-				name: 'Phê duyệt',
-				access: 'canApprove',
-				component: './Submissions/WorkflowApproval',
-			},
-			{
 				path: '/submissions/:id',
 				name: 'Chi tiết',
 				hideInMenu: true,
@@ -132,7 +145,7 @@ export default [
 	},
 	{
 		path: '/notifications',
-		name: 'Notifications',
+		name: 'Thông báo',
 		icon: 'BellOutlined',
 		component: './Notifications',
 	},
@@ -162,3 +175,4 @@ export default [
 		component: './exception/404',
 	},
 ];
+

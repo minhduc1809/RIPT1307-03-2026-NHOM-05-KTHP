@@ -192,7 +192,7 @@ Lấy chi tiết một workflow definition theo ID.
 
 | Status | Mã lỗi                        | Mô tả                              |
 | ------ | ----------------------------- | ---------------------------------- |
-| `404`  | `workflow.INSTANCE_NOT_FOUND` | Không tìm thấy workflow definition |
+| `404`  | `workflow.DEFINITION_NOT_FOUND` | Không tìm thấy workflow definition |
 
 ---
 
@@ -228,7 +228,7 @@ Cập nhật workflow definition. Tất cả trường đều optional (partial 
 | Status | Mã lỗi                        | Mô tả                              |
 | ------ | ----------------------------- | ---------------------------------- |
 | `400`  | `Bad Request`                 | Config không hợp lệ                |
-| `404`  | `workflow.INSTANCE_NOT_FOUND` | Không tìm thấy workflow definition |
+| `404`  | `workflow.DEFINITION_NOT_FOUND` | Không tìm thấy workflow definition |
 
 ---
 
@@ -247,7 +247,7 @@ Xóa vĩnh viễn workflow definition. Không thể xóa nếu còn workflow ins
 
 | Status | Mã lỗi                        | Mô tả                              |
 | ------ | ----------------------------- | ---------------------------------- |
-| `404`  | `workflow.INSTANCE_NOT_FOUND` | Không tìm thấy workflow definition |
+| `404`  | `workflow.DEFINITION_NOT_FOUND` | Không tìm thấy workflow definition |
 | `409`  | `error.CONFLICT`              | Còn workflow instance đang ACTIVE  |
 
 ---

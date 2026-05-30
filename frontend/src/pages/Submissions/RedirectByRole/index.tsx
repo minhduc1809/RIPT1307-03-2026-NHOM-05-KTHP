@@ -1,19 +1,13 @@
 import React, { useEffect } from 'react';
-import { history, useModel } from 'umi';
+import { history } from 'umi';
 
 const RedirectByRole: React.FC = () => {
-	const { initialState } = useModel('@@initialState');
-	const role = initialState?.currentUser?.role;
-
 	useEffect(() => {
-		if (role === 'ADMIN' || role === 'MANAGER') {
-			history.replace('/submissions/approval');
-		} else {
-			history.replace('/submissions/mine');
-		}
-	}, [role]);
+		history.replace('/submissions/mine');
+	}, []);
 
 	return null;
 };
 
 export default RedirectByRole;
+
