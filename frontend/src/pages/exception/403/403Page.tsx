@@ -12,7 +12,7 @@ const NotAccessible = () => {
 
 	useEffect(() => {
 		if (currentRole && initialState?.authorizedPermissions?.find((item) => item.rsname === currentRole))
-			history.replace('/dashboard');
+			history.replace('/active-forms');
 	}, [initialState?.authorizedPermissions]);
 
 	const onLogout = (): void => {

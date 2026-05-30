@@ -36,7 +36,7 @@ const ActiveForms: React.FC = () => {
 	};
 
 	const handleFillForm = (formId: string) => {
-		history.push(`/forms/${formId}`);
+		history.push(`/submissions/new/${formId}`);
 	};
 
 	return (

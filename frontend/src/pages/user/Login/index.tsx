@@ -12,13 +12,18 @@ const Login: React.FC = () => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 
+	/** Redirect path based on user role */
+	const getRedirectPath = (role?: string) => {
+		if (role === 'ADMIN' || role === 'MANAGER') return '/dashboard';
+		return '/active-forms';
+	};
 
 	useEffect(() => {
 		const token = localStorage.getItem('token');
-		if (token) {
-			history.replace('/dashboard');
+		if (token && initialState?.currentUser) {
+			history.replace(getRedirectPath(initialState.currentUser.role));
 		}
-	}, []);
+	}, [initialState?.currentUser]);
 
 	/**
 	 * Handle tokens and user info after successful login
@@ -39,7 +44,7 @@ const Login: React.FC = () => {
 			defaultMessage: 'Đăng nhập thành công',
 		});
 		message.success(defaultloginSuccessMessage);
-		history.push('/dashboard');
+		history.push(getRedirectPath(data.user?.role));
 	};
 
 	const handleSubmit = async (values: { email: string; password: string }) => {

@@ -243,8 +243,8 @@ const WorkflowsDashboard: React.FC = () => {
 			{/* Header */}
 			<div className={styles.headerSection}>
 				<div className={styles.headerTitle}>
-					<h1>Quản lý Workflows</h1>
-					<p>Thiết kế và quản lý các luồng phê duyệt cho hệ thống.</p>
+					<h1>{isAdminOrManager ? 'Quản lý Workflows' : 'Danh sách quy trình'}</h1>
+					<p>{isAdminOrManager ? 'Thiết kế và quản lý các luồng phê duyệt cho hệ thống.' : 'Xem các quy trình phê duyệt đang hoạt động.'}</p>
 				</div>
 				{isAdminOrManager && (
 					<Button
