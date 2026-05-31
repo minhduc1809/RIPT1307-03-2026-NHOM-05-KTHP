@@ -184,10 +184,22 @@ const PendingApprovals: React.FC = () => {
 		return moment().diff(moment(dateStr), 'hours') > 48;
 	};
 
-	// Inline quick approve
-	const handleInlineAction = async (item: IWorkflowInstance, action: string) => {
+	// Inline quick approve — finds the correct action name automatically
+	const handleInlineAction = async (item: IWorkflowInstance, fallbackAction: string) => {
 		setInlineExecuting(item.id);
 		try {
+			// Get actual available actions for this submission
+			let action = fallbackAction;
+			try {
+				const res = await getAvailableActions(item.submissionId);
+				const data = (res as any)?.data?.data ?? (res as any)?.data;
+				const actions: IAvailableAction[] = data?.actions ?? [];
+				const approveAction = actions.find((a) =>
+					a.action.includes('approve') || a.action.includes('start_review'),
+				);
+				if (approveAction) action = approveAction.action;
+			} catch { /* use fallback */ }
+
 			await executeWorkflowAction({
 				submissionId: item.submissionId,
 				action,
@@ -259,9 +271,17 @@ const PendingApprovals: React.FC = () => {
 				let failed = 0;
 				for (const item of confirmItems) {
 					try {
+						let action = 'approve';
+						try {
+							const res = await getAvailableActions(item.submissionId);
+							const data = (res as any)?.data?.data ?? (res as any)?.data;
+							const actions: IAvailableAction[] = data?.actions ?? [];
+							const approveAction = actions.find((a) => a.action.includes('approve') || a.action.includes('start_review'));
+							if (approveAction) action = approveAction.action;
+						} catch { /* */ }
 						await executeWorkflowAction({
 							submissionId: item.submissionId,
-							action: 'approve',
+							action,
 						});
 						success++;
 					} catch {
