@@ -142,14 +142,30 @@ const DelegationsPage: React.FC = () => {
 		setModalVisible(true);
 	};
 
+	// Get current user ID from initialState or JWT token
+	const getCurrentUserId = (): string | null => {
+		if (currentUser?.id) return currentUser.id;
+		// Fallback: decode from JWT
+		try {
+			const token = localStorage.getItem('token');
+			if (token) {
+				const payload = JSON.parse(atob(token.split('.')[1]));
+				return payload.sub || null;
+			}
+		} catch { /* */ }
+		return null;
+	};
+
 	const handleSave = async () => {
 		if (!toUserId) { message.warning('Vui lòng chọn người được ủy quyền'); return; }
 		if (!dateRange || !dateRange[0] || !dateRange[1]) { message.warning('Vui lòng chọn thời gian'); return; }
 
+		const myUserId = getCurrentUserId();
+		if (!myUserId) { message.warning('Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại'); return; }
+
 		setSaving(true);
 		try {
-			const payload = {
-				fromUserId: currentUser?.id,
+			const commonPayload = {
 				toUserId,
 				startDate: dateRange[0].toISOString(),
 				endDate: dateRange[1].toISOString(),
@@ -157,15 +173,22 @@ const DelegationsPage: React.FC = () => {
 				formIds: scopeFormIds,
 				workflowDefinitionIds: scopeWorkflowIds,
 			};
+
 			if (editing) {
-				await updateDelegation(editing.id, payload);
+				await updateDelegation(editing.id, commonPayload);
 				message.success('Đã cập nhật ủy quyền');
 			} else {
-				await createDelegation(payload);
+				await createDelegation({ fromUserId: myUserId, ...commonPayload });
 				message.success('Đã tạo ủy quyền');
 			}
 			setModalVisible(false);
-			fetchDelegations();
+			// Silent re-fetch to get full data with relations
+			getDelegations({ page, limit }).then((res) => {
+				const data = (res as any)?.data?.data ?? (res as any)?.data;
+				const items = data?.items ?? data ?? [];
+				setDelegations(Array.isArray(items) ? items : []);
+				setTotal(data?.meta?.total ?? items.length ?? 0);
+			}).catch(() => {});
 		} catch (err: any) {
 			message.error(err?.response?.data?.message || 'Có lỗi xảy ra');
 		} finally {
@@ -183,8 +206,9 @@ const DelegationsPage: React.FC = () => {
 			onOk: async () => {
 				try {
 					await deleteDelegation(record.id);
+					setDelegations((prev) => prev.filter((d) => d.id !== record.id));
+					setTotal((t) => Math.max(0, t - 1));
 					message.success('Đã thu hồi ủy quyền');
-					fetchDelegations();
 				} catch (err: any) {
 					message.error(err?.response?.data?.message || 'Có lỗi xảy ra');
 				}
@@ -193,11 +217,14 @@ const DelegationsPage: React.FC = () => {
 	};
 
 	const handleToggle = async (record: IDelegation, checked: boolean) => {
+		// Optimistic update
+		setDelegations((prev) => prev.map((d) => (d.id === record.id ? { ...d, isActive: checked } : d)));
 		try {
 			await updateDelegation(record.id, { isActive: checked });
 			message.success(checked ? 'Đã kích hoạt ủy quyền' : 'Đã tạm ngưng ủy quyền');
-			fetchDelegations();
 		} catch (err: any) {
+			// Revert on error
+			setDelegations((prev) => prev.map((d) => (d.id === record.id ? { ...d, isActive: !checked } : d)));
 			message.error(err?.response?.data?.message || 'Có lỗi xảy ra');
 		}
 	};

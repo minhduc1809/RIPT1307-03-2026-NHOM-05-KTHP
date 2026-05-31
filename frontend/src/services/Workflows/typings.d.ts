@@ -35,6 +35,7 @@ export interface IWorkflowConfig {
 	finalStates: string[];
 	transitions: IWorkflowTransition[];
 	statusMapping?: Record<string, string>;
+	stateLabels?: Record<string, string>;
 	resubmitTargetState?: string;
 	resubmitFastTrack?: boolean;
 	statesDetails?: Record<string, IStateDetail>;

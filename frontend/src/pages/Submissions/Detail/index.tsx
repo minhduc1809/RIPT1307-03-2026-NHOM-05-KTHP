@@ -37,6 +37,7 @@ import type { IWorkflowDefinition } from '@/services/Workflows/typings';
 import { getDelegations } from '@/services/Delegations/delegationApi';
 import type { IDelegation } from '@/services/Delegations/typings';
 import { getReadableData } from '@/utils/formDataHelper';
+import { getStateLabel } from '@/utils/workflowLabels';
 import styles from './index.less';
 
 const STATUS_LABELS: Record<string, string> = {
@@ -496,7 +497,7 @@ const SubmissionDetail: React.FC = () => {
 						</div>
 						<div className={styles.cardTitle}>
 							<h3>Lịch sử xử lý</h3>
-							<p>{historyData?.workflowName || 'Workflow'} &mdash; {historyData?.currentStep}</p>
+							<p>{historyData?.workflowName || 'Workflow'} &mdash; {getStateLabel(historyData?.currentStep || '')}</p>
 						</div>
 					</div>
 					<div className={styles.cardBody}>
@@ -518,11 +519,11 @@ const SubmissionDetail: React.FC = () => {
 										<div className={styles.timelineSteps}>
 											{h.fromStep && (
 												<>
-													<span>{h.fromStep}</span>
+													<span>{getStateLabel(h.fromStep)}</span>
 													<span className={styles.arrow}><ArrowRightOutlined /></span>
 												</>
 											)}
-											<span>{h.toStep}</span>
+											<span>{getStateLabel(h.toStep)}</span>
 										</div>
 										<div className={styles.timelineMeta}>
 											{h.actor && !isSystemBot(h.actor) && <span>{h.actor.name}</span>}

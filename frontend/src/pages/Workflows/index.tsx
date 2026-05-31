@@ -206,7 +206,7 @@ const WorkflowsDashboard: React.FC = () => {
 								else if (config.finalStates?.includes(s)) cls = styles.final;
 								return (
 									<span key={s} className={`${styles.stateTag} ${cls}`}>
-										{s}
+										{config.stateLabels?.[s] || s}
 									</span>
 								);
 							})}
@@ -466,7 +466,7 @@ const WorkflowsDashboard: React.FC = () => {
 									else if (selectedWorkflow.config.finalStates?.includes(s)) cls = styles.final;
 									return (
 										<span key={s} className={`${styles.stateTag} ${cls}`}>
-											{s}
+											{selectedWorkflow.config.stateLabels?.[s] || s}
 											{s === selectedWorkflow.config.initialState && ' (bắt đầu)'}
 											{selectedWorkflow.config.finalStates?.includes(s) && ' (kết thúc)'}
 										</span>

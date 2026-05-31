@@ -3,6 +3,51 @@ import axios from 'axios';
 import { history } from 'umi';
 import data from './data';
 
+const ERROR_MESSAGES: Record<string, string> = {
+	'error.FORBIDDEN': 'Bạn không có quyền thực hiện thao tác này',
+	'error.UNAUTHORIZED': 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại',
+	'auth.UNAUTHORIZED': 'Phiên đăng nhập đã hết hạn',
+	'error.INVALID_CREDENTIALS': 'Email hoặc mật khẩu không đúng',
+	'error.INVALID_REFRESH_TOKEN': 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại',
+	'error.TOKEN_REUSE_DETECTED': 'Phiên đăng nhập bị xung đột. Vui lòng đăng nhập lại',
+	'error.CONFLICT': 'Dữ liệu đã tồn tại trong hệ thống',
+	'ThrottlerException: Too Many Requests': 'Bạn đã thao tác quá nhanh. Vui lòng đợi một chút rồi thử lại',
+	'workflow.INVALID_TRANSITION': 'Không thể thực hiện thao tác này ở trạng thái hiện tại',
+	'workflow.INVALID_DELEGATION': 'Ủy quyền không hợp lệ hoặc đã hết hạn',
+	'workflow.DELEGATION_SCOPE_FORM': 'Ủy quyền không áp dụng cho biểu mẫu này',
+	'workflow.DELEGATION_SCOPE_WORKFLOW': 'Ủy quyền không áp dụng cho quy trình này',
+	'workflow.NOT_ALLOWED': 'Bạn không có quyền duyệt bước này',
+	'workflow.COMMENT_REQUIRED': 'Vui lòng nhập ghi chú trước khi thực hiện',
+	'workflow.ALREADY_VOTED': 'Bạn đã bỏ phiếu cho bước này rồi',
+	'workflow.ACTION_ALREADY_PERFORMED': 'Thao tác này đã được thực hiện trước đó',
+	'workflow.INSTANCE_NOT_FOUND': 'Không tìm thấy quy trình duyệt cho yêu cầu này',
+	'delegation.NOT_ALLOWED': 'Bạn không có quyền tạo ủy quyền này',
+	'delegation.USER_NOT_FOUND': 'Không tìm thấy người dùng',
+	'delegation.TENANT_MISMATCH': 'Hai người dùng không cùng đơn vị',
+	'delegation.INVALID_FORM_IDS': 'Một hoặc nhiều biểu mẫu không tồn tại',
+	'delegation.INVALID_WORKFLOW_DEFINITION_IDS': 'Một hoặc nhiều quy trình không tồn tại',
+	'file.INVALID_FORMAT': 'Định dạng file không được hỗ trợ',
+	'file.NOT_FOUND': 'Không tìm thấy file',
+	'file.PHYSICAL_NOT_FOUND': 'File đã bị xóa hoặc không tồn tại trên hệ thống',
+	'job.NOT_FOUND': 'Không tìm thấy tác vụ xuất dữ liệu',
+	'job.NOT_DONE': 'Tác vụ xuất dữ liệu chưa hoàn tất',
+	'job.NOT_FAILED': 'Tác vụ không ở trạng thái lỗi, không thể thử lại',
+};
+
+function translateError(raw: string | undefined): string {
+	if (!raw) return '';
+	if (ERROR_MESSAGES[raw]) return ERROR_MESSAGES[raw];
+	// Match partial keys
+	for (const [key, val] of Object.entries(ERROR_MESSAGES)) {
+		if (raw.includes(key)) return val;
+	}
+	// Clean up common patterns
+	if (raw.startsWith('Validation failed')) return 'Dữ liệu không hợp lệ. Vui lòng kiểm tra lại';
+	if (raw.includes('must be') || raw.includes('should not be')) return 'Vui lòng điền đầy đủ thông tin bắt buộc';
+	if (raw.includes('already exists') || raw.includes('Unique constraint')) return 'Dữ liệu đã tồn tại trong hệ thống';
+	return raw;
+}
+
 let isRefreshing = false;
 let failedQueue: Array<{ resolve: (value?: any) => void; reject: (reason?: any) => void }> = [];
 
@@ -121,51 +166,44 @@ axios.interceptors.response.use(
 			}
 		}
 
+		const friendlyError = translateError(descriptionError);
+
 		if (typeof originData !== 'object' || !Object.keys(originData ?? {}).includes('silent') || !originData?.silent)
 			switch (error?.response?.status) {
 				case 400:
-					notification.error({
-						message: 'Dữ liệu chưa đúng (004)',
-						description: descriptionError,
-					});
+					message.warning(friendlyError || 'Vui lòng kiểm tra lại thông tin đã nhập');
 					break;
 
 				case 401:
-					// Handled above with refresh logic
 					break;
 
 				case 403:
 				case 405:
-					notification.error({
-						message: 'Thao tác không được phép (304)',
-						description: descriptionError,
-					});
+					message.warning(friendlyError || 'Bạn không có quyền thực hiện thao tác này');
 					break;
 
 				case 404:
-					notification.error({
-						message: 'Không tìm thấy dữ liệu (040)',
-						description: descriptionError,
-					});
+					message.info(friendlyError || 'Dữ liệu không tồn tại hoặc đã bị xóa');
 					break;
 
 				case 409:
-					notification.error({
-						message: 'Dữ liệu chưa đúng (904)',
-						description: descriptionError,
-					});
+					message.warning(friendlyError || 'Dữ liệu đã tồn tại trong hệ thống');
+					break;
+
+				case 429:
+					message.warning('Bạn đã thao tác quá nhanh. Vui lòng đợi một chút');
 					break;
 
 				case 500:
 				case 502:
 					notification.error({
-						message: 'Hệ thống đang cập nhật (005)',
-						description: descriptionError,
+						message: 'Lỗi hệ thống',
+						description: 'Hệ thống đang gặp sự cố. Vui lòng thử lại sau ít phút',
 					});
 					break;
 
 				default:
-					message.error('Hệ thống đang cập nhật. Vui lòng thử lại sau');
+					message.error('Đã xảy ra lỗi. Vui lòng thử lại sau');
 					break;
 			}
 		// Do something with response error

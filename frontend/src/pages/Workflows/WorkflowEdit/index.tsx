@@ -35,6 +35,7 @@ interface WorkflowStage {
 	id: string;
 	type: StageType;
 	role?: string;
+	customLabel?: string;
 	requireCommentOnReject?: boolean;
 	canReturn?: boolean;
 	requireCommentOnReturn?: boolean;
@@ -104,7 +105,13 @@ function buildConfig(stages: WorkflowStage[]): IWorkflowConfig {
 		}
 	});
 
-	return { states, initialState: getStateName(0, stages[0]), finalStates: ['approved', 'rejected', ...(hasReturn ? ['returned'] : [])], transitions, ...(Object.keys(statesDetails).length > 0 && { statesDetails }) };
+	const stateLabels: Record<string, string> = {};
+	stages.forEach((s, i) => { stateLabels[getStateName(i, s)] = s.customLabel || `Bước ${i + 1}: ${getLabel(i, s)}`; });
+	stateLabels['approved'] = 'Đã phê duyệt';
+	stateLabels['rejected'] = 'Từ chối';
+	if (hasReturn) stateLabels['returned'] = 'Trả lại chỉnh sửa';
+
+	return { states, initialState: getStateName(0, stages[0]), finalStates: ['approved', 'rejected', ...(hasReturn ? ['returned'] : [])], transitions, stateLabels, ...(Object.keys(statesDetails).length > 0 && { statesDetails }) };
 }
 
 const WorkflowEdit: React.FC = (props: any) => {
@@ -240,6 +247,15 @@ const WorkflowEdit: React.FC = (props: any) => {
 														{TYPE_META[t].icon} {TYPE_META[t].label}
 													</button>
 												))}
+											</div>
+											<div className={styles.stageField} style={{ marginBottom: 12 }}>
+												<label>Tên hiển thị</label>
+												<Input
+													placeholder={`Bước ${idx + 1}: ${getLabel(idx, stage)}`}
+													value={stage.customLabel || ''}
+													onChange={(e) => updateStage(idx, { customLabel: e.target.value || undefined })}
+													allowClear
+												/>
 											</div>
 											<div className={styles.stageBody}>
 												{stage.type === 'sequential' && (

@@ -38,6 +38,7 @@ type StageType = 'sequential' | 'parallel' | 'voting';
 interface WorkflowStage {
 	id: string;
 	type: StageType;
+	customLabel?: string;
 	role?: string;
 	requireCommentOnReject?: boolean;
 	canReturn?: boolean;
@@ -143,11 +144,22 @@ function buildMixedConfig(stages: WorkflowStage[]): IWorkflowConfig {
 		}
 	});
 
+	// Generate Vietnamese labels for each state
+	const stateLabels: Record<string, string> = {};
+	stages.forEach((stage, idx) => {
+		const stateName = getStateName(idx, stage);
+		stateLabels[stateName] = stage.customLabel || `Bước ${idx + 1}: ${getStageLabel(idx, stage)}`;
+	});
+	stateLabels['approved'] = 'Đã phê duyệt';
+	stateLabels['rejected'] = 'Từ chối';
+	if (hasReturn) stateLabels['returned'] = 'Trả lại chỉnh sửa';
+
 	return {
 		states,
 		initialState: getStateName(0, stages[0]),
 		finalStates,
 		transitions,
+		stateLabels,
 		...(Object.keys(statesDetails).length > 0 && { statesDetails }),
 	};
 }
@@ -175,9 +187,12 @@ export function parseConfigToStages(config: IWorkflowConfig): WorkflowStage[] | 
 		const rejectT = fromTs.find((t) => t.action === 'reject');
 		const returnT = fromTs.find((t) => t.action === 'return_for_edit');
 
+		const label = config.stateLabels?.[current];
+
 		if (votingT) {
 			const vc = votingT.votingConfig;
 			stages.push(createStageFromParsed('voting', {
+				customLabel: label,
 				voterRole: votingT.roles?.[0] || 'MANAGER',
 				approveThreshold: vc?.approveThreshold ?? 2,
 				rejectThreshold: vc?.rejectThreshold ?? 2,
@@ -185,11 +200,13 @@ export function parseConfigToStages(config: IWorkflowConfig): WorkflowStage[] | 
 			current = vc?.approveTarget || votingT.to;
 		} else if (parallelT) {
 			stages.push(createStageFromParsed('parallel', {
+				customLabel: label,
 				parallelRoles: parallelT.roles || ['MANAGER', 'HR'],
 			}));
 			current = parallelT.to;
 		} else if (approveT) {
 			stages.push(createStageFromParsed('sequential', {
+				customLabel: label,
 				role: approveT.roles?.[0] || 'MANAGER',
 				requireCommentOnReject: !!rejectT?.conditions?.requireComment,
 				canReturn: !!returnT,
@@ -385,6 +402,17 @@ const WorkflowBuilder: React.FC = () => {
 														{TYPE_META[t].icon} {TYPE_META[t].label}
 													</button>
 												))}
+											</div>
+
+											{/* Stage label */}
+											<div className={styles.stageField} style={{ marginBottom: 12 }}>
+												<label>Tên hiển thị</label>
+												<Input
+													placeholder={`Bước ${idx + 1}: ${getStageLabel(idx, stage)}`}
+													value={stage.customLabel || ''}
+													onChange={(e) => updateStage(idx, { customLabel: e.target.value || undefined })}
+													allowClear
+												/>
 											</div>
 
 											{/* Type-specific config */}
