@@ -9,10 +9,11 @@
 - [3. Lấy tất cả Submission (Admin/Manager)](#3-lấy-tất-cả-submission-adminmanager)
 - [4. Lấy chi tiết Submission theo ID (Get Submission Details)](#4-lấy-chi-tiết-submission-theo-id-get-submission-details)
 - [5. Thu hồi Submission về trạng thái DRAFT (Recall Submission)](#5-thu-hồi-submission-về-trạng-thái-draft-recall-submission)
-- [6. Nộp lại Submission (Resubmit Revision)](#6-nộp-lại-submission-resubmit-revision)
-- [7. Lấy danh sách các phiên bản (Revisions)](#7-lấy-danh-sách-các-phiên-bản-revisions)
-- [8. Data Model](#8-data-model)
-- [9. Phân quyền (Authorization)](#9-phân-quyền-authorization)
+- [6. Rút đơn vĩnh viễn (Withdraw Submission)](#6-rút-đơn-vĩnh-viễn-withdraw-submission)
+- [7. Nộp lại Submission (Resubmit Revision)](#7-nộp-lại-submission-resubmit-revision)
+- [8. Lấy danh sách các phiên bản (Revisions)](#8-lấy-danh-sách-các-phiên-bản-revisions)
+- [9. Data Model](#9-data-model)
+- [10. Phân quyền (Authorization)](#10-phân-quyền-authorization)
 
 ---
 
@@ -305,7 +306,49 @@ Cho phép người nộp thu hồi lại đơn đã nộp để chỉnh sửa kh
 
 ---
 
-## 6. Nộp lại Submission (Resubmit Revision)
+## 6. Rút đơn vĩnh viễn (Withdraw Submission)
+
+Cho phép người nộp rút đơn vĩnh viễn. Submission sẽ chuyển sang trạng thái `CANCELLED` và không thể khôi phục.
+
+| Thuộc tính   | Giá trị                              |
+| ------------ | ------------------------------------ |
+| **Endpoint** | `PATCH /submissions/:id/withdraw`    |
+| **Auth**     | ✅ Bearer Token (Authorization)      |
+| **Roles**    | Người nộp (`submittedBy`)            |
+| **Status**   | `200 OK`                             |
+
+### Điều kiện áp dụng
+
+- Chỉ người nộp đơn mới có quyền rút đơn.
+- Khi rút đơn, trạng thái chuyển thành `CANCELLED`.
+- Khác với `recall` (đưa về DRAFT để sửa), `withdraw` là hủy vĩnh viễn.
+
+### Response (200 OK)
+
+```json
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "formId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+  "data": { ... },
+  "status": "CANCELLED",
+  "submittedBy": "cmp12xsmx00008pqv88263uth",
+  "parentSubmissionId": null,
+  "revisionNumber": 1,
+  "createdAt": "2026-05-12T08:00:00.000Z",
+  "updatedAt": "2026-05-12T08:30:00.000Z"
+}
+```
+
+### Lỗi
+
+| Status | Mã lỗi                 | Mô tả                                             |
+| ------ | ---------------------- | ------------------------------------------------- |
+| `403`  | `workflow.NOT_ALLOWED` | Không có quyền rút đơn hoặc trạng thái không cho phép |
+| `404`  | `submission.NOT_FOUND` | Không tìm thấy submission                         |
+
+---
+
+## 7. Nộp lại Submission (Resubmit Revision)
 
 Tạo một phiên bản mới (revision) từ một submission đã bị từ chối (`REJECTED`), bị hủy (`CANCELLED`), hoặc được trả lại để sửa (`RETURNED`).
 
@@ -365,7 +408,7 @@ Tạo một phiên bản mới (revision) từ một submission đã bị từ c
 
 ---
 
-## 7. Lấy danh sách các phiên bản (Revisions)
+## 8. Lấy danh sách các phiên bản (Revisions)
 
 Lấy toàn bộ cây lịch sử các phiên bản của một submission (từ phiên bản gốc đầu tiên cho đến các lần nộp lại tiếp theo).
 
@@ -421,7 +464,7 @@ Trả về mảng các submission được sắp xếp theo `revisionNumber` tă
 
 ---
 
-## 8. Data Model
+## 9. Data Model
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
@@ -460,7 +503,7 @@ Trả về mảng các submission được sắp xếp theo `revisionNumber` tă
 
 ---
 
-## 9. Phân quyền (Authorization)
+## 10. Phân quyền (Authorization)
 
 | Endpoint                           | ADMIN | MANAGER | USER (Chính chủ) | USER (Khác) |
 | ---------------------------------- | ----- | ------- | ---------------- | ----------- |
@@ -469,5 +512,6 @@ Trả về mảng các submission được sắp xếp theo `revisionNumber` tă
 | `GET /submissions/admin`           | ✅    | ✅      | ❌               | ❌          |
 | `GET /submissions/:id`             | ✅    | ✅      | ✅               | ❌          |
 | `PATCH /submissions/:id/recall`    | ❌    | ❌      | ✅               | ❌          |
+| `PATCH /submissions/:id/withdraw`  | ❌    | ❌      | ✅               | ❌          |
 | `POST /submissions/:id/resubmit`   | ❌    | ❌      | ✅               | ❌          |
 | `GET /submissions/:id/revisions`   | ✅    | ✅      | ✅               | ❌          |

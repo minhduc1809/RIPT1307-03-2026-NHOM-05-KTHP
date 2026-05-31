@@ -4,17 +4,61 @@
 
 ## Mục lục
 
-- [1. Upload File (Upload)](#1-upload-file-upload)
-- [2. Tải file đã upload (Download)](#2-tải-file-đã-upload-download)
-- [3. Tạo job xuất Excel (Export)](#3-tạo-job-xuất-excel-export)
-- [4. Kiểm tra tiến độ Export (Export Status)](#4-kiểm-tra-tiến-độ-export-export-status)
-- [5. Tải file Excel đã xuất (Download Export)](#5-tải-file-excel-đã-xuất-download-export)
-- [6. Data Model](#6-data-model)
-- [7. Phân quyền (Authorization)](#7-phân-quyền-authorization)
+- [1. Upload Avatar (Cloudinary)](#1-upload-avatar-cloudinary)
+- [2. Upload File (Upload)](#2-upload-file-upload)
+- [3. Tải file đã upload (Download)](#3-tải-file-đã-upload-download)
+- [4. Tạo job xuất Excel (Export)](#4-tạo-job-xuất-excel-export)
+- [5. Kiểm tra tiến độ Export (Export Status)](#5-kiểm-tra-tiến-độ-export-export-status)
+- [6. Thử lại Export Job (Retry)](#6-thử-lại-export-job-retry)
+- [7. Tải file Excel đã xuất (Download Export)](#7-tải-file-excel-đã-xuất-download-export)
+- [8. Data Model](#8-data-model)
+- [9. Phân quyền (Authorization)](#9-phân-quyền-authorization)
 
 ---
 
-## 1. Upload File (Upload)
+## 1. Upload Avatar (Cloudinary)
+
+Upload ảnh đại diện lên Cloudinary. Chỉ chấp nhận file ảnh, kích thước tối đa 5MB.
+
+| Thuộc tính   | Giá trị                            |
+| ------------ | ---------------------------------- |
+| **Endpoint** | `POST /files/avatar`               |
+| **Auth**     | ✅ Bearer Token (Authorization)    |
+| **Roles**    | Tất cả role (đã xác thực)         |
+| **Status**   | `201 Created`                      |
+
+### Headers
+
+```
+Authorization: Bearer <accessToken>
+Content-Type: multipart/form-data
+```
+
+### Request Body (multipart/form-data)
+
+| Trường | Kiểu   | Bắt buộc | Validation                                    |
+| ------ | ------ | --------- | --------------------------------------------- |
+| `file` | `File` | ✅        | Kích thước tối đa 5MB, chỉ chấp nhận image      |
+
+### Response (201 Created)
+
+```json
+{
+  "url": "https://res.cloudinary.com/.../avatar_userId.jpg",
+  "publicId": "avatars/userId"
+}
+```
+
+### Lỗi
+
+| Status | Mã lỗi            | Mô tả                                           |
+| ------ | ------------------ | ------------------------------------------------ |
+| `400`  | `Bad Request`      | File không hợp lệ (không phải image hoặc quá lớn) |
+| `401`  | `Unauthorized`     | Chưa đăng nhập hoặc token hết hạn               |
+
+---
+
+## 2. Upload File (Upload)
 
 Upload một file lên hệ thống. Hỗ trợ các định dạng: PNG, JPEG, JPG, PDF, DOC, DOCX. Kích thước tối đa 10MB.
 
@@ -62,7 +106,7 @@ Content-Type: multipart/form-data
 
 ---
 
-## 2. Tải file đã upload (Download)
+## 3. Tải file đã upload (Download)
 
 Tải file đã upload theo ID. ADMIN/MANAGER tải được tất cả file. USER chỉ tải được file do chính mình upload.
 
@@ -105,7 +149,7 @@ Content-Disposition: attachment; filename*=UTF-8''<encoded original filename>
 
 ---
 
-## 3. Tạo job xuất Excel (Export)
+## 4. Tạo job xuất Excel (Export)
 
 Tạo một job bất đồng bộ để xuất dữ liệu submission ra file Excel. Job được xử lý qua BullMQ queue.
 
@@ -163,7 +207,7 @@ Authorization: Bearer <accessToken>
 
 ---
 
-## 4. Kiểm tra tiến độ Export (Export Status)
+## 5. Kiểm tra tiến độ Export (Export Status)
 
 Kiểm tra trạng thái và tiến độ của một export job.
 
@@ -215,7 +259,51 @@ Kiểm tra trạng thái và tiến độ của một export job.
 
 ---
 
-## 5. Tải file Excel đã xuất (Download Export)
+## 6. Thử lại Export Job (Retry)
+
+Thử lại một export job đã thất bại (status = `FAILED`).
+
+| Thuộc tính   | Giá trị                               |
+| ------------ | ------------------------------------- |
+| **Endpoint** | `POST /files/export/:jobId/retry`     |
+| **Auth**     | ✅ Bearer Token (Authorization)       |
+| **Roles**    | `ADMIN`, `MANAGER`                    |
+| **Status**   | `200 OK`                              |
+
+### Path Parameters
+
+| Tham số | Kiểu     | Bắt buộc | Mô tả         |
+| ------- | -------- | --------- | -------------- |
+| `jobId` | `string` | ✅        | UUID của job   |
+
+### Response (200 OK)
+
+Trả về job record đã được reset về trạng thái `PENDING`.
+
+```json
+{
+  "id": "job-uuid-123",
+  "type": "EXPORT",
+  "status": "PENDING",
+  "progress": 0,
+  "result": null,
+  "error": null,
+  "createdBy": "cmp12xsmx00008pqv88263uth",
+  "createdAt": "2026-05-12T08:00:00.000Z",
+  "updatedAt": "2026-05-12T09:00:00.000Z"
+}
+```
+
+### Lỗi
+
+| Status | Mã lỗi            | Mô tả                            |
+| ------ | ------------------ | --------------------------------- |
+| `404`  | `job.NOT_FOUND`    | Không tìm thấy job               |
+| `400`  | `job.NOT_FAILED`   | Job không ở trạng thái FAILED     |
+
+---
+
+## 7. Tải file Excel đã xuất (Download Export)
 
 Tải file Excel khi export job đã hoàn thành (status = `DONE`).
 
@@ -250,7 +338,7 @@ Content-Disposition: attachment; filename*=UTF-8''export-<jobId>.xlsx
 
 ---
 
-## 6. Data Model
+## 8. Data Model
 
 ```
 ┌────────────────────────────────────────────────┐
@@ -291,14 +379,16 @@ Content-Disposition: attachment; filename*=UTF-8''export-<jobId>.xlsx
 
 ---
 
-## 7. Phân quyền (Authorization)
+## 9. Phân quyền (Authorization)
 
 | Endpoint                            | ADMIN | MANAGER | USER (Chính chủ) | USER (Khác) |
 | ----------------------------------- | ----- | ------- | ---------------- | ----------- |
+| `POST /files/avatar`                | ✅    | ✅      | ✅               | ✅          |
 | `POST /files/upload`                | ✅    | ✅      | ✅               | ✅          |
 | `GET /files/:id`                    | ✅    | ✅      | ✅               | ❌          |
 | `POST /files/export`                | ✅    | ✅      | ❌               | ❌          |
 | `GET /files/export/:jobId`          | ✅    | ✅      | ❌               | ❌          |
+| `POST /files/export/:jobId/retry`   | ✅    | ✅      | ❌               | ❌          |
 | `GET /files/export/:jobId/download` | ✅    | ✅      | ❌               | ❌          |
 
 ---
