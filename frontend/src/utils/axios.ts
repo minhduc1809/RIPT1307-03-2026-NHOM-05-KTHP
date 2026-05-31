@@ -137,10 +137,11 @@ axios.interceptors.response.use(
 			isRefreshing = true;
 
 			try {
+				const baseUrl = (window as any).APP_CONFIG_IP_ROOT || 'http://localhost:3000';
 				const { data: refreshData } = await axios.post(
-					originalRequest.url?.split('/auth/')[0] + '/auth/refresh',
+					`${baseUrl}/auth/refresh`,
 					{ refreshToken },
-					{ headers: {} } // Don't send expired token
+					{ headers: {} }
 				);
 
 				const responseData = refreshData?.data ?? refreshData;
