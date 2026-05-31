@@ -25,6 +25,7 @@ import { getDelegations } from '@/services/Delegations/delegationApi';
 import type { IDelegation } from '@/services/Delegations/typings';
 import { getReadableData } from '@/utils/formDataHelper';
 import ExportJobButton from '@/components/ExportJobButton';
+import { getStateLabel } from '@/utils/workflowLabels';
 import styles from './index.less';
 
 const ACTION_LABELS: Record<string, string> = {
@@ -537,7 +538,7 @@ const PendingApprovals: React.FC = () => {
 												fontSize: 11,
 											}}
 										>
-											{item.currentStep}
+											{getStateLabel(item.currentStep)}
 										</Tag>
 										{overdue && (
 											<Tag color="red" style={{ fontSize: 10 }}>
