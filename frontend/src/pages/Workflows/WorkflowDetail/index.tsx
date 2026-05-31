@@ -35,6 +35,15 @@ interface ApprovalStep {
 	requireCommentOnReturn: boolean;
 }
 
+type WorkflowType = 'sequential' | 'parallel' | 'voting' | 'unknown';
+
+function detectWorkflowType(config: IWorkflowConfig): WorkflowType {
+	if (config.transitions.some((t) => t.type === 'VOTING')) return 'voting';
+	if (config.transitions.some((t) => t.type === 'PARALLEL_JOIN')) return 'parallel';
+	if (config.transitions.some((t) => t.action === 'approve')) return 'sequential';
+	return 'unknown';
+}
+
 function parseSteps(config: IWorkflowConfig): ApprovalStep[] | null {
 	if (!config?.initialState || !config?.transitions?.length) return null;
 	const steps: ApprovalStep[] = [];
@@ -89,10 +98,19 @@ const WorkflowDetail: React.FC = (props: any) => {
 	useEffect(() => { fetchWorkflow(); }, [fetchWorkflow]);
 
 	const config = workflow?.config;
-	const steps = useMemo(() => config ? parseSteps(config) : null, [config]);
+	const wfType = useMemo(() => config ? detectWorkflowType(config) : 'unknown', [config]);
+	const steps = useMemo(() => config && wfType === 'sequential' ? parseSteps(config) : null, [config, wfType]);
 	const hasReject = config?.finalStates?.includes('rejected') ?? false;
 	const hasReturn = config?.finalStates?.includes('returned') ?? false;
-	const uniqueRoles = useMemo(() => [...new Set(steps?.map((s) => s.role) ?? [])], [steps]);
+
+	const uniqueRoles = useMemo(() => {
+		const roles = new Set<string>();
+		config?.transitions?.forEach((t) => t.roles?.forEach((r) => roles.add(r)));
+		return [...roles];
+	}, [config]);
+
+	const votingTransition = useMemo(() => config?.transitions?.find((t) => t.type === 'VOTING'), [config]);
+	const parallelTransition = useMemo(() => config?.transitions?.find((t) => t.type === 'PARALLEL_JOIN'), [config]);
 
 	if (loading) {
 		return <div className={styles.detailPage}><div className={styles.loadingContainer}><Spin size="large" /></div></div>;
@@ -113,7 +131,12 @@ const WorkflowDetail: React.FC = (props: any) => {
 					<div className={styles.headerInfo}>
 						<div className={styles.titleRow}>
 							<h1>{workflow.name}</h1>
-							<Tag color="blue">{steps?.length ?? 0} bước duyệt</Tag>
+							<Tag color={wfType === 'voting' ? 'purple' : wfType === 'parallel' ? 'cyan' : 'blue'}>
+								{wfType === 'sequential' && `${steps?.length ?? 0} bước tuần tự`}
+								{wfType === 'parallel' && 'Duyệt song song'}
+								{wfType === 'voting' && 'Bỏ phiếu'}
+								{wfType === 'unknown' && 'Tùy chỉnh'}
+							</Tag>
 						</div>
 						<div className={styles.headerMeta}>
 							{workflow.form && (
@@ -175,10 +198,28 @@ const WorkflowDetail: React.FC = (props: any) => {
 						</div>
 					</div>
 					<div className={styles.cardBody}>
-						{steps && steps.length > 0 ? (
-							<WorkflowTree steps={steps} roleLabels={ROLE_LABELS} />
+						{wfType === 'sequential' && steps && steps.length > 0 ? (
+							<WorkflowTree mode="sequential" steps={steps} roleLabels={ROLE_LABELS} />
+						) : wfType === 'parallel' && parallelTransition ? (
+							<WorkflowTree
+								mode="parallel"
+								parallelData={{ roles: parallelTransition.roles || [] }}
+								roleLabels={ROLE_LABELS}
+							/>
+						) : wfType === 'voting' && votingTransition?.votingConfig ? (
+							<WorkflowTree
+								mode="voting"
+								votingData={{
+									voterRole: votingTransition.roles?.[0] || 'MANAGER',
+									approveThreshold: votingTransition.votingConfig.approveThreshold,
+									rejectThreshold: votingTransition.votingConfig.rejectThreshold,
+								}}
+								roleLabels={ROLE_LABELS}
+							/>
 						) : (
-							<div className={styles.emptyFlow}>Không thể phân tích luồng phê duyệt</div>
+							<div className={styles.emptyFlow}>
+								Workflow tùy chỉnh - {config?.states?.length ?? 0} trạng thái, {config?.transitions?.length ?? 0} chuyển tiếp
+							</div>
 						)}
 					</div>
 				</div>

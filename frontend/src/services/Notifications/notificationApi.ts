@@ -7,7 +7,8 @@ export interface INotification {
 	id: string;
 	userId: string;
 	title: string;
-	message: string;
+	content: string;
+	message?: string;
 	type?: string;
 	metadata?: Record<string, any>;
 	read: boolean;

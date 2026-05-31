@@ -8,9 +8,10 @@ import {
 	InfoCircleOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
-import { message, Pagination, Spin } from 'antd';
+import { Button, message, Pagination, Spin } from 'antd';
 import moment from 'moment';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { history } from 'umi';
 import {
 	getNotifications,
 	getUnreadCount,
@@ -281,11 +282,25 @@ const Notifications: React.FC = () => {
 
 								<div className={styles.notifContent}>
 									<div className={styles.notifTitle}>{notif.title}</div>
-									<div className={styles.notifMessage}>{notif.message}</div>
+									<div className={styles.notifMessage}>{(notif as any).content || notif.message}</div>
 									<div className={styles.notifTime}>
 										<ClockCircleOutlined />
 										{formatTime(notif.createdAt)}
 									</div>
+									{notif.metadata?.submissionId && (
+										<Button
+											type="link"
+											size="small"
+											style={{ padding: 0, height: 'auto', marginTop: 4, fontSize: 12 }}
+											onClick={(e) => {
+												e.stopPropagation();
+												handleMarkAsRead(notif);
+												history.push(`/submissions/${notif.metadata.submissionId}`);
+											}}
+										>
+											Xem chi tiết
+										</Button>
+									)}
 								</div>
 
 								{!notif.read && (

@@ -29,12 +29,37 @@ export async function getInitialState(): Promise<IInitialState> {
 		try {
 			const { getUserInfo } = await import('@/services/base/api');
 			const response = await getUserInfo();
+			const userData = response?.data?.data ?? response?.data;
 			return {
-				currentUser: response?.data?.data,
+				currentUser: userData,
 				permissionLoading: false,
 			};
-		} catch (error) {
-			// Token invalid or expired, clear storage
+		} catch (error: any) {
+			// Access token expired — try refresh
+			if (error?.response?.status === 401) {
+				const refreshToken = localStorage.getItem('refreshToken');
+				if (refreshToken) {
+					try {
+						const axios = (await import('@/utils/axios')).default;
+						const { ip3 } = await import('@/utils/ip');
+						const refreshRes = await axios.post(`${ip3}/auth/refresh`, { refreshToken }, { headers: {} });
+						const refreshData = refreshRes?.data?.data ?? refreshRes?.data;
+						if (refreshData?.accessToken) {
+							localStorage.setItem('token', refreshData.accessToken);
+							if (refreshData.refreshToken) localStorage.setItem('refreshToken', refreshData.refreshToken);
+							const { getUserInfo } = await import('@/services/base/api');
+							const retryRes = await getUserInfo();
+							const userData = retryRes?.data?.data ?? retryRes?.data;
+							return {
+								currentUser: userData,
+								permissionLoading: false,
+							};
+						}
+					} catch {
+						// Refresh also failed — clear and redirect to login
+					}
+				}
+			}
 			localStorage.clear();
 		}
 	}

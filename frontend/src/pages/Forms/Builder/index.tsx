@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { history, useLocation } from 'umi';
 import { message } from 'antd';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable, DropResult, DragStart, DragUpdate } from 'react-beautiful-dnd';
 import {
 	AppstoreOutlined,
 	BgColorsOutlined,
@@ -126,8 +126,35 @@ const FormBuilder: React.FC = () => {
 
 	const selectedField = fields.find((f) => f.id === selectedFieldId);
 
-	// Drag and Drop Logic
+	// Track what's being dragged for inline ghost preview
+	const [draggingType, setDraggingType] = useState<string | null>(null);
+	const [dropIndex, setDropIndex] = useState<number | null>(null);
+	const [draggingFromCanvas, setDraggingFromCanvas] = useState(false);
+
+	const onDragStart = (start: DragStart) => {
+		if (start.source.droppableId === 'toolbox') {
+			setDraggingType(FIELD_TYPES[start.source.index]?.type || null);
+			setDraggingFromCanvas(false);
+		} else {
+			const field = fields[start.source.index];
+			setDraggingType(field?.type || null);
+			setDraggingFromCanvas(true);
+		}
+		setDropIndex(null);
+	};
+
+	const onDragUpdate = (update: DragUpdate) => {
+		if (update.destination?.droppableId === 'canvas') {
+			setDropIndex(update.destination.index);
+		} else {
+			setDropIndex(null);
+		}
+	};
+
 	const onDragEnd = (result: DropResult) => {
+		setDraggingType(null);
+		setDropIndex(null);
+		setDraggingFromCanvas(false);
 		const { source, destination } = result;
 
 		// Dropped outside a valid droppable area
@@ -321,7 +348,7 @@ const FormBuilder: React.FC = () => {
 				</div>
 			</header>
 
-			<DragDropContext onDragEnd={onDragEnd}>
+			<DragDropContext onDragStart={onDragStart} onDragUpdate={onDragUpdate} onDragEnd={onDragEnd}>
 				<main className={styles.mainContent}>
 					{/* Left Sidebar */}
 					<aside className={styles.sidebarLeft}>
@@ -359,12 +386,12 @@ const FormBuilder: React.FC = () => {
 									<div className={styles.fieldTypeGrid} ref={provided.innerRef} {...provided.droppableProps}>
 										{FIELD_TYPES.map((type, index) => (
 											<Draggable key={type.type} draggableId={type.type} index={index}>
-												{(dragProvided) => (
+												{(dragProvided, dragSnapshot) => (
 													<div
 														ref={dragProvided.innerRef}
 														{...dragProvided.draggableProps}
 														{...dragProvided.dragHandleProps}
-														className={styles.fieldTypeCard}
+														className={`${styles.fieldTypeCard} ${dragSnapshot.isDragging ? styles.fieldTypeDragging : ''}`}
 													>
 														<div className={`${styles.ftIcon} ${styles[type.type]}`}>{type.icon}</div>
 														<span className={styles.ftLabel}>{type.label}</span>
@@ -437,39 +464,48 @@ const FormBuilder: React.FC = () => {
 
 							<Droppable droppableId='canvas'>
 								{(provided, snapshot) => (
-									<div className={styles.dropZone} ref={provided.innerRef} {...provided.droppableProps}>
-										{fields.map((field, index) => (
-											<Draggable key={field.id} draggableId={field.id} index={index}>
-												{(dragProvided) => (
-													<div
-														ref={dragProvided.innerRef}
-														{...dragProvided.draggableProps}
-														{...dragProvided.dragHandleProps}
-														className={`${styles.formFieldItem} ${selectedFieldId === field.id ? styles.active : ''}`}
-														onClick={(e) => {
-															e.stopPropagation();
-															setSelectedFieldId(field.id);
-														}}
-													>
-														<div className={styles.fieldActions}>
-															<button className={styles.btnCopy} onClick={(e) => handleCopyField(field, index, e)}>
-																<CopyOutlined />
-															</button>
-															<button className={styles.btnDelete} onClick={(e) => handleDeleteField(field.id, e)}>
-																<DeleteOutlined />
-															</button>
-														</div>
+									<div
+										className={`${styles.dropZone} ${snapshot.isDraggingOver ? styles.dropZoneActive : ''}`}
+										ref={provided.innerRef}
+										{...provided.droppableProps}
+									>
+										{fields.map((field, index) => {
+											return (
+												<React.Fragment key={field.id}>
+													<Draggable draggableId={field.id} index={index}>
+														{(dragProvided, dragSnapshot) => (
+															<div
+																ref={dragProvided.innerRef}
+																{...dragProvided.draggableProps}
+																{...dragProvided.dragHandleProps}
+																className={`${styles.formFieldItem} ${selectedFieldId === field.id ? styles.active : ''} ${dragSnapshot.isDragging ? styles.dragging : ''}`}
+																onClick={(e) => {
+																	e.stopPropagation();
+																	setSelectedFieldId(field.id);
+																}}
+															>
+																<div className={styles.fieldActions}>
+																	<button className={styles.btnCopy} onClick={(e) => handleCopyField(field, index, e)}>
+																		<CopyOutlined />
+																	</button>
+																	<button className={styles.btnDelete} onClick={(e) => handleDeleteField(field.id, e)}>
+																		<DeleteOutlined />
+																	</button>
+																</div>
 
-														<span className={styles.fieldLabel}>
-															{field.label}
-															{field.required && <span className={styles.requiredMark}>*</span>}
-														</span>
-														{renderFieldPreview(field)}
-													</div>
-												)}
-											</Draggable>
-										))}
+																<span className={styles.fieldLabel}>
+																	{field.label}
+																	{field.required && <span className={styles.requiredMark}>*</span>}
+																</span>
+																{renderFieldPreview(field)}
+															</div>
+														)}
+													</Draggable>
+												</React.Fragment>
+											);
+										})}
 										{provided.placeholder}
+
 
 										{fields.length === 0 && !snapshot.isDraggingOver && (
 											<div className={styles.dropPlaceholder}>

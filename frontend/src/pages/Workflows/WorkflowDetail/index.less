@@ -175,6 +175,79 @@
 		}
 	}
 
+	// ---- Visual Flow (parallel/voting) ----
+	.visualFlow {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 16px;
+		padding: 28px 20px;
+		flex-wrap: wrap;
+	}
+
+	.flowNode {
+		padding: 12px 20px;
+		border-radius: 12px;
+		font-weight: 700;
+		font-size: 13px;
+		white-space: nowrap;
+	}
+
+	.flowArrow {
+		font-size: 22px;
+		color: #cbd5e1;
+		font-weight: 700;
+	}
+
+	.flowGroup {
+		border: 2px dashed #c7d2fe;
+		border-radius: 14px;
+		background: #eef2ff;
+		padding: 14px 18px;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+
+		.flowGroupLabel {
+			font-size: 11px;
+			font-weight: 700;
+			color: #6366f1;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			margin-bottom: 4px;
+		}
+
+		.flowGroupItem {
+			font-size: 13px;
+			font-weight: 600;
+			color: #475569;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+	}
+
+	.flowBranch {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		.flowBranchItem {
+			padding: 8px 16px;
+			border-radius: 10px;
+			font-size: 12px;
+			font-weight: 700;
+			white-space: nowrap;
+		}
+	}
+
+	.emptyFlow {
+		text-align: center;
+		padding: 20px;
+		color: #94a3b8;
+		font-size: 13px;
+	}
+
 	// ---- Loading ----
 	.loadingContainer {
 		display: flex; justify-content: center; align-items: center; min-height: 400px;

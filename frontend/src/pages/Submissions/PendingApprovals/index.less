@@ -1,0 +1,515 @@
+@import '~antd/es/style/themes/default.less';
+
+.pendingPage {
+	max-width: 1400px;
+	margin: 0 auto;
+	padding: 28px 24px 80px;
+
+	// ====== HEADER ======
+	.pageHeader {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		margin-bottom: 24px;
+
+		.headerLeft {
+			h1 {
+				font-size: 26px;
+				font-weight: 800;
+				color: #1a2332;
+				margin: 0 0 4px;
+			}
+			p {
+				font-size: 13px;
+				color: #94a3b8;
+				margin: 0;
+				display: flex;
+				align-items: center;
+			}
+		}
+
+		.headerRight {
+			display: flex;
+			gap: 8px;
+		}
+	}
+
+	// ====== TOOLBAR ======
+	.toolbar {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 20px;
+		gap: 12px;
+		flex-wrap: wrap;
+
+		.toolbarLeft {
+			display: flex;
+			gap: 8px;
+			flex: 1;
+		}
+
+		.toolbarRight {
+			display: flex;
+			gap: 8px;
+			align-items: center;
+		}
+	}
+
+	.viewToggle {
+		display: flex;
+		background: #f1f5f9;
+		border-radius: 10px;
+		padding: 3px;
+
+		.viewBtn {
+			width: 34px;
+			height: 30px;
+			border: none;
+			background: transparent;
+			border-radius: 8px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #94a3b8;
+			transition: all 0.2s;
+
+			&.active {
+				background: #fff;
+				color: #1a2332;
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+			}
+
+			&:hover:not(.active) {
+				color: #64748b;
+			}
+		}
+	}
+
+	// ====== KANBAN VIEW ======
+	.kanbanBoard {
+		display: flex;
+		gap: 16px;
+		overflow-x: auto;
+		padding-bottom: 16px;
+		min-height: 400px;
+		align-items: flex-start;
+	}
+
+	.kanbanColumn {
+		min-width: 300px;
+		max-width: 360px;
+		flex: 1;
+		background: #f8fafc;
+		border-radius: 16px;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+
+		.columnHeader {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 14px 16px;
+			border-bottom: 1px solid #e2e8f0;
+
+			.columnDot {
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				flex-shrink: 0;
+			}
+
+			.columnTitle {
+				font-size: 13px;
+				font-weight: 700;
+				color: #1a2332;
+				flex: 1;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+		}
+
+		.columnBody {
+			padding: 10px;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			max-height: 70vh;
+			overflow-y: auto;
+
+			&::-webkit-scrollbar {
+				width: 4px;
+			}
+			&::-webkit-scrollbar-thumb {
+				background: #cbd5e1;
+				border-radius: 4px;
+			}
+		}
+	}
+
+	// ====== KANBAN CARD ======
+	.kanbanCard {
+		background: #fff;
+		border-radius: 12px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+		border: 1.5px solid transparent;
+		transition: all 0.2s;
+		position: relative;
+		overflow: hidden;
+
+		&:hover {
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+			border-color: #e2e8f0;
+		}
+
+		&.overdue {
+			border-left: 3px solid #ef4444;
+		}
+
+		&.cardSelected {
+			border-color: #6366f1;
+			background: #f5f3ff;
+		}
+
+		.cardCheckbox {
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			z-index: 1;
+
+			input[type='checkbox'] {
+				width: 16px;
+				height: 16px;
+				accent-color: #6366f1;
+				cursor: pointer;
+			}
+		}
+
+		.cardBody {
+			padding: 12px 14px 10px 34px;
+			cursor: pointer;
+
+			.cardHeader {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 6px;
+
+				.cardTitle {
+					font-size: 13px;
+					font-weight: 700;
+					color: #1a2332;
+					flex: 1;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+			}
+
+			.cardMeta {
+				display: flex;
+				gap: 10px;
+				font-size: 11px;
+				color: #94a3b8;
+				margin-bottom: 6px;
+
+				span {
+					display: flex;
+					align-items: center;
+					gap: 3px;
+				}
+			}
+
+			.cardData {
+				.cardField {
+					display: flex;
+					justify-content: space-between;
+					font-size: 11px;
+					padding: 2px 0;
+
+					.fieldLabel {
+						color: #94a3b8;
+					}
+					.fieldValue {
+						color: #475569;
+						font-weight: 600;
+						max-width: 55%;
+						text-align: right;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+					}
+				}
+			}
+		}
+
+		.cardActions {
+			display: flex;
+			border-top: 1px solid #f1f5f9;
+
+			.quickApprove,
+			.quickMore {
+				flex: 1;
+				height: 34px;
+				border: none;
+				cursor: pointer;
+				font-size: 14px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transition: all 0.15s;
+			}
+
+			.quickApprove {
+				background: #ecfdf5;
+				color: #047857;
+				border-right: 1px solid #f1f5f9;
+				border-radius: 0 0 0 12px;
+
+				&:hover {
+					background: #d1fae5;
+				}
+				&:disabled {
+					opacity: 0.5;
+					cursor: not-allowed;
+				}
+			}
+
+			.quickMore {
+				background: #f8fafc;
+				color: #64748b;
+				font-size: 16px;
+				letter-spacing: 2px;
+				border-radius: 0 0 12px 0;
+
+				&:hover {
+					background: #f1f5f9;
+				}
+			}
+		}
+	}
+
+	// ====== LIST VIEW ======
+	.listSection {
+		background: #fff;
+		border-radius: 16px;
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+		overflow: hidden;
+	}
+
+	.listItem {
+		display: flex;
+		align-items: center;
+		padding: 14px 20px;
+		gap: 14px;
+		transition: background 0.15s;
+
+		& + .listItem {
+			border-top: 1px solid #f1f5f9;
+		}
+
+		&:hover {
+			background: #f8fafc;
+		}
+
+		&.overdue {
+			border-left: 3px solid #ef4444;
+		}
+
+		.listCheckbox {
+			width: 16px;
+			height: 16px;
+			accent-color: #6366f1;
+			cursor: pointer;
+			flex-shrink: 0;
+		}
+
+		.listInfo {
+			flex: 1;
+			min-width: 0;
+			cursor: pointer;
+
+			.listTitle {
+				font-size: 14px;
+				font-weight: 600;
+				color: #1a2332;
+				margin-bottom: 4px;
+				display: flex;
+				align-items: center;
+			}
+
+			.listMeta {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 12px;
+				font-size: 12px;
+				color: #94a3b8;
+
+				span {
+					display: flex;
+					align-items: center;
+					gap: 4px;
+				}
+
+				.listTag {
+					background: #f1f5f9;
+					padding: 1px 8px;
+					border-radius: 4px;
+					font-size: 11px;
+					color: #64748b;
+				}
+			}
+		}
+
+		.listActions {
+			display: flex;
+			gap: 6px;
+			flex-shrink: 0;
+		}
+	}
+
+	// ====== MODAL ======
+	.modalPreview {
+		margin-bottom: 16px;
+		padding: 14px 16px;
+		border-radius: 12px;
+		background: #f8fafc;
+		border: 1px solid #f1f5f9;
+
+		.previewMeta {
+			display: flex;
+			gap: 16px;
+			font-size: 12px;
+			color: #94a3b8;
+			margin-bottom: 10px;
+
+			span {
+				display: flex;
+				align-items: center;
+				gap: 4px;
+			}
+		}
+
+		.previewData {
+			.previewRow {
+				display: flex;
+				justify-content: space-between;
+				padding: 4px 0;
+				font-size: 13px;
+				border-bottom: 1px solid #f1f5f9;
+
+				&:last-child { border-bottom: none; }
+
+				.previewKey { color: #64748b; }
+				.previewValue {
+					color: #1a2332;
+					font-weight: 600;
+					text-align: right;
+					max-width: 60%;
+					word-break: break-word;
+				}
+			}
+		}
+	}
+
+	.modalActions {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		margin-bottom: 16px;
+	}
+
+	.modalActionBtn {
+		height: 40px;
+		padding: 0 18px;
+		border-radius: 10px;
+		font-weight: 600;
+		font-size: 13px;
+		border: none;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		transition: all 0.15s;
+
+		&:hover {
+			filter: brightness(0.95);
+		}
+	}
+
+	.modalForm {
+		border-top: 1px solid #f1f5f9;
+		padding-top: 16px;
+
+		.formField {
+			margin-bottom: 14px;
+
+			label {
+				display: block;
+				font-size: 13px;
+				font-weight: 600;
+				color: #475569;
+				margin-bottom: 6px;
+			}
+		}
+
+		.formFooter {
+			display: flex;
+			justify-content: flex-end;
+			gap: 8px;
+			margin-top: 16px;
+		}
+	}
+
+	// ====== EMPTY / LOADING ======
+	.emptyState {
+		text-align: center;
+		padding: 80px 20px;
+		color: #94a3b8;
+
+		h3 {
+			font-size: 18px;
+			font-weight: 700;
+			color: #1a2332;
+			margin: 16px 0 4px;
+		}
+		p {
+			font-size: 14px;
+			margin: 0;
+		}
+	}
+
+	.loadingContainer {
+		display: flex;
+		justify-content: center;
+		padding: 80px;
+	}
+}
+
+// ====== RESPONSIVE ======
+@media (max-width: 768px) {
+	.pendingPage {
+		padding: 16px 12px 60px;
+
+		.kanbanBoard {
+			flex-direction: column;
+		}
+
+		.kanbanColumn {
+			min-width: 100%;
+			max-width: 100%;
+		}
+
+		.toolbar {
+			flex-direction: column;
+			align-items: stretch;
+
+			.toolbarLeft,
+			.toolbarRight {
+				width: 100%;
+			}
+		}
+	}
+}

@@ -22,7 +22,7 @@ import {
 	updateMyProfile,
 	updateUser,
 } from '@/services/Users/userApi';
-import { uploadFileAvatar } from '@/services/Files/fileApi';
+import { uploadAvatar } from '@/services/Files/fileApi';
 import type { IUser } from '@/services/Users/typings';
 import styles from './index.less';
 
@@ -128,31 +128,18 @@ const Profile: React.FC = () => {
 
 		setUploadingAvatar(true);
 		try {
-			// Step 1: Upload file
-			const uploadRes = await uploadFileAvatar(file);
+			const uploadRes = await uploadAvatar(file);
 			const uploadData = (uploadRes as any)?.data?.data || (uploadRes as any)?.data;
-			// Build picture URL from file ID or use direct URL/storedPath
-			const pictureUrl =
-				uploadData?.url ||
-				(uploadData?.id ? `${(window as any).APP_CONFIG_IP_ROOT || 'http://localhost:3000'}/files/${uploadData.id}` : null) ||
-				(uploadData?.storedPath ? `${(window as any).APP_CONFIG_IP_ROOT || 'http://localhost:3000'}/${uploadData.storedPath}` : null);
+			const pictureUrl = uploadData?.url;
 
 			if (!pictureUrl) {
 				message.error('Upload ảnh thất bại');
 				return;
 			}
 
-			// Step 2: Update profile with new picture URL
-			const res = await updateMyProfile({
-				firstName: myProfile?.firstName || undefined,
-				lastName: myProfile?.lastName || undefined,
-				picture: pictureUrl,
-			});
-
-			const updatedProfile = (res as any)?.data?.data || (res as any)?.data;
-			setMyProfile(updatedProfile);
-			// Update global state so header avatar also updates
-			setInitialState((s: any) => ({ ...s, currentUser: { ...s.currentUser, ...updatedProfile } }));
+			const updatedProfile = { ...myProfile, picture: pictureUrl };
+			setMyProfile(updatedProfile as any);
+			setInitialState((s: any) => ({ ...s, currentUser: { ...s.currentUser, picture: pictureUrl } }));
 			message.success('Cập nhật ảnh đại diện thành công');
 		} catch (error) {
 			console.error('Avatar upload failed:', error);

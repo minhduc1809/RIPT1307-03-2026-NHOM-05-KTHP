@@ -5,6 +5,7 @@ import {
 	FileTextOutlined,
 	PlusOutlined,
 	RollbackOutlined,
+	StopOutlined,
 	UnorderedListOutlined,
 } from '@ant-design/icons';
 import { Button, Pagination, Spin } from 'antd';
@@ -55,7 +56,7 @@ const MySubmissions: React.FC = () => {
 	useEffect(() => {
 		const fetchCounts = async () => {
 			try {
-				const statuses = ['UNDER_REVIEW', 'APPROVED', 'REJECTED', 'RETURNED'];
+				const statuses = ['UNDER_REVIEW', 'APPROVED', 'REJECTED', 'RETURNED', 'CANCELLED'];
 				const results = await Promise.all([
 					getMySubmissions({ limit: 1 }),
 					...statuses.map((s) => getMySubmissions({ limit: 1, status: s })),
@@ -158,6 +159,16 @@ const MySubmissions: React.FC = () => {
 					<div className={styles.statInfo}>
 						<div className={styles.statNumber}>{counts.RETURNED ?? '-'}</div>
 						<div className={styles.statLabel}>Trả lại</div>
+					</div>
+				</div>
+				<div
+					className={`${styles.statCard} ${styles.cancelled} ${statusFilter === 'CANCELLED' ? styles.active : ''}`}
+					onClick={() => handleFilterClick('CANCELLED')}
+				>
+					<div className={styles.statIcon}><StopOutlined /></div>
+					<div className={styles.statInfo}>
+						<div className={styles.statNumber}>{counts.CANCELLED ?? '-'}</div>
+						<div className={styles.statLabel}>Đã hủy</div>
 					</div>
 				</div>
 			</div>

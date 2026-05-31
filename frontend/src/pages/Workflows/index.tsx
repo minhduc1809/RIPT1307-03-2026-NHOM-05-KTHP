@@ -1,13 +1,20 @@
 import {
 	ArrowRightOutlined,
+	BranchesOutlined,
 	DeleteOutlined,
 	EditOutlined,
 	EyeOutlined,
+	FileTextOutlined,
+	ForkOutlined,
+	LinkOutlined,
+	OrderedListOutlined,
 	PartitionOutlined,
 	PlusOutlined,
 	SearchOutlined,
+	SettingOutlined,
+	TeamOutlined,
 } from '@ant-design/icons';
-import { Button, Drawer, Input, message, Modal, Table, Tooltip } from 'antd';
+import { Button, Drawer, Input, message, Modal, Table, Tag, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -16,8 +23,58 @@ import {
 	deleteWorkflowDefinition,
 	getWorkflowDefinitions,
 } from '@/services/Workflows/workflowApi';
-import type { IWorkflowDefinition } from '@/services/Workflows/typings';
+import type { IWorkflowDefinition, IWorkflowConfig } from '@/services/Workflows/typings';
+import WorkflowTree from '@/components/WorkflowTree';
 import styles from './index.less';
+
+const ROLE_LABELS: Record<string, string> = {
+	ADMIN: 'Quản trị viên',
+	MANAGER: 'Quản lý',
+	HR: 'Nhân sự',
+	USER: 'Nhân viên',
+};
+
+type WorkflowType = 'sequential' | 'parallel' | 'voting' | 'custom';
+
+function detectType(config: IWorkflowConfig): WorkflowType {
+	if (config.transitions?.some((t) => t.type === 'VOTING')) return 'voting';
+	if (config.transitions?.some((t) => t.type === 'PARALLEL_JOIN')) return 'parallel';
+	if (config.transitions?.some((t) => t.action === 'approve')) return 'sequential';
+	return 'custom';
+}
+
+const TYPE_CONFIG: Record<WorkflowType, { label: string; color: string; icon: React.ReactNode }> = {
+	sequential: { label: 'Tuần tự', color: 'blue', icon: <OrderedListOutlined /> },
+	parallel: { label: 'Song song', color: 'cyan', icon: <ForkOutlined /> },
+	voting: { label: 'Bỏ phiếu', color: 'purple', icon: <TeamOutlined /> },
+	custom: { label: 'Tùy chỉnh', color: 'default', icon: <SettingOutlined /> },
+};
+
+function parseSequentialSteps(config: IWorkflowConfig) {
+	const steps: Array<{ role: string; canReject: boolean; requireCommentOnReject: boolean; canReturn: boolean; requireCommentOnReturn: boolean }> = [];
+	let current = config.initialState;
+	const visited = new Set<string>();
+	while (current && !visited.has(current)) {
+		visited.add(current);
+		if (config.finalStates?.includes(current)) break;
+		const fromTs = config.transitions.filter((t) =>
+			typeof t.from === 'string' ? t.from === current : Array.isArray(t.from) ? t.from.includes(current) : false,
+		);
+		const approveT = fromTs.find((t) => t.action === 'approve');
+		if (!approveT) break;
+		const rejectT = fromTs.find((t) => t.action === 'reject');
+		const returnT = fromTs.find((t) => t.action === 'return_for_edit');
+		steps.push({
+			role: approveT.roles?.[0] || 'MANAGER',
+			canReject: !!rejectT,
+			requireCommentOnReject: !!rejectT?.conditions?.requireComment,
+			canReturn: !!returnT,
+			requireCommentOnReturn: !!returnT?.conditions?.requireComment,
+		});
+		current = approveT.to;
+	}
+	return steps.length > 0 ? steps : null;
+}
 
 const WorkflowsDashboard: React.FC = () => {
 	const { initialState } = useModel('@@initialState');
@@ -54,17 +111,12 @@ const WorkflowsDashboard: React.FC = () => {
 		fetchWorkflows();
 	}, [fetchWorkflows]);
 
-	/** Client-side search */
 	const displayedWorkflows = useMemo(() => {
 		if (!searchText.trim()) return workflows;
 		return workflows.filter((w) =>
 			w.name.toLowerCase().includes(searchText.toLowerCase()),
 		);
 	}, [workflows, searchText]);
-
-	const handleSearch = (value: string) => {
-		setSearchText(value);
-	};
 
 	const handleView = (record: IWorkflowDefinition) => {
 		history.push(`/workflows/${record.id}`);
@@ -79,13 +131,11 @@ const WorkflowsDashboard: React.FC = () => {
 			message.warning('Chỉ ADMIN mới có quyền xóa workflow');
 			return;
 		}
-
 		Modal.confirm({
 			title: 'Xác nhận xóa',
 			content: (
 				<span>
-					Bạn có chắc chắn muốn xóa workflow <strong>{record.name}</strong>? Thao tác
-					này không thể hoàn tác.
+					Bạn có chắc chắn muốn xóa workflow <strong>{record.name}</strong>? Thao tác này không thể hoàn tác.
 				</span>
 			),
 			okText: 'Xóa',
@@ -105,12 +155,9 @@ const WorkflowsDashboard: React.FC = () => {
 		});
 	};
 
-	const getStateCount = (wf: IWorkflowDefinition): number => {
-		return wf.config?.states?.length ?? 0;
-	};
-
-	const getTransitionCount = (wf: IWorkflowDefinition): number => {
-		return wf.config?.transitions?.length ?? 0;
+	const openDrawer = (record: IWorkflowDefinition) => {
+		setSelectedWorkflow(record);
+		setDrawerOpen(true);
 	};
 
 	const columns: ColumnsType<IWorkflowDefinition> = useMemo(() => {
@@ -119,20 +166,30 @@ const WorkflowsDashboard: React.FC = () => {
 				title: 'Tên Workflow',
 				dataIndex: 'name',
 				key: 'name',
-				render: (_: string, record: IWorkflowDefinition) => (
-					<div className={styles.nameCell}>
-						<div className={styles.nameIcon}>
-							<PartitionOutlined />
-						</div>
-						<div className={styles.nameInfo}>
-							<div className={styles.nameTitle}>{record.name}</div>
-							<div className={styles.nameMeta}>
-								{getStateCount(record)} trạng thái •{' '}
-								{getTransitionCount(record)} chuyển đổi
+				render: (_: string, record: IWorkflowDefinition) => {
+					const wfType = detectType(record.config);
+					const typeConf = TYPE_CONFIG[wfType];
+					return (
+						<div className={styles.nameCell}>
+							<div className={styles.nameIcon}>
+								<PartitionOutlined />
+							</div>
+							<div className={styles.nameInfo}>
+								<div className={styles.nameTitle}>{record.name}</div>
+								<div className={styles.nameMeta}>
+									<Tag
+										icon={typeConf.icon}
+										color={typeConf.color}
+										style={{ fontSize: 10, lineHeight: '16px', margin: 0, borderRadius: 6 }}
+									>
+										{typeConf.label}
+									</Tag>
+									<span>{record.config?.states?.length ?? 0} trạng thái</span>
+								</div>
 							</div>
 						</div>
-					</div>
-				),
+					);
+				},
 			},
 			{
 				title: 'Trạng thái',
@@ -140,7 +197,7 @@ const WorkflowsDashboard: React.FC = () => {
 				width: 280,
 				render: (_: any, record: IWorkflowDefinition) => {
 					const config = record.config;
-					if (!config?.states?.length) return <span className={styles.noForm}>—</span>;
+					if (!config?.states?.length) return <span className={styles.noForm}>-</span>;
 					return (
 						<div className={styles.statesPreview}>
 							{config.states.slice(0, 4).map((s) => {
@@ -149,7 +206,7 @@ const WorkflowsDashboard: React.FC = () => {
 								else if (config.finalStates?.includes(s)) cls = styles.final;
 								return (
 									<span key={s} className={`${styles.stateTag} ${cls}`}>
-										{s}
+										{config.stateLabels?.[s] || s}
 									</span>
 								);
 							})}
@@ -168,7 +225,9 @@ const WorkflowsDashboard: React.FC = () => {
 				width: 180,
 				render: (_: any, record: IWorkflowDefinition) =>
 					record.form ? (
-						<span className={styles.formLink}>📋 {record.form.name}</span>
+						<span className={styles.formLink}>
+							<FileTextOutlined /> {record.form.name}
+						</span>
 					) : (
 						<span className={styles.noForm}>Không liên kết</span>
 					),
@@ -186,7 +245,6 @@ const WorkflowsDashboard: React.FC = () => {
 			},
 		];
 
-		// Action column
 		if (isAdminOrManager) {
 			cols.push({
 				title: 'Thao tác',
@@ -196,36 +254,18 @@ const WorkflowsDashboard: React.FC = () => {
 				render: (_: any, record: IWorkflowDefinition) => (
 					<div className={styles.actionBtns}>
 						<Tooltip title="Xem chi tiết">
-							<button
-								className={`${styles.actionBtn} ${styles.viewBtn}`}
-								onClick={(e) => {
-									e.stopPropagation();
-									handleView(record);
-								}}
-							>
+							<button className={`${styles.actionBtn} ${styles.viewBtn}`} onClick={(e) => { e.stopPropagation(); handleView(record); }}>
 								<EyeOutlined style={{ fontSize: 16 }} />
 							</button>
 						</Tooltip>
 						<Tooltip title="Chỉnh sửa">
-							<button
-								className={`${styles.actionBtn} ${styles.editBtn}`}
-								onClick={(e) => {
-									e.stopPropagation();
-									handleEdit(record);
-								}}
-							>
+							<button className={`${styles.actionBtn} ${styles.editBtn}`} onClick={(e) => { e.stopPropagation(); handleEdit(record); }}>
 								<EditOutlined style={{ fontSize: 16 }} />
 							</button>
 						</Tooltip>
 						{userRole === 'ADMIN' && (
 							<Tooltip title="Xóa">
-								<button
-									className={`${styles.actionBtn} ${styles.deleteBtn}`}
-									onClick={(e) => {
-										e.stopPropagation();
-										handleDelete(record);
-									}}
-								>
+								<button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={(e) => { e.stopPropagation(); handleDelete(record); }}>
 									<DeleteOutlined style={{ fontSize: 16 }} />
 								</button>
 							</Tooltip>
@@ -237,6 +277,22 @@ const WorkflowsDashboard: React.FC = () => {
 
 		return cols;
 	}, [isAdminOrManager, userRole]);
+
+	// Drawer: detect workflow type and prepare tree data
+	const drawerWfType = useMemo(() => selectedWorkflow ? detectType(selectedWorkflow.config) : 'custom', [selectedWorkflow]);
+	const drawerSteps = useMemo(() => {
+		if (drawerWfType !== 'sequential' || !selectedWorkflow) return null;
+		return parseSequentialSteps(selectedWorkflow.config);
+	}, [drawerWfType, selectedWorkflow]);
+	const drawerParallelTransition = useMemo(() => selectedWorkflow?.config?.transitions?.find((t) => t.type === 'PARALLEL_JOIN'), [selectedWorkflow]);
+	const drawerVotingTransition = useMemo(() => selectedWorkflow?.config?.transitions?.find((t) => t.type === 'VOTING'), [selectedWorkflow]);
+
+	// Stats
+	const typeCounts = useMemo(() => {
+		const counts: Record<WorkflowType, number> = { sequential: 0, parallel: 0, voting: 0, custom: 0 };
+		workflows.forEach((w) => { counts[detectType(w.config)]++; });
+		return counts;
+	}, [workflows]);
 
 	return (
 		<div className={styles.workflowDashboard}>
@@ -264,10 +320,8 @@ const WorkflowsDashboard: React.FC = () => {
 					<Input.Search
 						placeholder="Tìm kiếm tên workflow..."
 						prefix={<SearchOutlined style={{ color: '#94a3b8' }} />}
-						onSearch={handleSearch}
-						onChange={(e) => {
-							if (!e.target.value) setSearchText('');
-						}}
+						onSearch={(v) => setSearchText(v)}
+						onChange={(e) => { if (!e.target.value) setSearchText(''); }}
 						allowClear
 						enterButton={false}
 					/>
@@ -286,16 +340,12 @@ const WorkflowsDashboard: React.FC = () => {
 						pageSize: limit,
 						total,
 						showSizeChanger: true,
-						showTotal: (t, range) =>
-							`Hiển thị ${range[0]}-${range[1]} trong số ${t} workflow`,
-						onChange: (p, ps) => {
-							setPage(p);
-							setLimit(ps ?? 10);
-						},
+						showTotal: (t, range) => `Hiển thị ${range[0]}-${range[1]} trong số ${t} workflow`,
+						onChange: (p, ps) => { setPage(p); setLimit(ps ?? 10); },
 					}}
 					onRow={(record) => ({
 						style: { cursor: 'pointer' },
-						onClick: () => handleView(record),
+						onClick: () => openDrawer(record),
 					})}
 				/>
 			</div>
@@ -306,53 +356,86 @@ const WorkflowsDashboard: React.FC = () => {
 					<div style={{ position: 'relative', zIndex: 1 }}>
 						<div className={styles.statLabel}>Tổng Workflows</div>
 						<div className={styles.statValue}>{total}</div>
-						<div className={styles.statChange}>
-							Tổng số luồng phê duyệt trong hệ thống
-						</div>
+						<div className={styles.statChange}>Tổng số luồng phê duyệt trong hệ thống</div>
 					</div>
-					<div className={styles.statBgIcon}>⚙️</div>
+					<div className={styles.statBgIcon}><BranchesOutlined /></div>
 				</div>
 
 				<div className={styles.statCard}>
 					<div>
-						<div className={styles.statIcon}>🔗</div>
+						<div className={styles.statIcon}><LinkOutlined /></div>
 						<div className={styles.statTitle}>Có biểu mẫu</div>
 					</div>
-					<div className={styles.statNumber}>
-						{workflows.filter((w) => w.formId).length}
-					</div>
+					<div className={styles.statNumber}>{workflows.filter((w) => w.formId).length}</div>
 				</div>
 
 				<div className={`${styles.statCard} ${styles.light}`}>
 					<div>
-						<div className={styles.statIcon}>📊</div>
-						<div className={styles.statTitle}>Trung bình steps</div>
+						<div className={styles.statIcon}><BranchesOutlined /></div>
+						<div className={styles.statTitle}>Theo loại</div>
 					</div>
-					<div className={styles.statNumber}>
-						{workflows.length > 0
-							? Math.round(
-									workflows.reduce(
-										(sum, w) => sum + (w.config?.states?.length ?? 0),
-										0,
-									) / workflows.length,
-							  )
-							: 0}
+					<div className={styles.typeStats}>
+						{typeCounts.sequential > 0 && <Tag icon={<OrderedListOutlined />} color="blue">{typeCounts.sequential} tuần tự</Tag>}
+						{typeCounts.parallel > 0 && <Tag icon={<ForkOutlined />} color="cyan">{typeCounts.parallel} song song</Tag>}
+						{typeCounts.voting > 0 && <Tag icon={<TeamOutlined />} color="purple">{typeCounts.voting} bỏ phiếu</Tag>}
 					</div>
 				</div>
 			</div>
 
 			{/* Detail Drawer */}
 			<Drawer
-				title={selectedWorkflow?.name ?? 'Chi tiết Workflow'}
+				title={
+					selectedWorkflow ? (
+						<div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+							<span>{selectedWorkflow.name}</span>
+							<Tag color={TYPE_CONFIG[drawerWfType].color} style={{ margin: 0 }}>
+								{TYPE_CONFIG[drawerWfType].icon} {TYPE_CONFIG[drawerWfType].label}
+							</Tag>
+						</div>
+					) : 'Chi tiết Workflow'
+				}
 				open={drawerOpen}
-				onClose={() => {
-					setDrawerOpen(false);
-					setSelectedWorkflow(null);
-				}}
-				width={480}
+				onClose={() => { setDrawerOpen(false); setSelectedWorkflow(null); }}
+				width={560}
+				extra={
+					isAdminOrManager && selectedWorkflow ? (
+						<div style={{ display: 'flex', gap: 8 }}>
+							<Button size="small" icon={<EyeOutlined />} onClick={() => handleView(selectedWorkflow)}>Chi tiết</Button>
+							<Button size="small" icon={<EditOutlined />} onClick={() => handleEdit(selectedWorkflow)}>Sửa</Button>
+						</div>
+					) : null
+				}
 			>
 				{selectedWorkflow && (
 					<>
+						{/* Workflow Tree */}
+						<div className={styles.detailSection}>
+							<div className={styles.detailLabel}>Sơ đồ luồng</div>
+							{drawerWfType === 'sequential' && drawerSteps ? (
+								<WorkflowTree mode="sequential" steps={drawerSteps} roleLabels={ROLE_LABELS} />
+							) : drawerWfType === 'parallel' && drawerParallelTransition ? (
+								<WorkflowTree
+									mode="parallel"
+									parallelData={{ roles: drawerParallelTransition.roles || [] }}
+									roleLabels={ROLE_LABELS}
+								/>
+							) : drawerWfType === 'voting' && drawerVotingTransition?.votingConfig ? (
+								<WorkflowTree
+									mode="voting"
+									votingData={{
+										voterRole: drawerVotingTransition.roles?.[0] || 'MANAGER',
+										approveThreshold: drawerVotingTransition.votingConfig.approveThreshold,
+										rejectThreshold: drawerVotingTransition.votingConfig.rejectThreshold,
+									}}
+									roleLabels={ROLE_LABELS}
+								/>
+							) : (
+								<div style={{ padding: 20, color: '#94a3b8', textAlign: 'center' }}>
+									Workflow tùy chỉnh - {selectedWorkflow.config?.states?.length ?? 0} trạng thái
+								</div>
+							)}
+						</div>
+
 						{/* Basic Info */}
 						<div className={styles.detailSection}>
 							<div className={styles.detailLabel}>Tên Workflow</div>
@@ -363,20 +446,14 @@ const WorkflowsDashboard: React.FC = () => {
 							<div className={styles.detailSection}>
 								<div className={styles.detailLabel}>Biểu mẫu liên kết</div>
 								<div className={styles.detailValue}>
-									<span className={styles.formLink}>
-										📋 {selectedWorkflow.form.name}
-									</span>
+									<span className={styles.formLink}><FileTextOutlined /> {selectedWorkflow.form.name}</span>
 								</div>
 							</div>
 						)}
 
 						<div className={styles.detailSection}>
 							<div className={styles.detailLabel}>Ngày tạo</div>
-							<div className={styles.detailValue}>
-								{moment(selectedWorkflow.createdAt).format(
-									'DD/MM/YYYY HH:mm',
-								)}
-							</div>
+							<div className={styles.detailValue}>{moment(selectedWorkflow.createdAt).format('DD/MM/YYYY HH:mm')}</div>
 						</div>
 
 						{/* States */}
@@ -385,23 +462,13 @@ const WorkflowsDashboard: React.FC = () => {
 							<div className={styles.statesPreview} style={{ marginTop: 4 }}>
 								{selectedWorkflow.config?.states?.map((s) => {
 									let cls = styles.normal;
-									if (s === selectedWorkflow.config.initialState)
-										cls = styles.initial;
-									else if (
-										selectedWorkflow.config.finalStates?.includes(s)
-									)
-										cls = styles.final;
+									if (s === selectedWorkflow.config.initialState) cls = styles.initial;
+									else if (selectedWorkflow.config.finalStates?.includes(s)) cls = styles.final;
 									return (
-										<span
-											key={s}
-											className={`${styles.stateTag} ${cls}`}
-										>
-											{s}
-											{s === selectedWorkflow.config.initialState &&
-												' (bắt đầu)'}
-											{selectedWorkflow.config.finalStates?.includes(
-												s,
-											) && ' (kết thúc)'}
+										<span key={s} className={`${styles.stateTag} ${cls}`}>
+											{selectedWorkflow.config.stateLabels?.[s] || s}
+											{s === selectedWorkflow.config.initialState && ' (bắt đầu)'}
+											{selectedWorkflow.config.finalStates?.includes(s) && ' (kết thúc)'}
 										</span>
 									);
 								})}
@@ -413,21 +480,17 @@ const WorkflowsDashboard: React.FC = () => {
 							<div className={styles.detailLabel}>Chuyển đổi trạng thái</div>
 							<div className={styles.transitionCardList}>
 								{selectedWorkflow.config?.transitions?.map((t, idx) => {
-									const fromLabel =
-										typeof t.from === 'string'
-											? t.from === '*'
-												? '* (tất cả)'
-												: t.from
-											: (t.from as string[]).join(', ');
-
+									const fromLabel = typeof t.from === 'string' ? (t.from === '*' ? '* (tất cả)' : t.from) : (t.from as string[]).join(', ');
 									return (
 										<div key={idx} className={styles.transitionItem}>
 											<span className={styles.tFrom}>{fromLabel}</span>
-											<span className={styles.tArrow}>
-												<ArrowRightOutlined />
-											</span>
+											<span className={styles.tArrow}><ArrowRightOutlined /></span>
 											<span className={styles.tTo}>{t.to}</span>
-											<span className={styles.tAction}>{t.action}</span>
+											<span className={styles.tAction}>
+												{t.type === 'VOTING' && <TeamOutlined style={{ marginRight: 4 }} />}
+												{t.type === 'PARALLEL_JOIN' && <ForkOutlined style={{ marginRight: 4 }} />}
+												{t.action}
+											</span>
 										</div>
 									);
 								})}
