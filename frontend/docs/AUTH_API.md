@@ -5,12 +5,11 @@
 ## Mục lục
 
 - [1. Đăng nhập (Login)](#1-đăng-nhập-login)
-- [2. Đăng ký (Register)](#2-đăng-ký-register)
-- [3. Làm mới Access Token (Refresh)](#3-làm-mới-access-token-refresh)
-- [4. Đăng xuất (Logout)](#4-đăng-xuất-logout)
-- [5. Đăng nhập qua Keycloak](#5-đăng-nhập-qua-keycloak)
-- [6. Đăng xuất Keycloak](#6-đăng-xuất-keycloak)
-- [7. Lấy thông tin người dùng hiện tại (Me)](#7-lấy-thông-tin-người-dùng-hiện-tại-me)
+- [2. Làm mới Access Token (Refresh)](#2-làm-mới-access-token-refresh)
+- [3. Đăng xuất (Logout)](#3-đăng-xuất-logout)
+- [4. Đăng nhập qua Keycloak](#4-đăng-nhập-qua-keycloak)
+- [5. Đăng xuất Keycloak](#5-đăng-xuất-keycloak)
+- [6. Lấy thông tin người dùng hiện tại (Me)](#6-lấy-thông-tin-người-dùng-hiện-tại-me)
 
 ---
 
@@ -69,68 +68,9 @@
 
 ---
 
-## 2. Đăng ký (Register)
+## 2. Làm mới Access Token (Refresh)
 
-Tạo tài khoản mới với role mặc định là `USER`.
-
-| Thuộc tính   | Giá trị                 |
-| ------------ | ----------------------- |
-| **Endpoint** | `POST /auth/register`   |
-| **Auth**     | Không yêu cầu (Public) |
-| **Status**   | `201 Created`           |
-
-### Request Body
-
-```json
-{
-  "email": "newuser@system.com",
-  "username": "newuser",
-  "password": "User@123",
-  "firstName": "John",
-  "lastName": "Doe"
-}
-```
-
-| Trường      | Kiểu     | Bắt buộc | Validation             |
-| ----------- | -------- | --------- | ---------------------- |
-| `email`     | `string` | ✅        | Phải là email hợp lệ  |
-| `username`  | `string` | ✅        | Không được để trống    |
-| `password`  | `string` | ✅        | Tối thiểu 6 ký tự     |
-| `firstName` | `string` | ❌        |                        |
-| `lastName`  | `string` | ❌        |                        |
-
-### Response (201 Created)
-
-```json
-{
-  "id": "cm1abc...",
-  "email": "newuser@system.com",
-  "username": "newuser",
-  "role": "USER",
-  "firstName": "John",
-  "lastName": "Doe",
-  "picture": null,
-  "isActive": true,
-  "keycloakId": null,
-  "createdAt": "2026-05-11T11:00:00.000Z",
-  "updatedAt": "2026-05-11T11:00:00.000Z",
-  "deletedAt": null
-}
-```
-
-> **Lưu ý:** Response không trả về `passwordHash`.
-
-### Lỗi
-
-| Status | Mã lỗi           | Mô tả                                    |
-| ------ | ----------------- | ----------------------------------------- |
-| `409`  | `error.CONFLICT`  | Email hoặc username đã tồn tại trong hệ thống |
-
----
-
-## 3. Làm mới Access Token (Refresh)
-
-Sử dụng refresh token để lấy access token mới khi access token hết hạn. Backend thực hiện **token rotation** — refresh token cũ bị thu hồi và trả về refresh token mới.
+Sử dụng refresh token để lấy access token mới khi access token hết hạn. Backend thực hiện **token rotation với token family** — refresh token cũ bị đánh dấu revoked (không xóa) và trả về refresh token mới trong cùng family.
 
 | Thuộc tính   | Giá trị                 |
 | ------------ | ----------------------- |
@@ -159,19 +99,22 @@ Sử dụng refresh token để lấy access token mới khi access token hết 
 }
 ```
 
-> **Token Rotation:** Mỗi lần refresh, token cũ bị xóa và token mới được tạo. Client phải lưu lại `refreshToken` mới từ response.
+> **Token Rotation (Token Family):** Mỗi lần refresh, token cũ bị đánh dấu `isRevoked = true` (giữ lại để phát hiện token reuse) và token mới được tạo trong cùng `tokenFamily`. Client **phải lưu lại** `refreshToken` mới từ response.
+
+> **Token Reuse Detection:** Nếu client gửi lại một refresh token đã bị revoked, backend sẽ xóa **toàn bộ token family** liên quan, buộc user phải đăng nhập lại. Đây là biện pháp bảo mật chống token bị đánh cắp.
 
 ### Lỗi
 
-| Status | Mã lỗi                         | Mô tả                                    |
-| ------ | ------------------------------- | ----------------------------------------- |
-| `401`  | `error.INVALID_REFRESH_TOKEN`   | Refresh token không hợp lệ hoặc hết hạn  |
+| Status | Mã lỗi                         | Mô tả                                           |
+| ------ | ------------------------------- | ------------------------------------------------ |
+| `401`  | `error.INVALID_REFRESH_TOKEN`   | Refresh token không hợp lệ hoặc hết hạn         |
+| `401`  | `error.TOKEN_REUSE_DETECTED`    | Phát hiện token reuse — toàn bộ family bị thu hồi |
 
 ---
 
-## 4. Đăng xuất (Logout)
+## 3. Đăng xuất (Logout)
 
-Đăng xuất và thu hồi refresh token. Yêu cầu đăng nhập (gửi Bearer token).
+Đăng xuất và thu hồi **toàn bộ token family** liên quan đến refresh token. Yêu cầu đăng nhập (gửi Bearer token).
 
 | Thuộc tính   | Giá trị                            |
 | ------------ | ----------------------------------- |
@@ -203,11 +146,14 @@ Authorization: Bearer <accessToken>
 {
   "success": true
 }
+
 ```
+
+> **Family-based Revocation:** Khi logout, backend xóa tất cả refresh token thuộc cùng `tokenFamily`, đảm bảo không token nào trong chuỗi rotation còn hợp lệ.
 
 ---
 
-## 5. Đăng nhập qua Keycloak
+## 4. Đăng nhập qua Keycloak
 
 Đăng nhập thông qua Keycloak SSO (proxy mode).
 
@@ -250,7 +196,7 @@ Authorization: Bearer <accessToken>
 
 ---
 
-## 6. Đăng xuất Keycloak
+## 5. Đăng xuất Keycloak
 
 Đăng xuất khỏi phiên Keycloak.
 
@@ -284,7 +230,7 @@ Authorization: Bearer <accessToken>
 
 ---
 
-## 7. Lấy thông tin người dùng hiện tại (Me)
+## 6. Lấy thông tin người dùng hiện tại (Me)
 
 Lấy thông tin profile của người dùng đang đăng nhập.
 
@@ -367,6 +313,9 @@ Authorization: Bearer <accessToken>
 - **Refresh Token** hết hạn sau **7 ngày** (cấu hình qua `JWT_REFRESH_EXPIRATION`).
 - Refresh token được **hash bằng bcrypt** trước khi lưu vào database.
 - Mật khẩu người dùng được **hash bằng bcrypt** (10 rounds).
+- **Token Family:** Mỗi phiên đăng nhập tạo một `tokenFamily` (UUID). Tất cả refresh token sinh ra từ chuỗi rotation đều thuộc cùng family.
+- **Token Reuse Detection:** Nếu một refresh token đã bị revoked được sử dụng lại, toàn bộ family bị xóa — bảo vệ chống token bị đánh cắp.
+- **Cron Cleanup:** Hệ thống tự động dọn dẹp refresh token hết hạn lúc **02:00 hàng ngày** (Asia/Ho_Chi_Minh).
 - Tất cả các endpoint trả về lỗi validation sẽ có dạng:
 
 ```json
