@@ -1,5 +1,3 @@
-
-
 export default [
 	{
 		path: '/user',
@@ -179,7 +177,11 @@ export default [
 		layout: false,
 	},
 	{
+		path: '/404',
+		component: './exception/404/404Page',
+		layout: false,
+	},
+	{
 		component: './exception/404',
 	},
 ];
-

@@ -1,15 +1,9 @@
 import Footer from '@/components/Footer';
 import { HomeOutlined } from '@ant-design/icons';
 import { Button, Result } from 'antd';
-import { useEffect } from 'react';
 import { history } from 'umi';
 
-const DangCapNhatPage = () => {
-	// Nếu Đang cập nhật thì bỏ cái này đi
-	useEffect(() => {
-		history.replace('/active-forms');
-	}, []);
-
+const NotFoundPage = () => {
 	return (
 		<div
 			style={{
@@ -22,11 +16,13 @@ const DangCapNhatPage = () => {
 		>
 			<Result
 				status='404'
-				title='Đang cập nhật'
-				style={{ background: 'none' }}
-				subTitle='Hệ thống đang cập nhật. Vui lòng thử lại sau!'
+				title='404'
+				style={{
+					background: 'none',
+				}}
+				subTitle='Xin lỗi, trang bạn yêu cầu không tồn tại.'
 				extra={
-					<Button type='primary' onClick={() => history.replace('/')} icon={<HomeOutlined />}>
+					<Button type='primary' onClick={() => history.push('/')} icon={<HomeOutlined />}>
 						Về trang chủ
 					</Button>
 				}
@@ -36,4 +32,4 @@ const DangCapNhatPage = () => {
 		</div>
 	);
 };
-export default DangCapNhatPage;
+export default NotFoundPage;

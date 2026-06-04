@@ -116,8 +116,19 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 		footerRender: () => <Footer />,
 
 		onPageChange: () => {
+			const { pathname } = window.location;
+			// Public paths that don't require authentication
+			const publicPaths = ['/user/login', '/user', '/', '/403', '/404', '/hold-on'];
+			const isPublicPath = publicPaths.some((p) => pathname === p || pathname.startsWith('/user/'));
+
+			// Redirect to login if not authenticated and accessing a protected route
+			if (!initialState?.currentUser && !isPublicPath) {
+				history.replace('/user/login');
+				return;
+			}
+
 			if (initialState?.currentUser) {
-				const isUncheckPath = ['/notification/subscribe'].some((path) => window.location.pathname.includes(path));
+				const isUncheckPath = ['/notification/subscribe'].some((path) => pathname.includes(path));
 				if (
 					!isUncheckPath &&
 					currentRole &&
