@@ -109,14 +109,6 @@ export default [
 
 	///////////////////////////////////
 	// ALL ROLES
-	// Active Forms — Browse & Fill (all roles)
-	{
-		path: '/active-forms',
-		name: 'Biểu mẫu',
-		icon: 'FileTextOutlined',
-		component: './Forms/ActiveForms',
-	},
-
 	// Submissions
 	{
 		path: '/submissions',

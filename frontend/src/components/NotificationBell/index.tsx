@@ -102,8 +102,7 @@ const NotificationBell: React.FC = () => {
 	}, [open]);
 
 	const handleToggle = () => {
-		if (!open) fetchNotifications();
-		setOpen(!open);
+		history.push('/notifications');
 	};
 
 	const handleMarkRead = async (id: string, e: React.MouseEvent) => {
