@@ -158,6 +158,7 @@
 		transition: all 0.2s;
 		position: relative;
 		overflow: hidden;
+		flex-shrink: 0; // keep full card height — let the column scroll instead of squishing cards
 
 		&:hover {
 			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -370,99 +371,6 @@
 		}
 	}
 
-	// ====== MODAL ======
-	.modalPreview {
-		margin-bottom: 16px;
-		padding: 14px 16px;
-		border-radius: 12px;
-		background: #f8fafc;
-		border: 1px solid #f1f5f9;
-
-		.previewMeta {
-			display: flex;
-			gap: 16px;
-			font-size: 12px;
-			color: #94a3b8;
-			margin-bottom: 10px;
-
-			span {
-				display: flex;
-				align-items: center;
-				gap: 4px;
-			}
-		}
-
-		.previewData {
-			.previewRow {
-				display: flex;
-				justify-content: space-between;
-				padding: 4px 0;
-				font-size: 13px;
-				border-bottom: 1px solid #f1f5f9;
-
-				&:last-child { border-bottom: none; }
-
-				.previewKey { color: #64748b; }
-				.previewValue {
-					color: #1a2332;
-					font-weight: 600;
-					text-align: right;
-					max-width: 60%;
-					word-break: break-word;
-				}
-			}
-		}
-	}
-
-	.modalActions {
-		display: flex;
-		gap: 8px;
-		flex-wrap: wrap;
-		margin-bottom: 16px;
-	}
-
-	.modalActionBtn {
-		height: 40px;
-		padding: 0 18px;
-		border-radius: 10px;
-		font-weight: 600;
-		font-size: 13px;
-		border: none;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		transition: all 0.15s;
-
-		&:hover {
-			filter: brightness(0.95);
-		}
-	}
-
-	.modalForm {
-		border-top: 1px solid #f1f5f9;
-		padding-top: 16px;
-
-		.formField {
-			margin-bottom: 14px;
-
-			label {
-				display: block;
-				font-size: 13px;
-				font-weight: 600;
-				color: #475569;
-				margin-bottom: 6px;
-			}
-		}
-
-		.formFooter {
-			display: flex;
-			justify-content: flex-end;
-			gap: 8px;
-			margin-top: 16px;
-		}
-	}
-
 	// ====== EMPTY / LOADING ======
 	.emptyState {
 		text-align: center;
@@ -485,6 +393,147 @@
 		display: flex;
 		justify-content: center;
 		padding: 80px;
+	}
+}
+
+// ====== ACTION MODAL ======
+// Rendered via portal outside .pendingPage — must live at root level.
+.actionModal {
+	:global {
+		.ant-modal-content {
+			border-radius: 16px;
+			overflow: hidden;
+			box-shadow: 0 12px 40px rgba(15, 23, 42, 0.14);
+		}
+
+		.ant-modal-header {
+			padding: 18px 24px 14px;
+			border-bottom: 1px solid #f1f5f9;
+			border-radius: 16px 16px 0 0;
+		}
+
+		.ant-modal-title {
+			font-size: 16px;
+			font-weight: 800;
+			color: #1a2332;
+		}
+
+		.ant-modal-close-x {
+			color: #94a3b8;
+			transition: color 0.15s;
+
+			&:hover {
+				color: #1a2332;
+			}
+		}
+
+		.ant-modal-body {
+			padding: 20px 24px;
+		}
+	}
+}
+
+.modalPreview {
+	margin-bottom: 16px;
+	padding: 14px 16px;
+	border-radius: 12px;
+	background: #f8fafc;
+	border: 1px solid #f1f5f9;
+
+	.previewMeta {
+		display: flex;
+		gap: 16px;
+		font-size: 12px;
+		color: #94a3b8;
+		margin-bottom: 10px;
+
+		span {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+	}
+
+	.previewData {
+		.previewRow {
+			display: flex;
+			justify-content: space-between;
+			padding: 4px 0;
+			font-size: 13px;
+			border-bottom: 1px solid #f1f5f9;
+
+			&:last-child { border-bottom: none; }
+
+			.previewKey { color: #64748b; }
+			.previewValue {
+				color: #1a2332;
+				font-weight: 600;
+				text-align: right;
+				max-width: 60%;
+				word-break: break-word;
+			}
+		}
+	}
+}
+
+.modalActions {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 16px;
+}
+
+.modalActionBtn {
+	height: 40px;
+	padding: 0 18px;
+	border-radius: 10px;
+	font-weight: 600;
+	font-size: 13px;
+	border: none;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	transition: all 0.15s;
+
+	&:hover {
+		filter: brightness(0.95);
+	}
+}
+
+.modalForm {
+	border-top: 1px solid #f1f5f9;
+	padding-top: 16px;
+
+	.formField {
+		margin-bottom: 14px;
+
+		label {
+			display: block;
+			font-size: 13px;
+			font-weight: 600;
+			color: #475569;
+			margin-bottom: 6px;
+		}
+
+		:global {
+			.ant-input,
+			.ant-select-selector {
+				border-radius: 8px !important;
+				border-color: #e2e8f0;
+			}
+		}
+	}
+
+	.formFooter {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		margin-top: 16px;
+
+		:global(.ant-btn) {
+			border-radius: 8px;
+		}
 	}
 }
 

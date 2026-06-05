@@ -625,6 +625,7 @@ const PendingApprovals: React.FC = () => {
 				footer={null}
 				destroyOnClose
 				width={560}
+				className={styles.actionModal}
 			>
 				{loadingActions ? (
 					<div style={{ textAlign: 'center', padding: 40 }}><Spin /></div>
