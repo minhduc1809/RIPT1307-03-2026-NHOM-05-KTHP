@@ -6,6 +6,11 @@ export async function forgotPassword(email: string) {
 	return axios.post(`${ip3}/auth/forgot-password`, { email });
 }
 
+/** POST /auth/verify-reset-otp — Public, xác thực mã OTP, trả về resetToken */
+export async function verifyResetOtp(email: string, otp: string) {
+	return axios.post(`${ip3}/auth/verify-reset-otp`, { email, otp });
+}
+
 /** POST /auth/reset-password — Public, đặt lại mật khẩu bằng token */
 export async function resetPassword(token: string, newPassword: string) {
 	return axios.post(`${ip3}/auth/reset-password`, { token, newPassword });
