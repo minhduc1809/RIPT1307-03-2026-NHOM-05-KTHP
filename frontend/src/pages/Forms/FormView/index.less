@@ -266,6 +266,112 @@
 				flex-direction: column;
 				gap: 28px;
 			}
+
+			/* Theme: Dark */
+			&.theme_dark {
+				background: #1e293b !important;
+				box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+
+				.formPreviewHeader {
+					border-bottom-color: rgba(100, 116, 139, 0.2);
+					.formTitle { color: #f8fafc; }
+					.formDesc { color: #94a3b8; }
+				}
+
+				.fieldItem {
+					.fieldHeader .fieldLabel { color: #f8fafc; }
+					.fieldHeader .fieldTypeBadge { background: #334155; color: #94a3b8; }
+					.fieldInputPreview {
+						background: rgba(15, 23, 42, 0.6);
+						color: #64748b;
+						border-color: rgba(100, 116, 139, 0.2);
+					}
+					.fieldRules .ruleTag {
+						background: #334155;
+						color: #94a3b8;
+						border-color: rgba(100, 116, 139, 0.2);
+					}
+					.selectOptions .optionItem {
+						background: rgba(15, 23, 42, 0.4);
+						color: #e2e8f0;
+						.optionDot { background: #6366f1; }
+					}
+				}
+
+				.emptyFields { color: #64748b; }
+			}
+
+			/* Theme: Mint */
+			&.theme_mint {
+				background: linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 100%) !important;
+
+				.formPreviewHeader {
+					border-bottom-color: rgba(5, 150, 105, 0.12);
+					.formTitle { color: #065f46; }
+					.formDesc { color: #047857; }
+				}
+
+				.fieldItem {
+					.fieldHeader .fieldLabel { color: #064e3b; }
+					.fieldInputPreview {
+						background: rgba(167, 243, 208, 0.25);
+						color: #047857;
+						border-color: rgba(5, 150, 105, 0.12);
+					}
+					.selectOptions .optionItem {
+						background: rgba(167, 243, 208, 0.2);
+						color: #065f46;
+					}
+				}
+			}
+
+			/* Theme: Sunset */
+			&.theme_sunset {
+				background: linear-gradient(135deg, #fff1f2 0%, #fff7ed 100%) !important;
+
+				.formPreviewHeader {
+					border-bottom-color: rgba(220, 38, 38, 0.1);
+					.formTitle { color: #7f1d1d; }
+					.formDesc { color: #991b1b; }
+				}
+
+				.fieldItem {
+					.fieldHeader .fieldLabel { color: #7f1d1d; }
+					.fieldInputPreview {
+						background: rgba(254, 202, 202, 0.35);
+						color: #b91c1c;
+						border-color: rgba(220, 38, 38, 0.08);
+					}
+					.selectOptions .optionItem {
+						background: rgba(254, 202, 202, 0.25);
+						color: #7f1d1d;
+					}
+				}
+			}
+
+			/* Theme: Violet */
+			&.theme_violet {
+				background: linear-gradient(135deg, #faf5ff 0%, #eef2ff 100%) !important;
+
+				.formPreviewHeader {
+					border-bottom-color: rgba(124, 58, 237, 0.1);
+					.formTitle { color: #3b0764; }
+					.formDesc { color: #6b21a8; }
+				}
+
+				.fieldItem {
+					.fieldHeader .fieldLabel { color: #4c1d95; }
+					.fieldInputPreview {
+						background: rgba(196, 181, 253, 0.2);
+						color: #7c3aed;
+						border-color: rgba(124, 58, 237, 0.08);
+					}
+					.selectOptions .optionItem {
+						background: rgba(196, 181, 253, 0.15);
+						color: #4c1d95;
+					}
+				}
+			}
 		}
 
 		/* Individual Field */

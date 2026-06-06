@@ -1,4 +1,4 @@
-﻿@primary: #565e74;
+@primary: #565e74;
 @primary-dim: #4a5268;
 @primary-container: #dae2fd;
 @secondary: #506076;
@@ -370,10 +370,13 @@
 			&.activeTheme { border-color: @primary; background: fade(@primary-container, 10%); font-weight: 600; }
 
 			.themeColor {
-				width: 16px;
-				height: 16px;
-				border-radius: 4px;
+				width: 28px;
+				height: 28px;
+				border-radius: 6px;
 				border: 1px solid rgba(0, 0, 0, 0.08);
+				display: flex;
+				align-items: center;
+				justify-content: center;
 			}
 		}
 	}
@@ -743,35 +746,163 @@
 				.canvasContainer {
 					background-color: #1e293b;
 					box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-					.formTitleInput {
-						color: #f8fafc;
-					}
-					.formDescInput {
-						color: #94a3b8;
-					}
-					.fieldLabel {
-						color: #f8fafc;
-					}
-					.fieldInputPreview {
-						background-color: rgba(15, 23, 42, 0.6);
-						color: #94a3b8;
-					}
-					.formFieldItem:hover {
-						background-color: rgba(15, 23, 42, 0.3);
+					.formTitleDisplay { color: #f8fafc; }
+					.formDescDisplay { color: #94a3b8; }
+					.dropZone {
+						.formFieldItem {
+							&:hover {
+								background-color: rgba(15, 23, 42, 0.3);
+								border-color: #475569;
+							}
+							&.active {
+								border-color: #6366f1;
+								background-color: rgba(99, 102, 241, 0.08);
+							}
+							.fieldLabel { color: #f8fafc; }
+							.requiredMark { color: #f87171; }
+							.fieldInputPreview {
+								background-color: rgba(15, 23, 42, 0.6);
+								color: #64748b;
+							}
+							.fieldActions button {
+								background-color: #334155;
+								box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+								&.btnCopy { color: #818cf8; &:hover { background-color: #6366f1; color: #fff; } }
+								&.btnDelete { color: #f87171; &:hover { background-color: #ef4444; color: #fff; } }
+							}
+							.customDropdownOptions {
+								background-color: #334155;
+								border-color: rgba(100, 116, 139, 0.3);
+								.customOptionItem {
+									color: #e2e8f0;
+									&:hover { background-color: rgba(99, 102, 241, 0.15); color: #a5b4fc; }
+								}
+								.customOptionEmpty { color: #64748b; }
+							}
+						}
+						.dropPlaceholder {
+							color: #64748b;
+							border-color: rgba(100, 116, 139, 0.3);
+						}
 					}
 				}
 			}
 
 			&.theme_mint {
 				background: linear-gradient(135deg, #e0f2fe 0%, #ccfbf1 100%);
+				.canvasContainer {
+					.formTitleDisplay { color: #065f46; }
+					.formDescDisplay { color: #047857; }
+					.dropZone {
+						.formFieldItem {
+							&:hover {
+								background-color: rgba(167, 243, 208, 0.15);
+								border-color: rgba(5, 150, 105, 0.3);
+							}
+							&.active {
+								border-color: #059669;
+								background-color: rgba(5, 150, 105, 0.06);
+							}
+							.fieldLabel { color: #064e3b; }
+							.requiredMark { color: #dc2626; }
+							.fieldInputPreview {
+								background-color: rgba(167, 243, 208, 0.25);
+								color: #047857;
+							}
+							.customDropdownOptions {
+								background-color: #ecfdf5;
+								border-color: rgba(5, 150, 105, 0.15);
+								.customOptionItem {
+									color: #065f46;
+									&:hover { background-color: rgba(167, 243, 208, 0.4); color: #047857; }
+								}
+								.customOptionEmpty { color: #6b7280; }
+							}
+						}
+						.dropPlaceholder {
+							color: #059669;
+							border-color: rgba(5, 150, 105, 0.25);
+						}
+					}
+				}
 			}
 
 			&.theme_sunset {
 				background: linear-gradient(135deg, #fee2e2 0%, #ffedd5 100%);
+				.canvasContainer {
+					.formTitleDisplay { color: #7f1d1d; }
+					.formDescDisplay { color: #991b1b; }
+					.dropZone {
+						.formFieldItem {
+							&:hover {
+								background-color: rgba(254, 202, 202, 0.2);
+								border-color: rgba(220, 38, 38, 0.2);
+							}
+							&.active {
+								border-color: #dc2626;
+								background-color: rgba(220, 38, 38, 0.05);
+							}
+							.fieldLabel { color: #7f1d1d; }
+							.requiredMark { color: #b91c1c; }
+							.fieldInputPreview {
+								background-color: rgba(254, 202, 202, 0.35);
+								color: #b91c1c;
+							}
+							.customDropdownOptions {
+								background-color: #fff1f2;
+								border-color: rgba(220, 38, 38, 0.1);
+								.customOptionItem {
+									color: #7f1d1d;
+									&:hover { background-color: rgba(254, 202, 202, 0.5); color: #991b1b; }
+								}
+								.customOptionEmpty { color: #6b7280; }
+							}
+						}
+						.dropPlaceholder {
+							color: #dc2626;
+							border-color: rgba(220, 38, 38, 0.2);
+						}
+					}
+				}
 			}
 
 			&.theme_violet {
 				background: linear-gradient(135deg, #f3e8ff 0%, #e0e7ff 100%);
+				.canvasContainer {
+					.formTitleDisplay { color: #3b0764; }
+					.formDescDisplay { color: #6b21a8; }
+					.dropZone {
+						.formFieldItem {
+							&:hover {
+								background-color: rgba(196, 181, 253, 0.12);
+								border-color: rgba(124, 58, 237, 0.2);
+							}
+							&.active {
+								border-color: #7c3aed;
+								background-color: rgba(124, 58, 237, 0.05);
+							}
+							.fieldLabel { color: #4c1d95; }
+							.requiredMark { color: #9333ea; }
+							.fieldInputPreview {
+								background-color: rgba(196, 181, 253, 0.2);
+								color: #7c3aed;
+							}
+							.customDropdownOptions {
+								background-color: #faf5ff;
+								border-color: rgba(124, 58, 237, 0.1);
+								.customOptionItem {
+									color: #4c1d95;
+									&:hover { background-color: rgba(196, 181, 253, 0.3); color: #6b21a8; }
+								}
+								.customOptionEmpty { color: #6b7280; }
+							}
+						}
+						.dropPlaceholder {
+							color: #7c3aed;
+							border-color: rgba(124, 58, 237, 0.2);
+						}
+					}
+				}
 			}
 
 			.canvasContainer {

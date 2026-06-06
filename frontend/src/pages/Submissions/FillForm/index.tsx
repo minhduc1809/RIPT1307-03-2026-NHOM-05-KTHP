@@ -255,7 +255,7 @@ const FillForm: React.FC = (props: any) => {
 			</div>
 
 			{/* Form Fields */}
-			<div className={styles.formCard}>
+			<div className={`${styles.formCard} ${styles[`theme_${(form.settings as any)?.theme || 'default'}`] || ''}`}>
 				<div className={styles.cardHeader}>
 					<div className={styles.cardIcon}>📋</div>
 					<div className={styles.cardTitle}>
