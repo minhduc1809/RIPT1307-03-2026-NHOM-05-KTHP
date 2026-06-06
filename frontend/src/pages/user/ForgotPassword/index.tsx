@@ -317,7 +317,7 @@ const ForgotPassword: React.FC = () => {
 								size="large"
 								className={styles.submitBtn}
 								onClick={() => history.push('/user/login')}
-								style={{ marginTop: 16 }}
+								style={{ margin: '16px auto 0' }}
 							>
 								Đăng nhập ngay
 							</Button>
