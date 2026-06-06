@@ -54,8 +54,9 @@
 			gap: 10px;
 
 			.refreshBtn {
-				display: flex;
+				display: inline-flex;
 				align-items: center;
+				justify-content: center;
 				gap: 8px;
 				background: @color-surface;
 				border: 1px solid @color-border;
@@ -68,6 +69,12 @@
 				color: @color-text-secondary;
 				transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+				line-height: 1;
+
+				span {
+					color: inherit;
+					margin-top: 2px; // slightly adjust text baseline if lucide icon is misaligned
+				}
 
 				&:hover {
 					color: @color-text-primary;
@@ -76,8 +83,15 @@
 					transform: translateY(-1px);
 				}
 
-				&:active {
+				&:active:not(:disabled) {
 					transform: scale(0.97);
+				}
+
+				&:disabled {
+					opacity: 0.7;
+					cursor: not-allowed;
+					color: @color-text-secondary;
+					border-color: @color-border;
 				}
 
 				.refreshIcon {

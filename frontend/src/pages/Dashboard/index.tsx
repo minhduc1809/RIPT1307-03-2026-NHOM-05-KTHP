@@ -1,7 +1,5 @@
 import {
 	InboxOutlined,
-	ReloadOutlined,
-	CalendarOutlined,
 	AppstoreTwoTone,
 	CheckCircleTwoTone,
 	CloseCircleTwoTone,
@@ -9,6 +7,7 @@ import {
 	TrophyTwoTone,
 	DashboardTwoTone,
 } from '@ant-design/icons';
+import { RefreshCcw } from 'lucide-react';
 import { Spin, Tooltip } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import CountUp from 'react-countup';
@@ -184,7 +183,7 @@ const Dashboard: React.FC = () => {
 			fontWeight: 600,
 			fontSize: '12px',
 			labels: { colors: '#64748b' },
-			markers: { width: 10, height: 10, radius: 4 },
+			markers: { width: 10, height: 10, radius: 4 } as any,
 			itemMargin: { horizontal: 8, vertical: 4 },
 		},
 		dataLabels: {
@@ -346,8 +345,8 @@ const Dashboard: React.FC = () => {
 							onClick={() => fetchAll(true)}
 							disabled={refreshing}
 						>
-							<ReloadOutlined className={styles.refreshIcon} />
-							{refreshing ? 'Đang tải...' : 'Làm mới'}
+							<RefreshCcw size={16} className={styles.refreshIcon} />
+							<span>Làm mới</span>
 						</button>
 					</Tooltip>
 				</div>

@@ -5,7 +5,6 @@ import {
 	ClockCircleOutlined,
 	CloseOutlined,
 	ExclamationCircleOutlined,
-	InfoCircleOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
 import { Button, message, Pagination, Spin } from 'antd';
@@ -19,7 +18,7 @@ import {
 	markAsRead,
 } from '@/services/Notifications/notificationApi';
 import type { INotification } from '@/services/Notifications/notificationApi';
-import { connectSocket, disconnectSocket, offSocketEvent, onSocketEvent } from '@/services/socket';
+import { connectSocket, offSocketEvent, onSocketEvent } from '@/services/socket';
 import styles from './index.less';
 
 type FilterType = 'all' | 'unread' | 'read';
@@ -109,6 +108,7 @@ const Notifications: React.FC = () => {
 				userId: payload.userId || '',
 				title: payload.title || 'Thông báo mới',
 				message: payload.message || '',
+				content: payload.content || payload.message || '',
 				type: payload.type,
 				metadata: payload.metadata,
 				read: false,
@@ -296,7 +296,7 @@ const Notifications: React.FC = () => {
 											onClick={(e) => {
 												e.stopPropagation();
 												handleMarkAsRead(notif);
-												history.push(`/submissions/${notif.metadata.submissionId}`);
+												history.push(`/submissions/${notif.metadata?.submissionId}`);
 											}}
 										>
 											Xem chi tiết

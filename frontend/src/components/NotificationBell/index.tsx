@@ -7,7 +7,7 @@ import {
 	InfoCircleOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
-import { Badge, Button, Empty, Spin } from 'antd';
+import { Badge, Button, Spin } from 'antd';
 import moment from 'moment';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { history } from 'umi';
@@ -80,7 +80,7 @@ const NotificationBell: React.FC = () => {
 
 	// Socket real-time
 	useEffect(() => {
-		const socket = connectSocket();
+		connectSocket();
 		const handleNew = () => {
 			fetchUnread();
 			if (open) fetchNotifications();

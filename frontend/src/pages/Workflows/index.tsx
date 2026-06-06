@@ -393,7 +393,7 @@ const WorkflowsDashboard: React.FC = () => {
 						</div>
 					) : 'Chi tiết Workflow'
 				}
-				open={drawerOpen}
+				visible={drawerOpen}
 				onClose={() => { setDrawerOpen(false); setSelectedWorkflow(null); }}
 				width={560}
 				extra={

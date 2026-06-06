@@ -3,8 +3,6 @@ import { history, useLocation } from 'umi';
 import { message } from 'antd';
 import { DragDropContext, Droppable, Draggable, DropResult, DragStart, DragUpdate } from 'react-beautiful-dnd';
 import {
-	AppstoreOutlined,
-	BgColorsOutlined,
 	FontSizeOutlined,
 	NumberOutlined,
 	CalendarOutlined,
@@ -15,9 +13,6 @@ import {
 	ControlOutlined,
 	DownOutlined,
 	MinusCircleOutlined,
-	SettingOutlined,
-	QuestionCircleOutlined,
-	UserOutlined,
 	SelectOutlined,
 	LockOutlined,
 	GlobalOutlined,
@@ -69,7 +64,6 @@ const FormBuilder: React.FC = () => {
 	const [fields, setFields] = useState<IBuilderField[]>([]);
 	const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
 	const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-	const [activeTab, setActiveTab] = useState<'components' | 'themes' | 'settings'>('components');
 	const [themePreset, setThemePreset] = useState<'default' | 'dark' | 'mint' | 'sunset' | 'violet'>('default');
 	const [allowAnonymous, setAllowAnonymous] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
@@ -127,34 +121,15 @@ const FormBuilder: React.FC = () => {
 	const selectedField = fields.find((f) => f.id === selectedFieldId);
 
 	// Track what's being dragged for inline ghost preview
-	const [draggingType, setDraggingType] = useState<string | null>(null);
-	const [dropIndex, setDropIndex] = useState<number | null>(null);
-	const [draggingFromCanvas, setDraggingFromCanvas] = useState(false);
-
 	const onDragStart = (start: DragStart) => {
-		if (start.source.droppableId === 'toolbox') {
-			setDraggingType(FIELD_TYPES[start.source.index]?.type || null);
-			setDraggingFromCanvas(false);
-		} else {
-			const field = fields[start.source.index];
-			setDraggingType(field?.type || null);
-			setDraggingFromCanvas(true);
-		}
-		setDropIndex(null);
+		// Drag start logic if needed
 	};
 
 	const onDragUpdate = (update: DragUpdate) => {
-		if (update.destination?.droppableId === 'canvas') {
-			setDropIndex(update.destination.index);
-		} else {
-			setDropIndex(null);
-		}
+		// Drag update logic if needed
 	};
 
 	const onDragEnd = (result: DropResult) => {
-		setDraggingType(null);
-		setDropIndex(null);
-		setDraggingFromCanvas(false);
 		const { source, destination } = result;
 
 		// Dropped outside a valid droppable area
