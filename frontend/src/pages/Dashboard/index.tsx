@@ -1,11 +1,12 @@
+// design: smartadmin.pen · frame 03
 import {
+	CheckCircleOutlined,
+	ClockCircleOutlined,
+	CloseCircleOutlined,
+	FieldTimeOutlined,
+	FileTextOutlined,
 	InboxOutlined,
-	AppstoreTwoTone,
-	CheckCircleTwoTone,
-	CloseCircleTwoTone,
-	ClockCircleTwoTone,
-	TrophyTwoTone,
-	DashboardTwoTone,
+	TrophyOutlined,
 } from '@ant-design/icons';
 import { RefreshCcw } from 'lucide-react';
 import { Spin, Tooltip } from 'antd';
@@ -25,15 +26,11 @@ import {
 } from '@/services/Dashboard/dashboardApi';
 import styles from './index.less';
 
-// =============================================
-// TYPE DEFINITIONS
-// =============================================
 interface ISummary {
 	total: number;
 	pending: number;
 	approved: number;
 	rejected: number;
-	// Legacy fields (may be added later)
 	totalForms?: number;
 	totalSubmissions?: number;
 	totalUsers?: number;
@@ -66,16 +63,10 @@ interface ISlaMetric {
 	avgDurationHours: number;
 }
 
-// =============================================
-// HELPER – extract data from axios response
-// =============================================
 function extractData<T>(res: any): T {
 	return res?.data?.data ?? res?.data ?? res;
 }
 
-// =============================================
-// STATUS COLOR MAP
-// =============================================
 const STATUS_COLORS: Record<string, string> = {
 	PENDING: '#f59e0b',
 	APPROVED: '#10b981',
@@ -91,130 +82,108 @@ function getStatusColor(status: string): string {
 	return STATUS_COLORS[status.toUpperCase()] || '#94a3b8';
 }
 
-// =============================================
-// BAR GRADIENT COLORS (for top forms)
-// =============================================
-const BAR_GRADIENTS = [
-	'linear-gradient(90deg, #6366f1, #818cf8)',
-	'linear-gradient(90deg, #06b6d4, #67e8f9)',
-	'linear-gradient(90deg, #f59e0b, #fbbf24)',
-	'linear-gradient(90deg, #8b5cf6, #a78bfa)',
-	'linear-gradient(90deg, #ec4899, #f472b6)',
-	'linear-gradient(90deg, #10b981, #34d399)',
-	'linear-gradient(90deg, #f97316, #fb923c)',
-	'linear-gradient(90deg, #14b8a6, #2dd4bf)',
-	'linear-gradient(90deg, #e11d48, #fb7185)',
-	'linear-gradient(90deg, #7c3aed, #a78bfa)',
+const STAT_CARDS: { key: keyof ISummary; icon: React.ReactNode; color: string; label: string }[] = [
+	{ key: 'total', icon: <FileTextOutlined />, color: 'indigo', label: 'Tổng lượt nộp biểu mẫu' },
+	{ key: 'approved', icon: <CheckCircleOutlined />, color: 'green', label: 'Đã được phê duyệt' },
+	{ key: 'rejected', icon: <CloseCircleOutlined />, color: 'red', label: 'Bị từ chối' },
+	{ key: 'pending', icon: <ClockCircleOutlined />, color: 'amber', label: 'Đang chờ xử lý' },
 ];
 
-// =============================================
-// DASHBOARD COMPONENT
-// =============================================
 const Dashboard: React.FC = () => {
 	const { initialState } = useModel('@@initialState');
 	const userRole = initialState?.currentUser?.role;
 	const isFullDashboard = userRole === 'ADMIN' || userRole === 'MANAGER';
 
-	// Data state
 	const [summary, setSummary] = useState<ISummary | null>(null);
 	const [statusData, setStatusData] = useState<IStatusItem[]>([]);
 	const [dayData, setDayData] = useState<IDayItem[]>([]);
 	const [topForms, setTopForms] = useState<ITopForm[]>([]);
 	const [slaMetrics, setSlaMetrics] = useState<ISlaMetric[]>([]);
 
-	// Loading state
 	const [loading, setLoading] = useState(true);
 	const [refreshing, setRefreshing] = useState(false);
-
-	// Chart controls
 	const [selectedDays, setSelectedDays] = useState(30);
 
-	// ----- FETCH ALL DATA -----
-	const fetchAll = useCallback(async (showRefresh = false) => {
-		if (showRefresh) setRefreshing(true);
-		else setLoading(true);
+	const fetchAll = useCallback(
+		async (showRefresh = false) => {
+			if (showRefresh) setRefreshing(true);
+			else setLoading(true);
 
-		try {
-			if (isFullDashboard) {
-				const [summaryRes, statusRes, dayRes, topRes, slaRes] = await Promise.all([
-					getDashboardSummary(),
-					getSubmissionsByStatus(),
-					getSubmissionsByDay(selectedDays),
-					getTopForms(10),
-					getSlaMetrics(selectedDays),
-				]);
+			try {
+				if (isFullDashboard) {
+					const [summaryRes, statusRes, dayRes, topRes, slaRes] = await Promise.all([
+						getDashboardSummary(),
+						getSubmissionsByStatus(),
+						getSubmissionsByDay(selectedDays),
+						getTopForms(10),
+						getSlaMetrics(selectedDays),
+					]);
 
-				setSummary(extractData<ISummary>(summaryRes));
+					setSummary(extractData<ISummary>(summaryRes));
 
-				const rawStatus = extractData<IStatusItem[] | any>(statusRes);
-				setStatusData(Array.isArray(rawStatus) ? rawStatus : []);
+					const rawStatus = extractData<IStatusItem[] | any>(statusRes);
+					setStatusData(Array.isArray(rawStatus) ? rawStatus : []);
 
-				const rawDay = extractData<IDayItem[] | any>(dayRes);
-				setDayData(Array.isArray(rawDay) ? rawDay : []);
+					const rawDay = extractData<IDayItem[] | any>(dayRes);
+					setDayData(Array.isArray(rawDay) ? rawDay : []);
 
-				const rawTop = extractData<ITopForm[] | any>(topRes);
-				setTopForms(Array.isArray(rawTop) ? rawTop : []);
+					const rawTop = extractData<ITopForm[] | any>(topRes);
+					setTopForms(Array.isArray(rawTop) ? rawTop : []);
 
-				const rawSla = extractData<ISlaMetric[] | any>(slaRes);
-				setSlaMetrics(Array.isArray(rawSla) ? rawSla : []);
-			} else {
-				const summaryRes = await getMyDashboardSummary();
-				setSummary(extractData<ISummary>(summaryRes));
+					const rawSla = extractData<ISlaMetric[] | any>(slaRes);
+					setSlaMetrics(Array.isArray(rawSla) ? rawSla : []);
+				} else {
+					const summaryRes = await getMyDashboardSummary();
+					setSummary(extractData<ISummary>(summaryRes));
+				}
+			} catch (error) {
+				console.error('Dashboard fetch error', error);
+			} finally {
+				setLoading(false);
+				setRefreshing(false);
 			}
-		} catch (error) {
-			console.error('Dashboard fetch error', error);
-		} finally {
-			setLoading(false);
-			setRefreshing(false);
-		}
-	}, [selectedDays, isFullDashboard]);
+		},
+		[selectedDays, isFullDashboard],
+	);
 
 	useEffect(() => {
 		fetchAll();
 	}, [fetchAll]);
 
-	// ----- CHART CONFIG: DONUT (status) -----
 	const donutOptions: ApexOptions = {
 		chart: { type: 'donut', fontFamily: 'inherit' },
 		labels: statusData.map((s) => s.status),
 		colors: statusData.map((s) => getStatusColor(s.status)),
 		legend: {
-			position: 'bottom',
+			position: 'right',
 			fontWeight: 600,
 			fontSize: '12px',
-			labels: { colors: '#64748b' },
-			markers: { width: 10, height: 10, radius: 4 } as any,
-			itemMargin: { horizontal: 8, vertical: 4 },
+			labels: { colors: '#334155' },
+			markers: { width: 8, height: 8, radius: 8 } as any,
+			itemMargin: { horizontal: 4, vertical: 4 },
 		},
-		dataLabels: {
-			enabled: true,
-			dropShadow: { enabled: false },
-			style: { fontSize: '12px', fontWeight: 700 },
-		},
+		dataLabels: { enabled: false },
 		plotOptions: {
 			pie: {
 				donut: {
-					size: '58%',
+					size: '66%',
 					labels: {
 						show: true,
 						total: {
 							show: true,
-							label: 'Tổng',
-							fontSize: '13px',
-							fontWeight: 800,
-							color: '#94a3b8',
+							label: 'Tổng số',
+							fontSize: '11px',
+							fontWeight: 500,
+							color: '#64748b',
 							formatter: (w) => {
-								const total = w.globals.seriesTotals.reduce(
-									(a: number, b: number) => a + b,
-									0,
-								);
-								return total.toString();
+								const total = w.globals.seriesTotals.reduce((a: number, b: number) => a + b, 0);
+								return total.toLocaleString();
 							},
 						},
 						value: {
-							fontSize: '28px',
-							fontWeight: 900,
-							color: '#1a2332',
+							fontSize: '24px',
+							fontWeight: 800,
+							color: '#0f172a',
 							offsetY: 4,
 						},
 					},
@@ -223,22 +192,19 @@ const Dashboard: React.FC = () => {
 		},
 		stroke: { width: 2, colors: ['#fff'] },
 		tooltip: {
-			y: {
-				formatter: (val: number) => `${val} submissions`,
-			},
+			y: { formatter: (val: number) => `${val} submissions` },
 		},
 		responsive: [
 			{
 				breakpoint: 576,
 				options: {
-					chart: { height: 300 },
-					legend: { fontSize: '11px' },
+					chart: { height: 280 },
+					legend: { position: 'bottom' },
 				},
 			},
 		],
 	};
 
-	// ----- CHART CONFIG: AREA (daily submissions) -----
 	const areaOptions: ApexOptions = {
 		chart: {
 			type: 'area',
@@ -246,26 +212,22 @@ const Dashboard: React.FC = () => {
 			toolbar: { show: false },
 			zoom: { enabled: false },
 		},
-		colors: ['#6366f1'],
+		colors: ['#4f46e5'],
 		dataLabels: { enabled: false },
-		stroke: { curve: 'smooth', width: 3 },
+		stroke: { curve: 'smooth', width: 2.5 },
 		fill: {
 			type: 'gradient',
 			gradient: {
 				shadeIntensity: 1,
-				opacityFrom: 0.35,
-				opacityTo: 0.05,
-				stops: [0, 90, 100],
+				opacityFrom: 0.3,
+				opacityTo: 0,
+				stops: [0, 100],
 			},
 		},
 		xaxis: {
 			categories: dayData.map((d) => moment(d.date).format('DD/MM')),
 			labels: {
-				style: {
-					colors: '#94a3b8',
-					fontSize: '10px',
-					fontWeight: 600,
-				},
+				style: { colors: '#94a3b8', fontSize: '11px', fontWeight: 500 },
 				rotate: -45,
 				rotateAlways: dayData.length > 15,
 			},
@@ -274,41 +236,24 @@ const Dashboard: React.FC = () => {
 		},
 		yaxis: {
 			labels: {
-				style: {
-					colors: '#94a3b8',
-					fontSize: '11px',
-					fontWeight: 600,
-				},
+				style: { colors: '#94a3b8', fontSize: '11px', fontWeight: 500 },
 				formatter: (val: number) => Math.round(val).toString(),
 			},
 		},
 		grid: {
-			borderColor: '#f0f4f7',
-			strokeDashArray: 4,
+			borderColor: '#f1f5f9',
+			strokeDashArray: 0,
 			xaxis: { lines: { show: false } },
 		},
 		tooltip: {
 			x: { format: 'dd/MM/yyyy' },
 			y: { formatter: (val: number) => `${val} submissions` },
 		},
-		responsive: [
-			{
-				breakpoint: 576,
-				options: {
-					chart: { height: 260 },
-				},
-			},
-		],
+		responsive: [{ breakpoint: 576, options: { chart: { height: 220 } } }],
 	};
 
-	const areaSeries = [
-		{
-			name: 'Submissions',
-			data: dayData.map((d) => d.count),
-		},
-	];
+	const areaSeries = [{ name: 'Submissions', data: dayData.map((d) => d.count) }];
 
-	// ----- RENDER HELPERS -----
 	const maxCount = topForms.length > 0 ? topForms[0].count : 1;
 
 	const getRankClass = (idx: number) => {
@@ -318,7 +263,12 @@ const Dashboard: React.FC = () => {
 		return styles.rankOther;
 	};
 
-	// ----- LOADING STATE -----
+	const getRateClass = (rate: number) => {
+		if (rate >= 90) return styles.good;
+		if (rate >= 70) return styles.warn;
+		return styles.bad;
+	};
+
 	if (loading) {
 		return (
 			<div className={styles.dashboardPage}>
@@ -332,265 +282,174 @@ const Dashboard: React.FC = () => {
 
 	return (
 		<div className={styles.dashboardPage}>
-			{/* ====== HEADER ====== */}
 			<div className={styles.dashboardHeader}>
 				<div className={styles.headerLeft}>
 					<h1>Dashboard</h1>
-					<p>{isFullDashboard ? 'Tổng quan hệ thống quản lý biểu mẫu' : 'Tổng quan yêu cầu của tôi'}</p>
+					<p>{isFullDashboard ? 'Tổng quan hệ thống và phân tích dữ liệu submissions' : 'Tổng quan yêu cầu của tôi'}</p>
 				</div>
-				<div className={styles.headerRight}>
-					<Tooltip title="Làm mới dữ liệu">
-						<button
-							className={`${styles.refreshBtn} ${refreshing ? styles.spinning : ''}`}
-							onClick={() => fetchAll(true)}
-							disabled={refreshing}
-						>
-							<RefreshCcw size={16} className={styles.refreshIcon} />
-							<span>Làm mới</span>
-						</button>
-					</Tooltip>
-				</div>
+				<Tooltip title="Làm mới dữ liệu">
+					<button
+						type="button"
+						className={`${styles.refreshBtn} ${refreshing ? styles.spinning : ''}`}
+						onClick={() => fetchAll(true)}
+						disabled={refreshing}
+					>
+						<RefreshCcw size={14} className={styles.refreshIcon} />
+						<span>Làm mới</span>
+					</button>
+				</Tooltip>
 			</div>
 
-			{/* ====== STAT CARDS ====== */}
 			<div className={styles.statsGrid}>
-				<div className={`${styles.statCard} ${styles.forms} ${styles.fadeIn}`} style={{ animationDelay: '0.05s' }}>
-					<div className={styles.statTop}>
-						<span className={styles.statLabel}>Tổng submissions</span>
-						<div className={`${styles.statIcon} ${styles.formIcon}`}>
-							<AppstoreTwoTone twoToneColor="#6366f1" />
+				{STAT_CARDS.map((card, idx) => (
+					<div key={card.key} className={`${styles.statCard} ${styles.fadeIn}`} style={{ animationDelay: `${0.05 * (idx + 1)}s` }}>
+						<div className={`${styles.statIcon} ${styles[card.color]}`}>{card.icon}</div>
+						<div>
+							<div className={styles.statValue}>
+								<CountUp end={(summary?.[card.key] as number) ?? 0} duration={1.5} separator="," />
+							</div>
+							<div className={styles.statLabel}>{card.label}</div>
 						</div>
 					</div>
-					<div className={styles.statValue}>
-						<CountUp end={summary?.total ?? 0} duration={1.5} separator="," />
-					</div>
-					<div className={`${styles.statChange} ${styles.neutral}`}>
-						<DashboardTwoTone twoToneColor="#94a3b8" /> Tổng lượt nộp biểu mẫu
-					</div>
-				</div>
-
-				<div className={`${styles.statCard} ${styles.submissions} ${styles.fadeIn}`} style={{ animationDelay: '0.1s' }}>
-					<div className={styles.statTop}>
-						<span className={styles.statLabel}>Đã duyệt</span>
-						<div className={`${styles.statIcon} ${styles.submissionIcon}`}>
-							<CheckCircleTwoTone twoToneColor="#06b6d4" />
-						</div>
-					</div>
-					<div className={styles.statValue}>
-						<CountUp end={summary?.approved ?? 0} duration={1.5} separator="," />
-					</div>
-					<div className={`${styles.statChange} ${styles.neutral}`}>
-						<CheckCircleTwoTone twoToneColor="#94a3b8" /> Submissions đã được phê duyệt
-					</div>
-				</div>
-
-				<div className={`${styles.statCard} ${styles.users} ${styles.fadeIn}`} style={{ animationDelay: '0.15s' }}>
-					<div className={styles.statTop}>
-						<span className={styles.statLabel}>Từ chối</span>
-						<div className={`${styles.statIcon} ${styles.userIcon}`}>
-							<CloseCircleTwoTone twoToneColor="#f59e0b" />
-						</div>
-					</div>
-					<div className={styles.statValue}>
-						<CountUp end={summary?.rejected ?? 0} duration={1.5} separator="," />
-					</div>
-					<div className={`${styles.statChange} ${styles.neutral}`}>
-						<CloseCircleTwoTone twoToneColor="#94a3b8" /> Submissions bị từ chối
-					</div>
-				</div>
-
-				<div className={`${styles.statCard} ${styles.pending} ${styles.fadeIn}`} style={{ animationDelay: '0.2s' }}>
-					<div className={styles.statTop}>
-						<span className={styles.statLabel}>Chờ duyệt</span>
-						<div className={`${styles.statIcon} ${styles.pendingIcon}`}>
-							<ClockCircleTwoTone twoToneColor="#8b5cf6" />
-						</div>
-					</div>
-					<div className={styles.statValue}>
-						<CountUp end={summary?.pending ?? 0} duration={1.5} separator="," />
-					</div>
-					<div className={`${styles.statChange} ${styles.neutral}`}>
-						<ClockCircleTwoTone twoToneColor="#94a3b8" /> Submissions đang chờ xử lý
-					</div>
-				</div>
+				))}
 			</div>
 
-			{/* ====== CHARTS (ADMIN/MANAGER only) ====== */}
-			{isFullDashboard && <div className={styles.chartsGrid}>
-				{/* Donut – Submissions by Status */}
-				<div className={`${styles.chartCard} ${styles.fadeIn}`} style={{ animationDelay: '0.25s' }}>
-					<div className={styles.chartHeader}>
-						<div className={styles.chartTitle}>
-							<h3>Phân bổ theo trạng thái</h3>
-							<p>Tỷ lệ submission theo từng trạng thái</p>
-						</div>
-					</div>
-					<div className={styles.chartBody}>
-						{statusData.length > 0 ? (
-							<Chart
-								options={donutOptions}
-								series={statusData.map((s) => s.count)}
-								type="donut"
-								width="100%"
-								height={340}
-							/>
-						) : (
-							<div className={styles.emptyState}>
-								<InboxOutlined className={styles.emptyIcon} />
-								<span>Chưa có dữ liệu submission</span>
+			{isFullDashboard && (
+				<div className={styles.chartsGrid}>
+					<div className={`${styles.chartCard} ${styles.fadeIn}`} style={{ animationDelay: '0.25s' }}>
+						<div className={styles.chartHeader}>
+							<div className={styles.chartTitle}>
+								<h3>Phân bổ theo trạng thái</h3>
+								<p>Tỷ lệ submission theo từng trạng thái</p>
 							</div>
-						)}
-					</div>
-				</div>
-
-				{/* Area – Submissions by Day */}
-				<div className={`${styles.chartCard} ${styles.fadeIn}`} style={{ animationDelay: '0.3s' }}>
-					<div className={styles.chartHeader}>
-						<div className={styles.chartTitle}>
-							<h3>Submissions theo ngày</h3>
-							<p>Biểu đồ {selectedDays} ngày gần nhất</p>
 						</div>
-						<div className={styles.daysSelector}>
-							{[7, 14, 30].map((d) => (
-								<button
-									key={d}
-									className={`${styles.dayBtn} ${selectedDays === d ? styles.active : ''}`}
-									onClick={() => setSelectedDays(d)}
-								>
-									{d}D
-								</button>
-							))}
-						</div>
-					</div>
-					<div className={styles.chartBody}>
-						{dayData.length > 0 ? (
-							<Chart
-								options={areaOptions}
-								series={areaSeries}
-								type="area"
-								width="100%"
-								height={320}
-							/>
-						) : (
-							<div className={styles.emptyState}>
-								<InboxOutlined className={styles.emptyIcon} />
-								<span>Chưa có dữ liệu submission</span>
-							</div>
-						)}
-					</div>
-				</div>
-			</div>}
-
-			{/* ====== TOP FORMS (ADMIN/MANAGER only) ====== */}
-			{isFullDashboard &&
-			<div className={`${styles.topFormsSection} ${styles.fadeIn}`} style={{ animationDelay: '0.35s' }}>
-				<div className={styles.topFormsHeader}>
-					<div className={styles.topFormsTitle}>
-						<h3>
-							<TrophyTwoTone twoToneColor="#f59e0b" style={{ marginRight: 8 }} />
-							Top biểu mẫu được sử dụng nhiều nhất
-						</h3>
-						<p>Danh sách {topForms.length} form có số lượt nộp cao nhất</p>
-					</div>
-				</div>
-
-				{topForms.length > 0 ? (
-					<div className={styles.topFormsList}>
-						{topForms.map((form, idx) => (
-							<div key={form.formId} className={styles.topFormItem}>
-								<div className={`${styles.rankBadge} ${getRankClass(idx)}`}>
-									{idx + 1}
+						<div className={styles.chartBody}>
+							{statusData.length > 0 ? (
+								<Chart
+									options={donutOptions}
+									series={statusData.map((s) => s.count)}
+									type="donut"
+									width="100%"
+									height={240}
+								/>
+							) : (
+								<div className={styles.emptyState}>
+									<InboxOutlined className={styles.emptyIcon} />
+									<span>Chưa có dữ liệu submission</span>
 								</div>
-								<div className={styles.formInfo}>
-									<div className={styles.formName}>{form.formName ?? 'Không có tên'}</div>
-									<div className={styles.formMeta}>ID: {form.formId.slice(0, 8)}...</div>
-									<div className={styles.formBar}>
-										<div
-											className={styles.barFill}
-											style={{
-												width: `${(form.count / maxCount) * 100}%`,
-												background: BAR_GRADIENTS[idx % BAR_GRADIENTS.length],
-											}}
-										/>
+							)}
+						</div>
+					</div>
+
+					<div className={`${styles.chartCard} ${styles.fadeIn}`} style={{ animationDelay: '0.3s' }}>
+						<div className={styles.chartHeader}>
+							<div className={styles.chartTitle}>
+								<h3>Submissions theo ngày</h3>
+								<p>Xu hướng nộp biểu mẫu {selectedDays} ngày gần nhất</p>
+							</div>
+							<div className={styles.daysSelector}>
+								{[7, 14, 30].map((d) => (
+									<button
+										type="button"
+										key={d}
+										className={`${styles.dayBtn} ${selectedDays === d ? styles.active : ''}`}
+										onClick={() => setSelectedDays(d)}
+									>
+										{d}D
+									</button>
+								))}
+							</div>
+						</div>
+						<div className={styles.chartBody}>
+							{dayData.length > 0 ? (
+								<Chart options={areaOptions} series={areaSeries} type="area" width="100%" height={210} />
+							) : (
+								<div className={styles.emptyState}>
+									<InboxOutlined className={styles.emptyIcon} />
+									<span>Chưa có dữ liệu submission</span>
+								</div>
+							)}
+						</div>
+					</div>
+				</div>
+			)}
+
+			{isFullDashboard && (
+				<div className={styles.bottomGrid}>
+					<div className={`${styles.sectionCard} ${styles.fadeIn}`} style={{ animationDelay: '0.35s' }}>
+						<div className={styles.sectionHeader}>
+							<TrophyOutlined className={`${styles.sectionIcon} ${styles.amber}`} />
+							<h3>Top biểu mẫu được sử dụng nhiều nhất</h3>
+						</div>
+
+						{topForms.length > 0 ? (
+							<div className={styles.topFormsList}>
+								{topForms.map((form, idx) => (
+									<div key={form.formId} className={styles.topFormItem}>
+										<div className={`${styles.rankBadge} ${getRankClass(idx)}`}>{idx + 1}</div>
+										<div className={styles.formInfo}>
+											<div className={styles.formName}>{form.formName ?? 'Không có tên'}</div>
+											<div className={styles.formBar}>
+												<div className={styles.barFill} style={{ width: `${(form.count / maxCount) * 100}%` }} />
+											</div>
+										</div>
+										<div className={styles.formCount}>
+											<span className={styles.countValue}>
+												<CountUp end={form.count} duration={1.2} separator="," />
+											</span>
+											<span className={styles.countLabel}>lượt nộp</span>
+										</div>
 									</div>
-								</div>
-								<div className={styles.formCount}>
-									<span className={styles.countValue}>
-										<CountUp end={form.count} duration={1.2} separator="," />
-									</span>
-									<span className={styles.countLabel}>lượt nộp</span>
-								</div>
+								))}
 							</div>
-						))}
-					</div>
-				) : (
-					<div className={styles.emptyState}>
-						<InboxOutlined className={styles.emptyIcon} />
-						<span>Chưa có dữ liệu top forms</span>
-					</div>
-				)}
-			</div>}
-
-			{/* ====== SLA METRICS (ADMIN/MANAGER only) ====== */}
-			{isFullDashboard && slaMetrics.length > 0 && (
-				<div className={`${styles.topFormsSection} ${styles.fadeIn}`} style={{ animationDelay: '0.4s' }}>
-					<div className={styles.topFormsHeader}>
-						<div className={styles.topFormsTitle}>
-							<h3>
-								<ClockCircleTwoTone twoToneColor="#6366f1" style={{ marginRight: 8 }} />
-								SLA Compliance
-							</h3>
-							<p>Tỷ lệ tuân thủ SLA theo từng bước quy trình ({selectedDays} ngày gần nhất)</p>
-						</div>
+						) : (
+							<div className={styles.emptyState}>
+								<InboxOutlined className={styles.emptyIcon} />
+								<span>Chưa có dữ liệu top forms</span>
+							</div>
+						)}
 					</div>
 
-					<div style={{ overflowX: 'auto' }}>
-						<table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-							<thead>
-								<tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
-									<th style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 700, color: '#475569' }}>Quy trình</th>
-									<th style={{ padding: '10px 14px', textAlign: 'left', fontWeight: 700, color: '#475569' }}>Bước</th>
-									<th style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 700, color: '#475569' }}>SLA (giờ)</th>
-									<th style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 700, color: '#475569' }}>Tổng</th>
-									<th style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 700, color: '#475569' }}>Vi phạm</th>
-									<th style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 700, color: '#475569' }}>TB (giờ)</th>
-									<th style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 700, color: '#475569' }}>Tuân thủ</th>
-								</tr>
-							</thead>
-							<tbody>
-								{slaMetrics.map((m, idx) => {
-									const complianceColor =
-										m.complianceRate >= 90 ? '#10b981' :
-										m.complianceRate >= 70 ? '#f59e0b' : '#ef4444';
-									return (
-										<tr key={idx} style={{ borderBottom: '1px solid #f0f4f7' }}>
-											<td style={{ padding: '10px 14px', fontWeight: 500 }}>{m.definitionName}</td>
-											<td style={{ padding: '10px 14px', color: '#64748b' }}>{m.step}</td>
-											<td style={{ padding: '10px 14px', textAlign: 'center' }}>{m.slaHours}</td>
-											<td style={{ padding: '10px 14px', textAlign: 'center' }}>{m.totalInstances}</td>
-											<td style={{ padding: '10px 14px', textAlign: 'center', color: m.breachedCount > 0 ? '#ef4444' : '#94a3b8', fontWeight: m.breachedCount > 0 ? 700 : 400 }}>
-												{m.breachedCount}
-											</td>
-											<td style={{ padding: '10px 14px', textAlign: 'center' }}>{m.avgDurationHours}</td>
-											<td style={{ padding: '10px 14px', textAlign: 'center' }}>
-												<span style={{
-													display: 'inline-block',
-													padding: '2px 10px',
-													borderRadius: 12,
-													background: `${complianceColor}18`,
-													color: complianceColor,
-													fontWeight: 700,
-													fontSize: 12,
-												}}>
-													{m.complianceRate}%
-												</span>
-											</td>
+					{slaMetrics.length > 0 && (
+						<div className={`${styles.sectionCard} ${styles.fadeIn}`} style={{ animationDelay: '0.4s' }}>
+							<div className={styles.sectionHeader}>
+								<FieldTimeOutlined className={`${styles.sectionIcon} ${styles.indigo}`} />
+								<h3>Tuân thủ SLA theo bước</h3>
+							</div>
+
+							<div style={{ overflowX: 'auto' }}>
+								<table className={styles.slaTable}>
+									<thead>
+										<tr>
+											<th>QUY TRÌNH</th>
+											<th>BƯỚC</th>
+											<th className={styles.num}>SLA (GIỜ)</th>
+											<th className={styles.num}>TỔNG</th>
+											<th className={styles.num}>VI PHẠM</th>
+											<th className={styles.num}>TB (GIỜ)</th>
+											<th className={styles.num}>TUÂN THỦ</th>
 										</tr>
-									);
-								})}
-							</tbody>
-						</table>
-					</div>
+									</thead>
+									<tbody>
+										{slaMetrics.map((m, idx) => (
+											// eslint-disable-next-line react/no-array-index-key
+											<tr key={idx}>
+												<td>{m.definitionName}</td>
+												<td className={styles.stepCol}>{m.step}</td>
+												<td className={styles.num}>{m.slaHours}</td>
+												<td className={styles.num}>{m.totalInstances}</td>
+												<td className={styles.num}>{m.breachedCount}</td>
+												<td className={styles.num}>{m.avgDurationHours}</td>
+												<td className={`${styles.num} ${styles.rate} ${getRateClass(m.complianceRate)}`}>
+													{m.complianceRate}%
+												</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					)}
 				</div>
 			)}
 		</div>
