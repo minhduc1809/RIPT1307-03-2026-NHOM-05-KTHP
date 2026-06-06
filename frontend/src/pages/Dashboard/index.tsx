@@ -1,13 +1,13 @@
 import {
-	FileTextOutlined,
-	FormOutlined,
 	InboxOutlined,
 	ReloadOutlined,
-	TeamOutlined,
-	ClockCircleOutlined,
 	CalendarOutlined,
-	TrophyOutlined,
-	CloseCircleOutlined,
+	AppstoreTwoTone,
+	CheckCircleTwoTone,
+	CloseCircleTwoTone,
+	ClockCircleTwoTone,
+	TrophyTwoTone,
+	DashboardTwoTone,
 } from '@ant-design/icons';
 import { Spin, Tooltip } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -359,14 +359,14 @@ const Dashboard: React.FC = () => {
 					<div className={styles.statTop}>
 						<span className={styles.statLabel}>Tổng submissions</span>
 						<div className={`${styles.statIcon} ${styles.formIcon}`}>
-							<FormOutlined />
+							<AppstoreTwoTone twoToneColor="#6366f1" />
 						</div>
 					</div>
 					<div className={styles.statValue}>
 						<CountUp end={summary?.total ?? 0} duration={1.5} separator="," />
 					</div>
 					<div className={`${styles.statChange} ${styles.neutral}`}>
-						<CalendarOutlined /> Tổng lượt nộp biểu mẫu
+						<DashboardTwoTone twoToneColor="#94a3b8" /> Tổng lượt nộp biểu mẫu
 					</div>
 				</div>
 
@@ -374,14 +374,14 @@ const Dashboard: React.FC = () => {
 					<div className={styles.statTop}>
 						<span className={styles.statLabel}>Đã duyệt</span>
 						<div className={`${styles.statIcon} ${styles.submissionIcon}`}>
-							<FileTextOutlined />
+							<CheckCircleTwoTone twoToneColor="#06b6d4" />
 						</div>
 					</div>
 					<div className={styles.statValue}>
 						<CountUp end={summary?.approved ?? 0} duration={1.5} separator="," />
 					</div>
 					<div className={`${styles.statChange} ${styles.neutral}`}>
-						<InboxOutlined /> Submissions đã được phê duyệt
+						<CheckCircleTwoTone twoToneColor="#94a3b8" /> Submissions đã được phê duyệt
 					</div>
 				</div>
 
@@ -389,14 +389,14 @@ const Dashboard: React.FC = () => {
 					<div className={styles.statTop}>
 						<span className={styles.statLabel}>Từ chối</span>
 						<div className={`${styles.statIcon} ${styles.userIcon}`}>
-							<CloseCircleOutlined />
+							<CloseCircleTwoTone twoToneColor="#f59e0b" />
 						</div>
 					</div>
 					<div className={styles.statValue}>
 						<CountUp end={summary?.rejected ?? 0} duration={1.5} separator="," />
 					</div>
 					<div className={`${styles.statChange} ${styles.neutral}`}>
-						<CloseCircleOutlined /> Submissions bị từ chối
+						<CloseCircleTwoTone twoToneColor="#94a3b8" /> Submissions bị từ chối
 					</div>
 				</div>
 
@@ -404,14 +404,14 @@ const Dashboard: React.FC = () => {
 					<div className={styles.statTop}>
 						<span className={styles.statLabel}>Chờ duyệt</span>
 						<div className={`${styles.statIcon} ${styles.pendingIcon}`}>
-							<ClockCircleOutlined />
+							<ClockCircleTwoTone twoToneColor="#8b5cf6" />
 						</div>
 					</div>
 					<div className={styles.statValue}>
 						<CountUp end={summary?.pending ?? 0} duration={1.5} separator="," />
 					</div>
 					<div className={`${styles.statChange} ${styles.neutral}`}>
-						<ClockCircleOutlined /> Submissions đang chờ xử lý
+						<ClockCircleTwoTone twoToneColor="#94a3b8" /> Submissions đang chờ xử lý
 					</div>
 				</div>
 			</div>
@@ -488,7 +488,7 @@ const Dashboard: React.FC = () => {
 				<div className={styles.topFormsHeader}>
 					<div className={styles.topFormsTitle}>
 						<h3>
-							<TrophyOutlined style={{ color: '#f59e0b', marginRight: 8 }} />
+							<TrophyTwoTone twoToneColor="#f59e0b" style={{ marginRight: 8 }} />
 							Top biểu mẫu được sử dụng nhiều nhất
 						</h3>
 						<p>Danh sách {topForms.length} form có số lượt nộp cao nhất</p>
@@ -538,7 +538,7 @@ const Dashboard: React.FC = () => {
 					<div className={styles.topFormsHeader}>
 						<div className={styles.topFormsTitle}>
 							<h3>
-								<ClockCircleOutlined style={{ color: '#6366f1', marginRight: 8 }} />
+								<ClockCircleTwoTone twoToneColor="#6366f1" style={{ marginRight: 8 }} />
 								SLA Compliance
 							</h3>
 							<p>Tỷ lệ tuân thủ SLA theo từng bước quy trình ({selectedDays} ngày gần nhất)</p>

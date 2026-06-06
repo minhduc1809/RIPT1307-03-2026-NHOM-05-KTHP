@@ -221,12 +221,13 @@ const Notifications: React.FC = () => {
 			</div>
 
 			{/* Connection Status */}
-			<div className={`${styles.connectionBar} ${styles[socketStatus]}`}>
-				<span className={styles.statusDot} />
-				{socketStatus === 'connected' && 'Realtime đang kết nối — Thông báo mới sẽ tự động hiện'}
-				{socketStatus === 'connecting' && 'Đang kết nối realtime...'}
-				{socketStatus === 'disconnected' && 'Mất kết nối realtime — Đang thử kết nối lại'}
-			</div>
+			{socketStatus !== 'connected' && (
+				<div className={`${styles.connectionBar} ${styles[socketStatus]}`}>
+					<span className={styles.statusDot} />
+					{socketStatus === 'connecting' && 'Đang kết nối realtime...'}
+					{socketStatus === 'disconnected' && 'Mất kết nối realtime — Đang thử kết nối lại'}
+				</div>
+			)}
 
 			{/* Filter Tabs */}
 			<div className={styles.filterBar}>

@@ -90,29 +90,45 @@
 	// ====== KANBAN VIEW ======
 	.kanbanBoard {
 		display: flex;
-		gap: 16px;
+		gap: 20px;
 		overflow-x: auto;
+		overflow-y: hidden;
 		padding-bottom: 16px;
-		min-height: 400px;
+		min-height: calc(100vh - 280px);
 		align-items: flex-start;
+
+		&::-webkit-scrollbar {
+			height: 10px;
+		}
+		&::-webkit-scrollbar-thumb {
+			background: #cbd5e1;
+			border-radius: 5px;
+		}
+		&::-webkit-scrollbar-track {
+			background: #f1f5f9;
+			border-radius: 5px;
+		}
 	}
 
 	.kanbanColumn {
-		min-width: 300px;
-		max-width: 360px;
-		flex: 1;
-		background: #f8fafc;
-		border-radius: 16px;
+		min-width: 320px;
+		max-width: 320px;
+		flex-shrink: 0; // Ensure columns don't squish
+		background: #f1f5f9;
+		border-radius: 12px;
 		padding: 0;
 		display: flex;
 		flex-direction: column;
+		max-height: calc(100vh - 280px);
 
 		.columnHeader {
 			display: flex;
 			align-items: center;
 			gap: 8px;
 			padding: 14px 16px;
-			border-bottom: 1px solid #e2e8f0;
+			border-bottom: 2px solid #e2e8f0;
+			background: #f8fafc;
+			border-radius: 12px 12px 0 0;
 
 			.columnDot {
 				width: 10px;
@@ -128,23 +144,30 @@
 				flex: 1;
 				text-transform: uppercase;
 				letter-spacing: 0.5px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 		}
 
 		.columnBody {
-			padding: 10px;
+			padding: 12px;
 			display: flex;
 			flex-direction: column;
-			gap: 8px;
-			max-height: 70vh;
+			gap: 12px;
 			overflow-y: auto;
+			flex: 1; // Take remaining space in the column
+			min-height: 100px; // Provide a drop zone area even when empty
 
 			&::-webkit-scrollbar {
-				width: 4px;
+				width: 6px;
 			}
 			&::-webkit-scrollbar-thumb {
 				background: #cbd5e1;
-				border-radius: 4px;
+				border-radius: 6px;
+			}
+			&::-webkit-scrollbar-track {
+				background: transparent;
 			}
 		}
 	}
@@ -152,21 +175,22 @@
 	// ====== KANBAN CARD ======
 	.kanbanCard {
 		background: #fff;
-		border-radius: 12px;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-		border: 1.5px solid transparent;
+		border-radius: 10px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+		border: 1px solid #e2e8f0;
 		transition: all 0.2s;
 		position: relative;
 		overflow: hidden;
-		flex-shrink: 0; // keep full card height — let the column scroll instead of squishing cards
+		flex-shrink: 0;
 
 		&:hover {
 			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-			border-color: #e2e8f0;
+			border-color: #cbd5e1;
+			transform: translateY(-2px);
 		}
 
 		&.overdue {
-			border-left: 3px solid #ef4444;
+			border-left: 4px solid #ef4444;
 		}
 
 		&.cardSelected {
@@ -176,8 +200,8 @@
 
 		.cardCheckbox {
 			position: absolute;
-			top: 10px;
-			left: 10px;
+			top: 12px;
+			left: 12px;
 			z-index: 1;
 
 			input[type='checkbox'] {
@@ -189,58 +213,71 @@
 		}
 
 		.cardBody {
-			padding: 12px 14px 10px 34px;
+			padding: 14px 14px 12px 36px;
 			cursor: pointer;
 
 			.cardHeader {
 				display: flex;
 				justify-content: space-between;
-				align-items: center;
-				margin-bottom: 6px;
+				align-items: flex-start;
+				margin-bottom: 8px;
+				gap: 8px;
 
 				.cardTitle {
-					font-size: 13px;
+					font-size: 14px;
 					font-weight: 700;
 					color: #1a2332;
 					flex: 1;
+					line-height: 1.3;
+					// Multiline ellipsis for title
+					display: -webkit-box;
+					-webkit-line-clamp: 2;
+					-webkit-box-orient: vertical;
 					overflow: hidden;
-					text-overflow: ellipsis;
-					white-space: nowrap;
 				}
 			}
 
 			.cardMeta {
 				display: flex;
-				gap: 10px;
-				font-size: 11px;
-				color: #94a3b8;
-				margin-bottom: 6px;
+				gap: 12px;
+				font-size: 12px;
+				color: #64748b;
+				margin-bottom: 10px;
+				align-items: center;
 
 				span {
 					display: flex;
 					align-items: center;
-					gap: 3px;
+					gap: 4px;
 				}
 			}
 
 			.cardData {
+				background: #f8fafc;
+				border-radius: 6px;
+				padding: 8px;
+				
 				.cardField {
 					display: flex;
 					justify-content: space-between;
-					font-size: 11px;
-					padding: 2px 0;
+					font-size: 12px;
+					padding: 3px 0;
 
 					.fieldLabel {
-						color: #94a3b8;
-					}
-					.fieldValue {
-						color: #475569;
-						font-weight: 600;
-						max-width: 55%;
-						text-align: right;
+						color: #64748b;
+						max-width: 45%;
+						white-space: nowrap;
 						overflow: hidden;
 						text-overflow: ellipsis;
+					}
+					.fieldValue {
+						color: #1a2332;
+						font-weight: 600;
+						max-width: 50%;
+						text-align: right;
 						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
 					}
 				}
 			}

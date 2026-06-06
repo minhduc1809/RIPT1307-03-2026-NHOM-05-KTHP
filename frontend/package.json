@@ -69,6 +69,7 @@
     "fs-extra": "^11.2.0",
     "js-file-download": "^0.4.12",
     "lodash": "^4.17.21",
+    "lucide-react": "^1.17.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "path": "^0.12.7",

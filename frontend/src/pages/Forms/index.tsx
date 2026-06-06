@@ -11,6 +11,7 @@ import { Button, Input, message, Modal, Table, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { LayoutList, CheckCircle2, FileX } from 'lucide-react';
 import { history, useModel } from 'umi';
 import { deleteForm, getActiveForms, getFormsPage } from '@/services/Forms/formApi';
 import type { IForm, IFormPageRequest } from '@/services/Forms/typings';
@@ -330,12 +331,16 @@ const FormsDashboard: React.FC = () => {
 							<div className={styles.statValue}>{total}</div>
 							<div className={styles.statChange}>Tổng số biểu mẫu trong hệ thống</div>
 						</div>
-						<div className={styles.statBgIcon}>📊</div>
+						<div className={styles.statBgIcon}>
+							<LayoutList size={160} strokeWidth={1.5} color="rgba(255,255,255,0.2)" />
+						</div>
 					</div>
 
 					<div className={styles.statCard}>
 						<div>
-							<div className={styles.statIcon}>✅</div>
+							<div className={styles.statIcon}>
+								<CheckCircle2 size={32} color="#10b981" />
+							</div>
 							<div className={styles.statTitle}>Đang hoạt động</div>
 						</div>
 						<div className={styles.statNumber}>{activeCount}</div>
@@ -343,7 +348,9 @@ const FormsDashboard: React.FC = () => {
 
 					<div className={`${styles.statCard} ${styles.light}`}>
 						<div>
-							<div className={styles.statIcon}>📋</div>
+							<div className={styles.statIcon}>
+								<FileX size={32} color="#94a3b8" />
+							</div>
 							<div className={styles.statTitle}>Không hoạt động</div>
 						</div>
 						<div className={styles.statNumber}>{inactiveCount}</div>
