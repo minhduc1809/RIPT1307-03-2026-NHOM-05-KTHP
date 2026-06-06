@@ -10,6 +10,18 @@ export default [
 				component: './user/Login',
 			},
 			{
+				path: '/user/forgot-password',
+				layout: false,
+				name: 'forgot-password',
+				component: './user/ForgotPassword',
+			},
+			{
+				path: '/user/reset-password',
+				layout: false,
+				name: 'reset-password',
+				component: './user/ResetPassword',
+			},
+			{
 				path: '/user',
 				redirect: '/user/login',
 			},

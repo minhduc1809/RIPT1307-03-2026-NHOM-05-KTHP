@@ -4,6 +4,7 @@ import {
 	EditOutlined,
 	KeyOutlined,
 	LoadingOutlined,
+	LockOutlined,
 	MailOutlined,
 	PlusOutlined,
 	UserOutlined
@@ -23,6 +24,7 @@ import {
 	updateUser,
 } from '@/services/Users/userApi';
 import { uploadAvatar } from '@/services/Files/fileApi';
+import { changePassword } from '@/services/base/authApi';
 import type { IUser } from '@/services/Users/typings';
 import styles from './index.less';
 
@@ -60,6 +62,11 @@ const Profile: React.FC = () => {
 	const [selectedRoleUser, setSelectedRoleUser] = useState<IUser | null>(null);
 	const [roleForm] = Form.useForm();
 	const [submittingRole, setSubmittingRole] = useState(false);
+
+	// Change Password Modal State
+	const [isChangePasswordVisible, setIsChangePasswordVisible] = useState(false);
+	const [changePwForm] = Form.useForm();
+	const [changingPassword, setChangingPassword] = useState(false);
 
 
 	// --- PROFILE LOGIC ---
@@ -275,6 +282,31 @@ const Profile: React.FC = () => {
 	};
 
 
+	// --- CHANGE PASSWORD LOGIC ---
+	const handleChangePassword = async (values: { oldPassword: string; newPassword: string }) => {
+		setChangingPassword(true);
+		try {
+			await changePassword(values.oldPassword, values.newPassword);
+			message.success('Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
+			setIsChangePasswordVisible(false);
+			changePwForm.resetFields();
+			// Backend hủy toàn bộ refresh tokens → logout
+			setTimeout(() => {
+				localStorage.clear();
+				window.location.href = '/user/login';
+			}, 1000);
+		} catch (error: any) {
+			const errorMsg = error?.response?.data?.message;
+			if (typeof errorMsg === 'string') {
+				message.error(errorMsg);
+			} else {
+				message.error('Đổi mật khẩu thất bại. Vui lòng kiểm tra lại mật khẩu cũ.');
+			}
+		} finally {
+			setChangingPassword(false);
+		}
+	};
+
 	const columns: ColumnsType<IUser> = [
 		{
 			title: 'Thành viên',
@@ -400,6 +432,13 @@ const Profile: React.FC = () => {
 				<div className={styles.profileForm}>
 					<div className={styles.formHeader}>
 						<h2>Cấu hình Tài khoản</h2>
+						<Button
+							icon={<LockOutlined />}
+							className={styles.changePasswordBtn}
+							onClick={() => setIsChangePasswordVisible(true)}
+						>
+							Đổi mật khẩu
+						</Button>
 					</div>
 					<Form form={profileForm} layout="vertical" onFinish={handleUpdateProfile} className={styles.formGrid}>
 						<Form.Item label={<span className={styles.fieldLabel}>Họ</span>} name="lastName" className={styles.formField}>
@@ -526,6 +565,62 @@ const Profile: React.FC = () => {
 							<Option value="USER">User</Option>
 						</Select>
 					</Form.Item>
+				</Form>
+			</Modal>
+
+			{/* Change Password Modal */}
+			<Modal
+				title="Đổi mật khẩu"
+				visible={isChangePasswordVisible}
+				onCancel={() => { setIsChangePasswordVisible(false); changePwForm.resetFields(); }}
+				footer={null}
+				destroyOnClose
+				centered
+			>
+				<Form form={changePwForm} layout="vertical" onFinish={handleChangePassword}>
+					<Form.Item
+						name="oldPassword"
+						label="Mật khẩu hiện tại"
+						rules={[{ required: true, message: 'Vui lòng nhập mật khẩu hiện tại!' }]}
+					>
+						<Input.Password placeholder="Nhập mật khẩu hiện tại" />
+					</Form.Item>
+					<Form.Item
+						name="newPassword"
+						label="Mật khẩu mới"
+						rules={[
+							{ required: true, message: 'Vui lòng nhập mật khẩu mới!' },
+							{ min: 8, message: 'Mật khẩu phải có ít nhất 8 ký tự!' },
+						]}
+					>
+						<Input.Password placeholder="Nhập mật khẩu mới (tối thiểu 8 ký tự)" />
+					</Form.Item>
+					<Form.Item
+						name="confirmPassword"
+						label="Xác nhận mật khẩu mới"
+						dependencies={['newPassword']}
+						rules={[
+							{ required: true, message: 'Vui lòng xác nhận mật khẩu!' },
+							({ getFieldValue }) => ({
+								validator(_, value) {
+									if (!value || getFieldValue('newPassword') === value) {
+										return Promise.resolve();
+									}
+									return Promise.reject(new Error('Mật khẩu xác nhận không khớp!'));
+								},
+							}),
+						]}
+					>
+						<Input.Password placeholder="Nhập lại mật khẩu mới" />
+					</Form.Item>
+					<div style={{ textAlign: 'right', marginTop: 8 }}>
+						<Button onClick={() => { setIsChangePasswordVisible(false); changePwForm.resetFields(); }} style={{ marginRight: 8 }}>
+							Hủy
+						</Button>
+						<Button type="primary" htmlType="submit" loading={changingPassword}>
+							Đổi mật khẩu
+						</Button>
+					</div>
 				</Form>
 			</Modal>
 		</div>

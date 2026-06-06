@@ -227,3 +227,68 @@
 	padding: 20px;
 	text-align: center;
 }
+
+// =============================================
+// Modal đổi mật khẩu lần đầu
+// =============================================
+.changePasswordModal {
+	:global(.ant-modal-content) {
+		border-radius: 16px;
+		overflow: hidden;
+	}
+
+	:global(.ant-modal-body) {
+		padding: 0;
+	}
+}
+
+.modalContent {
+	padding: 40px 32px 32px;
+	text-align: center;
+}
+
+.modalIconWrapper {
+	margin-bottom: 20px;
+}
+
+.modalIcon {
+	font-size: 48px;
+	color: #f59e0b;
+	background: linear-gradient(135deg, #fef3c7, #fde68a);
+	padding: 16px;
+	border-radius: 50%;
+}
+
+.modalTitle {
+	font-size: 22px;
+	font-weight: 700;
+	color: #1a1a1a;
+	margin-bottom: 8px;
+}
+
+.modalDescription {
+	color: #64748b;
+	font-size: 14px;
+	line-height: 1.6;
+	margin-bottom: 28px;
+}
+
+.modalActions {
+	margin-top: 8px;
+}
+
+.changePwBtn {
+	border-radius: 8px;
+	height: 44px;
+	font-weight: 600;
+}
+
+.skipBtn {
+	margin-top: 4px;
+	color: #94a3b8;
+	font-size: 14px;
+
+	&:hover {
+		color: #64748b;
+	}
+}

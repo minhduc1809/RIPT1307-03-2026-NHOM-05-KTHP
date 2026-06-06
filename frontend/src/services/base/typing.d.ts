@@ -11,6 +11,7 @@ declare module Login {
 		lastName: string | null;
 		picture: string | null;
 		isActive: boolean;
+		passwordChangeRequired?: boolean;
 		keycloakId: string | null;
 		createdAt: string;
 		updatedAt: string;
