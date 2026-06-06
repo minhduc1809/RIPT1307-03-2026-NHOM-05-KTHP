@@ -166,6 +166,7 @@ const FormView: React.FC = () => {
 	}
 
 	const fields = form.schema?.fields ?? [];
+	const theme = (form.settings as any)?.theme || 'default';
 
 	return (
 		<div className={styles.formViewPage}>
@@ -231,7 +232,7 @@ const FormView: React.FC = () => {
 				)}
 
 				{/* Form Preview */}
-				<div className={styles.formPreviewCard}>
+				<div className={`${styles.formPreviewCard} ${styles[`theme_${theme}`] || ''}`}>
 					<div className={styles.formPreviewHeader}>
 						<h1 className={styles.formTitle}>{form.name}</h1>
 						{form.description && <p className={styles.formDesc}>{form.description}</p>}

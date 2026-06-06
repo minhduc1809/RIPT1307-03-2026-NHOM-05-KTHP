@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { history, useLocation } from 'umi';
 import { message } from 'antd';
 import { DragDropContext, Droppable, Draggable, DropResult, DragStart, DragUpdate } from 'react-beautiful-dnd';
@@ -49,11 +49,11 @@ const FIELD_TYPES = [
 ] as const;
 
 const THEME_PRESETS = [
-	{ id: 'default', label: 'Mặc định (Sáng)', color: '#f7f9fb', cardColor: '#ffffff' },
-	{ id: 'dark', label: 'Tối giản (Dark)', color: '#0f172a', cardColor: '#1e293b' },
-	{ id: 'mint', label: 'Mùa xuân (Mint)', color: '#ccfbf1', cardColor: '#ffffff' },
-	{ id: 'sunset', label: 'Hoàng hôn (Rose)', color: '#fee2e2', cardColor: '#ffffff' },
-	{ id: 'violet', label: 'Hiện đại (Violet)', color: '#f3e8ff', cardColor: '#ffffff' },
+	{ id: 'default', label: 'Mặc định (Sáng)', color: '#f7f9fb', cardColor: '#ffffff', textColor: '#2a3439' },
+	{ id: 'dark', label: 'Tối giản (Dark)', color: '#0f172a', cardColor: '#1e293b', textColor: '#f8fafc' },
+	{ id: 'mint', label: 'Mùa xuân (Mint)', color: '#ccfbf1', cardColor: '#ffffff', textColor: '#065f46' },
+	{ id: 'sunset', label: 'Hoàng hôn (Rose)', color: '#fee2e2', cardColor: '#ffffff', textColor: '#7f1d1d' },
+	{ id: 'violet', label: 'Hiện đại (Violet)', color: '#f3e8ff', cardColor: '#ffffff', textColor: '#3b0764' },
 ] as const;
 
 // Helper to generate unique IDs
@@ -443,7 +443,9 @@ const FormBuilder: React.FC = () => {
 										<div
 											className={styles.themeColor}
 											style={{ background: preset.color === '#f7f9fb' ? '#e2e8f0' : preset.color }}
-										/>
+										>
+											<span style={{ color: preset.textColor, fontSize: 11, fontWeight: 700 }}>Aa</span>
+										</div>
 										<span>{preset.label.split(' ')[0]}</span>
 									</div>
 								))}
