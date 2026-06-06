@@ -251,10 +251,10 @@ const FormsDashboard: React.FC = () => {
 			{/* Search & Filter Bar */}
 			<div className={styles.searchFilterBar}>
 				<div className={styles.searchInput}>
-					<Input.Search
+					<Input
 						placeholder='Tìm kiếm tên biểu mẫu...'
 						prefix={<SearchOutlined style={{ color: '#94a3b8' }} />}
-						onSearch={handleSearch}
+						onPressEnter={(e) => handleSearch(e.currentTarget.value)}
 						onChange={(e) => {
 							if (!e.target.value) {
 								setSearchText('');
@@ -262,7 +262,6 @@ const FormsDashboard: React.FC = () => {
 							}
 						}}
 						allowClear
-						enterButton={false}
 					/>
 				</div>
 				{isAdminOrManager && (

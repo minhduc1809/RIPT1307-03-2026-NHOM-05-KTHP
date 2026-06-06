@@ -3,7 +3,7 @@
 .pendingPage {
 	max-width: 1400px;
 	margin: 0 auto;
-	padding: 28px 24px 80px;
+	padding: 28px 24px 24px;
 
 	// ====== HEADER ======
 	.pageHeader {
@@ -88,38 +88,83 @@
 	}
 
 	// ====== KANBAN VIEW ======
+	.kanbanWrapper {
+		position: relative;
+
+		&:hover .scrollBtn {
+			opacity: 1;
+		}
+
+		.scrollBtn {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 44px;
+			height: 44px;
+			border-radius: 50%;
+			background: #fff;
+			border: 1px solid #e2e8f0;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			z-index: 10;
+			color: #64748b;
+			transition: all 0.2s;
+			opacity: 0;
+			font-size: 16px;
+
+			&:hover {
+				background: #f8fafc;
+				color: #1a2332;
+				border-color: #cbd5e1;
+				box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+				transform: translateY(-50%) scale(1.05);
+			}
+
+			&:active {
+				transform: translateY(-50%) scale(0.95);
+			}
+
+			&.scrollLeft {
+				left: -22px;
+			}
+
+			&.scrollRight {
+				right: -22px;
+			}
+		}
+	}
+
 	.kanbanBoard {
 		display: flex;
 		gap: 20px;
 		overflow-x: auto;
 		overflow-y: hidden;
 		padding-bottom: 16px;
-		min-height: calc(100vh - 280px);
-		align-items: flex-start;
+		height: calc(100vh - 190px);
+		min-height: 400px;
+		align-items: stretch;
+
+		scrollbar-width: none;
+		-ms-overflow-style: none;
 
 		&::-webkit-scrollbar {
-			height: 10px;
-		}
-		&::-webkit-scrollbar-thumb {
-			background: #cbd5e1;
-			border-radius: 5px;
-		}
-		&::-webkit-scrollbar-track {
-			background: #f1f5f9;
-			border-radius: 5px;
+			display: none;
 		}
 	}
 
 	.kanbanColumn {
-		min-width: 320px;
-		max-width: 320px;
+		min-width: 300px;
+		width: calc((100% - 60px) / 4);
 		flex-shrink: 0; // Ensure columns don't squish
 		background: #f1f5f9;
 		border-radius: 12px;
 		padding: 0;
 		display: flex;
 		flex-direction: column;
-		max-height: calc(100vh - 280px);
+		max-height: 100%;
 
 		.columnHeader {
 			display: flex;

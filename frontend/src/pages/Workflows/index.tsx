@@ -317,13 +317,12 @@ const WorkflowsDashboard: React.FC = () => {
 			{/* Search Bar */}
 			<div className={styles.searchFilterBar}>
 				<div className={styles.searchInput}>
-					<Input.Search
+					<Input
 						placeholder="Tìm kiếm tên workflow..."
 						prefix={<SearchOutlined style={{ color: '#94a3b8' }} />}
-						onSearch={(v) => setSearchText(v)}
+						onPressEnter={(e) => setSearchText(e.currentTarget.value)}
 						onChange={(e) => { if (!e.target.value) setSearchText(''); }}
 						allowClear
-						enterButton={false}
 					/>
 				</div>
 			</div>

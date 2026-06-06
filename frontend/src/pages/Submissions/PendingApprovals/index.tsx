@@ -10,10 +10,12 @@ import {
 	SwapOutlined,
 	TeamOutlined,
 	UserOutlined,
+	LeftOutlined,
+	RightOutlined,
 } from '@ant-design/icons';
 import { Badge, Button, Input, message, Modal, Pagination, Select, Spin, Tag, Tooltip } from 'antd';
 import moment from 'moment';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { history, useModel } from 'umi';
 import {
 	executeWorkflowAction,
@@ -59,7 +61,8 @@ const PendingApprovals: React.FC = () => {
 	const [items, setItems] = useState<IWorkflowInstance[]>([]);
 	const [total, setTotal] = useState(0);
 	const [page, setPage] = useState(1);
-	const [limit] = useState(100);
+	const [limit] = useState(20);
+	const boardRef = useRef<HTMLDivElement>(null);
 
 	// View mode
 	const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
@@ -508,22 +511,38 @@ const PendingApprovals: React.FC = () => {
 				</div>
 			) : viewMode === 'kanban' ? (
 				/* ====== KANBAN VIEW ====== */
-				<div className={styles.kanbanBoard}>
-					{kanbanColumns.map(({ step, items: stepItems }) => {
-						const color = getStepColor(step);
-						return (
-							<div key={step} className={styles.kanbanColumn}>
-								<div className={styles.columnHeader}>
-									<div className={styles.columnDot} style={{ background: color }} />
-									<span className={styles.columnTitle}>{step}</span>
-									<Badge count={stepItems.length} style={{ backgroundColor: color }} />
+				<div className={styles.kanbanWrapper}>
+					<button className={`${styles.scrollBtn} ${styles.scrollLeft}`} onClick={() => {
+						if (boardRef.current) {
+							boardRef.current.scrollBy({ left: -(boardRef.current.clientWidth || 320), behavior: 'smooth' });
+						}
+					}}>
+						<LeftOutlined />
+					</button>
+					<button className={`${styles.scrollBtn} ${styles.scrollRight}`} onClick={() => {
+						if (boardRef.current) {
+							boardRef.current.scrollBy({ left: (boardRef.current.clientWidth || 320), behavior: 'smooth' });
+						}
+					}}>
+						<RightOutlined />
+					</button>
+					<div className={styles.kanbanBoard} ref={boardRef}>
+						{kanbanColumns.map(({ step, items: stepItems }) => {
+							const color = getStepColor(step);
+							return (
+								<div key={step} className={styles.kanbanColumn}>
+									<div className={styles.columnHeader}>
+										<div className={styles.columnDot} style={{ background: color }} />
+										<span className={styles.columnTitle}>{getStateLabel(step)}</span>
+										<Badge count={stepItems.length} style={{ backgroundColor: color }} />
+									</div>
+									<div className={styles.columnBody}>
+										{stepItems.map(renderCard)}
+									</div>
 								</div>
-								<div className={styles.columnBody}>
-									{stepItems.map(renderCard)}
-								</div>
-							</div>
-						);
-					})}
+							);
+						})}
+					</div>
 				</div>
 			) : (
 				/* ====== LIST VIEW ====== */
