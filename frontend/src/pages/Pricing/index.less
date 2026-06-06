@@ -1,0 +1,154 @@
+// design: smartadmin.pen · frame 27
+
+@primary: #4f46e5;
+@text: #0f172a;
+@text-body: #334155;
+@muted: #64748b;
+@muted-light: #94a3b8;
+@border: #e2e8f0;
+@border-light: #f1f5f9;
+@success: #10b981;
+@grad: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+
+.tiers {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	max-width: 1440px;
+	margin: 0 auto;
+	padding: 50px 80px 80px;
+
+	@media (max-width: 991px) {
+		flex-direction: column;
+		align-items: stretch;
+		padding: 40px 24px 60px;
+	}
+}
+
+.tierCard {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 30px;
+	background: #fff;
+	border: 1px solid @border-light;
+	border-radius: 16px;
+	box-shadow: 0 6px 24px -4px rgba(79, 70, 229, 0.13);
+	transition: all 0.2s ease-out;
+
+	&:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.15), 0 8px 10px -6px rgba(79, 70, 229, 0.1);
+	}
+
+	&.highlight {
+		border: 2px solid @primary;
+		padding: 38px 30px;
+		box-shadow: 0 16px 48px -8px rgba(79, 70, 229, 0.35);
+
+		.tierName {
+			color: @primary;
+		}
+	}
+
+	.tierBadge {
+		align-self: flex-start;
+		padding: 4px 12px;
+		border-radius: 999px;
+		background: @grad;
+		color: #fff;
+		font-size: 10px;
+		font-weight: 800;
+		letter-spacing: 1px;
+	}
+
+	.tierName {
+		font-size: 16px;
+		font-weight: 700;
+		color: @text-body;
+	}
+
+	.tierPrice {
+		display: flex;
+		align-items: flex-end;
+		gap: 6px;
+
+		.amount {
+			font-size: 38px;
+			font-weight: 800;
+			letter-spacing: -1px;
+			line-height: 1;
+			color: @text;
+
+			&.contact {
+				font-size: 30px;
+			}
+		}
+
+		.unit {
+			font-size: 13px;
+			color: @muted-light;
+		}
+	}
+
+	.tierDesc {
+		font-size: 13px;
+		line-height: 1.6;
+		color: @muted;
+	}
+
+	.divider {
+		height: 1px;
+		background: @border-light;
+	}
+
+	.tierFeature {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 13px;
+		font-weight: 500;
+		color: @text-body;
+
+		.anticon {
+			color: @success;
+			font-size: 14px;
+		}
+	}
+}
+
+.tierBtn {
+	margin-top: 4px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	padding: 11px 20px;
+	border: 1px solid @border;
+	border-radius: 8px;
+	background: #fff;
+	color: @text-body;
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease-out;
+
+	&:hover {
+		transform: translateY(-2px);
+		background: #f8fafc;
+	}
+
+	&.gradient {
+		border: none;
+		background: @grad;
+		color: #fff;
+		font-weight: 700;
+		box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+
+		&:hover {
+			box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4);
+		}
+	}
+}

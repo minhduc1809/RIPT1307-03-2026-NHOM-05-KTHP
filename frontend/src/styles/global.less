@@ -545,3 +545,33 @@ canvas {
 		color: var(--primary-color);
 	}
 }
+// Toast (antd message) theo design system smartadmin.pen — pill trắng, icon màu trạng thái
+.ant-message-notice-content {
+	padding: 10px 16px;
+	border-radius: 8px;
+	box-shadow: 0 6px 24px rgba(15, 23, 42, 0.12);
+	color: #334155;
+	font-size: 14px;
+	font-weight: 500;
+
+	.anticon {
+		font-size: 16px;
+	}
+
+	.ant-message-success .anticon {
+		color: #10b981;
+	}
+
+	.ant-message-error .anticon {
+		color: #ef4444;
+	}
+
+	.ant-message-warning .anticon {
+		color: #f59e0b;
+	}
+
+	.ant-message-info .anticon,
+	.ant-message-loading .anticon {
+		color: #4f46e5;
+	}
+}

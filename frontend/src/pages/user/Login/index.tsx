@@ -1,7 +1,14 @@
-import Footer from '@/components/Footer';
 import { adminlogin } from '@/services/base/api';
 import { changePassword } from '@/services/base/authApi';
-import { LockOutlined, MailOutlined, ArrowRightOutlined, SafetyOutlined } from '@ant-design/icons';
+import { PublicHead } from '@/pages/Home/PublicShell';
+import {
+	ArrowRightOutlined,
+	CheckCircleFilled,
+	LockOutlined,
+	MailOutlined,
+	SafetyCertificateOutlined,
+	ThunderboltFilled,
+} from '@ant-design/icons';
 import { Button, Form, Input, message, Modal } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { history, useIntl, useModel, Link } from 'umi';
@@ -132,37 +139,54 @@ const Login: React.FC = () => {
 
 	return (
 		<div className={styles.container}>
+			<PublicHead title="Đăng nhập — FlowForm" />
 			<div className={styles.content}>
 				<div className={styles.loginBox}>
+					{/* Left gradient panel (design 01) */}
 					<div className={styles.leftPanel}>
+						<div className={styles.lpLogo}>
+							<div className={styles.lpLogoSq}>
+								<ThunderboltFilled />
+							</div>
+							<span>FLOWFORM</span>
+						</div>
+
 						<div className={styles.welcomeText}>
 							<h1>Chào mừng trở lại!</h1>
-							<p>
-								Đăng nhập để truy cập vào hệ thống quản lý của chúng tôi. Quản lý công việc hiệu quả và nhanh chóng hơn.
-							</p>
+							<p>Nền tảng quản lý biểu mẫu và tự động hóa quy trình phê duyệt cho tổ chức của bạn.</p>
 						</div>
-						<div className={styles.illustration}>
-							{/* Placeholder for an abstract shape or illustration */}
-							<div className={styles.abstractShape1}></div>
-							<div className={styles.abstractShape2}></div>
+
+						<div className={styles.glassCard}>
+							<div className={styles.glassItem}>
+								<CheckCircleFilled /> Phê duyệt đa cấp theo vai trò
+							</div>
+							<div className={styles.glassItem}>
+								<CheckCircleFilled /> Thông báo thời gian thực
+							</div>
+							<div className={styles.glassItem}>
+								<CheckCircleFilled /> Trình tạo biểu mẫu kéo thả
+							</div>
 						</div>
 					</div>
+
+					{/* Right form panel */}
 					<div className={styles.rightPanel}>
 						<div className={styles.header}>
 							<h2>Đăng Nhập</h2>
-							<p>Vui lòng điền thông tin đăng nhập của bạn</p>
+							<p>Đăng nhập để tiếp tục với FlowForm</p>
 						</div>
 
 						<Form form={form} onFinish={handleSubmit} layout='vertical' size='large' className={styles.loginForm}>
 							<Form.Item
 								name='email'
+								label='Email'
 								rules={[
 									{ required: true, message: 'Vui lòng nhập email!' },
 									{ type: 'email', message: 'Email không hợp lệ!' },
 								]}
 							>
 								<Input
-									placeholder='Email của bạn'
+									placeholder='Nhập email của bạn'
 									prefix={<MailOutlined className={styles.prefixIcon} />}
 									className={styles.customInput}
 								/>
@@ -170,6 +194,7 @@ const Login: React.FC = () => {
 
 							<Form.Item
 								name='password'
+								label='Mật khẩu'
 								rules={[
 									{ required: true, message: 'Vui lòng nhập mật khẩu!' },
 									({}) => ({
@@ -186,7 +211,7 @@ const Login: React.FC = () => {
 								]}
 							>
 								<Input.Password
-									placeholder='Mật khẩu'
+									placeholder='••••••••'
 									prefix={<LockOutlined className={styles.prefixIcon} />}
 									className={styles.customInput}
 								/>
@@ -210,12 +235,17 @@ const Login: React.FC = () => {
 								Đăng Nhập
 							</Button>
 						</Form>
+
+						<div className={styles.divider}>hoặc</div>
+
+						{/* TODO: nối luồng Keycloak SSO (APP_CONFIG_KEYCLOAK_AUTHORITY) */}
+						<button type="button" className={styles.ssoBtn}>
+							<SafetyCertificateOutlined /> Đăng nhập với PTIT SSO (Keycloak)
+						</button>
+
+						<div className={styles.copyright}>© 2026 FlowForm Platform. All rights reserved.</div>
 					</div>
 				</div>
-			</div>
-
-			<div className={styles.footerContainer}>
-				<Footer />
 			</div>
 
 			{/* Modal đổi mật khẩu lần đầu */}
@@ -231,7 +261,7 @@ const Login: React.FC = () => {
 			>
 				<div className={styles.modalContent}>
 					<div className={styles.modalIconWrapper}>
-						<SafetyOutlined className={styles.modalIcon} />
+						<SafetyCertificateOutlined className={styles.modalIcon} />
 					</div>
 					<h3 className={styles.modalTitle}>Yêu cầu đổi mật khẩu</h3>
 					<p className={styles.modalDescription}>
@@ -251,7 +281,7 @@ const Login: React.FC = () => {
 								{ min: 8, message: 'Mật khẩu phải có ít nhất 8 ký tự!' },
 							]}
 						>
-							<Input.Password placeholder="Nhập mật khẩu mới (tối thiểu 8 ký tự)" />
+							<Input.Password placeholder="Nhập mật khẩu mới (tối thiểu 8 ký tự)" className={styles.customInput} />
 						</Form.Item>
 
 						<Form.Item
@@ -270,7 +300,7 @@ const Login: React.FC = () => {
 								}),
 							]}
 						>
-							<Input.Password placeholder="Nhập lại mật khẩu mới" />
+							<Input.Password placeholder="Nhập lại mật khẩu mới" className={styles.customInput} />
 						</Form.Item>
 
 						<div className={styles.modalActions}>

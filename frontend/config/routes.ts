@@ -179,6 +179,31 @@ export default [
 		layout: false,
 	},
 	{
+		path: '/contact',
+		component: './Contact',
+		layout: false,
+	},
+	{
+		path: '/privacy',
+		component: './Privacy',
+		layout: false,
+	},
+	{
+		path: '/terms',
+		component: './Terms',
+		layout: false,
+	},
+	{
+		path: '/pricing',
+		component: './Pricing',
+		layout: false,
+	},
+	{
+		path: '/security',
+		component: './Security',
+		layout: false,
+	},
+	{
 		path: '/403',
 		component: './exception/403/403Page',
 		layout: false,

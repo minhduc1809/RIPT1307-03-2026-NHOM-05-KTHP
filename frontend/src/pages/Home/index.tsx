@@ -1,265 +1,322 @@
-import { Button, Col, Layout, Row } from 'antd';
+// design: smartadmin.pen · frame 23
+import {
+	AccountBookOutlined,
+	ArrowRightOutlined,
+	BellOutlined,
+	BranchesOutlined,
+	CalendarOutlined,
+	CaretRightFilled,
+	CheckCircleFilled,
+	CheckOutlined,
+	ClockCircleOutlined,
+	CloseOutlined,
+	FileTextOutlined,
+	FolderOpenOutlined,
+	LayoutOutlined,
+	SafetyCertificateOutlined,
+	ThunderboltFilled,
+} from '@ant-design/icons';
 import React from 'react';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { history } from 'umi';
 import styles from './index.less';
+import { goRegisterTenant, PublicFooter, PublicHead, PublicNavbar, Reveal } from './PublicShell';
 
-const { Header, Content, Footer } = Layout;
+const FEATURES = [
+	{
+		icon: <LayoutOutlined />,
+		color: 'indigo',
+		title: 'Trình tạo biểu mẫu động',
+		desc: 'Kéo thả văn bản, số, ngày, lựa chọn — kèm ràng buộc kiểm tra dữ liệu, chủ đề giao diện và lưu nháp tự động.',
+	},
+	{
+		icon: <BranchesOutlined />,
+		color: 'violet',
+		title: 'Tự động hóa quy trình',
+		desc: 'Thiết kế luồng phê duyệt tuần tự, song song hoặc bỏ phiếu. Máy trạng thái đảm bảo mọi bước đều được ghi vết.',
+	},
+	{
+		icon: <SafetyCertificateOutlined />,
+		color: 'cyan',
+		title: 'Phê duyệt theo vai trò',
+		desc: 'Phân quyền ADMIN, MANAGER, HR, USER kết hợp ủy quyền theo thời gian — đúng người, đúng việc, đúng lúc.',
+	},
+	{
+		icon: <BellOutlined />,
+		color: 'amber',
+		title: 'Thông báo thời gian thực',
+		desc: 'Socket.io đẩy cập nhật tức thì tới web và mobile. Không bỏ lỡ yêu cầu nào với cảnh báo SLA quá hạn.',
+	},
+];
+
+const STEPS = [
+	{
+		num: '1',
+		title: 'Tạo biểu mẫu',
+		desc: 'Kéo thả các trường dữ liệu, đặt ràng buộc kiểm tra và chọn chủ đề giao diện phù hợp.',
+	},
+	{
+		num: '2',
+		title: 'Gửi dữ liệu',
+		desc: 'Nhân viên điền và nộp biểu mẫu trên mọi thiết bị, có lưu nháp và kiểm tra dữ liệu tức thì.',
+	},
+	{
+		num: '3',
+		title: 'Phê duyệt quy trình',
+		desc: 'Yêu cầu tự động chạy qua các bước phê duyệt, thông báo realtime và ghi vết đầy đủ.',
+	},
+];
+
+const USE_CASES = [
+	{
+		icon: <CalendarOutlined />,
+		color: 'indigo',
+		title: 'Yêu cầu nghỉ phép',
+		desc: 'Nhân viên nộp đơn, quản lý và HR duyệt theo trình tự — tự động tính ngày phép còn lại.',
+	},
+	{
+		icon: <AccountBookOutlined />,
+		color: 'blue',
+		title: 'Phê duyệt chi phí',
+		desc: 'Đề nghị thanh toán chạy song song qua kế toán và quản lý — đối soát minh bạch từng bước.',
+	},
+	{
+		icon: <FolderOpenOutlined />,
+		color: 'teal',
+		title: 'Biểu mẫu nội bộ',
+		desc: 'Tuyển dụng, cấp phát thiết bị, khảo sát đào tạo — mọi nghiệp vụ trong một nền tảng.',
+	},
+];
 
 const Home: React.FC = () => {
-  return (
-    <div className={styles.homeContainer}>
-      <HelmetProvider>
-        <Helmet>
-          <title>FlowState - Xây dựng biểu mẫu và Tự động hóa</title>
-          <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-            rel="stylesheet"
-          />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-            rel="stylesheet"
-          />
-        </Helmet>
-      </HelmetProvider>
+	return (
+		<div className={styles.homeContainer}>
+			<PublicHead title="FlowForm — Xây dựng biểu mẫu và Tự động hóa quy trình" />
+			<PublicNavbar />
 
-      {/* Top Navigation Shell */}
-      <Header className={styles.homeHeader}>
-        <div className={styles.headerContent}>
-          <div className={styles.logo}>FlowForm</div>
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-            <Button type="text" style={{ fontWeight: 500 }} onClick={() => {
-              window.location.href = '/user/login';
-            }}>
-              Log In
-            </Button>
-            <Button
-              type="primary"
-              size="large"
-              style={{
-                borderRadius: '8px',
-                fontWeight: 600,
-                background: 'linear-gradient(135deg, #565e74 0%, #4a5268 100%)',
-                border: 'none',
-              }}
-            >
-              Get Started
-            </Button>
-          </div>
-        </div>
-      </Header>
+			{/* Hero */}
+			<section className={styles.hero}>
+				<div className={styles.heroInner}>
+					<div className={styles.heroBlob1} />
+					<div className={styles.heroBlob2} />
 
-      <Content>
-        {/* Hero Section */}
-        <section className={styles.homeHero}>
-          <Row gutter={[48, 48]} align="middle">
-            <Col xs={24} lg={12}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 12px', borderRadius: '100px', background: 'rgba(218, 226, 253, 0.3)', color: '#4a5167', fontSize: '12px', fontWeight: 600, textTransform: 'uppercase', marginBottom: '24px' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>bolt</span>
-                Mới: Trình kéo thả tự động hóa v2.0
-              </div>
-              <h1 className={styles.heroTitle}>
-                Xây dựng biểu mẫu và <span className={styles.textGradient}>Tự động hóa</span> quy trình không cần Code
-              </h1>
-              <p className={styles.heroSubtitle}>
-                Tạo các biểu mẫu động, thu thập dữ liệu và quản lý quy trình phê duyệt một cách dễ dàng. Giải phóng doanh nghiệp khỏi những thủ tục giấy tờ thủ công.
-              </p>
-              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                <Button size="large" type="primary" style={{ height: '56px', padding: '0 32px', borderRadius: '12px', fontSize: '18px', fontWeight: 'bold', background: 'linear-gradient(to right, #565e74, #4a5268)', border: 'none', boxShadow: '0px 12px 32px rgba(42, 52, 57, 0.06)' }}>
-                  Bắt đầu ngay
-                </Button>
-                <Button size="large" style={{ height: '56px', padding: '0 32px', borderRadius: '12px', fontSize: '18px', fontWeight: 'bold', background: '#e1e9ee', color: '#4a5167', border: 'none' }}>
-                  Xem bản dùng thử
-                </Button>
-              </div>
-            </Col>
-            <Col xs={24} lg={12}>
-              <div className={styles.heroImageWrapper}>
-                <img
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1QDljcR9IrIkAQJDlyiRcPGDGTi_3WHSBN83Fo41UcIUOJNwJLDgtjYeWe7DXbgU8RvuuizwPViyjsVWNgkUlyTTWx7yc2i3GQ9dI5cRfhDlwirrln-TEelZMNlDedeZc5xPUHlKivpMqaZiIhQO3I1ShN7VJcahewMSK98hJUOYnpdSFJSyex0G8Pl_bqdt63qurVxrPhHgRJO4wXsKosYv9sEwdsrHV5Pf7JBd7RrCqASIWNHvBWLO4AwqvRt-0aibVHc5jOVI"
-                  alt="Flow builder mock"
-                />
-              </div>
-            </Col>
-          </Row>
-        </section>
+					<div className={styles.heroLeft}>
+						<div className={`${styles.heroBadge} ${styles.animFadeUp} ${styles.d1}`}>
+							<span className={styles.badgeNew}>MỚI</span>
+							<span className={styles.badgeText}>Trình kéo thả tự động hóa v2.0</span>
+							<ThunderboltFilled className={styles.badgeZap} />
+						</div>
 
-        {/* Features Bento Grid */}
-        <section className={styles.featuresSection}>
-          <div className={styles.featuresContainer}>
-            <div className={styles.sectionTitle}>
-              <h2>Tính năng mạnh mẽ cho doanh nghiệp</h2>
-              <p>Tất cả những gì bạn cần để số hóa quy trình vận hành trong một nền tảng duy nhất.</p>
-            </div>
-            <Row gutter={[24, 24]}>
-              <Col xs={24} md={12} lg={6}>
-                <div className={styles.featureCard}>
-                  <div className={`${styles.iconWrapper} ${styles.c1}`}>
-                    <span className="material-symbols-outlined">dynamic_form</span>
-                  </div>
-                  <h3>Trình tạo biểu mẫu động</h3>
-                  <p>Thiết kế biểu mẫu chuyên nghiệp chỉ với vài cú nhấp chuột, hỗ trợ logic rẽ nhánh phức tạp.</p>
-                </div>
-              </Col>
-              <Col xs={24} md={12} lg={6}>
-                <div className={styles.featureCard}>
-                  <div className={`${styles.iconWrapper} ${styles.c2}`}>
-                    <span className="material-symbols-outlined">account_tree</span>
-                  </div>
-                  <h3>Tự động hóa quy trình</h3>
-                  <p>Thiết lập luồng phê duyệt tự động đa cấp độ, loại bỏ thời gian chờ đợi lãng phí.</p>
-                </div>
-              </Col>
-              <Col xs={24} md={12} lg={6}>
-                <div className={styles.featureCard}>
-                  <div className={`${styles.iconWrapper} ${styles.c3}`}>
-                    <span className="material-symbols-outlined">verified_user</span>
-                  </div>
-                  <h3>Phê duyệt theo vai trò</h3>
-                  <p>Quản lý quyền truy cập và phê duyệt chặt chẽ dựa trên cấu trúc tổ chức của bạn.</p>
-                </div>
-              </Col>
-              <Col xs={24} md={12} lg={6}>
-                <div className={styles.featureCard}>
-                  <div className={`${styles.iconWrapper} ${styles.c4}`}>
-                    <span className="material-symbols-outlined">notifications_active</span>
-                  </div>
-                  <h3>Thông báo thời gian thực</h3>
-                  <p>Luôn cập nhật trạng thái yêu cầu ngay lập tức qua Email, Mobile hoặc Tin nhắn hệ thống.</p>
-                </div>
-              </Col>
-            </Row>
-          </div>
-        </section>
+						<h1 className={`${styles.heroTitle} ${styles.animFadeUp} ${styles.d2}`}>
+							Xây dựng biểu mẫu và
+							<br />
+							<span className={styles.textGradient}>Tự động hóa quy trình</span>
+							<br />
+							không cần Code
+						</h1>
 
-        {/* How It Works (Timeline Pattern) */}
-        <section className={styles.howItWorksSection}>
-          <Row gutter={[64, 64]} align="middle">
-            <Col xs={24} md={12}>
-              <h2 className={styles.sectionTitle}>Quy trình đơn giản, hiệu quả vượt trội</h2>
-              <div className={styles.stepItem}>
-                <div className={styles.stepNumber}>1</div>
-                <div>
-                  <h4>Tạo biểu mẫu</h4>
-                  <p>Sử dụng trình kéo thả trực quan để thiết kế giao diện nhập liệu phù hợp với nhu cầu riêng của bạn.</p>
-                </div>
-              </div>
-              <div className={styles.stepItem}>
-                <div className={styles.stepNumber}>2</div>
-                <div>
-                  <h4>Gửi dữ liệu</h4>
-                  <p>Người dùng điền thông tin và gửi yêu cầu từ bất kỳ thiết bị nào, dữ liệu được bảo mật tuyệt đối.</p>
-                </div>
-              </div>
-              <div className={styles.stepItem}>
-                <div className={styles.stepNumber}>3</div>
-                <div>
-                  <h4>Phê duyệt quy trình</h4>
-                  <p>Hệ thống tự động chuyển tiếp đến người có thẩm quyền để xử lý và hoàn tất quy trình ngay tức thì.</p>
-                </div>
-              </div>
-            </Col>
-            <Col xs={24} md={12}>
-              <div className={styles.visualWrapper}>
-                <img
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3UOguVoADJRfMX5uSrBYWGjnUk2IspWxirRN-dkSgne-12C_z8PaS_Ed5wn_lkvRfs-uZAHpFdbht2dd2apPzrtHA_pjAXKppBWaB4NrOHSr6sITxKBI-N-MK-02sl5su9lAtFjm4mjo2p94A2SpNKSy99bpCQJcrUr4J9u8N1vwxsVydBgmXTJZ9mbsdTw5BYqtIXpZ2-3tXjDPfi0qa3OKTHLC6N3IlxO54bTSrL1Xb4AYZGSYq5FMw62d7BGN2lPQ5L61EXO0"
-                  alt="Steps visual"
-                />
-              </div>
-            </Col>
-          </Row>
-        </section>
+						<p className={`${styles.heroSubtitle} ${styles.animFadeUp} ${styles.d3}`}>
+							FlowForm giúp tổ chức của bạn số hóa biểu mẫu, thiết kế quy trình phê duyệt đa cấp và theo dõi mọi yêu cầu
+							theo thời gian thực — tất cả trong một nền tảng duy nhất.
+						</p>
 
-        {/* Use Cases Section */}
-        <section className={styles.useCasesSection}>
-          <div className={styles.useCasesContainer}>
-            <div className={styles.sectionTitle} style={{ textAlign: 'center', marginBottom: '64px' }}>
-              <h2 style={{ fontSize: '36px', fontWeight: 700, marginBottom: '16px' }}>Sẵn sàng cho mọi tình huống</h2>
-              <p style={{ color: '#566166' }}>Triển khai nhanh chóng cho các nhu cầu quản trị doanh nghiệp phổ biến nhất.</p>
-            </div>
-            <Row gutter={[32, 32]}>
-              <Col xs={24} md={8}>
-                <div className={styles.caseCard}>
-                  <div className={styles.imgWrapper}>
-                    <img
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBErqPuFhoDpg4wV_dgDQQHWQX5L5--3i0KySy7Cp6JyUkDMl5gRvxFfRZQURaDlqBARaQZnBQ0pXBgir3Beh3omIAbgp9EXO40QdHlsMfYYZg7jyeRUGnbvzPFa8EwKZuBULOkP6J-YXL3ZOnTbevbmjQMkbQl8dZYdgsf1klCt_TOpzsXMTTgpieUHID6FNCPRm9AqC8XvHV4LnbGxPYmh1xXmSpotcpr8qt3uvHAdO6yFYsydfSYFHhps-jMG7456j6B8xC27m0"
-                      alt="Use Case 1"
-                    />
-                  </div>
-                  <div className={styles.caseHeader}>
-                    <h4>Yêu cầu nghỉ phép</h4>
-                    <span className="material-symbols-outlined" style={{ color: '#565e74' }}>arrow_forward</span>
-                  </div>
-                  <p>Tự động hóa tính toán ngày nghỉ và phê duyệt từ quản lý trực tiếp.</p>
-                </div>
-              </Col>
-              <Col xs={24} md={8}>
-                <div className={styles.caseCard}>
-                  <div className={styles.imgWrapper}>
-                    <img
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoifrMwDNERaFVKNnrkzzLyx98l2-ciO5SWfNRG6tZadAxiNg5-ZKZmf4UDEe1Kq7rFF5OgJXHwqJfyxItUXuxdT5exIhCTuRZ0kaf4W6msraFw_lUcOWNjFD_XsDL4CkCGlhArAXU82-4ZzQoqTb3djs5aFNLpSY2oV_65gIc2v3dCJFER6KRZUvYQolf2ReNNNuavlfY0vuBjZKu1R6oQU7_dUl-Iic79SJXuARRi--Iw9Eb_UI76IQI6_0FCYvE_8Ug4IXUjeU"
-                      alt="Use Case 2"
-                    />
-                  </div>
-                  <div className={styles.caseHeader}>
-                    <h4>Phê duyệt chi phí</h4>
-                    <span className="material-symbols-outlined" style={{ color: '#565e74' }}>arrow_forward</span>
-                  </div>
-                  <p>Quản lý hóa đơn, chứng từ và theo dõi ngân sách theo thời gian thực.</p>
-                </div>
-              </Col>
-              <Col xs={24} md={8}>
-                <div className={styles.caseCard}>
-                  <div className={styles.imgWrapper}>
-                    <img
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-a9WmCmTUXpFbXGlu_oBL1KRAJ4cg6Lt6k3aH7Pe20nUITDd9ceqv2IW69oMmoB6iimI8xX5zaqiKhttSEm5NdMHEcB91alo9BrYFGScoMF5nDr2pjSohF0M8wW_1pE5asjaBc3Zr_08vqcfOMm4wq0HrJXYbnoPt48w4d603pdQ18pGqf-3TH6eSdiLxqds72EyvnRrKlYNYKyvEbQsuyVj-9dHbSNR20oCfFavgNHCji0HNwZD0V0_V9f9Bxox1gpaU1ayX-gA"
-                      alt="Use Case 3"
-                    />
-                  </div>
-                  <div className={styles.caseHeader}>
-                    <h4>Biểu mẫu nội bộ</h4>
-                    <span className="material-symbols-outlined" style={{ color: '#565e74' }}>arrow_forward</span>
-                  </div>
-                  <p>Khảo sát nhân viên, đánh giá công việc và thu thập ý kiến đóng góp.</p>
-                </div>
-              </Col>
-            </Row>
-          </div>
-        </section>
+						<div className={`${styles.heroCtas} ${styles.animFadeUp} ${styles.d4}`}>
+							<button type="button" className={`${styles.btnGradientPill} ${styles.lg}`} onClick={goRegisterTenant}>
+								Bắt đầu ngay <ArrowRightOutlined />
+							</button>
+							<button type="button" className={styles.btnSecondaryPill}>
+								<CaretRightFilled className={styles.playIcon} /> Xem bản dùng thử
+							</button>
+						</div>
 
-        {/* CTA Section */}
-        <section className={styles.ctaSection}>
-          <div className={styles.ctaBox}>
-            <h2>Bắt đầu xây dựng quy trình của bạn ngay hôm nay</h2>
-            <p>Tham gia cùng hơn 1,000+ doanh nghiệp đang tối ưu hóa vận hành với FlowState.</p>
-            <div className={styles.ctaButtons}>
-              <Button size="large" style={{ height: '56px', padding: '0 32px', borderRadius: '12px', fontSize: '18px', fontWeight: 'bold', color: '#565e74', border: 'none' }}>
-                Tạo tài khoản
-              </Button>
-              <Button size="large" ghost style={{ height: '56px', padding: '0 32px', borderRadius: '12px', fontSize: '18px', fontWeight: 'bold', borderColor: 'rgba(255,255,255,0.4)', color: '#fff', background: 'rgba(255,255,255,0.1)' }}>
-                Liên hệ tư vấn
-              </Button>
-            </div>
-          </div>
-        </section>
-      </Content>
+						<div className={`${styles.heroStats} ${styles.animFadeUp} ${styles.d5}`}>
+							<div>
+								<div className={styles.statValue}>1,000+</div>
+								<div className={styles.statLabel}>Doanh nghiệp tin dùng</div>
+							</div>
+							<div>
+								<div className={styles.statValue}>50k+</div>
+								<div className={styles.statLabel}>Biểu mẫu được xử lý/tháng</div>
+							</div>
+							<div>
+								<div className={styles.statValue}>99.9%</div>
+								<div className={styles.statLabel}>Uptime cam kết SLA</div>
+							</div>
+						</div>
+					</div>
 
-      <Footer className={styles.homeFooter}>
-        <div className={styles.footerContent}>
-          <div>
-            <div className={styles.brand}>FlowState</div>
-            <div>Giải pháp tối ưu hóa quy trình doanh nghiệp hiện đại.</div>
-            <div style={{ marginTop: '16px', fontSize: '14px' }}>© 2025 FlowState Systems. All rights reserved.</div>
-          </div>
-          <div className={styles.links}>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Security</a>
-            <a href="#">Contact</a>
-          </div>
-        </div>
-      </Footer>
-    </div>
-  );
+					{/* Isometric dashboard mockup */}
+					<div className={styles.heroMockup}>
+						<div className={styles.mockupBar}>
+							<span className={`${styles.dot} ${styles.r}`} />
+							<span className={`${styles.dot} ${styles.y}`} />
+							<span className={`${styles.dot} ${styles.g}`} />
+							<div className={styles.mockupUrl}>app.flowform.vn/dashboard</div>
+						</div>
+						<div className={styles.mockupBody}>
+							<div className={styles.mockupSidebar}>
+								<div className={styles.mockupLogo}>
+									<span className={styles.logoDot} />
+									<span>FLOWFORM</span>
+								</div>
+								<div className={`${styles.menuStripe} ${styles.active}`} />
+								<div className={styles.menuStripe} />
+								<div className={styles.menuStripe} />
+								<div className={styles.menuStripe} />
+							</div>
+							<div className={styles.mockupContent}>
+								<div className={styles.mockupStats}>
+									<div className={styles.miniStat}>
+										<div className={styles.miniIcon}>
+											<FileTextOutlined />
+										</div>
+										<div>
+											<div className={styles.miniValue}>1,284</div>
+											<div className={styles.miniLabel}>Tổng lượt nộp</div>
+										</div>
+									</div>
+									<div className={styles.miniStat}>
+										<div className={`${styles.miniIcon} ${styles.green}`}>
+											<CheckCircleFilled />
+										</div>
+										<div>
+											<div className={styles.miniValue}>876</div>
+											<div className={styles.miniLabel}>Đã phê duyệt</div>
+										</div>
+									</div>
+								</div>
+								<div className={styles.mockupChart}>
+									<div className={styles.bar} style={{ height: 50 }} />
+									<div className={`${styles.bar} ${styles.b2}`} style={{ height: 78 }} />
+									<div className={styles.bar} style={{ height: 62 }} />
+									<div className={`${styles.bar} ${styles.hl}`} style={{ height: 96 }} />
+								</div>
+							</div>
+						</div>
+					</div>
+
+					{/* Floating notification toast */}
+					<div className={styles.floatToast}>
+						<div className={styles.toastIcon}>
+							<CheckCircleFilled />
+						</div>
+						<div style={{ flex: 1 }}>
+							<div className={styles.toastTitle}>Yêu cầu đã được phê duyệt</div>
+							<div className={styles.toastMsg}>Đơn xin nghỉ phép của bạn đã được Quản lý phê duyệt.</div>
+							<div className={styles.toastTime}>
+								<ClockCircleOutlined /> Vừa xong
+							</div>
+						</div>
+						<CloseOutlined className={styles.toastClose} />
+					</div>
+
+					{/* Floating approved chip */}
+					<div className={styles.floatApproved}>
+						<div className={styles.approvedIcon}>
+							<CheckOutlined />
+						</div>
+						<div>
+							<div className={styles.approvedTitle}>Đã phê duyệt</div>
+							<div className={styles.approvedSub}>Đơn #0142 · vừa xong</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* Features (bento 2×2) */}
+			<section id="features" className={styles.section}>
+				<div className={styles.sectionInner}>
+					<Reveal>
+						<div className={styles.sectionHead}>
+							<span className={styles.sectionLabel}>TÍNH NĂNG NỔI BẬT</span>
+							<h2>Mọi thứ bạn cần để vận hành quy trình</h2>
+							<p>Từ biểu mẫu đầu tiên đến quy trình phê duyệt phức tạp — không cần viết một dòng code.</p>
+						</div>
+					</Reveal>
+					<Reveal stagger className={styles.bentoGrid}>
+						{FEATURES.map((f) => (
+							<div key={f.title} className={styles.featureCard}>
+								<div className={`${styles.featureIcon} ${styles[f.color]}`}>{f.icon}</div>
+								<h3>{f.title}</h3>
+								<p>{f.desc}</p>
+								<a className={styles.featureLink}>
+									Tìm hiểu thêm <ArrowRightOutlined />
+								</a>
+							</div>
+						))}
+					</Reveal>
+				</div>
+			</section>
+
+			{/* How it works */}
+			<section id="how-it-works" className={`${styles.section} ${styles.bgSlate}`}>
+				<div className={styles.sectionInner}>
+					<Reveal>
+						<div className={styles.sectionHead}>
+							<span className={styles.sectionLabel}>QUY TRÌNH 3 BƯỚC</span>
+							<h2>Bắt đầu chỉ trong vài phút</h2>
+						</div>
+					</Reveal>
+					<Reveal stagger className={styles.stepsRow}>
+						{STEPS.map((s, i) => (
+							<React.Fragment key={s.num}>
+								{i > 0 && (
+									<div className={styles.stepArrow}>
+										<ArrowRightOutlined />
+									</div>
+								)}
+								<div className={styles.stepItem}>
+									<div className={styles.stepNumber}>{s.num}</div>
+									<h4>{s.title}</h4>
+									<p>{s.desc}</p>
+								</div>
+							</React.Fragment>
+						))}
+					</Reveal>
+				</div>
+			</section>
+
+			{/* Use cases */}
+			<section id="use-cases" className={styles.section}>
+				<div className={styles.sectionInner}>
+					<Reveal>
+						<div className={styles.sectionHead}>
+							<span className={styles.sectionLabel}>TÌNH HUỐNG SỬ DỤNG</span>
+							<h2>Sinh ra cho mọi quy trình nội bộ</h2>
+						</div>
+					</Reveal>
+					<Reveal stagger className={styles.useCasesRow}>
+						{USE_CASES.map((u) => (
+							<div key={u.title} className={styles.useCaseCard}>
+								<div className={`${styles.useCaseHeader} ${styles[u.color]}`}>{u.icon}</div>
+								<div className={styles.useCaseBody}>
+									<h4>{u.title}</h4>
+									<p>{u.desc}</p>
+								</div>
+							</div>
+						))}
+					</Reveal>
+				</div>
+			</section>
+
+			{/* CTA */}
+			<section id="cta" className={styles.ctaSection}>
+				<Reveal className={styles.ctaBox}>
+					<h2>Bắt đầu xây dựng quy trình của bạn ngay hôm nay</h2>
+					<p>Tạo tenant riêng cho tổ chức của bạn trong 2 phút — bạn sẽ là Quản trị viên đầu tiên.</p>
+					<div className={styles.ctaButtons}>
+						<button type="button" className={styles.btnWhitePill} onClick={goRegisterTenant}>
+							Đăng ký tổ chức miễn phí
+						</button>
+						<button type="button" className={styles.btnOutlinePill} onClick={() => history.push('/contact')}>
+							Liên hệ tư vấn
+						</button>
+					</div>
+				</Reveal>
+			</section>
+
+			<PublicFooter />
+		</div>
+	);
 };
 
 export default Home;
