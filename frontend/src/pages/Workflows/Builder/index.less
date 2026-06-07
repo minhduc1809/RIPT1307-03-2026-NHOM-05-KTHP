@@ -23,6 +23,13 @@
 	overflow: hidden;
 	background: @bg;
 	font-family: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+	@media (max-width: 768px) {
+		height: auto; // Bỏ chiều cao cố định để scroll tự do trên mobile
+		min-height: calc(100vh - 96px);
+		overflow: auto;
+		-webkit-overflow-scrolling: touch;
+	}
 }
 
 .loadingWrap {
@@ -39,10 +46,20 @@
 	align-items: center;
 	flex-shrink: 0;
 	height: 60px;
-	padding: 0 20px;
+	padding: 0 24px;
 	background: #fff;
 	border: 1px solid @border;
 	border-radius: 10px 10px 0 0;
+
+	@media (max-width: 768px) {
+		padding: 0 20px;
+		gap: 10px;
+	}
+
+	@media (max-width: 640px) {
+		padding: 0 16px;
+		gap: 8px;
+	}
 }
 
 .backBtn {
@@ -97,11 +114,19 @@
 	font-size: 10px;
 	font-weight: 700;
 	letter-spacing: 1px;
+
+	@media (max-width: 480px) {
+		display: none;
+	}
 }
 
 .subTitle {
 	font-size: 11.5px;
 	color: @muted-light;
+
+	@media (max-width: 640px) {
+		display: none;
+	}
 }
 
 .topSpacer {
@@ -127,6 +152,15 @@
 		color: @muted;
 	}
 
+	// Desktop: hiện text
+	.btnText { display: inline; }
+
+	// Mobile: ẩn text, chỉ hiện icon
+	@media (max-width: 640px) {
+		padding: 8px 10px;
+		.btnText { display: none; }
+	}
+
 	&:hover {
 		border-color: #c7d2fe;
 		color: @primary;
@@ -145,6 +179,19 @@
 	cursor: pointer;
 	box-shadow: 0 4px 14px #4f46e54d;
 	transition: all 0.2s ease-out;
+
+	// Desktop: hiện text dài, ẩn text ngắn
+	.btnText { display: inline; }
+	.btnTextShort { display: none; }
+
+	// Mobile: ẩn text dài, hiện text ngắn
+	@media (max-width: 480px) {
+		padding: 8px 12px;
+		font-size: 13px;
+
+		.btnText { display: none; }
+		.btnTextShort { display: inline; }
+	}
 
 	&:hover {
 		transform: translateY(-1px);
@@ -166,6 +213,11 @@
 	border-top: none;
 	border-radius: 0 0 10px 10px;
 	overflow: hidden;
+
+	@media (max-width: 768px) {
+		flex-direction: column;
+		overflow: visible; // Để content có thể cuộn chung
+	}
 }
 
 .stagePanel {
@@ -181,6 +233,13 @@
 
 	@media (max-width: 1100px) {
 		width: 420px;
+	}
+
+	@media (max-width: 768px) {
+		width: 100%;
+		border-right: none;
+		border-bottom: 1px solid @border;
+		padding: 16px;
 	}
 }
 
@@ -436,6 +495,11 @@
 	flex: 1;
 	min-width: 0;
 	background: @bg;
+
+	@media (max-width: 768px) {
+		min-height: 400px;
+		flex: none; // Tránh bị thu hẹp trên mobile
+	}
 }
 
 .previewHeader {

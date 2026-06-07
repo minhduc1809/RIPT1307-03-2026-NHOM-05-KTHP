@@ -33,9 +33,20 @@
 	gap: 14px;
 	align-items: center;
 	height: 60px;
-	padding: 0 20px;
+	margin-top: 10px; // Thêm khoảng cách phía trên
+	padding: 0 24px; // tăng từ 20 → 24
 	background: #fff;
 	border-bottom: 1px solid @border;
+
+	@media (max-width: 768px) {
+		padding: 0 20px;
+		gap: 10px;
+	}
+
+	@media (max-width: 640px) {
+		padding: 0 16px; // tăng từ 12 → 16
+		gap: 8px;
+	}
 }
 
 .btnBack {
@@ -91,6 +102,16 @@
 	border: none;
 	outline: none;
 
+	// Giới hạn chiều rộng tên biểu mẫu trên mobile
+	@media (max-width: 640px) {
+		max-width: 120px;
+	}
+
+	@media (max-width: 480px) {
+		max-width: 90px;
+		font-size: 13px;
+	}
+
 	&::placeholder {
 		color: @muted-light;
 	}
@@ -107,6 +128,11 @@
 	background: transparent;
 	border: none;
 	outline: none;
+
+	// Ẩn mô tả trên màn nhỏ — tiết kiệm chiều rộng header
+	@media (max-width: 640px) {
+		display: none;
+	}
 }
 
 .editBadge {
@@ -118,6 +144,11 @@
 	letter-spacing: 1px;
 	background: @indigo-bg;
 	border-radius: 999px;
+
+	// Ẩn trên mobile nhỏ — bảo toàn không gian header
+	@media (max-width: 480px) {
+		display: none;
+	}
 }
 
 .headerSpacer {
@@ -144,6 +175,15 @@
 		font-size: 15px;
 	}
 
+	// Desktop: hiện text
+	.btnText { display: inline; }
+
+	// Mobile: ẩn text, chỉ hiện icon
+	@media (max-width: 640px) {
+		padding: 8px 10px;
+		.btnText { display: none; }
+	}
+
 	&:hover {
 		color: @primary;
 		border-color: #c7d2fe;
@@ -163,6 +203,19 @@
 	cursor: pointer;
 	transition: all 0.2s ease-out;
 
+	// Desktop: hiện text dài, ẩn text ngắn
+	.btnText { display: inline; }
+	.btnTextShort { display: none; }
+
+	// Mobile: ẩn text dài, hiện text ngắn
+	@media (max-width: 480px) {
+		padding: 8px 12px;
+		font-size: 13px;
+
+		.btnText { display: none; }
+		.btnTextShort { display: inline; }
+	}
+
 	&:hover {
 		box-shadow: 0 8px 20px -4px #4f46e566;
 		transform: translateY(-1px);
@@ -179,6 +232,12 @@
 	display: flex;
 	flex: 1;
 	min-height: 0;
+
+	// Mobile: stack vertically — toolbox → strip nằm ngang trên
+	@media (max-width: 768px) {
+		flex-direction: column;
+		overflow: hidden;
+	}
 }
 
 .toolbox {
@@ -191,6 +250,23 @@
 	overflow-y: auto;
 	background: #fff;
 	border-right: 1px solid @border;
+
+	// Mobile: thanh ngang scroll à top
+	@media (max-width: 768px) {
+		width: 100%;
+		flex-direction: row;
+		gap: 8px;
+		padding: 10px 16px; // tăng từ 12 → 16 — không sát viền
+		overflow-x: auto;
+		overflow-y: hidden;
+		border-right: none;
+		border-bottom: 1px solid @border;
+		-webkit-overflow-scrolling: touch;
+		flex-shrink: 0;
+		> span:first-child {
+			display: none;
+		}
+	}
 }
 
 .sectionLabel {
@@ -204,6 +280,12 @@
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+
+	// Mobile: items xếp ngang trong toolbox strip
+	@media (max-width: 768px) {
+		flex-direction: row;
+		gap: 8px;
+	}
 }
 
 .tile {
@@ -244,6 +326,26 @@
 		box-shadow: 0 8px 20px -4px #4f46e54d;
 		opacity: 0.95;
 	}
+
+	// Mobile strip: compact, icon + label dọc
+	@media (max-width: 768px) {
+		flex-direction: column;
+		gap: 4px;
+		padding: 8px 10px;
+		min-width: 64px;
+		align-items: center;
+		flex-shrink: 0;
+
+		.tileLabel {
+			font-size: 11px;
+			text-align: center;
+			flex: unset;
+		}
+
+		.tileGrip {
+			display: none;
+		}
+	}
 }
 
 .canvasArea {
@@ -254,6 +356,11 @@
 	min-width: 0;
 	padding: 24px;
 	overflow-y: auto;
+
+	@media (max-width: 768px) {
+		padding: 16px; // padding đều 4 phía
+		min-height: 0;
+	}
 }
 
 .paper {
@@ -455,6 +562,16 @@
 	overflow-y: auto;
 	background: #fff;
 	border-left: 1px solid @border;
+
+	// Mobile: panel dưới bottom — chiều cao cố định
+	@media (max-width: 768px) {
+		width: 100%;
+		height: 280px; // tăng thêm 20px — nội dung thông thoáng hơn
+		border-left: none;
+		border-top: 1px solid @border;
+		overflow-y: auto;
+		-webkit-overflow-scrolling: touch;
+	}
 }
 
 .tabs {

@@ -178,6 +178,11 @@
 	width: 100%;
 	margin-top: 4px;
 
+	@media (max-width: 480px) {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
 	.btnSecondary {
 		display: inline-flex;
 		gap: 8px;
@@ -253,7 +258,23 @@
 	gap: 10px;
 	align-items: center;
 
+	@media (max-width: 576px) {
+		width: 100%;
+		flex-direction: column;
+		align-items: stretch;
+	}
+
 	.roleFilter {
+		@media (max-width: 576px) {
+			width: 100%;
+		}
+
+		:global(.ant-select) {
+			@media (max-width: 576px) {
+				width: 100% !important;
+			}
+		}
+
 		:global(.ant-select-selector) {
 			border-radius: 8px !important;
 			border-color: @border !important;
@@ -276,12 +297,22 @@
 	font-size: 12.5px !important;
 	font-weight: 600 !important;
 	box-shadow: 0 4px 14px #4f46e54d;
+
+	@media (max-width: 576px) {
+		width: 100%;
+		justify-content: center;
+	}
 }
 
 .usersTableWrapper {
+	width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+
 	:global {
 		.ant-table {
 			font-family: inherit;
+			min-width: 800px;
 		}
 
 		.ant-table-thead > tr > th {
@@ -309,7 +340,10 @@
 		}
 
 		.ant-pagination {
-			padding: 0 16px;
+			padding: 0 16px 16px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
 
 			.ant-pagination-item,
 			.ant-pagination-prev .ant-pagination-item-link,

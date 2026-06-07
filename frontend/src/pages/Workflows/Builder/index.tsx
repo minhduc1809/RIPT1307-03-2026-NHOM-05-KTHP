@@ -408,11 +408,17 @@ const WorkflowBuilder: React.FC<IWorkflowBuilderProps> = ({ editId }) => {
 				<div className={styles.topSpacer} />
 				{editId && (
 					<button type='button' className={styles.viewBtn} onClick={() => history.push(`/workflows/${editId}`)}>
-						<EyeOutlined /> Xem chi tiết
+						<EyeOutlined />
+						<span className={styles.btnText}>Xem chi tiết</span>
 					</button>
 				)}
 				<button type='button' className={styles.saveBtn} onClick={handleSave} disabled={saving}>
-					{saving ? 'Đang lưu...' : editId ? 'Cập nhật quy trình' : 'Lưu quy trình'}
+					<span className={styles.btnText}>
+						{saving ? 'Đang lưu...' : editId ? 'Cập nhật quy trình' : 'Lưu quy trình'}
+					</span>
+					<span className={styles.btnTextShort}>
+						{saving ? '...' : 'Lưu'}
+					</span>
 				</button>
 			</header>
 

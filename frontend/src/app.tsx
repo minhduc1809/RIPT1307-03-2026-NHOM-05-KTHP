@@ -2,6 +2,7 @@ import Footer from '@/components/Footer';
 import HeaderBreadcrumb from '@/components/HeaderBreadcrumb';
 import PendingBadge from '@/components/MenuBadges/PendingBadge';
 import MenuUnreadBadge from '@/components/NotificationBell/MenuUnreadBadge';
+import MobileSidebarToggle from '@/components/MobileSidebarToggle';
 import RightContent from '@/components/RightContent';
 import { ThunderboltFilled } from '@ant-design/icons';
 import { notification } from 'antd';
@@ -106,7 +107,8 @@ export const request: RequestConfig = {
 };
 
 // ProLayout  https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }: any) => {
+	const sidebarCollapsed = initialState?.sidebarCollapsed ?? false;
 	return {
 		unAccessible: (
 			<TechnicalSupportBounder>
@@ -117,6 +119,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 		rightContentRender: () => <RightContent />,
 		headerContentRender: () => <HeaderBreadcrumb />,
 		disableContentMargin: false,
+		// Sync collapsed state với floating toggle button trên mobile
+		collapsed: sidebarCollapsed,
+		onCollapse: (c: boolean) => {
+			setInitialState((prev: any) => ({ ...prev, sidebarCollapsed: c }));
+		},
 
 		// các trang workspace toàn màn (builder) không có footer
 		footerRender: () => {
@@ -192,6 +199,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 				{/* <TechnicalSupportBounder> */}
 				<OneSignalBounder>{dom}</OneSignalBounder>
 				{/* </TechnicalSupportBounder> */}
+				{/* Nút hamburger floating — chỉ hiện trên mobile, fixed góc dưới trái */}
+				<MobileSidebarToggle />
 			</ErrorBoundary>
 		),
 		menuHeaderRender: () => (

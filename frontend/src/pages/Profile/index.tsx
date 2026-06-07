@@ -441,6 +441,7 @@ const Profile: React.FC = () => {
 								dataSource={users}
 								rowKey='id'
 								loading={loadingUsers}
+								scroll={{ x: 800 }}
 								pagination={{
 									current: page,
 									pageSize: limit,

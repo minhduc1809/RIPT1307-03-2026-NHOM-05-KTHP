@@ -531,11 +531,17 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ editId: editIdProp }) => {
 				<div className={styles.headerSpacer} />
 				{editId && (
 					<button type='button' className={styles.btnPreview} onClick={() => history.push(`/forms/${editId}`)}>
-						<EyeOutlined /> Xem biểu mẫu
+						<EyeOutlined />
+						<span className={styles.btnText}>Xem biểu mẫu</span>
 					</button>
 				)}
 				<button type='button' className={styles.btnSave} onClick={handleSave} disabled={isSaving || isLoading}>
-					{isSaving ? 'Đang lưu...' : editId ? 'Cập nhật biểu mẫu' : 'Lưu biểu mẫu'}
+					<span className={styles.btnText}>
+						{isSaving ? 'Đang lưu...' : editId ? 'Cập nhật biểu mẫu' : 'Lưu biểu mẫu'}
+					</span>
+					<span className={styles.btnTextShort}>
+						{isSaving ? '...' : 'Lưu'}
+					</span>
 				</button>
 			</header>
 

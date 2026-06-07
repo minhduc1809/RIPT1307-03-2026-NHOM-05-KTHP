@@ -34,6 +34,15 @@
 	}
 }
 
+// Ẩn nút trigger mặc định của ProLayout trên header mobile
+// vì đã có MobileSidebarToggle floating riêng ở góc dưới trái
+.ant-pro-global-header-collapsed-button,
+.ant-pro-sider-collapsed-button {
+	@media (max-width: @bp-md) {
+		display: none !important;
+	}
+}
+
 .ant-pro-sider.ant-layout-sider {
 	background: #fff;
 	border-right: 1px solid @border;

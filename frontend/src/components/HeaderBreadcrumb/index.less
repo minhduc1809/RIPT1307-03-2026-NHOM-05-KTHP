@@ -9,16 +9,12 @@
 	align-items: center;
 	height: 100%;
 	font-size: 13px;
-	min-width: 0; // cho phép truncate khi không gian hẹp
+	min-width: 0;
 	overflow: hidden;
 
+	// Ẩn toàn bộ breadcrumb trên mobile — header chỉ hiện logo + actions
 	@media (max-width: @bp-md) {
-		font-size: 12px;
-		gap: 4px;
-	}
-
-	@media (max-width: @bp-sm) {
-		font-size: 11px;
+		display: none;
 	}
 
 	.root {

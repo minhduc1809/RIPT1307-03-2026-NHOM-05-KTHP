@@ -307,6 +307,7 @@ const FormsDashboard: React.FC = () => {
 					dataSource={displayedForms}
 					loading={loading}
 					rowKey='id'
+					scroll={{ x: 550 }}
 					pagination={
 						isAdminOrManager
 							? {
