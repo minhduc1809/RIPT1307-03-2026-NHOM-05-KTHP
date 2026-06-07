@@ -668,17 +668,22 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ editId: editIdProp }) => {
 						{rightTab === 'theme' && (
 							<div className={styles.panelBody}>
 								<span className={styles.sectionLabel}>CHỦ ĐỀ BIỂU MẪU</span>
-								{THEME_PRESETS.map((preset) => (
-									<div
-										key={preset.id}
-										className={`${styles.themeRow} ${themePreset === preset.id ? styles.active : ''}`}
-										onClick={() => setThemePreset(preset.id)}
-									>
-										<span className={styles.swatch} style={{ background: preset.swatch }} />
-										<span className={styles.themeName}>{preset.label}</span>
-										{themePreset === preset.id && <CheckCircleOutlined className={styles.themeCheck} />}
-									</div>
-								))}
+								<div className={styles.themeGrid}>
+									{THEME_PRESETS.map((preset) => (
+										<div
+											key={preset.id}
+											className={`${styles.themeRow} ${themePreset === preset.id ? styles.active : ''}`}
+											onClick={() => setThemePreset(preset.id)}
+										>
+											<div className={styles.swatchArea} style={{ background: preset.swatch }}>
+												{themePreset === preset.id && (
+													<CheckCircleOutlined className={styles.themeCheck} />
+												)}
+											</div>
+											<span className={styles.themeName}>{preset.label}</span>
+										</div>
+									))}
+								</div>
 							</div>
 						)}
 

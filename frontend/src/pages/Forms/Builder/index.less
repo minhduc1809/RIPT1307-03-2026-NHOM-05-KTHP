@@ -18,7 +18,6 @@
 	// full-bleed dưới topbar 60px: -18px triệt tiêu gutter của ant-layout-content
 	height: calc(100vh - 60px);
 	min-height: 480px;
-	margin: -18px;
 	overflow: hidden;
 	font-family: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
 	background: @bg;
@@ -496,47 +495,71 @@
 	padding: 16px;
 }
 
+// Grid 2 cột cho bộ chọn theme
+.themeGrid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 8px;
+}
+
 .themeRow {
 	display: flex;
-	gap: 10px;
-	align-items: center;
-	padding: 10px 12px;
-	background: #fff;
-	border: 1px solid @border;
+	flex-direction: column;
+	overflow: hidden;
+	border: 1.5px solid @border;
 	border-radius: 10px;
 	cursor: pointer;
 	transition: all 0.2s ease-out;
 
-	.swatch {
-		flex-shrink: 0;
-		width: 22px;
-		height: 22px;
-		border: 1px solid @border;
-		border-radius: 50%;
+	// Phần màu — chiếm toàn bộ chiều rộng card
+	.swatchArea {
+		position: relative;
+		height: 54px;
+		// border tương phản để swatch trắng không mất trên nền trắng
+		border-bottom: 1px solid @border-light;
+		transition: height 0.2s ease-out;
+	}
+
+	// Check icon — overlay ở giữa swatch
+	.themeCheck {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		font-size: 20px;
+		color: @primary;
+		filter: drop-shadow(0 1px 3px rgba(0,0,0,0.25));
 	}
 
 	.themeName {
-		flex: 1;
-		color: @text-body;
+		padding: 7px 8px 6px;
+		color: @muted;
 		font-weight: 600;
-		font-size: 13px;
-	}
-
-	.themeCheck {
-		color: @primary;
-		font-size: 15px;
+		font-size: 10.5px;
+		line-height: 1.3;
+		text-align: center;
+		background: #fff;
+		transition: color 0.2s ease-out;
 	}
 
 	&:hover {
 		border-color: #c7d2fe;
+		box-shadow: 0 3px 10px rgba(79, 70, 229, 0.12);
+		transform: translateY(-1px);
+
+		.themeName {
+			color: @primary;
+		}
 	}
 
 	&.active {
-		background: @indigo-bg;
-		border: 1.5px solid @primary;
+		border-color: @primary;
+		box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18);
 
 		.themeName {
-			color: @text;
+			color: @primary;
+			background: @indigo-bg;
+			font-weight: 700;
 		}
 	}
 }
