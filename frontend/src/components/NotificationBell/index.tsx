@@ -78,7 +78,6 @@ const NotificationBell: React.FC = () => {
 		finally { setLoading(false); }
 	}, []);
 
-	// Initial load
 	useEffect(() => {
 		fetchUnread();
 	}, [fetchUnread]);
@@ -88,7 +87,6 @@ const NotificationBell: React.FC = () => {
 		publishUnread(unreadCount);
 	}, [unreadCount]);
 
-	// Socket real-time
 	useEffect(() => {
 		connectSocket();
 		const handleNew = () => {
@@ -99,7 +97,6 @@ const NotificationBell: React.FC = () => {
 		return () => { offSocketEvent('notification', handleNew); };
 	}, [fetchUnread, fetchNotifications, open]);
 
-	// Click outside to close
 	useEffect(() => {
 		if (!open) return;
 		const handleClick = (e: MouseEvent) => {

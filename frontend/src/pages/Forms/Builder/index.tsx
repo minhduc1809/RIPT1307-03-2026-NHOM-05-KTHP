@@ -1,4 +1,3 @@
-// design: smartadmin.pen · frame 05 (tạo mới) & 05b (chỉnh sửa)
 import React, { useEffect, useState } from 'react';
 import { history, useLocation } from 'umi';
 import { message } from 'antd';
@@ -70,7 +69,6 @@ const THEME_CLASS: Record<ThemeId, string> = {
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
 interface IFormBuilderProps {
-	// truyền từ trang FormEdit (/forms/:formId/edit); fallback query ?id= khi vào trực tiếp builder
 	editId?: string;
 }
 
@@ -507,7 +505,6 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ editId: editIdProp }) => {
 
 	return (
 		<div className={styles.builderLayout}>
-			{/* Top bar */}
 			<header className={styles.header}>
 				<button type='button' className={styles.btnBack} onClick={() => history.push('/forms')}>
 					<ArrowLeftOutlined />
@@ -544,7 +541,6 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ editId: editIdProp }) => {
 
 			<DragDropContext onDragEnd={onDragEnd}>
 				<main className={styles.mainContent}>
-					{/* Toolbox 240 */}
 					<aside className={styles.toolbox}>
 						<span className={styles.sectionLabel}>THÀNH PHẦN</span>
 						<Droppable droppableId='toolbox' isDropDisabled>
@@ -572,7 +568,6 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ editId: editIdProp }) => {
 						</Droppable>
 					</aside>
 
-					{/* Canvas */}
 					<section className={styles.canvasArea} onClick={() => setSelectedFieldId(null)}>
 						<Droppable droppableId='canvas'>
 							{(provided, snapshot) => (
@@ -650,7 +645,6 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ editId: editIdProp }) => {
 						</Droppable>
 					</section>
 
-					{/* Right panel 300 */}
 					<aside className={styles.propPanel}>
 						<div className={styles.tabs}>
 							{(

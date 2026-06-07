@@ -20,14 +20,12 @@ const Login: React.FC = () => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 
-	// State cho modal đổi mật khẩu lần đầu
 	const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 	const [changePwForm] = Form.useForm();
 	const [changingPassword, setChangingPassword] = useState(false);
 	const [pendingLoginData, setPendingLoginData] = useState<any>(null);
 	const [loginPassword, setLoginPassword] = useState('');
 
-	/** Redirect path based on user role */
 	const getRedirectPath = (role?: string) => {
 		if (role === 'ADMIN' || role === 'MANAGER') return '/dashboard';
 		return '/submissions/new';
@@ -40,15 +38,10 @@ const Login: React.FC = () => {
 		}
 	}, [initialState?.currentUser]);
 
-	/**
-	 * Handle tokens and user info after successful login
-	 */
 	const handleLoginSuccess = async (data: { accessToken: string; refreshToken: string; user: any }) => {
-		// Store tokens client-side as per AUTH_API.md
 		localStorage.setItem('token', data.accessToken);
 		localStorage.setItem('refreshToken', data.refreshToken);
 
-		// Use user info from login response directly
 		setInitialState({
 			...initialState,
 			currentUser: data.user,
@@ -65,15 +58,12 @@ const Login: React.FC = () => {
 	const handleSubmit = async (values: { email: string; password: string }) => {
 		try {
 			setSubmitting(true);
-			// Call login endpoint defined in AUTH_API.md
 			const response = await adminlogin({ email: values.email, password: values.password });
 
 			if (response.status === 200 && response?.data?.data?.accessToken) {
 				const loginData = response.data.data;
 
-				// Kiểm tra cờ passwordChangeRequired
 				if (loginData.user?.passwordChangeRequired) {
-					// Lưu token trước để có thể gọi API change-password
 					localStorage.setItem('token', loginData.accessToken);
 					localStorage.setItem('refreshToken', loginData.refreshToken);
 					setPendingLoginData(loginData);
@@ -125,11 +115,9 @@ const Login: React.FC = () => {
 		}
 	};
 
-	/** Bỏ qua đổi MK lần đầu */
 	const handleSkipChangePassword = () => {
 		setShowChangePasswordModal(false);
 		if (pendingLoginData) {
-			// Token đã lưu rồi, chỉ cần set initialState và redirect
 			setInitialState({
 				...initialState,
 				currentUser: pendingLoginData.user,
@@ -151,7 +139,6 @@ const Login: React.FC = () => {
 			<PublicHead title="Đăng nhập — FlowForm" />
 			<div className={styles.content}>
 				<div className={styles.loginBox}>
-					{/* Left gradient panel (design 01) */}
 					<div className={styles.leftPanel}>
 						<Link to='/' className={styles.lpLogo} title='Về trang chủ'>
 							<div className={styles.lpLogoSq}>
@@ -178,7 +165,6 @@ const Login: React.FC = () => {
 						</div>
 					</div>
 
-					{/* Right form panel */}
 					<div className={styles.rightPanel}>
 						<div className={styles.header}>
 							<h2>Đăng Nhập</h2>
@@ -257,7 +243,6 @@ const Login: React.FC = () => {
 				</div>
 			</div>
 
-			{/* Modal đổi mật khẩu lần đầu */}
 			<Modal
 				title={null}
 				visible={showChangePasswordModal}

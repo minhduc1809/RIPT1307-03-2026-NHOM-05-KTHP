@@ -33,14 +33,12 @@ const DelegationsPage: React.FC = () => {
 	const [page, setPage] = useState(1);
 	const [limit] = useState(20);
 
-	// Modal
 	const [modalVisible, setModalVisible] = useState(false);
 	const [editing, setEditing] = useState<IDelegation | null>(null);
 	const [saving, setSaving] = useState(false);
 	const [revokeTarget, setRevokeTarget] = useState<IDelegation | null>(null);
 	const [revoking, setRevoking] = useState(false);
 
-	// Form state
 	const [toUserId, setToUserId] = useState<string | undefined>(undefined);
 	const [startDate, setStartDate] = useState<moment.Moment | null>(null);
 	const [endDate, setEndDate] = useState<moment.Moment | null>(null);
@@ -48,7 +46,6 @@ const DelegationsPage: React.FC = () => {
 	const [scopeFormIds, setScopeFormIds] = useState<string[]>([]);
 	const [scopeWorkflowIds, setScopeWorkflowIds] = useState<string[]>([]);
 
-	// Options
 	const [userOptions, setUserOptions] = useState<{ label: string; value: string }[]>([]);
 	const [userSearching, setUserSearching] = useState(false);
 	const [formOptions, setFormOptions] = useState<{ label: string; value: string }[]>([]);
@@ -131,10 +128,8 @@ const DelegationsPage: React.FC = () => {
 		setModalVisible(true);
 	};
 
-	// Get current user ID from initialState or JWT token
 	const getCurrentUserId = (): string | null => {
 		if (currentUser?.id) return currentUser.id;
-		// Fallback: decode from JWT
 		try {
 			const token = localStorage.getItem('token');
 			if (token) {
@@ -171,7 +166,6 @@ const DelegationsPage: React.FC = () => {
 				message.success('Đã tạo ủy quyền');
 			}
 			setModalVisible(false);
-			// Silent re-fetch to get full data with relations
 			getDelegations({ page, limit }).then((res) => {
 				const data = (res as any)?.data?.data ?? (res as any)?.data;
 				const items = data?.items ?? data ?? [];
@@ -202,13 +196,11 @@ const DelegationsPage: React.FC = () => {
 	};
 
 	const handleToggle = async (record: IDelegation, checked: boolean) => {
-		// Optimistic update
 		setDelegations((prev) => prev.map((d) => (d.id === record.id ? { ...d, isActive: checked } : d)));
 		try {
 			await updateDelegation(record.id, { isActive: checked });
 			message.success(checked ? 'Đã kích hoạt ủy quyền' : 'Đã tạm ngưng ủy quyền');
 		} catch (err: any) {
-			// Revert on error
 			setDelegations((prev) => prev.map((d) => (d.id === record.id ? { ...d, isActive: !checked } : d)));
 			message.error(err?.response?.data?.message || 'Có lỗi xảy ra');
 		}
@@ -304,13 +296,11 @@ const DelegationsPage: React.FC = () => {
 		},
 	];
 
-	// Summary counts
 	const activeCount = delegations.filter(isCurrentlyActive).length;
 	const expiredCount = delegations.filter(isExpired).length;
 
 	return (
 		<div className={styles.delegationsPage}>
-			{/* Header */}
 			<div className={styles.pageHeader}>
 				<div>
 					<h1>Ủy quyền</h1>
@@ -321,7 +311,6 @@ const DelegationsPage: React.FC = () => {
 				</Button>
 			</div>
 
-			{/* Stats */}
 			<div className={styles.statsRow}>
 				<div className={styles.statItem}>
 					<div className={`${styles.statDot} ${styles.total}`} />
@@ -340,7 +329,6 @@ const DelegationsPage: React.FC = () => {
 				</div>
 			</div>
 
-			{/* Table */}
 			<div className={styles.tableCard}>
 				{loading ? (
 					<div className={styles.loadingContainer}><Spin /></div>
@@ -367,7 +355,6 @@ const DelegationsPage: React.FC = () => {
 				)}
 			</div>
 
-			{/* Modal Tạo / Chỉnh sửa — design: smartadmin.pen frame 17 (md2 / md2b) */}
 			<Modal
 				title={editing ? 'Chỉnh sửa ủy quyền' : 'Tạo ủy quyền'}
 				visible={modalVisible}
@@ -480,7 +467,6 @@ const DelegationsPage: React.FC = () => {
 				)}
 			</Modal>
 
-			{/* Modal Thu hồi — design: smartadmin.pen frame 17 (confirmModal) */}
 			<Modal
 				visible={!!revokeTarget}
 				onCancel={() => setRevokeTarget(null)}

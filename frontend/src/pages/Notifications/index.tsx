@@ -35,16 +35,13 @@ const Notifications: React.FC = () => {
 	const [unreadCount, setUnreadCount] = useState(0);
 	const [allTotal, setAllTotal] = useState(0);
 
-	// Socket state
 	const [socketStatus, setSocketStatus] = useState<'connecting' | 'connected' | 'disconnected'>(
 		'disconnected',
 	);
 
-	// Toast state
 	const [toast, setToast] = useState<INotification | null>(null);
 	const toastTimer = useRef<any>(null);
 
-	// ==================== FETCH DATA ====================
 	const fetchNotifications = useCallback(async () => {
 		setLoading(true);
 		try {
@@ -72,7 +69,6 @@ const Notifications: React.FC = () => {
 			const count = data?.count ?? data?.unread ?? data;
 			setUnreadCount(typeof count === 'number' ? count : 0);
 		} catch {
-			// silent
 		}
 	}, []);
 
@@ -89,7 +85,6 @@ const Notifications: React.FC = () => {
 		publishUnread(unreadCount);
 	}, [unreadCount]);
 
-	// ==================== SOCKET.IO ====================
 	useEffect(() => {
 		setSocketStatus('connecting');
 		const socket = connectSocket();
@@ -109,11 +104,9 @@ const Notifications: React.FC = () => {
 
 		if (socket.connected) setSocketStatus('connected');
 
-		// Listen for new notifications
 		const handleNewNotification = (payload: any) => {
 			console.log('[Notification] New:', payload);
 
-			// Add to top of list
 			const newNotif: INotification = {
 				id: payload.id || Date.now().toString(),
 				userId: payload.userId || '',
@@ -132,7 +125,6 @@ const Notifications: React.FC = () => {
 			setTotal((prev) => prev + 1);
 			setAllTotal((prev) => prev + 1);
 
-			// Show toast
 			setToast(newNotif);
 			if (toastTimer.current) clearTimeout(toastTimer.current);
 			toastTimer.current = setTimeout(() => setToast(null), 5000);
@@ -148,7 +140,6 @@ const Notifications: React.FC = () => {
 		};
 	}, []);
 
-	// ==================== ACTIONS ====================
 	const handleMarkAsRead = async (notif: INotification) => {
 		if (notif.read) return;
 		try {
@@ -158,7 +149,6 @@ const Notifications: React.FC = () => {
 			);
 			setUnreadCount((prev) => Math.max(0, prev - 1));
 		} catch {
-			// silent
 		}
 	};
 
@@ -187,7 +177,6 @@ const Notifications: React.FC = () => {
 		setPage(1);
 	};
 
-	// ==================== HELPERS ====================
 	const getTypeIconClass = (type?: string) => {
 		switch ((type || '').toLowerCase()) {
 			case 'success':
@@ -226,7 +215,6 @@ const Notifications: React.FC = () => {
 
 	return (
 		<div className={styles.notifPage}>
-			{/* Header */}
 			<div className={styles.pageHeader}>
 				<div className={styles.headerLeft}>
 					<h1>Thông báo</h1>
@@ -241,7 +229,6 @@ const Notifications: React.FC = () => {
 				</div>
 			</div>
 
-			{/* Filter Tabs */}
 			<div className={styles.filterBar}>
 				<button
 					className={`${styles.filterBtn} ${filter === 'all' ? styles.active : ''}`}
@@ -263,7 +250,6 @@ const Notifications: React.FC = () => {
 				</button>
 			</div>
 
-			{/* Notification List */}
 			<div className={styles.notifList}>
 				{loading ? (
 					<div className={styles.loadingContainer}>
@@ -339,7 +325,6 @@ const Notifications: React.FC = () => {
 				)}
 			</div>
 
-			{/* Trạng thái socket — pill góc phải (frame 15) */}
 			<div className={styles.socketRow}>
 				<span className={`${styles.socketPill} ${styles[socketStatus]}`}>
 					<span className={styles.statusDot} />
@@ -349,7 +334,6 @@ const Notifications: React.FC = () => {
 				</span>
 			</div>
 
-			{/* New Notification Toast */}
 			{toast && (
 				<div className={styles.newNotifToast}>
 					<span className={styles.toastIcon}>🔔</span>

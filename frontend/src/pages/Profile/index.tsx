@@ -39,7 +39,6 @@ const Profile: React.FC = () => {
 	const currentUser = initialState?.currentUser;
 	const isAdmin = currentUser?.role === 'ADMIN';
 
-	// Profile State
 	const [profileForm] = Form.useForm();
 	const [updatingProfile, setUpdatingProfile] = useState(false);
 	const [loadingProfile, setLoadingProfile] = useState(true);
@@ -47,7 +46,6 @@ const Profile: React.FC = () => {
 	const [uploadingAvatar, setUploadingAvatar] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
-	// User Management State
 	const [users, setUsers] = useState<IUser[]>([]);
 	const [totalUsers, setTotalUsers] = useState(0);
 	const [page, setPage] = useState(1);
@@ -55,25 +53,21 @@ const Profile: React.FC = () => {
 	const [loadingUsers, setLoadingUsers] = useState(false);
 	const [roleFilter, setRoleFilter] = useState<string | undefined>(undefined);
 
-	// Modal State
 	const [isUserModalVisible, setIsUserModalVisible] = useState(false);
 	const [editingUser, setEditingUser] = useState<IUser | null>(null);
 	const [userForm] = Form.useForm();
 	const [submittingUser, setSubmittingUser] = useState(false);
 
-	// Role Modal State
 	const [isRoleModalVisible, setIsRoleModalVisible] = useState(false);
 	const [selectedRoleUser, setSelectedRoleUser] = useState<IUser | null>(null);
 	const [roleForm] = Form.useForm();
 	const [submittingRole, setSubmittingRole] = useState(false);
 
-	// Change Password Modal State
 	const [isChangePasswordVisible, setIsChangePasswordVisible] = useState(false);
 	const [changePwForm] = Form.useForm();
 	const [changingPassword, setChangingPassword] = useState(false);
 
 
-	// --- PROFILE LOGIC ---
 	const fetchMyProfile = useCallback(async () => {
 		try {
 			const res = await getMyProfile();
@@ -106,7 +100,6 @@ const Profile: React.FC = () => {
 			message.success('Cập nhật hồ sơ thành công');
 			const updatedProfile = (res as any)?.data?.data || (res as any)?.data;
 			setMyProfile(updatedProfile);
-			// Update global state
 			setInitialState((s: any) => ({ ...s, currentUser: { ...s.currentUser, ...updatedProfile } }));
 		} catch (error) {
 			message.error('Cập nhật hồ sơ thất bại');
@@ -115,7 +108,6 @@ const Profile: React.FC = () => {
 		}
 	};
 
-	// --- AVATAR UPLOAD LOGIC ---
 	const handleAvatarClick = () => {
 		fileInputRef.current?.click();
 	};
@@ -124,14 +116,12 @@ const Profile: React.FC = () => {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
-		// Validate file type
 		const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
 		if (!allowedTypes.includes(file.type)) {
 			message.error('Chỉ chấp nhận file ảnh PNG, JPEG, JPG');
 			return;
 		}
 
-		// Validate file size (max 10MB)
 		if (file.size > 10 * 1024 * 1024) {
 			message.error('Kích thước file không được vượt quá 10MB');
 			return;
@@ -157,7 +147,6 @@ const Profile: React.FC = () => {
 			message.error('Cập nhật ảnh đại diện thất bại');
 		} finally {
 			setUploadingAvatar(false);
-			// Reset file input so same file can be selected again
 			if (fileInputRef.current) {
 				fileInputRef.current.value = '';
 			}
@@ -165,17 +154,14 @@ const Profile: React.FC = () => {
 	};
 
 
-	// --- USER MANAGEMENT LOGIC (ADMIN ONLY) ---
 	const fetchUsers = useCallback(async () => {
 		if (!isAdmin) return;
 		setLoadingUsers(true);
 		try {
 			const res = await getUsers({ page, limit, role: roleFilter });
 			
-			// Unwrap data correctly based on how axios/backend formats the response
 			const data = (res as any)?.data?.data || (res as any)?.data || res;
 			
-			// Support both response formats (array of items or result object)
 			const items = data?.items || data?.result || (Array.isArray(data) ? data : []);
 			const total = data?.meta?.total || data?.total || items.length;
 			
@@ -286,7 +272,6 @@ const Profile: React.FC = () => {
 	};
 
 
-	// --- CHANGE PASSWORD LOGIC ---
 	const handleChangePassword = async (values: { oldPassword: string; newPassword: string }) => {
 		setChangingPassword(true);
 		try {
@@ -294,7 +279,6 @@ const Profile: React.FC = () => {
 			message.success('Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
 			setIsChangePasswordVisible(false);
 			changePwForm.resetFields();
-			// Backend hủy toàn bộ refresh tokens → logout
 			setTimeout(() => {
 				localStorage.clear();
 				window.location.href = '/user/login';
@@ -471,7 +455,6 @@ const Profile: React.FC = () => {
 				)}
 			</div>
 
-			{/* User Modal (Create/Update) */}
 			<Modal
 				title={editingUser ? 'Cập nhật người dùng' : 'Thêm người dùng mới'}
 				visible={isUserModalVisible}
@@ -511,7 +494,6 @@ const Profile: React.FC = () => {
 				</Form>
 			</Modal>
 
-			{/* Role Assignment Modal */}
 			<Modal
 				title="Gán vai trò"
 				visible={isRoleModalVisible}
@@ -533,7 +515,6 @@ const Profile: React.FC = () => {
 				</Form>
 			</Modal>
 
-			{/* Change Password Modal */}
 			<Modal
 				title="Đổi mật khẩu"
 				visible={isChangePasswordVisible}
