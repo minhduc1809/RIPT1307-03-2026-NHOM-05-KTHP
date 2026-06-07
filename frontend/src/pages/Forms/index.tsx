@@ -8,12 +8,12 @@ import {
 	ReloadOutlined,
 	SearchOutlined,
 } from '@ant-design/icons';
-import { Button, Input, message, Modal, Table, Tooltip } from 'antd';
+import { Button, Input, message, Modal, Table, Tooltip, Switch } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { history, useModel } from 'umi';
-import { deleteForm, getActiveForms, getFormsPage } from '@/services/Forms/formApi';
+import { deleteForm, getActiveForms, getFormsPage, updateForm } from '@/services/Forms/formApi';
 import type { IForm, IFormPageRequest } from '@/services/Forms/typings';
 import styles from './index.less';
 
@@ -131,6 +131,16 @@ const FormsDashboard: React.FC = () => {
 		history.push(`/forms/${record.id}/edit`);
 	};
 
+	const handleToggleStatus = useCallback(async (checked: boolean, record: IForm) => {
+		try {
+			await updateForm(record.id, { isActive: checked });
+			message.success(`Đã ${checked ? 'kích hoạt' : 'vô hiệu hóa'} biểu mẫu thành công`);
+			fetchFormsAdmin();
+		} catch (error) {
+			message.error('Cập nhật trạng thái thất bại');
+		}
+	}, [fetchFormsAdmin]);
+
 	const getFieldCount = (form: IForm): number => {
 		return form.schema?.fields?.length ?? 0;
 	};
@@ -175,6 +185,21 @@ const FormsDashboard: React.FC = () => {
 					if (record.deletedAt) {
 						return <span className={`${styles.statusTag} ${styles.deleted}`}>Đã xóa</span>;
 					}
+					
+					if (isAdminOrManager) {
+						return (
+							<Switch
+								checked={isActive}
+								onChange={(checked, e) => {
+									e.stopPropagation(); // Tránh sự kiện click vào row
+									handleToggleStatus(checked, record);
+								}}
+								checkedChildren="Hoạt động"
+								unCheckedChildren="Vô hiệu"
+							/>
+						);
+					}
+
 					return isActive ? (
 						<span className={`${styles.statusTag} ${styles.active}`}>Đang hoạt động</span>
 					) : (
@@ -216,7 +241,7 @@ const FormsDashboard: React.FC = () => {
 		}
 
 		return cols;
-	}, [isAdminOrManager, userRole]);
+	}, [isAdminOrManager, userRole, handleToggleStatus]);
 
 	return (
 		<div className={styles.formDashboard}>
