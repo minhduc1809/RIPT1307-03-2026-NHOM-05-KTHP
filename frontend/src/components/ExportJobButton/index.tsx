@@ -6,7 +6,7 @@ import {
 	LoadingOutlined,
 	RedoOutlined,
 } from '@ant-design/icons';
-import { Button, message, Modal, Progress, Space, Typography } from 'antd';
+import { Button, message, Modal } from 'antd';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
 	createExportJob,
@@ -14,8 +14,7 @@ import {
 	getExportDownloadUrl,
 	retryExportJob,
 } from '@/services/Files/fileApi';
-
-const { Text } = Typography;
+import styles from './index.less';
 
 interface ExportJobButtonProps {
 	formId?: string;
@@ -155,81 +154,57 @@ const ExportJobButton: React.FC<ExportJobButtonProps> = ({
 		setDownloadUrl(null);
 	};
 
-	const renderStatusIcon = () => {
-		switch (status) {
-			case 'PENDING':
-			case 'PROCESSING':
-				return <LoadingOutlined style={{ fontSize: 48, color: '#6366f1' }} />;
-			case 'DONE':
-				return <CheckCircleOutlined style={{ fontSize: 48, color: '#10b981' }} />;
-			case 'FAILED':
-				return <CloseCircleOutlined style={{ fontSize: 48, color: '#ef4444' }} />;
-			default:
-				return null;
-		}
-	};
-
 	return (
 		<>
-			<Button icon={<ExportOutlined />} onClick={handleStartExport}>
+			<Button icon={<ExportOutlined />} onClick={handleStartExport} className={styles.trigger}>
 				{buttonText}
 			</Button>
 
+			{/* design: smartadmin.pen frame 18 */}
 			<Modal
-				title="Xuất dữ liệu Excel"
 				visible={modalVisible}
 				onCancel={handleClose}
 				footer={null}
 				destroyOnClose
 				centered
+				width={360}
+				closable={status !== 'PENDING' && status !== 'PROCESSING'}
+				maskClosable={false}
+				className={styles.modal}
 			>
-				<div style={{ textAlign: 'center', padding: '24px 0' }}>
-					{renderStatusIcon()}
+				<div className={styles.body}>
+					{(status === 'PENDING' || status === 'PROCESSING') && (
+						<>
+							<span className={styles.title}>Xuất dữ liệu Excel</span>
+							<LoadingOutlined className={styles.spinner} />
+							<span className={styles.statusText}>Đang xuất dữ liệu... {progress}%</span>
+							<div className={styles.track}>
+								<div className={styles.fill} style={{ width: `${progress}%` }} />
+							</div>
+							<span className={styles.hint}>(Vui lòng chờ đến khi tiến trình kết thúc!)</span>
+						</>
+					)}
 
-					<div style={{ marginTop: 16 }}>
-						{(status === 'PENDING' || status === 'PROCESSING') && (
-							<>
-								<Text strong>Đang xuất dữ liệu...</Text>
-								<Progress
-									percent={progress}
-									status="active"
-									style={{ marginTop: 12 }}
-									strokeColor="#6366f1"
-								/>
-							</>
-						)}
+					{status === 'DONE' && (
+						<>
+							<CheckCircleOutlined className={styles.doneIcon} />
+							<span className={styles.doneText}>Xuất dữ liệu thành công!</span>
+							<button type='button' className={styles.downloadBtn} onClick={handleDownload}>
+								<DownloadOutlined /> Tải file Excel
+							</button>
+						</>
+					)}
 
-						{status === 'DONE' && (
-							<Space direction="vertical" size={12}>
-								<Text strong style={{ color: '#10b981' }}>
-									Xuất dữ liệu thành công!
-								</Text>
-								<Button
-									type="primary"
-									icon={<DownloadOutlined />}
-									onClick={handleDownload}
-								>
-									Tải file Excel
-								</Button>
-							</Space>
-						)}
-
-						{status === 'FAILED' && (
-							<Space direction="vertical" size={12}>
-								<Text strong style={{ color: '#ef4444' }}>
-									Xuất dữ liệu thất bại
-								</Text>
-								{error && (
-									<Text type="secondary" style={{ fontSize: 12 }}>
-										{error}
-									</Text>
-								)}
-								<Button icon={<RedoOutlined />} onClick={handleRetry}>
-									Thử lại
-								</Button>
-							</Space>
-						)}
-					</div>
+					{status === 'FAILED' && (
+						<>
+							<CloseCircleOutlined className={styles.failIcon} />
+							<span className={styles.failText}>Xuất dữ liệu thất bại</span>
+							{error && <span className={styles.errorText}>{error}</span>}
+							<button type='button' className={styles.retryBtn} onClick={handleRetry}>
+								<RedoOutlined /> Thử lại
+							</button>
+						</>
+					)}
 				</div>
 			</Modal>
 		</>

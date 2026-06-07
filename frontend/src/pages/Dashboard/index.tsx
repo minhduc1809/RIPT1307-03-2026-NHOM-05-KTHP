@@ -1,4 +1,3 @@
-// design: smartadmin.pen · frame 03
 import {
 	CheckCircleOutlined,
 	ClockCircleOutlined,
@@ -89,7 +88,6 @@ const STAT_CARDS: { key: keyof ISummary; icon: React.ReactNode; color: string; l
 	{ key: 'pending', icon: <ClockCircleOutlined />, color: 'amber', label: 'Đang chờ xử lý' },
 ];
 
-/** Hook lấy chiều rộng cửa sổ để điều chỉnh chart height */
 function useWindowWidth() {
 	const [width, setWidth] = useState(() => window.innerWidth);
 	useEffect(() => {
@@ -119,7 +117,6 @@ const Dashboard: React.FC = () => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [selectedDays, setSelectedDays] = useState(30);
 
-	// Dùng ref để giữ giá trị mới nhất mà không tạo dependency trong useEffect
 	const selectedDaysRef = useRef(selectedDays);
 	const isFullDashboardRef = useRef(isFullDashboard);
 	selectedDaysRef.current = selectedDays;
@@ -129,7 +126,6 @@ const Dashboard: React.FC = () => {
 		async (showRefresh = false) => {
 			if (showRefresh) setRefreshing(true);
 			else setLoading(true);
-			// giữ spin tối thiểu 600ms để người dùng thấy phản hồi khi dữ liệu trả về quá nhanh
 			const minSpin = showRefresh ? new Promise((r) => setTimeout(r, 600)) : Promise.resolve();
 
 			try {
@@ -170,17 +166,14 @@ const Dashboard: React.FC = () => {
 		[], // stable — đọc giá trị mới nhất qua ref
 	);
 
-	// Fetch lần đầu khi mount
 	useEffect(() => {
 		fetchAll();
 	}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-	// Fetch lại khi selectedDays thay đổi (không dùng loading screen, chỉ refresh nhẹ)
 	useEffect(() => {
 		fetchAll(true);
 	}, [selectedDays]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	// ─── Chart heights — responsive theo window width ───────────────────────
 	const donutHeight = isMobile ? 260 : isTablet ? 280 : 240;
 	const areaHeight = isMobile ? 180 : isTablet ? 200 : 210;
 
@@ -189,7 +182,6 @@ const Dashboard: React.FC = () => {
 		labels: statusData.map((s) => s.status),
 		colors: statusData.map((s) => getStatusColor(s.status)),
 		legend: {
-			// Mobile: legend bên dưới chart để tiết kiệm chiều ngang
 			position: isMobile ? 'bottom' : 'right',
 			fontWeight: 600,
 			fontSize: isMobile ? '11px' : '12px',
@@ -307,7 +299,6 @@ const Dashboard: React.FC = () => {
 
 	return (
 		<div className={styles.dashboardPage}>
-			{/* ─── Header ─────────────────────────────────────────────────────── */}
 			<div className={styles.dashboardHeader}>
 				<div className={styles.headerLeft}>
 					<h1>Dashboard</h1>
@@ -317,8 +308,9 @@ const Dashboard: React.FC = () => {
 					<button
 						type="button"
 						className={`${styles.refreshBtn} ${refreshing ? styles.spinning : ''}`}
-						onClick={() => fetchAll(true)}
-						disabled={refreshing}
+						onClick={() => {
+							if (!refreshing) fetchAll(true);
+						}}
 					>
 						<RefreshCcw size={14} className={styles.refreshIcon} />
 						<span>Làm mới</span>
@@ -326,7 +318,6 @@ const Dashboard: React.FC = () => {
 				</Tooltip>
 			</div>
 
-			{/* ─── Stat cards ─────────────────────────────────────────────────── */}
 			<div className={styles.statsGrid}>
 				{STAT_CARDS.map((card, idx) => (
 					<div key={card.key} className={`${styles.statCard} ${styles.fadeIn}`} style={{ animationDelay: `${0.05 * (idx + 1)}s` }}>
@@ -341,10 +332,8 @@ const Dashboard: React.FC = () => {
 				))}
 			</div>
 
-			{/* ─── Charts ─────────────────────────────────────────────────────── */}
 			{isFullDashboard && (
 				<div className={styles.chartsGrid}>
-					{/* Donut chart */}
 					<div className={`${styles.chartCard} ${styles.fadeIn}`} style={{ animationDelay: '0.25s' }}>
 						<div className={styles.chartHeader}>
 							<div className={styles.chartTitle}>
@@ -370,7 +359,6 @@ const Dashboard: React.FC = () => {
 						</div>
 					</div>
 
-					{/* Area chart */}
 					<div className={`${styles.chartCard} ${styles.fadeIn}`} style={{ animationDelay: '0.3s' }}>
 						<div className={styles.chartHeader}>
 							<div className={styles.chartTitle}>
@@ -404,10 +392,8 @@ const Dashboard: React.FC = () => {
 				</div>
 			)}
 
-			{/* ─── Bottom: Top forms + SLA ────────────────────────────────────── */}
 			{isFullDashboard && (
 				<div className={styles.bottomGrid}>
-					{/* Top forms */}
 					<div className={`${styles.sectionCard} ${styles.fadeIn}`} style={{ animationDelay: '0.35s' }}>
 						<div className={styles.sectionHeader}>
 							<TrophyOutlined className={`${styles.sectionIcon} ${styles.amber}`} />
@@ -442,7 +428,6 @@ const Dashboard: React.FC = () => {
 						)}
 					</div>
 
-					{/* SLA table */}
 					{slaMetrics.length > 0 && (
 						<div className={`${styles.sectionCard} ${styles.fadeIn}`} style={{ animationDelay: '0.4s' }}>
 							<div className={styles.sectionHeader}>

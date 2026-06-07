@@ -13,7 +13,7 @@ export type GlobalHeaderRightProps = {
 };
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
-	const { initialState } = useModel('@@initialState');
+	const { initialState, setInitialState } = useModel('@@initialState');
 
 	const loginOut = async () => {
 		const refreshToken = localStorage.getItem('refreshToken');
@@ -22,6 +22,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 		}
 		localStorage.clear();
 		sessionStorage.clear();
+		await setInitialState((s: any) => ({ ...s, currentUser: undefined }));
 		history.replace('/user/login');
 	};
 
@@ -58,15 +59,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 			label: 'Hồ sơ cá nhân',
 			onClick: () => window.location.href = '/profile',
 		},
-		// {
-		// 	key: 'password',
-		// 	icon: <SwapOutlined />,
-		// 	label: 'Đổi mật khẩu',
-		// 	onClick: () => {
 		// 		const redirect = window.location.href;
 		// 		window.location.href = `${keycloakAuthEndpoint}?client_id=${AppModules[currentRole].clientId}&redirect_uri=${redirect}&response_type=code&scope=openid&kc_action=UPDATE_PASSWORD`;
-		// 	},
-		// },
 		{ type: 'divider', key: 'divider' },
 		{
 			key: 'logout',
@@ -78,12 +72,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 	];
 
 	if (menu && !initialState.currentUser.realm_access?.roles?.includes('QUAN_TRI_VIEN')) {
-		// items.splice(1, 0, {
-		//   key: 'center',
-		//   icon: <UserOutlined />,
-		//   label: 'Trang cá nhân',
 		//   onClick: () => history.push('/account/center'),
-		// });
 	}
 
 	return (

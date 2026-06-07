@@ -89,24 +89,13 @@ const MySubmissions: React.FC = () => {
 		<div className={styles.mySubmissionsPage}>
 			{/* Header */}
 			<div className={styles.pageHeader}>
-				<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-					<div>
-						<h1>Yêu cầu của tôi</h1>
-						<p>Theo dõi trạng thái các biểu mẫu bạn đã nộp</p>
-					</div>
-					<Button
-						type="primary"
-						icon={<PlusOutlined />}
-						onClick={() => setSubmitModalVisible(true)}
-						style={{
-							height: 40, borderRadius: 10, fontWeight: 600,
-							background: 'linear-gradient(135deg, #2563eb, #3b82f6)',
-							border: 'none', boxShadow: '0 2px 8px rgba(37,99,235,0.3)',
-						}}
-					>
-						Nộp biểu mẫu
-					</Button>
+				<div>
+					<h1>Yêu cầu của tôi</h1>
+					<p>Theo dõi trạng thái các biểu mẫu bạn đã nộp</p>
 				</div>
+				<Button type="primary" icon={<PlusOutlined />} onClick={() => setSubmitModalVisible(true)} className={styles.createBtn}>
+					Nộp biểu mẫu
+				</Button>
 			</div>
 
 			{/* Stats */}
@@ -115,61 +104,61 @@ const MySubmissions: React.FC = () => {
 					className={`${styles.statCard} ${styles.all} ${statusFilter === undefined ? styles.active : ''}`}
 					onClick={() => handleFilterClick(undefined)}
 				>
-					<div className={styles.statIcon}><UnorderedListOutlined /></div>
-					<div className={styles.statInfo}>
-						<div className={styles.statNumber}>{counts.ALL ?? '-'}</div>
-						<div className={styles.statLabel}>Tất cả</div>
+					<div className={styles.statRow}>
+						<span className={styles.statIcon}><UnorderedListOutlined /></span>
+						<span className={styles.statNumber}>{counts.ALL ?? '-'}</span>
 					</div>
+					<div className={styles.statLabel}>Tất cả</div>
 				</div>
 				<div
 					className={`${styles.statCard} ${styles.underReview} ${statusFilter === 'UNDER_REVIEW' ? styles.active : ''}`}
 					onClick={() => handleFilterClick('UNDER_REVIEW')}
 				>
-					<div className={styles.statIcon}><ClockCircleOutlined /></div>
-					<div className={styles.statInfo}>
-						<div className={styles.statNumber}>{counts.UNDER_REVIEW ?? '-'}</div>
-						<div className={styles.statLabel}>Đang duyệt</div>
+					<div className={styles.statRow}>
+						<span className={styles.statIcon}><ClockCircleOutlined /></span>
+						<span className={styles.statNumber}>{counts.UNDER_REVIEW ?? '-'}</span>
 					</div>
+					<div className={styles.statLabel}>Đang duyệt</div>
 				</div>
 				<div
 					className={`${styles.statCard} ${styles.approved} ${statusFilter === 'APPROVED' ? styles.active : ''}`}
 					onClick={() => handleFilterClick('APPROVED')}
 				>
-					<div className={styles.statIcon}><CheckCircleOutlined /></div>
-					<div className={styles.statInfo}>
-						<div className={styles.statNumber}>{counts.APPROVED ?? '-'}</div>
-						<div className={styles.statLabel}>Đã duyệt</div>
+					<div className={styles.statRow}>
+						<span className={styles.statIcon}><CheckCircleOutlined /></span>
+						<span className={styles.statNumber}>{counts.APPROVED ?? '-'}</span>
 					</div>
+					<div className={styles.statLabel}>Đã duyệt</div>
 				</div>
 				<div
 					className={`${styles.statCard} ${styles.rejected} ${statusFilter === 'REJECTED' ? styles.active : ''}`}
 					onClick={() => handleFilterClick('REJECTED')}
 				>
-					<div className={styles.statIcon}><CloseCircleOutlined /></div>
-					<div className={styles.statInfo}>
-						<div className={styles.statNumber}>{counts.REJECTED ?? '-'}</div>
-						<div className={styles.statLabel}>Từ chối</div>
+					<div className={styles.statRow}>
+						<span className={styles.statIcon}><CloseCircleOutlined /></span>
+						<span className={styles.statNumber}>{counts.REJECTED ?? '-'}</span>
 					</div>
+					<div className={styles.statLabel}>Từ chối</div>
 				</div>
 				<div
 					className={`${styles.statCard} ${styles.returned} ${statusFilter === 'RETURNED' ? styles.active : ''}`}
 					onClick={() => handleFilterClick('RETURNED')}
 				>
-					<div className={styles.statIcon}><RollbackOutlined /></div>
-					<div className={styles.statInfo}>
-						<div className={styles.statNumber}>{counts.RETURNED ?? '-'}</div>
-						<div className={styles.statLabel}>Trả lại</div>
+					<div className={styles.statRow}>
+						<span className={styles.statIcon}><RollbackOutlined /></span>
+						<span className={styles.statNumber}>{counts.RETURNED ?? '-'}</span>
 					</div>
+					<div className={styles.statLabel}>Trả lại</div>
 				</div>
 				<div
 					className={`${styles.statCard} ${styles.cancelled} ${statusFilter === 'CANCELLED' ? styles.active : ''}`}
 					onClick={() => handleFilterClick('CANCELLED')}
 				>
-					<div className={styles.statIcon}><StopOutlined /></div>
-					<div className={styles.statInfo}>
-						<div className={styles.statNumber}>{counts.CANCELLED ?? '-'}</div>
-						<div className={styles.statLabel}>Đã hủy</div>
+					<div className={styles.statRow}>
+						<span className={styles.statIcon}><StopOutlined /></span>
+						<span className={styles.statNumber}>{counts.CANCELLED ?? '-'}</span>
 					</div>
+					<div className={styles.statLabel}>Đã hủy</div>
 				</div>
 			</div>
 
@@ -188,8 +177,19 @@ const MySubmissions: React.FC = () => {
 						<div className={styles.loadingContainer}><Spin size="large" /></div>
 					) : items.length === 0 ? (
 						<div className={styles.emptyState}>
-							<span>📭</span>
-							<p>Chưa có yêu cầu nào</p>
+							<div className={styles.emptyIcon}>
+								<FileTextOutlined />
+							</div>
+							<h3>Chưa có yêu cầu nào</h3>
+							<p>Nộp biểu mẫu đầu tiên để bắt đầu theo dõi trạng thái phê duyệt tại đây.</p>
+							<Button
+								type='primary'
+								icon={<PlusOutlined />}
+								className={styles.createBtn}
+								onClick={() => setSubmitModalVisible(true)}
+							>
+								Nộp biểu mẫu đầu tiên
+							</Button>
 						</div>
 					) : (
 						<>
@@ -214,9 +214,10 @@ const MySubmissions: React.FC = () => {
 													{moment(item.createdAt).format('DD/MM/YYYY HH:mm')}
 												</span>
 												{item.revisionNumber > 1 && (
-													<span className={styles.metaItem}>
-														Lần nộp #{item.revisionNumber}
-													</span>
+													<>
+														<span className={styles.metaDot}>·</span>
+														<span className={styles.revTag}>Lần nộp #{item.revisionNumber}</span>
+													</>
 												)}
 											</div>
 											{readable.length > 0 && (

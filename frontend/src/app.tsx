@@ -1,5 +1,7 @@
 import Footer from '@/components/Footer';
 import HeaderBreadcrumb from '@/components/HeaderBreadcrumb';
+import PendingBadge from '@/components/MenuBadges/PendingBadge';
+import MenuUnreadBadge from '@/components/NotificationBell/MenuUnreadBadge';
 import RightContent from '@/components/RightContent';
 import { ThunderboltFilled } from '@ant-design/icons';
 import { notification } from 'antd';
@@ -129,7 +131,19 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 		onPageChange: () => {
 			const { pathname } = window.location;
 			// Public paths that don't require authentication
-			const publicPaths = ['/user/login', '/user', '/', '/403', '/404', '/hold-on'];
+			const publicPaths = [
+				'/user/login',
+				'/user',
+				'/',
+				'/403',
+				'/404',
+				'/hold-on',
+				'/contact',
+				'/privacy',
+				'/terms',
+				'/pricing',
+				'/security',
+			];
 			const isPublicPath = publicPaths.some((p) => pathname === p || pathname.startsWith('/user/'));
 
 			// Redirect to login if not authenticated and accessing a protected route
@@ -162,7 +176,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 				}}
 				style={{ display: 'block' }}
 			>
-				{dom}
+				{item?.path === '/notifications' || item?.path === '/submissions/pending' ? (
+					<span className='ds-menu-item-with-badge'>
+						{dom}
+						{item?.path === '/notifications' ? <MenuUnreadBadge /> : <PendingBadge />}
+					</span>
+				) : (
+					dom
+				)}
 			</a>
 		),
 
@@ -173,9 +194,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 				{/* </TechnicalSupportBounder> */}
 			</ErrorBoundary>
 		),
-		// Logo theo DS smartadmin.pen: ô vuông gradient + chữ FLOWFORM
-		// Khi sidebar thu gọn (collapsed) → chỉ hiện icon, ẩn chữ
-		menuHeaderRender: (_logo: any, _title: any, props: any) => (
+		menuHeaderRender: () => (
 			<a
 				className='ds-menu-header'
 				onClick={(e) => {
@@ -186,9 +205,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 				<span className='ds-logo-square'>
 					<ThunderboltFilled />
 				</span>
-				{!props?.collapsed && (
-					<span className='ds-logo-text'>FLOWFORM</span>
-				)}
+				<span className='ds-logo-text'>FLOWFORM</span>
 			</a>
 		),
 		...initialState?.settings,

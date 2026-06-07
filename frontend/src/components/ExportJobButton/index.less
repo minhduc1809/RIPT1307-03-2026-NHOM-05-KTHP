@@ -1,0 +1,155 @@
+// design: smartadmin.pen · frame 18 (ExportProcessing / Done / Failed)
+
+@primary: #4f46e5;
+@text: #0f172a;
+@text-body: #334155;
+@muted-light: #94a3b8;
+@border-light: #f1f5f9;
+@success: #10b981;
+@success-dark: #047857;
+@danger: #ef4444;
+@danger-dark: #dc2626;
+@grad: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+
+.modal {
+	font-family: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+	:global(.ant-modal-content) {
+		border-radius: 16px;
+		overflow: hidden;
+		box-shadow: 0 24px 64px #0f172a2e;
+	}
+
+	:global(.ant-modal-body) {
+		padding: 32px;
+	}
+}
+
+.body {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	align-items: center;
+	text-align: center;
+}
+
+.title {
+	font-size: 15px;
+	font-weight: 700;
+	color: @text;
+}
+
+.spinner {
+	font-size: 44px;
+	color: @primary;
+}
+
+.doneIcon {
+	font-size: 48px;
+	color: @success;
+}
+
+.failIcon {
+	font-size: 48px;
+	color: @danger;
+}
+
+.statusText {
+	font-size: 13.5px;
+	font-weight: 600;
+	color: @text-body;
+}
+
+.doneText {
+	font-size: 14.5px;
+	font-weight: 700;
+	color: @success-dark;
+}
+
+.failText {
+	font-size: 14.5px;
+	font-weight: 700;
+	color: @danger-dark;
+}
+
+.errorText {
+	max-width: 280px;
+	font-size: 12px;
+	line-height: 1.5;
+	color: @muted-light;
+}
+
+.track {
+	width: 100%;
+	height: 8px;
+	border-radius: 999px;
+	background: @border-light;
+	overflow: hidden;
+}
+
+.fill {
+	height: 100%;
+	border-radius: 999px;
+	background: @grad;
+	transition: width 0.5s ease-out;
+}
+
+.hint {
+	font-size: 11.5px;
+	font-style: italic;
+	color: @muted-light;
+}
+
+.downloadBtn {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	padding: 10px;
+	border: none;
+	border-radius: 8px;
+	background: @grad;
+	color: #fff;
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	box-shadow: 0 4px 14px #4f46e54d;
+	transition: all 0.2s ease-out;
+
+	&:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 8px 20px -4px #4f46e566;
+	}
+}
+
+.retryBtn {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	background: #fff;
+	color: @text-body;
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease-out;
+
+	&:hover {
+		background: #f8fafc;
+		border-color: #c7d2fe;
+	}
+}
+
+.trigger {
+	height: 38px !important;
+	border-radius: 8px !important;
+	border-color: #e2e8f0 !important;
+	font-weight: 600 !important;
+}

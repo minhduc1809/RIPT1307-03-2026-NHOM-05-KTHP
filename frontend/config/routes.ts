@@ -10,6 +10,12 @@ export default [
 				component: './user/Login',
 			},
 			{
+				path: '/user/register',
+				layout: false,
+				name: 'register-tenant',
+				component: './user/RegisterTenant',
+			},
+			{
 				path: '/user/forgot-password',
 				layout: false,
 				name: 'forgot-password',
@@ -131,17 +137,6 @@ export default [
 				hideInMenu: true,
 			},
 			{
-				path: '/submissions/pending',
-				name: 'Chờ phê duyệt',
-				access: 'canApprove',
-				component: './Submissions/PendingApprovals',
-			},
-			{
-				path: '/submissions/mine',
-				name: 'Yêu cầu của tôi',
-				component: './Submissions/MySubmissions',
-			},
-			{
 				path: '/submissions/new/:formId',
 				name: 'Điền biểu mẫu',
 				hideInMenu: true,
@@ -151,6 +146,17 @@ export default [
 				path: '/submissions/new',
 				name: 'Nộp biểu mẫu',
 				component: './Submissions/FormSubmit',
+			},
+			{
+				path: '/submissions/mine',
+				name: 'Yêu cầu của tôi',
+				component: './Submissions/MySubmissions',
+			},
+			{
+				path: '/submissions/pending',
+				name: 'Chờ phê duyệt',
+				access: 'canApprove',
+				component: './Submissions/PendingApprovals',
 			},
 			{
 				path: '/submissions/:id',

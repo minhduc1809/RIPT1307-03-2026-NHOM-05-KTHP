@@ -1,4 +1,3 @@
-// design: smartadmin.pen · DS frame 00 (Sidebar d3A6T + Topbar qYE1c)
 
 @primary: #4f46e5;
 @text: #0f172a;
@@ -11,13 +10,11 @@
 @bp-md: 768px;
 @bp-lg: 1100px;
 
-// ─── Khung tổng ──────────────────────────────────────────────────────────────
 .ant-layout {
 	min-height: 100vh;
 	background: #f8fafc;
 }
 
-// ─── Topbar ───────────────────────────────────────────────────────────────────
 .ant-layout-header.ant-pro-fixed-header,
 .ant-pro-global-header {
 	background: #fff;
@@ -37,7 +34,6 @@
 	}
 }
 
-// ─── Sidebar ─────────────────────────────────────────────────────────────────
 .ant-pro-sider.ant-layout-sider {
 	background: #fff;
 	border-right: 1px solid @border;
@@ -48,7 +44,6 @@
 	left: unset;
 }
 
-// ─── Logo ─────────────────────────────────────────────────────────────────────
 .ant-pro-sider-logo {
 	padding: 18px 16px !important;
 	border-bottom: 1px solid @border-light;
@@ -57,7 +52,6 @@
 		padding: 14px 12px !important;
 	}
 
-	// Khi collapsed: padding đều 2 bên để icon căn giữa
 	.ant-layout-sider-collapsed & {
 		padding: 16px 8px !important;
 		display: flex;
@@ -67,14 +61,13 @@
 
 .ds-menu-header {
 	display: flex;
-	gap: 10px;
 	align-items: center;
 	justify-content: flex-start;
+	white-space: nowrap;
 	text-decoration: none;
 	width: 100%;
 	overflow: hidden;
 
-	// Khi sidebar collapse: chỉ còn icon → căn giữa
 	.ant-layout-sider-collapsed & {
 		justify-content: center;
 		gap: 0;
@@ -85,6 +78,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	flex-shrink: 0;
 	width: 32px;
 	height: 32px;
 	border-radius: 10px;
@@ -97,11 +91,17 @@
 }
 
 .ds-logo-text {
+	max-width: 140px;
+	margin-left: 10px;
+	overflow: hidden;
 	color: @text;
 	font-family: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
 	font-size: 15px;
 	font-weight: 800;
 	letter-spacing: 1px;
+	opacity: 1;
+	transition: max-width 0.25s cubic-bezier(0.645, 0.045, 0.355, 1),
+		margin-left 0.25s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.18s ease-out;
 
 	@media (max-width: @bp-sm) {
 		font-size: 13px;
@@ -109,7 +109,79 @@
 	}
 }
 
-// ─── Menu ─────────────────────────────────────────────────────────────────────
+@rail: 64px;
+
+.ant-layout-sider.ant-layout-sider-collapsed {
+	flex: 0 0 @rail !important;
+	width: @rail !important;
+	min-width: @rail !important;
+	max-width: @rail !important;
+}
+
+.ant-pro-basicLayout .ant-layout > div:has(+ .ant-layout-sider-collapsed) {
+	flex: 0 0 @rail !important;
+	width: @rail !important;
+	min-width: @rail !important;
+	max-width: @rail !important;
+}
+
+.ant-layout-sider-collapsed {
+	.ds-logo-text {
+		max-width: 0;
+		margin-left: 0;
+		opacity: 0;
+	}
+
+	.ant-menu-light.ant-pro-sider-menu {
+		.ant-menu-item,
+		.ant-menu-submenu-title {
+			padding-left: 23px !important;
+		}
+	}
+}
+
+.ant-pro-sider {
+	.ant-menu-item,
+	.ant-menu-submenu-title {
+		text-overflow: clip;
+	}
+
+	.ant-menu-title-content,
+	.ant-pro-menu-item,
+	.ant-pro-menu-item-title,
+	.ds-menu-item-with-badge {
+		white-space: nowrap;
+	}
+
+	.ant-menu-item .anticon + span,
+	.ant-menu-submenu-title .anticon + span {
+		transition: opacity 0.25s ease-out;
+	}
+
+	.ant-motion-collapse,
+	.ant-motion-collapse-legacy {
+		transition: none !important;
+		animation: none !important;
+	}
+}
+
+.ant-layout-sider-collapsed .ant-menu-inline-collapsed {
+	.ant-menu-item .anticon + span,
+	.ant-menu-submenu-title .anticon + span {
+		display: inline-block;
+		max-width: none;
+		opacity: 0;
+	}
+}
+
+.ant-layout-sider {
+	overflow: hidden;
+	transition: width 0.25s cubic-bezier(0.645, 0.045, 0.355, 1),
+		min-width 0.25s cubic-bezier(0.645, 0.045, 0.355, 1),
+		max-width 0.25s cubic-bezier(0.645, 0.045, 0.355, 1),
+		flex 0.25s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+}
+
 .ant-menu-light.ant-pro-sider-menu {
 	padding: 12px 0;
 
@@ -120,11 +192,13 @@
 		margin: 0 0 4px;
 		padding: 9px 12px;
 		padding-left: 12px !important;
+		overflow: hidden;
 		line-height: 1.5;
 		border-radius: 8px;
 		color: @muted;
 		font-size: 13px;
 		font-weight: 600;
+		white-space: nowrap;
 
 		.anticon {
 			font-size: 17px;
@@ -242,7 +316,6 @@
 	}
 }
 
-// ─── Content area ─────────────────────────────────────────────────────────────
 .ant-layout-content {
 	margin: 18px !important;
 
@@ -255,9 +328,42 @@
 	}
 }
 
-// Compatible with IE11
 @media screen and(-ms-high-contrast: active), (-ms-high-contrast: none) {
 	body .ant-design-pro > .ant-layout {
 		min-height: 100vh;
 	}
+}
+
+.ds-menu-item-with-badge {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.ds-menu-notif-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 18px;
+	margin-left: 8px;
+	padding: 1px 6px;
+	border-radius: 999px;
+	background: #ef4444;
+	color: #fff;
+	font-size: 10px;
+	font-weight: 700;
+	line-height: 16px;
+}
+
+.ds-menu-notif-badge {
+	transition: opacity 0.2s ease-out;
+}
+
+.ant-layout-sider-collapsed .ds-menu-notif-badge {
+	opacity: 0;
+}
+
+.ant-layout-sider-collapsed .ds-menu-header {
+	justify-content: center;
 }

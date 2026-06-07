@@ -6,6 +6,7 @@ import { history } from 'umi';
 import { getActiveForms, getFormById } from '@/services/Forms/formApi';
 import type { IForm, IFormField } from '@/services/Forms/typings';
 import { createSubmission } from '@/services/Submissions/submissionApi';
+import styles from './index.less';
 
 interface Props {
 	visible: boolean;
@@ -14,6 +15,7 @@ interface Props {
 
 const SubmitFormModal: React.FC<Props> = ({ visible, onClose }) => {
 	const [step, setStep] = useState<'pick' | 'fill'>('pick');
+	const [pickedId, setPickedId] = useState<string | null>(null);
 
 	// Pick form state
 	const [forms, setForms] = useState<IForm[]>([]);
@@ -48,6 +50,7 @@ const SubmitFormModal: React.FC<Props> = ({ visible, onClose }) => {
 	}, [visible]);
 
 	const handlePickForm = async (form: IForm) => {
+		setPickedId(form.id);
 		setLoadingForm(true);
 		setStep('fill');
 		try {
@@ -158,17 +161,13 @@ const SubmitFormModal: React.FC<Props> = ({ visible, onClose }) => {
 	const renderField = (field: IFormField) => {
 		const value = formData[field.key];
 		const error = errors[field.key];
-		const fieldStyle = { marginBottom: 16 };
-		const labelStyle: React.CSSProperties = {
-			display: 'block', fontSize: 13, fontWeight: 600, color: '#475569', marginBottom: 6,
-		};
-		const errorStyle: React.CSSProperties = { fontSize: 12, color: '#ef4444', marginTop: 4 };
+		
 
 		return (
-			<div key={field.key} style={fieldStyle}>
-				<label style={labelStyle}>
+			<div key={field.key} className={styles.fieldGroup}>
+				<label>
 					{field.label}
-					{field.rules?.required && <span style={{ color: '#ef4444', marginLeft: 2 }}>*</span>}
+					{field.rules?.required && <span className={styles.requiredMark}>*</span>}
 				</label>
 
 				{field.type === 'text' && (
@@ -216,7 +215,7 @@ const SubmitFormModal: React.FC<Props> = ({ visible, onClose }) => {
 					);
 				})()}
 
-				{error && <div style={errorStyle}>{error}</div>}
+				{error && <div className={styles.fieldError}>{error}</div>}
 			</div>
 		);
 	};
@@ -227,13 +226,11 @@ const SubmitFormModal: React.FC<Props> = ({ visible, onClose }) => {
 				step === 'pick'
 					? 'Chọn biểu mẫu'
 					: (
-						<div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+						<div className={styles.titleRow}>
 							<button
-								onClick={() => { setStep('pick'); setSelectedForm(null); setFormData({}); setErrors({}); }}
-								style={{
-									border: 'none', background: 'none', cursor: 'pointer', padding: 4,
-									display: 'flex', alignItems: 'center', color: '#64748b',
-								}}
+								type='button'
+								className={styles.backBtn}
+								onClick={() => { setStep('pick'); setSelectedForm(null); setPickedId(null); setFormData({}); setErrors({}); }}
 							>
 								<ArrowLeftOutlined />
 							</button>
@@ -259,6 +256,7 @@ const SubmitFormModal: React.FC<Props> = ({ visible, onClose }) => {
 				) : null
 			}
 			width={600}
+			className={styles.modal}
 			destroyOnClose
 			style={{ top: 40 }}
 			bodyStyle={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto', padding: '16px 24px' }}
@@ -270,64 +268,29 @@ const SubmitFormModal: React.FC<Props> = ({ visible, onClose }) => {
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
 						allowClear
-						style={{ marginBottom: 16 }}
+						className={styles.searchInput}
 					/>
 					{loadingForms ? (
-						<div style={{ textAlign: 'center', padding: 40 }}><Spin /></div>
+						<div className={styles.centerNote}><Spin /></div>
 					) : filteredForms.length === 0 ? (
-						<div style={{ textAlign: 'center', padding: 40, color: '#94a3b8' }}>
-							Không tìm thấy biểu mẫu
-						</div>
+						<div className={styles.centerNote}>Không tìm thấy biểu mẫu</div>
 					) : (
-						<div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+						<div className={styles.formList}>
 							{filteredForms.map((form) => (
 								<div
-									key={form.id}
-									onClick={() => handlePickForm(form)}
-									style={{
-										padding: '14px 16px',
-										borderRadius: 12,
-										border: '1px solid #e2e8f0',
-										cursor: 'pointer',
-										transition: 'all 0.2s',
-										display: 'flex',
-										alignItems: 'center',
-										gap: 12,
-									}}
-									onMouseEnter={(e) => {
-										(e.currentTarget as HTMLDivElement).style.background = '#f8fafc';
-										(e.currentTarget as HTMLDivElement).style.borderColor = '#cbd5e1';
-									}}
-									onMouseLeave={(e) => {
-										(e.currentTarget as HTMLDivElement).style.background = '';
-										(e.currentTarget as HTMLDivElement).style.borderColor = '#e2e8f0';
-									}}
-								>
-									<div style={{
-										width: 36, height: 36, borderRadius: 10,
-										background: '#ede9fe', color: '#7c3aed',
-										display: 'flex', alignItems: 'center', justifyContent: 'center',
-										fontSize: 16, flexShrink: 0,
-									}}>
-										<FormOutlined />
-									</div>
-									<div style={{ flex: 1, minWidth: 0 }}>
-										<div style={{ fontSize: 14, fontWeight: 600, color: '#1a2332' }}>
-											{form.name}
-										</div>
-										{form.description && (
-											<div style={{
-												fontSize: 12, color: '#94a3b8', marginTop: 2,
-												overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-											}}>
-												{form.description}
-											</div>
-										)}
-									</div>
-									<div style={{ fontSize: 12, color: '#94a3b8', flexShrink: 0 }}>
-										{form.schema?.fields?.length ?? 0} trường
-									</div>
+								key={form.id}
+								className={`${styles.formItem} ${pickedId === form.id ? styles.picked : ''}`}
+								onClick={() => handlePickForm(form)}
+							>
+								<div className={styles.formItemIcon}>
+									<FormOutlined />
 								</div>
+								<div className={styles.formItemInfo}>
+									<div className={styles.formItemName}>{form.name}</div>
+									{form.description && <div className={styles.formItemDesc}>{form.description}</div>}
+								</div>
+								<div className={styles.formItemCount}>{form.schema?.fields?.length ?? 0} trường</div>
+							</div>
 							))}
 						</div>
 					)}
@@ -336,11 +299,9 @@ const SubmitFormModal: React.FC<Props> = ({ visible, onClose }) => {
 
 			{step === 'fill' && (
 				loadingForm ? (
-					<div style={{ textAlign: 'center', padding: 40 }}><Spin /></div>
+					<div className={styles.centerNote}><Spin /></div>
 				) : getFields().length === 0 ? (
-					<div style={{ textAlign: 'center', padding: 40, color: '#94a3b8' }}>
-						Biểu mẫu này chưa có trường dữ liệu
-					</div>
+					<div className={styles.centerNote}>Biểu mẫu này chưa có trường dữ liệu</div>
 				) : (
 					<>{getFields().map(renderField)}</>
 				)

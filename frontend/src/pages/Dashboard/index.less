@@ -1,4 +1,3 @@
-// design: smartadmin.pen · frame 03
 
 @primary: #4f46e5;
 @secondary: #7c3aed;
@@ -19,12 +18,10 @@
 @grad: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
 @card-shadow: 0 4px 20px -2px #4f46e51a;
 
-// Breakpoints
 @bp-sm: 480px;
 @bp-md: 768px;
 @bp-lg: 1100px;
 
-// ─── Page wrapper ────────────────────────────────────────────────────────────
 .dashboardPage {
 	display: flex;
 	flex-direction: column;
@@ -46,7 +43,6 @@
 	}
 }
 
-// ─── Reusable card mixin ─────────────────────────────────────────────────────
 .card() {
 	background: #fff;
 	border: 1px solid @border-light;
@@ -54,7 +50,6 @@
 	box-shadow: @card-shadow;
 }
 
-// ─── Header ──────────────────────────────────────────────────────────────────
 .dashboardHeader {
 	display: flex;
 	align-items: center;
@@ -91,7 +86,6 @@
 	}
 }
 
-// ─── Refresh button ───────────────────────────────────────────────────────────
 .refreshBtn {
 	display: inline-flex;
 	align-items: center;
@@ -152,12 +146,9 @@
 		}
 	}
 
-	&:disabled {
-		opacity: 0.6;
-		pointer-events: none;
-	}
-
 	&.spinning {
+		opacity: 0.65;
+		pointer-events: none;
 		border-color: #a5b4fc;
 		background: #eef2ff;
 		color: @primary;
@@ -170,7 +161,6 @@
 	}
 }
 
-// @keyframes phải trong :global để CSS Modules không scope tên → animation hoạt động đúng
 :global {
 	@keyframes refreshSpin {
 		from { transform: rotate(0deg); }
@@ -178,7 +168,6 @@
 	}
 }
 
-// ─── Stat cards ───────────────────────────────────────────────────────────────
 .statsGrid {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
@@ -208,7 +197,6 @@
 		gap: 12px;
 	}
 
-	// Mobile 2-col: chuyển sang layout dọc (icon trên, số dưới) — gọn hơn trong card nhỏ
 	@media (max-width: @bp-sm) {
 		flex-direction: column;
 		align-items: flex-start;
@@ -285,7 +273,6 @@
 	}
 }
 
-// ─── Charts grid ─────────────────────────────────────────────────────────────
 .chartsGrid {
 	display: grid;
 	grid-template-columns: 460px 1fr;
@@ -306,7 +293,9 @@
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
+	min-width: 0;
 	padding: 24px;
+	overflow: hidden;
 
 	@media (max-width: @bp-md) {
 		padding: 16px;
@@ -384,6 +373,7 @@
 }
 
 .chartBody {
+	min-width: 0;
 	min-height: 220px;
 
 	@media (max-width: @bp-sm) {
@@ -391,7 +381,6 @@
 	}
 }
 
-// ─── Bottom grid ─────────────────────────────────────────────────────────────
 .bottomGrid {
 	display: grid;
 	grid-template-columns: 1fr;
@@ -450,7 +439,6 @@
 	}
 }
 
-// ─── Top forms list ───────────────────────────────────────────────────────────
 .topFormsList {
 	display: flex;
 	flex-direction: column;
@@ -561,7 +549,6 @@
 	}
 }
 
-// ─── SLA table ────────────────────────────────────────────────────────────────
 .slaTableWrapper {
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
@@ -570,11 +557,9 @@
 
 .slaTable {
 	width: 100%;
-	// min-width đảm bảo bảng không bị nén nhỏ hơn nội dung → tạo scroll ngang thực sự
 	min-width: 520px;
 	border-collapse: collapse;
 
-	// Cho phép cuộn ngang trên mobile — wrapper đã có overflowX: auto
 	thead tr {
 		background: @bg;
 
@@ -623,7 +608,6 @@
 	}
 }
 
-// ─── States ───────────────────────────────────────────────────────────────────
 .loadingState {
 	display: flex;
 	flex-direction: column;
@@ -659,7 +643,6 @@
 	}
 }
 
-// ─── Animations ───────────────────────────────────────────────────────────────
 .fadeIn {
 	animation: fadeIn 0.5s ease-out both;
 }

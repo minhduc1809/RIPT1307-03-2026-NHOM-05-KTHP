@@ -1,4 +1,3 @@
-// Shell dùng chung cho các trang public (navbar 2 trạng thái, footer, Reveal, PageHero)
 import {
 	AppstoreOutlined,
 	DownOutlined,
@@ -14,8 +13,7 @@ import NotificationBell from '@/components/NotificationBell';
 import styles from './index.less';
 
 export const goLogin = () => history.push('/user/login');
-// TODO: trỏ về trang đăng ký tổ chức (POST /auth/register-tenant) khi page được dựng
-export const goRegisterTenant = () => history.push('/user/login');
+export const goRegisterTenant = () => history.push('/user/register');
 
 export const Brand: React.FC = () => (
 	<div className={styles.brand} onClick={() => history.push('/')}>
@@ -26,7 +24,6 @@ export const Brand: React.FC = () => (
 	</div>
 );
 
-/** Fade-up khi phần tử đi vào viewport (chạy 1 lần, threshold 15%). */
 export const Reveal: React.FC<{ className?: string; stagger?: boolean; id?: string }> = ({
 	children,
 	className,
@@ -66,7 +63,6 @@ export const Reveal: React.FC<{ className?: string; stagger?: boolean; id?: stri
 	);
 };
 
-/** Google font + page title cho mọi trang public. */
 export const PublicHead: React.FC<{ title: string }> = ({ title }) => (
 	<HelmetProvider>
 		<Helmet>
@@ -79,11 +75,6 @@ export const PublicHead: React.FC<{ title: string }> = ({ title }) => (
 	</HelmetProvider>
 );
 
-/**
- * Navbar public — 2 trạng thái (design 23 & 23b):
- *  - Khách: "Đăng nhập" + "Bắt đầu ngay"
- *  - Đã đăng nhập: NotificationBell + "Vào Dashboard" + user chip (→ Hồ sơ)
- */
 export const PublicNavbar: React.FC = () => {
 	const { initialState } = useModel('@@initialState');
 	const currentUser: any = initialState?.currentUser;
@@ -202,7 +193,6 @@ export const PublicFooter: React.FC = () => (
 	</footer>
 );
 
-/** Dải hero nhỏ dùng cho các trang phụ (Contact/Privacy/Terms/Pricing). */
 export const PageHero: React.FC<{ label: string; title: string; sub?: string }> = ({ label, title, sub }) => (
 	<div className={styles.pageHero}>
 		<span className={styles.pageHeroLabel}>{label}</span>

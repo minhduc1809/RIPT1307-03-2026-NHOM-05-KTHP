@@ -3,12 +3,10 @@ import {
 	CheckCircleOutlined,
 	ClockCircleOutlined,
 	CloseCircleOutlined,
-	ExportOutlined,
 	FilterOutlined,
 	RollbackOutlined,
 	SearchOutlined,
 	SwapOutlined,
-	TeamOutlined,
 	UserOutlined,
 	LeftOutlined,
 	RightOutlined,
@@ -87,6 +85,8 @@ const PendingApprovals: React.FC = () => {
 
 	// Bulk selection
 	const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+	const [bulkOpen, setBulkOpen] = useState(false);
+	const [bulkRunning, setBulkRunning] = useState(false);
 
 	const fetchPending = useCallback(async () => {
 		setLoading(true);
@@ -216,8 +216,8 @@ const PendingApprovals: React.FC = () => {
 		}
 	};
 
-	// Modal action
-	const openActionModal = async (item: IWorkflowInstance) => {
+	// Modal action — presetAction: chọn sẵn hành động khi mở từ nút Từ chối/Trả lại (frame 22)
+	const openActionModal = async (item: IWorkflowInstance, presetAction?: string) => {
 		setActiveItem(item);
 		setSelectedAction(null);
 		setComment('');
@@ -227,7 +227,12 @@ const PendingApprovals: React.FC = () => {
 		try {
 			const res = await getAvailableActions(item.submissionId);
 			const data = (res as any)?.data?.data ?? (res as any)?.data;
-			setAvailableActions(data?.actions ?? []);
+			const actions: IAvailableAction[] = data?.actions ?? [];
+			setAvailableActions(actions);
+			if (presetAction) {
+				const preset = actions.find((a) => a.action === presetAction || a.action.includes(presetAction));
+				if (preset) setSelectedAction(preset);
+			}
 		} catch {
 			setAvailableActions([]);
 		} finally {
@@ -260,42 +265,35 @@ const PendingApprovals: React.FC = () => {
 	};
 
 	// Bulk approve
-	const handleBulkApprove = async () => {
-		if (selectedIds.size === 0) return;
+	const confirmBulkApprove = async () => {
 		const confirmItems = items.filter((i) => selectedIds.has(i.id));
-
-		Modal.confirm({
-			title: `Phê duyệt hàng loạt`,
-			content: `Bạn có chắc muốn phê duyệt ${confirmItems.length} yêu cầu?`,
-			okText: 'Phê duyệt tất cả',
-			cancelText: 'Hủy',
-			onOk: async () => {
-				let success = 0;
-				let failed = 0;
-				for (const item of confirmItems) {
-					try {
-						let action = 'approve';
-						try {
-							const res = await getAvailableActions(item.submissionId);
-							const data = (res as any)?.data?.data ?? (res as any)?.data;
-							const actions: IAvailableAction[] = data?.actions ?? [];
-							const approveAction = actions.find((a) => a.action.includes('approve') || a.action.includes('start_review'));
-							if (approveAction) action = approveAction.action;
-						} catch { /* */ }
-						await executeWorkflowAction({
-							submissionId: item.submissionId,
-							action,
-						});
-						success++;
-					} catch {
-						failed++;
-					}
-				}
-				message.success(`Hoàn tất: ${success} thành công, ${failed} thất bại`);
-				setSelectedIds(new Set());
-				fetchPending();
-			},
-		});
+		setBulkRunning(true);
+		let success = 0;
+		let failed = 0;
+		for (const item of confirmItems) {
+			try {
+				let action = 'approve';
+				try {
+					const res = await getAvailableActions(item.submissionId);
+					const data = (res as any)?.data?.data ?? (res as any)?.data;
+					const actions: IAvailableAction[] = data?.actions ?? [];
+					const approveAction = actions.find((a) => a.action.includes('approve') || a.action.includes('start_review'));
+					if (approveAction) action = approveAction.action;
+				} catch { /* */ }
+				await executeWorkflowAction({
+					submissionId: item.submissionId,
+					action,
+				});
+				success++;
+			} catch {
+				failed++;
+			}
+		}
+		setBulkRunning(false);
+		setBulkOpen(false);
+		message.success(`Hoàn tất: ${success} thành công, ${failed} thất bại`);
+		setSelectedIds(new Set());
+		fetchPending();
 	};
 
 	const toggleSelect = (id: string) => {
@@ -418,9 +416,6 @@ const PendingApprovals: React.FC = () => {
 						<span style={{ marginLeft: 8 }}>yêu cầu đang chờ xử lý</span>
 					</p>
 				</div>
-				<div className={styles.headerRight}>
-					<ExportJobButton buttonText="Xuất Excel" />
-				</div>
 			</div>
 
 			{/* ====== TOOLBAR ====== */}
@@ -452,12 +447,13 @@ const PendingApprovals: React.FC = () => {
 					)}
 				</div>
 				<div className={styles.toolbarRight}>
+					<ExportJobButton buttonText='Xuất Excel' />
 					{selectedIds.size > 0 && (
 						<Button
 							type="primary"
 							icon={<CheckCircleOutlined />}
-							onClick={handleBulkApprove}
-							style={{ borderRadius: 8 }}
+							onClick={() => setBulkOpen(true)}
+							className={styles.bulkBtn}
 						>
 							Duyệt {selectedIds.size} yêu cầu
 						</Button>
@@ -545,87 +541,122 @@ const PendingApprovals: React.FC = () => {
 					</div>
 				</div>
 			) : (
-				/* ====== LIST VIEW ====== */
+				/* ====== LIST VIEW — design: smartadmin.pen frame 22 ====== */
 				<div className={styles.listSection}>
+					<div className={styles.ltHead}>
+						<span className={`${styles.ltCol} ${styles.colCheck}`} />
+						<span className={`${styles.ltCol} ${styles.colForm}`}>BIỂU MẪU</span>
+						<span className={`${styles.ltCol} ${styles.colUser}`}>NGƯỜI GỬI</span>
+						<span className={`${styles.ltCol} ${styles.colStep}`}>BƯỚC HIỆN TẠI</span>
+						<span className={`${styles.ltCol} ${styles.colTime}`}>THỜI GIAN</span>
+						<span className={`${styles.ltCol} ${styles.colActions}`}>THAO TÁC</span>
+					</div>
 					{filteredItems.map((item) => {
 						const sub = item.submission;
-						const readable = sub ? getReadableData(sub).slice(0, 3) : [];
 						const overdue = isOverdue(item.updatedAt || item.createdAt);
+						const stepColor = getStepColor(item.currentStep);
+						const senderName = sub?.user?.username || sub?.user?.email || '—';
 
 						return (
-							<div key={item.id} className={`${styles.listItem} ${overdue ? styles.overdue : ''}`}>
-								<input
-									type="checkbox"
-									checked={selectedIds.has(item.id)}
-									onChange={() => toggleSelect(item.id)}
-									className={styles.listCheckbox}
-								/>
-								<div
-									className={styles.listInfo}
+							<div key={item.id} className={styles.ltRow}>
+								<span className={`${styles.ltCol} ${styles.colCheck}`}>
+									<input
+										type='checkbox'
+										checked={selectedIds.has(item.id)}
+										onChange={() => toggleSelect(item.id)}
+										className={styles.listCheckbox}
+									/>
+								</span>
+								<span
+									className={`${styles.ltCol} ${styles.colForm} ${styles.formCell}`}
 									onClick={() => history.push(`/submissions/${item.submissionId}`)}
 								>
-									<div className={styles.listTitle}>
-										{sub?.form?.name || `#${item.submissionId.substring(0, 8)}`}
-										<Tag
-											style={{
-												marginLeft: 8,
-												borderRadius: 6,
-												background: `${getStepColor(item.currentStep)}18`,
-												color: getStepColor(item.currentStep),
-												border: 'none',
-												fontWeight: 600,
-												fontSize: 11,
-											}}
-										>
-											{getStateLabel(item.currentStep)}
-										</Tag>
-										{overdue && (
-											<Tag color="red" style={{ fontSize: 10 }}>
-												Quá hạn
-											</Tag>
-										)}
-									</div>
-									<div className={styles.listMeta}>
-										{sub?.user && (
-											<span><UserOutlined /> {sub.user.username || sub.user.email}</span>
-										)}
-										<span><ClockCircleOutlined /> {moment(item.createdAt).format('DD/MM/YYYY HH:mm')}</span>
-										{readable.map((f) => (
-											<span key={f.key} className={styles.listTag}>
-												{f.label}: {f.value}
-											</span>
-										))}
-									</div>
-								</div>
-								<div className={styles.listActions}>
-									<Button
-										type="primary"
-										size="small"
-										icon={<CheckCircleOutlined />}
+									<span className={styles.formName}>{sub?.form?.name || `#${item.submissionId.substring(0, 8)}`}</span>
+									<span className={styles.formSub}>
+										SUB-{item.submissionId.substring(0, 8).toUpperCase()}
+										{(sub?.revisionNumber ?? 1) > 1 && ` · Lần nộp #${sub?.revisionNumber}`}
+									</span>
+								</span>
+								<span className={`${styles.ltCol} ${styles.colUser} ${styles.userCell}`}>
+									<span className={styles.userAvatar}>{senderName[0]?.toUpperCase()}</span>
+									<span className={styles.userName}>{senderName}</span>
+								</span>
+								<span className={`${styles.ltCol} ${styles.colStep}`}>
+									<span className={styles.stepBadge} style={{ background: `${stepColor}1a`, color: stepColor }}>
+										<span className={styles.stepDot} style={{ background: stepColor }} />
+										{getStateLabel(item.currentStep)}
+									</span>
+								</span>
+								<span className={`${styles.ltCol} ${styles.colTime} ${styles.timeCell}`}>
+									<span>{getTimeAgo(item.updatedAt || item.createdAt)}</span>
+									{overdue && <span className={styles.overdueTag}>Quá hạn 48h</span>}
+								</span>
+								<span className={`${styles.ltCol} ${styles.colActions} ${styles.rowActions}`}>
+									<button
+										type='button'
+										className={`${styles.chipBtn} ${styles.chipApprove}`}
 										onClick={() => handleInlineAction(item, 'approve')}
-										loading={inlineExecuting === item.id}
-										style={{ borderRadius: 8, background: '#10b981', borderColor: '#10b981' }}
+										disabled={inlineExecuting === item.id}
 									>
-										Duyệt
-									</Button>
-									<Button
-										size="small"
-										onClick={() => openActionModal(item)}
-										style={{ borderRadius: 8 }}
+										{inlineExecuting === item.id ? <Spin size='small' /> : 'Phê duyệt'}
+									</button>
+									<button
+										type='button'
+										className={`${styles.chipBtn} ${styles.chipReject}`}
+										onClick={() => openActionModal(item, 'reject')}
 									>
-										Chi tiết
-									</Button>
-								</div>
+										Từ chối
+									</button>
+									<button
+										type='button'
+										className={`${styles.chipBtn} ${styles.chipReturn}`}
+										onClick={() => openActionModal(item, 'return_for_edit')}
+									>
+										Trả lại
+									</button>
+								</span>
 							</div>
 						);
 					})}
-					{total > limit && (
-						<div style={{ padding: 16, textAlign: 'center' }}>
-							<Pagination current={page} pageSize={limit} total={total} onChange={setPage} />
-						</div>
-					)}
+					<div className={styles.ltFooter}>
+						<span className={styles.ltTotal}>
+							Hiển thị {filteredItems.length > 0 ? (page - 1) * limit + 1 : 0}–
+							{Math.min(page * limit, total)} trên {total} yêu cầu chờ duyệt
+						</span>
+						{total > limit && <Pagination current={page} pageSize={limit} total={total} onChange={setPage} />}
+					</div>
 				</div>
 			)}
+
+			{/* ====== BULK APPROVE MODAL — cùng vibe confirmModal frame 17, tông success ====== */}
+			<Modal
+				visible={bulkOpen}
+				onCancel={() => !bulkRunning && setBulkOpen(false)}
+				footer={null}
+				width={400}
+				centered
+				closable={false}
+				className={styles.bulkModal}
+			>
+				<div className={styles.bulkBody}>
+					<div className={styles.bulkIconCircle}>
+						<CheckCircleOutlined />
+					</div>
+					<h3>Phê duyệt hàng loạt?</h3>
+					<p>
+						<strong>{selectedIds.size} yêu cầu</strong> đã chọn sẽ được phê duyệt lần lượt. Hành động này không thể hoàn
+						tác.
+					</p>
+					<div className={styles.bulkActions}>
+						<button type='button' className={styles.cancelBtn} onClick={() => setBulkOpen(false)} disabled={bulkRunning}>
+							Hủy
+						</button>
+						<button type='button' className={styles.successBtn} onClick={confirmBulkApprove} disabled={bulkRunning}>
+							<CheckCircleOutlined /> {bulkRunning ? 'Đang duyệt...' : 'Phê duyệt tất cả'}
+						</button>
+					</div>
+				</div>
+			</Modal>
 
 			{/* ====== ACTION MODAL ====== */}
 			<Modal

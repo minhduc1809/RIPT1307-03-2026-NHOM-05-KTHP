@@ -401,16 +401,10 @@ const SubmissionDetail: React.FC = () => {
 						<span>Lần nộp #{submission.revisionNumber}</span>
 					)}
 				</div>
-				{/* SLA info */}
-				{slaDetail?.slaHours && submission.status === 'UNDER_REVIEW' && (
-					<div className={styles.headerMeta} style={{ marginTop: 6 }}>
-						<span className={styles.slaInfo}>
-							<ExclamationCircleOutlined /> SLA: {slaDetail.slaHours} giờ làm việc
-						</span>
-					</div>
-				)}
 			</div>
 
+			<div className={styles.bodyGrid}>
+			<div className={styles.leftCol}>
 			{/* Submission Data */}
 			<div className={styles.card}>
 				<div className={styles.cardHeader}>
@@ -483,65 +477,6 @@ const SubmissionDetail: React.FC = () => {
 									</div>
 								);
 							})}
-						</div>
-					</div>
-				</div>
-			)}
-
-			{/* Workflow History Timeline */}
-			{histories.length > 0 && (
-				<div className={styles.card}>
-					<div className={styles.cardHeader}>
-						<div className={`${styles.cardIcon} ${styles.timelineIcon}`}>
-							<ClockCircleOutlined />
-						</div>
-						<div className={styles.cardTitle}>
-							<h3>Lịch sử xử lý</h3>
-							<p>{historyData?.workflowName || 'Workflow'} &mdash; {getStateLabel(historyData?.currentStep || '')}</p>
-						</div>
-					</div>
-					<div className={styles.cardBody}>
-						<div className={styles.timeline}>
-							{[...histories].reverse().map((h) => (
-								<div key={h.id} className={`${styles.timelineItem} ${isSystemBot(h.actor) ? styles.systemBot : ''}`}>
-									<div className={`${styles.timelineDot} ${styles[getDotClass(h.action)]} ${isSystemBot(h.actor) ? styles.botDot : ''}`}>
-										{getActionIcon(h.action, h.actor)}
-									</div>
-									<div className={styles.timelineContent}>
-										<div className={styles.timelineAction}>
-											<span className={`${styles.actionBadge} ${styles[getActionClass(h.action)]}`}>
-												{ACTION_LABELS[h.action] || h.action}
-											</span>
-											{isSystemBot(h.actor) && (
-												<span className={styles.systemBotLabel}>Hệ thống tự động</span>
-											)}
-										</div>
-										<div className={styles.timelineSteps}>
-											{h.fromStep && (
-												<>
-													<span>{getStateLabel(h.fromStep)}</span>
-													<span className={styles.arrow}><ArrowRightOutlined /></span>
-												</>
-											)}
-											<span>{getStateLabel(h.toStep)}</span>
-										</div>
-										<div className={styles.timelineMeta}>
-											{h.actor && !isSystemBot(h.actor) && <span>{h.actor.name}</span>}
-											{h.delegatedFor && (
-												<span className={styles.delegatedFor}>
-													Duyệt thay cho {h.delegatedFor.name}
-												</span>
-											)}
-											<span>{moment(h.createdAt).format('DD/MM/YYYY HH:mm')}</span>
-										</div>
-										{h.comment && (
-											<div className={styles.timelineComment}>
-												&ldquo;{h.comment}&rdquo;
-											</div>
-										)}
-									</div>
-								</div>
-							))}
 						</div>
 					</div>
 				</div>
@@ -700,6 +635,92 @@ const SubmissionDetail: React.FC = () => {
 					</div>
 				</div>
 			)}
+
+			</div>
+
+			<div className={styles.rightCol}>
+			{/* Workflow History Timeline */}
+			{histories.length > 0 && (
+				<div className={styles.card}>
+					<div className={styles.cardHeader}>
+						<div className={`${styles.cardIcon} ${styles.timelineIcon}`}>
+							<ClockCircleOutlined />
+						</div>
+						<div className={styles.cardTitle}>
+							<h3>Lịch sử xử lý</h3>
+							<p>{historyData?.workflowName || 'Workflow'} &mdash; {getStateLabel(historyData?.currentStep || '')}</p>
+						</div>
+					</div>
+					<div className={styles.cardBody}>
+						<div className={styles.timeline}>
+							{[...histories].reverse().map((h) => (
+								<div key={h.id} className={`${styles.timelineItem} ${isSystemBot(h.actor) ? styles.systemBot : ''}`}>
+									<div className={`${styles.timelineDot} ${styles[getDotClass(h.action)]} ${isSystemBot(h.actor) ? styles.botDot : ''}`}>
+										{getActionIcon(h.action, h.actor)}
+									</div>
+									<div className={styles.timelineContent}>
+										<div className={styles.timelineAction}>
+											<span className={`${styles.actionBadge} ${styles[getActionClass(h.action)]}`}>
+												{ACTION_LABELS[h.action] || h.action}
+											</span>
+											{isSystemBot(h.actor) && (
+												<span className={styles.systemBotLabel}>Hệ thống tự động</span>
+											)}
+										</div>
+										<div className={styles.timelineSteps}>
+											{h.fromStep && (
+												<>
+													<span>{getStateLabel(h.fromStep)}</span>
+													<span className={styles.arrow}><ArrowRightOutlined /></span>
+												</>
+											)}
+											<span>{getStateLabel(h.toStep)}</span>
+										</div>
+										<div className={styles.timelineMeta}>
+											{h.actor && !isSystemBot(h.actor) && <span>{h.actor.name}</span>}
+											{h.delegatedFor && (
+												<span className={styles.delegatedFor}>
+													Duyệt thay cho {h.delegatedFor.name}
+												</span>
+											)}
+											<span>{moment(h.createdAt).format('DD/MM/YYYY HH:mm')}</span>
+										</div>
+										{h.comment && (
+											<div className={styles.timelineComment}>
+												&ldquo;{h.comment}&rdquo;
+											</div>
+										)}
+									</div>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+			)}
+
+			{/* SLA Card — frame 13 */}
+			{slaDetail?.slaHours && submission.status === 'UNDER_REVIEW' && (() => {
+				const elapsed = moment().diff(moment(submission.createdAt), 'hours');
+				const pct = Math.min(100, Math.round((elapsed / slaDetail.slaHours) * 100));
+				const remain = Math.max(0, slaDetail.slaHours - elapsed);
+				return (
+					<div className={styles.slaCard}>
+						<div className={styles.slaHeader}>
+							<span><ExclamationCircleOutlined /> SLA bước hiện tại</span>
+							<span className={`${styles.slaPct} ${pct >= 100 ? styles.over : pct >= 70 ? styles.warn : ''}`}>{pct}%</span>
+						</div>
+						<div className={styles.slaTrack}>
+							<div className={`${styles.slaFill} ${pct >= 100 ? styles.over : pct >= 70 ? styles.warn : ''}`} style={{ width: `${pct}%` }} />
+						</div>
+						<span className={styles.slaNote}>
+							Đã trôi qua {elapsed} giờ · {remain > 0 ? `Còn lại ${remain} giờ trước khi quá hạn` : 'Đã quá hạn SLA'}
+						</span>
+					</div>
+				);
+			})()}
+			</div>
+			</div>
+
 
 			{/* Resubmit Modal */}
 			<Modal
