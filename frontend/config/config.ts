@@ -49,7 +49,7 @@ export default defineConfig({
 	// https://umijs.org/plugins/plugin-esbuild
 	esbuild: {},
 	title: SITE_TITLE,
-	favicon: '/favicon.ico',
+	favicon: '/logo.png',
 	metas: [
 		{ name: 'description', content: SITE_DESC },
 		{ name: 'keywords', content: 'quản lý biểu mẫu, workflow, phê duyệt, form builder, FlowForm' },
