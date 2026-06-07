@@ -231,12 +231,6 @@ const Login: React.FC = () => {
 							</Button>
 						</Form>
 
-						<div className={styles.divider}>hoặc</div>
-
-						{/* TODO: nối luồng Keycloak SSO (APP_CONFIG_KEYCLOAK_AUTHORITY) */}
-						<button type="button" className={styles.ssoBtn}>
-							<SafetyCertificateOutlined /> Đăng nhập với PTIT SSO (Keycloak)
-						</button>
 
 						<div className={styles.copyright}>© 2026 FlowForm Platform. All rights reserved.</div>
 					</div>

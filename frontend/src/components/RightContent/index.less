@@ -46,6 +46,15 @@
 		}
 	}
 
+	.desktopOnly {
+		display: flex;
+		align-items: center;
+
+		@media (max-width: @bp-md) {
+			display: none;
+		}
+	}
+
 	.action {
 		display: flex;
 		gap: 10px;
