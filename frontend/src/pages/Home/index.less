@@ -80,6 +80,10 @@
 		font-weight: 800;
 		letter-spacing: 1px;
 		color: @text;
+
+		@media (max-width: 576px) {
+			display: none;
+		}
 	}
 }
 
@@ -108,6 +112,7 @@
 	display: flex;
 	align-items: center;
 	gap: 12px;
+	flex-shrink: 0;
 
 	.loginLink {
 		font-size: 14px;
@@ -131,6 +136,7 @@
 	border-radius: 999px;
 	background: #fff;
 	cursor: pointer;
+	flex-shrink: 0;
 	transition: all 0.2s ease-out;
 
 	&:hover {
@@ -159,6 +165,10 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+
+		@media (max-width: 576px) {
+			display: none;
+		}
 	}
 
 	.chipCaret {
@@ -180,6 +190,8 @@
 	font-family: inherit;
 	font-size: 14px;
 	font-weight: 700;
+	white-space: nowrap;
+	flex-shrink: 0;
 	cursor: pointer;
 	box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
 	transition: all 0.2s ease-out;
