@@ -2,8 +2,13 @@
 @import '~antd/es/style/themes/default.less';
 
 @text: #0f172a;
+@muted: #64748b;
 @muted-light: #94a3b8;
 @border: #e2e8f0;
+@primary: #4f46e5;
+
+@bp-sm: 480px;
+@bp-md: 768px;
 
 .menu {
 	:global(.anticon) {
@@ -23,10 +28,22 @@
 	float: right;
 	margin-left: auto;
 
+	@media (max-width: @bp-md) {
+		gap: 8px;
+	}
+
+	@media (max-width: @bp-sm) {
+		gap: 4px;
+	}
+
 	.divider {
 		width: 1px;
 		height: 24px;
 		background: @border;
+
+		@media (max-width: @bp-md) {
+			display: none;
+		}
 	}
 
 	.action {
@@ -37,6 +54,11 @@
 		padding: 0 4px;
 		cursor: pointer;
 		transition: opacity 0.2s ease-out;
+
+		@media (max-width: @bp-sm) {
+			padding: 0 2px;
+			gap: 6px;
+		}
 
 		&:hover {
 			opacity: 0.85;
@@ -54,21 +76,39 @@
 		color: #fff;
 		font-size: 13px;
 		font-weight: 700;
+		flex-shrink: 0;
+
+		@media (max-width: @bp-sm) {
+			width: 32px;
+			height: 32px;
+			font-size: 12px;
+		}
 	}
 
 	.avatar {
 		width: 36px;
 		height: 36px;
+		flex-shrink: 0;
+
+		@media (max-width: @bp-sm) {
+			width: 32px;
+			height: 32px;
+		}
 
 		img {
 			object-fit: cover;
 		}
 	}
 
+	// Ẩn tên + role trên mobile (≤768px) để tiết kiệm không gian topbar
 	.userCol {
 		display: flex;
 		flex-direction: column;
 		line-height: 1.3;
+
+		@media (max-width: @bp-md) {
+			display: none;
+		}
 	}
 
 	.name {
@@ -86,13 +126,8 @@
 	.caret {
 		color: @muted-light;
 		font-size: 11px;
-	}
-}
 
-@media only screen and (max-width: @screen-md) {
-	.right {
-		.userCol,
-		.divider {
+		@media (max-width: @bp-md) {
 			display: none;
 		}
 	}
