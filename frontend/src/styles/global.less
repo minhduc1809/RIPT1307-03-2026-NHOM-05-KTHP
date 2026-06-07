@@ -8,6 +8,10 @@ html,
 body,
 #root {
 	height: 100%;
+	max-width: 100%;
+	// clip: chặn scroll ngang nhưng không tạo scroll context mới
+	// (khác hidden: không phá vỡ height/position của các element con)
+	overflow-x: clip;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;

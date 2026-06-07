@@ -174,7 +174,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 			</ErrorBoundary>
 		),
 		// Logo theo DS smartadmin.pen: ô vuông gradient + chữ FLOWFORM
-		menuHeaderRender: () => (
+		// Khi sidebar thu gọn (collapsed) → chỉ hiện icon, ẩn chữ
+		menuHeaderRender: (_logo: any, _title: any, props: any) => (
 			<a
 				className='ds-menu-header'
 				onClick={(e) => {
@@ -185,7 +186,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 				<span className='ds-logo-square'>
 					<ThunderboltFilled />
 				</span>
-				<span className='ds-logo-text'>FLOWFORM</span>
+				{!props?.collapsed && (
+					<span className='ds-logo-text'>FLOWFORM</span>
+				)}
 			</a>
 		),
 		...initialState?.settings,

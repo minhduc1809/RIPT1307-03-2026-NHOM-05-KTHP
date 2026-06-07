@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons';
 import { RefreshCcw } from 'lucide-react';
 import { Spin, Tooltip } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import CountUp from 'react-countup';
 import Chart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
@@ -89,10 +89,25 @@ const STAT_CARDS: { key: keyof ISummary; icon: React.ReactNode; color: string; l
 	{ key: 'pending', icon: <ClockCircleOutlined />, color: 'amber', label: 'Đang chờ xử lý' },
 ];
 
+/** Hook lấy chiều rộng cửa sổ để điều chỉnh chart height */
+function useWindowWidth() {
+	const [width, setWidth] = useState(() => window.innerWidth);
+	useEffect(() => {
+		const handler = () => setWidth(window.innerWidth);
+		window.addEventListener('resize', handler);
+		return () => window.removeEventListener('resize', handler);
+	}, []);
+	return width;
+}
+
 const Dashboard: React.FC = () => {
 	const { initialState } = useModel('@@initialState');
 	const userRole = initialState?.currentUser?.role;
 	const isFullDashboard = userRole === 'ADMIN' || userRole === 'MANAGER';
+
+	const windowWidth = useWindowWidth();
+	const isMobile = windowWidth <= 480;
+	const isTablet = windowWidth <= 768;
 
 	const [summary, setSummary] = useState<ISummary | null>(null);
 	const [statusData, setStatusData] = useState<IStatusItem[]>([]);
@@ -104,6 +119,12 @@ const Dashboard: React.FC = () => {
 	const [refreshing, setRefreshing] = useState(false);
 	const [selectedDays, setSelectedDays] = useState(30);
 
+	// Dùng ref để giữ giá trị mới nhất mà không tạo dependency trong useEffect
+	const selectedDaysRef = useRef(selectedDays);
+	const isFullDashboardRef = useRef(isFullDashboard);
+	selectedDaysRef.current = selectedDays;
+	isFullDashboardRef.current = isFullDashboard;
+
 	const fetchAll = useCallback(
 		async (showRefresh = false) => {
 			if (showRefresh) setRefreshing(true);
@@ -112,13 +133,13 @@ const Dashboard: React.FC = () => {
 			const minSpin = showRefresh ? new Promise((r) => setTimeout(r, 600)) : Promise.resolve();
 
 			try {
-				if (isFullDashboard) {
+				if (isFullDashboardRef.current) {
 					const [summaryRes, statusRes, dayRes, topRes, slaRes] = await Promise.all([
 						getDashboardSummary(),
 						getSubmissionsByStatus(),
-						getSubmissionsByDay(selectedDays),
+						getSubmissionsByDay(selectedDaysRef.current),
 						getTopForms(10),
-						getSlaMetrics(selectedDays),
+						getSlaMetrics(selectedDaysRef.current),
 					]);
 
 					setSummary(extractData<ISummary>(summaryRes));
@@ -146,21 +167,32 @@ const Dashboard: React.FC = () => {
 				setRefreshing(false);
 			}
 		},
-		[selectedDays, isFullDashboard],
+		[], // stable — đọc giá trị mới nhất qua ref
 	);
 
+	// Fetch lần đầu khi mount
 	useEffect(() => {
 		fetchAll();
-	}, [fetchAll]);
+	}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+	// Fetch lại khi selectedDays thay đổi (không dùng loading screen, chỉ refresh nhẹ)
+	useEffect(() => {
+		fetchAll(true);
+	}, [selectedDays]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	// ─── Chart heights — responsive theo window width ───────────────────────
+	const donutHeight = isMobile ? 260 : isTablet ? 280 : 240;
+	const areaHeight = isMobile ? 180 : isTablet ? 200 : 210;
 
 	const donutOptions: ApexOptions = {
 		chart: { type: 'donut', fontFamily: 'inherit' },
 		labels: statusData.map((s) => s.status),
 		colors: statusData.map((s) => getStatusColor(s.status)),
 		legend: {
-			position: 'right',
+			// Mobile: legend bên dưới chart để tiết kiệm chiều ngang
+			position: isMobile ? 'bottom' : 'right',
 			fontWeight: 600,
-			fontSize: '12px',
+			fontSize: isMobile ? '11px' : '12px',
 			labels: { colors: '#334155' },
 			markers: { width: 8, height: 8, radius: 8 } as any,
 			itemMargin: { horizontal: 4, vertical: 4 },
@@ -184,7 +216,7 @@ const Dashboard: React.FC = () => {
 							},
 						},
 						value: {
-							fontSize: '24px',
+							fontSize: isMobile ? '20px' : '24px',
 							fontWeight: 800,
 							color: '#0f172a',
 							offsetY: 4,
@@ -197,15 +229,6 @@ const Dashboard: React.FC = () => {
 		tooltip: {
 			y: { formatter: (val: number) => `${val} submissions` },
 		},
-		responsive: [
-			{
-				breakpoint: 576,
-				options: {
-					chart: { height: 280 },
-					legend: { position: 'bottom' },
-				},
-			},
-		],
 	};
 
 	const areaOptions: ApexOptions = {
@@ -230,9 +253,9 @@ const Dashboard: React.FC = () => {
 		xaxis: {
 			categories: dayData.map((d) => moment(d.date).format('DD/MM')),
 			labels: {
-				style: { colors: '#94a3b8', fontSize: '11px', fontWeight: 500 },
+				style: { colors: '#94a3b8', fontSize: isMobile ? '10px' : '11px', fontWeight: 500 },
 				rotate: -45,
-				rotateAlways: dayData.length > 15,
+				rotateAlways: dayData.length > 10,
 			},
 			axisBorder: { show: false },
 			axisTicks: { show: false },
@@ -252,7 +275,6 @@ const Dashboard: React.FC = () => {
 			x: { format: 'dd/MM/yyyy' },
 			y: { formatter: (val: number) => `${val} submissions` },
 		},
-		responsive: [{ breakpoint: 576, options: { chart: { height: 220 } } }],
 	};
 
 	const areaSeries = [{ name: 'Submissions', data: dayData.map((d) => d.count) }];
@@ -285,6 +307,7 @@ const Dashboard: React.FC = () => {
 
 	return (
 		<div className={styles.dashboardPage}>
+			{/* ─── Header ─────────────────────────────────────────────────────── */}
 			<div className={styles.dashboardHeader}>
 				<div className={styles.headerLeft}>
 					<h1>Dashboard</h1>
@@ -303,6 +326,7 @@ const Dashboard: React.FC = () => {
 				</Tooltip>
 			</div>
 
+			{/* ─── Stat cards ─────────────────────────────────────────────────── */}
 			<div className={styles.statsGrid}>
 				{STAT_CARDS.map((card, idx) => (
 					<div key={card.key} className={`${styles.statCard} ${styles.fadeIn}`} style={{ animationDelay: `${0.05 * (idx + 1)}s` }}>
@@ -317,8 +341,10 @@ const Dashboard: React.FC = () => {
 				))}
 			</div>
 
+			{/* ─── Charts ─────────────────────────────────────────────────────── */}
 			{isFullDashboard && (
 				<div className={styles.chartsGrid}>
+					{/* Donut chart */}
 					<div className={`${styles.chartCard} ${styles.fadeIn}`} style={{ animationDelay: '0.25s' }}>
 						<div className={styles.chartHeader}>
 							<div className={styles.chartTitle}>
@@ -333,7 +359,7 @@ const Dashboard: React.FC = () => {
 									series={statusData.map((s) => s.count)}
 									type="donut"
 									width="100%"
-									height={240}
+									height={donutHeight}
 								/>
 							) : (
 								<div className={styles.emptyState}>
@@ -344,6 +370,7 @@ const Dashboard: React.FC = () => {
 						</div>
 					</div>
 
+					{/* Area chart */}
 					<div className={`${styles.chartCard} ${styles.fadeIn}`} style={{ animationDelay: '0.3s' }}>
 						<div className={styles.chartHeader}>
 							<div className={styles.chartTitle}>
@@ -365,7 +392,7 @@ const Dashboard: React.FC = () => {
 						</div>
 						<div className={styles.chartBody}>
 							{dayData.length > 0 ? (
-								<Chart options={areaOptions} series={areaSeries} type="area" width="100%" height={210} />
+								<Chart options={areaOptions} series={areaSeries} type="area" width="100%" height={areaHeight} />
 							) : (
 								<div className={styles.emptyState}>
 									<InboxOutlined className={styles.emptyIcon} />
@@ -377,8 +404,10 @@ const Dashboard: React.FC = () => {
 				</div>
 			)}
 
+			{/* ─── Bottom: Top forms + SLA ────────────────────────────────────── */}
 			{isFullDashboard && (
 				<div className={styles.bottomGrid}>
+					{/* Top forms */}
 					<div className={`${styles.sectionCard} ${styles.fadeIn}`} style={{ animationDelay: '0.35s' }}>
 						<div className={styles.sectionHeader}>
 							<TrophyOutlined className={`${styles.sectionIcon} ${styles.amber}`} />
@@ -413,6 +442,7 @@ const Dashboard: React.FC = () => {
 						)}
 					</div>
 
+					{/* SLA table */}
 					{slaMetrics.length > 0 && (
 						<div className={`${styles.sectionCard} ${styles.fadeIn}`} style={{ animationDelay: '0.4s' }}>
 							<div className={styles.sectionHeader}>
@@ -420,7 +450,7 @@ const Dashboard: React.FC = () => {
 								<h3>Tuân thủ SLA theo bước</h3>
 							</div>
 
-							<div style={{ overflowX: 'auto' }}>
+							<div className={styles.slaTableWrapper}>
 								<table className={styles.slaTable}>
 									<thead>
 										<tr>

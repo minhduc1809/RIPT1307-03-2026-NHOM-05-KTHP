@@ -19,6 +19,12 @@
 @grad: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
 @card-shadow: 0 4px 20px -2px #4f46e51a;
 
+// Breakpoints
+@bp-sm: 480px;
+@bp-md: 768px;
+@bp-lg: 1100px;
+
+// ─── Page wrapper ────────────────────────────────────────────────────────────
 .dashboardPage {
 	display: flex;
 	flex-direction: column;
@@ -27,8 +33,20 @@
 	padding: 24px;
 	background: @bg;
 	font-family: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+	overflow-x: clip; // ngăn tràn ngang mà không phá vỡ layout con
+
+	@media (max-width: @bp-md) {
+		padding: 16px;
+		gap: 16px;
+	}
+
+	@media (max-width: @bp-sm) {
+		padding: 12px;
+		gap: 12px;
+	}
 }
 
+// ─── Reusable card mixin ─────────────────────────────────────────────────────
 .card() {
 	background: #fff;
 	border: 1px solid @border-light;
@@ -36,11 +54,13 @@
 	box-shadow: @card-shadow;
 }
 
-// Header
+// ─── Header ──────────────────────────────────────────────────────────────────
 .dashboardHeader {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: 12px;
+	flex-wrap: wrap;
 
 	.headerLeft {
 		h1 {
@@ -49,16 +69,29 @@
 			font-weight: 800;
 			letter-spacing: -0.4px;
 			color: @text;
+
+			@media (max-width: @bp-md) {
+				font-size: 18px;
+			}
+
+			@media (max-width: @bp-sm) {
+				font-size: 16px;
+			}
 		}
 
 		p {
 			margin: 0;
 			font-size: 13px;
 			color: @muted;
+
+			@media (max-width: @bp-sm) {
+				font-size: 12px;
+			}
 		}
 	}
 }
 
+// ─── Refresh button ───────────────────────────────────────────────────────────
 .refreshBtn {
 	display: inline-flex;
 	align-items: center;
@@ -72,25 +105,51 @@
 	font-size: 13px;
 	font-weight: 600;
 	cursor: pointer;
-	transition: all 0.2s ease-out;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	position: relative;
+	overflow: hidden;
+	white-space: nowrap;
+	flex-shrink: 0;
+
+	@media (max-width: @bp-sm) {
+		padding: 8px 12px;
+		font-size: 12px;
+		gap: 6px;
+	}
 
 	.refreshIcon {
-		display: block;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
 		color: @muted;
-		// svg mặc định xoay quanh góc trên-trái → ép xoay quanh tâm
-		transform-box: fill-box;
-		transform-origin: center;
+		transform-origin: center center;
+		transition: color 0.2s ease-out;
 	}
 
 	&:hover {
 		transform: translateY(-1px);
 		border-color: #c7d2fe;
-		box-shadow: 0 2px 8px #4f46e526;
+		box-shadow: 0 4px 12px -2px #4f46e526;
+		background: #fafbff;
+
+		.refreshIcon {
+			color: @primary;
+		}
 	}
 
 	&:active {
-		transform: translateY(0) scale(0.96);
-		background: @bg;
+		transform: translateY(1px) scale(0.96);
+		background: #eef2ff;
+		border-color: @primary;
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: radial-gradient(circle, @primary 0%, transparent 70%);
+			opacity: 0.1;
+		}
 	}
 
 	&:disabled {
@@ -98,29 +157,40 @@
 		pointer-events: none;
 	}
 
-	&.spinning .refreshIcon {
-		animation: spin 1s linear infinite;
+	&.spinning {
+		border-color: #a5b4fc;
+		background: #eef2ff;
+		color: @primary;
+		box-shadow: 0 0 0 3px #4f46e520;
+
+		.refreshIcon {
+			color: @primary;
+			animation: refreshSpin 0.7s linear infinite;
+		}
 	}
 }
 
-@keyframes spin {
-	to {
-		transform: rotate(360deg);
+// @keyframes phải trong :global để CSS Modules không scope tên → animation hoạt động đúng
+:global {
+	@keyframes refreshSpin {
+		from { transform: rotate(0deg); }
+		to   { transform: rotate(360deg); }
 	}
 }
 
-// Stat cards — icon box 48 trái + value/label phải
+// ─── Stat cards ───────────────────────────────────────────────────────────────
 .statsGrid {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	gap: 16px;
 
-	@media (max-width: 1100px) {
+	@media (max-width: @bp-lg) {
 		grid-template-columns: repeat(2, 1fr);
 	}
 
-	@media (max-width: 576px) {
-		grid-template-columns: 1fr;
+	@media (max-width: @bp-sm) {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
 	}
 }
 
@@ -133,9 +203,27 @@
 	padding: 20px;
 	transition: all 0.2s ease-out;
 
+	@media (max-width: @bp-md) {
+		padding: 16px;
+		gap: 12px;
+	}
+
+	// Mobile 2-col: chuyển sang layout dọc (icon trên, số dưới) — gọn hơn trong card nhỏ
+	@media (max-width: @bp-sm) {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 8px;
+		padding: 14px 12px;
+		border-radius: 10px;
+	}
+
 	&:hover {
 		transform: translateY(-2px);
 		box-shadow: 0 10px 25px -5px #4f46e526;
+
+		@media (max-width: @bp-sm) {
+			transform: none; // tắt hover animation trên mobile (touch)
+		}
 	}
 }
 
@@ -149,22 +237,24 @@
 	justify-content: center;
 	font-size: 22px;
 
-	&.indigo {
-		background: @indigo-bg;
-		color: @primary;
+	@media (max-width: @bp-md) {
+		width: 42px;
+		height: 42px;
+		font-size: 20px;
+		border-radius: 10px;
 	}
-	&.green {
-		background: @success-bg;
-		color: @success;
+
+	@media (max-width: @bp-sm) {
+		width: 36px;
+		height: 36px;
+		font-size: 17px;
+		border-radius: 8px;
 	}
-	&.red {
-		background: @danger-bg;
-		color: @danger;
-	}
-	&.amber {
-		background: @warning-bg;
-		color: @warning;
-	}
+
+	&.indigo { background: @indigo-bg; color: @primary; }
+	&.green  { background: @success-bg; color: @success; }
+	&.red    { background: @danger-bg; color: @danger; }
+	&.amber  { background: @warning-bg; color: @warning; }
 }
 
 .statValue {
@@ -173,6 +263,14 @@
 	letter-spacing: -0.5px;
 	line-height: 1.2;
 	color: @text;
+
+	@media (max-width: @bp-md) {
+		font-size: 22px;
+	}
+
+	@media (max-width: @bp-sm) {
+		font-size: 18px;
+	}
 }
 
 .statLabel {
@@ -180,16 +278,25 @@
 	font-size: 12px;
 	font-weight: 500;
 	color: @muted;
+
+	@media (max-width: @bp-sm) {
+		font-size: 10.5px;
+		line-height: 1.4;
+	}
 }
 
-// Charts row — donut 460 + area fill
+// ─── Charts grid ─────────────────────────────────────────────────────────────
 .chartsGrid {
 	display: grid;
 	grid-template-columns: 460px 1fr;
 	gap: 16px;
 
-	@media (max-width: 1100px) {
+	@media (max-width: @bp-lg) {
 		grid-template-columns: 1fr;
+	}
+
+	@media (max-width: @bp-md) {
+		gap: 12px;
 	}
 }
 
@@ -200,12 +307,23 @@
 	flex-direction: column;
 	gap: 16px;
 	padding: 24px;
+
+	@media (max-width: @bp-md) {
+		padding: 16px;
+		gap: 12px;
+	}
+
+	@media (max-width: @bp-sm) {
+		padding: 14px 12px;
+	}
 }
 
 .chartHeader {
 	display: flex;
 	align-items: flex-start;
 	justify-content: space-between;
+	gap: 10px;
+	flex-wrap: wrap;
 
 	.chartTitle {
 		h3 {
@@ -213,12 +331,20 @@
 			font-size: 15px;
 			font-weight: 700;
 			color: @text;
+
+			@media (max-width: @bp-sm) {
+				font-size: 13px;
+			}
 		}
 
 		p {
 			margin: 0;
 			font-size: 12px;
 			color: @muted;
+
+			@media (max-width: @bp-sm) {
+				font-size: 11px;
+			}
 		}
 	}
 }
@@ -229,6 +355,7 @@
 	padding: 3px;
 	border-radius: 8px;
 	background: @border-light;
+	flex-shrink: 0;
 }
 
 .dayBtn {
@@ -243,6 +370,11 @@
 	cursor: pointer;
 	transition: all 0.2s ease-out;
 
+	@media (max-width: @bp-sm) {
+		padding: 4px 8px;
+		font-size: 11px;
+	}
+
 	&.active {
 		background: #fff;
 		color: @primary;
@@ -253,17 +385,21 @@
 
 .chartBody {
 	min-height: 220px;
+
+	@media (max-width: @bp-sm) {
+		min-height: 180px;
+	}
 }
 
-// Bottom row — top forms + SLA
+// ─── Bottom grid ─────────────────────────────────────────────────────────────
 .bottomGrid {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr;
 	gap: 16px;
 	align-items: start;
 
-	@media (max-width: 1100px) {
-		grid-template-columns: 1fr;
+	@media (max-width: @bp-md) {
+		gap: 12px;
 	}
 }
 
@@ -274,6 +410,19 @@
 	flex-direction: column;
 	gap: 16px;
 	padding: 24px;
+
+	@media (max-width: @bp-md) {
+		padding: 16px;
+		gap: 12px;
+		max-width: 90vw;
+		width: 90vw;
+	}
+
+	@media (max-width: @bp-sm) {
+		padding: 14px 12px;
+		max-width: 90vw;
+		width: 90vw;
+	}
 }
 
 .sectionHeader {
@@ -283,13 +432,10 @@
 
 	.sectionIcon {
 		font-size: 17px;
+		flex-shrink: 0;
 
-		&.amber {
-			color: @warning;
-		}
-		&.indigo {
-			color: @primary;
-		}
+		&.amber { color: @warning; }
+		&.indigo { color: @primary; }
 	}
 
 	h3 {
@@ -297,20 +443,32 @@
 		font-size: 15px;
 		font-weight: 700;
 		color: @text;
+
+		@media (max-width: @bp-sm) {
+			font-size: 13px;
+		}
 	}
 }
 
-// Top forms
+// ─── Top forms list ───────────────────────────────────────────────────────────
 .topFormsList {
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
+
+	@media (max-width: @bp-sm) {
+		gap: 12px;
+	}
 }
 
 .topFormItem {
 	display: flex;
 	align-items: center;
 	gap: 12px;
+
+	@media (max-width: @bp-sm) {
+		gap: 8px;
+	}
 }
 
 .rankBadge {
@@ -325,20 +483,16 @@
 	font-size: 13px;
 	font-weight: 800;
 
-	&.rank1 {
-		background: linear-gradient(90deg, #f59e0b, #fbbf24);
-		box-shadow: 0 2px 8px #f59e0b66;
+	@media (max-width: @bp-sm) {
+		width: 24px;
+		height: 24px;
+		font-size: 11px;
 	}
-	&.rank2 {
-		background: @muted-light;
-	}
-	&.rank3 {
-		background: #d97706;
-	}
-	&.rankOther {
-		background: @border;
-		color: @muted;
-	}
+
+	&.rank1    { background: linear-gradient(90deg, #f59e0b, #fbbf24); box-shadow: 0 2px 8px #f59e0b66; }
+	&.rank2    { background: @muted-light; }
+	&.rank3    { background: #d97706; }
+	&.rankOther { background: @border; color: @muted; }
 }
 
 .formInfo {
@@ -356,6 +510,10 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+
+	@media (max-width: @bp-sm) {
+		font-size: 12px;
+	}
 }
 
 .formBar {
@@ -374,28 +532,49 @@
 
 .formCount {
 	flex-shrink: 0;
-	width: 80px;
+	width: 72px;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
+
+	@media (max-width: @bp-sm) {
+		width: 56px;
+	}
 
 	.countValue {
 		font-size: 15px;
 		font-weight: 800;
 		color: @text;
+
+		@media (max-width: @bp-sm) {
+			font-size: 13px;
+		}
 	}
 
 	.countLabel {
 		font-size: 11px;
 		color: @muted-light;
+
+		@media (max-width: @bp-sm) {
+			font-size: 10px;
+		}
 	}
 }
 
-// SLA table
+// ─── SLA table ────────────────────────────────────────────────────────────────
+.slaTableWrapper {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	padding-bottom: 4px; // gutter dưới để scrollbar không bị che
+}
+
 .slaTable {
 	width: 100%;
+	// min-width đảm bảo bảng không bị nén nhỏ hơn nội dung → tạo scroll ngang thực sự
+	min-width: 520px;
 	border-collapse: collapse;
 
+	// Cho phép cuộn ngang trên mobile — wrapper đã có overflowX: auto
 	thead tr {
 		background: @bg;
 
@@ -406,18 +585,16 @@
 			letter-spacing: 0.6px;
 			text-align: left;
 			color: @muted-light;
+			white-space: nowrap;
 
-			&:first-child {
-				border-radius: 8px 0 0 8px;
+			@media (max-width: @bp-sm) {
+				padding: 6px 8px;
+				font-size: 9.5px;
 			}
 
-			&:last-child {
-				border-radius: 0 8px 8px 0;
-			}
-
-			&.num {
-				text-align: right;
-			}
+			&:first-child { border-radius: 8px 0 0 8px; }
+			&:last-child  { border-radius: 0 8px 8px 0; }
+			&.num         { text-align: right; }
 		}
 	}
 
@@ -427,33 +604,26 @@
 		font-size: 12.5px;
 		font-weight: 600;
 		color: @text-body;
+		white-space: nowrap;
 
-		&.stepCol {
-			font-weight: 400;
-			color: @muted;
+		@media (max-width: @bp-sm) {
+			padding: 8px;
+			font-size: 11.5px;
 		}
 
-		&.num {
-			text-align: right;
-		}
+		&.stepCol { font-weight: 400; color: @muted; }
+		&.num     { text-align: right; }
 
 		&.rate {
 			font-weight: 800;
-
-			&.good {
-				color: @success;
-			}
-			&.warn {
-				color: @warning;
-			}
-			&.bad {
-				color: @danger;
-			}
+			&.good { color: @success; }
+			&.warn { color: @warning; }
+			&.bad  { color: @danger; }
 		}
 	}
 }
 
-// States
+// ─── States ───────────────────────────────────────────────────────────────────
 .loadingState {
 	display: flex;
 	flex-direction: column;
@@ -474,12 +644,22 @@
 	color: @muted-light;
 	font-size: 13px;
 
+	@media (max-width: @bp-sm) {
+		padding: 28px 0;
+		font-size: 12px;
+	}
+
 	.emptyIcon {
 		font-size: 32px;
 		color: #cbd5e1;
+
+		@media (max-width: @bp-sm) {
+			font-size: 26px;
+		}
 	}
 }
 
+// ─── Animations ───────────────────────────────────────────────────────────────
 .fadeIn {
 	animation: fadeIn 0.5s ease-out both;
 }
@@ -499,5 +679,6 @@
 	.fadeIn,
 	.refreshBtn.spinning .refreshIcon {
 		animation: none !important;
+		transform: none !important;
 	}
 }

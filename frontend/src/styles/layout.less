@@ -7,13 +7,17 @@
 @border-light: #f1f5f9;
 @indigo-bg: #eef2ff;
 
-// Khung tổng
+@bp-sm: 480px;
+@bp-md: 768px;
+@bp-lg: 1100px;
+
+// ─── Khung tổng ──────────────────────────────────────────────────────────────
 .ant-layout {
 	min-height: 100vh;
 	background: #f8fafc;
 }
 
-// Topbar — 60px trắng, border-bottom slate
+// ─── Topbar ───────────────────────────────────────────────────────────────────
 .ant-layout-header.ant-pro-fixed-header,
 .ant-pro-global-header {
 	background: #fff;
@@ -23,9 +27,17 @@
 
 .ant-pro-global-header {
 	padding: 0 24px 0 12px;
+
+	@media (max-width: @bp-md) {
+		padding: 0 12px 0 8px;
+	}
+
+	@media (max-width: @bp-sm) {
+		padding: 0 8px 0 4px;
+	}
 }
 
-// Sidebar — trắng, border phải
+// ─── Sidebar ─────────────────────────────────────────────────────────────────
 .ant-pro-sider.ant-layout-sider {
 	background: #fff;
 	border-right: 1px solid @border;
@@ -36,17 +48,37 @@
 	left: unset;
 }
 
-// Logo (menuHeaderRender trong app.tsx)
+// ─── Logo ─────────────────────────────────────────────────────────────────────
 .ant-pro-sider-logo {
 	padding: 18px 16px !important;
 	border-bottom: 1px solid @border-light;
+
+	@media (max-width: @bp-md) {
+		padding: 14px 12px !important;
+	}
+
+	// Khi collapsed: padding đều 2 bên để icon căn giữa
+	.ant-layout-sider-collapsed & {
+		padding: 16px 8px !important;
+		display: flex;
+		justify-content: center;
+	}
 }
 
 .ds-menu-header {
 	display: flex;
 	gap: 10px;
 	align-items: center;
+	justify-content: flex-start;
 	text-decoration: none;
+	width: 100%;
+	overflow: hidden;
+
+	// Khi sidebar collapse: chỉ còn icon → căn giữa
+	.ant-layout-sider-collapsed & {
+		justify-content: center;
+		gap: 0;
+	}
 }
 
 .ds-logo-square {
@@ -61,6 +93,7 @@
 	color: #fff;
 	font-size: 15px;
 	line-height: 1;
+	flex-shrink: 0;
 }
 
 .ds-logo-text {
@@ -69,9 +102,14 @@
 	font-size: 15px;
 	font-weight: 800;
 	letter-spacing: 1px;
+
+	@media (max-width: @bp-sm) {
+		font-size: 13px;
+		letter-spacing: 0.5px;
+	}
 }
 
-// Menu — item radius 8, 13/600, active EEF2FF + indigo
+// ─── Menu ─────────────────────────────────────────────────────────────────────
 .ant-menu-light.ant-pro-sider-menu {
 	padding: 12px 0;
 
@@ -204,11 +242,16 @@
 	}
 }
 
+// ─── Content area ─────────────────────────────────────────────────────────────
 .ant-layout-content {
 	margin: 18px !important;
 
-	@media (max-width: @screen-xs) {
+	@media (max-width: @bp-md) {
 		margin: 12px !important;
+	}
+
+	@media (max-width: @bp-sm) {
+		margin: 8px !important;
 	}
 }
 
