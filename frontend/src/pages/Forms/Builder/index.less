@@ -611,6 +611,12 @@
 	padding: 16px;
 }
 
+.themeGrid {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
 .themeRow {
 	display: flex;
 	gap: 10px;
@@ -821,5 +827,113 @@ select.propInput {
 		margin-bottom: 12px;
 		font-size: 36px;
 		opacity: 0.5;
+	}
+}
+
+// ==========================================
+// THEMES FOR FORM BUILDER CANVAS
+// ==========================================
+
+.themeDark {
+	background: #0f172a;
+	border-color: #1e293b;
+
+	.formHead h2 { color: #f8fafc; }
+	.formHead p { color: #94a3b8; }
+	
+	.fieldCard {
+		background: #0f172a;
+		border-color: #334155;
+		&:hover { border-color: #64748b; }
+		&.active { border-color: #8b5cf6; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2); }
+	}
+	
+	.fieldLabel { color: #f1f5f9; }
+	.fieldHint { color: #64748b; }
+	.requiredMark { color: #ef4444; }
+	
+	.fieldInputPreview {
+		background: #1e293b;
+		border-color: #334155;
+		color: #cbd5e1;
+		&.active { border-color: #8b5cf6; }
+	}
+}
+
+.themeMint {
+	background: #ecfdf5;
+	border-color: #d1fae5;
+
+	.formHead h2 { color: #064e3b; }
+	.formHead p { color: #047857; }
+	
+	.fieldCard {
+		background: #ecfdf5;
+		border-color: #a7f3d0;
+		&:hover { border-color: #34d399; }
+		&.active { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+	}
+	
+	.fieldLabel { color: #064e3b; }
+	.fieldHint { color: #059669; }
+	.requiredMark { color: #dc2626; }
+	
+	.fieldInputPreview {
+		background: #ffffff;
+		border-color: #a7f3d0;
+		color: #064e3b;
+		&.active { border-color: #10b981; }
+	}
+}
+
+.themeSunset {
+	background: #fff1f2;
+	border-color: #ffe4e6;
+
+	.formHead h2 { color: #881337; }
+	.formHead p { color: #9f1239; }
+	
+	.fieldCard {
+		background: #fff1f2;
+		border-color: #fecdd3;
+		&:hover { border-color: #fb7185; }
+		&.active { border-color: #f43f5e; box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.2); }
+	}
+	
+	.fieldLabel { color: #881337; }
+	.fieldHint { color: #e11d48; }
+	.requiredMark { color: #b91c1c; }
+	
+	.fieldInputPreview {
+		background: #ffffff;
+		border-color: #fecdd3;
+		color: #881337;
+		&.active { border-color: #f43f5e; }
+	}
+}
+
+.themeViolet {
+	background: #f5f3ff;
+	border-color: #ede9fe;
+
+	.formHead h2 { color: #4c1d95; }
+	.formHead p { color: #5b21b6; }
+	
+	.fieldCard {
+		background: #f5f3ff;
+		border-color: #ddd6fe;
+		&:hover { border-color: #a78bfa; }
+		&.active { border-color: #8b5cf6; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2); }
+	}
+	
+	.fieldLabel { color: #4c1d95; }
+	.fieldHint { color: #7c3aed; }
+	.requiredMark { color: #dc2626; }
+	
+	.fieldInputPreview {
+		background: #ffffff;
+		border-color: #ddd6fe;
+		color: #4c1d95;
+		&.active { border-color: #8b5cf6; }
 	}
 }

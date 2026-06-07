@@ -238,13 +238,23 @@ const FillForm: React.FC = (props: any) => {
 		);
 	}
 
+	const theme = form.settings?.theme || 'default';
+	const THEME_CLASS: Record<string, string> = {
+		default: '',
+		dark: 'themeDark',
+		mint: 'themeMint',
+		sunset: 'themeSunset',
+		violet: 'themeViolet',
+	};
+	const themeClassName = styles[THEME_CLASS[theme]] || '';
+
 	return (
 		<div className={styles.fillPage}>
 			<button type='button' className={styles.backLink} onClick={() => history.push('/submissions/new')}>
 				<ArrowLeftOutlined /> Quay lại danh sách biểu mẫu
 			</button>
 
-			<div className={styles.formCard}>
+			<div className={`${styles.formCard} ${themeClassName}`}>
 				<div className={styles.cardHeader}>
 					<div className={styles.cardIcon}>
 						<FileTextOutlined />
