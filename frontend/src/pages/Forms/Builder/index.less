@@ -15,19 +15,25 @@
 .builderLayout {
 	display: flex;
 	flex-direction: column;
+	// full-bleed dưới topbar 60px: -18px triệt tiêu gutter của ant-layout-content
 	height: calc(100vh - 60px);
 	min-height: 480px;
+	margin: -18px;
 	overflow: hidden;
-	background: @bg;
 	font-family: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+	background: @bg;
+
+	@media (max-width: 575px) {
+		margin: -12px;
+	}
 }
 
 // Top bar — 60px
 .header {
 	display: flex;
+	flex-shrink: 0;
 	gap: 14px;
 	align-items: center;
-	flex-shrink: 0;
 	height: 60px;
 	padding: 0 20px;
 	background: #fff;
@@ -36,22 +42,22 @@
 
 .btnBack {
 	display: flex;
+	flex-shrink: 0;
 	align-items: center;
 	justify-content: center;
-	flex-shrink: 0;
 	width: 34px;
 	height: 34px;
-	border: none;
-	border-radius: 8px;
-	background: @border-light;
 	color: @muted;
 	font-size: 15px;
+	background: @border-light;
+	border: none;
+	border-radius: 8px;
 	cursor: pointer;
 	transition: all 0.2s ease-out;
 
 	&:hover {
-		background: @border;
 		color: @text;
+		background: @border;
 	}
 }
 
@@ -78,13 +84,13 @@
 	max-width: 360px;
 	height: 22px;
 	padding: 0;
-	border: none;
-	background: transparent;
 	color: @text;
-	font-family: inherit;
-	font-size: 15px;
 	font-weight: 700;
+	font-size: 15px;
+	font-family: inherit;
 	line-height: 22px;
+	background: transparent;
+	border: none;
 	outline: none;
 
 	&::placeholder {
@@ -96,24 +102,24 @@
 	width: 360px;
 	height: 17px;
 	padding: 0;
-	border: none;
-	background: transparent;
 	color: @muted-light;
-	font-family: inherit;
 	font-size: 11.5px;
+	font-family: inherit;
 	line-height: 17px;
+	background: transparent;
+	border: none;
 	outline: none;
 }
 
 .editBadge {
 	flex-shrink: 0;
 	padding: 3px 10px;
-	border-radius: 999px;
-	background: @indigo-bg;
 	color: @primary;
-	font-size: 10px;
 	font-weight: 700;
+	font-size: 10px;
 	letter-spacing: 1px;
+	background: @indigo-bg;
+	border-radius: 999px;
 }
 
 .headerSpacer {
@@ -125,13 +131,13 @@
 	gap: 8px;
 	align-items: center;
 	padding: 8px 14px;
+	color: @text-body;
+	font-weight: 600;
+	font-size: 13px;
+	font-family: inherit;
+	background: #fff;
 	border: 1px solid @border;
 	border-radius: 8px;
-	background: #fff;
-	color: @text-body;
-	font-family: inherit;
-	font-size: 13px;
-	font-weight: 600;
 	cursor: pointer;
 	transition: all 0.2s ease-out;
 
@@ -141,27 +147,27 @@
 	}
 
 	&:hover {
-		border-color: #c7d2fe;
 		color: @primary;
+		border-color: #c7d2fe;
 	}
 }
 
 .btnSave {
 	padding: 10px 20px;
+	color: #fff;
+	font-weight: 600;
+	font-size: 14px;
+	font-family: inherit;
+	background: @grad;
 	border: none;
 	border-radius: 8px;
-	background: @grad;
-	color: #fff;
-	font-family: inherit;
-	font-size: 14px;
-	font-weight: 600;
-	cursor: pointer;
 	box-shadow: 0 4px 14px #4f46e54d;
+	cursor: pointer;
 	transition: all 0.2s ease-out;
 
 	&:hover {
-		transform: translateY(-1px);
 		box-shadow: 0 8px 20px -4px #4f46e566;
+		transform: translateY(-1px);
 	}
 
 	&:disabled {
@@ -180,19 +186,19 @@
 .toolbox {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
 	flex-shrink: 0;
+	gap: 12px;
 	width: 240px;
 	padding: 16px;
+	overflow-y: auto;
 	background: #fff;
 	border-right: 1px solid @border;
-	overflow-y: auto;
 }
 
 .sectionLabel {
 	color: @muted-light;
-	font-size: 10.5px;
 	font-weight: 700;
+	font-size: 10.5px;
 	letter-spacing: 1px;
 }
 
@@ -207,9 +213,9 @@
 	gap: 10px;
 	align-items: center;
 	padding: 12px 14px;
+	background: @bg;
 	border: 1px solid @border;
 	border-radius: 10px;
-	background: @bg;
 	cursor: grab;
 	transition: all 0.2s ease-out;
 
@@ -221,8 +227,8 @@
 	.tileLabel {
 		flex: 1;
 		color: @text-body;
-		font-size: 13px;
 		font-weight: 600;
+		font-size: 13px;
 	}
 
 	.tileGrip {
@@ -244,9 +250,9 @@
 
 .canvasArea {
 	display: flex;
+	flex: 1;
 	flex-direction: column;
 	align-items: center;
-	flex: 1;
 	min-width: 0;
 	padding: 24px;
 	overflow-y: auto;
@@ -275,8 +281,8 @@
 	h2 {
 		margin: 0;
 		color: @text;
-		font-size: 18px;
 		font-weight: 800;
+		font-size: 18px;
 		letter-spacing: -0.3px;
 	}
 
@@ -293,9 +299,9 @@
 	flex-direction: column;
 	gap: 8px;
 	padding: 14px;
+	background: #fff;
 	border: 1px solid @border;
 	border-radius: 10px;
-	background: #fff;
 	cursor: grab;
 	transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
 
@@ -320,14 +326,14 @@
 
 	.fieldLabel {
 		color: @text-body;
-		font-size: 13px;
 		font-weight: 600;
+		font-size: 13px;
 	}
 
 	.requiredMark {
 		color: @danger;
-		font-size: 13px;
 		font-weight: 600;
+		font-size: 13px;
 	}
 
 	.rowSpacer {
@@ -340,17 +346,17 @@
 		justify-content: center;
 		width: 22px;
 		height: 22px;
-		border: none;
-		border-radius: 5px;
-		background: transparent;
 		color: @muted-light;
 		font-size: 13px;
+		background: transparent;
+		border: none;
+		border-radius: 5px;
 		cursor: pointer;
 		transition: all 0.15s ease-out;
 
 		&:hover {
-			background: @border-light;
 			color: @primary;
+			background: @border-light;
 		}
 
 		&.danger {
@@ -370,11 +376,11 @@
 	justify-content: space-between;
 	height: 36px;
 	padding: 0 12px;
-	border: 1px solid @border-light;
-	border-radius: 8px;
-	background: @bg;
 	color: @muted-light;
 	font-size: 13px;
+	background: @bg;
+	border: 1px solid @border-light;
+	border-radius: 8px;
 
 	&.active {
 		border-color: @primary;
@@ -387,10 +393,10 @@
 
 .customDropdownOptions {
 	position: absolute;
-	z-index: 5;
 	top: calc(100% + 4px);
 	right: 0;
 	left: 0;
+	z-index: 5;
 	padding: 6px;
 	background: #fff;
 	border: 1px solid @border;
@@ -400,14 +406,14 @@
 
 .customOptionItem {
 	padding: 7px 10px;
-	border-radius: 6px;
 	color: @text-body;
 	font-size: 13px;
+	border-radius: 6px;
 	cursor: default;
 
 	&:hover {
-		background: @indigo-bg;
 		color: @primary;
+		background: @indigo-bg;
 	}
 }
 
@@ -424,12 +430,12 @@
 	align-items: center;
 	justify-content: center;
 	padding: 20px;
+	color: @primary;
+	font-weight: 600;
+	font-size: 13px;
+	background: @indigo-bg;
 	border: 1.5px dashed @primary;
 	border-radius: 10px;
-	background: @indigo-bg;
-	color: @primary;
-	font-size: 13px;
-	font-weight: 600;
 	transition: all 0.2s ease-out;
 
 	:global(.anticon) {
@@ -448,9 +454,9 @@
 	flex-direction: column;
 	flex-shrink: 0;
 	width: 300px;
+	overflow-y: auto;
 	background: #fff;
 	border-left: 1px solid @border;
-	overflow-y: auto;
 }
 
 .tabs {
@@ -462,13 +468,13 @@
 .tab {
 	flex: 1;
 	padding: 12px 0;
+	color: @muted;
+	font-weight: 600;
+	font-size: 12.5px;
+	font-family: inherit;
+	background: transparent;
 	border: none;
 	border-bottom: 2px solid transparent;
-	background: transparent;
-	color: @muted;
-	font-family: inherit;
-	font-size: 12.5px;
-	font-weight: 600;
 	cursor: pointer;
 	transition: color 0.2s ease-out;
 
@@ -477,9 +483,9 @@
 	}
 
 	&.active {
-		border-bottom-color: @primary;
 		color: @primary;
 		font-weight: 700;
+		border-bottom-color: @primary;
 	}
 }
 
@@ -495,9 +501,9 @@
 	gap: 10px;
 	align-items: center;
 	padding: 10px 12px;
+	background: #fff;
 	border: 1px solid @border;
 	border-radius: 10px;
-	background: #fff;
 	cursor: pointer;
 	transition: all 0.2s ease-out;
 
@@ -512,8 +518,8 @@
 	.themeName {
 		flex: 1;
 		color: @text-body;
-		font-size: 13px;
 		font-weight: 600;
+		font-size: 13px;
 	}
 
 	.themeCheck {
@@ -526,8 +532,8 @@
 	}
 
 	&.active {
-		border: 1.5px solid @primary;
 		background: @indigo-bg;
+		border: 1.5px solid @primary;
 
 		.themeName {
 			color: @text;
@@ -549,28 +555,28 @@
 
 	.checkBox {
 		display: flex;
+		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
-		flex-shrink: 0;
 		width: 18px;
 		height: 18px;
-		border: 1.5px solid @border;
-		border-radius: 5px;
-		background: #fff;
 		color: #fff;
 		font-size: 11px;
+		background: #fff;
+		border: 1.5px solid @border;
+		border-radius: 5px;
 		transition: all 0.15s ease-out;
 
 		&.checked {
-			border-color: @primary;
 			background: @primary;
+			border-color: @primary;
 		}
 	}
 
 	.checkLabel {
 		color: @text-body;
-		font-size: 13px;
 		font-weight: 500;
+		font-size: 13px;
 	}
 }
 
@@ -582,20 +588,20 @@
 
 	label {
 		color: @text-body;
-		font-size: 12.5px;
 		font-weight: 600;
+		font-size: 12.5px;
 	}
 }
 
 .propInput {
 	height: 36px;
 	padding: 0 12px;
+	color: @text;
+	font-size: 13px;
+	font-family: inherit;
+	background: #fff;
 	border: 1px solid @border;
 	border-radius: 8px;
-	background: #fff;
-	color: @text;
-	font-family: inherit;
-	font-size: 13px;
 	outline: none;
 	transition: all 0.2s ease-out;
 
@@ -623,45 +629,45 @@ select.propInput {
 		.propInput();
 
 		flex: 1;
-		height: 32px;
 		min-width: 0;
+		height: 32px;
 	}
 
 	button {
 		display: flex;
+		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
-		flex-shrink: 0;
 		width: 32px;
 		height: 32px;
+		color: @danger;
+		background: #fff;
 		border: 1px solid @border;
 		border-radius: 8px;
-		background: #fff;
-		color: @danger;
 		cursor: pointer;
 
 		&:hover {
-			border-color: @danger;
 			background: #fef2f2;
+			border-color: @danger;
 		}
 	}
 }
 
 .btnAddOption {
 	padding: 8px;
+	color: @primary;
+	font-weight: 600;
+	font-size: 12.5px;
+	font-family: inherit;
+	background: transparent;
 	border: 1px dashed @border;
 	border-radius: 8px;
-	background: transparent;
-	color: @primary;
-	font-family: inherit;
-	font-size: 12.5px;
-	font-weight: 600;
 	cursor: pointer;
 	transition: all 0.2s ease-out;
 
 	&:hover {
-		border-color: @primary;
 		background: @indigo-bg;
+		border-color: @primary;
 	}
 }
 
@@ -672,13 +678,13 @@ select.propInput {
 	justify-content: center;
 	margin-top: 6px;
 	padding: 9px;
+	color: @danger;
+	font-weight: 600;
+	font-size: 12.5px;
+	font-family: inherit;
+	background: #fef2f2;
 	border: 1px solid #fecaca;
 	border-radius: 8px;
-	background: #fef2f2;
-	color: @danger;
-	font-family: inherit;
-	font-size: 12.5px;
-	font-weight: 600;
 	cursor: pointer;
 	transition: all 0.2s ease-out;
 
