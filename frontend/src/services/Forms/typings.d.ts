@@ -74,4 +74,5 @@ export interface IFormUpdateRequest {
 	description?: string;
 	schema?: IFormSchema | Record<string, any>;
 	settings?: IFormSettings;
+	isActive?: boolean;
 }
