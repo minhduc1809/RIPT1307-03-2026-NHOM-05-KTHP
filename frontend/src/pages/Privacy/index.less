@@ -1,0 +1,147 @@
+// design: smartadmin.pen · frame 25
+
+@primary: #4f46e5;
+@text: #0f172a;
+@text-body: #334155;
+@muted: #64748b;
+@muted-light: #94a3b8;
+@border-light: #f1f5f9;
+@bg: #f8fafc;
+@indigo-bg: #eef2ff;
+@success: #10b981;
+
+.legalBody {
+	display: flex;
+	gap: 48px;
+	align-items: flex-start;
+	max-width: 1440px;
+	margin: 0 auto;
+	padding: 50px 80px 80px;
+
+	@media (max-width: 991px) {
+		flex-direction: column;
+		padding: 40px 24px 60px;
+	}
+}
+
+// Table of contents (sticky, scrollspy highlights the active section)
+.toc {
+	position: sticky;
+	top: 96px;
+	width: 280px;
+	flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 16px;
+	background: @bg;
+	border: 1px solid @border-light;
+	border-radius: 14px;
+
+	@media (max-width: 991px) {
+		position: static;
+		width: 100%;
+	}
+
+	.tocTitle {
+		margin-bottom: 4px;
+		font-size: 10.5px;
+		font-weight: 800;
+		letter-spacing: 1.5px;
+		color: @muted-light;
+	}
+
+	.tocItem {
+		padding: 8px 12px;
+		border-radius: 8px;
+		font-size: 13px;
+		font-weight: 500;
+		color: @muted;
+		cursor: pointer;
+		transition: all 0.2s ease-out;
+
+		&:hover {
+			color: @primary;
+			background: rgba(238, 242, 255, 0.6);
+		}
+
+		&.active {
+			background: @indigo-bg;
+			color: @primary;
+			font-weight: 700;
+		}
+	}
+}
+
+// Article
+.article {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.legalSection {
+	scroll-margin-top: 96px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	h2 {
+		margin: 0;
+		font-size: 20px;
+		font-weight: 800;
+		letter-spacing: -0.3px;
+		color: @text;
+	}
+
+	p {
+		margin: 0;
+		font-size: 14px;
+		line-height: 1.75;
+		color: @muted;
+	}
+}
+
+.bullet {
+	display: flex;
+	gap: 8px;
+	align-items: flex-start;
+
+	.bulletIcon {
+		flex-shrink: 0;
+		margin-top: 3px;
+		color: @success;
+		font-size: 14px;
+	}
+
+	span {
+		font-size: 13.5px;
+		line-height: 1.6;
+		color: @muted;
+	}
+}
+
+.noteBox {
+	display: flex;
+	gap: 10px;
+	align-items: flex-start;
+	padding: 12px 16px;
+	background: @indigo-bg;
+	border: 1px solid #c7d2fe;
+	border-radius: 10px;
+
+	.noteIcon {
+		flex-shrink: 0;
+		margin-top: 2px;
+		color: @primary;
+		font-size: 16px;
+	}
+
+	span {
+		font-size: 13px;
+		font-weight: 600;
+		line-height: 1.6;
+		color: #4338ca;
+	}
+}

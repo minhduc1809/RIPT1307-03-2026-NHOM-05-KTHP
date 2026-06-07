@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
-import { landingUrl } from '@/services/base/constant';
-import { Result } from 'antd';
+import { HomeOutlined } from '@ant-design/icons';
+import { Button, Result } from 'antd';
 import { useEffect } from 'react';
 import { history } from 'umi';
 
@@ -25,7 +25,11 @@ const DangCapNhatPage = () => {
 				title='Đang cập nhật'
 				style={{ background: 'none' }}
 				subTitle='Hệ thống đang cập nhật. Vui lòng thử lại sau!'
-				extra={<a href={landingUrl}>Tới trang Cổng thông tin</a>}
+				extra={
+					<Button type='primary' onClick={() => history.replace('/')} icon={<HomeOutlined />}>
+						Về trang chủ
+					</Button>
+				}
 			/>
 
 			<Footer />

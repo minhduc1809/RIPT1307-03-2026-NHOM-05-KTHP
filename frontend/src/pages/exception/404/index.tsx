@@ -1,20 +1,5 @@
-import { Link } from 'umi';
-import { Result, Button } from 'antd';
+import { Redirect } from 'umi';
 
-const NotFoundContent = () => (
-  <Result
-    status="404"
-    title="404"
-    style={{
-      background: 'none',
-    }}
-    subTitle="Xin lỗi, trang bạn yêu cầu không tồn tại."
-    extra={
-      <Link to="/">
-        <Button type="primary">Về trang chủ</Button>
-      </Link>
-    }
-  />
-);
+const NotFoundContent = () => <Redirect to='/404' />;
 
 export default NotFoundContent;

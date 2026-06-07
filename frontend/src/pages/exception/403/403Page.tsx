@@ -1,8 +1,7 @@
 import Footer from '@/components/Footer';
 
-import { landingUrl } from '@/services/base/constant';
 import { currentRole } from '@/utils/ip';
-import { GlobalOutlined, LogoutOutlined } from '@ant-design/icons';
+import { HomeOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Button, Result } from 'antd';
 import { useEffect } from 'react';
 import { history, useModel } from 'umi';
@@ -40,8 +39,8 @@ const NotAccessible = () => {
 				subTitle='Xin lỗi, bạn không có quyền truy cập trang này.'
 				extra={
 					<div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-						<Button type='primary' onClick={() => (window.location.href = landingUrl)} icon={<GlobalOutlined />}>
-							Tới trang Cổng thông tin
+						<Button type='primary' onClick={() => history.replace('/')} icon={<HomeOutlined />}>
+							Về trang chủ
 						</Button>
 						<Button icon={<LogoutOutlined />} onClick={onLogout}>
 							Đăng xuất

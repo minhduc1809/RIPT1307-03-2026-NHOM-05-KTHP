@@ -1,5 +1,3 @@
-
-
 export default [
 	{
 		path: '/user',
@@ -10,6 +8,24 @@ export default [
 				layout: false,
 				name: 'login',
 				component: './user/Login',
+			},
+			{
+				path: '/user/register',
+				layout: false,
+				name: 'register-tenant',
+				component: './user/RegisterTenant',
+			},
+			{
+				path: '/user/forgot-password',
+				layout: false,
+				name: 'forgot-password',
+				component: './user/ForgotPassword',
+			},
+			{
+				path: '/user/reset-password',
+				layout: false,
+				name: 'reset-password',
+				component: './user/ResetPassword',
 			},
 			{
 				path: '/user',
@@ -109,14 +125,6 @@ export default [
 
 	///////////////////////////////////
 	// ALL ROLES
-	// Active Forms — Browse & Fill (all roles)
-	{
-		path: '/active-forms',
-		name: 'Biểu mẫu',
-		icon: 'FileTextOutlined',
-		component: './Forms/ActiveForms',
-	},
-
 	// Submissions
 	{
 		path: '/submissions',
@@ -129,17 +137,6 @@ export default [
 				hideInMenu: true,
 			},
 			{
-				path: '/submissions/pending',
-				name: 'Chờ phê duyệt',
-				access: 'canApprove',
-				component: './Submissions/PendingApprovals',
-			},
-			{
-				path: '/submissions/mine',
-				name: 'Yêu cầu của tôi',
-				component: './Submissions/MySubmissions',
-			},
-			{
 				path: '/submissions/new/:formId',
 				name: 'Điền biểu mẫu',
 				hideInMenu: true,
@@ -149,6 +146,17 @@ export default [
 				path: '/submissions/new',
 				name: 'Nộp biểu mẫu',
 				component: './Submissions/FormSubmit',
+			},
+			{
+				path: '/submissions/mine',
+				name: 'Yêu cầu của tôi',
+				component: './Submissions/MySubmissions',
+			},
+			{
+				path: '/submissions/pending',
+				name: 'Chờ phê duyệt',
+				access: 'canApprove',
+				component: './Submissions/PendingApprovals',
 			},
 			{
 				path: '/submissions/:id',
@@ -177,6 +185,31 @@ export default [
 		layout: false,
 	},
 	{
+		path: '/contact',
+		component: './Contact',
+		layout: false,
+	},
+	{
+		path: '/privacy',
+		component: './Privacy',
+		layout: false,
+	},
+	{
+		path: '/terms',
+		component: './Terms',
+		layout: false,
+	},
+	{
+		path: '/pricing',
+		component: './Pricing',
+		layout: false,
+	},
+	{
+		path: '/security',
+		component: './Security',
+		layout: false,
+	},
+	{
 		path: '/403',
 		component: './exception/403/403Page',
 		layout: false,
@@ -187,7 +220,11 @@ export default [
 		layout: false,
 	},
 	{
+		path: '/404',
+		component: './exception/404/404Page',
+		layout: false,
+	},
+	{
 		component: './exception/404',
 	},
 ];
-

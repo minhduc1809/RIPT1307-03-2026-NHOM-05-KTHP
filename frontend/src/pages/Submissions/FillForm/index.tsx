@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined, SendOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, FileTextOutlined, SendOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Input, InputNumber, message, Select, Spin } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import moment from 'moment';
@@ -92,7 +92,7 @@ const FillForm: React.FC = (props: any) => {
 					} else if (rules?.regex) {
 						const regex = new RegExp(rules.regex);
 						if (!regex.test(strVal)) {
-							newErrors[field.key] = `Không đúng định dạng`;
+							newErrors[field.key] = 'Không đúng định dạng';
 						}
 					}
 				} else if (field.type === 'number') {
@@ -238,55 +238,62 @@ const FillForm: React.FC = (props: any) => {
 		);
 	}
 
+	const theme = form.settings?.theme || 'default';
+	const THEME_CLASS: Record<string, string> = {
+		default: '',
+		dark: 'themeDark',
+		mint: 'themeMint',
+		sunset: 'themeSunset',
+		violet: 'themeViolet',
+	};
+	const themeClassName = styles[THEME_CLASS[theme]] || '';
+
 	return (
 		<div className={styles.fillPage}>
-			{/* Header */}
-			<div className={styles.pageHeader}>
-				<div className={styles.headerLeft}>
-					<button
-						className={styles.backBtn}
-						onClick={() => history.push('/submissions/new')}
-					>
-						<ArrowLeftOutlined />
-					</button>
-					<h1>{form.name}</h1>
-				</div>
-				<p>{form.description || 'Điền thông tin và nộp biểu mẫu'}</p>
-			</div>
+			<button type='button' className={styles.backLink} onClick={() => history.push('/submissions/new')}>
+				<ArrowLeftOutlined /> Quay lại danh sách biểu mẫu
+			</button>
 
-			{/* Form Fields */}
-			<div className={styles.formCard}>
+			<div className={`${styles.formCard} ${themeClassName}`}>
 				<div className={styles.cardHeader}>
-					<div className={styles.cardIcon}>📋</div>
+					<div className={styles.cardIcon}>
+						<FileTextOutlined />
+					</div>
 					<div className={styles.cardTitle}>
-						<h3>Thông tin biểu mẫu</h3>
-						<p>Điền đầy đủ các trường bắt buộc (*) bên dưới</p>
+						<h3>{form.name}</h3>
+						<p>{form.description || 'Các trường đánh dấu * là bắt buộc'}</p>
 					</div>
 				</div>
-				<div className={styles.cardBody}>
-					{getFields().length === 0 ? (
-						<div className={styles.emptyForm}>
-							<span>📄</span>
-							Biểu mẫu này chưa có trường dữ liệu
-						</div>
-					) : (
-						<>
-							{getFields().map(renderField)}
 
-							<div className={styles.submitActions}>
-								<Button
-									type="primary"
-									icon={<SendOutlined />}
-									className={styles.submitBtn}
-									onClick={handleSubmit}
-									loading={submitting}
-								>
-									Nộp biểu mẫu
-								</Button>
-							</div>
-						</>
-					)}
-				</div>
+				{getFields().length === 0 ? (
+					<div className={styles.emptyForm}>
+						<span>📄</span>
+						Biểu mẫu này chưa có trường dữ liệu
+					</div>
+				) : (
+					<>
+						<div className={styles.fieldsGrid}>{getFields().map(renderField)}</div>
+
+						<div className={styles.footerRow}>
+							<button
+								type='button'
+								className={styles.draftBtn}
+								onClick={() => message.info('Tính năng lưu nháp đang phát triển')}
+							>
+								Lưu nháp
+							</button>
+							<Button
+								type='primary'
+								icon={<SendOutlined />}
+								className={styles.submitBtn}
+								onClick={handleSubmit}
+								loading={submitting}
+							>
+								Nộp yêu cầu
+							</Button>
+						</div>
+					</>
+				)}
 			</div>
 		</div>
 	);

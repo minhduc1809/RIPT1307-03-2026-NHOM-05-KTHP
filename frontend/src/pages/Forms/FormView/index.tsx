@@ -79,8 +79,8 @@ const FormView: React.FC = () => {
 
 		return (
 			<div className={styles.fieldRules}>
-				{rules.map((r, i) => (
-					<span key={i} className={styles.ruleTag}>
+				{rules.map((r) => (
+					<span key={r.label} className={styles.ruleTag}>
 						{r.label}: <strong>{r.value}</strong>
 					</span>
 				))}
@@ -117,8 +117,8 @@ const FormView: React.FC = () => {
 				{/* Select options */}
 				{field.type === 'select' && field.rules?.allowedTypes && field.rules.allowedTypes.length > 0 && (
 					<div className={styles.selectOptions}>
-						{field.rules.allowedTypes.map((opt: string, i: number) => (
-							<div key={i} className={styles.optionItem}>
+						{field.rules.allowedTypes.map((opt: string) => (
+							<div key={opt} className={styles.optionItem}>
 								<span className={styles.optionDot} />
 								{opt}
 							</div>
@@ -166,6 +166,15 @@ const FormView: React.FC = () => {
 	}
 
 	const fields = form.schema?.fields ?? [];
+	const theme = (form.settings as any)?.theme || 'default';
+	const THEME_CLASS: Record<string, string> = {
+		default: '',
+		dark: 'themeDark',
+		mint: 'themeMint',
+		sunset: 'themeSunset',
+		violet: 'themeViolet',
+	};
+	const themeClassName = styles[THEME_CLASS[theme]] || '';
 
 	return (
 		<div className={styles.formViewPage}>
@@ -231,7 +240,7 @@ const FormView: React.FC = () => {
 				)}
 
 				{/* Form Preview */}
-				<div className={styles.formPreviewCard}>
+				<div className={`${styles.formPreviewCard} ${themeClassName}`}>
 					<div className={styles.formPreviewHeader}>
 						<h1 className={styles.formTitle}>{form.name}</h1>
 						{form.description && <p className={styles.formDesc}>{form.description}</p>}

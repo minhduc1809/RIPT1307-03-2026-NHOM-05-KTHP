@@ -8,6 +8,10 @@ html,
 body,
 #root {
 	height: 100%;
+	max-width: 100%;
+	// clip: chặn scroll ngang nhưng không tạo scroll context mới
+	// (khác hidden: không phá vỡ height/position của các element con)
+	overflow-x: clip;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -543,5 +547,35 @@ canvas {
 	.ant-collapse-header-text {
 		font-weight: 600;
 		color: var(--primary-color);
+	}
+}
+// Toast (antd message) theo design system smartadmin.pen — pill trắng, icon màu trạng thái
+.ant-message-notice-content {
+	padding: 10px 16px;
+	border-radius: 8px;
+	box-shadow: 0 6px 24px rgba(15, 23, 42, 0.12);
+	color: #334155;
+	font-size: 14px;
+	font-weight: 500;
+
+	.anticon {
+		font-size: 16px;
+	}
+
+	.ant-message-success .anticon {
+		color: #10b981;
+	}
+
+	.ant-message-error .anticon {
+		color: #ef4444;
+	}
+
+	.ant-message-warning .anticon {
+		color: #f59e0b;
+	}
+
+	.ant-message-info .anticon,
+	.ant-message-loading .anticon {
+		color: #4f46e5;
 	}
 }

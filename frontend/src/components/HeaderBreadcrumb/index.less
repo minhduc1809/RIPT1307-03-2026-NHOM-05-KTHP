@@ -1,0 +1,78 @@
+// design: smartadmin.pen · DS Topbar (qYE1c) — "Trang chủ / <Trang>"
+
+@bp-sm: 480px;
+@bp-md: 768px;
+
+.breadcrumb {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+	height: 100%;
+	font-size: 13px;
+	min-width: 0;
+	overflow: hidden;
+
+	// Ẩn toàn bộ breadcrumb trên mobile — header chỉ hiện logo + actions
+	@media (max-width: @bp-md) {
+		display: none;
+	}
+
+	.root {
+		color: #94a3b8;
+		font-weight: 500;
+		cursor: pointer;
+		transition: color 0.2s ease-out;
+		white-space: nowrap;
+		flex-shrink: 0;
+
+		// Ẩn "Trang chủ" ở màn rất nhỏ — chỉ hiện trang hiện tại
+		@media (max-width: @bp-sm) {
+			display: none;
+		}
+
+		&:hover {
+			color: #4f46e5;
+		}
+	}
+
+	.sep {
+		color: #cbd5e1;
+		flex-shrink: 0;
+
+		// Ẩn dấu "/" đầu tiên khi đã ẩn "Trang chủ"
+		@media (max-width: @bp-sm) {
+			&:first-of-type {
+				display: none;
+			}
+		}
+	}
+
+	.current {
+		color: #334155;
+		font-weight: 600;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		min-width: 0;
+
+		@media (max-width: @bp-sm) {
+			font-size: 12px;
+		}
+	}
+
+	// route lồng nhau: chỉ mục cuối đậm, mục giữa nhạt như root
+	.current:not(:last-child) {
+		color: #94a3b8;
+		font-weight: 500;
+
+		// Ẩn các mục trung gian trên màn nhỏ, chỉ giữ trang cuối
+		@media (max-width: @bp-sm) {
+			display: none;
+
+			// Ẩn dấu "/" đi kèm mục ẩn
+			& + .sep {
+				display: none;
+			}
+		}
+	}
+}

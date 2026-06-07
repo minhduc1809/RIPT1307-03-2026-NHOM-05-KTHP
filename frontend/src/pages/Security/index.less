@@ -1,0 +1,123 @@
+// design: smartadmin.pen · frame 29
+
+@primary: #4f46e5;
+@secondary: #7c3aed;
+@text: #0f172a;
+@text-body: #334155;
+@muted: #64748b;
+@border-light: #f1f5f9;
+@indigo-bg: #eef2ff;
+@violet-bg: #f5f3ff;
+@success: #10b981;
+@success-bg: #ecfdf5;
+@warning: #f59e0b;
+@warning-bg: #fffbeb;
+@danger: #ef4444;
+@danger-bg: #fef2f2;
+
+.trustBadges {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+	justify-content: center;
+	padding-top: 14px;
+}
+
+.trustBadge {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 16px;
+	border-radius: 999px;
+	background: #fff;
+	border: 1px solid #c7d2fe;
+	box-shadow: 0 2px 8px rgba(79, 70, 229, 0.15);
+	font-size: 12.5px;
+	font-weight: 700;
+	color: @text-body;
+
+	.anticon {
+		color: @primary;
+		font-size: 15px;
+	}
+}
+
+.secGrid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 20px;
+	max-width: 1440px;
+	margin: 0 auto;
+	padding: 50px 80px 80px;
+
+	@media (max-width: 991px) {
+		grid-template-columns: 1fr;
+		padding: 40px 24px 60px;
+	}
+}
+
+.secCard {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 26px;
+	background: #fff;
+	border: 1px solid @border-light;
+	border-radius: 16px;
+	box-shadow: 0 6px 24px -4px rgba(79, 70, 229, 0.13);
+	transition: all 0.2s ease-out;
+
+	&:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.15), 0 8px 10px -6px rgba(79, 70, 229, 0.1);
+	}
+
+	.secIcon {
+		width: 48px;
+		height: 48px;
+		border-radius: 13px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 22px;
+
+		&.indigo {
+			background: @indigo-bg;
+			color: @primary;
+		}
+		&.violet {
+			background: @violet-bg;
+			color: @secondary;
+		}
+		&.cyan {
+			background: #ecfeff;
+			color: #0891b2;
+		}
+		&.amber {
+			background: @warning-bg;
+			color: @warning;
+		}
+		&.green {
+			background: @success-bg;
+			color: @success;
+		}
+		&.red {
+			background: @danger-bg;
+			color: @danger;
+		}
+	}
+
+	h3 {
+		margin: 0;
+		font-size: 16px;
+		font-weight: 700;
+		color: @text;
+	}
+
+	p {
+		margin: 0;
+		font-size: 13px;
+		line-height: 1.65;
+		color: @muted;
+	}
+}

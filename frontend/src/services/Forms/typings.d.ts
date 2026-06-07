@@ -41,10 +41,12 @@ export interface IForm {
 	deletedAt?: string | null;
 }
 
+// khớp FilterDto backend (common/utils/filter.util.ts): values là MẢNG, operator 'contain'/'eq'/...
 export interface IFormPageFilter {
 	field: string;
-	operator: 'contains' | 'equals' | 'startsWith' | 'endsWith';
-	value: string;
+	operator: 'contain' | 'not_contain' | 'eq' | 'ne' | 'in' | 'not_in' | 'lt' | 'lte' | 'gt' | 'gte' | 'between';
+	values: any[];
+	active?: boolean;
 }
 
 export interface IFormPageRequest {
@@ -72,4 +74,5 @@ export interface IFormUpdateRequest {
 	description?: string;
 	schema?: IFormSchema | Record<string, any>;
 	settings?: IFormSettings;
+	isActive?: boolean;
 }

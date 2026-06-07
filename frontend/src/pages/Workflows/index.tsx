@@ -1,12 +1,10 @@
 import {
 	ArrowRightOutlined,
-	BranchesOutlined,
 	DeleteOutlined,
 	EditOutlined,
 	EyeOutlined,
 	FileTextOutlined,
 	ForkOutlined,
-	LinkOutlined,
 	OrderedListOutlined,
 	PartitionOutlined,
 	PlusOutlined,
@@ -51,14 +49,15 @@ const TYPE_CONFIG: Record<WorkflowType, { label: string; color: string; icon: Re
 };
 
 function parseSequentialSteps(config: IWorkflowConfig) {
-	const steps: Array<{ role: string; canReject: boolean; requireCommentOnReject: boolean; canReturn: boolean; requireCommentOnReturn: boolean }> = [];
+	const steps: { role: string; canReject: boolean; requireCommentOnReject: boolean; canReturn: boolean; requireCommentOnReturn: boolean }[] = [];
 	let current = config.initialState;
 	const visited = new Set<string>();
 	while (current && !visited.has(current)) {
 		visited.add(current);
 		if (config.finalStates?.includes(current)) break;
+		const cur = current;
 		const fromTs = config.transitions.filter((t) =>
-			typeof t.from === 'string' ? t.from === current : Array.isArray(t.from) ? t.from.includes(current) : false,
+			typeof t.from === 'string' ? t.from === cur : Array.isArray(t.from) ? t.from.includes(cur) : false,
 		);
 		const approveT = fromTs.find((t) => t.action === 'approve');
 		if (!approveT) break;
@@ -92,6 +91,8 @@ const WorkflowsDashboard: React.FC = () => {
 	// Detail drawer
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const [selectedWorkflow, setSelectedWorkflow] = useState<IWorkflowDefinition | null>(null);
+	const [deleteTarget, setDeleteTarget] = useState<IWorkflowDefinition | null>(null);
+	const [deleting, setDeleting] = useState(false);
 
 	const fetchWorkflows = useCallback(async () => {
 		setLoading(true);
@@ -131,28 +132,24 @@ const WorkflowsDashboard: React.FC = () => {
 			message.warning('Chỉ ADMIN mới có quyền xóa workflow');
 			return;
 		}
-		Modal.confirm({
-			title: 'Xác nhận xóa',
-			content: (
-				<span>
-					Bạn có chắc chắn muốn xóa workflow <strong>{record.name}</strong>? Thao tác này không thể hoàn tác.
-				</span>
-			),
-			okText: 'Xóa',
-			okType: 'danger',
-			cancelText: 'Hủy',
-			onOk: async () => {
-				try {
-					await deleteWorkflowDefinition(record.id);
-					message.success('Đã xóa workflow thành công');
-					fetchWorkflows();
-				} catch (error: any) {
-					if (error?.response?.status === 409) {
-						message.error('Không thể xóa: còn workflow instance đang hoạt động');
-					}
-				}
-			},
-		});
+		setDeleteTarget(record);
+	};
+
+	const confirmDelete = async () => {
+		if (!deleteTarget) return;
+		setDeleting(true);
+		try {
+			await deleteWorkflowDefinition(deleteTarget.id);
+			message.success('Đã xóa quy trình thành công');
+			setDeleteTarget(null);
+			fetchWorkflows();
+		} catch (error: any) {
+			if (error?.response?.status === 409) {
+				message.error('Không thể xóa: còn workflow instance đang hoạt động');
+			}
+		} finally {
+			setDeleting(false);
+		}
 	};
 
 	const openDrawer = (record: IWorkflowDefinition) => {
@@ -287,20 +284,17 @@ const WorkflowsDashboard: React.FC = () => {
 	const drawerParallelTransition = useMemo(() => selectedWorkflow?.config?.transitions?.find((t) => t.type === 'PARALLEL_JOIN'), [selectedWorkflow]);
 	const drawerVotingTransition = useMemo(() => selectedWorkflow?.config?.transitions?.find((t) => t.type === 'VOTING'), [selectedWorkflow]);
 
-	// Stats
-	const typeCounts = useMemo(() => {
-		const counts: Record<WorkflowType, number> = { sequential: 0, parallel: 0, voting: 0, custom: 0 };
-		workflows.forEach((w) => { counts[detectType(w.config)]++; });
-		return counts;
-	}, [workflows]);
-
 	return (
 		<div className={styles.workflowDashboard}>
 			{/* Header */}
 			<div className={styles.headerSection}>
 				<div className={styles.headerTitle}>
-					<h1>{isAdminOrManager ? 'Quản lý Workflows' : 'Danh sách quy trình'}</h1>
-					<p>{isAdminOrManager ? 'Thiết kế và quản lý các luồng phê duyệt cho hệ thống.' : 'Xem các quy trình phê duyệt đang hoạt động.'}</p>
+					<h1>Quy trình</h1>
+					<p>
+						{isAdminOrManager
+							? 'Định nghĩa và quản lý các quy trình phê duyệt đa cấp'
+							: 'Xem các quy trình phê duyệt đang hoạt động.'}
+					</p>
 				</div>
 				{isAdminOrManager && (
 					<Button
@@ -309,7 +303,7 @@ const WorkflowsDashboard: React.FC = () => {
 						className={styles.createBtn}
 						onClick={() => history.push('/workflows/builder')}
 					>
-						Tạo workflow mới
+						Tạo quy trình
 					</Button>
 				)}
 			</div>
@@ -317,13 +311,12 @@ const WorkflowsDashboard: React.FC = () => {
 			{/* Search Bar */}
 			<div className={styles.searchFilterBar}>
 				<div className={styles.searchInput}>
-					<Input.Search
-						placeholder="Tìm kiếm tên workflow..."
+					<Input
+						placeholder="Tìm kiếm quy trình..."
 						prefix={<SearchOutlined style={{ color: '#94a3b8' }} />}
-						onSearch={(v) => setSearchText(v)}
+						onPressEnter={(e) => setSearchText(e.currentTarget.value)}
 						onChange={(e) => { if (!e.target.value) setSearchText(''); }}
 						allowClear
-						enterButton={false}
 					/>
 				</div>
 			</div>
@@ -340,7 +333,7 @@ const WorkflowsDashboard: React.FC = () => {
 						pageSize: limit,
 						total,
 						showSizeChanger: true,
-						showTotal: (t, range) => `Hiển thị ${range[0]}-${range[1]} trong số ${t} workflow`,
+						showTotal: (t, range) => `Hiển thị ${range[0]}–${range[1]} trên ${t} quy trình`,
 						onChange: (p, ps) => { setPage(p); setLimit(ps ?? 10); },
 					}}
 					onRow={(record) => ({
@@ -350,37 +343,34 @@ const WorkflowsDashboard: React.FC = () => {
 				/>
 			</div>
 
-			{/* Stats Grid */}
-			<div className={styles.statsGrid}>
-				<div className={styles.statCardPrimary}>
-					<div style={{ position: 'relative', zIndex: 1 }}>
-						<div className={styles.statLabel}>Tổng Workflows</div>
-						<div className={styles.statValue}>{total}</div>
-						<div className={styles.statChange}>Tổng số luồng phê duyệt trong hệ thống</div>
+			{/* Modal xác nhận xóa — design: smartadmin.pen frame 17 (confirmModal) */}
+			<Modal
+				visible={!!deleteTarget}
+				onCancel={() => setDeleteTarget(null)}
+				footer={null}
+				width={400}
+				centered
+				closable={false}
+				className={styles.deleteModal}
+			>
+				<div className={styles.deleteModalBody}>
+					<div className={styles.deleteIconCircle}>
+						<DeleteOutlined />
 					</div>
-					<div className={styles.statBgIcon}><BranchesOutlined /></div>
-				</div>
-
-				<div className={styles.statCard}>
-					<div>
-						<div className={styles.statIcon}><LinkOutlined /></div>
-						<div className={styles.statTitle}>Có biểu mẫu</div>
-					</div>
-					<div className={styles.statNumber}>{workflows.filter((w) => w.formId).length}</div>
-				</div>
-
-				<div className={`${styles.statCard} ${styles.light}`}>
-					<div>
-						<div className={styles.statIcon}><BranchesOutlined /></div>
-						<div className={styles.statTitle}>Theo loại</div>
-					</div>
-					<div className={styles.typeStats}>
-						{typeCounts.sequential > 0 && <Tag icon={<OrderedListOutlined />} color="blue">{typeCounts.sequential} tuần tự</Tag>}
-						{typeCounts.parallel > 0 && <Tag icon={<ForkOutlined />} color="cyan">{typeCounts.parallel} song song</Tag>}
-						{typeCounts.voting > 0 && <Tag icon={<TeamOutlined />} color="purple">{typeCounts.voting} bỏ phiếu</Tag>}
+					<h3>Xác nhận xóa quy trình?</h3>
+					<p>
+						Quy trình <strong>“{deleteTarget?.name}”</strong> sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.
+					</p>
+					<div className={styles.deleteModalActions}>
+						<button type='button' className={styles.cancelBtn} onClick={() => setDeleteTarget(null)} disabled={deleting}>
+							Hủy
+						</button>
+						<button type='button' className={styles.dangerBtn} onClick={confirmDelete} disabled={deleting}>
+							<DeleteOutlined /> {deleting ? 'Đang xóa...' : 'Xóa vĩnh viễn'}
+						</button>
 					</div>
 				</div>
-			</div>
+			</Modal>
 
 			{/* Detail Drawer */}
 			<Drawer
@@ -394,7 +384,7 @@ const WorkflowsDashboard: React.FC = () => {
 						</div>
 					) : 'Chi tiết Workflow'
 				}
-				open={drawerOpen}
+				visible={drawerOpen}
 				onClose={() => { setDrawerOpen(false); setSelectedWorkflow(null); }}
 				width={560}
 				extra={
@@ -482,6 +472,7 @@ const WorkflowsDashboard: React.FC = () => {
 								{selectedWorkflow.config?.transitions?.map((t, idx) => {
 									const fromLabel = typeof t.from === 'string' ? (t.from === '*' ? '* (tất cả)' : t.from) : (t.from as string[]).join(', ');
 									return (
+										// eslint-disable-next-line react/no-array-index-key
 										<div key={idx} className={styles.transitionItem}>
 											<span className={styles.tFrom}>{fromLabel}</span>
 											<span className={styles.tArrow}><ArrowRightOutlined /></span>

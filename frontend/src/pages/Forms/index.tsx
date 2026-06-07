@@ -1,18 +1,19 @@
 import {
 	DeleteOutlined,
+	DownloadOutlined,
 	EditOutlined,
 	EyeOutlined,
-	FilterOutlined,
+	FileTextOutlined,
 	PlusOutlined,
+	ReloadOutlined,
 	SearchOutlined,
-	SortAscendingOutlined,
 } from '@ant-design/icons';
-import { Button, Input, message, Modal, Table, Tooltip } from 'antd';
+import { Button, Input, message, Modal, Table, Tooltip, Switch } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import moment from 'moment';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { history, useModel } from 'umi';
-import { deleteForm, getActiveForms, getFormsPage } from '@/services/Forms/formApi';
+import { deleteForm, getActiveForms, getFormsPage, updateForm } from '@/services/Forms/formApi';
 import type { IForm, IFormPageRequest } from '@/services/Forms/typings';
 import styles from './index.less';
 
@@ -29,6 +30,8 @@ const FormsDashboard: React.FC = () => {
 	const [limit, setLimit] = useState(10);
 	const [searchText, setSearchText] = useState('');
 	const [statusFilter, setStatusFilter] = useState<boolean | undefined>(undefined);
+	const [deleteTarget, setDeleteTarget] = useState<IForm | null>(null);
+	const [deleting, setDeleting] = useState(false);
 
 	/** ADMIN/MANAGER: POST /forms/page */
 	const fetchFormsAdmin = useCallback(async () => {
@@ -45,7 +48,7 @@ const FormsDashboard: React.FC = () => {
 			}
 
 			if (searchText.trim()) {
-				payload.filters = [{ field: 'name', operator: 'contains', value: searchText.trim() }];
+				payload.filters = [{ field: 'name', operator: 'contain', values: [searchText.trim()] }];
 			}
 
 			const response = await getFormsPage(payload);
@@ -102,27 +105,22 @@ const FormsDashboard: React.FC = () => {
 			message.warning('Chỉ ADMIN mới có quyền xóa biểu mẫu');
 			return;
 		}
+		setDeleteTarget(record);
+	};
 
-		Modal.confirm({
-			title: 'Xác nhận xóa',
-			content: (
-				<span>
-					Bạn có chắc chắn muốn xóa biểu mẫu <strong>{record.name}</strong>? Thao tác này không thể hoàn tác.
-				</span>
-			),
-			okText: 'Xóa',
-			okType: 'danger',
-			cancelText: 'Hủy',
-			onOk: async () => {
-				try {
-					await deleteForm(record.id);
-					message.success('Đã xóa biểu mẫu thành công');
-					fetchFormsAdmin();
-				} catch (error) {
-					message.error('Xóa biểu mẫu thất bại');
-				}
-			},
-		});
+	const confirmDelete = async () => {
+		if (!deleteTarget) return;
+		setDeleting(true);
+		try {
+			await deleteForm(deleteTarget.id);
+			message.success('Đã xóa biểu mẫu thành công');
+			setDeleteTarget(null);
+			fetchFormsAdmin();
+		} catch (error) {
+			message.error('Xóa biểu mẫu thất bại');
+		} finally {
+			setDeleting(false);
+		}
 	};
 
 	const handleView = (record: IForm) => {
@@ -132,6 +130,16 @@ const FormsDashboard: React.FC = () => {
 	const handleEdit = (record: IForm) => {
 		history.push(`/forms/${record.id}/edit`);
 	};
+
+	const handleToggleStatus = useCallback(async (checked: boolean, record: IForm) => {
+		try {
+			await updateForm(record.id, { isActive: checked });
+			message.success(`Đã ${checked ? 'kích hoạt' : 'vô hiệu hóa'} biểu mẫu thành công`);
+			fetchFormsAdmin();
+		} catch (error) {
+			message.error('Cập nhật trạng thái thất bại');
+		}
+	}, [fetchFormsAdmin]);
 
 	const getFieldCount = (form: IForm): number => {
 		return form.schema?.fields?.length ?? 0;
@@ -143,39 +151,55 @@ const FormsDashboard: React.FC = () => {
 				title: 'Tên biểu mẫu',
 				dataIndex: 'name',
 				key: 'name',
-				render: (_: string, record: IForm) => (
-					<div className={styles.formNameCell}>
-						<div className={`${styles.formIcon} ${record.isActive ? styles.active : styles.inactive}`}>
-							<EyeOutlined />
-						</div>
-						<div className={styles.formInfo}>
-							<div className={styles.formTitle}>{record.name}</div>
-							<div className={styles.formMeta}>
-								{getFieldCount(record)} trường dữ liệu
-								{record.description ? ` • ${record.description}` : ''}
+				render: (_: string, record: IForm) => {
+					const iconState = record.deletedAt ? styles.deleted : record.isActive ? styles.active : styles.inactive;
+					return (
+						<div className={styles.formNameCell}>
+							<div className={`${styles.formIcon} ${iconState}`}>
+								<FileTextOutlined />
+							</div>
+							<div>
+								<div className={styles.formTitle}>{record.name}</div>
+								<div className={styles.formMeta}>
+									{getFieldCount(record)} trường
+									{record.description ? ` · ${record.description}` : ''}
+								</div>
 							</div>
 						</div>
-					</div>
-				),
+					);
+				},
 			},
 			{
 				title: 'Ngày tạo',
 				dataIndex: 'createdAt',
 				key: 'createdAt',
-				width: 160,
-				render: (date: string) => (
-					<span style={{ color: '#64748b', fontSize: 13 }}>{moment(date).format('DD/MM/YYYY')}</span>
-				),
+				width: 150,
+				render: (date: string) => <span className={styles.dateCell}>{moment(date).format('DD/MM/YYYY')}</span>,
 			},
 			{
 				title: 'Trạng thái',
 				dataIndex: 'isActive',
 				key: 'isActive',
-				width: 160,
+				width: 150,
 				render: (isActive: boolean, record: IForm) => {
 					if (record.deletedAt) {
 						return <span className={`${styles.statusTag} ${styles.deleted}`}>Đã xóa</span>;
 					}
+					
+					if (isAdminOrManager) {
+						return (
+							<Switch
+								checked={isActive}
+								onChange={(checked, e) => {
+									e.stopPropagation(); // Tránh sự kiện click vào row
+									handleToggleStatus(checked, record);
+								}}
+								checkedChildren="Hoạt động"
+								unCheckedChildren="Vô hiệu"
+							/>
+						);
+					}
+
 					return isActive ? (
 						<span className={`${styles.statusTag} ${styles.active}`}>Đang hoạt động</span>
 					) : (
@@ -217,21 +241,17 @@ const FormsDashboard: React.FC = () => {
 		}
 
 		return cols;
-	}, [isAdminOrManager, userRole]);
-
-	// Stats computation
-	const activeCount = forms.filter((f) => f.isActive && !f.deletedAt).length;
-	const inactiveCount = forms.filter((f) => !f.isActive || f.deletedAt).length;
+	}, [isAdminOrManager, userRole, handleToggleStatus]);
 
 	return (
 		<div className={styles.formDashboard}>
 			{/* Header */}
 			<div className={styles.headerSection}>
 				<div className={styles.headerTitle}>
-					<h1>{isAdminOrManager ? 'Danh sách biểu mẫu' : 'Biểu mẫu đang hoạt động'}</h1>
+					<h1>{isAdminOrManager ? 'Quản lý biểu mẫu' : 'Biểu mẫu đang hoạt động'}</h1>
 					<p>
 						{isAdminOrManager
-							? 'Quản lý và tinh chỉnh các biểu mẫu thu thập dữ liệu của bạn.'
+							? 'Tạo, chỉnh sửa và quản lý các biểu mẫu của tổ chức'
 							: 'Chọn biểu mẫu bạn muốn điền và gửi dữ liệu.'}
 					</p>
 				</div>
@@ -242,18 +262,18 @@ const FormsDashboard: React.FC = () => {
 						className={styles.createBtn}
 						onClick={() => history.push('/forms/builder')}
 					>
-						Tạo biểu mẫu mới
+						Tạo biểu mẫu
 					</Button>
 				)}
 			</div>
 
-			{/* Search & Filter Bar */}
+			{/* Toolbar */}
 			<div className={styles.searchFilterBar}>
 				<div className={styles.searchInput}>
-					<Input.Search
-						placeholder='Tìm kiếm tên biểu mẫu...'
+					<Input
+						placeholder='Tìm kiếm biểu mẫu...'
 						prefix={<SearchOutlined style={{ color: '#94a3b8' }} />}
-						onSearch={handleSearch}
+						onPressEnter={(e) => handleSearch(e.currentTarget.value)}
 						onChange={(e) => {
 							if (!e.target.value) {
 								setSearchText('');
@@ -261,31 +281,47 @@ const FormsDashboard: React.FC = () => {
 							}
 						}}
 						allowClear
-						enterButton={false}
 					/>
 				</div>
 				{isAdminOrManager && (
-					<div className={styles.filterGroup}>
-						<Button
-							className={styles.filterBtn}
-							icon={<FilterOutlined />}
-							onClick={() => {
-								if (statusFilter === undefined) {
-									setStatusFilter(true);
-								} else if (statusFilter === true) {
-									setStatusFilter(false);
-								} else {
-									setStatusFilter(undefined);
-								}
-								setPage(1);
-							}}
-						>
-							{statusFilter === undefined ? 'Lọc' : statusFilter ? 'Đang hoạt động' : 'Đã vô hiệu'}
-						</Button>
-						<Button className={styles.filterBtn} icon={<SortAscendingOutlined />}>
-							Sắp xếp
-						</Button>
-					</div>
+					<>
+						<div className={styles.segmented}>
+							{(
+								[
+									{ label: 'Tất cả', value: undefined },
+									{ label: 'Đang hoạt động', value: true },
+									{ label: 'Đã vô hiệu', value: false },
+								] as { label: string; value: boolean | undefined }[]
+							).map((opt) => (
+								<button
+									type='button'
+									key={opt.label}
+									className={`${styles.segBtn} ${statusFilter === opt.value ? styles.active : ''}`}
+									onClick={() => {
+										setStatusFilter(opt.value);
+										setPage(1);
+									}}
+								>
+									{opt.label}
+								</button>
+							))}
+						</div>
+						<div className={styles.toolbarSpacer} />
+						<Tooltip title='Xuất danh sách'>
+							<button
+								type='button'
+								className={styles.iconBtn}
+								onClick={() => message.info('Tính năng xuất danh sách đang phát triển')}
+							>
+								<DownloadOutlined />
+							</button>
+						</Tooltip>
+						<Tooltip title='Làm mới'>
+							<button type='button' className={styles.iconBtn} onClick={() => fetchFormsAdmin()}>
+								<ReloadOutlined />
+							</button>
+						</Tooltip>
+					</>
 				)}
 			</div>
 
@@ -296,6 +332,7 @@ const FormsDashboard: React.FC = () => {
 					dataSource={displayedForms}
 					loading={loading}
 					rowKey='id'
+					scroll={{ x: 550 }}
 					pagination={
 						isAdminOrManager
 							? {
@@ -303,7 +340,7 @@ const FormsDashboard: React.FC = () => {
 									pageSize: limit,
 									total,
 									showSizeChanger: true,
-									showTotal: (t, range) => `Hiển thị ${range[0]}-${range[1]} trong số ${t} biểu mẫu`,
+									showTotal: (t, range) => `Hiển thị ${range[0]}–${range[1]} trên ${t} biểu mẫu`,
 									onChange: (p, ps) => {
 										setPage(p);
 										setLimit(ps ?? 10);
@@ -311,7 +348,7 @@ const FormsDashboard: React.FC = () => {
 							  }
 							: {
 									pageSize: 10,
-									showTotal: (t, range) => `Hiển thị ${range[0]}-${range[1]} trong số ${t} biểu mẫu`,
+									showTotal: (t, range) => `Hiển thị ${range[0]}–${range[1]} trên ${t} biểu mẫu`,
 							  }
 					}
 					onRow={(record) => ({
@@ -321,35 +358,34 @@ const FormsDashboard: React.FC = () => {
 				/>
 			</div>
 
-			{/* Stats Bento Grid — chỉ cho ADMIN/MANAGER */}
-			{isAdminOrManager && (
-				<div className={styles.statsGrid}>
-					<div className={styles.statCardPrimary}>
-						<div style={{ position: 'relative', zIndex: 1 }}>
-							<div className={styles.statLabel}>Tổng biểu mẫu</div>
-							<div className={styles.statValue}>{total}</div>
-							<div className={styles.statChange}>Tổng số biểu mẫu trong hệ thống</div>
-						</div>
-						<div className={styles.statBgIcon}>📊</div>
+			{/* Modal xác nhận xóa — design: smartadmin.pen frame 17 (confirmModal) */}
+			<Modal
+				visible={!!deleteTarget}
+				onCancel={() => setDeleteTarget(null)}
+				footer={null}
+				width={400}
+				centered
+				closable={false}
+				className={styles.deleteModal}
+			>
+				<div className={styles.deleteModalBody}>
+					<div className={styles.deleteIconCircle}>
+						<DeleteOutlined />
 					</div>
-
-					<div className={styles.statCard}>
-						<div>
-							<div className={styles.statIcon}>✅</div>
-							<div className={styles.statTitle}>Đang hoạt động</div>
-						</div>
-						<div className={styles.statNumber}>{activeCount}</div>
-					</div>
-
-					<div className={`${styles.statCard} ${styles.light}`}>
-						<div>
-							<div className={styles.statIcon}>📋</div>
-							<div className={styles.statTitle}>Không hoạt động</div>
-						</div>
-						<div className={styles.statNumber}>{inactiveCount}</div>
+					<h3>Xác nhận xóa biểu mẫu?</h3>
+					<p>
+						Biểu mẫu <strong>“{deleteTarget?.name}”</strong> sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.
+					</p>
+					<div className={styles.deleteModalActions}>
+						<button type='button' className={styles.cancelBtn} onClick={() => setDeleteTarget(null)} disabled={deleting}>
+							Hủy
+						</button>
+						<button type='button' className={styles.dangerBtn} onClick={confirmDelete} disabled={deleting}>
+							<DeleteOutlined /> {deleting ? 'Đang xóa...' : 'Xóa vĩnh viễn'}
+						</button>
 					</div>
 				</div>
-			)}
+			</Modal>
 		</div>
 	);
 };

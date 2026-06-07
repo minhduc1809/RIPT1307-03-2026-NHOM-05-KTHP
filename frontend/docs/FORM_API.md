@@ -54,7 +54,7 @@ Authorization: Bearer <accessToken>
       }
     ]
   },
-  "settings": { "allowAnonymous": false }
+  "settings": { "allowAnonymous": false, "theme": "default" }
 }
 ```
 
@@ -76,7 +76,7 @@ Authorization: Bearer <accessToken>
     "formId": "form_xin_nghi_phep",
     "fields": [...]
   },
-  "settings": { "allowAnonymous": false },
+  "settings": { "allowAnonymous": false, "theme": "default" },
   "isActive": true,
   "createdBy": "cmp12xsmx00008pqv88263uth",
   "createdAt": "2026-05-12T08:00:00.000Z",
@@ -259,7 +259,7 @@ Authorization: Bearer <accessToken>
       }
     ]
   },
-  "settings": { "allowAnonymous": false },
+  "settings": { "allowAnonymous": false, "theme": "default" },
   "isActive": true,
   "createdBy": "cmp12xsmx00008pqv88263uth",
   "createdAt": "2026-05-12T08:00:00.000Z",
@@ -317,7 +317,7 @@ Authorization: Bearer <accessToken>
       }
     ]
   },
-  "settings": { "allowAnonymous": true }
+  "settings": { "allowAnonymous": true, "theme": "dark" }
 }
 ```
 
@@ -338,7 +338,7 @@ Authorization: Bearer <accessToken>
   "name": "Survey 2024 - Updated",
   "description": "Updated description",
   "schema": { ... },
-  "settings": { "allowAnonymous": true },
+  "settings": { "allowAnonymous": true, "theme": "dark" },
   "isActive": true,
   "createdBy": "cmp12xsmx00008pqv88263uth",
   "createdAt": "2026-05-12T08:00:00.000Z",
@@ -543,7 +543,9 @@ Form sử dụng Validation Engine để kiểm tra dữ liệu submission dựa
 - Tất cả endpoint yêu cầu **Bearer Token** trong header `Authorization`.
 - Form sử dụng **Soft Delete**: trường `deletedAt` được set thay vì xóa khỏi database.
 - `schema` lưu dưới dạng **JSON** trong database, cho phép định nghĩa form linh hoạt.
-- `settings` lưu các cấu hình bổ sung cho form (ví dụ: cho phép gửi ẩn danh).
+- `settings` lưu các cấu hình bổ sung cho form:
+  - `allowAnonymous` (`boolean`): Cho phép gửi ẩn danh (không cần đăng nhập).
+  - `theme` (`string`): Giao diện hiển thị form. Giá trị hợp lệ: `"default"`, `"dark"`, `"mint"`, `"sunset"`, `"violet"`.
 - Validation Engine hỗ trợ **cross-field validation** (ví dụ: ngày kết thúc phải sau ngày bắt đầu).
 - Tất cả các endpoint trả về lỗi validation sẽ có dạng:
 
