@@ -92,6 +92,19 @@ export const PublicNavbar: React.FC = () => {
 				.join('')
 		: '';
 
+	const getActionInfo = () => {
+		const role = currentUser?.role;
+		if (role === 'ADMIN' || role === 'MANAGER') {
+			return { path: '/dashboard', label: 'Vào Dashboard' };
+		}
+		if (role === 'HR') {
+			return { path: '/submissions/pending', label: 'Chờ phê duyệt' };
+		}
+		return { path: '/submissions/mine', label: 'Yêu cầu của tôi' };
+	};
+
+	const actionInfo = getActionInfo();
+
 	return (
 		<header className={styles.navbar}>
 			<div className={styles.navInner}>
@@ -105,8 +118,8 @@ export const PublicNavbar: React.FC = () => {
 				{currentUser ? (
 					<div className={styles.navRight}>
 						<NotificationBell />
-						<button type="button" className={styles.btnGradientPill} onClick={() => history.push('/dashboard')}>
-							<AppstoreOutlined /> Vào Dashboard
+						<button type="button" className={styles.btnGradientPill} onClick={() => history.push(actionInfo.path)}>
+							<AppstoreOutlined /> {actionInfo.label}
 						</button>
 						<div className={styles.userChip} onClick={() => history.push('/profile')}>
 							<span className={styles.chipAvatar}>{initials}</span>
