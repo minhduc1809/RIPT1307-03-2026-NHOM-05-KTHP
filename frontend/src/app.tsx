@@ -1,5 +1,7 @@
 import Footer from '@/components/Footer';
+import HeaderBreadcrumb from '@/components/HeaderBreadcrumb';
 import RightContent from '@/components/RightContent';
+import { ThunderboltFilled } from '@ant-design/icons';
 import { notification } from 'antd';
 import 'moment/locale/vi';
 import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
@@ -111,9 +113,18 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 		),
 		noFound: <NotFoundContent />,
 		rightContentRender: () => <RightContent />,
+		headerContentRender: () => <HeaderBreadcrumb />,
 		disableContentMargin: false,
 
-		footerRender: () => <Footer />,
+		// các trang workspace toàn màn (builder) không có footer
+		footerRender: () => {
+			const { pathname } = window.location;
+			const isWorkspace =
+				pathname.startsWith('/forms/builder') ||
+				pathname.startsWith('/workflows/builder') ||
+				/^\/(forms|workflows)\/[^/]+\/edit/.test(pathname);
+			return isWorkspace ? null : <Footer />;
+		},
 
 		onPageChange: () => {
 			const { pathname } = window.location;
@@ -162,7 +173,21 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 				{/* </TechnicalSupportBounder> */}
 			</ErrorBoundary>
 		),
-		menuHeaderRender: undefined,
+		// Logo theo DS smartadmin.pen: ô vuông gradient + chữ FLOWFORM
+		menuHeaderRender: () => (
+			<a
+				className='ds-menu-header'
+				onClick={(e) => {
+					e.preventDefault();
+					history.push('/dashboard');
+				}}
+			>
+				<span className='ds-logo-square'>
+					<ThunderboltFilled />
+				</span>
+				<span className='ds-logo-text'>FLOWFORM</span>
+			</a>
+		),
 		...initialState?.settings,
 	};
 };

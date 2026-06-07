@@ -44,7 +44,7 @@ export interface IUserPageRequest {
 	page?: number;
 	limit?: number;
 	condition?: Record<string, any>;
-	filters?: Array<{ field: string; operator: string; value: string }>;
+	filters?: { field: string; operator: string; values: any[]; active?: boolean }[];
 	sort?: Record<string, 'asc' | 'desc'> | string;
 }
 

@@ -1,640 +1,475 @@
-@import '~antd/es/style/themes/default.less';
+// design: Corporate Trust (smartadmin.pen) — trang xem chi tiết biểu mẫu
 
-@primary: #565e74;
-@primary-dim: #4a5268;
-@primary-container: #dae2fd;
-@secondary: #506076;
-@secondary-container: #d3e4fe;
-@tertiary: #615b77;
-@tertiary-container: #e3dbfd;
-@error: #9f403d;
-
-@background: #f7f9fb;
-@surface-container-lowest: #ffffff;
-@surface-container-low: #f0f4f7;
-@surface-container: #e8eff3;
-@surface-container-high: #e1e9ee;
-@surface-container-highest: #d9e4ea;
-
-@on-background: #2a3439;
-@on-surface: #2a3439;
-@on-surface-variant: #566166;
-@outline: #717c82;
-@outline-variant: #a9b4b9;
+@primary: #4f46e5;
+@text: #0f172a;
+@text-body: #334155;
+@muted: #64748b;
+@muted-light: #94a3b8;
+@border: #e2e8f0;
+@border-light: #f1f5f9;
+@bg: #f8fafc;
+@success: #10b981;
+@success-dark: #047857;
+@success-bg: #ecfdf5;
+@danger: #ef4444;
+@indigo-bg: #eef2ff;
+@violet-bg: #f5f3ff;
+@warning-bg: #fffbeb;
+@warning: #f59e0b;
+@grad: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+@card-shadow: 0 4px 20px -2px #4f46e51a;
 
 .formViewPage {
-	font-family: 'Inter', sans-serif;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 	min-height: 100vh;
-	background: @background;
-	color: @on-background;
+	padding: 24px;
+	background: @bg;
+	font-family: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
 
-	/* Header Bar */
-	.viewHeader {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 16px 32px;
-		background: rgba(255, 255, 255, 0.85);
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
-		border-bottom: 1px solid fade(@outline-variant, 20%);
-		position: sticky;
-		top: 0;
-		z-index: 50;
+.card() {
+	background: #fff;
+	border: 1px solid @border-light;
+	border-radius: 12px;
+	box-shadow: @card-shadow;
+}
 
-		.headerLeft {
-			display: flex;
-			align-items: center;
-			gap: 16px;
+// Trạng thái tải / lỗi
+.loadingWrapper,
+.errorWrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 14px;
+	min-height: 60vh;
+	color: @muted;
+	font-size: 13px;
+}
 
-			.backBtn {
-				display: inline-flex;
-				align-items: center;
-				gap: 8px;
-				padding: 8px 18px;
-				font-size: 14px;
-				font-weight: 500;
-				color: #64748b;
-				background: transparent;
-				border: 1px solid fade(@outline-variant, 30%);
-				border-radius: 8px;
-				cursor: pointer;
-				transition: all 0.2s ease;
+.errorIcon {
+	font-size: 36px;
+	color: @danger;
+}
 
-				&:hover {
-					background: @surface-container-low;
-					color: @on-surface;
-					border-color: fade(@outline-variant, 50%);
-				}
-			}
+.retryBtn {
+	padding: 9px 18px;
+	border: none;
+	border-radius: 8px;
+	background: @grad;
+	color: #fff;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+	box-shadow: 0 4px 14px #4f46e54d;
+	transition: all 0.2s ease-out;
 
-			.headerInfo {
-				.formName {
-					font-size: 18px;
-					font-weight: 700;
-					color: @on-surface;
-					letter-spacing: -0.3px;
-					margin: 0;
-				}
+	&:hover {
+		transform: translateY(-1px);
+	}
+}
 
-				.formMeta {
-					font-size: 12px;
-					color: @outline;
-					margin-top: 2px;
-				}
-			}
-		}
+// Header
+.viewHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+}
 
-		.headerActions {
-			display: flex;
-			align-items: center;
-			gap: 10px;
+.headerLeft {
+	display: flex;
+	gap: 14px;
+	align-items: center;
+	min-width: 0;
+}
 
-			.editBtn {
-				display: inline-flex;
-				align-items: center;
-				gap: 8px;
-				padding: 8px 20px;
-				font-size: 14px;
-				font-weight: 600;
-				color: #fff;
-				background: linear-gradient(135deg, @primary 0%, @primary-dim 100%);
-				border: none;
-				border-radius: 8px;
-				cursor: pointer;
-				box-shadow: 0 2px 8px rgba(86, 94, 116, 0.25);
-				transition: all 0.2s ease;
+.backBtn {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	flex-shrink: 0;
+	padding: 8px 14px;
+	border: 1px solid @border;
+	border-radius: 8px;
+	background: #fff;
+	color: @text-body;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease-out;
 
-				&:hover {
-					transform: translateY(-1px);
-					box-shadow: 0 4px 14px rgba(86, 94, 116, 0.35);
-				}
+	&:hover {
+		border-color: #c7d2fe;
+		color: @primary;
+	}
+}
 
-				&:active {
-					transform: scale(0.97);
-				}
-			}
+.headerInfo {
+	min-width: 0;
+}
+
+.formName {
+	margin: 0 0 2px;
+	font-size: 20px;
+	font-weight: 800;
+	letter-spacing: -0.4px;
+	color: @text;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.formMeta {
+	font-size: 12.5px;
+	color: @muted;
+}
+
+.editBtn {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	padding: 10px 18px;
+	border: none;
+	border-radius: 8px;
+	background: @grad;
+	color: #fff;
+	font-family: inherit;
+	font-size: 13.5px;
+	font-weight: 600;
+	cursor: pointer;
+	box-shadow: 0 4px 14px #4f46e54d;
+	transition: all 0.2s ease-out;
+
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 10px 25px -5px #4f46e566;
+	}
+}
+
+.viewContent {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+// Card thông tin nhanh
+.infoCard {
+	.card();
+
+	padding: 20px 24px;
+}
+
+.infoGrid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 16px;
+
+	@media (max-width: 900px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+.infoItem {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.infoLabel {
+	font-size: 10.5px;
+	font-weight: 700;
+	letter-spacing: 0.6px;
+	text-transform: uppercase;
+	color: @muted-light;
+}
+
+.infoValue {
+	font-size: 13.5px;
+	font-weight: 600;
+	color: @text-body;
+}
+
+.statusBadge {
+	display: inline-flex;
+	gap: 6px;
+	align-items: center;
+	padding: 4px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+
+	.dot {
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+	}
+
+	&.active {
+		background: @success-bg;
+		color: @success-dark;
+
+		.dot {
+			background: @success;
 		}
 	}
 
-	/* Main Content */
-	.viewContent {
-		max-width: 800px;
-		margin: 48px auto;
-		padding: 0 24px;
+	&.inactive {
+		background: @border-light;
+		color: @muted;
 
-		/* Info Card */
-		.infoCard {
-			background: @surface-container-lowest;
-			border-radius: 20px;
-			padding: 36px 40px;
-			margin-bottom: 32px;
-			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-
-			.infoGrid {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				gap: 24px;
-
-				@media (max-width: 600px) {
-					grid-template-columns: 1fr;
-				}
-
-				.infoItem {
-					.infoLabel {
-						font-size: 11px;
-						font-weight: 700;
-						text-transform: uppercase;
-						letter-spacing: 1px;
-						color: @outline;
-						margin-bottom: 6px;
-					}
-
-					.infoValue {
-						font-size: 14px;
-						font-weight: 500;
-						color: @on-surface;
-					}
-
-					.statusBadge {
-						display: inline-flex;
-						align-items: center;
-						gap: 6px;
-						padding: 4px 14px;
-						border-radius: 20px;
-						font-size: 12px;
-						font-weight: 600;
-
-						.dot {
-							width: 7px;
-							height: 7px;
-							border-radius: 50%;
-						}
-
-						&.active {
-							background: #dbeafe;
-							color: #1d4ed8;
-
-							.dot {
-								background: #2563eb;
-							}
-						}
-
-						&.inactive {
-							background: #fee2e2;
-							color: #991b1b;
-
-							.dot {
-								background: #dc2626;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		/* Description Card */
-		.descriptionCard {
-			background: @surface-container-lowest;
-			border-radius: 20px;
-			padding: 32px 40px;
-			margin-bottom: 32px;
-			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-
-			.sectionTitle {
-				font-size: 11px;
-				font-weight: 700;
-				text-transform: uppercase;
-				letter-spacing: 1px;
-				color: @outline;
-				margin-bottom: 12px;
-				display: flex;
-				align-items: center;
-				gap: 8px;
-
-				.icon {
-					font-size: 16px;
-					color: @primary;
-				}
-			}
-
-			.descriptionText {
-				font-size: 15px;
-				color: @on-surface-variant;
-				line-height: 1.6;
-				margin: 0;
-			}
-
-			.noDescription {
-				color: @outline-variant;
-				font-style: italic;
-				font-size: 14px;
-			}
-		}
-
-		/* Form Preview Card */
-		.formPreviewCard {
-			background: @surface-container-lowest;
-			border-radius: 20px;
-			padding: 40px;
-			box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-			margin-bottom: 32px;
-
-			.formPreviewHeader {
-				margin-bottom: 36px;
-				padding-bottom: 24px;
-				border-bottom: 1px solid fade(@outline-variant, 15%);
-
-				.formTitle {
-					font-size: 26px;
-					font-weight: 700;
-					color: @on-surface;
-					letter-spacing: -0.5px;
-					margin: 0 0 6px 0;
-				}
-
-				.formDesc {
-					font-size: 14px;
-					color: @on-surface-variant;
-					margin: 0;
-					line-height: 1.5;
-				}
-			}
-
-			.fieldsContainer {
-				display: flex;
-				flex-direction: column;
-				gap: 28px;
-			}
-
-			/* Theme: Dark */
-			&.theme_dark {
-				background: #1e293b !important;
-				box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-
-				.formPreviewHeader {
-					border-bottom-color: rgba(100, 116, 139, 0.2);
-					.formTitle { color: #f8fafc; }
-					.formDesc { color: #94a3b8; }
-				}
-
-				.fieldItem {
-					.fieldHeader .fieldLabel { color: #f8fafc; }
-					.fieldHeader .fieldTypeBadge { background: #334155; color: #94a3b8; }
-					.fieldInputPreview {
-						background: rgba(15, 23, 42, 0.6);
-						color: #64748b;
-						border-color: rgba(100, 116, 139, 0.2);
-					}
-					.fieldRules .ruleTag {
-						background: #334155;
-						color: #94a3b8;
-						border-color: rgba(100, 116, 139, 0.2);
-					}
-					.selectOptions .optionItem {
-						background: rgba(15, 23, 42, 0.4);
-						color: #e2e8f0;
-						.optionDot { background: #6366f1; }
-					}
-				}
-
-				.emptyFields { color: #64748b; }
-			}
-
-			/* Theme: Mint */
-			&.theme_mint {
-				background: linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 100%) !important;
-
-				.formPreviewHeader {
-					border-bottom-color: rgba(5, 150, 105, 0.12);
-					.formTitle { color: #065f46; }
-					.formDesc { color: #047857; }
-				}
-
-				.fieldItem {
-					.fieldHeader .fieldLabel { color: #064e3b; }
-					.fieldInputPreview {
-						background: rgba(167, 243, 208, 0.25);
-						color: #047857;
-						border-color: rgba(5, 150, 105, 0.12);
-					}
-					.selectOptions .optionItem {
-						background: rgba(167, 243, 208, 0.2);
-						color: #065f46;
-					}
-				}
-			}
-
-			/* Theme: Sunset */
-			&.theme_sunset {
-				background: linear-gradient(135deg, #fff1f2 0%, #fff7ed 100%) !important;
-
-				.formPreviewHeader {
-					border-bottom-color: rgba(220, 38, 38, 0.1);
-					.formTitle { color: #7f1d1d; }
-					.formDesc { color: #991b1b; }
-				}
-
-				.fieldItem {
-					.fieldHeader .fieldLabel { color: #7f1d1d; }
-					.fieldInputPreview {
-						background: rgba(254, 202, 202, 0.35);
-						color: #b91c1c;
-						border-color: rgba(220, 38, 38, 0.08);
-					}
-					.selectOptions .optionItem {
-						background: rgba(254, 202, 202, 0.25);
-						color: #7f1d1d;
-					}
-				}
-			}
-
-			/* Theme: Violet */
-			&.theme_violet {
-				background: linear-gradient(135deg, #faf5ff 0%, #eef2ff 100%) !important;
-
-				.formPreviewHeader {
-					border-bottom-color: rgba(124, 58, 237, 0.1);
-					.formTitle { color: #3b0764; }
-					.formDesc { color: #6b21a8; }
-				}
-
-				.fieldItem {
-					.fieldHeader .fieldLabel { color: #4c1d95; }
-					.fieldInputPreview {
-						background: rgba(196, 181, 253, 0.2);
-						color: #7c3aed;
-						border-color: rgba(124, 58, 237, 0.08);
-					}
-					.selectOptions .optionItem {
-						background: rgba(196, 181, 253, 0.15);
-						color: #4c1d95;
-					}
-				}
-			}
-		}
-
-		/* Individual Field */
-		.fieldItem {
-			.fieldHeader {
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				margin-bottom: 10px;
-
-				.fieldTypeIcon {
-					width: 30px;
-					height: 30px;
-					border-radius: 8px;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					font-size: 14px;
-					flex-shrink: 0;
-
-					&.text {
-						background: fade(@primary-container, 30%);
-						color: @primary;
-					}
-
-					&.number {
-						background: fade(@secondary-container, 30%);
-						color: @secondary;
-					}
-
-					&.date {
-						background: fade(@tertiary-container, 30%);
-						color: @tertiary;
-					}
-
-					&.select {
-						background: fade(@primary-container, 30%);
-						color: @primary;
-					}
-				}
-
-				.fieldLabel {
-					font-size: 14px;
-					font-weight: 600;
-					color: @on-surface;
-				}
-
-				.requiredMark {
-					color: @error;
-					font-weight: 700;
-					margin-left: 2px;
-				}
-
-				.fieldTypeBadge {
-					margin-left: auto;
-					padding: 2px 10px;
-					border-radius: 12px;
-					font-size: 11px;
-					font-weight: 600;
-					text-transform: uppercase;
-					letter-spacing: 0.5px;
-					background: @surface-container-high;
-					color: @outline;
-				}
-			}
-
-			.fieldInputPreview {
-				width: 100%;
-				height: 44px;
-				background: fade(@surface-container-highest, 30%);
-				border-radius: 10px;
-				display: flex;
-				align-items: center;
-				padding: 0 16px;
-				color: @outline-variant;
-				font-size: 14px;
-				font-style: italic;
-				border: 1px solid fade(@outline-variant, 15%);
-				justify-content: space-between;
-			}
-
-			.fieldRules {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 6px;
-				margin-top: 10px;
-
-				.ruleTag {
-					display: inline-flex;
-					align-items: center;
-					gap: 4px;
-					padding: 3px 10px;
-					border-radius: 6px;
-					font-size: 11px;
-					font-weight: 500;
-					background: @surface-container-low;
-					color: @on-surface-variant;
-					border: 1px solid fade(@outline-variant, 10%);
-				}
-			}
-
-			.selectOptions {
-				margin-top: 8px;
-				display: flex;
-				flex-direction: column;
-				gap: 4px;
-
-				.optionItem {
-					display: flex;
-					align-items: center;
-					gap: 8px;
-					padding: 8px 14px;
-					background: fade(@surface-container-highest, 25%);
-					border-radius: 8px;
-					font-size: 13px;
-					color: @on-surface;
-
-					.optionDot {
-						width: 6px;
-						height: 6px;
-						border-radius: 50%;
-						background: @primary;
-						flex-shrink: 0;
-					}
-				}
-			}
-		}
-
-		/* Empty State */
-		.emptyFields {
-			text-align: center;
-			padding: 64px 24px;
-			color: @outline;
-
-			.emptyIcon {
-				font-size: 56px;
-				margin-bottom: 16px;
-				opacity: 0.3;
-			}
-
-			p {
-				font-size: 15px;
-				margin: 0;
-			}
-		}
-
-		/* Settings Card */
-		.settingsCard {
-			background: @surface-container-lowest;
-			border-radius: 20px;
-			padding: 32px 40px;
-			box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-
-			.sectionTitle {
-				font-size: 11px;
-				font-weight: 700;
-				text-transform: uppercase;
-				letter-spacing: 1px;
-				color: @outline;
-				margin-bottom: 16px;
-				display: flex;
-				align-items: center;
-				gap: 8px;
-
-				.icon {
-					font-size: 16px;
-					color: @primary;
-				}
-			}
-
-			.settingsList {
-				display: flex;
-				flex-direction: column;
-				gap: 12px;
-
-				.settingItem {
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-					padding: 12px 16px;
-					background: @surface-container-low;
-					border-radius: 10px;
-
-					.settingKey {
-						font-size: 13px;
-						font-weight: 600;
-						color: @on-surface;
-					}
-
-					.settingValue {
-						font-size: 13px;
-						color: @on-surface-variant;
-						font-family: 'Fira Code', 'Consolas', monospace;
-
-						&.true {
-							color: #16a34a;
-						}
-
-						&.false {
-							color: #dc2626;
-						}
-					}
-				}
-			}
-
-			.noSettings {
-				color: @outline-variant;
-				font-style: italic;
-				font-size: 14px;
-			}
+		.dot {
+			background: @muted-light;
 		}
 	}
+}
 
-	/* Loading State */
-	.loadingWrapper {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		min-height: 60vh;
-		gap: 16px;
+// Mô tả + cài đặt
+.descriptionCard,
+.settingsCard {
+	.card();
 
-		.loadingText {
-			font-size: 14px;
-			color: @outline;
-			margin-top: 8px;
-		}
+	padding: 20px 24px;
+}
+
+.sectionTitle {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	margin-bottom: 12px;
+	font-size: 15px;
+	font-weight: 700;
+	color: @text;
+
+	.icon {
+		color: @primary;
+		font-size: 16px;
+	}
+}
+
+.descriptionText {
+	margin: 0;
+	font-size: 13.5px;
+	line-height: 1.6;
+	color: @text-body;
+}
+
+// Bản xem trước biểu mẫu (giấy)
+.formPreviewCard {
+	.card();
+
+	align-self: center;
+	width: 620px;
+	max-width: 100%;
+	padding: 24px;
+	box-shadow: 0 8px 30px -4px #4f46e521;
+}
+
+.formPreviewHeader {
+	padding-bottom: 12px;
+	margin-bottom: 16px;
+	border-bottom: 1px solid @border-light;
+}
+
+.formTitle {
+	margin: 0 0 4px;
+	font-size: 18px;
+	font-weight: 800;
+	letter-spacing: -0.3px;
+	color: @text;
+}
+
+.formDesc {
+	margin: 0;
+	font-size: 12.5px;
+	line-height: 1.5;
+	color: @muted;
+}
+
+.fieldsContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.fieldItem {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 14px;
+	border: 1px solid @border;
+	border-radius: 10px;
+	background: #fff;
+}
+
+.fieldHeader {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+}
+
+.fieldTypeIcon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 28px;
+	height: 28px;
+	border-radius: 8px;
+	font-size: 13px;
+
+	&.text {
+		background: @indigo-bg;
+		color: @primary;
 	}
 
-	/* Error State */
-	.errorWrapper {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		min-height: 60vh;
-		gap: 16px;
+	&.number {
+		background: #ecfeff;
+		color: #0891b2;
+	}
 
-		.errorIcon {
-			font-size: 56px;
-			color: @error;
-			opacity: 0.5;
-		}
+	&.date {
+		background: @warning-bg;
+		color: @warning;
+	}
 
-		p {
-			font-size: 15px;
-			color: @on-surface-variant;
-		}
+	&.select {
+		background: @violet-bg;
+		color: #7c3aed;
+	}
+}
 
-		.retryBtn {
-			padding: 8px 24px;
-			font-size: 14px;
-			font-weight: 600;
-			color: #fff;
-			background: @primary;
-			border: none;
-			border-radius: 8px;
-			cursor: pointer;
-			transition: all 0.2s;
+.fieldLabel {
+	flex: 1;
+	font-size: 13px;
+	font-weight: 600;
+	color: @text-body;
+}
 
-			&:hover {
-				opacity: 0.9;
-			}
-		}
+.requiredMark {
+	margin-left: 3px;
+	color: @danger;
+}
+
+.fieldTypeBadge {
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: @border-light;
+	color: @muted;
+	font-size: 10.5px;
+	font-weight: 700;
+	letter-spacing: 0.4px;
+}
+
+.fieldInputPreview {
+	display: flex;
+	align-items: center;
+	height: 36px;
+	padding: 0 12px;
+	border: 1px solid @border-light;
+	border-radius: 8px;
+	background: @bg;
+	color: @muted-light;
+	font-size: 13px;
+}
+
+.selectOptions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.optionItem {
+	display: inline-flex;
+	gap: 6px;
+	align-items: center;
+	padding: 4px 10px;
+	border: 1px solid @border;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 500;
+	color: @text-body;
+}
+
+.optionDot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: @primary;
+}
+
+.fieldRules {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.ruleTag {
+	padding: 3px 8px;
+	border-radius: 6px;
+	background: @indigo-bg;
+	color: @primary;
+	font-size: 11px;
+	font-weight: 500;
+
+	strong {
+		font-weight: 700;
+	}
+}
+
+.emptyFields {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	padding: 32px 0;
+	color: @muted-light;
+	font-size: 13px;
+
+	.emptyIcon {
+		font-size: 32px;
+		color: #cbd5e1;
+	}
+}
+
+// Danh sách cài đặt
+.settingsList {
+	display: flex;
+	flex-direction: column;
+}
+
+.settingItem {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 0;
+	border-bottom: 1px solid @border-light;
+
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.settingKey {
+	font-size: 13px;
+	font-weight: 500;
+	color: @text-body;
+}
+
+.settingValue {
+	font-size: 12.5px;
+	font-weight: 600;
+	color: @muted;
+
+	&.true {
+		color: @success-dark;
+	}
+
+	&.false {
+		color: @muted-light;
 	}
 }

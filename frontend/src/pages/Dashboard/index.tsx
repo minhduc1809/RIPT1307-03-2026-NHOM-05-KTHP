@@ -108,6 +108,8 @@ const Dashboard: React.FC = () => {
 		async (showRefresh = false) => {
 			if (showRefresh) setRefreshing(true);
 			else setLoading(true);
+			// giữ spin tối thiểu 600ms để người dùng thấy phản hồi khi dữ liệu trả về quá nhanh
+			const minSpin = showRefresh ? new Promise((r) => setTimeout(r, 600)) : Promise.resolve();
 
 			try {
 				if (isFullDashboard) {
@@ -139,6 +141,7 @@ const Dashboard: React.FC = () => {
 			} catch (error) {
 				console.error('Dashboard fetch error', error);
 			} finally {
+				await minSpin;
 				setLoading(false);
 				setRefreshing(false);
 			}

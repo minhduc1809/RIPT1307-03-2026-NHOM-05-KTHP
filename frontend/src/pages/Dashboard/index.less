@@ -75,13 +75,22 @@
 	transition: all 0.2s ease-out;
 
 	.refreshIcon {
+		display: block;
 		color: @muted;
+		// svg mặc định xoay quanh góc trên-trái → ép xoay quanh tâm
+		transform-box: fill-box;
+		transform-origin: center;
 	}
 
 	&:hover {
 		transform: translateY(-1px);
 		border-color: #c7d2fe;
 		box-shadow: 0 2px 8px #4f46e526;
+	}
+
+	&:active {
+		transform: translateY(0) scale(0.96);
+		background: @bg;
 	}
 
 	&:disabled {
@@ -117,6 +126,7 @@
 
 .statCard {
 	.card();
+
 	display: flex;
 	align-items: center;
 	gap: 16px;
@@ -185,6 +195,7 @@
 
 .chartCard {
 	.card();
+
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
@@ -258,6 +269,7 @@
 
 .sectionCard {
 	.card();
+
 	display: flex;
 	flex-direction: column;
 	gap: 16px;

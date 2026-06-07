@@ -1,21 +1,26 @@
+// design: smartadmin.pen · frame 05 (tạo mới) & 05b (chỉnh sửa)
 import React, { useEffect, useState } from 'react';
 import { history, useLocation } from 'umi';
 import { message } from 'antd';
-import { DragDropContext, Droppable, Draggable, DropResult, DragStart, DragUpdate } from 'react-beautiful-dnd';
+import type { DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import {
-	FontSizeOutlined,
-	NumberOutlined,
+	ArrowLeftOutlined,
+	MoreOutlined,
 	CalendarOutlined,
-	UnorderedListOutlined,
+	CheckCircleOutlined,
+	CheckOutlined,
+	ControlOutlined,
 	CopyOutlined,
 	DeleteOutlined,
-	PlusCircleOutlined,
-	ControlOutlined,
 	DownOutlined,
+	EditOutlined,
+	EyeOutlined,
+	FontSizeOutlined,
 	MinusCircleOutlined,
-	SelectOutlined,
-	LockOutlined,
-	GlobalOutlined,
+	NumberOutlined,
+	PlusOutlined,
+	UnorderedListOutlined,
 } from '@ant-design/icons';
 import { createForm, getFormById, updateForm } from '@/services/Forms/formApi';
 import styles from './index.less';
@@ -44,33 +49,41 @@ const FIELD_TYPES = [
 ] as const;
 
 const THEME_PRESETS = [
-	{ id: 'default', label: 'Mặc định (Sáng)', color: '#f7f9fb', cardColor: '#ffffff', textColor: '#2a3439' },
-	{ id: 'dark', label: 'Tối giản (Dark)', color: '#0f172a', cardColor: '#1e293b', textColor: '#f8fafc' },
-	{ id: 'mint', label: 'Mùa xuân (Mint)', color: '#ccfbf1', cardColor: '#ffffff', textColor: '#065f46' },
-	{ id: 'sunset', label: 'Hoàng hôn (Rose)', color: '#fee2e2', cardColor: '#ffffff', textColor: '#7f1d1d' },
-	{ id: 'violet', label: 'Hiện đại (Violet)', color: '#f3e8ff', cardColor: '#ffffff', textColor: '#3b0764' },
+	{ id: 'default', label: 'Mặc định (Sáng)', swatch: '#ffffff' },
+	{ id: 'dark', label: 'Tối giản (Dark)', swatch: '#0f172a' },
+	{ id: 'mint', label: 'Mùa xuân (Mint)', swatch: '#6ee7b7' },
+	{ id: 'sunset', label: 'Hoàng hôn (Rose)', swatch: '#fda4af' },
+	{ id: 'violet', label: 'Hiện đại (Violet)', swatch: '#8b5cf6' },
 ] as const;
 
-// Helper to generate unique IDs
+type ThemeId = (typeof THEME_PRESETS)[number]['id'];
+type RightTab = 'field' | 'theme' | 'settings';
+
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
-const FormBuilder: React.FC = () => {
+interface IFormBuilderProps {
+	// truyền từ trang FormEdit (/forms/:formId/edit); fallback query ?id= khi vào trực tiếp builder
+	editId?: string;
+}
+
+const FormBuilder: React.FC<IFormBuilderProps> = ({ editId: editIdProp }) => {
 	const location = useLocation();
 	const queryParams = new URLSearchParams(location.search);
-	const editId = queryParams.get('id');
+	const editId = editIdProp ?? queryParams.get('id');
 
 	const [formName, setFormName] = useState('Đăng ký thông tin mới');
 	const [formDescription, setFormDescription] = useState('Vui lòng điền đầy đủ các thông tin bên dưới để tiếp tục.');
 	const [fields, setFields] = useState<IBuilderField[]>([]);
 	const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
 	const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
-	const [themePreset, setThemePreset] = useState<'default' | 'dark' | 'mint' | 'sunset' | 'violet'>('default');
+	const [themePreset, setThemePreset] = useState<ThemeId>('default');
 	const [allowAnonymous, setAllowAnonymous] = useState(false);
+	const [allowDraft, setAllowDraft] = useState(true);
+	const [rightTab, setRightTab] = useState<RightTab>('field');
 	const [isSaving, setIsSaving] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [originalFormId, setOriginalFormId] = useState<string | undefined>(undefined);
 
-	// Load existing form data when editing
 	useEffect(() => {
 		if (!editId) return;
 		setIsLoading(true);
@@ -82,15 +95,14 @@ const FormBuilder: React.FC = () => {
 					setFormDescription(form.description || '');
 					setOriginalFormId(form.schema?.formId);
 
-					// Load settings
 					if (form.settings) {
 						setAllowAnonymous(form.settings.allowAnonymous ?? false);
-						if (form.settings.theme && ['default', 'dark', 'mint', 'sunset', 'violet'].includes(form.settings.theme)) {
+						setAllowDraft(form.settings.allowDraft ?? true);
+						if (form.settings.theme && THEME_PRESETS.some((t) => t.id === form.settings.theme)) {
 							setThemePreset(form.settings.theme);
 						}
 					}
 
-					// Map schema fields to builder fields
 					if (form.schema?.fields && Array.isArray(form.schema.fields)) {
 						const builderFields: IBuilderField[] = form.schema.fields.map((f: any) => ({
 							id: generateId(),
@@ -120,22 +132,10 @@ const FormBuilder: React.FC = () => {
 
 	const selectedField = fields.find((f) => f.id === selectedFieldId);
 
-	// Track what's being dragged for inline ghost preview
-	const onDragStart = (start: DragStart) => {
-		// Drag start logic if needed
-	};
-
-	const onDragUpdate = (update: DragUpdate) => {
-		// Drag update logic if needed
-	};
-
 	const onDragEnd = (result: DropResult) => {
 		const { source, destination } = result;
-
-		// Dropped outside a valid droppable area
 		if (!destination) return;
 
-		// Reordering within the canvas
 		if (source.droppableId === 'canvas' && destination.droppableId === 'canvas') {
 			const newFields = Array.from(fields);
 			const [movedItem] = newFields.splice(source.index, 1);
@@ -144,7 +144,6 @@ const FormBuilder: React.FC = () => {
 			return;
 		}
 
-		// Dragging from toolbox to canvas
 		if (source.droppableId === 'toolbox' && destination.droppableId === 'canvas') {
 			const fieldTypeTemplate = FIELD_TYPES[source.index];
 			const newFieldId = generateId();
@@ -163,10 +162,10 @@ const FormBuilder: React.FC = () => {
 			newFields.splice(destination.index, 0, newField);
 			setFields(newFields);
 			setSelectedFieldId(newFieldId);
+			setRightTab('field');
 		}
 	};
 
-	// Field Actions
 	const handleDeleteField = (id: string, e?: React.MouseEvent) => {
 		if (e) e.stopPropagation();
 		setFields(fields.filter((f) => f.id !== id));
@@ -176,23 +175,23 @@ const FormBuilder: React.FC = () => {
 	const handleCopyField = (field: IBuilderField, index: number, e: React.MouseEvent) => {
 		e.stopPropagation();
 		const newId = generateId();
-		const clonedField: IBuilderField = {
-			...field,
-			id: newId,
-			key: `${field.key}_copy`,
-		};
+		const clonedField: IBuilderField = { ...field, id: newId, key: `${field.key}_copy` };
 		const newFields = Array.from(fields);
 		newFields.splice(index + 1, 0, clonedField);
 		setFields(newFields);
 		setSelectedFieldId(newId);
+		setRightTab('field');
 	};
 
-	// Update Field Properties
+	const selectField = (id: string) => {
+		setSelectedFieldId(id);
+		setRightTab('field');
+	};
+
 	const updateFieldProp = (id: string, key: keyof IBuilderField, value: any) => {
 		setFields(fields.map((f) => (f.id === id ? { ...f, [key]: value } : f)));
 	};
 
-	// Save Logic
 	const handleSave = async () => {
 		if (!formName.trim()) {
 			message.warning('Vui lòng nhập tên biểu mẫu');
@@ -201,7 +200,6 @@ const FormBuilder: React.FC = () => {
 
 		setIsSaving(true);
 		try {
-			// Map internal builder fields to the IFormSchema format
 			const schemaFields = fields.map((f) => {
 				const fieldRule: any = {};
 				if (f.required) fieldRule.required = true;
@@ -240,7 +238,7 @@ const FormBuilder: React.FC = () => {
 					formId: originalFormId || `form_${generateId()}`,
 					fields: schemaFields as any,
 				},
-				settings: { allowAnonymous, theme: themePreset },
+				settings: { allowAnonymous, allowDraft, theme: themePreset },
 			};
 
 			if (editId) {
@@ -260,14 +258,19 @@ const FormBuilder: React.FC = () => {
 		}
 	};
 
-	// Rendering Helpers
 	const renderFieldPreview = (field: IBuilderField) => {
 		switch (field.type) {
 			case 'text':
 			case 'number':
-			case 'date':
 				return <div className={styles.fieldInputPreview}>{field.placeholder || '...'}</div>;
-			case 'select':
+			case 'date':
+				return (
+					<div className={styles.fieldInputPreview}>
+						<span>{field.placeholder || 'Chọn ngày...'}</span>
+						<CalendarOutlined />
+					</div>
+				);
+			case 'select': {
 				const isOpen = openDropdownId === field.id;
 				return (
 					<div className={styles.selectPreviewContainer}>
@@ -275,7 +278,7 @@ const FormBuilder: React.FC = () => {
 							className={`${styles.fieldInputPreview} ${isOpen ? styles.active : ''}`}
 							onClick={(e) => {
 								e.stopPropagation();
-								setSelectedFieldId(field.id);
+								selectField(field.id);
 								setOpenDropdownId(isOpen ? null : field.id);
 							}}
 							style={{ cursor: 'pointer' }}
@@ -287,6 +290,7 @@ const FormBuilder: React.FC = () => {
 						{isOpen && (
 							<div className={styles.customDropdownOptions}>
 								{field.options?.map((opt, i) => (
+									// eslint-disable-next-line react/no-array-index-key
 									<div key={i} className={styles.customOptionItem}>
 										{opt}
 									</div>
@@ -298,416 +302,408 @@ const FormBuilder: React.FC = () => {
 						)}
 					</div>
 				);
+			}
 			default:
 				return null;
 		}
 	};
 
-	return (
-		<div className={styles.builderLayout}>
-			{/* Top Header */}
-			<header className={styles.header}>
-				<div className={styles.headerLeft}>
-					<span className={styles.logo}>{editId ? 'Chỉnh sửa biểu mẫu' : 'Tạo biểu mẫu mới'}</span>
-					{!editId && <span className={styles.editBadge}>Đang tạo</span>}
-				</div>
-				<div className={styles.headerRight}>
-					<div className={styles.actions}>
-						<button className={styles.btnBack} onClick={() => history.push('/forms')}>
-							Quay lại
-						</button>
-						<button className={styles.btnSave} onClick={handleSave} disabled={isSaving || isLoading}>
-							{isSaving ? 'Đang lưu...' : editId ? 'Cập nhật' : 'Lưu'}
-						</button>
+	const renderFieldConfig = () => {
+		if (!selectedField) {
+			return (
+				<div className={styles.panelBody}>
+					<div className={styles.emptyProps}>
+						<ControlOutlined />
+						<p>Chọn một trường trên biểu mẫu để cấu hình</p>
 					</div>
 				</div>
+			);
+		}
+
+		return (
+			<div className={styles.panelBody}>
+				<div className={styles.propGroup}>
+					<label>Mã trường (Key)</label>
+					<input
+						type='text'
+						className={styles.propInput}
+						value={selectedField.key}
+						onChange={(e) => updateFieldProp(selectedField.id, 'key', e.target.value)}
+					/>
+				</div>
+				<div className={styles.propGroup}>
+					<label>Nhãn hiển thị</label>
+					<input
+						type='text'
+						className={styles.propInput}
+						value={selectedField.label}
+						onChange={(e) => updateFieldProp(selectedField.id, 'label', e.target.value)}
+					/>
+				</div>
+				<div className={styles.propGroup}>
+					<label>Gợi ý (Placeholder)</label>
+					<input
+						type='text'
+						className={styles.propInput}
+						value={selectedField.placeholder || ''}
+						onChange={(e) => updateFieldProp(selectedField.id, 'placeholder', e.target.value)}
+					/>
+				</div>
+
+				<label className={styles.checkRow}>
+					<input
+						type='checkbox'
+						hidden
+						checked={selectedField.required}
+						onChange={(e) => updateFieldProp(selectedField.id, 'required', e.target.checked)}
+					/>
+					<span className={`${styles.checkBox} ${selectedField.required ? styles.checked : ''}`}>
+						{selectedField.required && <CheckOutlined />}
+					</span>
+					<span className={styles.checkLabel}>Bắt buộc nhập</span>
+				</label>
+
+				{selectedField.type === 'text' && (
+					<>
+						<div className={styles.propGroup}>
+							<label>Độ dài tối thiểu (minLength)</label>
+							<input
+								type='number'
+								className={styles.propInput}
+								value={selectedField.minLength ?? ''}
+								onChange={(e) =>
+									updateFieldProp(selectedField.id, 'minLength', e.target.value ? Number(e.target.value) : undefined)
+								}
+							/>
+						</div>
+						<div className={styles.propGroup}>
+							<label>Độ dài tối đa (maxLength)</label>
+							<input
+								type='number'
+								className={styles.propInput}
+								value={selectedField.maxLength ?? ''}
+								onChange={(e) =>
+									updateFieldProp(selectedField.id, 'maxLength', e.target.value ? Number(e.target.value) : undefined)
+								}
+							/>
+						</div>
+						<div className={styles.propGroup}>
+							<label>Biểu thức Regex (regex)</label>
+							<input
+								type='text'
+								className={styles.propInput}
+								value={selectedField.regex || ''}
+								placeholder='VD: ^[\w-\.]+@...'
+								onChange={(e) => updateFieldProp(selectedField.id, 'regex', e.target.value)}
+							/>
+						</div>
+					</>
+				)}
+
+				{selectedField.type === 'number' && (
+					<>
+						<div className={styles.propGroup}>
+							<label>Giá trị nhỏ nhất (min)</label>
+							<input
+								type='number'
+								className={styles.propInput}
+								value={selectedField.min ?? ''}
+								onChange={(e) =>
+									updateFieldProp(selectedField.id, 'min', e.target.value ? Number(e.target.value) : undefined)
+								}
+							/>
+						</div>
+						<div className={styles.propGroup}>
+							<label>Giá trị lớn nhất (max)</label>
+							<input
+								type='number'
+								className={styles.propInput}
+								value={selectedField.max ?? ''}
+								onChange={(e) =>
+									updateFieldProp(selectedField.id, 'max', e.target.value ? Number(e.target.value) : undefined)
+								}
+							/>
+						</div>
+					</>
+				)}
+
+				{selectedField.type === 'date' && (
+					<div className={styles.propGroup}>
+						<label>Sau ngày của trường (afterField)</label>
+						<select
+							className={styles.propInput}
+							value={selectedField.afterField || ''}
+							onChange={(e) => updateFieldProp(selectedField.id, 'afterField', e.target.value)}
+						>
+							<option value=''>-- Không có --</option>
+							{fields
+								.filter((f) => f.type === 'date' && f.id !== selectedField.id)
+								.map((f) => (
+									<option key={f.key} value={f.key}>
+										{f.label} ({f.key})
+									</option>
+								))}
+						</select>
+					</div>
+				)}
+
+				{selectedField.type === 'select' && (
+					<div className={styles.propGroup}>
+						<label>Tùy chọn danh sách</label>
+						<div className={styles.optionsList}>
+							{selectedField.options?.map((opt, optIdx) => (
+								// eslint-disable-next-line react/no-array-index-key
+								<div key={optIdx} className={styles.optionItem}>
+									<input
+										type='text'
+										value={opt}
+										onChange={(e) => {
+											const newOpts = [...(selectedField.options || [])];
+											newOpts[optIdx] = e.target.value;
+											updateFieldProp(selectedField.id, 'options', newOpts);
+										}}
+									/>
+									<button
+										type='button'
+										onClick={() => {
+											const newOpts = [...(selectedField.options || [])];
+											newOpts.splice(optIdx, 1);
+											updateFieldProp(selectedField.id, 'options', newOpts);
+										}}
+									>
+										<MinusCircleOutlined />
+									</button>
+								</div>
+							))}
+						</div>
+						<button
+							type='button'
+							className={styles.btnAddOption}
+							onClick={() => {
+								const newOpts = [...(selectedField.options || []), `Lựa chọn ${(selectedField.options?.length || 0) + 1}`];
+								updateFieldProp(selectedField.id, 'options', newOpts);
+							}}
+						>
+							+ Thêm tùy chọn
+						</button>
+					</div>
+				)}
+
+				<button type='button' className={styles.btnDeleteField} onClick={() => handleDeleteField(selectedField.id)}>
+					<DeleteOutlined />
+					Xóa trường này
+				</button>
+			</div>
+		);
+	};
+
+	return (
+		<div className={styles.builderLayout}>
+			{/* Top bar */}
+			<header className={styles.header}>
+				<button type='button' className={styles.btnBack} onClick={() => history.push('/forms')}>
+					<ArrowLeftOutlined />
+				</button>
+				<div className={styles.titleCol}>
+					<div className={styles.titleRow}>
+						<input
+							className={styles.nameInput}
+							value={formName}
+							onChange={(e) => setFormName(e.target.value)}
+							placeholder='Tên biểu mẫu...'
+							size={Math.max(formName.length, 10)}
+						/>
+						<EditOutlined className={styles.titleIcon} />
+						{editId && <span className={styles.editBadge}>ĐANG CHỈNH SỬA</span>}
+					</div>
+					<input
+						className={styles.descInput}
+						value={formDescription}
+						onChange={(e) => setFormDescription(e.target.value)}
+						placeholder='Mô tả ngắn về biểu mẫu...'
+					/>
+				</div>
+				<div className={styles.headerSpacer} />
+				{editId && (
+					<button type='button' className={styles.btnPreview} onClick={() => history.push(`/forms/${editId}`)}>
+						<EyeOutlined /> Xem biểu mẫu
+					</button>
+				)}
+				<button type='button' className={styles.btnSave} onClick={handleSave} disabled={isSaving || isLoading}>
+					{isSaving ? 'Đang lưu...' : editId ? 'Cập nhật biểu mẫu' : 'Lưu biểu mẫu'}
+				</button>
 			</header>
 
-			<DragDropContext onDragStart={onDragStart} onDragUpdate={onDragUpdate} onDragEnd={onDragEnd}>
+			<DragDropContext onDragEnd={onDragEnd}>
 				<main className={styles.mainContent}>
-					{/* Left Sidebar */}
-					<aside className={styles.sidebarLeft}>
-						<div className={styles.sidebarTitle}>
-							<h2>Thông tin biểu mẫu</h2>
-							<p>Nhập tên, mô tả và thêm các trường</p>
-						</div>
+					{/* Toolbox 240 */}
+					<aside className={styles.toolbox}>
+						<span className={styles.sectionLabel}>THÀNH PHẦN</span>
+						<Droppable droppableId='toolbox' isDropDisabled>
+							{(provided) => (
+								<div className={styles.tileList} ref={provided.innerRef} {...provided.droppableProps}>
+									{FIELD_TYPES.map((type, index) => (
+										<Draggable key={type.type} draggableId={type.type} index={index}>
+											{(dragProvided, dragSnapshot) => (
+												<div
+													ref={dragProvided.innerRef}
+													{...dragProvided.draggableProps}
+													{...dragProvided.dragHandleProps}
+													className={`${styles.tile} ${dragSnapshot.isDragging ? styles.dragging : ''}`}
+												>
+													<span className={styles.tileIcon}>{type.icon}</span>
+													<span className={styles.tileLabel}>{type.label}</span>
+													<MoreOutlined className={styles.tileGrip} />
+												</div>
+											)}
+										</Draggable>
+									))}
+									{provided.placeholder}
+								</div>
+							)}
+						</Droppable>
+					</aside>
 
-						<div className={styles.metaForm}>
-							<div className={styles.metaGroup}>
-								<label>Tên biểu mẫu</label>
-								<input
-									type="text"
-									value={formName}
-									onChange={(e) => setFormName(e.target.value)}
-									placeholder="Nhập tên biểu mẫu..."
-								/>
-							</div>
-							<div className={styles.metaGroup}>
-								<label>Mô tả</label>
-								<textarea
-									value={formDescription}
-									onChange={(e) => setFormDescription(e.target.value)}
-									placeholder="Nhập mô tả biểu mẫu..."
-									rows={3}
-								/>
-							</div>
-						</div>
+					{/* Canvas */}
+					<section className={styles.canvasArea} onClick={() => setSelectedFieldId(null)}>
+						<Droppable droppableId='canvas'>
+							{(provided, snapshot) => (
+								<div
+									className={styles.paper}
+									ref={provided.innerRef}
+									{...provided.droppableProps}
+									onClick={(e) => e.stopPropagation()}
+								>
+									<div className={styles.formHead}>
+										<h2>{formName || 'Tên biểu mẫu'}</h2>
+										{formDescription && <p>{formDescription}</p>}
+									</div>
 
-						{/* Add New Field */}
-						<div className={styles.addFieldSection}>
-							<h3>Thêm trường mới</h3>
-							<Droppable droppableId='toolbox' isDropDisabled={true}>
-								{(provided) => (
-									<div className={styles.fieldTypeGrid} ref={provided.innerRef} {...provided.droppableProps}>
-										{FIELD_TYPES.map((type, index) => (
-											<Draggable key={type.type} draggableId={type.type} index={index}>
-												{(dragProvided, dragSnapshot) => (
-													<div
-														ref={dragProvided.innerRef}
-														{...dragProvided.draggableProps}
-														{...dragProvided.dragHandleProps}
-														className={`${styles.fieldTypeCard} ${dragSnapshot.isDragging ? styles.fieldTypeDragging : ''}`}
-													>
-														<div className={`${styles.ftIcon} ${styles[type.type]}`}>{type.icon}</div>
-														<span className={styles.ftLabel}>{type.label}</span>
+									{fields.map((field, index) => (
+										<Draggable key={field.id} draggableId={field.id} index={index}>
+											{(dragProvided, dragSnapshot) => (
+												<div
+													ref={dragProvided.innerRef}
+													{...dragProvided.draggableProps}
+													{...dragProvided.dragHandleProps}
+													className={`${styles.fieldCard} ${selectedFieldId === field.id ? styles.active : ''} ${
+														dragSnapshot.isDragging ? styles.dragging : ''
+													}`}
+													onClick={(e) => {
+														e.stopPropagation();
+														selectField(field.id);
+													}}
+												>
+													<div className={styles.fieldRow}>
+														<span className={styles.fieldLabel}>{field.label}</span>
+														{field.required && <span className={styles.requiredMark}>*</span>}
+														<span className={styles.rowSpacer} />
+														<button
+															type='button'
+															className={styles.fieldAction}
+															title='Cấu hình'
+															onClick={(e) => {
+																e.stopPropagation();
+																selectField(field.id);
+															}}
+														>
+															<ControlOutlined />
+														</button>
+														<button
+															type='button'
+															className={styles.fieldAction}
+															title='Nhân bản'
+															onClick={(e) => handleCopyField(field, index, e)}
+														>
+															<CopyOutlined />
+														</button>
+														<button
+															type='button'
+															className={`${styles.fieldAction} ${styles.danger}`}
+															title='Xóa'
+															onClick={(e) => handleDeleteField(field.id, e)}
+														>
+															<DeleteOutlined />
+														</button>
 													</div>
-												)}
-											</Draggable>
-										))}
-										{provided.placeholder}
-									</div>
-								)}
-							</Droppable>
-						</div>
+													{renderFieldPreview(field)}
+												</div>
+											)}
+										</Draggable>
+									))}
+									{provided.placeholder}
 
-						{/* Settings */}
-						<div className={styles.addFieldSection}>
-							<h3>Cài đặt</h3>
-							<div className={styles.settingCard}>
-								<div className={styles.settingInfo}>
-									<div className={styles.settingIcon}>
-										{allowAnonymous ? <GlobalOutlined /> : <LockOutlined />}
-									</div>
-									<div>
-										<div className={styles.settingLabel}>Gửi ẩn danh</div>
-										<div className={styles.settingDesc}>Không cần đăng nhập</div>
+									<div className={`${styles.dropGhost} ${snapshot.isDraggingOver ? styles.over : ''}`}>
+										<PlusOutlined />
+										<span>Thả thành phần vào đây</span>
 									</div>
 								</div>
-								<label className={styles.settingToggle}>
-									<input
-										type='checkbox'
-										checked={allowAnonymous}
-										onChange={(e) => setAllowAnonymous(e.target.checked)}
-									/>
-									<div className={`${styles.toggleTrack} ${allowAnonymous ? styles.checked : ''}`} />
-									<div className={`${styles.toggleThumb} ${allowAnonymous ? styles.checked : ''}`} />
-								</label>
-							</div>
+							)}
+						</Droppable>
+					</section>
+
+					{/* Right panel 300 */}
+					<aside className={styles.propPanel}>
+						<div className={styles.tabs}>
+							{(
+								[
+									{ key: 'field', label: 'Thành phần' },
+									{ key: 'theme', label: 'Giao diện' },
+									{ key: 'settings', label: 'Cài đặt' },
+								] as { key: RightTab; label: string }[]
+							).map((t) => (
+								<button
+									type='button'
+									key={t.key}
+									className={`${styles.tab} ${rightTab === t.key ? styles.active : ''}`}
+									onClick={() => setRightTab(t.key)}
+								>
+									{t.label}
+								</button>
+							))}
 						</div>
 
-						{/* Theme */}
-						<div className={styles.addFieldSection}>
-							<h3>Giao diện</h3>
-							<div className={styles.themeGrid}>
+						{rightTab === 'field' && renderFieldConfig()}
+
+						{rightTab === 'theme' && (
+							<div className={styles.panelBody}>
+								<span className={styles.sectionLabel}>CHỦ ĐỀ BIỂU MẪU</span>
 								{THEME_PRESETS.map((preset) => (
 									<div
 										key={preset.id}
-										className={`${styles.themeChip} ${themePreset === preset.id ? styles.activeTheme : ''}`}
+										className={`${styles.themeRow} ${themePreset === preset.id ? styles.active : ''}`}
 										onClick={() => setThemePreset(preset.id)}
 									>
-										<div
-											className={styles.themeColor}
-											style={{ background: preset.color === '#f7f9fb' ? '#e2e8f0' : preset.color }}
-										>
-											<span style={{ color: preset.textColor, fontSize: 11, fontWeight: 700 }}>Aa</span>
-										</div>
-										<span>{preset.label.split(' ')[0]}</span>
+										<span className={styles.swatch} style={{ background: preset.swatch }} />
+										<span className={styles.themeName}>{preset.label}</span>
+										{themePreset === preset.id && <CheckCircleOutlined className={styles.themeCheck} />}
 									</div>
 								))}
 							</div>
-						</div>
-					</aside>
+						)}
 
-					{/* Middle Canvas */}
-					<section
-						className={`${styles.canvasArea} ${styles[`theme_${themePreset}`]}`}
-						onClick={() => setSelectedFieldId(null)}
-					>
-						<div className={styles.canvasContainer} onClick={(e) => e.stopPropagation()}>
-							<div className={styles.formHeader}>
-								<h2 className={styles.formTitleDisplay}>{formName || 'Tên biểu mẫu'}</h2>
-								{formDescription && <p className={styles.formDescDisplay}>{formDescription}</p>}
-							</div>
-
-							<Droppable droppableId='canvas'>
-								{(provided, snapshot) => (
-									<div
-										className={`${styles.dropZone} ${snapshot.isDraggingOver ? styles.dropZoneActive : ''}`}
-										ref={provided.innerRef}
-										{...provided.droppableProps}
-									>
-										{fields.map((field, index) => {
-											return (
-												<React.Fragment key={field.id}>
-													<Draggable draggableId={field.id} index={index}>
-														{(dragProvided, dragSnapshot) => (
-															<div
-																ref={dragProvided.innerRef}
-																{...dragProvided.draggableProps}
-																{...dragProvided.dragHandleProps}
-																className={`${styles.formFieldItem} ${selectedFieldId === field.id ? styles.active : ''} ${dragSnapshot.isDragging ? styles.dragging : ''}`}
-																onClick={(e) => {
-																	e.stopPropagation();
-																	setSelectedFieldId(field.id);
-																}}
-															>
-																<div className={styles.fieldActions}>
-																	<button className={styles.btnCopy} onClick={(e) => handleCopyField(field, index, e)}>
-																		<CopyOutlined />
-																	</button>
-																	<button className={styles.btnDelete} onClick={(e) => handleDeleteField(field.id, e)}>
-																		<DeleteOutlined />
-																	</button>
-																</div>
-
-																<span className={styles.fieldLabel}>
-																	{field.label}
-																	{field.required && <span className={styles.requiredMark}>*</span>}
-																</span>
-																{renderFieldPreview(field)}
-															</div>
-														)}
-													</Draggable>
-												</React.Fragment>
-											);
-										})}
-										{provided.placeholder}
-
-
-										{fields.length === 0 && !snapshot.isDraggingOver && (
-											<div className={styles.dropPlaceholder}>
-												<PlusCircleOutlined className={styles.icon} />
-												<span className={styles.text}>Kéo thả thành phần từ bên trái vào đây</span>
-											</div>
-										)}
-									</div>
-								)}
-							</Droppable>
-						</div>
-					</section>
-
-					{/* Right Sidebar (Properties) */}
-					<aside className={styles.sidebarRight}>
-						<div className={styles.propsHeader}>
-							<h2>
-								<ControlOutlined />
-								Cấu hình trường
-							</h2>
-						</div>
-
-						{selectedField ? (
-							<>
-								<div className={styles.propsBody}>
-									<div className={styles.propGroup}>
-										<label>Mã trường (Key)</label>
-										<input
-											type='text'
-											className={styles.propInput}
-											value={selectedField.key}
-											onChange={(e) => updateFieldProp(selectedField.id, 'key', e.target.value)}
-										/>
-									</div>
-									<div className={styles.propGroup}>
-										<label>Nhãn hiển thị</label>
-										<input
-											type='text'
-											className={styles.propInput}
-											value={selectedField.label}
-											onChange={(e) => updateFieldProp(selectedField.id, 'label', e.target.value)}
-										/>
-									</div>
-									<div className={styles.propGroup}>
-										<label>Gợi ý (Placeholder)</label>
-										<input
-											type='text'
-											className={styles.propInput}
-											value={selectedField.placeholder || ''}
-											onChange={(e) => updateFieldProp(selectedField.id, 'placeholder', e.target.value)}
-										/>
-									</div>
-
-									<div className={styles.propSwitch}>
-										<div className={styles.switchText}>
-											<span>Bắt buộc nhập</span>
-											<p>Người dùng phải điền trường này</p>
-										</div>
-										<label className={styles.toggleWrapper}>
-											<input
-												type='checkbox'
-												checked={selectedField.required}
-												onChange={(e) => updateFieldProp(selectedField.id, 'required', e.target.checked)}
-											/>
-											<div className={`${styles.toggleTrack} ${selectedField.required ? styles.checked : ''}`} />
-											<div className={`${styles.toggleThumb} ${selectedField.required ? styles.checked : ''}`} />
-										</label>
-									</div>
-
-									{selectedField.type === 'text' && (
-										<>
-											<div className={styles.propGroup}>
-												<label>Độ dài tối thiểu (minLength)</label>
-												<input
-													type='number'
-													className={styles.propInput}
-													value={selectedField.minLength ?? ''}
-													onChange={(e) =>
-														updateFieldProp(
-															selectedField.id,
-															'minLength',
-															e.target.value ? Number(e.target.value) : undefined,
-														)
-													}
-												/>
-											</div>
-											<div className={styles.propGroup}>
-												<label>Độ dài tối đa (maxLength)</label>
-												<input
-													type='number'
-													className={styles.propInput}
-													value={selectedField.maxLength ?? ''}
-													onChange={(e) =>
-														updateFieldProp(
-															selectedField.id,
-															'maxLength',
-															e.target.value ? Number(e.target.value) : undefined,
-														)
-													}
-												/>
-											</div>
-											<div className={styles.propGroup}>
-												<label>Biểu thức Regex (regex)</label>
-												<input
-													type='text'
-													className={styles.propInput}
-													value={selectedField.regex || ''}
-													placeholder='VD: ^[\w-\.]+@...'
-													onChange={(e) => updateFieldProp(selectedField.id, 'regex', e.target.value)}
-												/>
-											</div>
-										</>
-									)}
-
-									{selectedField.type === 'number' && (
-										<>
-											<div className={styles.propGroup}>
-												<label>Giá trị nhỏ nhất (min)</label>
-												<input
-													type='number'
-													className={styles.propInput}
-													value={selectedField.min ?? ''}
-													onChange={(e) =>
-														updateFieldProp(
-															selectedField.id,
-															'min',
-															e.target.value ? Number(e.target.value) : undefined,
-														)
-													}
-												/>
-											</div>
-											<div className={styles.propGroup}>
-												<label>Giá trị lớn nhất (max)</label>
-												<input
-													type='number'
-													className={styles.propInput}
-													value={selectedField.max ?? ''}
-													onChange={(e) =>
-														updateFieldProp(
-															selectedField.id,
-															'max',
-															e.target.value ? Number(e.target.value) : undefined,
-														)
-													}
-												/>
-											</div>
-										</>
-									)}
-
-									{selectedField.type === 'date' && (
-										<div className={styles.propGroup}>
-											<label>Sau ngày của trường (afterField)</label>
-											<select
-												className={styles.propInput}
-												value={selectedField.afterField || ''}
-												onChange={(e) => updateFieldProp(selectedField.id, 'afterField', e.target.value)}
-											>
-												<option value=''>-- Không có --</option>
-												{fields
-													.filter((f) => f.type === 'date' && f.id !== selectedField.id)
-													.map((f) => (
-														<option key={f.key} value={f.key}>
-															{f.label} ({f.key})
-														</option>
-													))}
-											</select>
-										</div>
-									)}
-
-									{selectedField.type === 'select' && (
-										<div className={styles.propOptions}>
-											<label>Tùy chọn danh sách</label>
-											<div className={styles.optionsList}>
-												{selectedField.options?.map((opt, optIdx) => (
-													<div key={optIdx} className={styles.optionItem}>
-														<input
-															type='text'
-															value={opt}
-															onChange={(e) => {
-																const newOpts = [...(selectedField.options || [])];
-																newOpts[optIdx] = e.target.value;
-																updateFieldProp(selectedField.id, 'options', newOpts);
-															}}
-														/>
-														<button
-															onClick={() => {
-																const newOpts = [...(selectedField.options || [])];
-																newOpts.splice(optIdx, 1);
-																updateFieldProp(selectedField.id, 'options', newOpts);
-															}}
-														>
-															<MinusCircleOutlined />
-														</button>
-													</div>
-												))}
-											</div>
-											<button
-												className={styles.btnAddOption}
-												onClick={() => {
-													const newOpts = [
-														...(selectedField.options || []),
-														`Lựa chọn ${(selectedField.options?.length || 0) + 1}`,
-													];
-													updateFieldProp(selectedField.id, 'options', newOpts);
-												}}
-											>
-												+ Thêm tùy chọn
-											</button>
-										</div>
-									)}
-								</div>
-
-								<div className={styles.propsFooter}>
-									<button className={styles.btnDeleteField} onClick={() => handleDeleteField(selectedField.id)}>
-										<DeleteOutlined />
-										Xóa trường này
-									</button>
-								</div>
-							</>
-						) : (
-							<div className={styles.propsBody}>
-								<div className={styles.emptyProps}>
-									<SelectOutlined style={{ fontSize: 48, marginBottom: 16, opacity: 0.5 }} />
-									<p>Chọn một trường để cấu hình</p>
-								</div>
+						{rightTab === 'settings' && (
+							<div className={styles.panelBody}>
+								<span className={styles.sectionLabel}>CÀI ĐẶT NÂNG CAO</span>
+								<label className={styles.checkRow}>
+									<input
+										type='checkbox'
+										hidden
+										checked={allowAnonymous}
+										onChange={(e) => setAllowAnonymous(e.target.checked)}
+									/>
+									<span className={`${styles.checkBox} ${allowAnonymous ? styles.checked : ''}`}>
+										{allowAnonymous && <CheckOutlined />}
+									</span>
+									<span className={styles.checkLabel}>Cho phép nộp ẩn danh</span>
+								</label>
+								<label className={styles.checkRow}>
+									<input type='checkbox' hidden checked={allowDraft} onChange={(e) => setAllowDraft(e.target.checked)} />
+									<span className={`${styles.checkBox} ${allowDraft ? styles.checked : ''}`}>
+										{allowDraft && <CheckOutlined />}
+									</span>
+									<span className={styles.checkLabel}>Cho phép lưu nháp</span>
+								</label>
 							</div>
 						)}
 					</aside>

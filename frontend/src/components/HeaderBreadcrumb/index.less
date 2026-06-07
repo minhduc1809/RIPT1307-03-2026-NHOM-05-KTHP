@@ -1,0 +1,33 @@
+.breadcrumb {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+	height: 100%;
+	font-size: 13px;
+
+	.root {
+		color: #94a3b8;
+		font-weight: 500;
+		cursor: pointer;
+		transition: color 0.2s ease-out;
+
+		&:hover {
+			color: #4f46e5;
+		}
+	}
+
+	.sep {
+		color: #cbd5e1;
+	}
+
+	.current {
+		color: #334155;
+		font-weight: 600;
+	}
+
+	// route lồng nhau: chỉ mục cuối đậm, mục giữa nhạt như root
+	.current:not(:last-child) {
+		color: #94a3b8;
+		font-weight: 500;
+	}
+}

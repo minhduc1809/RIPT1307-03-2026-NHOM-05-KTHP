@@ -79,8 +79,8 @@ const FormView: React.FC = () => {
 
 		return (
 			<div className={styles.fieldRules}>
-				{rules.map((r, i) => (
-					<span key={i} className={styles.ruleTag}>
+				{rules.map((r) => (
+					<span key={r.label} className={styles.ruleTag}>
 						{r.label}: <strong>{r.value}</strong>
 					</span>
 				))}
@@ -117,8 +117,8 @@ const FormView: React.FC = () => {
 				{/* Select options */}
 				{field.type === 'select' && field.rules?.allowedTypes && field.rules.allowedTypes.length > 0 && (
 					<div className={styles.selectOptions}>
-						{field.rules.allowedTypes.map((opt: string, i: number) => (
-							<div key={i} className={styles.optionItem}>
+						{field.rules.allowedTypes.map((opt: string) => (
+							<div key={opt} className={styles.optionItem}>
 								<span className={styles.optionDot} />
 								{opt}
 							</div>

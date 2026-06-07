@@ -1,42 +1,104 @@
-.ant-pro-header-light {
-	.ant-pro-global-header-layout-mix {
-		background-color: var(--primary-color);
+// design: smartadmin.pen · DS frame 00 (Sidebar d3A6T + Topbar qYE1c)
 
-		.ant-pro-global-header-logo a img {
-			height: 100%;
-			padding: 5px 0;
+@primary: #4f46e5;
+@text: #0f172a;
+@muted: #64748b;
+@border: #e2e8f0;
+@border-light: #f1f5f9;
+@indigo-bg: #eef2ff;
 
-			@media (max-width: @screen-xs) {
-				max-width: 160px;
-			}
-		}
-	}
+// Khung tổng
+.ant-layout {
+	min-height: 100vh;
+	background: #f8fafc;
 }
 
-.ant-pro-header-dark {
-	.ant-pro-global-header-layout-mix {
-		.ant-pro-global-header-logo a img {
-			height: 100%;
-			padding: 8px 0;
-		}
-	}
+// Topbar — 60px trắng, border-bottom slate
+.ant-layout-header.ant-pro-fixed-header,
+.ant-pro-global-header {
+	background: #fff;
+	border-bottom: 1px solid @border;
+	box-shadow: none;
 }
 
+.ant-pro-global-header {
+	padding: 0 24px 0 12px;
+}
+
+// Sidebar — trắng, border phải
+.ant-pro-sider.ant-layout-sider {
+	background: #fff;
+	border-right: 1px solid @border;
+	box-shadow: none;
+}
+
+.ant-pro-sider.ant-layout-sider.ant-pro-sider-fixed {
+	left: unset;
+}
+
+// Logo (menuHeaderRender trong app.tsx)
+.ant-pro-sider-logo {
+	padding: 18px 16px !important;
+	border-bottom: 1px solid @border-light;
+}
+
+.ds-menu-header {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	text-decoration: none;
+}
+
+.ds-logo-square {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: 10px;
+	background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+	box-shadow: 0 3px 10px rgba(79, 70, 229, 0.3);
+	color: #fff;
+	font-size: 15px;
+	line-height: 1;
+}
+
+.ds-logo-text {
+	color: @text;
+	font-family: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+	font-size: 15px;
+	font-weight: 800;
+	letter-spacing: 1px;
+}
+
+// Menu — item radius 8, 13/600, active EEF2FF + indigo
 .ant-menu-light.ant-pro-sider-menu {
-	padding: 18px 0;
-	// font-weight: 600;
+	padding: 12px 0;
 
 	.ant-menu-item,
 	.ant-menu-submenu-title {
 		height: auto;
-		min-height: 36px;
-		padding: 5px 12px;
+		min-height: 40px;
+		margin: 0 0 4px;
+		padding: 9px 12px;
 		padding-left: 12px !important;
 		line-height: 1.5;
-		border-radius: 2px;
+		border-radius: 8px;
+		color: @muted;
+		font-size: 13px;
+		font-weight: 600;
+
+		.anticon {
+			font-size: 17px;
+		}
 
 		&::after {
 			border: none;
+		}
+
+		&:hover {
+			color: @primary;
+			background-color: #f8fafc;
 		}
 	}
 
@@ -46,29 +108,49 @@
 
 	li.ant-menu-item-selected {
 		padding-left: 12px !important;
-		color: white;
-		// background-color: var(--primary-color);
+		color: @primary;
+		background-color: @indigo-bg !important;
+
+		a,
+		.anticon {
+			color: @primary;
+		}
 	}
 
 	.ant-menu-submenu {
 		& > .ant-menu-submenu-title {
 			padding-right: 24px !important;
 			padding-left: 12px !important;
-			border-radius: 2px;
+			border-radius: 8px;
 
 			.ant-menu-submenu-arrow {
 				right: 10px;
+				color: #94a3b8;
+			}
+		}
+
+		&.ant-menu-submenu-selected > .ant-menu-submenu-title {
+			color: @primary;
+
+			.anticon {
+				color: @primary;
 			}
 		}
 
 		.ant-menu-sub {
 			padding-left: 12px;
-			background-color: #f8f8fa;
-			border-radius: 2px;
+			background-color: transparent;
+
+			.ant-menu-item {
+				min-height: 34px;
+				padding: 6px 12px 6px 28px !important;
+				font-size: 12px;
+				font-weight: 500;
+			}
 
 			.ant-menu-sub {
 				.ant-menu-item-only-child {
-					padding-left: 12px !important;
+					padding-left: 28px !important;
 				}
 			}
 		}
@@ -101,7 +183,7 @@
 		padding-top: 5px;
 		padding-bottom: 5px;
 		line-height: 1.5 !important;
-		border-radius: 2px;
+		border-radius: 8px;
 
 		&::after {
 			border: none;
@@ -128,14 +210,6 @@
 	@media (max-width: @screen-xs) {
 		margin: 12px !important;
 	}
-}
-
-.ant-layout {
-	min-height: 100vh;
-}
-
-.ant-pro-sider.ant-layout-sider.ant-pro-sider-fixed {
-	left: unset;
 }
 
 // Compatible with IE11
