@@ -59,6 +59,14 @@ const THEME_PRESETS = [
 type ThemeId = (typeof THEME_PRESETS)[number]['id'];
 type RightTab = 'field' | 'theme' | 'settings';
 
+const THEME_CLASS: Record<ThemeId, string> = {
+	default: '',
+	dark: 'themeDark',
+	mint: 'themeMint',
+	sunset: 'themeSunset',
+	violet: 'themeViolet',
+};
+
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
 interface IFormBuilderProps {
@@ -569,7 +577,7 @@ const FormBuilder: React.FC<IFormBuilderProps> = ({ editId: editIdProp }) => {
 						<Droppable droppableId='canvas'>
 							{(provided, snapshot) => (
 								<div
-									className={styles.paper}
+									className={`${styles.paper} ${styles[THEME_CLASS[themePreset]] || ''}`}
 									ref={provided.innerRef}
 									{...provided.droppableProps}
 									onClick={(e) => e.stopPropagation()}

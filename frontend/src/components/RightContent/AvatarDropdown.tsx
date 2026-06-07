@@ -13,7 +13,7 @@ export type GlobalHeaderRightProps = {
 };
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
-	const { initialState } = useModel('@@initialState');
+	const { initialState, setInitialState } = useModel('@@initialState');
 
 	const loginOut = async () => {
 		const refreshToken = localStorage.getItem('refreshToken');
@@ -22,6 +22,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 		}
 		localStorage.clear();
 		sessionStorage.clear();
+		await setInitialState((s: any) => ({ ...s, currentUser: undefined }));
 		history.replace('/user/login');
 	};
 

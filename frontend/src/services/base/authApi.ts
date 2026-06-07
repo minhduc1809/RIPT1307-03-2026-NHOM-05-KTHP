@@ -22,3 +22,17 @@ export async function resetPassword(token: string, newPassword: string) {
 export async function changePassword(oldPassword: string, newPassword: string) {
 	return axios.post(`${ip3}/auth/change-password`, { oldPassword, newPassword, silent: true });
 }
+
+export interface IRegisterTenantPayload {
+	companyName: string;
+	domain: string;
+	adminEmail: string;
+	adminUsername: string;
+	adminPassword: string;
+	adminFirstName?: string;
+	adminLastName?: string;
+}
+
+export async function registerTenant(payload: IRegisterTenantPayload) {
+	return axios.post(`${ip3}/auth/register-tenant`, { ...payload, silent: true });
+}

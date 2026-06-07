@@ -294,8 +294,9 @@ const Dashboard: React.FC = () => {
 					<button
 						type="button"
 						className={`${styles.refreshBtn} ${refreshing ? styles.spinning : ''}`}
-						onClick={() => fetchAll(true)}
-						disabled={refreshing}
+						onClick={() => {
+							if (!refreshing) fetchAll(true);
+						}}
 					>
 						<RefreshCcw size={14} className={styles.refreshIcon} />
 						<span>Làm mới</span>

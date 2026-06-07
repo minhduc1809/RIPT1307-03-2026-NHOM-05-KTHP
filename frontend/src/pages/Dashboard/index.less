@@ -93,13 +93,13 @@
 		background: @bg;
 	}
 
-	&:disabled {
-		opacity: 0.6;
+	&.spinning {
+		opacity: 0.65;
 		pointer-events: none;
-	}
 
-	&.spinning .refreshIcon {
-		animation: spin 1s linear infinite;
+		.refreshIcon {
+			animation: spin 1s linear infinite;
+		}
 	}
 }
 
@@ -199,7 +199,9 @@
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
+	min-width: 0;
 	padding: 24px;
+	overflow: hidden;
 }
 
 .chartHeader {
@@ -252,6 +254,7 @@
 }
 
 .chartBody {
+	min-width: 0;
 	min-height: 220px;
 }
 

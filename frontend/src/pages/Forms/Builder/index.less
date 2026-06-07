@@ -267,16 +267,90 @@
 }
 
 .paper {
+	--fp-bg: #fff;
+	--fp-border: @border-light;
+	--fp-title: @text;
+	--fp-desc: @muted;
+	--fp-divider: @border-light;
+	--fp-card-bg: #fff;
+	--fp-card-border: @border;
+	--fp-label: @text-body;
+	--fp-input-bg: @bg;
+	--fp-input-border: @border-light;
+	--fp-input-text: @muted-light;
+	--fp-accent: @primary;
+
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
 	width: 620px;
 	max-width: 100%;
 	padding: 24px;
-	background: #fff;
-	border: 1px solid @border-light;
+	background: var(--fp-bg);
+	border: 1px solid var(--fp-border);
 	border-radius: 12px;
 	box-shadow: 0 8px 30px -4px #4f46e521;
+	transition: background 0.2s ease-out, border-color 0.2s ease-out;
+}
+
+.themeDark {
+	--fp-bg: #0f172a;
+	--fp-border: #1e293b;
+	--fp-title: #f8fafc;
+	--fp-desc: #94a3b8;
+	--fp-divider: #1e293b;
+	--fp-card-bg: #1e293b;
+	--fp-card-border: #334155;
+	--fp-label: #e2e8f0;
+	--fp-input-bg: #0f172a;
+	--fp-input-border: #334155;
+	--fp-input-text: #64748b;
+	--fp-accent: #818cf8;
+}
+
+.themeMint {
+	--fp-bg: #ecfdf5;
+	--fp-border: #a7f3d0;
+	--fp-title: #064e3b;
+	--fp-desc: #047857;
+	--fp-divider: #a7f3d0;
+	--fp-card-bg: #fff;
+	--fp-card-border: #a7f3d0;
+	--fp-label: #065f46;
+	--fp-input-bg: #f0fdfa;
+	--fp-input-border: #a7f3d0;
+	--fp-input-text: #34d399;
+	--fp-accent: #10b981;
+}
+
+.themeSunset {
+	--fp-bg: #fff1f2;
+	--fp-border: #fecdd3;
+	--fp-title: #881337;
+	--fp-desc: #be123c;
+	--fp-divider: #fecdd3;
+	--fp-card-bg: #fff;
+	--fp-card-border: #fecdd3;
+	--fp-label: #9f1239;
+	--fp-input-bg: #fff1f2;
+	--fp-input-border: #fecdd3;
+	--fp-input-text: #fb7185;
+	--fp-accent: #e11d48;
+}
+
+.themeViolet {
+	--fp-bg: #f5f3ff;
+	--fp-border: #ddd6fe;
+	--fp-title: #4c1d95;
+	--fp-desc: #6d28d9;
+	--fp-divider: #ddd6fe;
+	--fp-card-bg: #fff;
+	--fp-card-border: #ddd6fe;
+	--fp-label: #5b21b6;
+	--fp-input-bg: #f5f3ff;
+	--fp-input-border: #ddd6fe;
+	--fp-input-text: #a78bfa;
+	--fp-accent: #7c3aed;
 }
 
 .formHead {
@@ -284,11 +358,11 @@
 	flex-direction: column;
 	gap: 4px;
 	padding-bottom: 12px;
-	border-bottom: 1px solid @border-light;
+	border-bottom: 1px solid var(--fp-divider);
 
 	h2 {
 		margin: 0;
-		color: @text;
+		color: var(--fp-title);
 		font-size: 18px;
 		font-weight: 800;
 		letter-spacing: -0.3px;
@@ -296,7 +370,7 @@
 
 	p {
 		margin: 0;
-		color: @muted;
+		color: var(--fp-desc);
 		font-size: 12.5px;
 		line-height: 1.5;
 	}
@@ -307,18 +381,18 @@
 	flex-direction: column;
 	gap: 8px;
 	padding: 14px;
-	border: 1px solid @border;
+	border: 1px solid var(--fp-card-border);
 	border-radius: 10px;
-	background: #fff;
+	background: var(--fp-card-bg);
 	cursor: grab;
-	transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
+	transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out, background 0.2s ease-out;
 
 	&:hover {
-		border-color: #c7d2fe;
+		border-color: var(--fp-accent);
 	}
 
 	&.active {
-		border-color: @primary;
+		border-color: var(--fp-accent);
 		box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.14);
 	}
 
@@ -333,7 +407,7 @@
 	align-items: center;
 
 	.fieldLabel {
-		color: @text-body;
+		color: var(--fp-label);
 		font-size: 13px;
 		font-weight: 600;
 	}
@@ -384,14 +458,14 @@
 	justify-content: space-between;
 	height: 36px;
 	padding: 0 12px;
-	border: 1px solid @border-light;
+	border: 1px solid var(--fp-input-border);
 	border-radius: 8px;
-	background: @bg;
-	color: @muted-light;
+	background: var(--fp-input-bg);
+	color: var(--fp-input-text);
 	font-size: 13px;
 
 	&.active {
-		border-color: @primary;
+		border-color: var(--fp-accent);
 	}
 }
 
@@ -406,8 +480,8 @@
 	right: 0;
 	left: 0;
 	padding: 6px;
-	background: #fff;
-	border: 1px solid @border;
+	background: var(--fp-card-bg);
+	border: 1px solid var(--fp-card-border);
 	border-radius: 8px;
 	box-shadow: 0 10px 25px -5px #0f172a26;
 }
@@ -415,13 +489,13 @@
 .customOptionItem {
 	padding: 7px 10px;
 	border-radius: 6px;
-	color: @text-body;
+	color: var(--fp-label);
 	font-size: 13px;
 	cursor: default;
 
 	&:hover {
-		background: @indigo-bg;
-		color: @primary;
+		background: var(--fp-input-bg);
+		color: var(--fp-accent);
 	}
 }
 

@@ -4,14 +4,11 @@ import {
 	EditOutlined,
 	KeyOutlined,
 	LoadingOutlined,
-	LockOutlined,
-	MailOutlined,
 	PlusOutlined,
-	UserOutlined
+	UserOutlined,
 } from '@ant-design/icons';
 import { Avatar, Button, Form, Input, message, Modal, Select, Table, Tooltip, Spin } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import moment from 'moment';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useModel } from 'umi';
 import {
@@ -29,6 +26,13 @@ import type { IUser } from '@/services/Users/typings';
 import styles from './index.less';
 
 const { Option } = Select;
+
+const ROLE_LABELS: Record<string, string> = {
+	ADMIN: 'Quản trị viên',
+	MANAGER: 'Quản lý',
+	HR: 'Nhân sự',
+	USER: 'Nhân viên',
+};
 
 const Profile: React.FC = () => {
 	const { initialState, setInitialState } = useModel('@@initialState');
@@ -307,72 +311,56 @@ const Profile: React.FC = () => {
 		}
 	};
 
+	const roleBadgeClass = (role?: string) =>
+		role === 'ADMIN' ? styles.admin : role === 'MANAGER' ? styles.manager : role === 'HR' ? styles.hr : styles.user;
+
 	const columns: ColumnsType<IUser> = [
 		{
-			title: 'Thành viên',
-			key: 'user',
+			title: 'Email',
+			dataIndex: 'email',
+			key: 'email',
+			render: (email: string) => <span className={styles.emailCell}>{email}</span>,
+		},
+		{
+			title: 'Tên',
+			key: 'name',
+			width: 190,
 			render: (_: any, record: IUser) => (
-				<div className={styles.userCell}>
-					<Avatar className={styles.userAvatar} src={record.picture} icon={!record.picture && <UserOutlined />} />
-					<div className={styles.userInfo}>
-						<div className={styles.userFullName}>
-							{record.firstName || record.lastName ? `${record.firstName || ''} ${record.lastName || ''}`.trim() : record.username}
-						</div>
-						<div className={styles.userEmail}>{record.email}</div>
-					</div>
-				</div>
+				<span className={styles.nameCell}>
+					{record.firstName || record.lastName
+						? `${record.lastName || ''} ${record.firstName || ''}`.trim()
+						: record.username}
+				</span>
 			),
 		},
 		{
 			title: 'Vai trò',
 			dataIndex: 'role',
 			key: 'role',
-			render: (role: string) => {
-				const roleClass = role === 'ADMIN' ? styles.admin : role === 'MANAGER' ? styles.manager : role === 'HR' ? styles.hr : styles.user;
-				return <span className={`${styles.roleTag} ${roleClass}`}>{role}</span>;
-			},
-		},
-		{
-			title: 'Trạng thái',
-			dataIndex: 'isActive',
-			key: 'isActive',
-			render: (isActive: boolean, record: IUser) => {
-				if (record.deletedAt) return <span style={{ color: '#94a3b8', fontSize: 12 }}>Đã xóa</span>;
-				return (
-					<div className={styles.statusDot}>
-						<div className={`${styles.dot} ${isActive ? styles.online : styles.offline}`}></div>
-						<span style={{ color: isActive ? '#22c55e' : '#a9b4b9' }}>
-							{isActive ? 'Hoạt động' : 'Đã khóa'}
-						</span>
-					</div>
-				);
-			},
-		},
-		{
-			title: 'Ngày tạo',
-			dataIndex: 'createdAt',
-			key: 'createdAt',
-			render: (date: string) => <span style={{ fontSize: 12, color: '#64748b' }}>{moment(date).format('DD/MM/YYYY')}</span>,
+			width: 150,
+			render: (role: string) => (
+				<span className={`${styles.roleBadge} ${roleBadgeClass(role)}`}>{ROLE_LABELS[role] || role}</span>
+			),
 		},
 		{
 			title: 'Thao tác',
 			key: 'actions',
-			align: 'right',
+			width: 110,
 			render: (_: any, record: IUser) => (
 				<div className={styles.actionBtns}>
-					<Tooltip title="Cập nhật">
-						<button className={`${styles.actionBtn} ${styles.editBtn}`} onClick={() => handleOpenUserModal(record)}>
+					<Tooltip title='Cập nhật'>
+						<button type='button' className={`${styles.actionBtn} ${styles.editBtn}`} onClick={() => handleOpenUserModal(record)}>
 							<EditOutlined />
 						</button>
 					</Tooltip>
-					<Tooltip title="Gán vai trò">
-						<button className={`${styles.actionBtn} ${styles.roleBtn}`} onClick={() => handleOpenRoleModal(record)}>
+					<Tooltip title='Gán vai trò'>
+						<button type='button' className={`${styles.actionBtn} ${styles.roleBtn}`} onClick={() => handleOpenRoleModal(record)}>
 							<KeyOutlined />
 						</button>
 					</Tooltip>
 					{record.id !== myProfile?.id && (
-						<Tooltip title="Xóa">
-							<button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDeleteUser(record)}>
+						<Tooltip title='Xóa'>
+							<button type='button' className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDeleteUser(record)}>
 								<DeleteOutlined />
 							</button>
 						</Tooltip>
@@ -388,8 +376,7 @@ const Profile: React.FC = () => {
 
 	return (
 		<div className={styles.profilePage}>
-			{/* SECTION 1: PROFILE */}
-			<section className={styles.profileSection}>
+			<div className={styles.layoutRow}>
 				<div className={styles.profileCard}>
 					<div className={styles.avatarWrapper}>
 						<Avatar className={styles.avatar} src={myProfile?.picture} icon={!myProfile?.picture && <UserOutlined />} />
@@ -402,109 +389,87 @@ const Profile: React.FC = () => {
 							<CameraOutlined />
 						</div>
 						<input
-							type="file"
+							type='file'
 							ref={fileInputRef}
 							style={{ display: 'none' }}
-							accept="image/png,image/jpeg,image/jpg"
+							accept='image/png,image/jpeg,image/jpg'
 							onChange={handleAvatarChange}
 						/>
 					</div>
 					<div className={styles.userName}>
-						{myProfile?.firstName || myProfile?.lastName ? `${myProfile?.firstName || ''} ${myProfile?.lastName || ''}`.trim() : myProfile?.username}
+						{myProfile?.firstName || myProfile?.lastName
+							? `${myProfile?.lastName || ''} ${myProfile?.firstName || ''}`.trim()
+							: myProfile?.username}
 					</div>
-					<div className={styles.userSubtitle}>{myProfile?.email}</div>
-					<div className={styles.roleBadges}>
-						<span className={`${styles.roleBadge} ${myProfile?.role === 'ADMIN' ? styles.admin : myProfile?.role === 'MANAGER' ? styles.manager : myProfile?.role === 'HR' ? styles.hr : styles.user}`}>
-							{myProfile?.role}
-						</span>
-						<span className={`${styles.roleBadge} ${styles.activeBadge}`}>ACTIVE</span>
-					</div>
+					<div className={styles.userEmail}>{myProfile?.email}</div>
+					<span className={`${styles.roleBadge} ${roleBadgeClass(myProfile?.role)}`}>
+						{ROLE_LABELS[myProfile?.role || ''] || myProfile?.role}
+					</span>
 
-					<div className={styles.contactInfo}>
-						<div className={styles.contactTitle}>Thông tin liên hệ</div>
-						<div className={styles.contactItem}>
-							<MailOutlined className={styles.contactIcon} />
-							<span>{myProfile?.email}</span>
-						</div>
-					</div>
-				</div>
+					<div className={styles.divider} />
 
-				<div className={styles.profileForm}>
-					<div className={styles.formHeader}>
-						<h2>Cấu hình Tài khoản</h2>
-						<Button
-							icon={<LockOutlined />}
-							className={styles.changePasswordBtn}
-							onClick={() => setIsChangePasswordVisible(true)}
-						>
-							Đổi mật khẩu
-						</Button>
-					</div>
-					<Form form={profileForm} layout="vertical" onFinish={handleUpdateProfile} className={styles.formGrid}>
-						<Form.Item label={<span className={styles.fieldLabel}>Họ</span>} name="lastName" className={styles.formField}>
-							<Input size="large" placeholder="Nhập họ" />
+					<Form form={profileForm} layout='vertical' onFinish={handleUpdateProfile} className={styles.profileFields}>
+						<Form.Item label='Họ' name='lastName'>
+							<Input placeholder='Nhập họ' />
 						</Form.Item>
-						<Form.Item label={<span className={styles.fieldLabel}>Tên</span>} name="firstName" className={styles.formField}>
-							<Input size="large" placeholder="Nhập tên" />
+						<Form.Item label='Tên' name='firstName'>
+							<Input placeholder='Nhập tên' />
 						</Form.Item>
-						<Form.Item label={<span className={styles.fieldLabel}>Email</span>} name="email" className={`${styles.formField} ${styles.fullWidth}`}>
-							<Input size="large" disabled />
-						</Form.Item>
-						<div className={`${styles.formField} ${styles.fullWidth}`} style={{ textAlign: 'right' }}>
-							<Button type="primary" htmlType="submit" className={styles.saveBtn} loading={updatingProfile}>
+						<div className={styles.btnRow}>
+							<button type='button' className={styles.btnSecondary} onClick={() => setIsChangePasswordVisible(true)}>
+								<KeyOutlined /> Đổi mật khẩu
+							</button>
+							<Button type='primary' htmlType='submit' className={styles.btnPrimary} loading={updatingProfile}>
 								Lưu thay đổi
 							</Button>
 						</div>
 					</Form>
 				</div>
-			</section>
 
-			{/* SECTION 2: USER MANAGEMENT (ADMIN ONLY) */}
-			{isAdmin && (
-				<section className={styles.userManagement}>
-					<div className={styles.sectionHeader}>
-						<div className={styles.sectionTitle}>
-							<h2>Quản lý Người dùng</h2>
-							<p>Kiểm soát quyền truy cập và phân quyền hệ thống</p>
-						</div>
-						<div className={styles.sectionActions}>
-							<div className={styles.roleFilter}>
-								<Select
-									placeholder="Tất cả vai trò"
-									allowClear
-									value={roleFilter}
-									onChange={(val) => { setRoleFilter(val); setPage(1); }}
-								>
-									<Option value="ADMIN">Admin</Option>
-									<Option value="MANAGER">Manager</Option>
-									<Option value="HR">HR</Option>
-									<Option value="USER">User</Option>
-								</Select>
+				{isAdmin && (
+					<div className={styles.userMgmtCard}>
+						<div className={styles.mgmtHeader}>
+							<h2>Quản lý người dùng</h2>
+							<div className={styles.mgmtActions}>
+								<div className={styles.roleFilter}>
+									<Select
+										placeholder='Tất cả vai trò'
+										allowClear
+										value={roleFilter}
+										style={{ width: 140 }}
+										onChange={(val) => { setRoleFilter(val); setPage(1); }}
+									>
+										<Option value='ADMIN'>Quản trị viên</Option>
+										<Option value='MANAGER'>Quản lý</Option>
+										<Option value='HR'>Nhân sự</Option>
+										<Option value='USER'>Nhân viên</Option>
+									</Select>
+								</div>
+								<Button type='primary' icon={<PlusOutlined />} className={styles.addUserBtn} onClick={() => handleOpenUserModal()}>
+									Thêm người dùng
+								</Button>
 							</div>
-							<Button type="primary" icon={<PlusOutlined />} className={styles.addUserBtn} onClick={() => handleOpenUserModal()}>
-								Thêm người dùng mới
-							</Button>
+						</div>
+
+						<div className={styles.usersTableWrapper}>
+							<Table
+								columns={columns}
+								dataSource={users}
+								rowKey='id'
+								loading={loadingUsers}
+								pagination={{
+									current: page,
+									pageSize: limit,
+									total: totalUsers,
+									showSizeChanger: true,
+									onChange: (p, s) => { setPage(p); setLimit(s || 10); },
+									showTotal: (t, range) => `Hiển thị ${range[0]}–${range[1]} trên ${t} người dùng`,
+								}}
+							/>
 						</div>
 					</div>
-
-					<div className={styles.usersTableWrapper}>
-						<Table
-							columns={columns}
-							dataSource={users}
-							rowKey="id"
-							loading={loadingUsers}
-							pagination={{
-								current: page,
-								pageSize: limit,
-								total: totalUsers,
-								showSizeChanger: true,
-								onChange: (p, s) => { setPage(p); setLimit(s || 10); },
-								showTotal: (t, range) => `Hiển thị ${range[0]}-${range[1]} của ${t} người dùng`
-							}}
-						/>
-					</div>
-				</section>
-			)}
+				)}
+			</div>
 
 			{/* User Modal (Create/Update) */}
 			<Modal

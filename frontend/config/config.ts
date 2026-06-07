@@ -5,6 +5,11 @@ import routes from './routes';
 // import proxy from './proxy';
 // const { REACT_APP_ENV } = process.env;
 
+const SITE_URL = process.env.APP_CONFIG_SITE_URL || '';
+const SITE_TITLE = 'FlowForm — Quản lý biểu mẫu & quy trình phê duyệt';
+const SITE_DESC =
+	'Nền tảng quản lý biểu mẫu động, tự động hóa quy trình phê duyệt đa cấp, ủy quyền và thông báo thời gian thực cho tổ chức của bạn.';
+
 export default defineConfig({
 	devServer: {
 		port: 8000,
@@ -43,7 +48,23 @@ export default defineConfig({
 	// esbuild is father build tools
 	// https://umijs.org/plugins/plugin-esbuild
 	esbuild: {},
-	title: false,
+	title: SITE_TITLE,
+	favicon: '/favicon.ico',
+	metas: [
+		{ name: 'description', content: SITE_DESC },
+		{ name: 'keywords', content: 'quản lý biểu mẫu, workflow, phê duyệt, form builder, FlowForm' },
+		{ name: 'theme-color', content: '#4f46e5' },
+		{ property: 'og:type', content: 'website' },
+		{ property: 'og:site_name', content: 'FlowForm' },
+		{ property: 'og:title', content: SITE_TITLE },
+		{ property: 'og:description', content: SITE_DESC },
+		{ property: 'og:image', content: `${SITE_URL}/metadata.png` },
+		{ property: 'og:url', content: SITE_URL || '/' },
+		{ name: 'twitter:card', content: 'summary_large_image' },
+		{ name: 'twitter:title', content: SITE_TITLE },
+		{ name: 'twitter:description', content: SITE_DESC },
+		{ name: 'twitter:image', content: `${SITE_URL}/metadata.png` },
+	],
 	ignoreMomentLocale: true,
 	// proxy: proxy[REACT_APP_ENV || 'dev'],
 	manifest: {

@@ -14,8 +14,7 @@ import NotificationBell from '@/components/NotificationBell';
 import styles from './index.less';
 
 export const goLogin = () => history.push('/user/login');
-// TODO: trỏ về trang đăng ký tổ chức (POST /auth/register-tenant) khi page được dựng
-export const goRegisterTenant = () => history.push('/user/login');
+export const goRegisterTenant = () => history.push('/user/register');
 
 export const Brand: React.FC = () => (
 	<div className={styles.brand} onClick={() => history.push('/')}>

@@ -94,20 +94,29 @@ const Login: React.FC = () => {
 		}
 	};
 
-	/** Xử lý đổi mật khẩu lần đầu */
 	const handleFirstTimeChangePassword = async (values: { newPassword: string }) => {
 		if (!pendingLoginData || !loginPassword) return;
 		try {
 			setChangingPassword(true);
 			await changePassword(loginPassword, values.newPassword);
-			message.success('Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
+
+			const email = pendingLoginData.user?.email;
+			const reloginRes = await adminlogin({ email, password: values.newPassword });
+			const reloginData = (reloginRes as any)?.data?.data;
+
 			setShowChangePasswordModal(false);
-			// Backend hủy toàn bộ refresh tokens → cần login lại
-			localStorage.clear();
 			setPendingLoginData(null);
 			setLoginPassword('');
 			changePwForm.resetFields();
-			form.resetFields();
+
+			if (reloginData?.accessToken) {
+				message.success('Đổi mật khẩu thành công!');
+				await handleLoginSuccess(reloginData);
+			} else {
+				message.success('Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
+				localStorage.clear();
+				form.resetFields();
+			}
 		} catch (error: any) {
 			const errorMsg = error?.response?.data?.message || 'Đổi mật khẩu thất bại.';
 			message.error(typeof errorMsg === 'string' ? errorMsg : 'Đổi mật khẩu thất bại.');
@@ -144,12 +153,12 @@ const Login: React.FC = () => {
 				<div className={styles.loginBox}>
 					{/* Left gradient panel (design 01) */}
 					<div className={styles.leftPanel}>
-						<div className={styles.lpLogo}>
+						<Link to='/' className={styles.lpLogo} title='Về trang chủ'>
 							<div className={styles.lpLogoSq}>
 								<ThunderboltFilled />
 							</div>
 							<span>FLOWFORM</span>
-						</div>
+						</Link>
 
 						<div className={styles.welcomeText}>
 							<h1>Chào mừng trở lại!</h1>

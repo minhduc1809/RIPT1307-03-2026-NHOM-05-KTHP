@@ -45,13 +45,14 @@ const FormSubmit: React.FC = () => {
 		return form.schema?.fields?.length ?? 0;
 	};
 
-	const FORM_COLORS = [
-		{ bg: '#ede9fe', color: '#7c3aed', icon: '📋' },
-		{ bg: '#dbeafe', color: '#2563eb', icon: '📝' },
-		{ bg: '#d1fae5', color: '#059669', icon: '📊' },
-		{ bg: '#fef3c7', color: '#d97706', icon: '📄' },
-		{ bg: '#fce7f3', color: '#db2777', icon: '📑' },
-		{ bg: '#e0e7ff', color: '#4f46e5', icon: '📃' },
+	// icon box gradient theo frame 10 (xoay vòng 6 tông)
+	const FORM_GRADIENTS = [
+		'linear-gradient(135deg, #4f46e5, #7c3aed)',
+		'linear-gradient(135deg, #0891b2, #06b6d4)',
+		'linear-gradient(135deg, #059669, #10b981)',
+		'linear-gradient(135deg, #d97706, #f59e0b)',
+		'linear-gradient(135deg, #db2777, #ec4899)',
+		'linear-gradient(135deg, #2563eb, #3b82f6)',
 	];
 
 	return (
@@ -90,7 +91,7 @@ const FormSubmit: React.FC = () => {
 			) : (
 				<div className={styles.formsGrid}>
 					{filteredForms.map((form, idx) => {
-						const colorSet = FORM_COLORS[idx % FORM_COLORS.length];
+						const gradient = FORM_GRADIENTS[idx % FORM_GRADIENTS.length];
 						const fieldCount = getFieldCount(form);
 
 						return (
@@ -100,11 +101,8 @@ const FormSubmit: React.FC = () => {
 								onClick={() => history.push(`/submissions/new/${form.id}`)}
 							>
 								<div className={styles.cardTop}>
-									<div
-										className={styles.formIcon}
-										style={{ background: colorSet.bg, color: colorSet.color }}
-									>
-										{colorSet.icon}
+									<div className={styles.formIcon} style={{ background: gradient }}>
+										<FileTextOutlined />
 									</div>
 									<div className={styles.arrowIcon}>
 										<ArrowRightOutlined />

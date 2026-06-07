@@ -7,7 +7,7 @@ import {
 	InfoCircleOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
-import { Badge, Button, Spin } from 'antd';
+import { Badge, Spin } from 'antd';
 import moment from 'moment';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { history } from 'umi';
@@ -19,13 +19,14 @@ import {
 } from '@/services/Notifications/notificationApi';
 import type { INotification } from '@/services/Notifications/notificationApi';
 import { connectSocket, onSocketEvent, offSocketEvent } from '@/services/socket';
+import { publishUnread, subscribeUnread } from './unreadStore';
 import styles from './index.less';
 
 const TYPE_ICON: Record<string, React.ReactNode> = {
-	SUCCESS: <CheckCircleOutlined style={{ color: '#10b981' }} />,
-	WARNING: <WarningOutlined style={{ color: '#f59e0b' }} />,
-	ERROR: <CloseCircleOutlined style={{ color: '#ef4444' }} />,
-	INFO: <InfoCircleOutlined style={{ color: '#6366f1' }} />,
+	SUCCESS: <CheckCircleOutlined />,
+	WARNING: <WarningOutlined />,
+	ERROR: <CloseCircleOutlined />,
+	INFO: <InfoCircleOutlined />,
 };
 
 function getTimeAgo(dateStr: string): string {
@@ -45,6 +46,7 @@ function getNavigationPath(notification: INotification): string | null {
 
 	if (meta.submissionId) return `/submissions/${meta.submissionId}`;
 	if (meta.instanceId) return `/submissions/${meta.submissionId || ''}`;
+	if (meta.delegationId) return '/delegations';
 	return '/notifications';
 }
 
@@ -56,14 +58,17 @@ const NotificationBell: React.FC = () => {
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	const fetchUnread = useCallback(async () => {
+		if (!localStorage.getItem('token')) return;
 		try {
 			const res = await getUnreadCount();
 			const data = (res as any)?.data?.data ?? (res as any)?.data;
-			setUnreadCount(data?.count ?? 0);
+			const count = data?.count ?? data?.unread ?? data;
+			setUnreadCount(typeof count === 'number' ? count : 0);
 		} catch { /* */ }
 	}, []);
 
 	const fetchNotifications = useCallback(async () => {
+		if (!localStorage.getItem('token')) return;
 		setLoading(true);
 		try {
 			const res = await getNotifications({ page: 1, limit: 10 });
@@ -77,6 +82,11 @@ const NotificationBell: React.FC = () => {
 	useEffect(() => {
 		fetchUnread();
 	}, [fetchUnread]);
+
+	useEffect(() => subscribeUnread(setUnreadCount), []);
+	useEffect(() => {
+		publishUnread(unreadCount);
+	}, [unreadCount]);
 
 	// Socket real-time
 	useEffect(() => {
@@ -102,7 +112,9 @@ const NotificationBell: React.FC = () => {
 	}, [open]);
 
 	const handleToggle = () => {
-		history.push('/notifications');
+		const next = !open;
+		setOpen(next);
+		if (next) fetchNotifications();
 	};
 
 	const handleMarkRead = async (id: string, e: React.MouseEvent) => {
@@ -152,8 +164,11 @@ const NotificationBell: React.FC = () => {
 							<div className={styles.loadingState}><Spin size="small" /></div>
 						) : notifications.length === 0 ? (
 							<div className={styles.emptyState}>
-								<BellOutlined style={{ fontSize: 32, color: '#cbd5e1' }} />
-								<p>Chưa có thông báo</p>
+								<div className={styles.emptyIcon}>
+									<BellOutlined />
+								</div>
+								<div className={styles.emptyTitle}>Chưa có thông báo</div>
+								<p className={styles.emptySub}>Thông báo mới sẽ xuất hiện tại đây</p>
 							</div>
 						) : (
 							notifications.map((n) => (
@@ -162,8 +177,8 @@ const NotificationBell: React.FC = () => {
 									className={`${styles.notifItem} ${!n.read ? styles.unread : ''}`}
 									onClick={() => handleClickNotification(n)}
 								>
-									<div className={styles.notifIcon}>
-										{TYPE_ICON[n.type || 'INFO'] || TYPE_ICON.INFO}
+									<div className={`${styles.notifIcon} ${styles[`type${(n.type || 'INFO').toUpperCase()}`] || styles.typeINFO}`}>
+										{TYPE_ICON[(n.type || 'INFO').toUpperCase()] || TYPE_ICON.INFO}
 									</div>
 									<div className={styles.notifContent}>
 										<div className={styles.notifTitle}>{n.title}</div>
@@ -173,20 +188,28 @@ const NotificationBell: React.FC = () => {
 										</div>
 									</div>
 									{!n.read && (
-										<button className={styles.readBtn} onClick={(e) => handleMarkRead(n.id, e)} title="Đánh dấu đã đọc">
-											<CheckOutlined />
-										</button>
+										<button
+											type='button'
+											className={styles.unreadDot}
+											onClick={(e) => handleMarkRead(n.id, e)}
+											title='Đánh dấu đã đọc'
+										/>
 									)}
 								</div>
 							))
 						)}
 					</div>
 
-					<div className={styles.dropdownFooter}>
-						<Button type="link" size="small" onClick={() => { setOpen(false); history.push('/notifications'); }}>
-							Xem tất cả thông báo
-						</Button>
-					</div>
+					<button
+						type='button'
+						className={styles.dropdownFooter}
+						onClick={() => {
+							setOpen(false);
+							history.push('/notifications');
+						}}
+					>
+						Xem tất cả thông báo
+					</button>
 				</div>
 			)}
 		</div>

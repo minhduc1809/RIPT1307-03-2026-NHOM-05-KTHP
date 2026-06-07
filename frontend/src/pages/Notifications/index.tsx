@@ -3,11 +3,12 @@ import {
 	CheckCircleOutlined,
 	CheckOutlined,
 	ClockCircleOutlined,
+	CloseCircleOutlined,
 	CloseOutlined,
-	ExclamationCircleOutlined,
+	InfoCircleOutlined,
 	WarningOutlined,
 } from '@ant-design/icons';
-import { Button, message, Pagination, Spin } from 'antd';
+import { message, Pagination, Spin } from 'antd';
 import moment from 'moment';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { history } from 'umi';
@@ -19,6 +20,7 @@ import {
 } from '@/services/Notifications/notificationApi';
 import type { INotification } from '@/services/Notifications/notificationApi';
 import { connectSocket, offSocketEvent, onSocketEvent } from '@/services/socket';
+import { publishUnread, subscribeUnread } from '@/components/NotificationBell/unreadStore';
 import styles from './index.less';
 
 type FilterType = 'all' | 'unread' | 'read';
@@ -31,6 +33,7 @@ const Notifications: React.FC = () => {
 	const [limit] = useState(20);
 	const [filter, setFilter] = useState<FilterType>('all');
 	const [unreadCount, setUnreadCount] = useState(0);
+	const [allTotal, setAllTotal] = useState(0);
 
 	// Socket state
 	const [socketStatus, setSocketStatus] = useState<'connecting' | 'connected' | 'disconnected'>(
@@ -51,8 +54,10 @@ const Notifications: React.FC = () => {
 
 			const response = await getNotifications(params);
 			const data = (response as any)?.data?.data ?? (response as any)?.data;
+			const totalCount = data?.meta?.total ?? data?.total ?? 0;
 			setNotifications(data?.items ?? (Array.isArray(data) ? data : []));
-			setTotal(data?.meta?.total ?? data?.total ?? 0);
+			setTotal(totalCount);
+			if (filter === 'all') setAllTotal(totalCount);
 		} catch (err) {
 			console.error('Failed to load notifications:', err);
 		} finally {
@@ -64,7 +69,8 @@ const Notifications: React.FC = () => {
 		try {
 			const response = await getUnreadCount();
 			const data = (response as any)?.data?.data ?? (response as any)?.data;
-			setUnreadCount(data?.count ?? data ?? 0);
+			const count = data?.count ?? data?.unread ?? data;
+			setUnreadCount(typeof count === 'number' ? count : 0);
 		} catch {
 			// silent
 		}
@@ -77,6 +83,11 @@ const Notifications: React.FC = () => {
 	useEffect(() => {
 		fetchUnreadCount();
 	}, [fetchUnreadCount]);
+
+	useEffect(() => subscribeUnread(setUnreadCount), []);
+	useEffect(() => {
+		publishUnread(unreadCount);
+	}, [unreadCount]);
 
 	// ==================== SOCKET.IO ====================
 	useEffect(() => {
@@ -119,6 +130,7 @@ const Notifications: React.FC = () => {
 			setNotifications((prev) => [newNotif, ...prev]);
 			setUnreadCount((prev) => prev + 1);
 			setTotal((prev) => prev + 1);
+			setAllTotal((prev) => prev + 1);
 
 			// Show toast
 			setToast(newNotif);
@@ -126,13 +138,13 @@ const Notifications: React.FC = () => {
 			toastTimer.current = setTimeout(() => setToast(null), 5000);
 		};
 
-		onSocketEvent('notification.new', handleNewNotification);
+		onSocketEvent('notification', handleNewNotification);
 
 		return () => {
 			socket.off('connect', onConnect);
 			socket.off('disconnect', onDisconnect);
 			socket.off('connect_error', onConnectError);
-			offSocketEvent('notification.new', handleNewNotification);
+			offSocketEvent('notification', handleNewNotification);
 		};
 	}, []);
 
@@ -147,6 +159,15 @@ const Notifications: React.FC = () => {
 			setUnreadCount((prev) => Math.max(0, prev - 1));
 		} catch {
 			// silent
+		}
+	};
+
+	const handleRowClick = (notif: INotification) => {
+		handleMarkAsRead(notif);
+		if (notif.metadata?.submissionId) {
+			history.push(`/submissions/${notif.metadata.submissionId}`);
+		} else if (notif.metadata?.delegationId) {
+			history.push('/delegations');
 		}
 	};
 
@@ -168,7 +189,7 @@ const Notifications: React.FC = () => {
 
 	// ==================== HELPERS ====================
 	const getTypeIconClass = (type?: string) => {
-		switch (type) {
+		switch ((type || '').toLowerCase()) {
 			case 'success':
 				return styles.typeSuccess;
 			case 'warning':
@@ -181,15 +202,15 @@ const Notifications: React.FC = () => {
 	};
 
 	const getTypeIcon = (type?: string) => {
-		switch (type) {
+		switch ((type || '').toLowerCase()) {
 			case 'success':
 				return <CheckCircleOutlined />;
 			case 'warning':
 				return <WarningOutlined />;
 			case 'error':
-				return <ExclamationCircleOutlined />;
+				return <CloseCircleOutlined />;
 			default:
-				return <BellOutlined />;
+				return <InfoCircleOutlined />;
 		}
 	};
 
@@ -209,25 +230,16 @@ const Notifications: React.FC = () => {
 			<div className={styles.pageHeader}>
 				<div className={styles.headerLeft}>
 					<h1>Thông báo</h1>
-					<p>Quản lý các thông báo và cập nhật realtime</p>
+					<p>Cập nhật thời gian thực về yêu cầu và quy trình của bạn</p>
 				</div>
 				<div className={styles.headerActions}>
 					{unreadCount > 0 && (
 						<button className={styles.markAllBtn} onClick={handleMarkAllAsRead}>
-							<CheckOutlined /> Đọc tất cả ({unreadCount})
+							<CheckOutlined /> Đọc tất cả
 						</button>
 					)}
 				</div>
 			</div>
-
-			{/* Connection Status */}
-			{socketStatus !== 'connected' && (
-				<div className={`${styles.connectionBar} ${styles[socketStatus]}`}>
-					<span className={styles.statusDot} />
-					{socketStatus === 'connecting' && 'Đang kết nối realtime...'}
-					{socketStatus === 'disconnected' && 'Mất kết nối realtime — Đang thử kết nối lại'}
-				</div>
-			)}
 
 			{/* Filter Tabs */}
 			<div className={styles.filterBar}>
@@ -235,20 +247,19 @@ const Notifications: React.FC = () => {
 					className={`${styles.filterBtn} ${filter === 'all' ? styles.active : ''}`}
 					onClick={() => handleFilterChange('all')}
 				>
-					Tất cả
+					Tất cả ({allTotal})
 				</button>
 				<button
 					className={`${styles.filterBtn} ${filter === 'unread' ? styles.active : ''}`}
 					onClick={() => handleFilterChange('unread')}
 				>
-					Chưa đọc
-					{unreadCount > 0 && <span className={styles.badge}>{unreadCount}</span>}
+					Chưa đọc ({unreadCount})
 				</button>
 				<button
 					className={`${styles.filterBtn} ${filter === 'read' ? styles.active : ''}`}
 					onClick={() => handleFilterChange('read')}
 				>
-					Đã đọc
+					Đã đọc ({Math.max(0, allTotal - unreadCount)})
 				</button>
 			</div>
 
@@ -260,12 +271,21 @@ const Notifications: React.FC = () => {
 					</div>
 				) : notifications.length === 0 ? (
 					<div className={styles.emptyState}>
-						<span>🔔</span>
-						<p>
-							{filter === 'unread'
-								? 'Không có thông báo chưa đọc'
-								: 'Chưa có thông báo nào'}
-						</p>
+						<div className={styles.emptyIcon}>
+							<BellOutlined />
+							<span className={styles.dot1} />
+							<span className={styles.dot2} />
+						</div>
+						<div className={styles.emptyTexts}>
+							<h3>
+								{filter === 'unread'
+									? 'Không có thông báo chưa đọc'
+									: filter === 'read'
+									? 'Chưa có thông báo đã đọc'
+									: 'Chưa có thông báo nào'}
+							</h3>
+							<p>Khi có cập nhật về yêu cầu, quy trình hoặc ủy quyền, thông báo sẽ xuất hiện tại đây.</p>
+						</div>
 					</div>
 				) : (
 					<>
@@ -273,7 +293,7 @@ const Notifications: React.FC = () => {
 							<div
 								key={notif.id}
 								className={`${styles.notifItem} ${!notif.read ? styles.unread : ''}`}
-								onClick={() => handleMarkAsRead(notif)}
+								onClick={() => handleRowClick(notif)}
 							>
 								<div
 									className={`${styles.notifIcon} ${getTypeIconClass(notif.type)}`}
@@ -288,35 +308,18 @@ const Notifications: React.FC = () => {
 										<ClockCircleOutlined />
 										{formatTime(notif.createdAt)}
 									</div>
-									{notif.metadata?.submissionId && (
-										<Button
-											type="link"
-											size="small"
-											style={{ padding: 0, height: 'auto', marginTop: 4, fontSize: 12 }}
-											onClick={(e) => {
-												e.stopPropagation();
-												handleMarkAsRead(notif);
-												history.push(`/submissions/${notif.metadata?.submissionId}`);
-											}}
-										>
-											Xem chi tiết
-										</Button>
-									)}
 								</div>
 
 								{!notif.read && (
-									<div className={styles.notifActions}>
-										<button
-											className={styles.readBtn}
-											onClick={(e) => {
-												e.stopPropagation();
-												handleMarkAsRead(notif);
-											}}
-											title="Đánh dấu đã đọc"
-										>
-											<CheckOutlined />
-										</button>
-									</div>
+									<button
+										type="button"
+										className={styles.unreadDot}
+										onClick={(e) => {
+											e.stopPropagation();
+											handleMarkAsRead(notif);
+										}}
+										title="Đánh dấu đã đọc"
+									/>
 								)}
 							</div>
 						))}
@@ -336,13 +339,23 @@ const Notifications: React.FC = () => {
 				)}
 			</div>
 
+			{/* Trạng thái socket — pill góc phải (frame 15) */}
+			<div className={styles.socketRow}>
+				<span className={`${styles.socketPill} ${styles[socketStatus]}`}>
+					<span className={styles.statusDot} />
+					{socketStatus === 'connected' && 'Socket: connected'}
+					{socketStatus === 'connecting' && 'Socket: đang kết nối...'}
+					{socketStatus === 'disconnected' && 'Socket: mất kết nối — đang thử lại'}
+				</span>
+			</div>
+
 			{/* New Notification Toast */}
 			{toast && (
 				<div className={styles.newNotifToast}>
 					<span className={styles.toastIcon}>🔔</span>
 					<div className={styles.toastContent}>
 						<div className={styles.toastTitle}>{toast.title}</div>
-						<div className={styles.toastMsg}>{toast.message}</div>
+						<div className={styles.toastMsg}>{(toast as any).content || toast.message}</div>
 					</div>
 					<button className={styles.toastClose} onClick={() => setToast(null)}>
 						<CloseOutlined />
