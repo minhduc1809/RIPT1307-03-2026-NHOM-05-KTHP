@@ -1,3 +1,4 @@
+// design: smartadmin.pen · frame 05 (Form Builder) & 05b (Form Edit)
 
 @primary: #4f46e5;
 @text: #0f172a;
@@ -25,6 +26,7 @@
 	}
 }
 
+// Top bar — 60px
 .header {
 	display: flex;
 	flex-shrink: 0;
@@ -172,6 +174,7 @@
 	}
 }
 
+// Body — toolbox 240 | canvas | panel 300
 .mainContent {
 	display: flex;
 	flex: 1;
@@ -254,90 +257,16 @@
 }
 
 .paper {
-	--fp-bg: #fff;
-	--fp-border: @border-light;
-	--fp-title: @text;
-	--fp-desc: @muted;
-	--fp-divider: @border-light;
-	--fp-card-bg: #fff;
-	--fp-card-border: @border;
-	--fp-label: @text-body;
-	--fp-input-bg: @bg;
-	--fp-input-border: @border-light;
-	--fp-input-text: @muted-light;
-	--fp-accent: @primary;
-
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
 	width: 620px;
 	max-width: 100%;
 	padding: 24px;
-	background: var(--fp-bg);
-	border: 1px solid var(--fp-border);
+	background: #fff;
+	border: 1px solid @border-light;
 	border-radius: 12px;
 	box-shadow: 0 8px 30px -4px #4f46e521;
-	transition: background 0.2s ease-out, border-color 0.2s ease-out;
-}
-
-.themeDark {
-	--fp-bg: #0f172a;
-	--fp-border: #1e293b;
-	--fp-title: #f8fafc;
-	--fp-desc: #94a3b8;
-	--fp-divider: #1e293b;
-	--fp-card-bg: #1e293b;
-	--fp-card-border: #334155;
-	--fp-label: #e2e8f0;
-	--fp-input-bg: #0f172a;
-	--fp-input-border: #334155;
-	--fp-input-text: #64748b;
-	--fp-accent: #818cf8;
-}
-
-.themeMint {
-	--fp-bg: #ecfdf5;
-	--fp-border: #a7f3d0;
-	--fp-title: #064e3b;
-	--fp-desc: #047857;
-	--fp-divider: #a7f3d0;
-	--fp-card-bg: #fff;
-	--fp-card-border: #a7f3d0;
-	--fp-label: #065f46;
-	--fp-input-bg: #f0fdfa;
-	--fp-input-border: #a7f3d0;
-	--fp-input-text: #34d399;
-	--fp-accent: #10b981;
-}
-
-.themeSunset {
-	--fp-bg: #fff1f2;
-	--fp-border: #fecdd3;
-	--fp-title: #881337;
-	--fp-desc: #be123c;
-	--fp-divider: #fecdd3;
-	--fp-card-bg: #fff;
-	--fp-card-border: #fecdd3;
-	--fp-label: #9f1239;
-	--fp-input-bg: #fff1f2;
-	--fp-input-border: #fecdd3;
-	--fp-input-text: #fb7185;
-	--fp-accent: #e11d48;
-}
-
-.themeViolet {
-	--fp-bg: #f5f3ff;
-	--fp-border: #ddd6fe;
-	--fp-title: #4c1d95;
-	--fp-desc: #6d28d9;
-	--fp-divider: #ddd6fe;
-	--fp-card-bg: #fff;
-	--fp-card-border: #ddd6fe;
-	--fp-label: #5b21b6;
-	--fp-input-bg: #f5f3ff;
-	--fp-input-border: #ddd6fe;
-	--fp-input-text: #a78bfa;
-	--fp-accent: #7c3aed;
 }
 
 .formHead {
@@ -345,11 +274,11 @@
 	flex-direction: column;
 	gap: 4px;
 	padding-bottom: 12px;
-	border-bottom: 1px solid var(--fp-divider);
+	border-bottom: 1px solid @border-light;
 
 	h2 {
 		margin: 0;
-		color: var(--fp-title);
+		color: @text;
 		font-weight: 800;
 		font-size: 18px;
 		letter-spacing: -0.3px;
@@ -357,7 +286,7 @@
 
 	p {
 		margin: 0;
-		color: var(--fp-desc);
+		color: @muted;
 		font-size: 12.5px;
 		line-height: 1.5;
 	}
@@ -368,18 +297,18 @@
 	flex-direction: column;
 	gap: 8px;
 	padding: 14px;
-	border: 1px solid var(--fp-card-border);
+	background: #fff;
+	border: 1px solid @border;
 	border-radius: 10px;
-	background: var(--fp-card-bg);
 	cursor: grab;
-	transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out, background 0.2s ease-out;
+	transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
 
 	&:hover {
-		border-color: var(--fp-accent);
+		border-color: #c7d2fe;
 	}
 
 	&.active {
-		border-color: var(--fp-accent);
+		border-color: @primary;
 		box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.14);
 	}
 
@@ -394,7 +323,7 @@
 	align-items: center;
 
 	.fieldLabel {
-		color: var(--fp-label);
+		color: @text-body;
 		font-weight: 600;
 		font-size: 13px;
 	}
@@ -445,14 +374,14 @@
 	justify-content: space-between;
 	height: 36px;
 	padding: 0 12px;
-	border: 1px solid var(--fp-input-border);
-	border-radius: 8px;
-	background: var(--fp-input-bg);
-	color: var(--fp-input-text);
+	color: @muted-light;
 	font-size: 13px;
+	background: @bg;
+	border: 1px solid @border-light;
+	border-radius: 8px;
 
 	&.active {
-		border-color: var(--fp-accent);
+		border-color: @primary;
 	}
 }
 
@@ -467,22 +396,22 @@
 	left: 0;
 	z-index: 5;
 	padding: 6px;
-	background: var(--fp-card-bg);
-	border: 1px solid var(--fp-card-border);
+	background: #fff;
+	border: 1px solid @border;
 	border-radius: 8px;
 	box-shadow: 0 10px 25px -5px #0f172a26;
 }
 
 .customOptionItem {
 	padding: 7px 10px;
-	color: var(--fp-label);
+	color: @text-body;
 	font-size: 13px;
 	border-radius: 6px;
 	cursor: default;
 
 	&:hover {
-		background: var(--fp-input-bg);
-		color: var(--fp-accent);
+		color: @primary;
+		background: @indigo-bg;
 	}
 }
 
@@ -517,6 +446,7 @@
 	}
 }
 
+// Right panel — 300, tabs
 .propPanel {
 	display: flex;
 	flex-direction: column;
@@ -564,71 +494,47 @@
 	padding: 16px;
 }
 
-// Grid 2 cột cho bộ chọn theme
-.themeGrid {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 8px;
-}
-
 .themeRow {
 	display: flex;
-	flex-direction: column;
-	overflow: hidden;
-	border: 1.5px solid @border;
+	gap: 10px;
+	align-items: center;
+	padding: 10px 12px;
+	background: #fff;
+	border: 1px solid @border;
 	border-radius: 10px;
 	cursor: pointer;
 	transition: all 0.2s ease-out;
 
-	// Phần màu — chiếm toàn bộ chiều rộng card
-	.swatchArea {
-		position: relative;
-		height: 54px;
-		// border tương phản để swatch trắng không mất trên nền trắng
-		border-bottom: 1px solid @border-light;
-		transition: height 0.2s ease-out;
-	}
-
-	// Check icon — overlay ở giữa swatch
-	.themeCheck {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		font-size: 20px;
-		color: @primary;
-		filter: drop-shadow(0 1px 3px rgba(0,0,0,0.25));
+	.swatch {
+		flex-shrink: 0;
+		width: 22px;
+		height: 22px;
+		border: 1px solid @border;
+		border-radius: 50%;
 	}
 
 	.themeName {
-		padding: 7px 8px 6px;
-		color: @muted;
+		flex: 1;
+		color: @text-body;
 		font-weight: 600;
-		font-size: 10.5px;
-		line-height: 1.3;
-		text-align: center;
-		background: #fff;
-		transition: color 0.2s ease-out;
+		font-size: 13px;
+	}
+
+	.themeCheck {
+		color: @primary;
+		font-size: 15px;
 	}
 
 	&:hover {
 		border-color: #c7d2fe;
-		box-shadow: 0 3px 10px rgba(79, 70, 229, 0.12);
-		transform: translateY(-1px);
-
-		.themeName {
-			color: @primary;
-		}
 	}
 
 	&.active {
-		border-color: @primary;
-		box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.18);
+		background: @indigo-bg;
+		border: 1.5px solid @primary;
 
 		.themeName {
-			color: @primary;
-			background: @indigo-bg;
-			font-weight: 700;
+			color: @text;
 		}
 	}
 }
@@ -672,6 +578,7 @@
 	}
 }
 
+// Field config (tab Thành phần)
 .propGroup {
 	display: flex;
 	flex-direction: column;
